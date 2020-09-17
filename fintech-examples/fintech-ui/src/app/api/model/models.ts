@@ -1,3 +1,4 @@
+export * from './accountBalance';
 export * from './accountDetails';
 export * from './accountList';
 export * from './accountReference';

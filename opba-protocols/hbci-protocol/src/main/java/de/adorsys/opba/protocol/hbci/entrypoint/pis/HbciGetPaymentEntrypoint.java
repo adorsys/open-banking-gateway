@@ -45,7 +45,7 @@ public abstract class HbciGetPaymentEntrypoint<REQUEST extends FacadeServiceable
     public CompletableFuture<Result<RESULT_BODY>> execute(ServiceContext<REQUEST> serviceContext) {
         PaymentHbciContext paymentHbciContext = hbciPreparePaymentContext.prepareContext(serviceContext, action);
         if (!paymentHbciContext.getPayment().isInstantPayment()) {
-            return acccStatusResult(paymentHbciContext);
+            return acscStatusResult(paymentHbciContext);
         }
         ProcessInstance instance = runtimeService.startProcessInstanceByKey(
                 HBCI_REQUEST_SAGA,
@@ -62,9 +62,9 @@ public abstract class HbciGetPaymentEntrypoint<REQUEST extends FacadeServiceable
         return result;
     }
 
-    private CompletableFuture<Result<RESULT_BODY>> acccStatusResult(PaymentHbciContext paymentHbciContext) {
+    private CompletableFuture<Result<RESULT_BODY>> acscStatusResult(PaymentHbciContext paymentHbciContext) {
         ProtocolFacingPayment payment = paymentHbciContext.getRequestScoped().paymentAccess().getFirstByCurrentSession();
-        paymentHbciContext.getPayment().setPaymentStatus(PaymentStatus.ACCC.name());
+        paymentHbciContext.getPayment().setPaymentStatus(PaymentStatus.ACSC.name());
         ProcessResponse processResponse = new ProcessResponse("", "", new PaymentInitiateBodyWithPayment(paymentHbciContext.getPayment(), payment));
         Result<RESULT_BODY> result = new SuccessResult<>(extractResultBodyMapper.apply(processResponse));
         return CompletableFuture.completedFuture(result);

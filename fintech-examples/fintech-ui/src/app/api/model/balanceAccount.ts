@@ -9,87 +9,15 @@
  * https://openapi-generator.tech
  * Do not edit the class manually.
  */
-import { AccountStatus } from './accountStatus';
-import { Address } from './address';
-import { LinksAccountDetails } from './linksAccountDetails';
-import { AccountBalance } from './accountBalance';
+import { Amount } from './amount';
 
 
-/**
- * The ASPSP shall give at least one of the account reference identifiers:   - iban   - bban   - pan   - maskedPan   - msisdn If the account is a multicurrency account currency code in \"currency\" is set to \"XXX\". 
- */
-export interface AccountDetails { 
-    /**
-     * This shall be filled, if addressable resource are created by the ASPSP on the /accounts or /card-accounts endpoint.
-     */
-    resourceId?: string;
-    /**
-     * International bank account number ISO 31616.
-     */
+export interface BalanceAccount { 
+    amount?: Amount;
+    balanceType?: string;
     iban?: string;
-    /**
-     * Basic Bank Account Number (BBAN) Identifier.  This data element can be used in the body of the Consent request.   Message for retrieving Account access Consent from this Account. This   data elements is used for payment Accounts which have no IBAN.   ISO20022: Basic Bank Account Number (BBAN).    Identifier used nationally by financial institutions, i.e., in individual countries,   generally as part of a National Account Numbering Scheme(s),   which uniquely identifies the account of a customer. 
-     */
-    bban?: string;
-    /**
-     * Primary Account Number according to ISO/IEC 7812. 
-     */
-    pan?: string;
-    /**
-     * Masked Primary Account Number. 
-     */
-    maskedPan?: string;
-    /**
-     * Mobile phone number.
-     */
-    msisdn?: string;
-    /**
-     * ISO 4217 Alpha 3 currency code. 
-     */
-    currency: string;
-    /**
-     * Name of the account given by the bank or the PSU in online-banking.
-     */
-    name?: string;
-    /**
-     * Product name of the bank for this account, proprietary definition.
-     */
-    product?: string;
-    /**
-     * ExternalCashAccountType1Code from ISO 20022. 
-     */
-    cashAccountType?: string;
-    status?: AccountStatus;
-    /**
-     * BICFI 
-     */
-    bic?: string;
-    /**
-     * Case of a set of pending card transactions, the APSP will provide the relevant cash account the card is set up on.
-     */
-    linkedAccounts?: string;
-    /**
-     * Specifies the usage of the account:   * PRIV: private personal account   * ORGA: professional account 
-     */
-    usage?: AccountDetails.UsageEnum;
-    /**
-     * Specifications that might be provided by the ASPSP:   - characteristics of the account   - characteristics of the relevant card 
-     */
-    details?: string;
-    links?: LinksAccountDetails;
-    /**
-     * Name of the legal account owner. If there is more than one owner, then e.g. two names might be noted here.
-     */
-    ownerName?: string;
-    ownerAddress?: Address;
-    balances?: Array<AccountBalance>;
+    lastChangeDateTime?: Date;
+    lastCommittedTransaction?: string;
+    referenceDate?: string;
 }
-export namespace AccountDetails {
-    export type UsageEnum = 'PRIV' | 'ORGA';
-    export const UsageEnum = {
-        PRIV: 'PRIV' as UsageEnum,
-        ORGA: 'ORGA' as UsageEnum
-    };
-}
-
 

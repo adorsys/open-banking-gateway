@@ -19,6 +19,8 @@ describe('AccountsConsentReviewComponent', () => {
     back: jasmine.createSpy('onBack')
   };
 
+  beforeAll(()=> window.onbeforeunload = jasmine.createSpy());
+
   beforeEach(async(() => {
     TestBed.configureTestingModule({
       declarations: [AccountsConsentReviewComponent],

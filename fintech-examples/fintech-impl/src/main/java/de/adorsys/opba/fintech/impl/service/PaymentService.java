@@ -26,7 +26,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 import java.util.UUID;
 
@@ -95,36 +94,24 @@ public class PaymentService {
         if (payments.isEmpty()) {
             return new ResponseEntity<>(new ArrayList<>(), HttpStatus.OK);
         }
-        PaymentEntity payment = payments.get(0);
+        List<PaymentInitiationWithStatusResponse> result = new ArrayList<>();
 
-        ResponseEntity<PaymentInformationResponse> response = tppPisPaymentStatusClient.getPaymentInformation(
-                tppProperties.getServiceSessionPassword(),
-                sessionEntity.getUserEntity().getFintechUserId(),
-                UUID.fromString(restRequestContext.getRequestId()),
-                paymentProduct,
-                COMPUTE_X_TIMESTAMP_UTC,
-                COMPUTE_X_REQUEST_SIGNATURE,
-                COMPUTE_FINTECH_ID,
-                bankId,
-                payment.getTppServiceSessionId()
-        );
-
-        switch (response.getStatusCode()) {
-            case OK:
-                return paymentInfoResponse(response);
-            case UNAUTHORIZED:
-                return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
-            default:
-                throw new RuntimeException("DID NOT EXPECT RETURNCODE:" + response.getStatusCode());
+        for (PaymentEntity payment : payments) {
+            PaymentInformationResponse body = tppPisPaymentStatusClient.getPaymentInformation(tppProperties.getServiceSessionPassword(),
+                    sessionEntity.getUserEntity().getFintechUserId(),
+                    UUID.fromString(restRequestContext.getRequestId()),
+                    paymentProduct,
+                    COMPUTE_X_TIMESTAMP_UTC,
+                    COMPUTE_X_REQUEST_SIGNATURE,
+                    COMPUTE_FINTECH_ID,
+                    bankId,
+                    payment.getTppServiceSessionId()).getBody();
+            PaymentInitiationWithStatusResponse paymentInitiationWithStatusResponse = Mappers
+                    .getMapper(PaymentInitiationWithStatusResponseMapper.class)
+                    .mapFromTppToFintech(body);
+            result.add(paymentInitiationWithStatusResponse);
         }
-    }
-
-    private ResponseEntity<List<PaymentInitiationWithStatusResponse>> paymentInfoResponse(ResponseEntity<PaymentInformationResponse> response) {
-        PaymentInformationResponse paymentInfoTpp = response.getBody();
-        PaymentInitiationWithStatusResponse paymentInfo = Mappers
-                .getMapper(PaymentInitiationWithStatusResponseMapper.class)
-                .mapFromTppToFintech(paymentInfoTpp);
-        return new ResponseEntity<>(Collections.singletonList(paymentInfo), HttpStatus.OK);
+        return new ResponseEntity<>(result, HttpStatus.OK);
     }
 
     private AccountReference getAccountReference(String iban) {

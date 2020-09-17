@@ -3,7 +3,7 @@ import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { ValidatorService } from 'angular-iban';
 import { FintechSinglePaymentInitiationService, SinglePaymentInitiationRequest } from '../../../api';
 import { ActivatedRoute, Router } from '@angular/router';
-import { HeaderConfig } from '../../../models/consts';
+import { Consts, HeaderConfig } from '../../../models/consts';
 import { RedirectStruct, RedirectType } from '../../redirect-page/redirect-struct';
 import { StorageService } from '../../../services/storage.service';
 import { ConfirmData } from '../payment-confirm/confirm.data';
@@ -28,8 +28,8 @@ export class InitiateComponent implements OnInit {
     private route: ActivatedRoute,
     private storageService: StorageService
   ) {
-    this.bankId = this.route.snapshot.paramMap.get('bankid');
-    this.accountId = this.route.snapshot.paramMap.get('accountid');
+    this.bankId = this.route.snapshot.params[Consts.BANK_ID_NAME];
+    this.accountId = this.route.snapshot.params[Consts.ACCOUNT_ID_NAME];
   }
 
   ngOnInit() {
@@ -83,7 +83,7 @@ export class InitiateComponent implements OnInit {
   }
 
   private getDebitorIban(accountId: string): string {
-    const list = this.storageService.getLoa();
+    const list = this.storageService.getLoa(this.bankId);
     if (list === null) {
       throw new Error('no cached list of accounts available.');
     }

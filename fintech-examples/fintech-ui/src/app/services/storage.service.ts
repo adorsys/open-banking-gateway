@@ -92,12 +92,12 @@ export class StorageService {
     return this.isAnySessionValid();
   }
 
-  public setLoa(accountStruct: AccountStruct[]): void {
-    localStorage.setItem(Session.LOA, JSON.stringify(accountStruct));
+  public setLoa(bankId: string, accountStruct: AccountStruct[]): void {
+    localStorage.setItem(bankId, JSON.stringify(accountStruct));
   }
 
-  public getLoa(): AccountStruct[] {
-    const value = localStorage.getItem(Session.LOA);
+  public getLoa(bankId: string): AccountStruct[] {
+    const value = localStorage.getItem(bankId);
     if (value === null) {
       return null;
     }
@@ -157,6 +157,7 @@ export class StorageService {
       return {
         loa: LoARetrievalInformation.FROM_TPP_WITH_AVAILABLE_CONSENT,
         lot: LoTRetrievalInformation.FROM_TPP_WITH_AVAILABLE_CONSENT,
+        withBalance: true,
         paymentRequiresAuthentication: false
       };
     }

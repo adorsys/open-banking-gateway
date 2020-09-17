@@ -13,7 +13,7 @@ export class ErrorService {
   }
 
   getServerMessage(error: HttpErrorResponse): string {
-    const errorMessage = error.error.message;
-    return errorMessage ? errorMessage : error.message;
+    const errorMessage = error.error;
+    return errorMessage ? errorMessage : error.error;
   }
 }

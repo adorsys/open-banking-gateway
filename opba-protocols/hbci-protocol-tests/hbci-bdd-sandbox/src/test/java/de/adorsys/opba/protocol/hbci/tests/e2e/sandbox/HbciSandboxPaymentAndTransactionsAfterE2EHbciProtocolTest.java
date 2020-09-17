@@ -115,7 +115,7 @@ class HbciSandboxPaymentAndTransactionsAfterE2EHbciProtocolTest extends SpringSc
         then()
                 .open_banking_has_stored_payment()
                 .fintech_calls_payment_activation_for_current_authorization_id()
-                .fintech_calls_payment_status(BANK_BLZ_30000003_ID, TransactionStatus.ACCC.name());
+                .fintech_calls_payment_status(BANK_BLZ_30000003_ID, TransactionStatus.ACSC.name());
 
         accountInformationRequest
                 .fintech_calls_list_transactions_for_max_musterman_for_blz_30000003()
@@ -134,7 +134,7 @@ class HbciSandboxPaymentAndTransactionsAfterE2EHbciProtocolTest extends SpringSc
                 .open_banking_has_consent_for_max_musterman_account_list()
                 .fintech_calls_consent_activation_for_current_authorization_id()
                 .open_banking_can_read_max_musterman_hbci_transaction_data_using_consent_bound_to_service_session_with_extra_transactions(
-                        MAX_MUSTERMAN_BANK_BLZ_30000003_ACCOUNT_ID, BANK_BLZ_30000003_ID, DATE_FROM, DATE_TO, BOTH_BOOKING, new BigDecimal[] {new BigDecimal("1.03")}
+                        MAX_MUSTERMAN_BANK_BLZ_30000003_ACCOUNT_ID, BANK_BLZ_30000003_ID, DATE_FROM, DATE_TO, BOTH_BOOKING, new BigDecimal[] {new BigDecimal("-1.03")}
                 );
     }
 

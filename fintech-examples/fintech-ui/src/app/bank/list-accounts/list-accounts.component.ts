@@ -3,13 +3,13 @@ import { AccountDetails } from '../../api';
 import { ActivatedRoute, Router } from '@angular/router';
 import { AisService } from '../services/ais.service';
 import { AccountStruct, RedirectStruct, RedirectType } from '../redirect-page/redirect-struct';
-import { HeaderConfig } from '../../models/consts';
+import { Consts, HeaderConfig } from '../../models/consts';
 import { StorageService } from '../../services/storage.service';
 
 @Component({
   selector: 'app-list-accounts',
   templateUrl: './list-accounts.component.html',
-  styleUrls: ['./list-accounts.component.scss']
+  styleUrls: ['./list-accounts.component.scss'],
 })
 export class ListAccountsComponent implements OnInit {
   accounts: AccountDetails[];
@@ -23,7 +23,7 @@ export class ListAccountsComponent implements OnInit {
   ) {}
 
   ngOnInit() {
-    this.bankId = this.route.snapshot.paramMap.get('bankid');
+    this.bankId = this.route.snapshot.params[Consts.BANK_ID_NAME];
     this.loadAccount();
   }
 
@@ -32,7 +32,8 @@ export class ListAccountsComponent implements OnInit {
   }
 
   private loadAccount(): void {
-    this.aisService.getAccounts(this.bankId, this.storageService.getSettings().loa).subscribe(response => {
+    const settings = this.storageService.getSettings();
+    this.aisService.getAccounts(this.bankId, settings.loa, settings.withBalance).subscribe((response) => {
       switch (response.status) {
         case 202:
           this.storageService.setRedirect(
@@ -59,7 +60,7 @@ export class ListAccountsComponent implements OnInit {
           for (const accountDetail of this.accounts) {
             loa.push(new AccountStruct(accountDetail.resourceId, accountDetail.iban, accountDetail.name));
           }
-          this.storageService.setLoa(loa);
+          this.storageService.setLoa(this.bankId, loa);
       }
     });
   }

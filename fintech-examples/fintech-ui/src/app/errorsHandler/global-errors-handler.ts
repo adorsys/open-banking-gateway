@@ -32,8 +32,7 @@ export class GlobalErrorHandler implements ErrorHandler {
     this.zone.run(() => {
       if (message !== null) {
         infoService.openFeedback(message, {
-          severity: 'error',
-          duration: 60000
+          severity: 'error'
         });
       }
     });
