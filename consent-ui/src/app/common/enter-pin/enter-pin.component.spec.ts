@@ -20,15 +20,15 @@ describe('EnterPinComponent', () => {
   beforeEach(async(() => {
     TestBed.configureTestingModule({
       declarations: [EnterPinComponent],
-      imports: [ReactiveFormsModule, HttpClientTestingModule]
+      imports: [ReactiveFormsModule, HttpClientTestingModule],
     }).compileComponents();
   }));
 
   beforeEach(() => {
     fixture = TestBed.createComponent(EnterPinComponent);
     component = fixture.componentInstance;
-    sessionService = TestBed.get(SessionService);
-    updateConsentAuthorizationService = TestBed.get(UpdateConsentAuthorizationService);
+    sessionService = TestBed.inject(SessionService);
+    updateConsentAuthorizationService = TestBed.inject(UpdateConsentAuthorizationService);
     sessionServiceSpy = spyOn(sessionService, 'getRedirectCode').and.returnValue(StubUtilTests.REDIRECT_ID);
     updateConsentAuthorizationServiceSpy = spyOn(
       updateConsentAuthorizationService,

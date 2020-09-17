@@ -25,16 +25,16 @@ describe('EnterTanComponent', () => {
     TestBed.configureTestingModule({
       declarations: [EnterTanComponent],
       schemas: [NO_ERRORS_SCHEMA],
-      imports: [ReactiveFormsModule, HttpClientTestingModule]
+      imports: [ReactiveFormsModule, HttpClientTestingModule],
     }).compileComponents();
   }));
 
   beforeEach(() => {
     fixture = TestBed.createComponent(EnterTanComponent);
     component = fixture.componentInstance;
-    sessionService = TestBed.get(SessionService);
-    updateConsentAuthorizationService = TestBed.get(UpdateConsentAuthorizationService);
-    consentAuthorizationService = TestBed.get(ConsentAuthorizationService);
+    sessionService = TestBed.inject(SessionService);
+    updateConsentAuthorizationService = TestBed.inject(UpdateConsentAuthorizationService);
+    consentAuthorizationService = TestBed.inject(ConsentAuthorizationService);
     sessionServiceSpy = spyOn(sessionService, 'getRedirectCode').and.returnValue(StubUtilTests.REDIRECT_ID);
     updateConsentAuthorizationServiceSpy = spyOn(
       updateConsentAuthorizationService,

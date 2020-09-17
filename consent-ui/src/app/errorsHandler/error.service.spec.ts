@@ -6,7 +6,7 @@ describe('ErrorService', () => {
   beforeEach(() => TestBed.configureTestingModule({}));
 
   it('should be created', () => {
-    const service: ErrorService = TestBed.get(ErrorService);
+    const service: ErrorService = TestBed.inject(ErrorService);
     expect(service).toBeTruthy();
   });
 });

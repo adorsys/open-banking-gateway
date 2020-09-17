@@ -12,7 +12,7 @@ describe('ConsentSharingComponent', () => {
   let consentAuthorizationService: UpdateConsentAuthorizationService;
   let fixture: ComponentFixture<ConsentSharingComponent>;
 
-  beforeAll(()=> window.onbeforeunload = jasmine.createSpy());
+  beforeAll(() => (window.onbeforeunload = jasmine.createSpy()));
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
@@ -23,21 +23,21 @@ describe('ConsentSharingComponent', () => {
           provide: ActivatedRoute,
           useValue: {
             parent: {
-              snapshot: { params: { authId: StubUtilTests.AUTH_ID } }
+              snapshot: { params: { authId: StubUtilTests.AUTH_ID } },
             },
             snapshot: {
-              queryParams: {}
-            }
-          }
-        }
-      ]
+              queryParams: {},
+            },
+          },
+        },
+      ],
     }).compileComponents();
   }));
 
   beforeEach(() => {
     fixture = TestBed.createComponent(ConsentSharingComponent);
     component = fixture.componentInstance;
-    consentAuthorizationService = TestBed.get(UpdateConsentAuthorizationService);
+    consentAuthorizationService = TestBed.inject(UpdateConsentAuthorizationService);
     fixture.detectChanges();
   });
 

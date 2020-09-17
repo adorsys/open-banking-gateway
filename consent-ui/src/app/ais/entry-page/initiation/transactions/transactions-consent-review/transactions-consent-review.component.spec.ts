@@ -17,10 +17,10 @@ describe('TransactionsConsentReviewComponent', () => {
   let consentAuthorizationService: UpdateConsentAuthorizationService;
 
   const locationStub = {
-    back: jasmine.createSpy('onBack')
+    back: jasmine.createSpy('onBack'),
   };
 
-  beforeAll(()=> window.onbeforeunload = jasmine.createSpy());
+  beforeAll(() => (window.onbeforeunload = jasmine.createSpy()));
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
@@ -33,9 +33,9 @@ describe('TransactionsConsentReviewComponent', () => {
         { provide: Location, useValue: locationStub },
         {
           provide: ActivatedRoute,
-          useValue: { parent: { parent: { params: of({ authId: StubUtilTests.AUTH_ID }) } } }
-        }
-      ]
+          useValue: { parent: { parent: { params: of({ authId: StubUtilTests.AUTH_ID }) } } },
+        },
+      ],
     }).compileComponents();
   }));
 
@@ -43,7 +43,7 @@ describe('TransactionsConsentReviewComponent', () => {
     fixture = TestBed.createComponent(TransactionsConsentReviewComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
-    consentAuthorizationService = TestBed.get(UpdateConsentAuthorizationService);
+    consentAuthorizationService = TestBed.inject(UpdateConsentAuthorizationService);
   });
 
   it('should create', () => {

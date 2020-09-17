@@ -1,18 +1,18 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
-
-import { Access, ConsentAccountAccessSelectionComponent } from './consent-account-access-selection.component';
+import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { ReactiveFormsModule } from '@angular/forms';
 import { CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
 import { RouterTestingModule } from '@angular/router/testing';
 import { ActivatedRoute } from '@angular/router';
 import { of } from 'rxjs';
+
 import { SessionService } from '../../../../../common/session.service';
 import { AccountAccessLevel, AisConsentToGrant } from '../../../../common/dto/ais-consent';
 import { AuthConsentState } from '../../../../common/dto/auth-state';
+import { Access, ConsentAccountAccessSelectionComponent } from './consent-account-access-selection.component';
 import { AccountsConsentReviewComponent } from '../../accounts/accounts-consent-review/accounts-consent-review.component';
 import { DedicatedAccessComponent } from '../dedicated-access/dedicated-access.component';
 import { StubUtilTests } from '../../../../common/stub-util-tests';
-import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { UpdateConsentAuthorizationService } from '../../../../../api';
 import { StubUtil } from '../../../../../common/utils/stub-util';
 
@@ -21,7 +21,7 @@ describe('ConsentAccountAccessSelectionComponent', () => {
   let fixture: ComponentFixture<ConsentAccountAccessSelectionComponent>;
   let updateConsentAuthorizationService: UpdateConsentAuthorizationService;
 
-  beforeAll(()=> window.onbeforeunload = jasmine.createSpy());
+  beforeAll(() => (window.onbeforeunload = jasmine.createSpy()));
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
@@ -32,8 +32,8 @@ describe('ConsentAccountAccessSelectionComponent', () => {
           provide: ActivatedRoute,
           useValue: {
             parent: { parent: { params: of({ authId: StubUtilTests.AUTH_ID }) } },
-            snapshot: {}
-          }
+            snapshot: {},
+          },
         },
         {
           provide: SessionService,
@@ -41,11 +41,11 @@ describe('ConsentAccountAccessSelectionComponent', () => {
             getConsentObject: () => new AisConsentToGrant(),
             getConsentState: () => new AuthConsentState([]),
             getFintechName: (): string => StubUtil.FINTECH_NAME,
-            getBankName: (): string => StubUtil.ASPSP_NAME
-          }
-        }
+            getBankName: (): string => StubUtil.ASPSP_NAME,
+          },
+        },
       ],
-      schemas: [CUSTOM_ELEMENTS_SCHEMA]
+      schemas: [CUSTOM_ELEMENTS_SCHEMA],
     }).compileComponents();
   }));
 
@@ -55,7 +55,7 @@ describe('ConsentAccountAccessSelectionComponent', () => {
     component.consentReviewPage = AccountsConsentReviewComponent.ROUTE;
     component.dedicatedConsentPage = DedicatedAccessComponent.ROUTE;
     component.accountAccesses = [new Access(AccountAccessLevel.ALL_ACCOUNTS, 'access to all accounts')];
-    updateConsentAuthorizationService = TestBed.get(UpdateConsentAuthorizationService);
+    updateConsentAuthorizationService = TestBed.inject(UpdateConsentAuthorizationService);
     fixture.detectChanges();
   });
 
@@ -99,7 +99,7 @@ describe('ConsentAccountAccessSelectionComponent', () => {
     const handleMethodSelectedEventSpy = spyOn(component, 'handleMethodSelectedEvent');
     const access: Access = {
       id: AccountAccessLevel.ALL_ACCOUNTS,
-      message: 'yes we can'
+      message: 'yes we can',
     };
     component.handleMethodSelectedEvent(access);
     expect(handleMethodSelectedEventSpy).toHaveBeenCalled();
