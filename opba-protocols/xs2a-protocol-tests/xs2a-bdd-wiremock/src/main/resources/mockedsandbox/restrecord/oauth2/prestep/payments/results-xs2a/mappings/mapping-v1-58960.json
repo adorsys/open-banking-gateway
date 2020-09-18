@@ -1,49 +1,56 @@
 {
-  "id" : "b14827b1-ffe5-3a24-8711-2516a0faa626",
-  "request" : {
-    "url" : "/v1/payments/sepa-credit-transfers",
-    "method" : "POST",
-    "headers" : {
-      "X-Request-ID" : {
-        "equalTo" : "12b34483-242a-428b-8295-2f4805bb0a30"
+  "id": "b14827b1-ffe5-3a24-8711-2516a0faa626",
+  "priority": 10,
+  "request": {
+    "url": "/v1/payments/sepa-credit-transfers",
+    "method": "POST",
+    "headers": {
+      "X-Request-ID": {
+        "matches": ".+"
       },
-      "PSU-ID" : {
-        "equalTo" : "anton.brueckner"
+      "PSU-ID": {
+        "equalTo": "anton.brueckner"
       },
-      "Authorization" : {
-        "equalTo" : "Bearer eyJraWQiOiJpc3FyWW04QlNpY2w2ZXhRcEhHREpBIiwiYWxnIjoiSFMyNTYifQ.eyJzdWIiOiJkMGF1dUlxN1J6QXR6dkNEVDh6bV9vIiwidG9rZW5fdXNhZ2UiOiJMT0dJTiIsInJvbGUiOiJDVVNUT01FUiIsInNjYV9pZCI6IjBiekJRellmUUZjaWFEdkk2VjZoX28iLCJhdXRob3Jpc2F0aW9uX2lkIjoiMGJ6QlF6WWZRRmNpYUR2STZWNmhfbyIsImV4cCI6MTU5OTY1NDExNCwibG9naW4iOiJhbnRvbi5icnVlY2tuZXIiLCJpYXQiOjE1OTk2NTM4MTQsImp0aSI6InNUMGppVGd2VERvb2NCVnM1YTdMYzAifQ.vejR6GNnsONmxGKj_bPV_Hun0n2iUVmQt6WZ6SAZq5g"
+      "Authorization": {
+        "equalTo": "Bearer eyJraWQiOiJpc3FyWW04QlNpY2w2ZXhRcEhHREpBIiwiYWxnIjoiSFMyNTYifQ.eyJzdWIiOiJkMGF1dUlxN1J6QXR6dkNEVDh6bV9vIiwidG9rZW5fdXNhZ2UiOiJMT0dJTiIsInJvbGUiOiJDVVNUT01FUiIsInNjYV9pZCI6IjBiekJRellmUUZjaWFEdkk2VjZoX28iLCJhdXRob3Jpc2F0aW9uX2lkIjoiMGJ6QlF6WWZRRmNpYUR2STZWNmhfbyIsImV4cCI6MTU5OTY1NDExNCwibG9naW4iOiJhbnRvbi5icnVlY2tuZXIiLCJpYXQiOjE1OTk2NTM4MTQsImp0aSI6InNUMGppVGd2VERvb2NCVnM1YTdMYzAifQ.vejR6GNnsONmxGKj_bPV_Hun0n2iUVmQt6WZ6SAZq5g"
       },
-      "TPP-Nok-Redirect-URI" : {
-        "equalTo" : "http://localhost:4200/embedded-server/v1/consent/4833fed6-7455-4ab6-83a0-41a287d100d4/fromAspsp/STUB_STATE/nok?redirectCode=bf3d2c9a-d559-4d19-9aa9-809e6592bf02"
+      "TPP-Nok-Redirect-URI": {
+        "matches": "http://localhost:\\d+/v1/consent/.+/fromAspsp/STUB_STATE/nok\\?redirectCode=.+"
       },
-      "PSU-IP-Address" : {
-        "equalTo" : "127.0.0.1"
+      "PSU-IP-Address": {
+        "matches": "\\b((25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)(\\.|$)){4}\\b"
       },
-      "TPP-Redirect-URI" : {
-        "equalTo" : "http://localhost:4200/embedded-server/v1/consent/4833fed6-7455-4ab6-83a0-41a287d100d4/fromAspsp/STUB_STATE/ok?redirectCode=bf3d2c9a-d559-4d19-9aa9-809e6592bf02"
+      "TPP-Redirect-URI": {
+        "matches": "http://localhost:\\d+/v1/consent/.+/fromAspsp/STUB_STATE/ok\\?redirectCode=.+"
       },
-      "Content-Type" : {
-        "equalTo" : "application/json; charset=UTF-8"
+      "Content-Type": {
+        "equalTo": "application/json; charset=UTF-8"
       }
     },
-    "bodyPatterns" : [ {
-      "equalToJson" : "{\"debtorAccount\":{\"iban\":\"DE80760700240271232400\"},\"instructedAmount\":{\"currency\":\"EUR\",\"amount\":\"12.34\"},\"creditorAccount\":{\"iban\":\"AL90208110080000001039531801\"},\"creditorName\":\"test user\",\"remittanceInformationUnstructured\":\"test transfer\"}",
-      "ignoreArrayOrder" : true,
-      "ignoreExtraElements" : true
-    } ]
+    "bodyPatterns": [
+      {
+        "equalToJson": "{\"creditorAccount\":{\"currency\":\"EUR\",\"iban\":\"DE80760700240271232400\"},\"creditorAddress\":{\"buildingNumber\":\"56\",\"townName\":\"Nürnberg\",\"country\":\"DE\",\"postCode\":\"90543\",\"streetName\":\"WBG Straße\"},\"creditorAgent\":\"AAAADEBBXXX\",\"creditorName\":\"WBG\",\"debtorAccount\":{\"currency\":\"EUR\",\"iban\":\"DE80760700240271232400\"},\"endToEndIdentification\":\"WBG-123456789\",\"instructedAmount\":{\"currency\":\"EUR\",\"amount\":\"1.03\"},\"remittanceInformationUnstructured\":\"Ref. Number WBG-1222\"}",
+        "ignoreArrayOrder": true,
+        "ignoreExtraElements": true
+      }
+    ]
   },
-  "response" : {
-    "status" : 201,
-    "bodyFileName" : "body-v1-58960.json",
-    "headers" : {
-      "Vary" : [ "Origin", "Access-Control-Request-Method", "Access-Control-Request-Headers" ],
-      "Aspsp-Sca-Approach" : "REDIRECT",
-      "Location" : "http://localhost:30014/v1/payments/sepa-credit-transfers/az89REkp5XULNSY5Oqk24cOV8_tPScF8huTLM73HyYruMdXus0_fi2h52JOC0cDhcgftJbETkzvNvu5mZQqWcA==_=_psGLvQpt9Q",
-      "X-Request-Id" : "12b34483-242a-428b-8295-2f4805bb0a30",
-      "Content-Type" : "application/json",
-      "Date" : "Wed, 09 Sep 2020 12:16:55 GMT",
-      "Keep-Alive" : "timeout=60"
+  "response": {
+    "status": 201,
+    "bodyFileName": "body-v1-58960.json",
+    "headers": {
+      "Vary": [
+        "Origin",
+        "Access-Control-Request-Method",
+        "Access-Control-Request-Headers"
+      ],
+      "Aspsp-Sca-Approach": "REDIRECT",
+      "Location": "http://localhost:30014/v1/payments/sepa-credit-transfers/az89REkp5XULNSY5Oqk24cOV8_tPScF8huTLM73HyYruMdXus0_fi2h52JOC0cDhcgftJbETkzvNvu5mZQqWcA==_=_psGLvQpt9Q",
+      "X-Request-Id": "12b34483-242a-428b-8295-2f4805bb0a30",
+      "Content-Type": "application/json",
+      "Date": "Wed, 09 Sep 2020 12:16:55 GMT",
+      "Keep-Alive": "timeout=60"
     }
   },
-  "uuid" : "b14827b1-ffe5-3a24-8711-2516a0faa626"
+  "uuid": "b14827b1-ffe5-3a24-8711-2516a0faa626"
 }

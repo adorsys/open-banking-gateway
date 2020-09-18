@@ -28,12 +28,11 @@ public class WiremockPaymentRequest<SELF extends WiremockPaymentRequest<SELF>> e
     private WireMockServer wireMock;
 
     public SELF open_banking_redirect_from_aspsp_ok_webhook_called_for_api_test() {
-        LoggedRequest paymentInitiateRequest = await().atMost(Durations.TEN_SECONDS)
-                                                       .until(() ->
-                                                                      wireMock.findAll(postRequestedFor(urlMatching("/v1/payments/sepa-credit-transfers.*"))), it -> !it.isEmpty()
-                                                       ).get(0);
+        return open_banking_redirect_from_aspsp_ok_webhook_called_for_api_test(0);
+    }
 
-        this.redirectOkUri = paymentInitiateRequest.getHeader(TPP_REDIRECT_URI);
+    public SELF open_banking_redirect_from_aspsp_ok_webhook_called_for_api_test(int paymentCreationRequestIndex) {
+        extractRedirectOkUriSentByOpbaFromWiremock(paymentCreationRequestIndex);
         ExtractableResponse<Response> response = withSignatureHeaders(RestAssured
                         .given()
                               .cookie(AUTHORIZATION_SESSION_KEY, authSessionCookie))
@@ -49,12 +48,7 @@ public class WiremockPaymentRequest<SELF extends WiremockPaymentRequest<SELF>> e
     }
 
     public SELF open_banking_redirect_from_aspsp_ok_webhook_called_for_api_test_without_cookie_unauthorized() {
-        LoggedRequest paymentInitiateRequest = await().atMost(Durations.TEN_SECONDS)
-                                                       .until(() ->
-                                                                      wireMock.findAll(postRequestedFor(urlMatching("/v1/payments/sepa-credit-transfers.*"))), it -> !it.isEmpty()
-                                                       ).get(0);
-
-        this.redirectOkUri = paymentInitiateRequest.getHeader(TPP_REDIRECT_URI);
+        extractRedirectOkUriSentByOpbaFromWiremock();
         withSignatureHeaders(RestAssured
                                         .given())
                                         .when()
@@ -64,6 +58,33 @@ public class WiremockPaymentRequest<SELF extends WiremockPaymentRequest<SELF>> e
                                                 .extract();
 
         return self();
+    }
+
+    public SELF open_banking_redirect_from_aspsp_with_static_oauth2_code_to_exchange_to_token(String code) {
+        extractRedirectOkUriSentByOpbaFromWiremock();
+        ExtractableResponse<Response> response = RestAssured
+                .given()
+                    .cookie(AUTHORIZATION_SESSION_KEY, authSessionCookie)
+                .when()
+                    .get(redirectOkUri + "&code=" + code)
+                .then()
+                    .statusCode(HttpStatus.SEE_OTHER.value())
+                .extract();
+
+        updateRedirectCode(response);
+        return self();
+    }
+
+    private void extractRedirectOkUriSentByOpbaFromWiremock() {
+        extractRedirectOkUriSentByOpbaFromWiremock(0);
+    }
+
+    private void extractRedirectOkUriSentByOpbaFromWiremock(int paymentCreationRequestIndex) {
+        LoggedRequest paymentInitiateRequest = await().atMost(Durations.TEN_SECONDS)
+                .until(() ->
+                        wireMock.findAll(postRequestedFor(urlMatching("/v1/payments/sepa-credit-transfers.*"))), it -> !it.isEmpty()
+                ).get(paymentCreationRequestIndex);
+        this.redirectOkUri = paymentInitiateRequest.getHeader(TPP_REDIRECT_URI);
     }
 
 }

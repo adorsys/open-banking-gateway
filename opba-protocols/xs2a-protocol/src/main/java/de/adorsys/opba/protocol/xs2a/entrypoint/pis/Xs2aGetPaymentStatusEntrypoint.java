@@ -37,6 +37,8 @@ import static de.adorsys.opba.protocol.xs2a.constant.GlobalConst.XS2A_MAPPERS_PA
 @Service("xs2aGetPaymentStatusState")
 @RequiredArgsConstructor
 public class Xs2aGetPaymentStatusEntrypoint implements GetPaymentStatusState {
+
+    private final Xs2aPaymentContextLoader contextLoader;
     private final PaymentInitiationService pis;
     private final PaymentStatusToBodyMapper mapper;
     private final Xs2aGetPaymentStatusEntrypoint.Extractor extractor;
@@ -48,7 +50,7 @@ public class Xs2aGetPaymentStatusEntrypoint implements GetPaymentStatusState {
     public CompletableFuture<Result<PaymentStatusBody>> execute(ServiceContext<PaymentStatusRequest> context) {
         ProtocolFacingPayment payment = context.getRequestScoped().paymentAccess().getFirstByCurrentSession();
 
-        ValidatedPathHeaders<PaymentStateParameters, PaymentStateHeaders> params = extractor.forExecution(prepareContext(context));
+        ValidatedPathHeaders<PaymentStateParameters, PaymentStateHeaders> params = extractor.forExecution(prepareContext(context, payment));
 
         Response<PaymentInitiationStatus> paymentStatus = pis.getSinglePaymentInitiationStatus(
                 context.getRequest().getPaymentProduct().toString(),
@@ -70,8 +72,10 @@ public class Xs2aGetPaymentStatusEntrypoint implements GetPaymentStatusState {
     }
 
 
-    protected Xs2aPisContext prepareContext(ServiceContext<PaymentStatusRequest> serviceContext) {
+    protected Xs2aPisContext prepareContext(ServiceContext<PaymentStatusRequest> serviceContext, ProtocolFacingPayment payment) {
         Xs2aPisContext context = request2ContextMapper.map(serviceContext.getRequest());
+        Xs2aPisContext paymentInitiationContext = contextLoader.loadContext(payment);
+        context.setOauth2Token(paymentInitiationContext.getOauth2Token());
         context.setAction(ProtocolAction.GET_PAYMENT_STATUS);
         extender.extend(context, serviceContext);
         return context;

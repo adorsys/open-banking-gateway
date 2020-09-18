@@ -167,7 +167,7 @@ public class PaymentRequestCommon<SELF extends PaymentRequestCommon<SELF>> exten
                      .cookie(AUTHORIZATION_SESSION_KEY, authSessionCookie)
                      .queryParam(REDIRECT_CODE_QUERY, redirectCode)
                      .contentType(APPLICATION_JSON_VALUE)
-                     .body(readResource("restrecord/tpp-ui-input/params/anton-brueckner-account-all-accounts-consent.json"))
+                     .body(readResource("restrecord/tpp-ui-input/params/anton-brueckner-payments-authorize.json"))
                  .when()
                     .post(AUTHORIZE_PAYMENT_ENDPOINT, serviceSessionId)
                  .then()

@@ -1,27 +1,34 @@
 {
-  "id" : "83e9afa4-4ae5-388c-a02e-08692260d8de",
-  "request" : {
-    "url" : "/v1/payments/sepa-credit-transfers/az89REkp5XULNSY5Oqk24cOV8_tPScF8huTLM73HyYruMdXus0_fi2h52JOC0cDhcgftJbETkzvNvu5mZQqWcA==_=_psGLvQpt9Q",
-    "method" : "GET",
-    "headers" : {
-      "PSU-ID" : {
-        "equalTo" : ""
+  "id": "83e9afa4-4ae5-388c-a02e-08692260d8de",
+  "request": {
+    "url": "/v1/payments/sepa-credit-transfers/az89REkp5XULNSY5Oqk24cOV8_tPScF8huTLM73HyYruMdXus0_fi2h52JOC0cDhcgftJbETkzvNvu5mZQqWcA==_=_psGLvQpt9Q/status",
+    "method": "GET",
+    "headers": {
+      "PSU-ID": {
+        "equalTo": ""
       },
-      "X-Request-ID" : {
-        "equalTo" : "ef0ae31a-b6d3-4d16-8bd3-7f4a3db4b9ee"
+      "X-Request-ID": {
+        "matches": ".+"
+      },
+      "Authorization": {
+        "equalTo": "Bearer eyJraWQiOiJpc3FyWW04QlNpY2w2ZXhRcEhHREpBIiwiYWxnIjoiSFMyNTYifQ.eyJzdWIiOiJkMGF1dUlxN1J6QXR6dkNEVDh6bV9vIiwidG9rZW5fdXNhZ2UiOiJMT0dJTiIsInJvbGUiOiJDVVNUT01FUiIsInNjYV9pZCI6IjBiekJRellmUUZjaWFEdkk2VjZoX28iLCJhdXRob3Jpc2F0aW9uX2lkIjoiMGJ6QlF6WWZRRmNpYUR2STZWNmhfbyIsImV4cCI6MTU5OTY1NDExNCwibG9naW4iOiJhbnRvbi5icnVlY2tuZXIiLCJpYXQiOjE1OTk2NTM4MTQsImp0aSI6InNUMGppVGd2VERvb2NCVnM1YTdMYzAifQ.vejR6GNnsONmxGKj_bPV_Hun0n2iUVmQt6WZ6SAZq5g"
       }
     }
   },
-  "response" : {
-    "status" : 200,
-    "bodyFileName" : "body-v1-53661.json",
-    "headers" : {
-      "Vary" : [ "Origin", "Access-Control-Request-Method", "Access-Control-Request-Headers" ],
-      "X-Request-Id" : "ef0ae31a-b6d3-4d16-8bd3-7f4a3db4b9ee",
-      "Content-Type" : "application/json;charset=UTF-8",
-      "Date" : "Wed, 09 Sep 2020 12:17:14 GMT",
-      "Keep-Alive" : "timeout=60"
+  "response": {
+    "status": 200,
+    "bodyFileName": "body-v1-53661.json",
+    "headers": {
+      "Vary": [
+        "Origin",
+        "Access-Control-Request-Method",
+        "Access-Control-Request-Headers"
+      ],
+      "X-Request-Id": "ef0ae31a-b6d3-4d16-8bd3-7f4a3db4b9ee",
+      "Content-Type": "application/json;charset=UTF-8",
+      "Date": "Wed, 09 Sep 2020 12:17:14 GMT",
+      "Keep-Alive": "timeout=60"
     }
   },
-  "uuid" : "83e9afa4-4ae5-388c-a02e-08692260d8de"
+  "uuid": "83e9afa4-4ae5-388c-a02e-08692260d8de"
 }
