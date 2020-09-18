@@ -22,7 +22,6 @@ import de.adorsys.opba.protocol.xs2a.tests.e2e.stages.CommonGivenStages;
 import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
 import org.assertj.core.api.Assertions;
-import org.junit.jupiter.api.io.TempDir;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.util.FileSystemUtils;
 
