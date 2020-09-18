@@ -73,7 +73,7 @@ public class AccountService {
 
 
     private ResponseEntity readOpbaResponse(String bankID, SessionEntity sessionEntity, String redirectCode,
-                                            LoARetrievalInformation loARetrievalInformation, boolean withBalance, Boolean useOpbCache) {
+                                            LoARetrievalInformation loARetrievalInformation, boolean withBalance, Boolean online) {
         UUID xRequestId = UUID.fromString(restRequestContext.getRequestId());
         Optional<ConsentEntity> optionalConsent = Optional.empty();
         if (loARetrievalInformation.equals(LoARetrievalInformation.FROM_TPP_WITH_AVAILABLE_CONSENT)) {
@@ -86,7 +86,7 @@ public class AccountService {
                 optionalConsent.get().getUserEntity().getLoginUserName(),
                 optionalConsent.get().getBankId(),
                 optionalConsent.get().getCreationTime());
-            return consentAvailable(bankID, sessionEntity, redirectCode, xRequestId, optionalConsent, withBalance, useOpbCache);
+            return consentAvailable(bankID, sessionEntity, redirectCode, xRequestId, optionalConsent, withBalance, online);
         }
 
         BankProfileResponse bankProfile = searchService.getBankProfileById(bankID).getBody();
@@ -96,7 +96,7 @@ public class AccountService {
             return consentNotYetAvailable(bankID, sessionEntity, redirectCode, xRequestId, optionalConsent);
         }
 
-        return consentAvailable(bankID, sessionEntity, redirectCode, xRequestId, optionalConsent, withBalance, useOpbCache);
+        return consentAvailable(bankID, sessionEntity, redirectCode, xRequestId, optionalConsent, withBalance, online);
     }
 
     private ResponseEntity consentAvailable(String bankID, SessionEntity sessionEntity, String redirectCode,

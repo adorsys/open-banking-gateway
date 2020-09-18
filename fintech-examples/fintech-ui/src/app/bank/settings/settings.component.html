@@ -18,6 +18,15 @@
           <div class="form-check">
             <input
               type="checkbox"
+              value="{{ settingsForm.get('onlineLoa') }}"
+              formControlName="onlineLoa"
+              id="onlineLoa"
+            />
+            <label for="onlineLoa">Don't use protocol cache</label>
+          </div>
+          <div class="form-check">
+            <input
+              type="checkbox"
               value="{{ settingsForm.get('withBalance') }}"
               formControlName="withBalance"
               id="balance"
@@ -35,6 +44,15 @@
           <div class="form-check">
             <input type="radio" value="{{ lotFromTppWithNewConsent }}" formControlName="lot" id="lot2" />
             <label for="lot2">Discard propably existing consent ONE TIME ONLY.</label>
+          </div>
+          <div class="form-check">
+            <input
+              type="checkbox"
+              value="{{ settingsForm.get('onlineLot') }}"
+              formControlName="onlineLot"
+              id="onlineLot"
+            />
+            <label for="onlineLot">Don't use protocol cache</label>
           </div>
         </div>
 

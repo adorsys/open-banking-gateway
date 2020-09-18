@@ -158,6 +158,8 @@ export class StorageService {
         loa: LoARetrievalInformation.FROM_TPP_WITH_AVAILABLE_CONSENT,
         lot: LoTRetrievalInformation.FROM_TPP_WITH_AVAILABLE_CONSENT,
         withBalance: true,
+        onlineLoa: true,
+        onlineLot: true,
         paymentRequiresAuthentication: false
       };
     }
