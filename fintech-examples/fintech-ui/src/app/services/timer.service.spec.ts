@@ -6,12 +6,12 @@ import { TimerService } from './timer.service';
 describe('TimerService', () => {
   beforeEach(() =>
     TestBed.configureTestingModule({
-      imports: [HttpClientTestingModule, RouterTestingModule]
+      imports: [HttpClientTestingModule, RouterTestingModule],
     })
   );
 
   it('should be created', () => {
-    const service: TimerService = TestBed.get(TimerService);
+    const service: TimerService = TestBed.inject(TimerService);
     expect(service).toBeTruthy();
   });
 });
