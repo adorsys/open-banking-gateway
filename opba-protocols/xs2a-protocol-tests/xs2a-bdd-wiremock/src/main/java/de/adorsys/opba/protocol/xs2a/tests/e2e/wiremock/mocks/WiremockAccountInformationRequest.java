@@ -42,11 +42,11 @@ public class WiremockAccountInformationRequest<SELF extends WiremockAccountInfor
     private WireMockServer wireMock;
 
     public SELF open_banking_redirect_from_aspsp_ok_webhook_called_for_api_test() {
-        LoggedRequest consentInitiateRequest = await().atMost(Durations.TEN_SECONDS)
-                .until(() ->
-                        wireMock.findAll(postRequestedFor(urlMatching("/v1/consents.*"))), it -> !it.isEmpty()
-                ).get(0);
-        this.redirectOkUri = consentInitiateRequest.getHeader(TPP_REDIRECT_URI);
+        return open_banking_redirect_from_aspsp_ok_webhook_called_for_api_test(0);
+    }
+
+    public SELF open_banking_redirect_from_aspsp_ok_webhook_called_for_api_test(int consentCreationRequestIndex) {
+        extractRedirectOkUriSentByOpbaFromWiremock(consentCreationRequestIndex);
         ExtractableResponse<Response> response = withSignatureHeaders(RestAssured
                 .given()
                     .cookie(AUTHORIZATION_SESSION_KEY, authSessionCookie))
@@ -58,6 +58,22 @@ public class WiremockAccountInformationRequest<SELF extends WiremockAccountInfor
 
         assertThat(response.header(LOCATION)).contains("ais").contains("consent-result");
 
+        return self();
+    }
+
+    public SELF open_banking_redirect_from_aspsp_with_static_oauth2_code_to_exchange_to_token(String code) {
+        extractRedirectOkUriSentByOpbaFromWiremock();
+        ExtractableResponse<Response> response = withSignatureHeaders(RestAssured
+                .given()
+                    .cookie(AUTHORIZATION_SESSION_KEY, authSessionCookie))
+                .when()
+                    .get(redirectOkUri + "&code=" + code)
+                .then()
+                    .statusCode(HttpStatus.SEE_OTHER.value())
+                .extract();
+
+        assertThat(response.header(LOCATION)).contains("ais").contains("to-aspsp-redirection");
+        updateRedirectCode(response);
         return self();
     }
 
@@ -216,11 +232,7 @@ public class WiremockAccountInformationRequest<SELF extends WiremockAccountInfor
     }
 
     public SELF open_banking_redirect_from_aspsp_ok_webhook_called_for_api_test_without_cookie_unauthorized() {
-        LoggedRequest consentInitiateRequest = await().atMost(Durations.TEN_SECONDS)
-                                                       .until(() ->
-                                                                      wireMock.findAll(postRequestedFor(urlMatching("/v1/consents.*"))), it -> !it.isEmpty()
-                                                       ).get(0);
-        this.redirectOkUri = consentInitiateRequest.getHeader(TPP_REDIRECT_URI);
+        extractRedirectOkUriSentByOpbaFromWiremock();
 
         withSignatureHeaders(RestAssured.given())
                  .when()
@@ -231,4 +243,17 @@ public class WiremockAccountInformationRequest<SELF extends WiremockAccountInfor
 
         return self();
     }
+
+    private void extractRedirectOkUriSentByOpbaFromWiremock() {
+        extractRedirectOkUriSentByOpbaFromWiremock(0);
+    }
+
+    private void extractRedirectOkUriSentByOpbaFromWiremock(int consentCreationRequestIndex) {
+        LoggedRequest consentInitiateRequest = await().atMost(Durations.TEN_SECONDS)
+                .until(() ->
+                        wireMock.findAll(postRequestedFor(urlMatching("/v1/consents.*"))), it -> !it.isEmpty()
+                ).get(consentCreationRequestIndex);
+        this.redirectOkUri = consentInitiateRequest.getHeader(TPP_REDIRECT_URI);
+    }
+
 }
