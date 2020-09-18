@@ -20,7 +20,7 @@ describe('EnterPinComponent', () => {
   beforeEach(async(() => {
     TestBed.configureTestingModule({
       declarations: [EnterPinComponent],
-      imports: [ReactiveFormsModule, HttpClientTestingModule],
+      imports: [ReactiveFormsModule, HttpClientTestingModule]
     }).compileComponents();
   }));
 

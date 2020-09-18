@@ -21,7 +21,7 @@ export class NavbarComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    this.timerService.timerStatusChanged$.subscribe(timer => {
+    this.timerService.timerStatusChanged$.subscribe((timer) => {
       if (timer.started) {
         this.timer = { ...timer };
       }

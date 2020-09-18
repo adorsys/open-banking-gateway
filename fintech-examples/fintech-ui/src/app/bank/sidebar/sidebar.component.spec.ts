@@ -27,12 +27,12 @@ describe('SidebarComponent', () => {
               paramMap: {
                 get(bankId: string): string {
                   return '1234';
-                },
-              },
-            },
-          },
-        },
-      ],
+                }
+              }
+            }
+          }
+        }
+      ]
     }).compileComponents();
   }));
 
@@ -60,7 +60,7 @@ describe('SidebarComponent', () => {
       bankId: '1234',
       bankName: 'Deutsche Bank',
       bic: '1234',
-      services: [],
+      services: []
     } as BankProfile;
 
     spyOn(bankProfileService, 'getBankProfile').withArgs(bankId).and.returnValue(of(bankProfile));

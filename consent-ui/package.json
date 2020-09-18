@@ -15,7 +15,8 @@
     "test": "ng test",
     "lint": "ng lint",
     "e2e": "ng e2e",
-    "format:fix": "pretty-quick --staged 'consent-ui/**/*'"
+    "format:fix": "pretty-quick --staged --pattern 'consent-ui/**/*'",
+    "format:fix-from-root:pattern": "pretty-quick --pattern 'consent-ui/**/*'"
   },
   "private": true,
   "dependencies": {

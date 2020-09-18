@@ -23,7 +23,7 @@ export class RedirectPageComponent implements OnInit {
   ) {}
 
   ngOnInit() {
-    this.route.paramMap.subscribe(p => {
+    this.route.paramMap.subscribe((p) => {
       this.redirectStruct = JSON.parse(p.get(HeaderConfig.HEADER_FIELD_LOCATION));
       this.cardModal = {
         title: 'Redirection',

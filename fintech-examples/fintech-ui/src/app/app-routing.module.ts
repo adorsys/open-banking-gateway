@@ -31,12 +31,12 @@ const routes: Routes = [
   {
     path: RoutingPath.BANK,
     canActivate: [AuthGuard],
-    loadChildren: () => import('./bank/bank.module').then(m => m.BankModule)
+    loadChildren: () => import('./bank/bank.module').then((m) => m.BankModule)
   },
   {
     path: RoutingPath.BANK_SEARCH,
     canActivate: [AuthGuard],
-    loadChildren: () => import('./bank-search/bank-search.module').then(m => m.BankSearchModule)
+    loadChildren: () => import('./bank-search/bank-search.module').then((m) => m.BankSearchModule)
   },
   {
     path: RoutingPath.REDIRECT_AFTER_CONSENT,

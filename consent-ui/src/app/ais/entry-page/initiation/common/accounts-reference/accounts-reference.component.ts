@@ -18,7 +18,7 @@ export class AccountsReferenceComponent implements OnInit, OnDestroy {
   constructor() {}
 
   ngOnInit() {
-    this.accounts.forEach(it => {
+    this.accounts.forEach((it) => {
       if (!this.targetForm.contains(it.id)) {
         const control = this.addControlToForm(it);
         control.setValue(it.iban);
@@ -45,7 +45,7 @@ export class AccountsReferenceComponent implements OnInit, OnDestroy {
   private addControlToForm(account: AccountReference): FormControl {
     const formControl = new FormControl('', [ValidatorService.validateIban, Validators.required]);
     this.targetForm.addControl(account.id, formControl);
-    this.subscriptions[account.id] = formControl.valueChanges.subscribe(it => (account.iban = it));
+    this.subscriptions[account.id] = formControl.valueChanges.subscribe((it) => (account.iban = it));
     return formControl;
   }
 }

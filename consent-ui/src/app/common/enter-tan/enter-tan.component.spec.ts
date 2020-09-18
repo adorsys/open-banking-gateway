@@ -25,7 +25,7 @@ describe('EnterTanComponent', () => {
     TestBed.configureTestingModule({
       declarations: [EnterTanComponent],
       schemas: [NO_ERRORS_SCHEMA],
-      imports: [ReactiveFormsModule, HttpClientTestingModule],
+      imports: [ReactiveFormsModule, HttpClientTestingModule]
     }).compileComponents();
   }));
 

@@ -27,10 +27,10 @@ describe('LoginComponent', () => {
         BankSearchModule,
         ReactiveFormsModule,
         HttpClientModule,
-        RouterTestingModule.withRoutes([{ path: RoutingPath.BANK_SEARCH, component: BankSearchComponent }]),
+        RouterTestingModule.withRoutes([{ path: RoutingPath.BANK_SEARCH, component: BankSearchComponent }])
       ],
       providers: [AuthService, DocumentCookieService],
-      declarations: [LoginComponent],
+      declarations: [LoginComponent]
     }).compileComponents();
   }));
 

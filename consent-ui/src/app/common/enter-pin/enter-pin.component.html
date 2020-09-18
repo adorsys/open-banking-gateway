@@ -21,15 +21,11 @@
           >
             Pin is required
           </div>
-          <div *ngIf="wrongPassword" class="invalid-feedback d-block">
-            Password is incorrect
-          </div>
+          <div *ngIf="wrongPassword" class="invalid-feedback d-block">Password is incorrect</div>
         </div>
       </section>
 
-      <button id="do_submit" type="submit" class="btn btn-primary w-100" [disabled]="pinForm.invalid">
-        Confirm
-      </button>
+      <button id="do_submit" type="submit" class="btn btn-primary w-100" [disabled]="pinForm.invalid">Confirm</button>
     </div>
   </div>
 </form>

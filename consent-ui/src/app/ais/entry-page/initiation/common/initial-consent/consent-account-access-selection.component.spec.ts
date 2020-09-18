@@ -32,8 +32,8 @@ describe('ConsentAccountAccessSelectionComponent', () => {
           provide: ActivatedRoute,
           useValue: {
             parent: { parent: { params: of({ authId: StubUtilTests.AUTH_ID }) } },
-            snapshot: {},
-          },
+            snapshot: {}
+          }
         },
         {
           provide: SessionService,
@@ -41,11 +41,11 @@ describe('ConsentAccountAccessSelectionComponent', () => {
             getConsentObject: () => new AisConsentToGrant(),
             getConsentState: () => new AuthConsentState([]),
             getFintechName: (): string => StubUtil.FINTECH_NAME,
-            getBankName: (): string => StubUtil.ASPSP_NAME,
-          },
-        },
+            getBankName: (): string => StubUtil.ASPSP_NAME
+          }
+        }
       ],
-      schemas: [CUSTOM_ELEMENTS_SCHEMA],
+      schemas: [CUSTOM_ELEMENTS_SCHEMA]
     }).compileComponents();
   }));
 
@@ -99,7 +99,7 @@ describe('ConsentAccountAccessSelectionComponent', () => {
     const handleMethodSelectedEventSpy = spyOn(component, 'handleMethodSelectedEvent');
     const access: Access = {
       id: AccountAccessLevel.ALL_ACCOUNTS,
-      message: 'yes we can',
+      message: 'yes we can'
     };
     component.handleMethodSelectedEvent(access);
     expect(handleMethodSelectedEventSpy).toHaveBeenCalled();

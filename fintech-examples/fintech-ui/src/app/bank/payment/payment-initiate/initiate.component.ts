@@ -65,7 +65,7 @@ export class InitiateComponent implements OnInit {
         this.storageService.getSettings().paymentRequiresAuthentication,
         'response'
       )
-      .subscribe(response => {
+      .subscribe((response) => {
         if (response.status === 202) {
           this.setRedirectInfo(response);
           const confirmData = this.setConfirmDataAndGet(response, paymentRequest);

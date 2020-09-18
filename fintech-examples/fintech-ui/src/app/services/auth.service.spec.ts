@@ -26,9 +26,9 @@ describe('AuthService', () => {
     TestBed.configureTestingModule({
       imports: [
         HttpClientTestingModule,
-        RouterTestingModule.withRoutes([{ path: RoutingPath.LOGIN, component: LoginComponent }]),
+        RouterTestingModule.withRoutes([{ path: RoutingPath.LOGIN, component: LoginComponent }])
       ],
-      providers: [AuthService, DocumentCookieService],
+      providers: [AuthService, DocumentCookieService]
     });
 
     cookieService = TestBed.inject(DocumentCookieService);

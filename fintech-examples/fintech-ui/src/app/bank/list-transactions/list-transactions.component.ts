@@ -36,7 +36,7 @@ export class ListTransactionsComponent implements OnInit {
   private loadTransactions(): void {
     this.aisService
       .getTransactions(this.bankId, this.accountId, this.storageService.getSettings().lot)
-      .subscribe(response => {
+      .subscribe((response) => {
         switch (response.status) {
           case 202:
             console.log('list tx got REDIRECT');

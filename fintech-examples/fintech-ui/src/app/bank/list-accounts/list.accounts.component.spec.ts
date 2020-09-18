@@ -30,10 +30,10 @@ describe('ListAccountsComponent', () => {
         {
           provide: ActivatedRoute,
           useValue: {
-            snapshot: { params: { bankid: '1234' } },
-          },
-        },
-      ],
+            snapshot: { params: { bankid: '1234' } }
+          }
+        }
+      ]
     }).compileComponents();
   }));
 

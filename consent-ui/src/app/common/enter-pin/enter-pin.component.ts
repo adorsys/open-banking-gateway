@@ -43,7 +43,7 @@ export class EnterPinComponent implements OnInit {
         { scaAuthenticationData: { PSU_PASSWORD: this.pinForm.get('pin').value } },
         'response'
       )
-      .subscribe(res => {
+      .subscribe((res) => {
         this.sessionService.setRedirectCode(this.authorizationSessionId, res.headers.get(ApiHeaders.REDIRECT_CODE));
         this.enteredPin.emit(res);
       });

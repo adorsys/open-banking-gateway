@@ -30,12 +30,12 @@ describe('BankComponent', () => {
               paramMap: {
                 get(bankId: string): string {
                   return '1234';
-                },
-              },
-            },
-          },
-        },
-      ],
+                }
+              }
+            }
+          }
+        }
+      ]
     }).compileComponents();
   }));
 

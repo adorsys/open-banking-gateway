@@ -11,7 +11,6 @@ import { CustomizeService } from '../../services/customize.service';
   styleUrls: ['../auth.component.scss']
 })
 export class AnonymousComponent implements OnInit {
-
   redirectCode: string;
   private route: ActivatedRouteSnapshot;
   private authId: string;
@@ -34,12 +33,12 @@ export class AnonymousComponent implements OnInit {
       this.redirectCode = this.sessionService.getRedirectCode(this.authId);
     }
 
-    this.doLoginAsAnonymous()
+    this.doLoginAsAnonymous();
   }
 
   private doLoginAsAnonymous() {
     localStorage.setItem(ApiHeaders.COOKIE_TTL, '0');
-    this.authService.userLoginForAnonymousPayment(this.authId, this.redirectCode).subscribe(res => {
+    this.authService.userLoginForAnonymousPayment(this.authId, this.redirectCode).subscribe((res) => {
       this.sessionService.setTTL(this.authId, res.headers.get(ApiHeaders.COOKIE_TTL));
       window.location.href = res.headers.get(ApiHeaders.LOCATION);
     });

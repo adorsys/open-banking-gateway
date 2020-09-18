@@ -11,7 +11,7 @@ import { RedirectTupelForMap } from '../bank/redirect-page/redirect-struct';
 import { RoutingPath } from '../models/routing-path.model';
 
 @Injectable({
-  providedIn: 'root',
+  providedIn: 'root'
 })
 export class AuthService {
   constructor(

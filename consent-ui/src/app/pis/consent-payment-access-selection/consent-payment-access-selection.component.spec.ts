@@ -29,8 +29,8 @@ describe('ConsentPaymentAccessSelectionComponent', () => {
           provide: ActivatedRoute,
           useValue: {
             parent: { parent: { params: of({ authId: StubUtilTests.AUTH_ID }) } },
-            snapshot: {},
-          },
+            snapshot: {}
+          }
         },
         {
           provide: SessionService,
@@ -40,11 +40,11 @@ describe('ConsentPaymentAccessSelectionComponent', () => {
             hasGeneralViolation: () => false,
             getConsentState: () => new AuthConsentState([]),
             getFintechName: (): string => StubUtil.FINTECH_NAME,
-            getBankName: (): string => StubUtil.ASPSP_NAME,
-          },
-        },
+            getBankName: (): string => StubUtil.ASPSP_NAME
+          }
+        }
       ],
-      schemas: [CUSTOM_ELEMENTS_SCHEMA],
+      schemas: [CUSTOM_ELEMENTS_SCHEMA]
     }).compileComponents();
   }));
 

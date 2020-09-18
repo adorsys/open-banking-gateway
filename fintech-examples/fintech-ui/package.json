@@ -13,8 +13,8 @@
     "test": "ng test",
     "lint": "ng lint",
     "e2e": "ng e2e",
-    "format:fix": "pretty-quick --staged 'fintech-examples/fintech-ui/**/*'",
-    "format:fix:precommit": "pretty-quick --staged --pattern 'fintech-examples/fintech-ui/**/*'"
+    "format:fix": "pretty-quick --staged --pattern 'fintech-examples/fintech-ui/**/*'",
+    "format:fix-from-root:pattern": "pretty-quick --pattern 'fintech-examples/fintech-ui/**/*'"
   },
   "private": true,
   "dependencies": {

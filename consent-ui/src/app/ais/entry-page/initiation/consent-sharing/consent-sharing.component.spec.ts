@@ -23,14 +23,14 @@ describe('ConsentSharingComponent', () => {
           provide: ActivatedRoute,
           useValue: {
             parent: {
-              snapshot: { params: { authId: StubUtilTests.AUTH_ID } },
+              snapshot: { params: { authId: StubUtilTests.AUTH_ID } }
             },
             snapshot: {
-              queryParams: {},
-            },
-          },
-        },
-      ],
+              queryParams: {}
+            }
+          }
+        }
+      ]
     }).compileComponents();
   }));
 

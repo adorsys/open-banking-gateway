@@ -5,8 +5,7 @@ import { InfoService } from './info/info.service';
 
 @Injectable()
 export class GlobalErrorHandler implements ErrorHandler {
-  constructor(private zone: NgZone, private injector: Injector) {
-  }
+  constructor(private zone: NgZone, private injector: Injector) {}
 
   handleError(error) {
     console.error(error);
@@ -14,8 +13,8 @@ export class GlobalErrorHandler implements ErrorHandler {
     const errorService = this.injector.get(ErrorService);
     const infoService = this.injector.get(InfoService);
 
-    let message = 'Something went wrong';               // default ErrorMessage
-    const pageUrl = error.url;                              // get actual error pageUrl
+    let message = 'Something went wrong'; // default ErrorMessage
+    const pageUrl = error.url; // get actual error pageUrl
 
     if (error.status === 400) {
       if (pageUrl.includes('register')) {

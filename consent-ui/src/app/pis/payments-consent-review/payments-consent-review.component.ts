@@ -36,7 +36,7 @@ export class PaymentsConsentReviewComponent implements OnInit {
   ) {}
 
   ngOnInit() {
-    this.activatedRoute.parent.parent.params.subscribe(res => {
+    this.activatedRoute.parent.parent.params.subscribe((res) => {
       this.authorizationId = res.authId;
       this.aspspName = this.sessionService.getBankName(res.authId);
       this.finTechName = this.sessionService.getFintechName(res.authId);
@@ -62,7 +62,7 @@ export class PaymentsConsentReviewComponent implements OnInit {
         body,
         'response'
       )
-      .subscribe(res => {
+      .subscribe((res) => {
         this.sessionService.setRedirectCode(this.authorizationId, res.headers.get(ApiHeaders.REDIRECT_CODE));
         window.location.href = res.headers.get(ApiHeaders.LOCATION);
       });

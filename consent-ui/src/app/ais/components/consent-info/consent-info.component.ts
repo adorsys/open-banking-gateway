@@ -23,14 +23,14 @@ export class ConsentInfoComponent implements OnInit {
   constructor(private router: Router, private activatedRoute: ActivatedRoute, private sessionService: SessionService) {}
 
   ngOnInit() {
-    this.activatedRoute.params.subscribe(res => {
+    this.activatedRoute.params.subscribe((res) => {
       this.authorizationId = res.authId;
       this.aspspName = this.sessionService.getBankName(res.authId);
       this.finTechName = this.sessionService.getFintechName(res.authId);
       this.aisConsent = ConsentUtil.getOrDefault(this.authorizationId, this.sessionService);
     });
 
-    this.router.events.subscribe(evt => {
+    this.router.events.subscribe((evt) => {
       this.aisConsent = ConsentUtil.getOrDefault(this.authorizationId, this.sessionService);
     });
   }
