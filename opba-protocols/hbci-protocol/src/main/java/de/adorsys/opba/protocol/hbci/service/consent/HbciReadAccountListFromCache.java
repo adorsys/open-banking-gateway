@@ -25,12 +25,8 @@ public class HbciReadAccountListFromCache extends ValidatedExecution<AccountList
     @SneakyThrows
     private void convertConsentToResponseIfPresent(DelegateExecution execution) {
         ContextUtil.getAndUpdateContext(execution, (AccountListHbciContext ctx) -> {
-            if (null != ctx.getCachedResult()) {
+            if (ctx.getOnline() != Boolean.TRUE && null != ctx.getCachedResult()) {
                 ctx.setResponse(ctx.getCachedResult().getAccounts());
-            }
-
-            if (ctx.getOnline() == Boolean.FALSE) {
-                ctx.consentAccess().deleteByCurrentServiceSession();
             }
         });
     }

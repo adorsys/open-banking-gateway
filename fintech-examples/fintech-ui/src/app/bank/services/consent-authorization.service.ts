@@ -51,6 +51,9 @@ export class ConsentAuthorizationService {
           'ConsentAuthorizationService.fromConsent: location (from response header) to navigate to is now:',
           location
         );
+
+        this.storageService.setAfterRedirect(true);
+
         this.router.navigate([location]);
       });
   }

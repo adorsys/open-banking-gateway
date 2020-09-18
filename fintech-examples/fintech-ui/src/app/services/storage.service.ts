@@ -158,8 +158,8 @@ export class StorageService {
         loa: LoARetrievalInformation.FROM_TPP_WITH_AVAILABLE_CONSENT,
         lot: LoTRetrievalInformation.FROM_TPP_WITH_AVAILABLE_CONSENT,
         withBalance: true,
-        onlineLoa: true,
-        onlineLot: true,
+        cacheLoa: false,
+        cacheLot: false,
         paymentRequiresAuthentication: false
       };
     }
@@ -173,6 +173,18 @@ export class StorageService {
   public deleteSettings(): void {
     localStorage.removeItem(Consts.LOCAL_STORAGE_SETTINGS);
   }
+
+  public setAfterRedirect(afterRedirect: boolean) {
+    localStorage.setItem(Session.AFTER_REDIRECT, JSON.stringify(afterRedirect));
+  }
+
+  public isAfterRedirect() {
+    const value = localStorage.getItem(Session.AFTER_REDIRECT);
+    if (value === null) {
+      return false;
+    }
+    return JSON.parse(value);
+  }
 }
 
 enum Session {
@@ -183,5 +195,6 @@ enum Session {
   REDIRECT_MAP = 'REDIRECT_MAP',
   LOA = 'LOA',
   USER_REDIRECTED = 'USER_REDIRECTED',
-  REDIRECT_CANCEL_URL = 'REDIRECT_CANCEL_URL'
+  REDIRECT_CANCEL_URL = 'REDIRECT_CANCEL_URL',
+  AFTER_REDIRECT = 'AFTER_REDIRECT'
 }

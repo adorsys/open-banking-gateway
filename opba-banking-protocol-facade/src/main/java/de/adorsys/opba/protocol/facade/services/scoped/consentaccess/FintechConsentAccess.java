@@ -88,13 +88,4 @@ public class FintechConsentAccess implements ConsentAccess {
     public Collection<ProtocolFacingConsent> getAvailableConsentsForCurrentPsu() {
         return Collections.emptyList();
     }
-
-    @Override
-    public void deleteByCurrentServiceSession() {
-        ServiceSession serviceSession = entityManager.find(ServiceSession.class, serviceSessionId);
-        if (null == serviceSession || null == serviceSession.getAuthSession() || null == serviceSession.getAuthSession().getPsu()) {
-            return;
-        }
-        consents.deleteByServiceSessionId(serviceSession.getId());
-    }
 }
