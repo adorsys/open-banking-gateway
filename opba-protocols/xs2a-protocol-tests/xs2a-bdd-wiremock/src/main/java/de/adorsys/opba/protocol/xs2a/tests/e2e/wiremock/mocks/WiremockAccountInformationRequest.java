@@ -63,9 +63,9 @@ public class WiremockAccountInformationRequest<SELF extends WiremockAccountInfor
 
     public SELF open_banking_redirect_from_aspsp_with_static_oauth2_code_to_exchange_to_token(String code) {
         extractRedirectOkUriSentByOpbaFromWiremock();
-        ExtractableResponse<Response> response = withSignatureHeaders(RestAssured
+        ExtractableResponse<Response> response = RestAssured
                 .given()
-                    .cookie(AUTHORIZATION_SESSION_KEY, authSessionCookie))
+                    .cookie(AUTHORIZATION_SESSION_KEY, authSessionCookie)
                 .when()
                     .get(redirectOkUri + "&code=" + code)
                 .then()
@@ -254,5 +254,4 @@ public class WiremockAccountInformationRequest<SELF extends WiremockAccountInfor
                 ).get(consentCreationRequestIndex);
         this.redirectOkUri = consentInitiateRequest.getHeader(TPP_REDIRECT_URI);
     }
-
 }

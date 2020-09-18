@@ -1,6 +1,7 @@
 package de.adorsys.opba.protocol.xs2a.tests.e2e.wiremock.mocks;
 
 import com.github.tomakehurst.wiremock.WireMockServer;
+import com.github.tomakehurst.wiremock.common.ConsoleNotifier;
 import com.github.tomakehurst.wiremock.core.WireMockConfiguration;
 import com.github.tomakehurst.wiremock.extension.responsetemplating.ResponseTemplateTransformer;
 import com.google.common.io.Resources;
@@ -133,6 +134,37 @@ public class MockServers<SELF extends MockServers<SELF>> extends CommonGivenStag
     public SELF redirect_mock_of_sandbox_for_anton_brueckner_payments_running() {
         WireMockConfiguration config = WireMockConfiguration.options().dynamicPort()
                                                .usingFilesUnderClasspath("mockedsandbox/restrecord/redirect/payments/sandbox/");
+        startWireMock(config);
+
+        return self();
+    }
+
+    public SELF oauth2_prestep_mock_of_sandbox_for_anton_brueckner_payments_running(Path tempDir) {
+        mergeWireMockFixtures(
+                tempDir,
+                "mockedsandbox/restrecord/oauth2/prestep/payments/results-oauth2",
+                "mockedsandbox/restrecord/oauth2/prestep/payments/results-xs2a"
+        );
+
+        WireMockConfiguration config = WireMockConfiguration.options().dynamicPort()
+                .usingFilesUnderClasspath(tempDir.toAbsolutePath().toString())
+                .extensions(new ResponseTemplateTransformer(false));
+        startWireMock(config);
+
+        return self();
+    }
+
+    public SELF oauth2_integrated_mock_of_sandbox_for_anton_brueckner_payments_running(Path tempDir) {
+        mergeWireMockFixtures(
+                tempDir,
+                "mockedsandbox/restrecord/oauth2/integrated/payments/results-oauth2",
+                "mockedsandbox/restrecord/oauth2/integrated/payments/results-xs2a"
+        );
+
+        WireMockConfiguration config = WireMockConfiguration.options().dynamicPort()
+                .usingFilesUnderClasspath(tempDir.toAbsolutePath().toString())
+                .notifier(new ConsoleNotifier(true))
+                .extensions(new ResponseTemplateTransformer(false));
         startWireMock(config);
 
         return self();

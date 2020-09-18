@@ -1,46 +1,53 @@
 {
-  "id" : "7726e4ee-2523-399f-8d65-ec646a24c8b7",
-  "request" : {
-    "url" : "/v1/payments/sepa-credit-transfers",
-    "method" : "POST",
-    "headers" : {
-      "X-Request-ID" : {
-        "equalTo" : "12b34483-242a-428b-8295-2f4805bb0a30"
+  "id": "7726e4ee-2523-399f-8d65-ec646a24c8b7",
+  "request": {
+    "url": "/v1/payments/sepa-credit-transfers",
+    "method": "POST",
+    "headers": {
+      "X-Request-ID": {
+        "matches": ".+"
       },
-      "PSU-ID" : {
-        "equalTo" : "anton.brueckner"
+      "PSU-ID": {
+        "equalTo": "anton.brueckner"
       },
-      "TPP-Nok-Redirect-URI" : {
-        "equalTo" : "http://localhost:4200/embedded-server/v1/consent/12880ecf-7887-4a9a-b1c1-d61aebb45071/fromAspsp/STUB_STATE/nok?redirectCode=58a34d64-10ce-4d1b-b00c-fd9ec242a3f4"
+      "TPP-Nok-Redirect-URI": {
+        "matches": "http://localhost:\\d+/v1/consent/.+/fromAspsp/STUB_STATE/nok\\?redirectCode=.+"
       },
-      "PSU-IP-Address" : {
-        "equalTo" : "127.0.0.1"
+      "PSU-IP-Address": {
+        "matches": "\\b((25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)(\\.|$)){4}\\b"
       },
-      "TPP-Redirect-URI" : {
-        "equalTo" : "http://localhost:4200/embedded-server/v1/consent/12880ecf-7887-4a9a-b1c1-d61aebb45071/fromAspsp/STUB_STATE/ok?redirectCode=58a34d64-10ce-4d1b-b00c-fd9ec242a3f4"
+      "TPP-Redirect-URI": {
+        "matches": "http://localhost:\\d+/v1/consent/.+/fromAspsp/STUB_STATE/ok\\?redirectCode=.+"
       },
-      "Content-Type" : {
-        "equalTo" : "application/json; charset=UTF-8"
+      "Content-Type": {
+        "equalTo": "application/json; charset=UTF-8"
       }
     },
-    "bodyPatterns" : [ {
-      "equalToJson" : "{\"debtorAccount\":{\"iban\":\"DE80760700240271232400\"},\"instructedAmount\":{\"currency\":\"EUR\",\"amount\":\"12.34\"},\"creditorAccount\":{\"iban\":\"AL90208110080000001039531801\"},\"creditorName\":\"test user\",\"remittanceInformationUnstructured\":\"test transfer\"}",
-      "ignoreArrayOrder" : true,
-      "ignoreExtraElements" : true
-    } ]
+    "bodyPatterns": [
+      {
+        "equalToJson": "{\"creditorAccount\":{\"currency\":\"EUR\",\"iban\":\"DE80760700240271232400\"},\"creditorAddress\":{\"buildingNumber\":\"56\",\"townName\":\"Nürnberg\",\"country\":\"DE\",\"postCode\":\"90543\",\"streetName\":\"WBG Straße\"},\"creditorAgent\":\"AAAADEBBXXX\",\"creditorName\":\"WBG\",\"debtorAccount\":{\"currency\":\"EUR\",\"iban\":\"DE80760700240271232400\"},\"endToEndIdentification\":\"WBG-123456789\",\"instructedAmount\":{\"currency\":\"EUR\",\"amount\":\"1.03\"},\"remittanceInformationUnstructured\":\"Ref. Number WBG-1222\"}",
+        "ignoreArrayOrder": true,
+        "ignoreExtraElements": true
+      }
+    ]
   },
-  "response" : {
-    "status" : 201,
-    "bodyFileName" : "body-v1-27380.json",
-    "headers" : {
-      "Vary" : [ "Origin", "Access-Control-Request-Method", "Access-Control-Request-Headers" ],
-      "Aspsp-Sca-Approach" : "REDIRECT",
-      "Location" : "http://localhost:30014/v1/payments/sepa-credit-transfers/n2p3ojqm6ueavh_0wqdFfQbQa9XyPsnQOW2oFsPfDW3XCdoAx3AMFYiDbe-nvEQ3cgftJbETkzvNvu5mZQqWcA==_=_psGLvQpt9Q",
-      "X-Request-Id" : "12b34483-242a-428b-8295-2f4805bb0a30",
-      "Content-Type" : "application/json",
-      "Date" : "Wed, 09 Sep 2020 12:19:25 GMT",
-      "Keep-Alive" : "timeout=60"
+  "response": {
+    "status": 201,
+    "bodyFileName": "body-v1-27380.json",
+    "transformers": ["response-template"],
+    "headers": {
+      "Vary": [
+        "Origin",
+        "Access-Control-Request-Method",
+        "Access-Control-Request-Headers"
+      ],
+      "Aspsp-Sca-Approach": "REDIRECT",
+      "Location": "http://localhost:30014/v1/payments/sepa-credit-transfers/n2p3ojqm6ueavh_0wqdFfQbQa9XyPsnQOW2oFsPfDW3XCdoAx3AMFYiDbe-nvEQ3cgftJbETkzvNvu5mZQqWcA==_=_psGLvQpt9Q",
+      "X-Request-Id": "12b34483-242a-428b-8295-2f4805bb0a30",
+      "Content-Type": "application/json",
+      "Date": "Wed, 09 Sep 2020 12:19:25 GMT",
+      "Keep-Alive": "timeout=60"
     }
   },
-  "uuid" : "7726e4ee-2523-399f-8d65-ec646a24c8b7"
+  "uuid": "7726e4ee-2523-399f-8d65-ec646a24c8b7"
 }
