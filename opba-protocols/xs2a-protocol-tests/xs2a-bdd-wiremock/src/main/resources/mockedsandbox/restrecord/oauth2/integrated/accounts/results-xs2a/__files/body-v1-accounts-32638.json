@@ -1,1 +1,412 @@
-{"account":{"iban":"DE80760700240271232400","currency":"EUR"},"transactions":{"booked":[{"transactionId":"zHnHUfkvTHAgUlvLc9lCOY","bookingDate":"2020-09-09","valueDate":"2020-09-09","transactionAmount":{"currency":"EUR","amount":"-12.34"},"creditorName":"test user","creditorAccount":{"iban":"AL90208110080000001039531801","currency":"EUR"},"debtorAccount":{"iban":"DE80760700240271232400","currency":"EUR"},"remittanceInformationUnstructured":"test transfer","remittanceInformationUnstructuredArray":["mock remittance unstructured array"],"remittanceInformationStructuredArray":[{"reference":"Mock remittance reference","referenceType":"Mock reference type","referenceIssuer":"Mock reference issuer"}],"additionalInformation":"mock additional information","bankTransactionCode":"PMNT-ICDT-STDO","proprietaryBankTransactionCode":"PMNT-ICDT-STDO","balanceAfterTransaction":{"balanceAmount":{"currency":"EUR","amount":"27887.66"},"balanceType":"interimAvailable","lastChangeDateTime":"2020-09-09T14:12:39.225+02:00","referenceDate":"2020-09-09"}},{"transactionId":"TEHRM2o4ToAgg7s_kY6ov4","endToEndId":"20180625TAAA002","bookingDate":"2020-09-09","valueDate":"2020-09-09","transactionAmount":{"currency":"EUR","amount":"-100.00"},"creditorName":"Patrick Brueckner","creditorAccount":{"iban":"DE23760700240234367800","currency":"EUR"},"debtorAccount":{"iban":"DE80760700240271232400","currency":"EUR"},"remittanceInformationUnstructured":"Payment","remittanceInformationUnstructuredArray":["mock remittance unstructured array"],"remittanceInformationStructuredArray":[{"reference":"Mock remittance reference","referenceType":"Mock reference type","referenceIssuer":"Mock reference issuer"}],"additionalInformation":"mock additional information","bankTransactionCode":"PMNT-IRCT-STDO","proprietaryBankTransactionCode":"PMNT-IRCT-STDO","balanceAfterTransaction":{"balanceAmount":{"currency":"EUR","amount":"27900.00"},"balanceType":"interimAvailable","lastChangeDateTime":"2020-09-09T14:12:39.225+02:00","referenceDate":"2020-09-09"}},{"transactionId":"YLuJIwuMS34odGmJMJ5FmQ","endToEndId":"20180625TAAA001","bookingDate":"2020-09-09","valueDate":"2020-09-09","transactionAmount":{"currency":"EUR","amount":"-150.00"},"creditorName":"Maria Brueckner","creditorAccount":{"iban":"DE67760700240243265400","currency":"EUR"},"debtorAccount":{"iban":"DE80760700240271232400","currency":"EUR"},"remittanceInformationUnstructured":"Payment","remittanceInformationUnstructuredArray":["mock remittance unstructured array"],"remittanceInformationStructuredArray":[{"reference":"Mock remittance reference","referenceType":"Mock reference type","referenceIssuer":"Mock reference issuer"}],"additionalInformation":"mock additional information","bankTransactionCode":"PMNT-IRCT-STDO","proprietaryBankTransactionCode":"PMNT-IRCT-STDO","balanceAfterTransaction":{"balanceAmount":{"currency":"EUR","amount":"28000.00"},"balanceType":"interimAvailable","lastChangeDateTime":"2020-09-09T14:12:39.009+02:00","referenceDate":"2020-09-09"}},{"transactionId":"E_rtWlHyTK8hlG_bdRicEs","endToEndId":"20180624TAAA001, 20180624TAAA001","bookingDate":"2020-09-09","valueDate":"2020-09-09","transactionAmount":{"currency":"EUR","amount":"-2300.00"},"creditorName":"multiple","creditorAgent":"multiple","debtorAccount":{"iban":"DE80760700240271232400","currency":"EUR"},"remittanceInformationUnstructured":"Batch booking, no remittance information available","remittanceInformationUnstructuredArray":["mock remittance unstructured array"],"remittanceInformationStructuredArray":[{"reference":"Mock remittance reference","referenceType":"Mock reference type","referenceIssuer":"Mock reference issuer"}],"additionalInformation":"mock additional information","bankTransactionCode":"PMNT-IRCT-STDO","proprietaryBankTransactionCode":"PMNT-IRCT-STDO","balanceAfterTransaction":{"balanceAmount":{"currency":"EUR","amount":"28150.00"},"balanceType":"interimAvailable","lastChangeDateTime":"2020-09-09T14:12:38.789+02:00","referenceDate":"2020-09-09"}},{"transactionId":"LeX6X2GgTXgqynXcniQuEI","endToEndId":"20180623TAAA001, 20180623TAAA002","bookingDate":"2020-09-09","valueDate":"2020-09-09","transactionAmount":{"currency":"EUR","amount":"-250.00"},"creditorName":"multiple","creditorAgent":"multiple","debtorAccount":{"iban":"DE80760700240271232400","currency":"EUR"},"remittanceInformationUnstructured":"Batch booking, no remittance information available","remittanceInformationUnstructuredArray":["mock remittance unstructured array"],"remittanceInformationStructuredArray":[{"reference":"Mock remittance reference","referenceType":"Mock reference type","referenceIssuer":"Mock reference issuer"}],"additionalInformation":"mock additional information","bankTransactionCode":"PMNT-IRCT-STDO","proprietaryBankTransactionCode":"PMNT-IRCT-STDO","balanceAfterTransaction":{"balanceAmount":{"currency":"EUR","amount":"30450.00"},"balanceType":"interimAvailable","lastChangeDateTime":"2020-09-09T14:12:38.291+02:00","referenceDate":"2020-09-09"}},{"transactionId":"Ipnv-GhYSZskK4DqXod9HA","endToEndId":"20180614T110000","bookingDate":"2020-09-09","valueDate":"2020-09-09","transactionAmount":{"currency":"EUR","amount":"2300.00"},"creditorName":"Anton Brueckner","creditorAccount":{"iban":"DE80760700240271232400","currency":"EUR"},"debtorAccount":{"iban":"DE38760700240320465700","currency":"EUR"},"remittanceInformationUnstructured":"Payment","remittanceInformationUnstructuredArray":["mock remittance unstructured array"],"remittanceInformationStructuredArray":[{"reference":"Mock remittance reference","referenceType":"Mock reference type","referenceIssuer":"Mock reference issuer"}],"additionalInformation":"mock additional information","bankTransactionCode":"PMNT-IRCT-STDO","proprietaryBankTransactionCode":"PMNT-IRCT-STDO","balanceAfterTransaction":{"balanceAmount":{"currency":"EUR","amount":"30700.00"},"balanceType":"interimAvailable","lastChangeDateTime":"2020-09-09T14:12:37.861+02:00","referenceDate":"2020-09-09"}},{"transactionId":"cehYP9clRlggwP_07U_CK4","endToEndId":"20180602T101000","bookingDate":"2020-09-09","valueDate":"2020-09-09","transactionAmount":{"currency":"EUR","amount":"-900.00"},"creditorName":"Rainer Maier","creditorAccount":{"iban":"DE84100100100568753108","currency":"EUR"},"debtorAccount":{"iban":"DE80760700240271232400","currency":"EUR"},"remittanceInformationUnstructured":"Payment","remittanceInformationUnstructuredArray":["mock remittance unstructured array"],"remittanceInformationStructuredArray":[{"reference":"Mock remittance reference","referenceType":"Mock reference type","referenceIssuer":"Mock reference issuer"}],"additionalInformation":"mock additional information","bankTransactionCode":"PMNT-IRCT-STDO","proprietaryBankTransactionCode":"PMNT-IRCT-STDO","balanceAfterTransaction":{"balanceAmount":{"currency":"EUR","amount":"28400.00"},"balanceType":"interimAvailable","lastChangeDateTime":"2020-09-09T14:12:37.596+02:00","referenceDate":"2020-09-09"}},{"transactionId":"DNnUINikR-ouTwKDlu7E-o","endToEndId":"20180601T131000","bookingDate":"2020-09-09","valueDate":"2020-09-09","transactionAmount":{"currency":"EUR","amount":"-700.00"},"creditorName":"Max Musterman","creditorAccount":{"iban":"DE38760700240320465700","currency":"EUR"},"debtorAccount":{"iban":"DE80760700240271232400","currency":"EUR"},"remittanceInformationUnstructured":"Payment","remittanceInformationUnstructuredArray":["mock remittance unstructured array"],"remittanceInformationStructuredArray":[{"reference":"Mock remittance reference","referenceType":"Mock reference type","referenceIssuer":"Mock reference issuer"}],"additionalInformation":"mock additional information","bankTransactionCode":"PMNT-IRCT-STDO","proprietaryBankTransactionCode":"PMNT-IRCT-STDO","balanceAfterTransaction":{"balanceAmount":{"currency":"EUR","amount":"29300.00"},"balanceType":"interimAvailable","lastChangeDateTime":"2020-09-09T14:12:36.471+02:00","referenceDate":"2020-09-09"}},{"transactionId":"Wn6_AIvvTaMnxe1YUyotuA","endToEndId":"Wn6_AIvvTaMnxe1YUyotuA","bookingDate":"2020-09-09","valueDate":"2020-09-09","transactionAmount":{"currency":"EUR","amount":"30000.00"},"creditorName":"anton.brueckner","creditorAccount":{"iban":"DE80760700240271232400","currency":"EUR"},"debtorName":"anton.brueckner","debtorAccount":{"iban":"DE80760700240271232400","currency":"EUR"},"remittanceInformationUnstructured":"Cash deposit through Bank ATM","remittanceInformationUnstructuredArray":["mock remittance unstructured array"],"remittanceInformationStructuredArray":[{"reference":"Mock remittance reference","referenceType":"Mock reference type","referenceIssuer":"Mock reference issuer"}],"additionalInformation":"mock additional information","bankTransactionCode":"PMNT-MCOP-OTHR","proprietaryBankTransactionCode":"PMNT-MCOP-OTHR","balanceAfterTransaction":{"balanceAmount":{"currency":"EUR","amount":"30000.00"},"balanceType":"interimAvailable","lastChangeDateTime":"2020-09-09T14:12:36.463+02:00","referenceDate":"2020-09-09"}}],"_links":{"account":{"href":"http://localhost:30014/v1/accounts/sCPf7hrmSf4tYXF2X8b7r8"}}},"balances":[{"balanceAmount":{"currency":"EUR","amount":"27887.66"},"balanceType":"interimAvailable","lastChangeDateTime":"2020-09-09T14:17:37.244+02:00","referenceDate":"2020-09-09"},{"balanceAmount":{"currency":"EUR","amount":"27887.66"},"balanceType":"closingBooked","lastChangeDateTime":"2020-09-09T14:17:37.244+02:00","referenceDate":"2020-09-09"}],"_links":{"download":{"href":"http://localhost:30014/v1/accounts/sCPf7hrmSf4tYXF2X8b7r8/transactions/download/ZG93bmxvYWRJZA=="}}}
+{
+  "account": {
+    "iban": "DE80760700240271232400",
+    "currency": "EUR"
+  },
+  "transactions": {
+    "booked": [
+      {
+        "transactionId": "zHnHUfkvTHAgUlvLc9lCOY",
+        "bookingDate": "2020-09-09",
+        "valueDate": "2020-09-09",
+        "transactionAmount": {
+          "currency": "EUR",
+          "amount": "-12.34"
+        },
+        "creditorName": "test user",
+        "creditorAccount": {
+          "iban": "AL90208110080000001039531801",
+          "currency": "EUR"
+        },
+        "debtorAccount": {
+          "iban": "DE80760700240271232400",
+          "currency": "EUR"
+        },
+        "remittanceInformationUnstructured": "test transfer",
+        "remittanceInformationUnstructuredArray": [
+          "mock remittance unstructured array"
+        ],
+        "remittanceInformationStructuredArray": [
+          {
+            "reference": "Mock remittance reference",
+            "referenceType": "Mock reference type",
+            "referenceIssuer": "Mock reference issuer"
+          }
+        ],
+        "additionalInformation": "mock additional information",
+        "bankTransactionCode": "PMNT-ICDT-STDO",
+        "proprietaryBankTransactionCode": "PMNT-ICDT-STDO",
+        "balanceAfterTransaction": {
+          "balanceAmount": {
+            "currency": "EUR",
+            "amount": "27887.66"
+          },
+          "balanceType": "interimAvailable",
+          "lastChangeDateTime": "2020-09-09T14:12:39.225+02:00",
+          "referenceDate": "2020-09-09"
+        }
+      },
+      {
+        "transactionId": "TEHRM2o4ToAgg7s_kY6ov4",
+        "endToEndId": "20180625TAAA002",
+        "bookingDate": "2020-09-09",
+        "valueDate": "2020-09-09",
+        "transactionAmount": {
+          "currency": "EUR",
+          "amount": "-100.00"
+        },
+        "creditorName": "Patrick Brueckner",
+        "creditorAccount": {
+          "iban": "DE23760700240234367800",
+          "currency": "EUR"
+        },
+        "debtorAccount": {
+          "iban": "DE80760700240271232400",
+          "currency": "EUR"
+        },
+        "remittanceInformationUnstructured": "Payment",
+        "remittanceInformationUnstructuredArray": [
+          "mock remittance unstructured array"
+        ],
+        "remittanceInformationStructuredArray": [
+          {
+            "reference": "Mock remittance reference",
+            "referenceType": "Mock reference type",
+            "referenceIssuer": "Mock reference issuer"
+          }
+        ],
+        "additionalInformation": "mock additional information",
+        "bankTransactionCode": "PMNT-IRCT-STDO",
+        "proprietaryBankTransactionCode": "PMNT-IRCT-STDO",
+        "balanceAfterTransaction": {
+          "balanceAmount": {
+            "currency": "EUR",
+            "amount": "27900.00"
+          },
+          "balanceType": "interimAvailable",
+          "lastChangeDateTime": "2020-09-09T14:12:39.225+02:00",
+          "referenceDate": "2020-09-09"
+        }
+      },
+      {
+        "transactionId": "YLuJIwuMS34odGmJMJ5FmQ",
+        "endToEndId": "20180625TAAA001",
+        "bookingDate": "2020-09-09",
+        "valueDate": "2020-09-09",
+        "transactionAmount": {
+          "currency": "EUR",
+          "amount": "-150.00"
+        },
+        "creditorName": "Maria Brueckner",
+        "creditorAccount": {
+          "iban": "DE67760700240243265400",
+          "currency": "EUR"
+        },
+        "debtorAccount": {
+          "iban": "DE80760700240271232400",
+          "currency": "EUR"
+        },
+        "remittanceInformationUnstructured": "Payment",
+        "remittanceInformationUnstructuredArray": [
+          "mock remittance unstructured array"
+        ],
+        "remittanceInformationStructuredArray": [
+          {
+            "reference": "Mock remittance reference",
+            "referenceType": "Mock reference type",
+            "referenceIssuer": "Mock reference issuer"
+          }
+        ],
+        "additionalInformation": "mock additional information",
+        "bankTransactionCode": "PMNT-IRCT-STDO",
+        "proprietaryBankTransactionCode": "PMNT-IRCT-STDO",
+        "balanceAfterTransaction": {
+          "balanceAmount": {
+            "currency": "EUR",
+            "amount": "28000.00"
+          },
+          "balanceType": "interimAvailable",
+          "lastChangeDateTime": "2020-09-09T14:12:39.009+02:00",
+          "referenceDate": "2020-09-09"
+        }
+      },
+      {
+        "transactionId": "E_rtWlHyTK8hlG_bdRicEs",
+        "endToEndId": "20180624TAAA001, 20180624TAAA001",
+        "bookingDate": "2020-09-09",
+        "valueDate": "2020-09-09",
+        "transactionAmount": {
+          "currency": "EUR",
+          "amount": "-2300.00"
+        },
+        "creditorName": "multiple",
+        "creditorAgent": "multiple",
+        "debtorAccount": {
+          "iban": "DE80760700240271232400",
+          "currency": "EUR"
+        },
+        "remittanceInformationUnstructured": "Batch booking, no remittance information available",
+        "remittanceInformationUnstructuredArray": [
+          "mock remittance unstructured array"
+        ],
+        "remittanceInformationStructuredArray": [
+          {
+            "reference": "Mock remittance reference",
+            "referenceType": "Mock reference type",
+            "referenceIssuer": "Mock reference issuer"
+          }
+        ],
+        "additionalInformation": "mock additional information",
+        "bankTransactionCode": "PMNT-IRCT-STDO",
+        "proprietaryBankTransactionCode": "PMNT-IRCT-STDO",
+        "balanceAfterTransaction": {
+          "balanceAmount": {
+            "currency": "EUR",
+            "amount": "28150.00"
+          },
+          "balanceType": "interimAvailable",
+          "lastChangeDateTime": "2020-09-09T14:12:38.789+02:00",
+          "referenceDate": "2020-09-09"
+        }
+      },
+      {
+        "transactionId": "LeX6X2GgTXgqynXcniQuEI",
+        "endToEndId": "20180623TAAA001, 20180623TAAA002",
+        "bookingDate": "2020-09-09",
+        "valueDate": "2020-09-09",
+        "transactionAmount": {
+          "currency": "EUR",
+          "amount": "-250.00"
+        },
+        "creditorName": "multiple",
+        "creditorAgent": "multiple",
+        "debtorAccount": {
+          "iban": "DE80760700240271232400",
+          "currency": "EUR"
+        },
+        "remittanceInformationUnstructured": "Batch booking, no remittance information available",
+        "remittanceInformationUnstructuredArray": [
+          "mock remittance unstructured array"
+        ],
+        "remittanceInformationStructuredArray": [
+          {
+            "reference": "Mock remittance reference",
+            "referenceType": "Mock reference type",
+            "referenceIssuer": "Mock reference issuer"
+          }
+        ],
+        "additionalInformation": "mock additional information",
+        "bankTransactionCode": "PMNT-IRCT-STDO",
+        "proprietaryBankTransactionCode": "PMNT-IRCT-STDO",
+        "balanceAfterTransaction": {
+          "balanceAmount": {
+            "currency": "EUR",
+            "amount": "30450.00"
+          },
+          "balanceType": "interimAvailable",
+          "lastChangeDateTime": "2020-09-09T14:12:38.291+02:00",
+          "referenceDate": "2020-09-09"
+        }
+      },
+      {
+        "transactionId": "Ipnv-GhYSZskK4DqXod9HA",
+        "endToEndId": "20180614T110000",
+        "bookingDate": "2020-09-09",
+        "valueDate": "2020-09-09",
+        "transactionAmount": {
+          "currency": "EUR",
+          "amount": "2300.00"
+        },
+        "creditorName": "Anton Brueckner",
+        "creditorAccount": {
+          "iban": "DE80760700240271232400",
+          "currency": "EUR"
+        },
+        "debtorAccount": {
+          "iban": "DE38760700240320465700",
+          "currency": "EUR"
+        },
+        "remittanceInformationUnstructured": "Payment",
+        "remittanceInformationUnstructuredArray": [
+          "mock remittance unstructured array"
+        ],
+        "remittanceInformationStructuredArray": [
+          {
+            "reference": "Mock remittance reference",
+            "referenceType": "Mock reference type",
+            "referenceIssuer": "Mock reference issuer"
+          }
+        ],
+        "additionalInformation": "mock additional information",
+        "bankTransactionCode": "PMNT-IRCT-STDO",
+        "proprietaryBankTransactionCode": "PMNT-IRCT-STDO",
+        "balanceAfterTransaction": {
+          "balanceAmount": {
+            "currency": "EUR",
+            "amount": "30700.00"
+          },
+          "balanceType": "interimAvailable",
+          "lastChangeDateTime": "2020-09-09T14:12:37.861+02:00",
+          "referenceDate": "2020-09-09"
+        }
+      },
+      {
+        "transactionId": "cehYP9clRlggwP_07U_CK4",
+        "endToEndId": "20180602T101000",
+        "bookingDate": "2020-09-09",
+        "valueDate": "2020-09-09",
+        "transactionAmount": {
+          "currency": "EUR",
+          "amount": "-900.00"
+        },
+        "creditorName": "Rainer Maier",
+        "creditorAccount": {
+          "iban": "DE84100100100568753108",
+          "currency": "EUR"
+        },
+        "debtorAccount": {
+          "iban": "DE80760700240271232400",
+          "currency": "EUR"
+        },
+        "remittanceInformationUnstructured": "Payment",
+        "remittanceInformationUnstructuredArray": [
+          "mock remittance unstructured array"
+        ],
+        "remittanceInformationStructuredArray": [
+          {
+            "reference": "Mock remittance reference",
+            "referenceType": "Mock reference type",
+            "referenceIssuer": "Mock reference issuer"
+          }
+        ],
+        "additionalInformation": "mock additional information",
+        "bankTransactionCode": "PMNT-IRCT-STDO",
+        "proprietaryBankTransactionCode": "PMNT-IRCT-STDO",
+        "balanceAfterTransaction": {
+          "balanceAmount": {
+            "currency": "EUR",
+            "amount": "28400.00"
+          },
+          "balanceType": "interimAvailable",
+          "lastChangeDateTime": "2020-09-09T14:12:37.596+02:00",
+          "referenceDate": "2020-09-09"
+        }
+      },
+      {
+        "transactionId": "DNnUINikR-ouTwKDlu7E-o",
+        "endToEndId": "20180601T131000",
+        "bookingDate": "2020-09-09",
+        "valueDate": "2020-09-09",
+        "transactionAmount": {
+          "currency": "EUR",
+          "amount": "-700.00"
+        },
+        "creditorName": "Max Musterman",
+        "creditorAccount": {
+          "iban": "DE38760700240320465700",
+          "currency": "EUR"
+        },
+        "debtorAccount": {
+          "iban": "DE80760700240271232400",
+          "currency": "EUR"
+        },
+        "remittanceInformationUnstructured": "Payment",
+        "remittanceInformationUnstructuredArray": [
+          "mock remittance unstructured array"
+        ],
+        "remittanceInformationStructuredArray": [
+          {
+            "reference": "Mock remittance reference",
+            "referenceType": "Mock reference type",
+            "referenceIssuer": "Mock reference issuer"
+          }
+        ],
+        "additionalInformation": "mock additional information",
+        "bankTransactionCode": "PMNT-IRCT-STDO",
+        "proprietaryBankTransactionCode": "PMNT-IRCT-STDO",
+        "balanceAfterTransaction": {
+          "balanceAmount": {
+            "currency": "EUR",
+            "amount": "29300.00"
+          },
+          "balanceType": "interimAvailable",
+          "lastChangeDateTime": "2020-09-09T14:12:36.471+02:00",
+          "referenceDate": "2020-09-09"
+        }
+      },
+      {
+        "transactionId": "Wn6_AIvvTaMnxe1YUyotuA",
+        "endToEndId": "Wn6_AIvvTaMnxe1YUyotuA",
+        "bookingDate": "2020-09-09",
+        "valueDate": "2020-09-09",
+        "transactionAmount": {
+          "currency": "EUR",
+          "amount": "30000.00"
+        },
+        "creditorName": "anton.brueckner",
+        "creditorAccount": {
+          "iban": "DE80760700240271232400",
+          "currency": "EUR"
+        },
+        "debtorName": "anton.brueckner",
+        "debtorAccount": {
+          "iban": "DE80760700240271232400",
+          "currency": "EUR"
+        },
+        "remittanceInformationUnstructured": "Cash deposit through Bank ATM",
+        "remittanceInformationUnstructuredArray": [
+          "mock remittance unstructured array"
+        ],
+        "remittanceInformationStructuredArray": [
+          {
+            "reference": "Mock remittance reference",
+            "referenceType": "Mock reference type",
+            "referenceIssuer": "Mock reference issuer"
+          }
+        ],
+        "additionalInformation": "mock additional information",
+        "bankTransactionCode": "PMNT-MCOP-OTHR",
+        "proprietaryBankTransactionCode": "PMNT-MCOP-OTHR",
+        "balanceAfterTransaction": {
+          "balanceAmount": {
+            "currency": "EUR",
+            "amount": "30000.00"
+          },
+          "balanceType": "interimAvailable",
+          "lastChangeDateTime": "2020-09-09T14:12:36.463+02:00",
+          "referenceDate": "2020-09-09"
+        }
+      }
+    ],
+    "_links": {
+      "account": {
+        "href": "http://localhost:30014/v1/accounts/sCPf7hrmSf4tYXF2X8b7r8"
+      }
+    }
+  },
+  "balances": [
+    {
+      "balanceAmount": {
+        "currency": "EUR",
+        "amount": "27887.66"
+      },
+      "balanceType": "interimAvailable",
+      "lastChangeDateTime": "2020-09-09T14:17:37.244+02:00",
+      "referenceDate": "2020-09-09"
+    },
+    {
+      "balanceAmount": {
+        "currency": "EUR",
+        "amount": "27887.66"
+      },
+      "balanceType": "closingBooked",
+      "lastChangeDateTime": "2020-09-09T14:17:37.244+02:00",
+      "referenceDate": "2020-09-09"
+    }
+  ],
+  "_links": {
+    "download": {
+      "href": "http://localhost:30014/v1/accounts/sCPf7hrmSf4tYXF2X8b7r8/transactions/download/ZG93bmxvYWRJZA=="
+    }
+  }
+}
