@@ -1,6 +1,6 @@
 import { Component, Input, OnDestroy, OnInit } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
-import { uuid } from 'uuidv4';
+import * as uuid from 'uuid';
 import { Subscription } from 'rxjs';
 import { ValidatorService } from 'angular-iban';
 
@@ -56,7 +56,7 @@ export class AccountReference {
   iban: string;
 
   constructor(iban?: string) {
-    this.id = 'account-reference:' + uuid();
+    this.id = 'account-reference:' + uuid.v4();
     this.iban = iban ? iban : '';
   }
 }
