@@ -44,13 +44,13 @@ public class AccountService {
 
     public ResponseEntity listAccounts(SessionEntity sessionEntity,
                                        String fintechOkUrl, String fintechNOKUrl,
-                                       String bankId, LoARetrievalInformation loARetrievalInformation, boolean withBalance, Boolean useOpbCache) {
+                                       String bankId, LoARetrievalInformation loARetrievalInformation, boolean withBalance, Boolean online) {
 
         log.info("List of accounts {} with balance {}", loARetrievalInformation, withBalance);
         final String fintechRedirectCode = UUID.randomUUID().toString();
 
         try {
-            ResponseEntity accounts = readOpbaResponse(bankId, sessionEntity, fintechRedirectCode, loARetrievalInformation, withBalance, useOpbCache);
+            ResponseEntity accounts = readOpbaResponse(bankId, sessionEntity, fintechRedirectCode, loARetrievalInformation, withBalance, online);
 
             switch (accounts.getStatusCode()) {
                 case OK:
@@ -100,7 +100,7 @@ public class AccountService {
     }
 
     private ResponseEntity consentAvailable(String bankID, SessionEntity sessionEntity, String redirectCode,
-                                            UUID xRequestId, Optional<ConsentEntity> optionalConsent, boolean withBalance, Boolean useOpbCache) {
+                                            UUID xRequestId, Optional<ConsentEntity> optionalConsent, boolean withBalance, Boolean online) {
         log.info("do LOA for bank {} {} consent", bankID, optionalConsent.isPresent() ? "with" : "without");
         UUID serviceSessionID = optionalConsent.map(ConsentEntity::getTppServiceSessionId).orElse(null);
         return tppAisClient.getAccounts(
@@ -115,7 +115,7 @@ public class AccountService {
             bankID,
             null,
             serviceSessionID,
-            useOpbCache,
+            online,
             withBalance);
     }
 
