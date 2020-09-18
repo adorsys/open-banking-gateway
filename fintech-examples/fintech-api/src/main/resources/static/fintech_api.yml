@@ -742,7 +742,7 @@ components:
       name: online
       in: query
       description: |
-        If false, new data will be requested and cache will be updated
+        If true, new data will be requested and cache will be updated
       example: "false"
       schema:
         type: boolean
