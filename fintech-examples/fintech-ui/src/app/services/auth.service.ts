@@ -66,7 +66,7 @@ export class AuthService {
   }
 
   openLoginPage() {
-    this.router.navigate(['/'.concat(RoutingPath.LOGIN)]);
+    this.router.navigate([`/${RoutingPath.LOGIN}`]);
   }
 
   public isLoggedIn(): boolean {
