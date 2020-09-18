@@ -34,8 +34,9 @@ export class ListTransactionsComponent implements OnInit {
   }
 
   private loadTransactions(): void {
+    const settings = this.storageService.getSettings();
     this.aisService
-      .getTransactions(this.bankId, this.accountId, this.storageService.getSettings().lot)
+      .getTransactions(this.bankId, this.accountId, settings.lot, settings.onlineLot)
       .subscribe((response) => {
         switch (response.status) {
           case 202:
