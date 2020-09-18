@@ -37,7 +37,7 @@ export class DedicatedAccessComponent implements OnInit {
 
   ngOnInit() {
     this.wrongIban = this.activatedRoute.snapshot.queryParamMap.get('wrong') === 'true';
-    this.activatedRoute.parent.parent.params.subscribe(res => {
+    this.activatedRoute.parent.parent.params.subscribe((res) => {
       this.authorizationId = res.authId;
       this.aspspName = this.sessionService.getBankName(res.authId);
       this.finTechName = this.sessionService.getFintechName(res.authId);
@@ -51,9 +51,9 @@ export class DedicatedAccessComponent implements OnInit {
     consentObj.consent.access.availableAccounts = null;
     consentObj.consent.access.allPsd2 = null;
 
-    consentObj.consent.access.accounts = this.accounts.map(it => it.iban);
-    consentObj.consent.access.balances = this.accounts.map(it => it.iban);
-    consentObj.consent.access.transactions = this.accounts.map(it => it.iban);
+    consentObj.consent.access.accounts = this.accounts.map((it) => it.iban);
+    consentObj.consent.access.balances = this.accounts.map((it) => it.iban);
+    consentObj.consent.access.transactions = this.accounts.map((it) => it.iban);
 
     this.sessionService.setConsentObject(this.authorizationId, consentObj);
     this.router.navigate([SharedRoutes.REVIEW], { relativeTo: this.activatedRoute.parent });
@@ -75,7 +75,7 @@ export class DedicatedAccessComponent implements OnInit {
     const consentObj = ConsentUtil.getOrDefault(this.authorizationId, this.sessionService);
     if (consentObj.consent.access.accounts) {
       this.accounts = [];
-      consentObj.consent.access.accounts.forEach(it => this.accounts.push(new AccountReference(it)));
+      consentObj.consent.access.accounts.forEach((it) => this.accounts.push(new AccountReference(it)));
     }
   }
 }

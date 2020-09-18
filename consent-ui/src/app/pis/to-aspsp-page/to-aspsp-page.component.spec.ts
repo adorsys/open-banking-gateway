@@ -23,11 +23,11 @@ describe('ToAspspPageComponent', () => {
           useValue: {
             parent: {
               params: of({ authId: StubUtilTests.AUTH_ID }),
-              queryParams: of({ redirectCode: StubUtilTests.REDIRECT_ID }),
-            },
-          },
-        },
-      ],
+              queryParams: of({ redirectCode: StubUtilTests.REDIRECT_ID })
+            }
+          }
+        }
+      ]
     }).compileComponents();
   }));
 

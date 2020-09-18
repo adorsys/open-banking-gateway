@@ -40,9 +40,7 @@
           >
             TAN is required
           </div>
-          <div *ngIf="wrongSca" class="invalid-feedback d-block">
-            SCA challenge is incorrect
-          </div>
+          <div *ngIf="wrongSca" class="invalid-feedback d-block">SCA challenge is incorrect</div>
         </div>
       </section>
       <button id="do_submit" type="submit" class="btn btn-primary w-100" [disabled]="reportScaResultForm.invalid">

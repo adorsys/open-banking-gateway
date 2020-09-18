@@ -22,7 +22,7 @@ describe('SelectScaComponent', () => {
   beforeEach(async(() => {
     TestBed.configureTestingModule({
       declarations: [SelectScaComponent],
-      imports: [ReactiveFormsModule, HttpClientTestingModule],
+      imports: [ReactiveFormsModule, HttpClientTestingModule]
     }).compileComponents();
   }));
 

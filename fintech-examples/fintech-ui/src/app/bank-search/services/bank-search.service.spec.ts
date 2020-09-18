@@ -11,7 +11,7 @@ describe('BankSearchService', () => {
   beforeEach(() => {
     TestBed.configureTestingModule({
       imports: [HttpClientTestingModule],
-      providers: [BankSearchService, FinTechBankSearchService],
+      providers: [BankSearchService, FinTechBankSearchService]
     });
 
     bankSearchService = TestBed.inject(BankSearchService);

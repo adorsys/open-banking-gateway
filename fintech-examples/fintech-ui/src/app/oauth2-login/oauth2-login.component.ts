@@ -11,13 +11,13 @@ export class Oauth2LoginComponent implements OnInit {
   constructor(private router: Router, private activatedRoute: ActivatedRoute, private authService: AuthService) {}
 
   ngOnInit() {
-    this.activatedRoute.queryParams.subscribe(it => {
+    this.activatedRoute.queryParams.subscribe((it) => {
       const state = it['state'];
       const code = it['code'];
       const scope = it['scope'];
       const error = it['error'];
 
-      this.authService.oauth2Login(code, state, scope, error).subscribe(success => {
+      this.authService.oauth2Login(code, state, scope, error).subscribe((success) => {
         if (success) {
           this.router.navigate(['/search']);
         }

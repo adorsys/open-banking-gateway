@@ -16,7 +16,7 @@ describe('AccountsConsentReviewComponent', () => {
   let consentAuthorizationService: UpdateConsentAuthorizationService;
 
   const locationStub = {
-    back: jasmine.createSpy('onBack'),
+    back: jasmine.createSpy('onBack')
   };
 
   beforeAll(() => (window.onbeforeunload = jasmine.createSpy()));
@@ -32,10 +32,10 @@ describe('AccountsConsentReviewComponent', () => {
         {
           provide: ActivatedRoute,
           useValue: {
-            parent: { parent: { params: of(convertToParamMap({ authId: StubUtilTests.AUTH_ID })) } },
-          },
-        },
-      ],
+            parent: { parent: { params: of(convertToParamMap({ authId: StubUtilTests.AUTH_ID })) } }
+          }
+        }
+      ]
     }).compileComponents();
   }));
 

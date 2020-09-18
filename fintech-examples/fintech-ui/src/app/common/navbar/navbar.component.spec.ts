@@ -16,7 +16,7 @@ describe('NavbarComponent', () => {
     TestBed.configureTestingModule({
       providers: [AuthService, SimpleTimer],
       declarations: [NavbarComponent],
-      imports: [RouterTestingModule, HttpClientTestingModule],
+      imports: [RouterTestingModule, HttpClientTestingModule]
     }).compileComponents();
   }));
 

@@ -13,7 +13,7 @@ describe('BankSearchComponent', () => {
   beforeEach(async(() => {
     TestBed.configureTestingModule({
       imports: [ReactiveFormsModule, HttpClientTestingModule, RouterTestingModule],
-      declarations: [BankSearchComponent, SearchComponent],
+      declarations: [BankSearchComponent, SearchComponent]
     }).compileComponents();
   }));
 

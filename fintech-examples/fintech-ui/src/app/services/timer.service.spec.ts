@@ -6,7 +6,7 @@ import { TimerService } from './timer.service';
 describe('TimerService', () => {
   beforeEach(() =>
     TestBed.configureTestingModule({
-      imports: [HttpClientTestingModule, RouterTestingModule],
+      imports: [HttpClientTestingModule, RouterTestingModule]
     })
   );
 

@@ -31,16 +31,16 @@ describe('DedicatedAccessComponent', () => {
       providers: [
         {
           provide: Router,
-          useValue: route,
+          useValue: route
         },
         {
           provide: ActivatedRoute,
           useValue: {
             parent: { parent: { params: of({ authId: StubUtilTests.AUTH_ID }) } },
-            snapshot: { queryParamMap: convertToParamMap({ wrong: false }) },
-          },
-        },
-      ],
+            snapshot: { queryParamMap: convertToParamMap({ wrong: false }) }
+          }
+        }
+      ]
     }).compileComponents();
   }));
 
@@ -60,12 +60,12 @@ describe('DedicatedAccessComponent', () => {
           allPsd2: null,
           accounts: null,
           balances: null,
-          transactions: null,
+          transactions: null
         },
         frequencyPerDay: 24,
         recurringIndicator: true,
-        validUntil: '2021-06-24',
-      },
+        validUntil: '2021-06-24'
+      }
     };
     consentUtilSpy = spyOn(ConsentUtil, 'getOrDefault').and.returnValue(mockData);
     fixture.detectChanges();

@@ -27,7 +27,7 @@ export class BankSearchComponent {
 
   onSearch(keyword: string): void {
     if (keyword && keyword.trim()) {
-      this.bankSearchService.searchBanks(keyword).subscribe(bankDescriptor => {
+      this.bankSearchService.searchBanks(keyword).subscribe((bankDescriptor) => {
         this.searchedBanks = bankDescriptor.bankDescriptor;
       });
     } else {

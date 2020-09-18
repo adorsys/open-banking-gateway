@@ -44,7 +44,7 @@ export class ConsentSharingComponent implements OnInit {
 
     this.authStateConsentAuthorizationService
       .authUsingGET(this.authorizationId, redirectCode, 'response')
-      .subscribe(res => {
+      .subscribe((res) => {
         this.sessionService.setRedirectCode(this.authorizationId, res.headers.get(ApiHeaders.REDIRECT_CODE));
       });
     this.loadRedirectUri(this.authorizationId, redirectCode);
@@ -63,7 +63,7 @@ export class ConsentSharingComponent implements OnInit {
         {} as DenyRequest,
         'response'
       )
-      .subscribe(res => {
+      .subscribe((res) => {
         console.log(res);
         window.location.href = res.headers.get(ApiHeaders.LOCATION);
       });

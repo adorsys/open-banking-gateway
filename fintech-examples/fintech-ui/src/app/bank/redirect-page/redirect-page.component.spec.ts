@@ -6,7 +6,7 @@ import { ActivatedRoute } from '@angular/router';
 import { RedirectPageComponent } from './redirect-page.component';
 import { ConsentAuthorizationService } from '../services/consent-authorization.service';
 import { RedirectStruct } from './redirect-struct';
-import { HttpClientTestingModule } from '@angular/common/http/testing'
+import { HttpClientTestingModule } from '@angular/common/http/testing';
 
 describe('RedirectPageComponent', () => {
   let component: RedirectPageComponent;

@@ -12,7 +12,7 @@ import { ApiHeaders } from '../../../../../api/api.headers';
 @Component({
   selector: 'consent-app-access-selection',
   templateUrl: './consent-account-access-selection.component.html',
-  styleUrls: ['./consent-account-access-selection.component.scss'],
+  styleUrls: ['./consent-account-access-selection.component.scss']
 })
 export class ConsentAccountAccessSelectionComponent implements OnInit, AfterContentChecked {
   public finTechName: string;

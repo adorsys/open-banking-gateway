@@ -46,7 +46,7 @@ export class SelectScaComponent implements OnInit {
         { scaAuthenticationData: { SCA_CHALLENGE_ID: this.selectedMethod.value } },
         'response'
       )
-      .subscribe(res => {
+      .subscribe((res) => {
         this.sessionService.setRedirectCode(this.authorizationSessionId, res.headers.get(ApiHeaders.REDIRECT_CODE));
         this.selectedValue.emit(res);
       });
@@ -55,7 +55,7 @@ export class SelectScaComponent implements OnInit {
   private initSca(): void {
     this.authStateConsentAuthorizationService
       .authUsingGET(this.authorizationSessionId, this.redirectCode, 'response')
-      .subscribe(consentAuth => {
+      .subscribe((consentAuth) => {
         this.sessionService.setRedirectCode(
           this.authorizationSessionId,
           consentAuth.headers.get(ApiHeaders.REDIRECT_CODE)

@@ -14,7 +14,7 @@ export class RedirectTupelForMap {
 
 export enum RedirectType {
   AIS,
-  PIS,
+  PIS
 }
 
 export class AccountStruct {

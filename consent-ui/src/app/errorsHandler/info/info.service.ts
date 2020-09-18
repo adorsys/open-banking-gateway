@@ -23,11 +23,7 @@ export class InfoService {
     this.overlayRef = this.overlay.create({
       hasBackdrop: false,
       scrollStrategy: this.overlay.scrollStrategies.noop(),
-      positionStrategy: this.overlay
-        .position()
-        .global()
-        .right(this.CORNER_OFFSET)
-        .top(this.CORNER_OFFSET)
+      positionStrategy: this.overlay.position().global().right(this.CORNER_OFFSET).top(this.CORNER_OFFSET)
     });
   }
 
