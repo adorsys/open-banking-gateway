@@ -116,5 +116,8 @@
       }
     }
   },
-  "defaultProject": "fintech-ui"
+  "defaultProject": "fintech-ui",
+  "cli": {
+    "analytics": "d2e35e7f-3ad2-4813-9bca-23eebb19702b"
+  }
 }

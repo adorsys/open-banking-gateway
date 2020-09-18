@@ -57,6 +57,9 @@ public class AccountService {
                 return handleAcceptedService.handleAccepted(consentRepository, ConsentType.AIS, bankId, fintechRedirectCode, sessionEntity, accounts.getHeaders());
             case UNAUTHORIZED:
                 return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
+            case NOT_FOUND:
+                log.info("tpp return 404 with error code {}", accounts.getHeaders().get("X-ERROR-CODE"));
+                return accounts;
             default:
                 throw new RuntimeException("DID NOT EXPECT RETURNCODE:" + accounts.getStatusCode());
         }

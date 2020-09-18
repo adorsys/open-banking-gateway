@@ -16,7 +16,7 @@ import static de.adorsys.opba.protocol.api.dto.headers.ResponseHeaders.X_ERROR_C
 public class FacadeRuntimeErrorResultWithOwnResponseCode<T> extends FacadeRuntimeErrorResult<T> {
     private static final int DEFAULT_RESPONSE_CODE = 500;
     private static final int CONSENT_USAGE_LIMIT_EXCEEDED_ENUM = 399;
-    private static final int CONSENT_USAGE_LIMIT_EXCEEDED_HTTP_RESPONSE_CODE = 409;
+    private static final int CONSENT_USAGE_LIMIT_EXCEEDED_HTTP_RESPONSE_CODE = 404;
 
     private int responseCode = DEFAULT_RESPONSE_CODE;
     public static final FacadeRuntimeErrorResultWithOwnResponseCode.ErrorWithBodyFromProtocol ERROR_FROM_PROTOCOL =

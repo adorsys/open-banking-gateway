@@ -7,7 +7,7 @@ import org.springframework.cloud.openfeign.FeignClient;
 import javax.servlet.http.HttpServletRequest;
 import java.util.Optional;
 
-@FeignClient(url = "${tpp.url}", name = "tppAisClient")
+@FeignClient(url = "${tpp.url}", name = "tppAisClient", decode404 = true)
 public interface TppAisClient extends TppBankingApiAccountInformationServiceAisApi {
     default Optional<ObjectMapper> getObjectMapper() {
         return Optional.empty();

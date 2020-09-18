@@ -15,14 +15,32 @@ export class GlobalErrorHandler implements ErrorHandler {
     let message = null;
 
     if (error instanceof HttpErrorResponse) {
-      if (error.status === 401) {
-        console.log('status was 401');
-        this.router.navigate(['/session-expired']);
-      } else if (error.status === 403) {
-        console.log('status was 403');
-        this.router.navigate(['/forbidden-oauth2']);
-      } else {
-        message = errorService.getServerMessage(error);
+      console.log('status was ', error.status);
+      switch (error.status) {
+        case 401:
+          this.router.navigate(['/session-expired']);
+          break;
+        case 403:
+          this.router.navigate(['/forbidden-oauth2']);
+          break;
+        case 404:
+          let errorCode = 'unknown';
+          if (error.headers.get('X-ERROR-CODE') != null) {
+            errorCode = error.headers.get('X-ERROR-CODE');
+          }
+          switch (errorCode) {
+            case '399':
+              message =
+                'The consent has been used too many time. Please request for new consent by changing settings or wait till tomorrow and try again.';
+              break;
+            default:
+              message = errorService.getServerMessage(error);
+              break;
+          }
+          break;
+        default:
+          message = errorService.getServerMessage(error);
+          break;
       }
     } else {
       // Client Error
@@ -32,7 +50,8 @@ export class GlobalErrorHandler implements ErrorHandler {
     this.zone.run(() => {
       if (message !== null) {
         infoService.openFeedback(message, {
-          severity: 'error'
+          severity: 'error',
+          duration: 5000,
         });
       }
     });
