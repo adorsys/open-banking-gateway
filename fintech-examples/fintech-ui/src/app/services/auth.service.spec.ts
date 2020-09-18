@@ -74,6 +74,6 @@ describe('AuthService', () => {
     authService.logout();
 
     // user must be navigated to login page
-    expect(navigateSpy).toHaveBeenCalledWith(['/'.concat(RoutingPath.LOGIN)]);
+    expect(navigateSpy).toHaveBeenCalledWith([`/${RoutingPath.LOGIN}`]);
   });
 });
