@@ -29,7 +29,7 @@ public class HbciReadTransactionListFromCache extends ValidatedExecution<Transac
                 ctx.setResponse(ctx.getCachedResult().getTransactionsByIban().get(ctx.getAccountIban()));
             }
 
-            if (ctx.getUseCache() == Boolean.FALSE) {
+            if (ctx.getOnline() == Boolean.FALSE) {
                 ctx.consentAccess().deleteByCurrentServiceSession();
             }
         });

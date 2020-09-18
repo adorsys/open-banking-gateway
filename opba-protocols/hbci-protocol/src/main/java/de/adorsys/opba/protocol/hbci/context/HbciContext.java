@@ -105,7 +105,7 @@ public class HbciContext extends BaseContext {
 
     private HbciResultCache cachedResult;
 
-    private Boolean useCache;
+    private Boolean online;
 
     public HbciConsent getHbciDialogConsent() {
         if (null == hbciDialogConsent) {

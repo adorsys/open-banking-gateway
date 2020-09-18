@@ -259,9 +259,9 @@ paths:
         - $ref: "#/components/parameters/Fintech-Redirect-URL-OK"
         - $ref: "#/components/parameters/Fintech-Redirect-URL-NOK"
         - $ref: "#/components/parameters/LoARetrievalInformation"
-        - $ref: "#/components/parameters/Use-OPB-Cache"
         #query
         - $ref: "#/components/parameters/withBalance"
+        - $ref: "#/components/parameters/online"
 
       security:
         - sessionCookie: []
@@ -292,6 +292,7 @@ paths:
         - $ref: "#/components/parameters/entryReferenceFrom"
         - $ref: "#/components/parameters/bookingStatus"
         - $ref: "#/components/parameters/deltaList"
+        - $ref: "#/components/parameters/online"
 
         #header
         - $ref: "#/components/parameters/X-Request-ID"
@@ -299,7 +300,6 @@ paths:
         - $ref: "#/components/parameters/Fintech-Redirect-URL-OK"
         - $ref: "#/components/parameters/Fintech-Redirect-URL-NOK"
         - $ref: "#/components/parameters/LoTRetrievalInformation"
-        - $ref: "#/components/parameters/Use-OPB-Cache"
 
       security:
         - sessionCookie: []
@@ -612,16 +612,6 @@ components:
       schema:
         type: string
 
-    Use-OPB-Cache:
-      name: Use-OPB-Cache
-      in: header
-      description: |
-        If false, new data will be requested and cache will be updated
-      example: "true"
-      schema:
-        type: boolean
-        default: "true"
-
     auth-id:
       name: auth-id
       in: path
@@ -747,6 +737,16 @@ components:
       required: false
       schema:
         type: string
+
+    online:
+      name: online
+      in: query
+      description: |
+        If false, new data will be requested and cache will be updated
+      example: "false"
+      schema:
+        type: boolean
+        default: "true"
 
   responses:
     200_PaymentInitiationStatusResponseList:

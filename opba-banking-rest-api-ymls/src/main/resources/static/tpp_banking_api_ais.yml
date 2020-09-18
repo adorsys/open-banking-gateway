@@ -39,9 +39,9 @@ paths:
         - $ref: "./tpp_banking_api_commons.yml#/components/parameters/PSU-Consent-Session"
         - $ref: "./tpp_banking_api_commons.yml#/components/parameters/Service-Session-ID"
         - $ref: "./tpp_banking_api_commons.yml#/components/parameters/X-Request-ID"
-        - $ref: "./tpp_banking_api_commons.yml#/components/parameters/Use-Cache"
           # query
         - $ref: "#/components/parameters/withBalance"
+        - $ref: "#/components/parameters/online"
 
       security:
         - BearerAuthOAuth: []
@@ -82,13 +82,13 @@ paths:
         - $ref: "./tpp_banking_api_commons.yml#/components/parameters/PSU-Consent-Session"
         - $ref: "./tpp_banking_api_commons.yml#/components/parameters/Service-Session-ID"
         - $ref: "./tpp_banking_api_commons.yml#/components/parameters/X-Request-ID"
-        - $ref: "./tpp_banking_api_commons.yml#/components/parameters/Use-Cache"
         #query
         - $ref: "#/components/parameters/dateFrom"
         - $ref: "#/components/parameters/dateTo"
         - $ref: "#/components/parameters/entryReferenceFrom"
         - $ref: "#/components/parameters/bookingStatus"
         - $ref: "#/components/parameters/deltaList"
+        - $ref: "#/components/parameters/online"
 
       security:
         - BearerAuthOAuth: []
@@ -207,6 +207,17 @@ components:
         but for the balances too.
       schema:
         type: boolean
+
+    online:
+      name: online
+      in: query
+      required: false
+      description: |
+        Makes possible to request actual data and update cache if cache is used by protocol implementation.
+      example: "false"
+      schema:
+        type: boolean
+        default: "true"
 
     deltaList:
       name: deltaList

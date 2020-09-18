@@ -49,8 +49,8 @@ public class TppBankingApiAisController implements TppBankingApiAccountInformati
         String bankID,
         String psUConsentSession,
         UUID serviceSessionId,
-        Boolean useCache,
-        Boolean withBalance
+        Boolean withBalance,
+        Boolean online
     ) {
         return accounts.execute(
             ListAccountsRequest.builder()
@@ -65,7 +65,7 @@ public class TppBankingApiAisController implements TppBankingApiAccountInformati
                     .serviceSessionId(serviceSessionId)
                     .requestId(xRequestID)
                     .bankId(bankID)
-                    .useCache(useCache)
+                    .online(online)
                     .build()
                 )
                 .withBalance(withBalance)
@@ -87,12 +87,12 @@ public class TppBankingApiAisController implements TppBankingApiAccountInformati
         String bankID,
         String psUConsentSession,
         UUID serviceSessionId,
-        Boolean useCache,
         LocalDate dateFrom,
         LocalDate dateTo,
         String entryReferenceFrom,
         String bookingStatus,
-        Boolean deltaList
+        Boolean deltaList,
+        Boolean online
     ) {
         return transactions.execute(
             ListTransactionsRequest.builder()
@@ -107,7 +107,7 @@ public class TppBankingApiAisController implements TppBankingApiAccountInformati
                     .serviceSessionId(serviceSessionId)
                     .requestId(xRequestID)
                     .bankId(bankID)
-                    .useCache(useCache)
+                    .online(online)
                     .build()
                 )
                 .accountId(accountId)

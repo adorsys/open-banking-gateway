@@ -29,7 +29,7 @@ public class HbciReadAccountListFromCache extends ValidatedExecution<AccountList
                 ctx.setResponse(ctx.getCachedResult().getAccounts());
             }
 
-            if (ctx.getUseCache() == Boolean.FALSE) {
+            if (ctx.getOnline() == Boolean.FALSE) {
                 ctx.consentAccess().deleteByCurrentServiceSession();
             }
         });

@@ -89,7 +89,7 @@ public class FacadeServiceableRequest {
     private final boolean anonymousPsuAllowed;
 
     /**
-     * When false then new account or transaction list will be loaded and cache will be updated.
+     * When false then account or transaction list will be loaded from cache. Otherwise cache will be updated with new data.
      */
-    private final boolean useCache;
+    private final boolean online;
 }

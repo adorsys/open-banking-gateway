@@ -24,7 +24,7 @@ export class AisService {
       notOkUrl,
       loARetrievalInformation,
       withBalance,
-      false,
+      true,
       'response'
     );
   }
@@ -46,7 +46,7 @@ export class AisService {
       null,
       'both',
       null,
-      false,
+      true,
       'response'
     );
   }
