@@ -1,15 +1,14 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+import { HttpClientTestingModule } from '@angular/common/http/testing';
+import { RouterTestingModule } from '@angular/router/testing';
+import { ActivatedRoute } from '@angular/router';
+import { ReactiveFormsModule } from '@angular/forms';
+import { of } from 'rxjs';
 
+import { BankProfileService } from '../bank-search/services/bank-profile.service';
 import { BankComponent } from './bank.component';
 import { SidebarComponent } from './sidebar/sidebar.component';
-import { RouterTestingModule } from '@angular/router/testing';
 import { NavbarComponent } from '../common/navbar/navbar.component';
-import { AuthService } from '../services/auth.service';
-import { HttpClientTestingModule } from '@angular/common/http/testing';
-import { ReactiveFormsModule } from '@angular/forms';
-import { BankProfileService } from '../bank-search/services/bank-profile.service';
-import { of } from 'rxjs';
-import { ActivatedRoute } from '@angular/router';
 
 describe('BankComponent', () => {
   let component: BankComponent;
@@ -31,12 +30,12 @@ describe('BankComponent', () => {
               paramMap: {
                 get(bankId: string): string {
                   return '1234';
-                }
-              }
-            }
-          }
-        }
-      ]
+                },
+              },
+            },
+          },
+        },
+      ],
     }).compileComponents();
   }));
 
@@ -44,7 +43,7 @@ describe('BankComponent', () => {
     fixture = TestBed.createComponent(BankComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
-    bankService = TestBed.get(BankProfileService);
+    bankService = TestBed.inject(BankProfileService);
   });
 
   it('should create', () => {

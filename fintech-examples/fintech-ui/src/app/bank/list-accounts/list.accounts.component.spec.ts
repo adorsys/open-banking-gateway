@@ -1,6 +1,6 @@
 import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
-import { ActivatedRoute, convertToParamMap } from '@angular/router';
+import { ActivatedRoute } from '@angular/router';
 import { RouterTestingModule } from '@angular/router/testing';
 import { CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
 import { HttpResponse } from '@angular/common/http';
@@ -30,18 +30,18 @@ describe('ListAccountsComponent', () => {
         {
           provide: ActivatedRoute,
           useValue: {
-            snapshot: { params: { bankid: '1234' } }
-          }
-        }
-      ]
+            snapshot: { params: { bankid: '1234' } },
+          },
+        },
+      ],
     }).compileComponents();
   }));
 
   beforeEach(() => {
     fixture = TestBed.createComponent(ListAccountsComponent);
     component = fixture.componentInstance;
-    aisService = TestBed.get(AisService);
-    route = TestBed.get(ActivatedRoute);
+    aisService = TestBed.inject(AisService);
+    route = TestBed.inject(ActivatedRoute);
     fixture.detectChanges();
   });
 
@@ -54,11 +54,9 @@ describe('ListAccountsComponent', () => {
     const loaRetrievalInformation = LoARetrievalInformation.FROM_TPP_WITH_AVAILABLE_CONSENT;
     const mockAccounts: HttpResponse<AccountList> = {} as HttpResponse<AccountList>;
 
-    spyOn(aisService, 'getAccounts')
-      .withArgs(bankId, loaRetrievalInformation, false)
-      .and.returnValue(of(mockAccounts));
+    spyOn(aisService, 'getAccounts').withArgs(bankId, loaRetrievalInformation, false).and.returnValue(of(mockAccounts));
     expect(component.bankId).toEqual(bankId);
-    aisService.getAccounts(bankId, loaRetrievalInformation, false).subscribe(res => {
+    aisService.getAccounts(bankId, loaRetrievalInformation, false).subscribe((res) => {
       expect(res).toEqual(mockAccounts);
     });
   });
