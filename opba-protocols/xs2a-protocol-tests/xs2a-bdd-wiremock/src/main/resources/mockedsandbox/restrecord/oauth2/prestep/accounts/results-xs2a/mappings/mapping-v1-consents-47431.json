@@ -1,5 +1,6 @@
 {
   "id": "69629a72-7cba-34f6-b179-870ee19ea706",
+  "priority": 100,
   "request": {
     "url": "/v1/consents",
     "method": "POST",
