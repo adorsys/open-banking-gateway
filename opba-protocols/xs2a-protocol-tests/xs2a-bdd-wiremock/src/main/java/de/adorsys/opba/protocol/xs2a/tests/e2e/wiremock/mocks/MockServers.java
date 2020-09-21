@@ -162,7 +162,6 @@ public class MockServers<SELF extends MockServers<SELF>> extends CommonGivenStag
 
         WireMockConfiguration config = WireMockConfiguration.options().dynamicPort()
                 .usingFilesUnderClasspath(tempDir.toAbsolutePath().toString())
-                .notifier(new ConsoleNotifier(true))
                 .extensions(new ResponseTemplateTransformer(false));
         startWireMock(config);
 
