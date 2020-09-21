@@ -25,6 +25,7 @@ import java.util.UUID;
 
 import static de.adorsys.opba.protocol.xs2a.tests.TestProfiles.MOCKED_SANDBOX;
 import static de.adorsys.opba.protocol.xs2a.tests.TestProfiles.ONE_TIME_POSTGRES_RAMFS;
+import static de.adorsys.opba.protocol.xs2a.tests.e2e.wiremock.Const.PIS_OAUTH2_CODE;
 import static org.springframework.boot.test.context.SpringBootTest.WebEnvironment.RANDOM_PORT;
 
 /**
@@ -35,8 +36,6 @@ import static org.springframework.boot.test.context.SpringBootTest.WebEnvironmen
 @SpringBootTest(classes = {Xs2aProtocolApplication.class, JGivenConfig.class}, webEnvironment = RANDOM_PORT)
 @ActiveProfiles(profiles = {ONE_TIME_POSTGRES_RAMFS, MOCKED_SANDBOX})
 public class WiremockAuthenticatedPaymentE2EXs2aProtocolTest extends SpringScenarioTest<MockServers, WiremockPaymentRequest<? extends WiremockPaymentRequest<?>>, PaymentResult> {
-
-    private static final String OAUTH2_CODE = "jCLPmAuBugTKfOkmxcmGKsiq";
 
     private final String OPBA_PASSWORD = UUID.randomUUID().toString();
     private final String OPBA_LOGIN = UUID.randomUUID().toString();
@@ -361,7 +360,7 @@ public class WiremockAuthenticatedPaymentE2EXs2aProtocolTest extends SpringScena
                 .and()
                 .user_anton_brueckner_sees_that_he_needs_to_be_redirected_to_aspsp_and_redirects_to_aspsp()
                 .and()
-                .open_banking_redirect_from_aspsp_with_static_oauth2_code_to_exchange_to_token(OAUTH2_CODE)
+                .open_banking_redirect_from_aspsp_with_static_oauth2_code_to_exchange_to_token(PIS_OAUTH2_CODE)
                 .and()
                 .user_anton_brueckner_sees_that_he_needs_to_be_redirected_to_aspsp_and_redirects_to_aspsp()
                 .and()
@@ -392,7 +391,7 @@ public class WiremockAuthenticatedPaymentE2EXs2aProtocolTest extends SpringScena
                 .and()
                 .user_anton_brueckner_sees_that_he_needs_to_be_redirected_to_aspsp_and_redirects_to_aspsp()
                 .and()
-                .open_banking_redirect_from_aspsp_with_static_oauth2_code_to_exchange_to_token(OAUTH2_CODE);
+                .open_banking_redirect_from_aspsp_with_static_oauth2_code_to_exchange_to_token(PIS_OAUTH2_CODE);
         then()
                 .open_banking_has_stored_payment()
                 .fintech_calls_payment_activation_for_current_authorization_id()
