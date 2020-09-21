@@ -58,6 +58,7 @@ public class AccountInformationResult<SELF extends AccountInformationResult<SELF
     private static final int MAX_MUSTERMAN_BOOKED_TRANSACTIONS_COUNT = 5;
     private static final String ANTON_BRUECKNER_IBAN = "DE80760700240271232400";
     private static final String MAX_MUSTERMAN_IBAN = "DE38760700240320465700";
+    public static final String ONLINE = "online";
 
     @Getter
     @ExpectedScenarioState
@@ -279,6 +280,7 @@ public class AccountInformationResult<SELF extends AccountInformationResult<SELF
                 .queryParam("dateFrom", dateFrom.format(ISO_DATE))
                 .queryParam("dateTo", dateTo.format(ISO_DATE))
                 .queryParam("bookingStatus", bookingStatus)
+                .queryParam(ONLINE, false)
             .when()
                 .get(AIS_TRANSACTIONS_ENDPOINT, resourceId)
             .then()
