@@ -54,9 +54,11 @@ describe('ListAccountsComponent', () => {
     const loaRetrievalInformation = LoARetrievalInformation.FROM_TPP_WITH_AVAILABLE_CONSENT;
     const mockAccounts: HttpResponse<AccountList> = {} as HttpResponse<AccountList>;
 
-    spyOn(aisService, 'getAccounts').withArgs(bankId, loaRetrievalInformation, false).and.returnValue(of(mockAccounts));
+    spyOn(aisService, 'getAccounts')
+      .withArgs(bankId, loaRetrievalInformation, false, true)
+      .and.returnValue(of(mockAccounts));
     expect(component.bankId).toEqual(bankId);
-    aisService.getAccounts(bankId, loaRetrievalInformation, false).subscribe((res) => {
+    aisService.getAccounts(bankId, loaRetrievalInformation, false, true).subscribe((res) => {
       expect(res).toEqual(mockAccounts);
     });
   });
