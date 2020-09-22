@@ -1,9 +1,8 @@
 package de.adorsys.opba.protocol.xs2a.service.xs2a.ais;
 
-import com.google.gson.Gson;
-import com.google.gson.JsonArray;
-import com.google.gson.JsonElement;
-import com.google.gson.JsonObject;
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.node.ArrayNode;
 import de.adorsys.opba.protocol.bpmnshared.dto.messages.ProcessErrorEnum;
 import de.adorsys.opba.protocol.bpmnshared.dto.messages.InternalReturnableProcessError;
 import de.adorsys.xs2a.adapter.service.exception.ErrorResponseException;
@@ -19,46 +18,55 @@ public class Xs2aConsentErrorHandler {
         try {
             tryCreate.run();
         } catch (ErrorResponseException ex) {
-            tryHandleConsentExceededException(execution, ex, eventPublisher);
+            tryHandleConsentException(execution, ex, eventPublisher);
         }
     }
 
-    private void tryHandleConsentExceededException(DelegateExecution execution, ErrorResponseException ex, ApplicationEventPublisher eventPublisher) {
+    private void tryHandleConsentException(DelegateExecution execution, ErrorResponseException ex, ApplicationEventPublisher eventPublisher) {
         if (!ex.getErrorResponse().isPresent() || null == ex.getErrorResponse().get().getTppMessages()) {
             throw ex;
         }
 
-        if (isConsentExceeded(ex)) {
-            eventPublisher.publishEvent(new InternalReturnableProcessError(execution.getRootProcessInstanceId(), execution.getId(),
+        if (isTppMessage(ex, "ACCESS_EXCEEDED")) {
+            eventPublisher.publishEvent(new InternalReturnableProcessError(execution.getProcessInstanceId(), execution.getId(),
                 ProcessErrorEnum.CONSENT_ACCESS_EXCEEDED_LIMIT));
+            return;
+        }
+        if (isTppMessage(ex, "CONSENT_UNKNOWN")) {
+            eventPublisher.publishEvent(new InternalReturnableProcessError(execution.getProcessInstanceId(), execution.getId(),
+                ProcessErrorEnum.CONSENT_UNKNOWN));
             return;
         }
         throw ex;
     }
 
-    private boolean isConsentExceeded(ErrorResponseException ex) {
+    private boolean isTppMessage(ErrorResponseException ex, String searchText) {
+        log.debug("I am looking for {} in {}", searchText, ex.getMessage());
         try {
-            Gson gson = new Gson();
+            ObjectMapper objectMapper = new ObjectMapper();
             String message = ex.getMessage();
-            JsonObject object = gson.fromJson(message, JsonObject.class);
-            JsonArray tppMessages = object.getAsJsonArray("tppMessages");
-            for (int i = 0; i < tppMessages.size(); i++) {
-                JsonObject messageObject = tppMessages.get(i).getAsJsonObject();
-                if (messageObject != null) {
-                    JsonElement messageCodeElement = messageObject.get("code");
-                    if (messageCodeElement != null) {
-                        if ("ACCESS_EXCEEDED".equalsIgnoreCase(messageCodeElement.getAsString())) {
-                            return true;
+            JsonNode object = objectMapper.readTree(message);
+            JsonNode tppMessagesNode = object.get("tppMessages");
+            if (tppMessagesNode.isArray()) {
+                ArrayNode tppMessages = (ArrayNode) tppMessagesNode;
+                for (int i = 0; i < tppMessages.size(); i++) {
+                    JsonNode singleTppMessageNode = tppMessages.get(i);
+                    if (singleTppMessageNode != null) {
+                        JsonNode singleTppMessageNodeCode = singleTppMessageNode.get("code");
+                        if (singleTppMessageNodeCode != null) {
+                            if (searchText.equalsIgnoreCase(singleTppMessageNodeCode.textValue())) {
+                                log.error("FOUND ERROR: {}", searchText);
+                                return true;
+                            }
                         } else {
-                            log.debug("message {} did not contain expected code", message);
+                            log.warn("error during errorhandling: message {} had no code element", message);
                         }
                     } else {
-                        log.debug("message {} had no code element", message);
+                        log.warn("error during errorhandling: message {} had unknown element", message);
                     }
-                } else {
-                    log.debug("message {} had unknown element", message);
                 }
             }
+
         } catch (Exception ex2) {
             ex2.printStackTrace();
             log.error("exception {} during parsing exception {}", ex2.getMessage(), ex.getMessage());

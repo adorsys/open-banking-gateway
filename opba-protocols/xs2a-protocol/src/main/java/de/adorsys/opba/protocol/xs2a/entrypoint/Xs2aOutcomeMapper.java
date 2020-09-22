@@ -21,6 +21,7 @@ import de.adorsys.opba.protocol.bpmnshared.dto.messages.InternalReturnableProces
 import de.adorsys.opba.protocol.bpmnshared.dto.messages.ValidationProblem;
 import de.adorsys.opba.protocol.bpmnshared.outcome.OutcomeMapper;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 
 import java.net.URI;
 import java.util.Set;
@@ -31,6 +32,7 @@ import java.util.function.Function;
  * Mapper to convert from internal protocol result to facade facing protocol result.
  * @param <T>
  */
+@Slf4j
 @RequiredArgsConstructor
 public class Xs2aOutcomeMapper<T> implements OutcomeMapper<T> {
 
@@ -81,6 +83,7 @@ public class Xs2aOutcomeMapper<T> implements OutcomeMapper<T> {
 
     @Override
     public void onReturnableProcessError(InternalReturnableProcessError internalReturnableProcessError) {
+        log.info("here I handle InternalReturnableProcessError");
         channel.complete(new ReturnableProcessErrorResult<T>(internalReturnableProcessError.getProcessErrorEnum().getCode()));
     }
 

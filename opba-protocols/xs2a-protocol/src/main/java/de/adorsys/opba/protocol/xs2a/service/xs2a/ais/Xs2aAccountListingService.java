@@ -53,13 +53,13 @@ public class Xs2aAccountListingService extends ValidatedExecution<Xs2aAisContext
 
     @Service
     public static class Extractor extends QueryHeadersMapperTemplate<
-                    Xs2aAisContext,
-                    Xs2aWithBalanceParameters,
-                    Xs2aWithConsentIdHeaders> {
+        Xs2aAisContext,
+        Xs2aWithBalanceParameters,
+        Xs2aWithConsentIdHeaders> {
 
         public Extractor(
-                DtoMapper<Xs2aContext, Xs2aWithConsentIdHeaders> toHeaders,
-                DtoMapper<Xs2aAisContext, Xs2aWithBalanceParameters> toQuery) {
+            DtoMapper<Xs2aContext, Xs2aWithConsentIdHeaders> toHeaders,
+            DtoMapper<Xs2aAisContext, Xs2aWithBalanceParameters> toQuery) {
             super(toHeaders, toQuery);
         }
     }

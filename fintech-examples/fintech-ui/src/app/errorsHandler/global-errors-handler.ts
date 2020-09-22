@@ -24,19 +24,7 @@ export class GlobalErrorHandler implements ErrorHandler {
           this.router.navigate(['/forbidden-oauth2']);
           break;
         case 404:
-          let errorCode = 'unknown';
-          if (error.headers.get('X-ERROR-CODE') != null) {
-            errorCode = error.headers.get('X-ERROR-CODE');
-          }
-          switch (errorCode) {
-            case '399':
-              message =
-                'The consent has been used too many time. Please request for new consent by changing settings or wait till tomorrow and try again.';
-              break;
-            default:
-              message = errorService.getServerMessage(error);
-              break;
-          }
+          message = this.handleConsentNotFound(error, errorService);
           break;
         default:
           message = errorService.getServerMessage(error);
@@ -59,5 +47,20 @@ export class GlobalErrorHandler implements ErrorHandler {
 
   get router(): Router {
     return this.injector.get(Router);
+  }
+
+  handleConsentNotFound(error, errorService: ErrorService): string {
+    let errorCode = 'unknown';
+    if (error.headers.get('X-ERROR-CODE') != null) {
+      errorCode = error.headers.get('X-ERROR-CODE');
+    }
+    switch (errorCode) {
+      case '399':
+        return 'The consent has been used too many time. Please request for new consent by changing settings or wait till tomorrow and try again.';
+        break;
+      default:
+        return errorService.getServerMessage(error);
+        break;
+    }
   }
 }
