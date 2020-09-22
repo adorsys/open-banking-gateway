@@ -2,7 +2,7 @@ package de.adorsys.opba.protocol.bpmnshared.service.eventbus;
 
 import de.adorsys.opba.protocol.bpmnshared.dto.messages.InternalProcessResult;
 import de.adorsys.opba.protocol.bpmnshared.dto.messages.ProcessError;
-import de.adorsys.opba.protocol.bpmnshared.dto.messages.InternalReturnableProcessError;
+import de.adorsys.opba.protocol.bpmnshared.dto.messages.ProcessErrorWithRootProcessId;
 import lombok.RequiredArgsConstructor;
 import org.flowable.engine.RuntimeService;
 import org.springframework.stereotype.Service;
@@ -61,8 +61,8 @@ class ProcessResultEventHandler {
         synchronized (lock) {
             InternalProcessResult handledResult = result;
 
-            if (handledResult instanceof ProcessError && !(handledResult instanceof InternalReturnableProcessError)) {
-                handledResult = replaceErrorProcessIdWithParentProcessId((ProcessError) handledResult);
+            if (handledResult instanceof ProcessError) {
+                handledResult = replaceErrorProcessIdWithParentProcessIdIfNeeded((ProcessError) handledResult);
             }
 
             consumer = subscribers.remove(handledResult.getProcessId());
@@ -77,7 +77,11 @@ class ProcessResultEventHandler {
     }
 
 
-    private ProcessError replaceErrorProcessIdWithParentProcessId(ProcessError error) {
+    private ProcessError replaceErrorProcessIdWithParentProcessIdIfNeeded(ProcessError error) {
+        if (error instanceof ProcessErrorWithRootProcessId) {
+            return error;
+        }
+
         String rootProcessId = runtimeService.createProcessInstanceQuery()
             .processInstanceId(error.getProcessId())
             .singleResult()
