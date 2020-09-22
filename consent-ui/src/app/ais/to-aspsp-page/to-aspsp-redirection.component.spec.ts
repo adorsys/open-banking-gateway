@@ -12,7 +12,7 @@ describe('ToAspspRedirectionComponent', () => {
   let component: ToAspspRedirectionComponent;
   let fixture: ComponentFixture<ToAspspRedirectionComponent>;
 
-  beforeAll(()=> window.onbeforeunload = jasmine.createSpy());
+  beforeAll(() => (window.onbeforeunload = jasmine.createSpy()));
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
@@ -25,11 +25,11 @@ describe('ToAspspRedirectionComponent', () => {
           useValue: {
             parent: {
               params: of({ authId: StubUtilTests.AUTH_ID }),
-              queryParams: of({ redirectCode: StubUtilTests.REDIRECT_ID }),
-            },
-          },
-        },
-      ],
+              queryParams: of({ redirectCode: StubUtilTests.REDIRECT_ID })
+            }
+          }
+        }
+      ]
     }).compileComponents();
   }));
 

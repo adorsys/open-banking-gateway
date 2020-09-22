@@ -10,7 +10,7 @@ describe('AIS EnterPinPageComponent', () => {
   let component: EnterPinPageComponent;
   let fixture: ComponentFixture<EnterPinPageComponent>;
 
-  beforeAll(()=> window.onbeforeunload = jasmine.createSpy());
+  beforeAll(() => (window.onbeforeunload = jasmine.createSpy()));
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({

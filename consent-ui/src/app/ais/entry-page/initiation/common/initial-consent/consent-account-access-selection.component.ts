@@ -1,4 +1,4 @@
-import {ChangeDetectorRef, Component, Input, OnInit} from '@angular/core';
+import { AfterContentChecked, ChangeDetectorRef, Component, Input, OnInit } from '@angular/core';
 import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { AuthConsentState } from '../../../../common/dto/auth-state';
@@ -14,7 +14,7 @@ import { ApiHeaders } from '../../../../../api/api.headers';
   templateUrl: './consent-account-access-selection.component.html',
   styleUrls: ['./consent-account-access-selection.component.scss']
 })
-export class ConsentAccountAccessSelectionComponent implements OnInit {
+export class ConsentAccountAccessSelectionComponent implements OnInit, AfterContentChecked {
   public finTechName: string;
   public aspspName: string;
 
@@ -41,11 +41,11 @@ export class ConsentAccountAccessSelectionComponent implements OnInit {
   }
 
   ngAfterContentChecked(): void {
-    this.cdRef.detectChanges()
+    this.cdRef.detectChanges();
   }
 
   ngOnInit() {
-    this.activatedRoute.parent.parent.params.subscribe(res => {
+    this.activatedRoute.parent.parent.params.subscribe((res) => {
       this.authorizationId = res.authId;
       this.aspspName = this.sessionService.getBankName(res.authId);
       this.finTechName = this.sessionService.getFintechName(res.authId);
@@ -101,7 +101,7 @@ export class ConsentAccountAccessSelectionComponent implements OnInit {
         {} as DenyRequest,
         'response'
       )
-      .subscribe(res => {
+      .subscribe((res) => {
         window.location.href = res.headers.get(ApiHeaders.LOCATION);
       });
   }
@@ -113,7 +113,7 @@ export class ConsentAccountAccessSelectionComponent implements OnInit {
       consentObj.extras = consentObj.extras ? consentObj.extras : {};
       this.state
         .getGeneralViolations()
-        .forEach(it => (consentObj.extras[it.code] = this.accountAccessForm.get(it.code).value));
+        .forEach((it) => (consentObj.extras[it.code] = this.accountAccessForm.get(it.code).value));
     }
 
     consentObj.level = this.selectedAccess.value.id;

@@ -9,7 +9,7 @@ describe('AccountCardComponent', () => {
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [AccountCardComponent],
+      declarations: [AccountCardComponent]
     }).compileComponents();
   }));
 
@@ -19,7 +19,7 @@ describe('AccountCardComponent', () => {
     component.account = {
       iban: 'DE2750010517421134792622',
       bban: 'DE2750010517421134792622',
-      currency: 'EUR',
+      currency: 'EUR'
     };
     fixture.detectChanges();
   });

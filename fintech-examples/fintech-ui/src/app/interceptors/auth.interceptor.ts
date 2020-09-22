@@ -13,7 +13,7 @@ export class AuthInterceptor implements HttpInterceptor {
 
   intercept(request: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<any>> {
     return this.handleRequest(request, next).pipe(
-      tap(response => {
+      tap((response) => {
         if (response instanceof HttpResponse) {
           const maxAge = response.headers.get(HeaderConfig.HEADER_FIELD_X_MAX_AGE);
           if (maxAge !== null) {

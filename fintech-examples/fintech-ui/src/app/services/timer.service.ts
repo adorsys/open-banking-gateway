@@ -30,7 +30,7 @@ export class TimerService {
   private timerRings(): void {
     if (!this.authService.isLoggedIn()) {
       this.stopTimer();
-      if (this.router.url !== '/'.concat(RoutingPath.LOGIN)) {
+      if (this.router.url !== `/${RoutingPath.LOGIN}`) {
         this.router.navigate([RoutingPath.SESSION_EXPIRED]);
       }
     } else {

@@ -16,12 +16,12 @@ export class DynamicInputsComponent implements OnInit {
   constructor() {}
 
   ngOnInit() {
-    this.violations.forEach(it => this.targetForm.addControl(it.code, new FormControl('', Validators.required)));
+    this.violations.forEach((it) => this.targetForm.addControl(it.code, new FormControl('', Validators.required)));
 
     if (this.payment && this.payment.extras) {
       this.violations
-        .filter(it => this.targetForm.get(it.code) && this.payment.extras[it.code])
-        .forEach(it => this.targetForm.get(it.code).setValue(this.payment.extras[it.code]));
+        .filter((it) => this.targetForm.get(it.code) && this.payment.extras[it.code])
+        .forEach((it) => this.targetForm.get(it.code).setValue(this.payment.extras[it.code]));
     }
   }
 }

@@ -28,7 +28,7 @@ export class SidebarComponent implements OnInit {
   }
 
   getBankProfile(id: string) {
-    this.bankProfileService.getBankProfile(id).subscribe(response => {
+    this.bankProfileService.getBankProfile(id).subscribe((response) => {
       this.bankName = response.bankName;
       this.showListAccounts = response.services.includes('LIST_ACCOUNTS');
       this.showListTransactions = response.services.includes('LIST_TRANSACTIONS');

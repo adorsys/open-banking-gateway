@@ -25,9 +25,11 @@ export class ConsentAuthorizationService {
         ' with redirect code ' +
         redirectCode
     );
+    if (this.storageService.getUserRedirected()) {
+    }
     this.finTechAuthorizationService
       .fromConsentGET(authId, okOrNotOk, redirectCode, '', xsrfToken, 'response')
-      .subscribe(resp => {
+      .subscribe((resp) => {
         console.log(
           'ConsentAuthorizationService.fromConsent: ' +
             'server responded. Now delete redirect cookie for redirect code ',
@@ -68,7 +70,7 @@ export class ConsentAuthorizationService {
     );
     this.finTechAuthorizationService
       .fromPaymentGET(authId, okOrNotOk, redirectCode, '', xsrfToken, 'response')
-      .subscribe(resp => {
+      .subscribe((resp) => {
         console.log(
           'ConsentAuthorizationService.fromPayment: server responded. now delete redirect cookie for redirect code ',
           redirectCode

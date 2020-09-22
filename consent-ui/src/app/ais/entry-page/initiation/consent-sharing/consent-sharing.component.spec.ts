@@ -12,7 +12,7 @@ describe('ConsentSharingComponent', () => {
   let consentAuthorizationService: UpdateConsentAuthorizationService;
   let fixture: ComponentFixture<ConsentSharingComponent>;
 
-  beforeAll(()=> window.onbeforeunload = jasmine.createSpy());
+  beforeAll(() => (window.onbeforeunload = jasmine.createSpy()));
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
@@ -37,7 +37,7 @@ describe('ConsentSharingComponent', () => {
   beforeEach(() => {
     fixture = TestBed.createComponent(ConsentSharingComponent);
     component = fixture.componentInstance;
-    consentAuthorizationService = TestBed.get(UpdateConsentAuthorizationService);
+    consentAuthorizationService = TestBed.inject(UpdateConsentAuthorizationService);
     fixture.detectChanges();
   });
 

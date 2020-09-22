@@ -1,14 +1,15 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 import { Location } from '@angular/common';
-import { DedicatedAccessComponent } from './dedicated-access.component';
 import { ReactiveFormsModule } from '@angular/forms';
 import { CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
 import { RouterTestingModule } from '@angular/router/testing';
 import { ActivatedRoute, convertToParamMap, Router } from '@angular/router';
 import { of } from 'rxjs';
+
 import { StubUtilTests } from '../../../../common/stub-util-tests';
 import { SessionService } from '../../../../../common/session.service';
 import { ConsentUtil } from '../../../../common/consent-util';
+import { DedicatedAccessComponent } from './dedicated-access.component';
 
 describe('DedicatedAccessComponent', () => {
   let component: DedicatedAccessComponent;
@@ -17,7 +18,7 @@ describe('DedicatedAccessComponent', () => {
   let location: Location;
   let sessionServiceSpy;
   let activatedRoute: ActivatedRoute;
-  let route = { navigate: jasmine.createSpy('navigate') };
+  const route = { navigate: jasmine.createSpy('navigate') };
   let authId;
   let consentUtilSpy;
   let mockData;
@@ -47,11 +48,10 @@ describe('DedicatedAccessComponent', () => {
     fixture = TestBed.createComponent(DedicatedAccessComponent);
     sessionService = fixture.debugElement.injector.get(SessionService);
     component = fixture.componentInstance;
-    activatedRoute = TestBed.get(ActivatedRoute);
-    location = TestBed.get(Location);
-    route = TestBed.get(Router);
+    activatedRoute = TestBed.inject(ActivatedRoute);
+    location = TestBed.inject(Location);
 
-    activatedRoute.parent.parent.params.subscribe(id => (authId = id.authId));
+    activatedRoute.parent.parent.params.subscribe((id) => (authId = id.authId));
     mockData = {
       level: null,
       consent: {

@@ -10,11 +10,11 @@ const routes: Routes = [
     children: [
       {
         path: 'accounts',
-        loadChildren: () => import('./list-accounts/list-accounts.module').then(m => m.ListAccountsModule)
+        loadChildren: () => import('./list-accounts/list-accounts.module').then((m) => m.ListAccountsModule)
       },
       {
         path: 'payment',
-        loadChildren: () => import('./payment/payment.module').then(m => m.PaymentModule)
+        loadChildren: () => import('./payment/payment.module').then((m) => m.PaymentModule)
       },
       {
         path: 'settings',

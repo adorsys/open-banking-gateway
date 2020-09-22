@@ -24,8 +24,8 @@ export class PaymentAccountPaymentsComponent implements OnInit {
     const accountId = this.route.snapshot.params[Consts.ACCOUNT_ID_NAME];
     this.fintechRetrieveAllSinglePaymentsService
       .retrieveAllSinglePayments(bankId, accountId, '', '', 'response')
-      .pipe(map(response => response))
-      .subscribe(response => {
+      .pipe(map((response) => response))
+      .subscribe((response) => {
         this.list = response.body;
       });
   }

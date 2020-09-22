@@ -8,6 +8,7 @@ import { HeaderConfig } from '../models/consts';
 import { DocumentCookieService } from './document-cookie.service';
 import { StorageService } from './storage.service';
 import { RedirectTupelForMap } from '../bank/redirect-page/redirect-struct';
+import { RoutingPath } from '../models/routing-path.model';
 
 @Injectable({
   providedIn: 'root'
@@ -24,7 +25,7 @@ export class AuthService {
   login(credentials: Credentials): Observable<boolean> {
     this.storageService.clearStorage();
     return this.finTechAuthorizationService.loginPOST('', credentials, 'response').pipe(
-      map(response => {
+      map((response) => {
         this.setSessionData(response, credentials);
         return response.ok;
       })
@@ -33,7 +34,7 @@ export class AuthService {
 
   gmailOauth2Login(): Observable<string> {
     return this.finTechOauthAuthenticationService.oauthLoginPOST('', 'gmail', 'response').pipe(
-      map(response => {
+      map((response) => {
         return response.headers.get('Location');
       })
     );
@@ -41,7 +42,7 @@ export class AuthService {
 
   oauth2Login(code: string, state: string, scope: string, error: string): Observable<boolean> {
     return this.finTechAuthorizationService.callbackGetLogin(code, state, scope, error, 'response').pipe(
-      map(response => {
+      map((response) => {
         const creds = new Credentials();
         creds.username = response.body.userProfile.name;
         this.setSessionData(response, creds);
@@ -65,7 +66,7 @@ export class AuthService {
   }
 
   openLoginPage() {
-    this.router.navigate(['/login']);
+    this.router.navigate([`/${RoutingPath.LOGIN}`]);
   }
 
   public isLoggedIn(): boolean {

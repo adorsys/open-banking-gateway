@@ -15,7 +15,7 @@ import { environment } from '../environments/environment';
 
 import { BASE_PATH as BASE_PATH_AUTH } from './api-auth';
 import { SimpleTimer } from 'ng2-simple-timer';
-import {CookieRenewalService} from './ais/common/cookie-renewal/CookieRenewalService';
+import { CookieRenewalService } from './ais/common/cookie-renewal/CookieRenewalService';
 
 @NgModule({
   declarations: [AppComponent],

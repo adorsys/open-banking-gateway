@@ -17,7 +17,7 @@ export class PaymentInfoComponent implements OnInit {
   constructor(private router: Router, private activatedRoute: ActivatedRoute, private sessionService: SessionService) {}
 
   ngOnInit() {
-    this.activatedRoute.params.subscribe(res => {
+    this.activatedRoute.params.subscribe((res) => {
       this.authorizationId = res.authId;
       this.loadPaymentState();
     });

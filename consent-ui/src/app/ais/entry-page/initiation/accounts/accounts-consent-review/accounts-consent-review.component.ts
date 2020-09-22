@@ -36,7 +36,7 @@ export class AccountsConsentReviewComponent implements OnInit {
   private authorizationId: string;
 
   ngOnInit() {
-    this.activatedRoute.parent.parent.params.subscribe(res => {
+    this.activatedRoute.parent.parent.params.subscribe((res) => {
       this.authorizationId = res.authId;
       this.aisConsent = ConsentUtil.getOrDefault(this.authorizationId, this.sessionService);
       this.aspspName = this.sessionService.getBankName(res.authId);
@@ -60,7 +60,7 @@ export class AccountsConsentReviewComponent implements OnInit {
         body,
         'response'
       )
-      .subscribe(res => {
+      .subscribe((res) => {
         this.sessionService.setRedirectCode(this.authorizationId, res.headers.get(ApiHeaders.REDIRECT_CODE));
         window.location.href = res.headers.get(ApiHeaders.LOCATION);
       });

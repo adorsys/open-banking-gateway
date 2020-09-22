@@ -52,7 +52,7 @@ describe('ConsentPaymentAccessSelectionComponent', () => {
     fixture = TestBed.createComponent(ConsentPaymentAccessSelectionComponent);
     component = fixture.componentInstance;
     component.paymentReviewPage = PaymentsConsentReviewComponent.ROUTE;
-    sessionService = TestBed.get(SessionService);
+    sessionService = TestBed.inject(SessionService);
     spyOn(component, 'hasGeneralViolations').and.returnValue(false);
     fixture.detectChanges();
   });

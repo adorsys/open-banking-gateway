@@ -1,13 +1,12 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
-
-import { SidebarComponent } from './sidebar.component';
+import { ActivatedRoute } from '@angular/router';
 import { RouterTestingModule } from '@angular/router/testing';
 import { HttpClientTestingModule } from '@angular/common/http/testing';
+import { of } from 'rxjs';
+
 import { BankProfileService } from '../../bank-search/services/bank-profile.service';
 import { BankProfile } from '../../api';
-import { of } from 'rxjs';
-import { ActivatedRoute } from '@angular/router';
-import { NoopAnimationsModule } from '@angular/platform-browser/animations';
+import { SidebarComponent } from './sidebar.component';
 
 describe('SidebarComponent', () => {
   let component: SidebarComponent;
@@ -40,7 +39,7 @@ describe('SidebarComponent', () => {
   beforeEach(() => {
     fixture = TestBed.createComponent(SidebarComponent);
     component = fixture.componentInstance;
-    bankProfileService = TestBed.get(BankProfileService);
+    bankProfileService = TestBed.inject(BankProfileService);
 
     fixture.detectChanges();
   });
@@ -50,9 +49,7 @@ describe('SidebarComponent', () => {
   });
 
   it('Should call getProfile on ngOnInit', () => {
-    const bankProfileServiceSpy = spyOn(bankProfileService, 'getBankProfile')
-      .withArgs('1234')
-      .and.callThrough();
+    const bankProfileServiceSpy = spyOn(bankProfileService, 'getBankProfile').withArgs('1234').and.callThrough();
     component.ngOnInit();
     expect(bankProfileServiceSpy).toHaveBeenCalled();
   });
@@ -66,11 +63,9 @@ describe('SidebarComponent', () => {
       services: []
     } as BankProfile;
 
-    spyOn(bankProfileService, 'getBankProfile')
-      .withArgs(bankId)
-      .and.returnValue(of(bankProfile));
+    spyOn(bankProfileService, 'getBankProfile').withArgs(bankId).and.returnValue(of(bankProfile));
     component.getBankProfile(bankId);
     expect(component.bankId).toEqual(bankId);
-    bankProfileService.getBankProfile(bankId).subscribe(res => expect(res).toEqual(bankProfile));
+    bankProfileService.getBankProfile(bankId).subscribe((res) => expect(res).toEqual(bankProfile));
   });
 });

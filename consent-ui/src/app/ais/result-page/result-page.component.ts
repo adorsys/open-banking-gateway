@@ -57,13 +57,13 @@ export class ResultPageComponent implements OnInit {
         {} as DenyRequest,
         'response'
       )
-      .subscribe(res => {
+      .subscribe((res) => {
         window.location.href = res.headers.get(ApiHeaders.LOCATION);
       });
   }
 
   private loadRedirectUri(authId: string, redirectCode: string) {
-    this.authStateConsentAuthorizationService.authUsingGET(authId, redirectCode, 'response').subscribe(res => {
+    this.authStateConsentAuthorizationService.authUsingGET(authId, redirectCode, 'response').subscribe((res) => {
       console.log(res);
       this.sessionService.setRedirectCode(authId, res.headers.get(ApiHeaders.REDIRECT_CODE));
       this.redirectTo = res.headers.get(ApiHeaders.LOCATION);

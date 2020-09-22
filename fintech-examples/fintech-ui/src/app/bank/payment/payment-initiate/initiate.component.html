@@ -35,12 +35,8 @@
               type="text"
             />
             <div *ngIf="creditorIban.errors" class="invalid-feedback">
-              <div *ngIf="creditorIban.errors.required">
-                IBAN is required.
-              </div>
-              <div *ngIf="creditorIban.errors.iban">
-                IBAN is invalid
-              </div>
+              <div *ngIf="creditorIban.errors.required">IBAN is required.</div>
+              <div *ngIf="creditorIban.errors.iban">IBAN is invalid</div>
             </div>
           </div>
           <div class="form-group col-md-6">

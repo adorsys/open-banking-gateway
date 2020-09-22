@@ -26,7 +26,7 @@ export class ConfirmComponent implements OnInit {
   confirmData: ConfirmData = new ConfirmData();
 
   ngOnInit() {
-    this.route.paramMap.subscribe(p => {
+    this.route.paramMap.subscribe((p) => {
       this.confirmData = JSON.parse(p.get(Consts.CONFIRM_PAYMENT));
     });
   }

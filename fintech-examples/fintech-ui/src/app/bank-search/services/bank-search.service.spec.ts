@@ -1,7 +1,7 @@
 import { TestBed } from '@angular/core/testing';
+import { HttpClientTestingModule } from '@angular/common/http/testing';
 
 import { BankSearchService } from './bank-search.service';
-import { HttpClientTestingModule, HttpTestingController } from '@angular/common/http/testing';
 import { FinTechBankSearchService } from '../../api';
 
 describe('BankSearchService', () => {
@@ -14,8 +14,8 @@ describe('BankSearchService', () => {
       providers: [BankSearchService, FinTechBankSearchService]
     });
 
-    bankSearchService = TestBed.get(BankSearchService);
-    finTechBankSearchService = TestBed.get(FinTechBankSearchService);
+    bankSearchService = TestBed.inject(BankSearchService);
+    finTechBankSearchService = TestBed.inject(FinTechBankSearchService);
   });
 
   it('should be created', () => {

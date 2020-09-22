@@ -1,17 +1,18 @@
 import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
-import { ActivatedRoute, convertToParamMap } from '@angular/router';
+import { ActivatedRoute } from '@angular/router';
 import { RouterTestingModule } from '@angular/router/testing';
+import { CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
+import { HttpResponse } from '@angular/common/http';
 import { of } from 'rxjs';
+
 import { AisService } from '../services/ais.service';
+import { StorageService } from '../../services/storage.service';
 import { ListTransactionsComponent } from './list-transactions.component';
 import { BankComponent } from '../bank.component';
 import { SidebarComponent } from '../sidebar/sidebar.component';
-import { HttpResponse } from '@angular/common/http';
 import { TransactionsResponse } from '../../api';
 import { Consts, LoTRetrievalInformation } from '../../models/consts';
-import { CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
-import { StorageService } from '../../services/storage.service';
 
 describe('ListTransactionsComponent', () => {
   let component: ListTransactionsComponent;
@@ -43,14 +44,12 @@ describe('ListTransactionsComponent', () => {
   beforeEach(() => {
     fixture = TestBed.createComponent(ListTransactionsComponent);
     component = fixture.componentInstance;
-    aisService = TestBed.get(AisService);
-    route = TestBed.get(ActivatedRoute);
-    storageService = TestBed.get(StorageService);
+    aisService = TestBed.inject(AisService);
+    route = TestBed.inject(ActivatedRoute);
+    storageService = TestBed.inject(StorageService);
     bankId = route.snapshot.params[Consts.BANK_ID_NAME];
     accountId = route.snapshot.params[Consts.ACCOUNT_ID_NAME];
-    storageServiceSpy = spyOn(storageService, 'getLoa')
-      .withArgs(bankId)
-      .and.returnValues([]);
+    storageServiceSpy = spyOn(storageService, 'getLoa').withArgs(bankId).and.returnValues([]);
     fixture.detectChanges();
   });
 
@@ -66,7 +65,7 @@ describe('ListTransactionsComponent', () => {
       .withArgs(bankId, accountId, loTRetrievalInformation)
       .and.returnValue(of(mockTransactions));
     expect(component.bankId).toEqual(bankId);
-    aisService.getTransactions(bankId, accountId, loTRetrievalInformation).subscribe(res => {
+    aisService.getTransactions(bankId, accountId, loTRetrievalInformation).subscribe((res) => {
       expect(res).toEqual(mockTransactions);
     });
   });

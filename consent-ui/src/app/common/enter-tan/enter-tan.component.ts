@@ -43,7 +43,7 @@ export class EnterTanComponent implements OnInit {
 
     this.consentAuthorizationService
       .authUsingGET(this.authorizationSessionId, this.redirectCode, 'response')
-      .subscribe(response => {
+      .subscribe((response) => {
         this.sessionService.setRedirectCode(
           this.authorizationSessionId,
           response.headers.get(ApiHeaders.REDIRECT_CODE)
@@ -76,7 +76,7 @@ export class EnterTanComponent implements OnInit {
         { scaAuthenticationData: { SCA_CHALLENGE_DATA: this.reportScaResultForm.get('tan').value } },
         'response'
       )
-      .subscribe(res => {
+      .subscribe((res) => {
         this.sessionService.setRedirectCode(this.authorizationSessionId, res.headers.get(ApiHeaders.REDIRECT_CODE));
         this.enteredSca.emit(res);
       });
