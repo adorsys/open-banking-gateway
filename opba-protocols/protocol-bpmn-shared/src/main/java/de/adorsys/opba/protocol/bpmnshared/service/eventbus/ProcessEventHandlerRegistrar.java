@@ -32,13 +32,10 @@ public class ProcessEventHandlerRegistrar {
      * ({@link de.adorsys.opba.protocol.bpmnshared.dto.messages.InternalProcessResult}) by {@code mapper}
      */
     public <T> void addHandler(String processId, OutcomeMapper<T> mapper) {
-        log.info("here I am in procResultEnventHanlder2");
         handler.add(
                 processId,
                 procResult -> {
-                    log.info("proc result is of type {}", procResult.getClass().getCanonicalName());
                     if (procResult instanceof InternalReturnableProcessError) {
-                        log.info("procResult is instanceof InternalReturnableProcessError");
                         mapper.onReturnableProcessError((InternalReturnableProcessError) procResult);
                     } else if (procResult instanceof ProcessResponse) {
                         mapper.onSuccess((ProcessResponse) procResult);
