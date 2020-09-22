@@ -33,7 +33,6 @@ describe('SettingsComponent', () => {
   it('should confirm settings with storageService', () => {
     const onConfirmSpy = spyOn(component, 'onConfirm');
     component.onConfirm();
-    fixture.detectChanges();
     expect(onConfirmSpy).toHaveBeenCalled();
   });
 });

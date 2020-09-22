@@ -44,4 +44,17 @@ describe('InitiateComponent', () => {
   it('should create', () => {
     expect(component).toBeTruthy();
   });
+
+  it('should call onDeny', () => {
+    const onDenySpy = spyOn(component, 'onDeny');
+    component.onDeny();
+    expect(onDenySpy).toHaveBeenCalled();
+  });
+
+  it('should call onConfirm', () => {
+    const onConfirmSpy = spyOn(component, 'onConfirm');
+    component.onConfirm();
+    expect(onConfirmSpy).toHaveBeenCalled();
+  });
+
 });
