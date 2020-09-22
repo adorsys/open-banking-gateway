@@ -48,15 +48,6 @@ public class SandboxServers<SELF extends SandboxServers<SELF>> extends CommonGiv
         return self();
     }
 
-    public SELF enabled_oauth2_integrated_sandbox_mode() {
-        enabled_redirect_sandbox_mode(ASPSP_PROFILE_BASE_URI);
-        /*
-         * Not OAUTH2 due to https://github.com/adorsys/xs2a/issues/73
-         */
-        updateScaRedirectFlow(ASPSP_PROFILE_BASE_URI, "REDIRECT");
-        return self();
-    }
-
     public SELF enabled_embedded_sandbox_mode(String aspspProfileUri) {
         RestAssured
                 .given()
@@ -74,7 +65,7 @@ public class SandboxServers<SELF extends SandboxServers<SELF>> extends CommonGiv
         RestAssured
                 .given()
                     .contentType(MediaType.APPLICATION_JSON_VALUE)
-                    .body("[\"REDIRECT\",\"EMBEDDED\",\"DECOUPLED\"]")
+                    .body("[\"REDIRECT\",\"EMBEDDED\",\"DECOUPLED\",\"OAUTH\"]")
                 .when()
                     .put(aspspProfileUri + "/api/v1/aspsp-profile/for-debug/sca-approaches")
                 .then()

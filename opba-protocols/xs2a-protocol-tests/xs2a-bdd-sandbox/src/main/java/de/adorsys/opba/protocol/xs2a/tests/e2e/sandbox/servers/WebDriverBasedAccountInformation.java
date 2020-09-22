@@ -1,6 +1,5 @@
 package de.adorsys.opba.protocol.xs2a.tests.e2e.sandbox.servers;
 
-import com.tngtech.jgiven.annotation.ExpectedScenarioState;
 import com.tngtech.jgiven.integration.spring.JGivenStage;
 import de.adorsys.opba.protocol.xs2a.tests.e2e.stages.AccountInformationRequestCommon;
 import org.openqa.selenium.By;
@@ -21,8 +20,8 @@ import org.springframework.web.util.UriComponentsBuilder;
 import java.net.URI;
 import java.time.Duration;
 
-import static de.adorsys.opba.protocol.xs2a.tests.e2e.sandbox.servers.config.RetryableConfig.TEST_RETRY_OPS;
 import static de.adorsys.opba.api.security.external.domain.HttpHeaders.AUTHORIZATION_SESSION_KEY;
+import static de.adorsys.opba.protocol.xs2a.tests.e2e.sandbox.servers.config.RetryableConfig.TEST_RETRY_OPS;
 
 @JGivenStage
 @SuppressWarnings("checkstyle:MethodName") // Jgiven prettifies snake-case names not camelCase
@@ -324,6 +323,30 @@ public class WebDriverBasedAccountInformation<SELF extends WebDriverBasedAccount
         add_open_banking_auth_session_key_cookie_to_selenium(driver, authSessionCookie);
         try {
             clickOnButton(driver, By.className("btn-primary"), true);
+        } finally {
+            driver.manage().deleteCookieNamed(AUTHORIZATION_SESSION_KEY);
+        }
+        return self();
+    }
+
+    /*
+   Caused by FIXME https://github.com/adorsys/XS2A-Sandbox/issues/42, should be sandbox_anton_brueckner_clicks_redirect_back_to_tpp_button_api_localhost_cookie_only
+    */
+    public SELF sandbox_anton_brueckner_imitates_click_redirect_back_to_tpp_button_api_localhost_cookie_only_with_oauth2_integrated_hack(WebDriver driver) {
+        return sandbox_anton_brueckner_imitates_click_redirect_back_to_tpp_button_api_localhost_cookie_only_with_oauth2_integrated_hack(driver, authSessionCookie);
+    }
+
+    /*
+    Caused by FIXME https://github.com/adorsys/XS2A-Sandbox/issues/42, should be sandbox_anton_brueckner_clicks_redirect_back_to_tpp_button_api_localhost_cookie_only
+     */
+    public SELF sandbox_anton_brueckner_imitates_click_redirect_back_to_tpp_button_api_localhost_cookie_only_with_oauth2_integrated_hack(WebDriver driver, String authSessionCookie) {
+        waitForPageLoad(driver);
+        add_open_banking_auth_session_key_cookie_to_selenium(driver, authSessionCookie);
+        try {
+            String redirect = driver.findElement(By.className("btn-primary"))
+                    .getAttribute("href")
+                    .replaceAll("oauth2=false", "oauth2=true");
+            swallowReachedErrorPageException(() -> driver.navigate().to(redirect));
         } finally {
             driver.manage().deleteCookieNamed(AUTHORIZATION_SESSION_KEY);
         }
