@@ -39,7 +39,9 @@ public class SandboxServers<SELF extends SandboxServers<SELF>> extends CommonGiv
     }
 
     public SELF enabled_redirect_sandbox_mode() {
-        return enabled_redirect_sandbox_mode(ASPSP_PROFILE_BASE_URI);
+        enabled_redirect_sandbox_mode(ASPSP_PROFILE_BASE_URI);
+        updateScaRedirectFlow(ASPSP_PROFILE_BASE_URI, "REDIRECT");
+        return self();
     }
 
     public SELF enabled_oauth2_pre_step_sandbox_mode() {
