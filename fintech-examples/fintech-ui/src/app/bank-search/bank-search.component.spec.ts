@@ -7,7 +7,7 @@ import { BankSearchComponent } from './bank-search.component';
 import { SearchComponent } from '../common/search/search.component';
 import { BankDescriptor } from '../api';
 
-fdescribe('BankSearchComponent', () => {
+describe('BankSearchComponent', () => {
   let component: BankSearchComponent;
   let fixture: ComponentFixture<BankSearchComponent>;
 
