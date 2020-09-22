@@ -23,7 +23,8 @@ export class GlobalErrorHandler implements ErrorHandler {
         case 403:
           this.router.navigate(['/forbidden-oauth2']);
           break;
-        case 404:
+        case 410:
+        case 429:
           message = this.handleConsentNotFound(error, errorService);
           break;
         default:

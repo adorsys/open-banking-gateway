@@ -15,7 +15,7 @@ export class ConsentUtil {
     // FIXME: These fields MUST be initialized by FinTech through API and user can only adjust it.
     aisConsent.consent = new AisConsentImpl();
     aisConsent.consent.access = new AccountAccess();
-    aisConsent.consent.frequencyPerDay = 2; // Setting larger value as 10 exhausts very fast
+    aisConsent.consent.frequencyPerDay = 24; // Setting larger value as 10 exhausts very fast
     aisConsent.consent.recurringIndicator = true;
     aisConsent.consent.validUntil = ConsentUtil.futureDate().toISOString().split('T')[0];
     return aisConsent;
