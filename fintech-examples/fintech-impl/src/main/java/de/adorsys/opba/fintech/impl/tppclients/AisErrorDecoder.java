@@ -4,6 +4,7 @@ import de.adorsys.opba.fintech.impl.exceptions.ConsentException;
 import feign.Response;
 import feign.codec.ErrorDecoder;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.HttpStatus;
 
 import java.util.Optional;
 
@@ -14,7 +15,7 @@ public class AisErrorDecoder implements ErrorDecoder {
 
     @Override
     public Exception decode(String methodKey, Response response) {
-        if (response.status() == 410 || response.status() == 429) {
+        if (response.status() == HttpStatus.GONE.value() || response.status() == HttpStatus.TOO_MANY_REQUESTS.value()) {
             Optional<String> first = response.headers().get(X_ERROR_CODE).stream().findFirst();
             if (first.isPresent()) {
                 return new ConsentException(response.status(), Integer.valueOf(first.get()));
