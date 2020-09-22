@@ -55,6 +55,8 @@ export class GlobalErrorHandler implements ErrorHandler {
       errorCode = error.headers.get('X-ERROR-CODE');
     }
     switch (errorCode) {
+      case '398':
+        return 'The consent is unknown. Please request for new consent by changing settings.';
       case '399':
         return 'The consent has been used too many time. Please request for new consent by changing settings or wait till tomorrow and try again.';
         break;

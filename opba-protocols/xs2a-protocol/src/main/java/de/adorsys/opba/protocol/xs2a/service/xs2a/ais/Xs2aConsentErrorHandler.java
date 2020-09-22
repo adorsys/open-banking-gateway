@@ -28,12 +28,12 @@ public class Xs2aConsentErrorHandler {
         }
 
         if (isTppMessage(ex, "ACCESS_EXCEEDED")) {
-            eventPublisher.publishEvent(new InternalReturnableProcessError(execution.getProcessInstanceId(), execution.getId(),
+            eventPublisher.publishEvent(new InternalReturnableProcessError(execution.getRootProcessInstanceId(), execution.getId(),
                 ProcessErrorEnum.CONSENT_ACCESS_EXCEEDED_LIMIT));
             return;
         }
         if (isTppMessage(ex, "CONSENT_UNKNOWN")) {
-            eventPublisher.publishEvent(new InternalReturnableProcessError(execution.getProcessInstanceId(), execution.getId(),
+            eventPublisher.publishEvent(new InternalReturnableProcessError(execution.getRootProcessInstanceId(), execution.getId(),
                 ProcessErrorEnum.CONSENT_UNKNOWN));
             return;
         }

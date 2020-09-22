@@ -15,6 +15,7 @@ import static de.adorsys.opba.protocol.api.dto.headers.ResponseHeaders.X_ERROR_C
 @Setter
 public class FacadeRuntimeErrorResultWithOwnResponseCode<T> extends FacadeRuntimeErrorResult<T> {
     private static final int DEFAULT_RESPONSE_CODE = 500;
+    private static final int CONSENT_UNKNOWN_ENUM = 398;
     private static final int CONSENT_USAGE_LIMIT_EXCEEDED_ENUM = 399;
     private static final int CONSENT_USAGE_LIMIT_EXCEEDED_HTTP_RESPONSE_CODE = 404;
 
@@ -33,6 +34,7 @@ public class FacadeRuntimeErrorResultWithOwnResponseCode<T> extends FacadeRuntim
             mapped.getHeaders().put(X_ERROR_CODE, "" + result.getErrorCode());
             switch (result.getErrorCode()) {
                 case CONSENT_USAGE_LIMIT_EXCEEDED_ENUM:
+                case CONSENT_UNKNOWN_ENUM:
                     mapped.setResponseCode(CONSENT_USAGE_LIMIT_EXCEEDED_HTTP_RESPONSE_CODE);
                     break;
                 default:
