@@ -22,7 +22,18 @@ describe('SettingsComponent', () => {
     fixture.detectChanges();
   });
 
+  afterEach(() => {
+    TestBed.resetTestingModule();
+  });
+
   it('should create', () => {
     expect(component).toBeTruthy();
+  });
+
+  it('should confirm settings with storageService', () => {
+    const onConfirmSpy = spyOn(component, 'onConfirm');
+    component.onConfirm();
+    fixture.detectChanges();
+    expect(onConfirmSpy).toHaveBeenCalled();
   });
 });
