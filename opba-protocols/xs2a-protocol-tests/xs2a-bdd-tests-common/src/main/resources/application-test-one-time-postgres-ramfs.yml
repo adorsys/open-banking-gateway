@@ -154,7 +154,7 @@ protocol:
           report-sca-result: ${facade.urls.embedded-ui-base-url}/ais${protocol.xs2a.urls.common.parameters.report-sca-result}
           provide-psu-iban: ${facade.urls.embedded-ui-base-url}/ais${protocol.xs2a.urls.common.parameters.provide-psu-iban}
       pis:
-        to-aspsp: ${facade.urls.embedded-ui-base-url}/pis${protocol.xs2a.urls.common.to-aspsp}
+        to-aspsp: ${facade.urls.embedded-ui-base-url}/pis${protocol.xs2a.urls.common.to-aspsp}?redirectCode=#{context.getRedirectCodeIfAuthContinued()}
         web-hooks:
           ok: ${protocol.xs2a.urls.common.web-hooks.ok}
           nok: ${protocol.xs2a.urls.common.web-hooks.nok}
@@ -166,7 +166,7 @@ protocol:
           report-sca-result: ${facade.urls.embedded-ui-base-url}/pis${protocol.xs2a.urls.common.parameters.report-sca-result}
           provide-psu-iban: ${facade.urls.embedded-ui-base-url}/pis${protocol.xs2a.urls.common.parameters.provide-psu-iban}
       common:
-        to-aspsp: /#{context.getAuthorizationSessionIdIfOpened()}/to-aspsp-redirection
+        to-aspsp: /#{context.getAuthorizationSessionIdIfOpened()}/to-aspsp-redirection?redirectCode=#{context.getRedirectCodeIfAuthContinued()}
         web-hooks:
           ok: ${facade.urls.embedded-ui-base-url}/embedded-server/v1/consent/#{context.getAuthorizationSessionIdIfOpened()}/fromAspsp/STUB_STATE/ok?redirectCode=#{context.getAspspRedirectCode()}
           nok: ${facade.urls.embedded-ui-base-url}/embedded-server/v1/consent/#{context.getAuthorizationSessionIdIfOpened()}/fromAspsp/STUB_STATE/nok?redirectCode=#{context.getAspspRedirectCode()}
