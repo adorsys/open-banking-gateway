@@ -8,6 +8,7 @@ import de.adorsys.opba.protocol.xs2a.tests.e2e.sandbox.servers.config.RetryableC
 import de.adorsys.opba.protocol.xs2a.tests.e2e.stages.PaymentResult;
 import de.adorsys.psd2.sandbox.cms.starter.Xs2aCmsAutoConfiguration;
 import io.github.bonigarcia.seljup.SeleniumExtension;
+import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.condition.EnabledIfEnvironmentVariable;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.junit.jupiter.params.ParameterizedTest;
@@ -28,11 +29,13 @@ import static de.adorsys.opba.protocol.xs2a.tests.Const.ENABLE_HEAVY_TESTS;
 import static de.adorsys.opba.protocol.xs2a.tests.Const.TRUE_BOOL;
 import static de.adorsys.opba.protocol.xs2a.tests.TestProfiles.MOCKED_SANDBOX;
 import static de.adorsys.opba.protocol.xs2a.tests.TestProfiles.ONE_TIME_POSTGRES_RAMFS;
+import static de.adorsys.opba.protocol.xs2a.tests.e2e.stages.StagesCommonUtil.SANDBOX_OAUTH2_INTEGRATED_BANK_ID;
 import static org.springframework.boot.test.context.SpringBootTest.WebEnvironment.RANDOM_PORT;
 
 /**
  * Happy-path heavy test that uses Dynamic-Sandbox to drive banking-protocol.
  */
+@SuppressWarnings("CPD-START") // Same steps are used, but that's fine for readability
 @EnabledIfEnvironmentVariable(named = ENABLE_HEAVY_TESTS, matches = TRUE_BOOL)
 @EnableAutoConfiguration(exclude = {
     HypermediaAutoConfiguration.class,
@@ -109,6 +112,97 @@ public class SandboxE2EProtocolPisTest extends SandboxCommonTest<
                 .sandbox_anton_brueckner_provides_sca_challenge_result(firefoxDriver)
                 .and()
                 .sandbox_anton_brueckner_clicks_redirect_back_to_tpp_button_api_localhost_cookie_only(firefoxDriver);
+        then()
+                .open_banking_has_stored_payment()
+                .fintech_calls_payment_activation_for_current_authorization_id()
+                .fintech_calls_payment_status()
+                .fintech_calls_payment_information_iban_400();
+    }
+
+    /**
+     * Not using {@code ParameterizedTest} as OAuth2 is the special case of REDIRECT (to reduce pipeline runtime).
+     */
+    @Test
+    public void testSinglePaymentWithConsentUsingOAuth2PreStep(FirefoxDriver firefoxDriver) {
+        given()
+                .enabled_oauth2_pre_step_sandbox_mode()
+                .rest_assured_points_to_opba_server_with_fintech_signer_on_banking_api()
+                .user_registered_in_opba_with_credentials(OPBA_LOGIN, OPBA_PASSWORD);
+
+        when()
+                .fintech_calls_initiate_payment_for_anton_brueckner()
+                .and()
+                .user_logged_in_into_opba_as_opba_user_with_credentials_using_fintech_supplied_url(OPBA_LOGIN, OPBA_PASSWORD)
+                .and()
+                .user_anton_brueckner_provided_initial_parameters_to_authorize_initiation_payment()
+                .and()
+                .user_anton_brueckner_sees_that_he_needs_to_be_redirected_to_aspsp_and_redirects_to_aspsp()
+                .and()
+                .sandbox_anton_brueckner_navigates_to_bank_auth_page(firefoxDriver)
+                .and()
+                .add_open_banking_auth_session_key_cookie_to_selenium(firefoxDriver)
+                .and()
+                .sandbox_anton_brueckner_inputs_username_and_password_for_oauth2_form(firefoxDriver)
+                .and()
+                .update_redirect_code_from_browser_url(firefoxDriver)
+                .and()
+                .user_anton_brueckner_sees_that_he_needs_to_be_redirected_to_aspsp_and_redirects_to_aspsp()
+                .and()
+                .sandbox_anton_brueckner_navigates_to_bank_auth_page(firefoxDriver)
+                .and()
+                .sandbox_anton_brueckner_inputs_username_and_password(firefoxDriver)
+                .and()
+                .sandbox_anton_brueckner_confirms_consent_information(firefoxDriver)
+                .and()
+                .sandbox_anton_brueckner_selects_sca_method(firefoxDriver)
+                .and()
+                .sandbox_anton_brueckner_provides_sca_challenge_result(firefoxDriver)
+                .and()
+                .sandbox_anton_brueckner_clicks_redirect_back_to_tpp_button_api_localhost_cookie_only(firefoxDriver);
+
+        then()
+                .open_banking_has_stored_payment()
+                .fintech_calls_payment_activation_for_current_authorization_id()
+                .fintech_calls_payment_status()
+                .fintech_calls_payment_information_iban_400();
+    }
+
+    /**
+     * Not using {@code ParameterizedTest} as OAuth2 is the special case of REDIRECT (to reduce pipeline runtime).
+     */
+    @Test
+    public void testSinglePaymentWithConsentUsingOAuth2Integrated(FirefoxDriver firefoxDriver) {
+        given()
+                .enabled_redirect_sandbox_mode()
+                .rest_assured_points_to_opba_server_with_fintech_signer_on_banking_api()
+                .user_registered_in_opba_with_credentials(OPBA_LOGIN, OPBA_PASSWORD);
+
+        when()
+                /*
+                 * FIXME: Using custom bank id because of https://github.com/adorsys/xs2a/issues/73
+                 */
+                .fintech_calls_initiate_payment_for_anton_brueckner(SANDBOX_OAUTH2_INTEGRATED_BANK_ID)
+                .and()
+                .user_logged_in_into_opba_as_opba_user_with_credentials_using_fintech_supplied_url(OPBA_LOGIN, OPBA_PASSWORD)
+                .and()
+                .user_anton_brueckner_provided_initial_parameters_to_authorize_initiation_payment()
+                .and()
+                .user_anton_brueckner_sees_that_he_needs_to_be_redirected_to_aspsp_and_redirects_to_aspsp()
+                .and()
+                .sandbox_anton_brueckner_navigates_to_bank_auth_page(firefoxDriver)
+                .and()
+                .sandbox_anton_brueckner_inputs_username_and_password(firefoxDriver)
+                .and()
+                .sandbox_anton_brueckner_confirms_consent_information(firefoxDriver)
+                .and()
+                .sandbox_anton_brueckner_selects_sca_method(firefoxDriver)
+                .and()
+                .sandbox_anton_brueckner_provides_sca_challenge_result(firefoxDriver)
+                .and()
+                .add_open_banking_auth_session_key_cookie_to_selenium(firefoxDriver) // for back redirect as cookie is unavaliable in AIS class
+                .and()
+                .sandbox_anton_brueckner_imitates_click_redirect_back_to_tpp_button_api_localhost_cookie_only_with_oauth2_integrated_hack(firefoxDriver);
+
         then()
                 .open_banking_has_stored_payment()
                 .fintech_calls_payment_activation_for_current_authorization_id()

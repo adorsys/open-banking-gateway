@@ -265,7 +265,6 @@ class SandboxE2EProtocolAisTest extends SandboxCommonTest<
     public void testAccountsListWithConsentUsingOAuth2Integrated(FirefoxDriver firefoxDriver) {
         given()
                 .enabled_redirect_sandbox_mode()
-                .enabled_oauth2_integrated_sandbox_mode()
                 .rest_assured_points_to_opba_server_with_fintech_signer_on_banking_api()
                 .user_registered_in_opba_with_credentials(OPBA_LOGIN, OPBA_PASSWORD);
 
@@ -291,7 +290,7 @@ class SandboxE2EProtocolAisTest extends SandboxCommonTest<
                 .and()
                 .sandbox_anton_brueckner_provides_sca_challenge_result(firefoxDriver)
                 .and()
-                .sandbox_anton_brueckner_clicks_redirect_back_to_tpp_button_api_localhost_cookie_only(firefoxDriver);
+                .sandbox_anton_brueckner_imitates_click_redirect_back_to_tpp_button_api_localhost_cookie_only_with_oauth2_integrated_hack(firefoxDriver);
 
         then()
                 .open_banking_has_consent_for_anton_brueckner_account_list()
