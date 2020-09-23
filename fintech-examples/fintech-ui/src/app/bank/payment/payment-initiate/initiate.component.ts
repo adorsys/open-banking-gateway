@@ -44,7 +44,8 @@ export class InitiateComponent implements OnInit {
   }
 
   onConfirm(): void {
-    let okurl = window.location.pathname;
+    let okurl = this.router.url;
+    console.log('okurl: ', okurl);
     const notOkUrl = okurl.replace('/payment/.*', '/payment/accounts');
     okurl = okurl.replace('/initiate', '/payments');
     console.log('set urls to ', okurl, '', notOkUrl);
