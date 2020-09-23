@@ -39,8 +39,7 @@ export class GlobalErrorHandler implements ErrorHandler {
     this.zone.run(() => {
       if (message !== null) {
         infoService.openFeedback(message, {
-          severity: 'error',
-          duration: 5000
+          severity: 'error'
         });
       }
     });
@@ -55,7 +54,7 @@ export class GlobalErrorHandler implements ErrorHandler {
     if (error.headers.get('X-ERROR-CODE') != null) {
       errorCode = error.headers.get('X-ERROR-CODE').trim();
     }
-    console.log('got error code "', errorCode + '"');
+    console.log('got error code "' + errorCode + '"');
     switch (errorCode) {
       case 'CONSENT_UNKNOWN':
         return 'The consent is unknown. Please request for new consent by changing settings.';
