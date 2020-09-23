@@ -67,7 +67,7 @@ public class AccountService {
             }
         } catch (ConsentException consentException) {
             HttpHeaders headers = new HttpHeaders();
-            headers.add(AisErrorDecoder.X_ERROR_CODE, "" + consentException.getXErrorCode());
+            headers.add(AisErrorDecoder.X_ERROR_CODE, consentException.getXErrorCode());
             return new ResponseEntity(headers, HttpStatus.valueOf(consentException.getHttpResponseCode()));
         }
     }

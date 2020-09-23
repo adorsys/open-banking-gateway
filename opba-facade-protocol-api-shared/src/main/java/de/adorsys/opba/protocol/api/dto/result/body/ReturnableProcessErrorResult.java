@@ -10,5 +10,5 @@ public class ReturnableProcessErrorResult<T> implements Result<T> {
     /** the error code should be returned to the caller, it may be used in the
      * rest layer to use a specific http response code
      */
-    private final int errorCode;
+    private final String errorCodeString;
 }

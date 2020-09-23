@@ -6,10 +6,10 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 @Getter
 public class InternalReturnableProcessError extends ProcessErrorWithRootProcessId {
-    private ProcessErrorEnum processErrorEnum;
-    public InternalReturnableProcessError(String rootProcessId, String executionId, ProcessErrorEnum processErrorEnum) {
-        super(rootProcessId, executionId, processErrorEnum.toString(), true);
-        this.processErrorEnum = processErrorEnum;
-        log.debug("create ReturnableProcessError {} {} {}", rootProcessId, executionId, processErrorEnum.toString());
+    private String processErrorString;
+    public InternalReturnableProcessError(String rootProcessId, String executionId, String processErrorString) {
+        super(rootProcessId, executionId, processErrorString, true);
+        this.processErrorString = processErrorString;
+        log.debug("create ReturnableProcessError {} {} {}", rootProcessId, executionId, processErrorString);
     }
 }

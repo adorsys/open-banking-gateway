@@ -1,6 +1,7 @@
 package de.adorsys.opba.protocol.facade.dto.result.torest.redirectable;
 
 import de.adorsys.opba.protocol.api.dto.result.body.ReturnableProcessErrorResult;
+import de.adorsys.opba.protocol.api.errors.ProcessErrorStrings;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
@@ -16,10 +17,7 @@ import static de.adorsys.opba.protocol.api.dto.headers.ResponseHeaders.X_ERROR_C
 public class FacadeRuntimeErrorResultWithOwnResponseCode<T> extends FacadeRuntimeErrorResult<T> {
     private static final int DEFAULT_RESPONSE_CODE = 500;
 
-    private static final int CONSENT_UNKNOWN_ENUM = 398;
     private static final int CONSENT_UNKNOWN_RESPONSE_CODE = 410;
-
-    private static final int CONSENT_USAGE_LIMIT_EXCEEDED_ENUM = 399;
     private static final int CONSENT_USAGE_LIMIT_EXCEEDED_HTTP_RESPONSE_CODE = 429;
 
     private int responseCode = DEFAULT_RESPONSE_CODE;
@@ -34,17 +32,17 @@ public class FacadeRuntimeErrorResultWithOwnResponseCode<T> extends FacadeRuntim
         default FacadeRuntimeErrorResultWithOwnResponseCode map(ReturnableProcessErrorResult result) {
             FacadeRuntimeErrorResultWithOwnResponseCode mapped = new FacadeRuntimeErrorResultWithOwnResponseCode<>();
             map(result, mapped);
-            mapped.getHeaders().put(X_ERROR_CODE, "" + result.getErrorCode());
-            switch (result.getErrorCode()) {
-                case CONSENT_USAGE_LIMIT_EXCEEDED_ENUM:
+            mapped.getHeaders().put(X_ERROR_CODE, result.getErrorCodeString());
+            switch (result.getErrorCodeString()) {
+                case ProcessErrorStrings.CONSENT_ACCESS_EXCEEDED_LIMIT:
                     mapped.setResponseCode(CONSENT_USAGE_LIMIT_EXCEEDED_HTTP_RESPONSE_CODE);
                     break;
-                case CONSENT_UNKNOWN_ENUM:
+                case ProcessErrorStrings.CONSENT_UNKNOWN:
                     mapped.setResponseCode(CONSENT_UNKNOWN_RESPONSE_CODE);
                     break;
                 default:
                     mapped.setResponseCode(DEFAULT_RESPONSE_CODE);
-                    log.error("did not find specific error for {} to map to specific response code.", result.getErrorCode());
+                    log.error("did not find specific error for {} to map to specific response code.", result.getErrorCodeString());
             }
             return mapped;
         }

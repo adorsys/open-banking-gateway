@@ -3,7 +3,7 @@ package de.adorsys.opba.protocol.xs2a.service.xs2a.ais;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ArrayNode;
-import de.adorsys.opba.protocol.bpmnshared.dto.messages.ProcessErrorEnum;
+import de.adorsys.opba.protocol.api.errors.ProcessErrorStrings;
 import de.adorsys.opba.protocol.bpmnshared.dto.messages.InternalReturnableProcessError;
 import de.adorsys.xs2a.adapter.service.exception.ErrorResponseException;
 import lombok.extern.slf4j.Slf4j;
@@ -29,12 +29,12 @@ public class Xs2aConsentErrorHandler {
 
         if (isTppMessage(ex, "ACCESS_EXCEEDED")) {
             eventPublisher.publishEvent(new InternalReturnableProcessError(execution.getRootProcessInstanceId(), execution.getId(),
-                ProcessErrorEnum.CONSENT_ACCESS_EXCEEDED_LIMIT));
+                ProcessErrorStrings.CONSENT_ACCESS_EXCEEDED_LIMIT));
             return;
         }
         if (isTppMessage(ex, "CONSENT_UNKNOWN")) {
             eventPublisher.publishEvent(new InternalReturnableProcessError(execution.getRootProcessInstanceId(), execution.getId(),
-                ProcessErrorEnum.CONSENT_UNKNOWN));
+                ProcessErrorStrings.CONSENT_UNKNOWN));
             return;
         }
         throw ex;

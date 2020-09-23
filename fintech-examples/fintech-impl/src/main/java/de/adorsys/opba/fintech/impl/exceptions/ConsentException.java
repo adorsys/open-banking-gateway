@@ -7,5 +7,5 @@ import lombok.RequiredArgsConstructor;
 @Getter
 public class ConsentException extends RuntimeException {
     private final int httpResponseCode;
-    private final int xErrorCode;
+    private final String xErrorCode;
 }

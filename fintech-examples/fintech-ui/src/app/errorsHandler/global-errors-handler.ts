@@ -40,7 +40,7 @@ export class GlobalErrorHandler implements ErrorHandler {
       if (message !== null) {
         infoService.openFeedback(message, {
           severity: 'error',
-          duration: 5000,
+          duration: 5000
         });
       }
     });
@@ -53,12 +53,13 @@ export class GlobalErrorHandler implements ErrorHandler {
   handleConsentNotFound(error, errorService: ErrorService): string {
     let errorCode = 'unknown';
     if (error.headers.get('X-ERROR-CODE') != null) {
-      errorCode = error.headers.get('X-ERROR-CODE');
+      errorCode = error.headers.get('X-ERROR-CODE').trim();
     }
+    console.log('got error code "', errorCode + '"');
     switch (errorCode) {
-      case '398':
+      case 'CONSENT_UNKNOWN':
         return 'The consent is unknown. Please request for new consent by changing settings.';
-      case '399':
+      case 'CONSENT_ACCESS_EXCEEDED_LIMIT':
         return 'The consent has been used too many time. Please request for new consent by changing settings or wait till tomorrow and try again.';
         break;
       default:

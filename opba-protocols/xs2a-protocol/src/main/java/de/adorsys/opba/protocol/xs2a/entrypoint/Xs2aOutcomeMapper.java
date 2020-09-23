@@ -83,7 +83,7 @@ public class Xs2aOutcomeMapper<T> implements OutcomeMapper<T> {
 
     @Override
     public void onReturnableProcessError(InternalReturnableProcessError internalReturnableProcessError) {
-        channel.complete(new ReturnableProcessErrorResult<T>(internalReturnableProcessError.getProcessErrorEnum().getCode()));
+        channel.complete(new ReturnableProcessErrorResult<T>(internalReturnableProcessError.getProcessErrorString()));
     }
 
     @Override

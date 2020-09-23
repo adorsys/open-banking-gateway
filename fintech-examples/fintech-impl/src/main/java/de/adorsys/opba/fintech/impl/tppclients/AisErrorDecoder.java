@@ -18,7 +18,7 @@ public class AisErrorDecoder implements ErrorDecoder {
         if (response.status() == HttpStatus.GONE.value() || response.status() == HttpStatus.TOO_MANY_REQUESTS.value()) {
             Optional<String> first = response.headers().get(X_ERROR_CODE).stream().findFirst();
             if (first.isPresent()) {
-                return new ConsentException(response.status(), Integer.valueOf(first.get()));
+                return new ConsentException(response.status(), first.get());
             }
             log.error("Error during error handling. Excpeted headerfield wih {}", X_ERROR_CODE);
         }
