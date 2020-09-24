@@ -1,8 +1,8 @@
-import {FinTechAccountInformationService} from "../../api";
-import {TestBed} from "@angular/core/testing";
-import {HttpClientTestingModule} from "@angular/common/http/testing";
-import {AisService} from "./ais.service";
-import {LoARetrievalInformation, LoTRetrievalInformation} from "../../models/consts";
+import { FinTechAccountInformationService } from '../../api';
+import { TestBed } from '@angular/core/testing';
+import { HttpClientTestingModule } from '@angular/common/http/testing';
+import { AisService } from './ais.service';
+import { LoARetrievalInformation, LoTRetrievalInformation } from '../../models/consts';
 
 describe('AisService', () => {
   let finTechAccountInformationService: FinTechAccountInformationService;
@@ -10,9 +10,7 @@ describe('AisService', () => {
 
   beforeEach(() => {
     TestBed.configureTestingModule({
-      imports: [
-        HttpClientTestingModule,
-      ],
+      imports: [HttpClientTestingModule],
       providers: [AisService]
     });
 

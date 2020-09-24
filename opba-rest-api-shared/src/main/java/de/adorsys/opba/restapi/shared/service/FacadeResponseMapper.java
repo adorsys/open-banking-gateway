@@ -9,6 +9,7 @@ import de.adorsys.opba.protocol.facade.dto.result.torest.FacadeResult;
 import de.adorsys.opba.protocol.facade.dto.result.torest.redirectable.FacadeRedirectErrorResult;
 import de.adorsys.opba.protocol.facade.dto.result.torest.redirectable.FacadeResultRedirectable;
 import de.adorsys.opba.protocol.facade.dto.result.torest.redirectable.FacadeRuntimeErrorResult;
+import de.adorsys.opba.protocol.facade.dto.result.torest.redirectable.FacadeRuntimeErrorResultWithOwnResponseCode;
 import de.adorsys.opba.protocol.facade.dto.result.torest.redirectable.FacadeStartAuthorizationResult;
 import de.adorsys.opba.protocol.facade.dto.result.torest.staticres.FacadeSuccessResult;
 import de.adorsys.opba.restapi.shared.mapper.FacadeResponseBodyToRestBodyMapper;
@@ -40,6 +41,10 @@ public class FacadeResponseMapper {
     public <T, F> ResponseEntity<?> translate(FacadeResult<F> result, FacadeResponseBodyToRestBodyMapper<T, F> mapper) {
         if (result instanceof FacadeRedirectErrorResult) {
             return handleError((FacadeRedirectErrorResult) result);
+        }
+
+        if (result instanceof FacadeRuntimeErrorResultWithOwnResponseCode) {
+            return handleErrorWithOwnResponseCode((FacadeRuntimeErrorResultWithOwnResponseCode) result);
         }
 
         if (result instanceof FacadeRuntimeErrorResult) {
@@ -98,6 +103,10 @@ public class FacadeResponseMapper {
         return putHeadersFromResponse(result, response).build();
     }
 
+    protected <E> ResponseEntity<E> handleErrorWithOwnResponseCode(FacadeRuntimeErrorResultWithOwnResponseCode<?> result) {
+        ResponseEntity.BodyBuilder response = putDefaultHeaders(result, ResponseEntity.status(result.getResponseCode()));
+        return putHeadersFromResponse(result, response).build();
+    }
 
     protected <T, F> ResponseEntity<T> handleSuccess(FacadeSuccessResult<F> result, FacadeResponseBodyToRestBodyMapper<T, F> mapper) {
         ResponseEntity.BodyBuilder response = putDefaultHeaders(result, ResponseEntity.status(OK));

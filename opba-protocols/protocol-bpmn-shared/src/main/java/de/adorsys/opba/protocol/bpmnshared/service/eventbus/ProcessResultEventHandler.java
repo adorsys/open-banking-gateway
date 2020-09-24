@@ -2,6 +2,7 @@ package de.adorsys.opba.protocol.bpmnshared.service.eventbus;
 
 import de.adorsys.opba.protocol.bpmnshared.dto.messages.InternalProcessResult;
 import de.adorsys.opba.protocol.bpmnshared.dto.messages.ProcessError;
+import de.adorsys.opba.protocol.bpmnshared.dto.messages.ProcessErrorWithRootProcessId;
 import lombok.RequiredArgsConstructor;
 import org.flowable.engine.RuntimeService;
 import org.springframework.stereotype.Service;
@@ -30,7 +31,8 @@ class ProcessResultEventHandler {
 
     /**
      * Adds the subscriber to the BPMN process. If any already exists - old one will be removed.
-     * @param processId BPMN process id to subscribe to
+     *
+     * @param processId  BPMN process id to subscribe to
      * @param subscriber Internal BPMN event handling function
      */
     void add(String processId, Consumer<InternalProcessResult> subscriber) {
@@ -49,6 +51,7 @@ class ProcessResultEventHandler {
 
     /**
      * Spring event-bus listener to listen for BPMN process result.
+     *
      * @param result BPMN process message to notify with the subscribers.
      */
     @TransactionalEventListener
@@ -59,7 +62,7 @@ class ProcessResultEventHandler {
             InternalProcessResult handledResult = result;
 
             if (handledResult instanceof ProcessError) {
-                handledResult = replaceErrorProcessIdWithParentProcessId((ProcessError) handledResult);
+                handledResult = replaceErrorProcessIdWithParentProcessIdIfNeeded((ProcessError) handledResult);
             }
 
             consumer = subscribers.remove(handledResult.getProcessId());
@@ -74,11 +77,15 @@ class ProcessResultEventHandler {
     }
 
 
-    private ProcessError replaceErrorProcessIdWithParentProcessId(ProcessError error) {
+    private ProcessError replaceErrorProcessIdWithParentProcessIdIfNeeded(ProcessError error) {
+        if (error instanceof ProcessErrorWithRootProcessId) {
+            return error;
+        }
+
         String rootProcessId = runtimeService.createProcessInstanceQuery()
-                .processInstanceId(error.getProcessId())
-                .singleResult()
-                .getRootProcessInstanceId();
+            .processInstanceId(error.getProcessId())
+            .singleResult()
+            .getRootProcessInstanceId();
 
         return error.toBuilder().processId(rootProcessId).build();
     }

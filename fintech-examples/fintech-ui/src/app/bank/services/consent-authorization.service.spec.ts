@@ -1,11 +1,11 @@
-import {Router} from "@angular/router";
-import {FinTechAuthorizationService} from "../../api";
-import {StorageService} from "../../services/storage.service";
-import {TestBed} from "@angular/core/testing";
-import {HttpClientTestingModule} from "@angular/common/http/testing";
-import {ConsentAuthorizationService} from "./consent-authorization.service";
-import {RouterTestingModule} from "@angular/router/testing";
-import {Consent, LoARetrievalInformation, Payment} from "../../models/consts";
+import { Router } from '@angular/router';
+import { FinTechAuthorizationService } from '../../api';
+import { StorageService } from '../../services/storage.service';
+import { TestBed } from '@angular/core/testing';
+import { HttpClientTestingModule } from '@angular/common/http/testing';
+import { ConsentAuthorizationService } from './consent-authorization.service';
+import { RouterTestingModule } from '@angular/router/testing';
+import { Consent, LoARetrievalInformation, Payment } from '../../models/consts';
 
 describe('ConsentAuthorizationService', () => {
   let router: Router;
@@ -15,10 +15,7 @@ describe('ConsentAuthorizationService', () => {
 
   beforeEach(() => {
     TestBed.configureTestingModule({
-      imports: [
-        HttpClientTestingModule,
-        RouterTestingModule
-      ],
+      imports: [HttpClientTestingModule, RouterTestingModule],
       providers: [ConsentAuthorizationService]
     });
 
