@@ -82,7 +82,7 @@ export class ConsentPaymentAccessSelectionComponent implements OnInit, AfterCont
   private updatePaymentObject() {
     const paymentObj = PaymentUtil.getOrDefault(this.authorizationId, this.sessionService);
 
-    if (this.state.hasGeneralViolation()) {
+    if (this.hasGeneralViolations()) {
       paymentObj.extras = paymentObj.extras ? paymentObj.extras : {};
       this.state
         .getGeneralViolations()
