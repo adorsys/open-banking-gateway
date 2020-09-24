@@ -51,6 +51,10 @@ paths:
           $ref: "#/components/responses/202_AUTHORIZATION_REQUIRED"
         "401":
           $ref: "./tpp_banking_api_commons.yml#/components/responses/401_UNAUTHORIZED"
+        "410":
+          $ref: "#/components/responses/ErrorShownInXErrorCodeHeaderField"
+        "429":
+          $ref: "#/components/responses/ErrorShownInXErrorCodeHeaderField"
 
   /v1/banking/ais/accounts/{account-id}/transactions:
     get:
@@ -254,6 +258,15 @@ components:
         X-Request-ID:
           $ref: "./tpp_banking_api_commons.yml#/components/headers/X-Request-ID"
       # content - Although content might be present, one should consider it as informative json value that is not actionable
+
+    ErrorShownInXErrorCodeHeaderField:
+      description: |
+        The headerfield tells what exactly was wrong.
+      headers:
+        X-ERROR-CODE:
+          schema:
+            type: string
+
 
     200_AccountList:
       description: OK

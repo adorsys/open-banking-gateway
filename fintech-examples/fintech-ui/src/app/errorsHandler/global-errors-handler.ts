@@ -15,14 +15,21 @@ export class GlobalErrorHandler implements ErrorHandler {
     let message = null;
 
     if (error instanceof HttpErrorResponse) {
-      if (error.status === 401) {
-        console.log('status was 401');
-        this.router.navigate(['/session-expired']);
-      } else if (error.status === 403) {
-        console.log('status was 403');
-        this.router.navigate(['/forbidden-oauth2']);
-      } else {
-        message = errorService.getServerMessage(error);
+      console.log('status was ', error.status);
+      switch (error.status) {
+        case 401:
+          this.router.navigate(['/session-expired']);
+          break;
+        case 403:
+          this.router.navigate(['/forbidden-oauth2']);
+          break;
+        case 410:
+        case 429:
+          message = this.handleConsentNotFound(error, errorService);
+          break;
+        default:
+          message = errorService.getServerMessage(error);
+          break;
       }
     } else {
       // Client Error
@@ -40,5 +47,23 @@ export class GlobalErrorHandler implements ErrorHandler {
 
   get router(): Router {
     return this.injector.get(Router);
+  }
+
+  handleConsentNotFound(error, errorService: ErrorService): string {
+    let errorCode = 'unknown';
+    if (error.headers.get('X-ERROR-CODE') != null) {
+      errorCode = error.headers.get('X-ERROR-CODE').trim();
+    }
+    console.log('got error code "' + errorCode + '"');
+    switch (errorCode) {
+      case 'CONSENT_UNKNOWN':
+        return 'The consent is unknown. Please request for new consent by changing settings.';
+      case 'CONSENT_ACCESS_EXCEEDED_LIMIT':
+        return 'The consent has been used too many time. Please request for new consent by changing settings or wait till tomorrow and try again.';
+        break;
+      default:
+        return errorService.getServerMessage(error);
+        break;
+    }
   }
 }

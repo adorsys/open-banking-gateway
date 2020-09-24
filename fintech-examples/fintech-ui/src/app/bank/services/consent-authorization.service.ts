@@ -26,7 +26,6 @@ export class ConsentAuthorizationService {
         redirectCode
     );
     if (this.storageService.getUserRedirected()) {
-
     }
     this.finTechAuthorizationService
       .fromConsentGET(authId, okOrNotOk, redirectCode, '', xsrfToken, 'response')
