@@ -25,7 +25,6 @@ function updateBankList(bankNameInputId, bankListId, bankIdInput, response) {
     bankList.innerHTML = ''
 
     response.bankDescriptor.forEach(descriptor => {
-        console.log(descriptor)
         const elem = document.createElement("li");
         elem.setAttribute('id', descriptor.bic);
         const linkElem = document.createElement('a');
@@ -34,7 +33,7 @@ function updateBankList(bankNameInputId, bankListId, bankIdInput, response) {
         linkElem.appendChild(linkText);
         elem.appendChild(linkElem);
         bankList.appendChild(elem);
-        document.addEventListener(
+        elem.addEventListener(
             "click",
                 _ => {
                 bankList.innerText = ''
