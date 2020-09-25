@@ -6,7 +6,7 @@ import org.springframework.boot.context.properties.EnableConfigurationProperties
 import org.springframework.cloud.openfeign.EnableFeignClients;
 
 @SpringBootApplication
-@EnableFeignClients(basePackages = {"de.adorsys.opba.firefly.api", "de.adorsys.opba.tpp"})
+@EnableFeignClients(basePackages = "de.adorsys.opba.fireflyexporter")
 @EnableConfigurationProperties
 @SuppressWarnings("checkstyle:HideUtilityClassConstructor") // Springboot starter class is not an utility class
 public class FireflyExporterApplication {

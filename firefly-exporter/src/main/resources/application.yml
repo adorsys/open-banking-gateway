@@ -17,9 +17,14 @@ spring:
     change-log: classpath:firefly-exporter-migration/master.xml
     parameters:
       table-prefix:
+  mvc:
+    static-path-pattern: "/static/**"
+
+api:
+  url: http://localhost:${server.port}
 
 firefly:
-  url: http://127.0.0.1:9999/
+  url: http://localhost:9999
 
 open-banking:
   url: https://obg-dev-openbankinggateway.cloud.adorsys.de/

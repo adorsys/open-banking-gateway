@@ -1,0 +1,32 @@
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org">
+<script src="/static/js/search.js"></script>
+<head>
+    <title>OpenBanking to Firefly-III bank account data exporter</title>
+    <link rel="icon" href="/static/favicon.ico" type="image/x-icon">
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+</head>
+<body>
+    <script th:inline="javascript">
+        let API_URL = /*[[${apiUrl}]]*/ "";
+    </script>
+    <h1>Import your bank accounts and transactions into FireFly-III</h1>
+    <form>
+        <div>
+            <label for="firefly-personal-token">FireFly-III personal access token:</label>
+            <input id="firefly-personal-token" name="firefly-personal-token" type="password"/>
+        </div>
+        <div>
+            <input type="text" id="bank-name-id" onkeyup="callSearch('bank-name-id', 'bank-list', 'bank-id', API_URL)" placeholder="Search for your bank..."/>
+            <input type="hidden" id="bank-id"/>
+            <ul id="bank-list"/>
+        </div>
+        <div>
+            <input id="import-accounts" type="button" value="Import accounts"/>
+        </div>
+        <div>
+            <input id="import-transactions" type="button" value="Import transactions"/>
+        </div>
+    </form>
+</body>
+</html>
