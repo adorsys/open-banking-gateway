@@ -61,7 +61,7 @@ public class FeignConfig {
                 .path(requestTemplate.path())
                 .headers(headers)
                 .queryParams(queries)
-                .body(new String(requestTemplate.body(), requestTemplate.requestCharset()))
+                .body(null == requestTemplate.body() ? null : new String(requestTemplate.body(), requestTemplate.requestCharset()))
                 .build();
         RequestDataToSignNormalizer signatureGen = dataToSignProvider.normalizerFor(toSign);
         return requestSigningService.signature(signatureGen.canonicalStringToSign(toSign));
