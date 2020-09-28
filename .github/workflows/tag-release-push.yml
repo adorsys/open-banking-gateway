@@ -20,8 +20,8 @@ jobs:
         run: ./scripts/promote_oc_image_to_dockerhub.sh
         env:
           OPENSHIFT_TOKEN: ${{ secrets.OPENSHIFT_TOKEN }}
-          DOCKERHUB_USER: ${{ secrets.DOCKERHUB_USER }}
-          DOCKERHUB_PASS: ${{ secrets.DOCKERHUB_PASS }}
+          DOCKERHUB_USERNAME: ${{ secrets.DOCKERHUB_USERNAME }}
+          DOCKERHUB_PASSWORD: ${{ secrets.DOCKERHUB_PASSWORD }}
           RELEASE_CANDIDATE_DOMAIN: openshift-registry.adorsys.de
           RELEASE_CANDIDATE_PROJECT_NAME: open-banking-gateway-integ
 
