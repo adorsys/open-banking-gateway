@@ -78,17 +78,6 @@ class TestTppBankSearchController extends BaseMockitoTest {
                 .andReturn();
     }
 
-    @Test
-    void testBankSearchIncorrectKeyword() throws Exception {
-        UUID xRequestId = UUID.randomUUID();
-        Instant xTimestampUtc = Instant.now();
-        String keyword = "qwertasdf";
-
-        performBankSearchRequest(xRequestId, xTimestampUtc, keyword)
-                .andExpect(jsonPath("$.bankDescriptor.length()").value("0"))
-                .andReturn();
-    }
-
     @NotNull
     private ResultActions performBankSearchRequest(UUID xRequestId, Instant xTimestampUtc, String keyword) throws Exception {
 
