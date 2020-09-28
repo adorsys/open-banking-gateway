@@ -1,15 +1,15 @@
-import {async, ComponentFixture, TestBed} from '@angular/core/testing';
-import {ReactiveFormsModule} from '@angular/forms';
-import {HttpClientTestingModule} from '@angular/common/http/testing';
-import {RouterTestingModule} from '@angular/router/testing';
+import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+import { ReactiveFormsModule } from '@angular/forms';
+import { HttpClientTestingModule } from '@angular/common/http/testing';
+import { RouterTestingModule } from '@angular/router/testing';
 
-import {BankSearchComponent} from './bank-search.component';
-import {SearchComponent} from '../common/search/search.component';
-import {BankDescriptor} from '../api';
-import {BankSearchService} from './services/bank-search.service';
-import {StorageService} from '../services/storage.service';
-import {Router} from '@angular/router';
-import {RoutingPath} from '../models/routing-path.model';
+import { BankSearchComponent } from './bank-search.component';
+import { SearchComponent } from '../common/search/search.component';
+import { BankDescriptor } from '../api';
+import { BankSearchService } from './services/bank-search.service';
+import { StorageService } from '../services/storage.service';
+import { Router } from '@angular/router';
+import { RoutingPath } from '../models/routing-path.model';
 
 describe('BankSearchComponent', () => {
   let component: BankSearchComponent;
