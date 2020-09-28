@@ -2,7 +2,7 @@ package de.adorsys.opba.protocol.xs2a.domain.dto.forms;
 
 import de.adorsys.opba.protocol.xs2a.config.MapperTestConfig;
 import de.adorsys.opba.protocol.xs2a.util.FixtureProvider;
-import de.adorsys.xs2a.adapter.service.model.AuthenticationObject;
+import de.adorsys.xs2a.adapter.api.model.AuthenticationObject;
 import lombok.SneakyThrows;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;

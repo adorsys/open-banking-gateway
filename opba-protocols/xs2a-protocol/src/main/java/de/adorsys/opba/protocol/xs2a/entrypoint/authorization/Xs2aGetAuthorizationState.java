@@ -141,7 +141,7 @@ public class Xs2aGetAuthorizationState implements GetAuthorizationState {
     }
 
     @Mapper(componentModel = SPRING_KEYWORD, implementationPackage = XS2A_MAPPERS_PACKAGE)
-    public interface ChallengeDataMapper extends DtoMapper<de.adorsys.xs2a.adapter.service.model.ChallengeData, ChallengeData> {
+    public interface ChallengeDataMapper extends DtoMapper<de.adorsys.xs2a.adapter.api.model.ChallengeData, ChallengeData> {
     }
 
     @Mapper(componentModel = SPRING_KEYWORD, uses = Xs2aUuidMapper.class, implementationPackage = XS2A_MAPPERS_PACKAGE)

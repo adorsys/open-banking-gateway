@@ -16,9 +16,9 @@ import de.adorsys.opba.protocol.xs2a.service.dto.ValidatedPathHeaders;
 import de.adorsys.opba.protocol.xs2a.service.mapper.PathHeadersMapperTemplate;
 import de.adorsys.opba.protocol.xs2a.service.xs2a.dto.payment.PaymentInfoHeaders;
 import de.adorsys.opba.protocol.xs2a.service.xs2a.dto.payment.PaymentInfoParameters;
-import de.adorsys.xs2a.adapter.service.PaymentInitiationService;
-import de.adorsys.xs2a.adapter.service.Response;
-import de.adorsys.xs2a.adapter.service.model.SinglePaymentInitiationInformationWithStatusResponse;
+import de.adorsys.xs2a.adapter.api.PaymentInitiationService;
+import de.adorsys.xs2a.adapter.api.Response;
+import de.adorsys.xs2a.adapter.api.model.PaymentInitiationWithStatusResponse;
 import lombok.RequiredArgsConstructor;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
@@ -52,7 +52,7 @@ public class Xs2aGetPaymentInfoEntrypoint implements GetPaymentInfoState {
 
         ValidatedPathHeaders<PaymentInfoParameters, PaymentInfoHeaders> params = extractor.forExecution(prepareContext(context, payment));
 
-        Response<SinglePaymentInitiationInformationWithStatusResponse> paymentInformation = pis.getSinglePaymentInformation(
+        Response<PaymentInitiationWithStatusResponse> paymentInformation = pis.getSinglePaymentInformation(
                 context.getRequest().getPaymentProduct().toString(),
                 payment.getPaymentId(),
                 params.getHeaders().toHeaders(),
@@ -89,7 +89,7 @@ public class Xs2aGetPaymentInfoEntrypoint implements GetPaymentInfoState {
     @Mapper(componentModel = SPRING_KEYWORD, implementationPackage = XS2A_MAPPERS_PACKAGE)
     public interface PaymentInformationToBodyMapper {
         @Mapping(source = "paymentInformation.creditorAddress.townName", target = "creditorAddress.city")
-        PaymentInfoBody map(SinglePaymentInitiationInformationWithStatusResponse paymentInformation);
+        PaymentInfoBody map(PaymentInitiationWithStatusResponse paymentInformation);
     }
 
     @Service

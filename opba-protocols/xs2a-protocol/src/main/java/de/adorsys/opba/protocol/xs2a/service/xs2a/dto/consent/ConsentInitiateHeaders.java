@@ -9,7 +9,7 @@ import de.adorsys.opba.protocol.xs2a.service.xs2a.annotations.ValidationInfo;
 import de.adorsys.opba.protocol.xs2a.service.xs2a.dto.ResponseTokenMapper;
 import de.adorsys.opba.protocol.xs2a.service.xs2a.dto.ValidationMode;
 import de.adorsys.opba.protocol.xs2a.service.xs2a.dto.WithBasicInfo;
-import de.adorsys.xs2a.adapter.service.RequestHeaders;
+import de.adorsys.xs2a.adapter.api.RequestHeaders;
 import lombok.Getter;
 import lombok.Setter;
 import org.mapstruct.Mapper;
@@ -20,10 +20,10 @@ import java.util.Map;
 import static de.adorsys.opba.protocol.api.dto.codes.TypeCode.STRING;
 import static de.adorsys.opba.protocol.xs2a.constant.GlobalConst.SPRING_KEYWORD;
 import static de.adorsys.opba.protocol.xs2a.constant.GlobalConst.XS2A_MAPPERS_PACKAGE;
-import static de.adorsys.xs2a.adapter.service.RequestHeaders.PSU_IP_ADDRESS;
-import static de.adorsys.xs2a.adapter.service.RequestHeaders.PSU_IP_PORT;
-import static de.adorsys.xs2a.adapter.service.RequestHeaders.TPP_NOK_REDIRECT_URI;
-import static de.adorsys.xs2a.adapter.service.RequestHeaders.TPP_REDIRECT_URI;
+import static de.adorsys.xs2a.adapter.api.RequestHeaders.PSU_IP_ADDRESS;
+import static de.adorsys.xs2a.adapter.api.RequestHeaders.PSU_IP_PORT;
+import static de.adorsys.xs2a.adapter.api.RequestHeaders.TPP_NOK_REDIRECT_URI;
+import static de.adorsys.xs2a.adapter.api.RequestHeaders.TPP_REDIRECT_URI;
 
 /**
  * Object that represents request Headers that are necessary to call ASPSP API for consent initiation.

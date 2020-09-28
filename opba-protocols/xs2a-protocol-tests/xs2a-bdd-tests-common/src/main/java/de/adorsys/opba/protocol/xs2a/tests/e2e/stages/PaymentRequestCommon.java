@@ -5,7 +5,7 @@ import com.tngtech.jgiven.integration.spring.JGivenStage;
 import de.adorsys.opba.consentapi.model.generated.ConsentAuth;
 import de.adorsys.opba.consentapi.model.generated.SinglePayment;
 import de.adorsys.opba.protocol.xs2a.tests.e2e.LocationExtractorUtil;
-import de.adorsys.xs2a.adapter.adapter.StandardPaymentProduct;
+import de.adorsys.xs2a.adapter.api.model.PaymentProduct;
 import io.restassured.RestAssured;
 import io.restassured.response.ExtractableResponse;
 import io.restassured.response.Response;
@@ -106,7 +106,7 @@ public class PaymentRequestCommon<SELF extends PaymentRequestCommon<SELF>> exten
                 .contentType(APPLICATION_JSON_VALUE)
                 .body(body)
             .when()
-                .post(PIS_SINGLE_PAYMENT_ENDPOINT, StandardPaymentProduct.SEPA_CREDIT_TRANSFERS.getSlug())
+                .post(PIS_SINGLE_PAYMENT_ENDPOINT, PaymentProduct.SEPA_CREDIT_TRANSFERS.toString())
             .then()
                 .statusCode(ACCEPTED.value())
                 .extract();
@@ -123,7 +123,7 @@ public class PaymentRequestCommon<SELF extends PaymentRequestCommon<SELF>> exten
                 .contentType(APPLICATION_JSON_VALUE)
                 .body(body)
              .when()
-                .post(PIS_SINGLE_PAYMENT_ENDPOINT, StandardPaymentProduct.SEPA_CREDIT_TRANSFERS.getSlug())
+                .post(PIS_SINGLE_PAYMENT_ENDPOINT, PaymentProduct.SEPA_CREDIT_TRANSFERS.toString())
              .then()
                 .statusCode(ACCEPTED.value())
                 .extract();

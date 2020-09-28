@@ -10,10 +10,10 @@ import de.adorsys.opba.protocol.xs2a.service.xs2a.dto.Xs2aAuthorizedConsentParam
 import de.adorsys.opba.protocol.xs2a.service.xs2a.dto.Xs2aStandardHeaders;
 import de.adorsys.opba.protocol.xs2a.service.xs2a.dto.authenticate.embedded.ProvideScaChallengeResultBody;
 import de.adorsys.opba.protocol.xs2a.service.xs2a.validation.Xs2aValidator;
-import de.adorsys.xs2a.adapter.service.AccountInformationService;
-import de.adorsys.xs2a.adapter.service.Response;
-import de.adorsys.xs2a.adapter.service.model.ScaStatusResponse;
-import de.adorsys.xs2a.adapter.service.model.TransactionAuthorisation;
+import de.adorsys.xs2a.adapter.api.AccountInformationService;
+import de.adorsys.xs2a.adapter.api.Response;
+import de.adorsys.xs2a.adapter.api.model.ScaStatusResponse;
+import de.adorsys.xs2a.adapter.api.model.TransactionAuthorisation;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.flowable.engine.delegate.DelegateExecution;
@@ -56,6 +56,7 @@ public class Xs2aAisAuthenticateConsentWithScaChallenge extends ValidatedExecuti
                 params.getPath().getConsentId(),
                 params.getPath().getAuthorizationId(),
                 params.getHeaders().toHeaders(),
+                params.getPath().toParameters(),
                 params.getBody()
         );
 
@@ -64,7 +65,7 @@ public class Xs2aAisAuthenticateConsentWithScaChallenge extends ValidatedExecuti
                 (Xs2aContext ctx) -> {
                     ctx.setLastScaChallenge(null); // eagerly destroy SCA challenge, albeit it is not persisted
                     ctx.setWrongAuthCredentials(false);
-                    ctx.setScaStatus(authResponse.getBody().getScaStatus().getValue());
+                    ctx.setScaStatus(authResponse.getBody().getScaStatus().toString());
                 }
         );
     }

@@ -4,8 +4,8 @@ import com.tngtech.jgiven.Stage;
 import com.tngtech.jgiven.annotation.ExpectedScenarioState;
 import com.tngtech.jgiven.integration.spring.JGivenStage;
 import de.adorsys.opba.db.repository.jpa.PaymentRepository;
-import de.adorsys.xs2a.adapter.adapter.StandardPaymentProduct;
-import de.adorsys.xs2a.adapter.service.model.TransactionStatus;
+import de.adorsys.xs2a.adapter.api.model.PaymentProduct;
+import de.adorsys.xs2a.adapter.api.model.TransactionStatus;
 import io.restassured.RestAssured;
 import io.restassured.response.ExtractableResponse;
 import io.restassured.response.Response;
@@ -91,7 +91,7 @@ public class PaymentResult<SELF extends PaymentResult<SELF>> extends Stage<SELF>
         ExtractableResponse<Response> response = withPaymentInfoHeaders(UUID.randomUUID().toString())
                 .header(SERVICE_SESSION_ID, paymentServiceSessionId)
             .when()
-                .get(PIS_PAYMENT_INFORMATION_ENDPOINT, StandardPaymentProduct.SEPA_CREDIT_TRANSFERS.getSlug())
+                .get(PIS_PAYMENT_INFORMATION_ENDPOINT, PaymentProduct.SEPA_CREDIT_TRANSFERS.toString())
             .then()
                 .statusCode(OK.value())
                 .body("endToEndIdentification", equalTo("WBG-123456789"))
@@ -128,7 +128,7 @@ public class PaymentResult<SELF extends PaymentResult<SELF>> extends Stage<SELF>
         ExtractableResponse<Response> response = withPaymentInfoHeaders(UUID.randomUUID().toString())
                 .header(SERVICE_SESSION_ID, paymentServiceSessionId)
             .when()
-                .get(PIS_PAYMENT_INFORMATION_ENDPOINT, StandardPaymentProduct.SEPA_CREDIT_TRANSFERS.getSlug())
+                .get(PIS_PAYMENT_INFORMATION_ENDPOINT, PaymentProduct.SEPA_CREDIT_TRANSFERS.toString())
             .then()
                 .statusCode(OK.value())
                 .body("endToEndIdentification", emptyOrNullString())
@@ -156,7 +156,7 @@ public class PaymentResult<SELF extends PaymentResult<SELF>> extends Stage<SELF>
         ExtractableResponse<Response> response = withPaymentInfoHeaders(UUID.randomUUID().toString(), bankId)
                 .header(SERVICE_SESSION_ID, paymentServiceSessionId)
             .when()
-                .get(PIS_PAYMENT_INFORMATION_ENDPOINT, StandardPaymentProduct.SEPA_CREDIT_TRANSFERS.getSlug())
+                .get(PIS_PAYMENT_INFORMATION_ENDPOINT, PaymentProduct.SEPA_CREDIT_TRANSFERS.toString())
             .then()
                 .statusCode(OK.value())
                 .body("endToEndIdentification", equalTo("WBG-123456789"))
@@ -189,7 +189,7 @@ public class PaymentResult<SELF extends PaymentResult<SELF>> extends Stage<SELF>
         ExtractableResponse<Response> response = withPaymentInfoHeaders(UUID.randomUUID().toString(), bankId)
                 .header(SERVICE_SESSION_ID, serviceSessionId)
             .when()
-                .get(PIS_PAYMENT_STATUS_ENDPOINT, StandardPaymentProduct.SEPA_CREDIT_TRANSFERS.getSlug())
+                .get(PIS_PAYMENT_STATUS_ENDPOINT, PaymentProduct.SEPA_CREDIT_TRANSFERS.toString())
             .then()
                 .statusCode(OK.value())
                 .body("transactionStatus", equalTo(expectedStatus))

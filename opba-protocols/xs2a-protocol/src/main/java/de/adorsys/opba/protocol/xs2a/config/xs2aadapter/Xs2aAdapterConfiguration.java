@@ -1,23 +1,21 @@
 package de.adorsys.opba.protocol.xs2a.config.xs2aadapter;
 
 import com.google.common.io.Resources;
-import de.adorsys.xs2a.adapter.adapter.link.identity.IdentityLinksRewriter;
-import de.adorsys.xs2a.adapter.http.ApacheHttpClientFactory;
-import de.adorsys.xs2a.adapter.http.HttpClientFactory;
-import de.adorsys.xs2a.adapter.mapper.PaymentInitiationScaStatusResponseMapper;
-import de.adorsys.xs2a.adapter.service.AccountInformationService;
-import de.adorsys.xs2a.adapter.service.AspspReadOnlyRepository;
-import de.adorsys.xs2a.adapter.service.DownloadService;
-import de.adorsys.xs2a.adapter.service.Oauth2Service;
-import de.adorsys.xs2a.adapter.service.PaymentInitiationService;
-import de.adorsys.xs2a.adapter.service.Pkcs12KeyStore;
-import de.adorsys.xs2a.adapter.service.impl.AccountInformationServiceImpl;
-import de.adorsys.xs2a.adapter.service.impl.DownloadServiceImpl;
-import de.adorsys.xs2a.adapter.service.impl.PaymentInitiationServiceImpl;
-import de.adorsys.xs2a.adapter.service.link.LinksRewriter;
-import de.adorsys.xs2a.adapter.service.loader.AdapterDelegatingOauth2Service;
-import de.adorsys.xs2a.adapter.service.loader.AdapterServiceLoader;
-import de.adorsys.xs2a.adapter.service.loader.Psd2AdapterServiceLoader;
+import de.adorsys.xs2a.adapter.impl.link.identity.IdentityLinksRewriter;
+import de.adorsys.xs2a.adapter.api.http.HttpClientFactory;
+import de.adorsys.xs2a.adapter.impl.http.ApacheHttpClientFactory;
+import de.adorsys.xs2a.adapter.api.AccountInformationService;
+import de.adorsys.xs2a.adapter.api.AspspReadOnlyRepository;
+import de.adorsys.xs2a.adapter.api.DownloadService;
+import de.adorsys.xs2a.adapter.api.Oauth2Service;
+import de.adorsys.xs2a.adapter.api.PaymentInitiationService;
+import de.adorsys.xs2a.adapter.api.Pkcs12KeyStore;
+import de.adorsys.xs2a.adapter.serviceloader.AccountInformationServiceImpl;
+import de.adorsys.xs2a.adapter.serviceloader.DownloadServiceImpl;
+import de.adorsys.xs2a.adapter.serviceloader.PaymentInitiationServiceImpl;
+import de.adorsys.xs2a.adapter.api.link.LinksRewriter;
+import de.adorsys.xs2a.adapter.serviceloader.AdapterDelegatingOauth2Service;
+import de.adorsys.xs2a.adapter.serviceloader.AdapterServiceLoader;
 import lombok.SneakyThrows;
 import org.apache.http.impl.client.HttpClientBuilder;
 import org.springframework.beans.factory.annotation.Value;
@@ -45,11 +43,6 @@ public class Xs2aAdapterConfiguration {
     }
 
     @Bean
-    PaymentInitiationScaStatusResponseMapper xs2aPaymentInitiationScaStatusResponseMapper() {
-        return new PaymentInitiationScaStatusResponseMapper();
-    }
-
-    @Bean
     AccountInformationService xs2aaccountInformationService(AdapterServiceLoader adapterServiceLoader) {
         return new AccountInformationServiceImpl(adapterServiceLoader);
     }
@@ -63,7 +56,7 @@ public class Xs2aAdapterConfiguration {
     AdapterServiceLoader xs2aadapterServiceLoader(AspspReadOnlyRepository aspspRepository,
                                                   LinksRewriter linksRewriter, Pkcs12KeyStore keyStore,
                                                   HttpClientFactory httpClientFactory) {
-        return new Psd2AdapterServiceLoader(aspspRepository, keyStore, httpClientFactory, linksRewriter, linksRewriter, chooseFirstFromMultipleAspsps);
+        return new AdapterServiceLoader(aspspRepository, keyStore, httpClientFactory, linksRewriter, linksRewriter, chooseFirstFromMultipleAspsps);
     }
 
     @Bean

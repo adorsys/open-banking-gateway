@@ -5,10 +5,10 @@ import de.adorsys.opba.protocol.api.dto.request.payments.SinglePaymentBody;
 import de.adorsys.opba.protocol.api.dto.result.body.AccountListBody;
 import de.adorsys.opba.protocol.api.dto.result.body.TransactionsResponseBody;
 import de.adorsys.opba.protocol.bpmnshared.dto.messages.ProcessResponse;
-import de.adorsys.xs2a.adapter.service.model.AccountListHolder;
-import de.adorsys.xs2a.adapter.service.model.RemittanceInformationStructured;
-import de.adorsys.xs2a.adapter.service.model.SinglePaymentInitiationBody;
-import de.adorsys.xs2a.adapter.service.model.TransactionsReport;
+import de.adorsys.xs2a.adapter.api.model.AccountList;
+import de.adorsys.xs2a.adapter.api.model.PaymentInitiationJson;
+import de.adorsys.xs2a.adapter.api.model.RemittanceInformationStructured;
+import de.adorsys.xs2a.adapter.api.model.TransactionsResponse200Json;
 import lombok.RequiredArgsConstructor;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
@@ -28,24 +28,24 @@ public class Xs2aResultBodyExtractor {
     private final Xs2aToFacadeMapper mapper;
 
     public AccountListBody extractAccountList(ProcessResponse result) {
-        return mapper.map((AccountListHolder) result.getResult());
+        return mapper.map((AccountList) result.getResult());
     }
 
     public TransactionsResponseBody extractTransactionsReport(ProcessResponse result) {
-        return mapper.map((TransactionsReport) result.getResult());
+        return mapper.map((TransactionsResponse200Json) result.getResult());
     }
 
     public SinglePaymentBody extractSinglePaymentBody(ProcessResponse result) {
-        return mapper.map((SinglePaymentInitiationBody) result.getResult());
+        return mapper.map((PaymentInitiationJson) result.getResult());
     }
 
     @Mapper(componentModel = SPRING_KEYWORD, implementationPackage = XS2A_MAPPERS_PACKAGE)
     public interface Xs2aToFacadeMapper {
-        AccountListBody map(AccountListHolder accountList);
-        TransactionsResponseBody map(TransactionsReport transactions);
+        AccountListBody map(AccountList accountList);
+        TransactionsResponseBody map(TransactionsResponse200Json transactions);
 
         @Mapping(source = "singlePaymentInitiationBody.creditorAddress.townName", target = "creditorAddress.city")
-        SinglePaymentBody map(SinglePaymentInitiationBody singlePaymentInitiationBody);
+        SinglePaymentBody map(PaymentInitiationJson singlePaymentInitiationBody);
 
         default String map(RemittanceInformationStructured value) {
             if (null == value) {

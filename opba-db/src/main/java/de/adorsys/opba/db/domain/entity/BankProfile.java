@@ -6,7 +6,7 @@ import de.adorsys.opba.protocol.api.common.Approach;
 import de.adorsys.opba.protocol.api.common.CurrentBankProfile;
 import de.adorsys.opba.protocol.api.common.ProtocolAction;
 import de.adorsys.opba.tppbankingapi.search.model.generated.BankProfileDescriptor;
-import de.adorsys.xs2a.adapter.service.model.Aspsp;
+import de.adorsys.xs2a.adapter.api.model.Aspsp;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -100,7 +100,7 @@ public class BankProfile implements Serializable, CurrentBankProfile {
         @Mapping(source = "bank.uuid", target = "bankCode")
         @Mapping(expression = "java("
                 + "bankProfile.getScaApproaches().stream()"
-                + ".map(a -> de.adorsys.xs2a.adapter.service.model.AspspScaApproach.valueOf(a.name()))"
+                + ".map(a -> de.adorsys.xs2a.adapter.api.model.AspspScaApproach.valueOf(a.name()))"
                 + ".collect(java.util.stream.Collectors.toList()))",
                 target = "scaApproaches")
         Aspsp map(BankProfile bankProfile);

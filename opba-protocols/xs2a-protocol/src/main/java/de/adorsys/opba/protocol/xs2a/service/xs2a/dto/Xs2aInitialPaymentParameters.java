@@ -3,6 +3,7 @@ package de.adorsys.opba.protocol.xs2a.service.xs2a.dto;
 import de.adorsys.opba.protocol.api.dto.payment.PaymentType;
 import de.adorsys.opba.protocol.bpmnshared.dto.DtoMapper;
 import de.adorsys.opba.protocol.xs2a.context.pis.Xs2aPisContext;
+import de.adorsys.xs2a.adapter.api.model.PaymentProduct;
 import lombok.Data;
 import org.mapstruct.Mapper;
 
@@ -28,7 +29,7 @@ public class Xs2aInitialPaymentParameters {
      * Payment product is provided by ASPSP.
      */
     @NotBlank
-    private String paymentProduct;
+    private PaymentProduct paymentProduct;
 
     @Mapper(componentModel = SPRING_KEYWORD, implementationPackage = XS2A_MAPPERS_PACKAGE)
     public interface FromCtx extends DtoMapper<Xs2aPisContext, Xs2aInitialPaymentParameters> {

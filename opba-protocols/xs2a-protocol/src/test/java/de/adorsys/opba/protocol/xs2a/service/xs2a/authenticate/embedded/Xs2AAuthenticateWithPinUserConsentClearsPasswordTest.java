@@ -7,10 +7,10 @@ import de.adorsys.opba.protocol.xs2a.service.xs2a.consent.RequestScopedStub;
 import de.adorsys.opba.protocol.xs2a.service.xs2a.dto.Xs2aAuthorizedConsentParameters;
 import de.adorsys.opba.protocol.xs2a.service.xs2a.dto.Xs2aStandardHeaders;
 import de.adorsys.opba.protocol.xs2a.service.xs2a.validation.Xs2aValidator;
-import de.adorsys.xs2a.adapter.service.AccountInformationService;
-import de.adorsys.xs2a.adapter.service.Response;
-import de.adorsys.xs2a.adapter.service.model.UpdatePsuAuthentication;
-import de.adorsys.xs2a.adapter.service.model.UpdatePsuAuthenticationResponse;
+import de.adorsys.xs2a.adapter.api.AccountInformationService;
+import de.adorsys.xs2a.adapter.api.Response;
+import de.adorsys.xs2a.adapter.api.model.UpdatePsuAuthentication;
+import de.adorsys.xs2a.adapter.api.model.UpdatePsuAuthenticationResponse;
 import org.flowable.engine.delegate.DelegateExecution;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
@@ -62,7 +62,7 @@ class Xs2AAuthenticateWithPinUserConsentClearsPasswordTest extends BaseMockitoTe
         when(delegateExecution.getVariable(CONTEXT)).thenReturn(context);
         context.setPsuPassword(PASSWORD_VALUE);
         when(extractor.forExecution(context)).thenReturn(mockParams);
-        when(ais.updateConsentsPsuData(any(), any(), any(), any(UpdatePsuAuthentication.class))).thenReturn(psuResponse);
+        when(ais.updateConsentsPsuData(any(), any(), any(), any(), any(UpdatePsuAuthentication.class))).thenReturn(psuResponse);
         when(psuResponse.getBody()).thenReturn(responseBody);
 
         tested.doRealExecution(delegateExecution, context);
