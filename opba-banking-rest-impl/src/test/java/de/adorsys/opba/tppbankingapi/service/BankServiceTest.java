@@ -33,6 +33,5 @@ class BankServiceTest {
         // Then
         assertThat(banks).isNotNull();
         assertThat(banks.size()).isEqualTo(0);
-
     }
 }
