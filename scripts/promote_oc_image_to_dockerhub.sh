@@ -27,7 +27,7 @@ do
 done < "$SCRIPT_DIR/service.list"
 
 echo "Promoting pulled images"
-docker login -u "$DOCKERHUB_USER" -p "$DOCKERHUB_PASS" "$TARGET_REGISTRY_DOMAIN" || exit 1
+docker login -u "$DOCKERHUB_USERNAME" -p "$DOCKERHUB_PASSWORD" "$TARGET_REGISTRY_DOMAIN" || exit 1
 while IFS="" read -r service_and_context || [ -n "$service_and_context" ]
 do
     SERVICE_NAME=$(echo "$service_and_context" | cut -d"=" -f1)
