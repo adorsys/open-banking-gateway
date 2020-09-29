@@ -16,4 +16,10 @@ public class ApiConfig {
 
     @NotNull
     private URI url;
+
+    @NotNull
+    private URI redirectOk;
+
+    @NotNull
+    private URI redirectNok;
 }

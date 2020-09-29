@@ -22,6 +22,8 @@ spring:
 
 api:
   url: http://localhost:${server.port}
+  redirect-ok: ${api.url}?consent=ok
+  redirect-nok: ${api.url}?consent=nok
 
 firefly:
   url: http://localhost:9999
@@ -30,6 +32,7 @@ open-banking:
   url: https://obg-dev-openbankinggateway.cloud.adorsys.de/
   client-id: MY-SUPER-FINTECH-ID
   data-protection-password: qwerty
+  user-id: test-user
 
 security:
   # This is the example private key value used only for DEMO purposes
