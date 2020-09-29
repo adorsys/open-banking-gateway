@@ -22,9 +22,8 @@ public class ExportController {
     private final TransactionExportService transactionExportService;
 
     @PostMapping("/{bankId}/export-accounts")
-    public ResponseEntity<Object> exportAccounts(@RequestHeader(FIREFLY_TOKEN) String fireflyToken, @PathVariable String bankId) {
-        accountExportService.exportAccounts(fireflyToken, bankId);
-        return ResponseEntity.ok().build();
+    public ResponseEntity<Long> exportAccounts(@RequestHeader(FIREFLY_TOKEN) String fireflyToken, @PathVariable String bankId) {
+        return accountExportService.exportAccounts(fireflyToken, bankId);
     }
 
     @PostMapping("/{bankId}/export-transactions")
