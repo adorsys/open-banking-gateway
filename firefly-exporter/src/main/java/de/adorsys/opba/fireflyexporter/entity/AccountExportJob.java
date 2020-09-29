@@ -23,6 +23,9 @@ public class AccountExportJob {
     @SequenceGenerator(name = "account_export_id_generator", sequenceName = "account_export_id_seq")
     private long id;
 
+    private long accountsExported;
+
+    private long numAccountsToExport;
 
     @CreatedDate
     private Instant createdAt;
