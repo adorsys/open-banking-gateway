@@ -35,7 +35,6 @@ public class Xs2aAuthorizedConsentParameters {
     }
 
     public RequestParams toParameters() {
-        return RequestParams.builder()
-                .build();
+        return RequestParams.builder().build();
     }
 }

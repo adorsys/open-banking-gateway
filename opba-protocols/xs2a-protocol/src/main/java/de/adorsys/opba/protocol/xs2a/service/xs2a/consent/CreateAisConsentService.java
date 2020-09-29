@@ -2,8 +2,8 @@ package de.adorsys.opba.protocol.xs2a.service.xs2a.consent;
 
 import de.adorsys.opba.protocol.xs2a.context.ais.Xs2aAisContext;
 import de.adorsys.opba.protocol.xs2a.service.dto.ValidatedPathHeadersBody;
-import de.adorsys.opba.protocol.xs2a.service.xs2a.dto.Xs2aAuthorizedConsentParameters;
 import de.adorsys.opba.protocol.xs2a.service.xs2a.dto.consent.ConsentInitiateHeaders;
+import de.adorsys.opba.protocol.xs2a.service.xs2a.dto.consent.ConsentInitiateParameters;
 import de.adorsys.opba.protocol.xs2a.service.xs2a.quirks.QuirkUtil;
 import de.adorsys.xs2a.adapter.api.AccountInformationService;
 import de.adorsys.xs2a.adapter.api.Response;
@@ -24,7 +24,7 @@ public class CreateAisConsentService {
             AccountInformationService ais,
             DelegateExecution execution,
             Xs2aAisContext context,
-            ValidatedPathHeadersBody<Xs2aAuthorizedConsentParameters, ConsentInitiateHeaders, Consents> params) {
+            ValidatedPathHeadersBody<ConsentInitiateParameters, ConsentInitiateHeaders, Consents> params) {
         Response<ConsentsResponse201> consentInit = ais.createConsent(
                 QuirkUtil.pushBicToXs2aAdapterHeaders(context, params.getHeaders().toHeaders()),
                 params.getPath().toParameters(),
