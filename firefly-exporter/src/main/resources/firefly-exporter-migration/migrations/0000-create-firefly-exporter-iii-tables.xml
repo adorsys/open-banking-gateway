@@ -33,6 +33,12 @@
             <column name="id" type="BIGINT">
                 <constraints primaryKey="true"/>
             </column>
+            <column name="bank_id" type="VARCHAR(36)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="consent_id" type="UUID">
+                <constraints nullable="false"/>
+            </column>
             <column name="created_at" type="TIMESTAMP">
                 <constraints nullable="false"/>
             </column>
@@ -41,6 +47,9 @@
             </column>
         </createTable>
         <createSequence sequenceName="consent_id_seq" incrementBy="50"/>
+        <createIndex tableName="${table-prefix}bank_consent" indexName="${table-prefix}bank_consent_consent_id_idx">
+            <column>consent_id</column>
+        </createIndex>
     </changeSet>
 
 </databaseChangeLog>
