@@ -23,17 +23,20 @@
             <div class="form-group">
                 <label for="bank-name-id">Search for your bank</label>
                 <input class="form-control" type="text" id="bank-name-id" onkeyup="callSearch('bank-name-id', 'bank-list', 'bank-id', API_URL)" placeholder="Deutsche bank"/>
-                <input class="form-control" type="hidden" id="bank-id"/>
+                <input class="form-control" type="hidden" id="bank-id" th:value="${bankId}"/>
                 <div class="scrollable">
                     <ul class="list-group" id="bank-list"></ul>
                 </div>
             </div>
 
             <div class="form-group">
-                <input class="form-control" id="import-accounts" type="button" value="Import accounts" onclick="callAccountImport('firefly-personal-token', 'bank-id', API_URL)"/>
-            </div>
+                <input class="form-control" id="import-accounts" type="button" value="Import accounts" onclick="callAccountImport('firefly-personal-token', 'bank-id', 'import-accounts-redirect', 'import-accounts-status', API_URL)"/>
+            <span class="hidden" id="import-accounts-status">Please wait...</span>
+            <a class="hidden" href="#" id="import-accounts-redirect">You need to be redirected to OpenBankingGateway for consent authorization</a>
+        </div>
             <div  class="form-group">
                 <input class="form-control" id="import-transactions" type="button" value="Import transactions"/>
+            <a class="hidden" href="#" id="import-transactions-redirect">You need to be redirected to OpenBankingGateway for consent authorization</a>
             </div>
         </form>
     </div>

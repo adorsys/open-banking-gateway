@@ -11,7 +11,6 @@ import feign.RequestInterceptor;
 import feign.RequestTemplate;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.Configuration;
 
 import java.io.UnsupportedEncodingException;
 import java.net.URLDecoder;

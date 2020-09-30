@@ -22,8 +22,8 @@ spring:
 
 api:
   url: http://localhost:${server.port}
-  redirect-ok: ${api.url}?consent=ok
-  redirect-nok: ${api.url}?consent=nok
+  redirect-ok-template: ${api.url}/consent-confirmed?redirectCode={redirectCode}
+  redirect-nok-template: ${api.url}/consent-declined
 
 firefly:
   url: http://localhost:9999

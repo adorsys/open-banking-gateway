@@ -26,11 +26,14 @@ public class FireFlyExporter {
         int numExported = 0;
         for (AccountDetails account : accountList.getAccounts()) {
             Account fireflyAccount = new Account();
+            fireflyAccount.setName(account.getResourceId());
             fireflyAccount.setIban(account.getIban());
-            fireflyAccount.setNotes("ID:" + account.getResourceId());
             fireflyAccount.setCurrencyCode(account.getCurrency());
             fireflyAccount.setBic(account.getBic());
-            fireflyAccount.setName(account.getName());
+            fireflyAccount.setActive(true);
+            fireflyAccount.setAccountRole(Account.AccountRoleEnum.DEFAULTASSET);
+            fireflyAccount.setType(Account.TypeEnum.ASSET);
+
             fireflyAccount.setCurrentBalance(
                     account.getBalances()
                             .stream().filter(it -> "interimAvailable".equals(it.getBalanceType()))
