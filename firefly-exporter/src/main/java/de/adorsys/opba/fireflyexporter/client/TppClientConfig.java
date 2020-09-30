@@ -1,4 +1,4 @@
-package de.adorsys.opba.fireflyexporter.config;
+package de.adorsys.opba.fireflyexporter.client;
 
 import com.google.common.collect.Iterables;
 import de.adorsys.opba.api.security.external.service.RequestSigningService;
@@ -6,6 +6,7 @@ import de.adorsys.opba.api.security.generator.api.DataToSignProvider;
 import de.adorsys.opba.api.security.generator.api.RequestDataToSignNormalizer;
 import de.adorsys.opba.api.security.generator.api.RequestToSign;
 import de.adorsys.opba.api.security.requestsigner.OpenBankingDataToSignProvider;
+import de.adorsys.opba.fireflyexporter.config.OpenBankingConfig;
 import feign.RequestInterceptor;
 import feign.RequestTemplate;
 import lombok.RequiredArgsConstructor;
@@ -24,35 +25,31 @@ import static de.adorsys.opba.fireflyexporter.config.HeaderFields.FINTECH_ID;
 import static de.adorsys.opba.fireflyexporter.config.HeaderFields.X_REQUEST_SIGNATURE;
 import static de.adorsys.opba.fireflyexporter.config.HeaderFields.X_TIMESTAMP_UTC;
 
-@Configuration
 @RequiredArgsConstructor
-public class FeignConfig {
-
-    private final RequestSigningService requestSigningService;
-    private final OpenBankingConfig opbaConfig;
+public class TppClientConfig {
 
     @Bean
-    public RequestInterceptor requestInterceptorWithSigning() {
+    public RequestInterceptor requestInterceptorWithSigning(OpenBankingConfig opbaConfig, RequestSigningService requestSigningService) {
         return requestTemplate -> {
             requestTemplate.header(COMPUTE_PSU_IP_ADDRESS, Boolean.TRUE.toString());
-            fillSecurityHeadersWithSigning(requestTemplate);
+            fillSecurityHeadersWithSigning(requestTemplate, opbaConfig, requestSigningService);
         };
     }
 
-    private void fillSecurityHeadersWithSigning(RequestTemplate requestTemplate) {
+    private void fillSecurityHeadersWithSigning(RequestTemplate requestTemplate, OpenBankingConfig opbaConfig, RequestSigningService requestSigningService) {
         Instant instant = Instant.now();
 
         requestTemplate.header(FINTECH_ID, opbaConfig.getClientId());
         requestTemplate.header(X_TIMESTAMP_UTC, instant.toString());
-        requestTemplate.header(X_REQUEST_SIGNATURE, calculateSignature(requestTemplate));
+        requestTemplate.header(X_REQUEST_SIGNATURE, calculateSignature(requestTemplate, requestSigningService));
     }
 
-    private String calculateSignature(RequestTemplate requestTemplate) {
+    private String calculateSignature(RequestTemplate requestTemplate, RequestSigningService requestSigningService) {
         Map<String, String> headers = requestTemplate.headers().entrySet().stream().collect(
                 Collectors.toMap(Map.Entry::getKey, it -> Iterables.getFirst(it.getValue(), ""))
         );
         Map<String, String> queries = requestTemplate.queries().entrySet().stream()
-                                              .collect(Collectors.toMap(Map.Entry::getKey, e -> decodeQueryValue(e.getValue())));
+                .collect(Collectors.toMap(Map.Entry::getKey, e -> decodeQueryValue(e.getValue())));
 
         // OpenBankingSigner - This is generated class by opba-api-security-signer-generator-impl annotation processor
         DataToSignProvider dataToSignProvider = new OpenBankingDataToSignProvider();
@@ -73,9 +70,9 @@ public class FeignConfig {
         }
 
         return value.stream()
-                       .findFirst()
-                       .map(this::decodeQueryParam)
-                       .orElse(null);
+                .findFirst()
+                .map(this::decodeQueryParam)
+                .orElse(null);
     }
 
 
