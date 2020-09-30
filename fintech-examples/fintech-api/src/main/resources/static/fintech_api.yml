@@ -416,6 +416,28 @@ paths:
         "401":
           $ref: "#/components/responses/401_Unauthorized"
 
+  /v1/consent/{userid}/{password}:
+    get:
+      summary: ask for existing consent of user
+      description: This method is disabled by default. It can be enabled by profile "CONSENT_RETRIEVAL"
+      operationId: retrieveConsent
+      tags:
+        - FintechRetrieveConsent
+      parameters:
+        #path
+        - name: userid
+          in: path
+          schema:
+            type: string
+        - name: password
+          in: path
+          schema:
+            type: string
+
+      responses:
+        "200":
+          $ref: "#/components/responses/200_ConsentRetrievalResult"
+
 components:
   securitySchemes:
     sessionCookie:
@@ -916,6 +938,13 @@ components:
             type: array
             items:
               $ref: "#/components/schemas/psuMessage"
+
+    200_ConsentRetrievalResult:
+      description: List of all consents for all banks of user
+      content:
+        application/json:
+          schema:
+            type: object
 
   schemas:
     paymentInitiationWithStatusResponse:
