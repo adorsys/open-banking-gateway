@@ -38,7 +38,7 @@ public class FinTechAccountInformationImpl implements FinTechAccountInformationA
 
         SessionEntity sessionEntity = sessionLogicService.getSession();
         return sessionLogicService.addSessionMaxAgeToHeader(accountService.listAccounts(sessionEntity,
-            fintechRedirectURLOK, fintechRedirectURLNOK, bankId, LoARetrievalInformation.valueOf(loARetrievalInformation), withBalance));
+                fintechRedirectURLOK, fintechRedirectURLNOK, bankId, LoARetrievalInformation.valueOf(loARetrievalInformation), withBalance));
     }
 
     @Override
@@ -53,7 +53,7 @@ public class FinTechAccountInformationImpl implements FinTechAccountInformationA
         }
         SessionEntity sessionEntity = sessionLogicService.getSession();
         return sessionLogicService.addSessionMaxAgeToHeader(
-            transactionService.listTransactions(sessionEntity, fintechRedirectURLOK, fintechRedirectURLNOK,
+                transactionService.listTransactions(sessionEntity, fintechRedirectURLOK, fintechRedirectURLNOK,
                 bankId, accountId, dateFrom, dateTo, entryReferenceFrom, bookingStatus, deltaList, LoTRetrievalInformation.valueOf(loTRetrievalInformation)));
     }
 }
