@@ -2,10 +2,8 @@ package de.adorsys.opba.fireflyexporter.service;
 
 import de.adorsys.opba.fireflyexporter.config.ApiConfig;
 import de.adorsys.opba.fireflyexporter.config.OpenBankingConfig;
-import de.adorsys.opba.fireflyexporter.repository.BankConsentRepository;
 import de.adorsys.opba.tpp.ais.api.model.generated.TransactionsResponse;
 import de.adorsys.opba.tpp.ais.api.resource.generated.TppBankingApiAccountInformationServiceAisApi;
-import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
