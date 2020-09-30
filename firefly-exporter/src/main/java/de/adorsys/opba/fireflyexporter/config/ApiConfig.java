@@ -1,10 +1,13 @@
 package de.adorsys.opba.fireflyexporter.config;
 
+import com.google.common.collect.ImmutableMap;
 import lombok.Data;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.validation.annotation.Validated;
+import org.springframework.web.util.UriComponentsBuilder;
 
+import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 import java.net.URI;
 
@@ -17,9 +20,25 @@ public class ApiConfig {
     @NotNull
     private URI url;
 
-    @NotNull
-    private URI redirectOk;
+    @NotBlank
+    private String redirectOkTemplate;
 
-    @NotNull
-    private URI redirectNok;
+    @NotBlank
+    private String redirectNokTemplate;
+
+    public String getRedirectOkUri(String redirectCode) {
+        return UriComponentsBuilder.fromHttpUrl(redirectOkTemplate)
+                .buildAndExpand(ImmutableMap.of("redirectCode", redirectCode))
+                .toUri()
+                .toASCIIString();
+
+
+    }
+
+    public String getRedirectNokUri() {
+        return UriComponentsBuilder.fromHttpUrl(redirectNokTemplate)
+                .build()
+                .toUri()
+                .toASCIIString();
+    }
 }

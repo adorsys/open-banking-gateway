@@ -1,5 +1,6 @@
 package de.adorsys.opba.fireflyexporter.service;
 
+import de.adorsys.opba.fireflyexporter.client.TppAisClient;
 import de.adorsys.opba.fireflyexporter.config.ApiConfig;
 import de.adorsys.opba.fireflyexporter.config.OpenBankingConfig;
 import de.adorsys.opba.fireflyexporter.entity.AccountExportJob;
@@ -7,7 +8,6 @@ import de.adorsys.opba.fireflyexporter.entity.BankConsent;
 import de.adorsys.opba.fireflyexporter.repository.AccountExportJobRepository;
 import de.adorsys.opba.fireflyexporter.repository.BankConsentRepository;
 import de.adorsys.opba.tpp.ais.api.model.generated.AccountList;
-import de.adorsys.opba.tpp.ais.api.resource.generated.TppBankingApiAccountInformationServiceAisApi;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -23,10 +23,10 @@ import static org.springframework.http.HttpHeaders.LOCATION;
 public class AccountExportService {
 
     private final ApiConfig apiConfig;
-    private final TppBankingApiAccountInformationServiceAisApi aisApi;
+    private final TppAisClient aisApi;
     private final OpenBankingConfig bankingConfig;
     private final BankConsentRepository consentRepository;
-    private final ConsentCreationService consentCreationService;
+    private final ConsentService consentService;
     private final FireFlyExporter exporter;
     private final AccountExportJobRepository exportJobRepository;
 
@@ -35,8 +35,8 @@ public class AccountExportService {
         ResponseEntity<AccountList> accounts = aisApi.getAccounts(
                 bankingConfig.getDataProtectionPassword(),
                 bankingConfig.getUserId(),
-                apiConfig.getRedirectOk().toASCIIString(),
-                apiConfig.getRedirectNok().toASCIIString(),
+                apiConfig.getRedirectOkUri(UUID.randomUUID().toString()),
+                apiConfig.getRedirectNokUri(),
                 UUID.randomUUID(),
                 null,
                 null,
@@ -48,7 +48,7 @@ public class AccountExportService {
         );
 
         if (accounts.getStatusCode() == HttpStatus.ACCEPTED) {
-            String redirectTo = consentCreationService.createConsentForAccountsAndTransactions(bankId);
+            String redirectTo = consentService.createConsentForAccountsAndTransactions(bankId);
             return ResponseEntity.accepted().header(LOCATION, redirectTo).build();
         }
 

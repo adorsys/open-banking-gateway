@@ -5,6 +5,7 @@
 <head>
     <title>OpenBanking to Firefly-III bank account data exporter</title>
     <link rel="icon" href="/static/favicon.ico" type="image/x-icon">
+    <link rel="stylesheet" href="/static/css/uploader.css">
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
 </head>
 <body>
@@ -19,14 +20,17 @@
         </div>
         <div>
             <input type="text" id="bank-name-id" onkeyup="callSearch('bank-name-id', 'bank-list', 'bank-id', API_URL)" placeholder="Search for your bank..."/>
-            <input type="hidden" id="bank-id"/>
+            <input type="hidden" id="bank-id" th:value="${bankId}"/>
             <ul id="bank-list"/>
         </div>
         <div>
-            <input id="import-accounts" type="button" value="Import accounts" onclick="callAccountImport('firefly-personal-token', 'bank-id', API_URL)"/>
+            <input id="import-accounts" type="button" value="Import accounts" onclick="callAccountImport('firefly-personal-token', 'bank-id', 'import-accounts-redirect', 'import-accounts-status', API_URL)"/>
+            <span class="hidden" id="import-accounts-status">Please wait...</span>
+            <a class="hidden" href="#" id="import-accounts-redirect">You need to be redirected to OpenBankingGateway for consent authorization</a>
         </div>
         <div>
             <input id="import-transactions" type="button" value="Import transactions"/>
+            <a class="hidden" href="#" id="import-transactions-redirect">You need to be redirected to OpenBankingGateway for consent authorization</a>
         </div>
     </form>
 </body>
