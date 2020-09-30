@@ -1,6 +1,7 @@
 <!DOCTYPE HTML>
 <html xmlns:th="http://www.thymeleaf.org">
 <script src="/static/js/search.js"></script>
+<script src="/static/js/import.js"></script>
 <head>
     <title>OpenBanking to Firefly-III bank account data exporter</title>
     <link rel="icon" href="/static/favicon.ico" type="image/x-icon">
@@ -29,7 +30,7 @@
             </div>
 
             <div class="form-group">
-                <input class="form-control" id="import-accounts" type="button" value="Import accounts"/>
+                <input class="form-control" id="import-accounts" type="button" value="Import accounts" onclick="callAccountImport('firefly-personal-token', 'bank-id', API_URL)"/>
             </div>
             <div  class="form-group">
                 <input class="form-control" id="import-transactions" type="button" value="Import transactions"/>

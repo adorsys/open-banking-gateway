@@ -1,7 +1,7 @@
 package de.adorsys.opba.fireflyexporter.service;
 
 import de.adorsys.opba.firefly.api.model.generated.Account;
-import de.adorsys.opba.firefly.api.resource.generated.AccountsApi;
+import de.adorsys.opba.fireflyexporter.client.FireflyAccountsApiClient;
 import de.adorsys.opba.fireflyexporter.entity.AccountExportJob;
 import de.adorsys.opba.fireflyexporter.repository.AccountExportJobRepository;
 import de.adorsys.opba.tpp.ais.api.model.generated.AccountDetails;
@@ -16,11 +16,13 @@ import org.springframework.transaction.support.TransactionOperations;
 public class FireFlyExporter {
 
     private final TransactionOperations txOper;
-    private final AccountsApi accountsApi;
+    private final FireFlyTokenProvider tokenProvider;
+    private final FireflyAccountsApiClient accountsApi;
     private final AccountExportJobRepository exportJobRepository;
 
     @Async
     public void exportToFirefly(String fireFlyToken, AccountExportJob exportJob, AccountList accountList) {
+        tokenProvider.setToken(fireFlyToken);
         int numExported = 0;
         for (AccountDetails account : accountList.getAccounts()) {
             Account fireflyAccount = new Account();
