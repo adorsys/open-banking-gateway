@@ -1,15 +1,16 @@
 package de.adorsys.opba.fireflyexporter.client;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import de.adorsys.opba.tpp.banksearch.api.resource.generated.TppBankSearchApi;
+
+import de.adorsys.opba.firefly.api.resource.generated.AccountsApi;
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.http.HttpHeaders;
 
 import javax.servlet.http.HttpServletRequest;
 import java.util.Optional;
 
-@FeignClient(url = "${open-banking.url}", name = "tppSearch", configuration = TppClientConfig.class)
-public interface TppBankSearchClient extends TppBankSearchApi {
+@FeignClient(url = "${firefly.url}", name = "fireflyAccountsApiClient", configuration = FireFlyClientConfig.class)
+public interface FireflyAccountsApiClient extends AccountsApi {
     default Optional<ObjectMapper> getObjectMapper() {
         return Optional.empty();
     }
