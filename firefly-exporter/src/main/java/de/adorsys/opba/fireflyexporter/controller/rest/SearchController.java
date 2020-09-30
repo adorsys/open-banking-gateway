@@ -14,11 +14,12 @@ import java.util.UUID;
 @RequiredArgsConstructor
 public class SearchController {
 
+    private static final int DEFAULT_PAGE_SIZE = 10;
+
     private final TppBankSearchApi bankSearchApi;
-    private static final int MAX = 10;
 
     @GetMapping("/search")
     public ResponseEntity<BankSearchResponse> searchBank(@RequestParam(value = "q", defaultValue = "") String query) {
-        return bankSearchApi.bankSearchGET(UUID.randomUUID(), query, null, null, null, 0, MAX);
+        return bankSearchApi.bankSearchGET(UUID.randomUUID(), query, null, null, null, 0, DEFAULT_PAGE_SIZE);
     }
 }

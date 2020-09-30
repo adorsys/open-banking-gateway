@@ -11,12 +11,10 @@ import de.adorsys.opba.tpp.ais.api.resource.generated.TppBankingApiAccountInform
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.UUID;
-import java.util.concurrent.Future;
 
 import static org.springframework.http.HttpHeaders.LOCATION;
 

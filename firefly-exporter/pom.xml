@@ -210,7 +210,7 @@
 								<java8>false</java8>
 								<useTags>true</useTags>
 								<defaultInterfaces>false</defaultInterfaces>
-								<implicitHeaders>false</implicitHeaders>
+								<implicitHeaders>true</implicitHeaders>
 								<generateForOpenFeign>true</generateForOpenFeign>
 								<library>spring-cloud</library>
 								<swaggerDocketConfig>false</swaggerDocketConfig>
