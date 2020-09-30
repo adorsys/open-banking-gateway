@@ -56,6 +56,27 @@
         <createIndex tableName="${table-prefix}bank_consent" indexName="${table-prefix}bank_consent_consent_id_idx">
             <column name="consent_id"/>
         </createIndex>
+
+        <createTable tableName="${table-prefix}redirect_state">
+            <column name="id" type="UUID">
+                <constraints primaryKey="true"/>
+            </column>
+            <column name="authorization_session_id" type="VARCHAR(36)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="service_session_id" type="UUID">
+                <constraints nullable="false"/>
+            </column>
+            <column name="bank_id" type="VARCHAR(36)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="created_at" type="TIMESTAMP">
+                <constraints nullable="false"/>
+            </column>
+            <column name="modified_at" type="TIMESTAMP">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
     </changeSet>
 
 </databaseChangeLog>
