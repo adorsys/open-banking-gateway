@@ -22,7 +22,7 @@
             </div>
             <div class="form-group">
                 <label for="bank-name-id">Search for your bank</label>
-                <input class="form-control" type="text" id="bank-name-id" onkeyup="callSearch('bank-name-id', 'bank-list', 'bank-id', API_URL)" placeholder="Deutsche bank"/>
+                <input class="form-control" type="text" id="bank-name-id" th:value="${bankName}" onkeyup="callSearch('bank-name-id', 'bank-list', 'bank-id', API_URL)" placeholder="Deutsche bank"/>
                 <input class="form-control" type="hidden" id="bank-id" th:value="${bankId}"/>
                 <div class="scrollable">
                     <ul class="list-group" id="bank-list"></ul>
@@ -35,11 +35,13 @@
             <a class="hidden" href="#" id="import-accounts-redirect">You need to be redirected to OpenBankingGateway for consent authorization</a>
         </div>
             <div  class="form-group">
-                <input class="form-control" id="import-transactions" type="button" value="Import transactions" onclick="callExportableAccounts('firefly-personal-token', 'bank-id', 'import-transactions-redirect', 'import-transactions-status', 'exportable-account-list', API_URL)"/>
+                <input class="form-control" id="import-transactions" type="button" value="Import transactions" onclick="callExportableAccounts('firefly-personal-token', 'bank-id', 'import-transactions-redirect', 'import-transactions-status', 'account-export-block', 'exportable-account-list', API_URL)"/>
             <span class="hidden" id="import-transactions-status">Please wait...</span>
             <a class="hidden" href="#" id="import-transactions-redirect">You need to be redirected to OpenBankingGateway for consent authorization</a>
-            <div>
-                <ul id="exportable-account-list"/>
+            <div id="account-export-block" class="hidden">
+                <ul id="exportable-account-list"></ul>
+                <input id="import-selected-transactions" type="button" value="Import selected accounts transactions" onclick="callAccountImport('firefly-personal-token', 'bank-id', 'import-accounts-redirect', 'account-export-block', 'import-accounts-status', API_URL)"/>
+                <span class="hidden" id="import-selected-transactions-status">Please wait...</span>
             </div>
         </div>
         </form>
