@@ -12,7 +12,8 @@ import de.adorsys.opba.protocol.facade.services.pis.GetPaymentStatusService;
 import de.adorsys.opba.restapi.shared.mapper.FacadeResponseBodyToRestBodyMapper;
 import de.adorsys.opba.restapi.shared.service.FacadeResponseMapper;
 import de.adorsys.opba.tppbankingapi.Const;
-import de.adorsys.opba.tppbankingapi.pis.model.generated.PaymentInitiationWithStatusResponse;
+import de.adorsys.opba.tppbankingapi.pis.model.generated.PaymentInformationResponse;
+import de.adorsys.opba.tppbankingapi.pis.model.generated.PaymentStatusResponse;
 import de.adorsys.opba.tppbankingapi.pis.resource.generated.TppBankingApiPaymentStatusPisApi;
 import lombok.RequiredArgsConstructor;
 import org.mapstruct.Mapper;
@@ -62,7 +63,7 @@ public class TppBankingApiPisInfoController implements TppBankingApiPaymentStatu
     }
 
     @Override
-    public CompletableFuture getPaymentInitiationStatus(String serviceSessionPassword,
+    public CompletableFuture getPaymentStatus(String serviceSessionPassword,
                                                         String fintechUserID,
                                                         UUID xRequestID,
                                                         String paymentProduct,
@@ -89,14 +90,14 @@ public class TppBankingApiPisInfoController implements TppBankingApiPaymentStatu
     }
 
     @Mapper(componentModel = SPRING_KEYWORD, implementationPackage = Const.API_MAPPERS_PACKAGE)
-    public interface PaymentInfoBodyToApiMapper extends FacadeResponseBodyToRestBodyMapper<PaymentInitiationWithStatusResponse, PaymentInfoBody> {
+    public interface PaymentInfoBodyToApiMapper extends FacadeResponseBodyToRestBodyMapper<PaymentInformationResponse, PaymentInfoBody> {
 
         @Mapping(source = "facade.creditorAddress.city", target = "creditorAddress.townName")
-        PaymentInitiationWithStatusResponse map(PaymentInfoBody facade);
+        PaymentInformationResponse map(PaymentInfoBody facade);
     }
 
     @Mapper(componentModel = SPRING_KEYWORD, implementationPackage = Const.API_MAPPERS_PACKAGE)
-    public interface PaymentStatusBodyToApiMapper extends FacadeResponseBodyToRestBodyMapper<PaymentInitiationWithStatusResponse, PaymentStatusBody> {
-        PaymentInitiationWithStatusResponse map(PaymentStatusBody facade);
+    public interface PaymentStatusBodyToApiMapper extends FacadeResponseBodyToRestBodyMapper<PaymentStatusResponse, PaymentStatusBody> {
+        PaymentStatusResponse map(PaymentStatusBody facade);
     }
 }

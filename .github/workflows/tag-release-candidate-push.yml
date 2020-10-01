@@ -1,0 +1,36 @@
+# Builds pushes of release candidate tags
+name: Release candidate develop and testing
+
+on:
+  push:
+    tags:
+      - rc-*
+
+jobs:
+  build:
+    runs-on: ubuntu-18.04
+    steps:
+      - uses: actions/checkout@v2
+      - name: Set up JDK 1.8
+        uses: actions/setup-java@v1
+        with:
+          java-version: 1.8
+      - name: Build project and run test suite
+        run: ./scripts/build_and_test.sh
+
+      - name: Deploy release-candidate JARs to Github packages
+        run: ./scripts/deploy_mvn_release_candidate.sh
+        env:
+          GPG_EXECUTABLE: gpg
+          GPG_PASSPHRASE: ${{ secrets.GPG_PASSPHRASE }}
+          GPG_SECRET_KEY: ${{ secrets.GPG_SECRET_KEY }}
+          GPG_OWNERTRUST: ${{ secrets.GPG_OWNERTRUST }}
+          STAGE_ARTIFACTORY_USERNAME: ${{ secrets.GITHUB_USER }}
+          STAGE_ARTIFACTORY_PASSWORD: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Deploy develop artifacts to OpenShift
+        run: ./scripts/deploy_openshift_release_candidate.sh
+        env:
+          OPENSHIFT_TOKEN: ${{ secrets.OPENSHIFT_TOKEN }}
+          RELEASE_CANDIDATE_DOMAIN: openshift-registry.adorsys.de
+          RELEASE_CANDIDATE_PROJECT_NAME: open-banking-gateway-integ

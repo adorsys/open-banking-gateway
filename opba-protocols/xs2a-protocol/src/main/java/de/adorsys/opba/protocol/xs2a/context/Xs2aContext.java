@@ -10,6 +10,7 @@ import de.adorsys.opba.protocol.xs2a.service.storage.TransientDataEntry;
 import de.adorsys.xs2a.adapter.service.model.AuthenticationObject;
 import de.adorsys.xs2a.adapter.service.model.ChallengeData;
 import de.adorsys.xs2a.adapter.service.model.StartScaProcessResponse;
+import de.adorsys.xs2a.adapter.service.model.TokenResponse;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 
@@ -144,6 +145,36 @@ public class Xs2aContext extends BaseContext {
      * Is used for embedded SCA with some data to send back to PSU (for example in case of photo tan)
      */
     private ChallengeData challengeData;
+
+    /**
+     * Is used to store Oauth2 token in case of Oauth2 approaches.
+     */
+    private String oauth2Code;
+
+    /**
+     * Is used to store Oauth2 token in case of Oauth2 approaches.
+     */
+    private TokenResponse oauth2Token;
+
+    /**
+     * Indicates that ASPSP requires Oauth2-pre-step for consent authorization.
+     */
+    private boolean oauth2PreStepNeeded;
+
+    /**
+     * Indicates that ASPSP requires Oauth2-integrated step for consent authorization.
+     */
+    private boolean oauth2IntegratedNeeded;
+
+    /**
+     * SCA Oauth2 link to follow.
+     */
+    private String scaOauth2Link;
+
+    /**
+     * OAuth2 redirect back link that is used for this session.
+     */
+    private String oauth2RedirectBackLink;
 
     @JsonIgnore
     public String getPsuPassword() {

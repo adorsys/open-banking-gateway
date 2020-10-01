@@ -1,16 +1,21 @@
 package de.adorsys.opba.protocol.hbci.entrypoint.pis;
 
 import com.google.common.collect.ImmutableMap;
+import de.adorsys.multibanking.domain.PaymentStatus;
 import de.adorsys.opba.protocol.api.common.ProtocolAction;
 import de.adorsys.opba.protocol.api.dto.ValidationIssue;
 import de.adorsys.opba.protocol.api.dto.context.ServiceContext;
 import de.adorsys.opba.protocol.api.dto.request.FacadeServiceableGetter;
 import de.adorsys.opba.protocol.api.dto.result.body.ValidationError;
 import de.adorsys.opba.protocol.api.dto.result.fromprotocol.Result;
+import de.adorsys.opba.protocol.api.dto.result.fromprotocol.ok.SuccessResult;
+import de.adorsys.opba.protocol.api.services.scoped.consent.ProtocolFacingPayment;
 import de.adorsys.opba.protocol.bpmnshared.dto.DtoMapper;
 import de.adorsys.opba.protocol.bpmnshared.dto.messages.ProcessResponse;
 import de.adorsys.opba.protocol.bpmnshared.service.eventbus.ProcessEventHandlerRegistrar;
+import de.adorsys.opba.protocol.hbci.context.PaymentHbciContext;
 import de.adorsys.opba.protocol.hbci.entrypoint.HbciOutcomeMapper;
+import de.adorsys.opba.protocol.hbci.service.protocol.pis.dto.PaymentInitiateBodyWithPayment;
 import lombok.RequiredArgsConstructor;
 import org.flowable.engine.RuntimeService;
 import org.flowable.engine.runtime.ProcessInstance;
@@ -38,12 +43,13 @@ public abstract class HbciGetPaymentEntrypoint<REQUEST extends FacadeServiceable
 
     @Transactional
     public CompletableFuture<Result<RESULT_BODY>> execute(ServiceContext<REQUEST> serviceContext) {
+        PaymentHbciContext paymentHbciContext = hbciPreparePaymentContext.prepareContext(serviceContext, action);
+        if (!paymentHbciContext.getPayment().isInstantPayment()) {
+            return acscStatusResult(paymentHbciContext);
+        }
         ProcessInstance instance = runtimeService.startProcessInstanceByKey(
                 HBCI_REQUEST_SAGA,
-                new ConcurrentHashMap<>(ImmutableMap.of(
-                        CONTEXT,
-                        hbciPreparePaymentContext.prepareContext(serviceContext, action)
-                ))
+                new ConcurrentHashMap<>(ImmutableMap.of(CONTEXT, paymentHbciContext))
         );
 
         CompletableFuture<Result<RESULT_BODY>> result = new CompletableFuture<>();
@@ -54,5 +60,13 @@ public abstract class HbciGetPaymentEntrypoint<REQUEST extends FacadeServiceable
         );
 
         return result;
+    }
+
+    private CompletableFuture<Result<RESULT_BODY>> acscStatusResult(PaymentHbciContext paymentHbciContext) {
+        ProtocolFacingPayment payment = paymentHbciContext.getRequestScoped().paymentAccess().getFirstByCurrentSession();
+        paymentHbciContext.getPayment().setPaymentStatus(PaymentStatus.ACSC.name());
+        ProcessResponse processResponse = new ProcessResponse("", "", new PaymentInitiateBodyWithPayment(paymentHbciContext.getPayment(), payment));
+        Result<RESULT_BODY> result = new SuccessResult<>(extractResultBodyMapper.apply(processResponse));
+        return CompletableFuture.completedFuture(result);
     }
 }

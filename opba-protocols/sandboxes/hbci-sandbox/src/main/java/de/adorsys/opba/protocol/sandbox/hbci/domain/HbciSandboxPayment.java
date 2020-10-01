@@ -56,6 +56,9 @@ public class HbciSandboxPayment {
     @Enumerated(EnumType.STRING)
     private PaymentStatus status;
 
+    @Column(nullable = false)
+    private boolean instantPayment;
+
     @CreatedDate
     private Instant createdAt;
 
@@ -90,10 +93,11 @@ public class HbciSandboxPayment {
 
     public Transaction toTransaction(String accountNumber, BigDecimal balance) {
         Transaction transaction = new Transaction();
-        transaction.setAmount(getAmount().toString());
         if (getDeduceFrom().endsWith(accountNumber)) {
+            transaction.setAmount(getAmount().negate().toString());
             transaction.setBalanceAfter(balance.subtract(getAmount()).toString());
         } else {
+            transaction.setAmount(getAmount().toString());
             transaction.setBalanceAfter(balance.add(getAmount()).toString());
         }
         transaction.setBalanceBefore(balance.toString());

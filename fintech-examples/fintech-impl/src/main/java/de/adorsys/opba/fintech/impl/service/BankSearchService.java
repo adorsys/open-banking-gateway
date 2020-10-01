@@ -13,6 +13,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
+import java.util.Collections;
 import java.util.UUID;
 import java.util.stream.Collectors;
 
@@ -41,9 +42,11 @@ public class BankSearchService {
                 start,
                 max).getBody();
 
-        InlineResponse2001 inlineResponse2001 =
-                new InlineResponse2001().bankDescriptor(bankSearchResponse.getBankDescriptor().stream().map(
-                        bankDescriptor -> ManualMapper.fromTppToFintech(bankDescriptor)).collect(Collectors.toList()));
+        InlineResponse2001 inlineResponse2001 = new InlineResponse2001().bankDescriptor(Collections.emptyList());
+        if (bankSearchResponse.getBankDescriptor() != null) {
+            inlineResponse2001.bankDescriptor(bankSearchResponse.getBankDescriptor().stream().map(
+                    bankDescriptor -> ManualMapper.fromTppToFintech(bankDescriptor)).collect(Collectors.toList()));
+        }
         inlineResponse2001.setKeyword(bankSearchResponse.getKeyword());
         inlineResponse2001.setMax(bankSearchResponse.getMax());
         inlineResponse2001.setStart(bankSearchResponse.getStart());

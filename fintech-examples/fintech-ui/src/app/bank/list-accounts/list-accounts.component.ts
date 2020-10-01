@@ -3,10 +3,8 @@ import { AccountDetails } from '../../api';
 import { ActivatedRoute, Router } from '@angular/router';
 import { AisService } from '../services/ais.service';
 import { AccountStruct, RedirectStruct, RedirectType } from '../redirect-page/redirect-struct';
-import { HeaderConfig } from '../../models/consts';
+import { Consts, HeaderConfig } from '../../models/consts';
 import { StorageService } from '../../services/storage.service';
-import { SettingsService } from '../services/settings.service';
-import { tap } from 'rxjs/operators';
 
 @Component({
   selector: 'app-list-accounts',
@@ -15,42 +13,27 @@ import { tap } from 'rxjs/operators';
 })
 export class ListAccountsComponent implements OnInit {
   accounts: AccountDetails[];
-  selectedAccount: string;
   bankId = '';
-  loARetrievalInformation;
 
   constructor(
     private router: Router,
     private route: ActivatedRoute,
     private aisService: AisService,
-    private storageService: StorageService,
-    private settingsService: SettingsService
-  ) {
-    this.settingsService
-      .getLoA()
-      .pipe(tap(el => (this.loARetrievalInformation = el)))
-      .subscribe();
-  }
+    private storageService: StorageService
+  ) {}
 
   ngOnInit() {
-    this.bankId = this.route.snapshot.paramMap.get('bankid');
+    this.bankId = this.route.snapshot.params[Consts.BANK_ID_NAME];
     this.loadAccount();
   }
 
-  selectAccount(id) {
-    this.selectedAccount = id;
-  }
-
-  isSelected(id) {
-    return id === this.selectedAccount ? 'selected' : 'unselected';
-  }
-
-  visibleAccountNumber(acc: AccountDetails) {
-    return !acc.iban || acc.iban.length === 0 ? acc.bban : acc.iban;
+  onSubmit(id: any) {
+    this.router.navigate([id], { relativeTo: this.route });
   }
 
   private loadAccount(): void {
-    this.aisService.getAccounts(this.bankId, this.loARetrievalInformation).subscribe(response => {
+    const settings = this.storageService.getSettings();
+    this.aisService.getAccounts(this.bankId, settings.loa, settings.withBalance).subscribe((response) => {
       switch (response.status) {
         case 202:
           this.storageService.setRedirect(
@@ -72,13 +55,12 @@ export class ListAccountsComponent implements OnInit {
           // if LoT is cancelled after redirect page is displayed
           // to be removed when issue https://github.com/adorsys/open-banking-gateway/issues/848 is resolved
           // or Fintech UI refactored
-          this.storageService.redirectCancelUrl = this.router.url;
           this.accounts = response.body.accounts;
           const loa = [];
           for (const accountDetail of this.accounts) {
             loa.push(new AccountStruct(accountDetail.resourceId, accountDetail.iban, accountDetail.name));
           }
-          this.storageService.setLoa(loa);
+          this.storageService.setLoa(this.bankId, loa);
       }
     });
   }

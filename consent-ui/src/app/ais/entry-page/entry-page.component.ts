@@ -13,7 +13,7 @@ export class EntryPageComponent implements OnInit {
 
   ngOnInit() {
     console.log('EntryPageComponent onInit');
-    this.route.paramMap.subscribe(p => {
+    this.route.paramMap.subscribe((p) => {
       this.authid = p.get('authId');
       this.cookieRenewalService.activate(this.authid);
     });

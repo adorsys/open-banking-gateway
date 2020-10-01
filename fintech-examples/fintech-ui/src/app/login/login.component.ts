@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { AuthService } from '../services/auth.service';
+import { RoutingPath } from '../models/routing-path.model';
 
 @Component({
   selector: 'app-login',
@@ -22,18 +23,18 @@ export class LoginComponent implements OnInit {
 
   onSubmit() {
     if (this.loginForm.valid) {
-      this.authService.login(this.loginForm.value).subscribe(success => {
+      this.authService.login(this.loginForm.value).subscribe((success) => {
         if (success) {
-          this.router.navigate(['/search']);
+          this.router.navigate([RoutingPath.BANK_SEARCH]);
         }
       });
     }
   }
 
   gmailOauth2Login() {
-    this.authService.gmailOauth2Login().subscribe(res => {
-      window.location.href = res
-    })
+    this.authService.gmailOauth2Login().subscribe((res) => {
+      window.location.href = res;
+    });
   }
 
   get username() {

@@ -10,10 +10,7 @@
         "matches": "[0-9a-zA-z\\-]+"
       },
       "PSU-ID": {
-        "equalTo": "max.musterman"
-      },
-      "Content-Type": {
-        "equalTo": "application/json; charset=UTF-8"
+        "equalTo": ""
       }
     }
   },

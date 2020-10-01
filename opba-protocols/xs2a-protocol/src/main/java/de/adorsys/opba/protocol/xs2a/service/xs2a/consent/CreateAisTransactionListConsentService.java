@@ -31,7 +31,7 @@ public class CreateAisTransactionListConsentService extends ValidatedExecution<T
     private final AccountInformationService ais;
     private final Xs2aValidator validator;
     private final ProtocolUrlsConfiguration urlsConfiguration;
-    private final CreateConsentErrorSink errorSink;
+    private final CreateConsentOrPaymentPossibleErrorHandler handler;
     private final CreateAisConsentService createAisConsentService;
 
     @Override
@@ -52,10 +52,7 @@ public class CreateAisTransactionListConsentService extends ValidatedExecution<T
     @Override
     protected void doRealExecution(DelegateExecution execution, TransactionListXs2aContext context) {
         ValidatedHeadersBody<ConsentInitiateHeaders, Consents> params = extractor.forExecution(context);
-        errorSink.swallowConsentCreationErrorForLooping(
-                () -> createAisConsentService.createConsent(ais, execution, context, params),
-                ex -> createAisConsentService.aisOnWrongIban(execution, log)
-        );
+        handler.tryCreateAndHandleErrors(execution, () -> createAisConsentService.createConsent(ais, execution, context, params));
     }
 
     @Override

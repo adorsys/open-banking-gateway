@@ -20,6 +20,8 @@ describe('TransactionsConsentReviewComponent', () => {
     back: jasmine.createSpy('onBack')
   };
 
+  beforeAll(() => (window.onbeforeunload = jasmine.createSpy()));
+
   beforeEach(async(() => {
     TestBed.configureTestingModule({
       declarations: [TransactionsConsentReviewComponent],
@@ -41,7 +43,7 @@ describe('TransactionsConsentReviewComponent', () => {
     fixture = TestBed.createComponent(TransactionsConsentReviewComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
-    consentAuthorizationService = TestBed.get(UpdateConsentAuthorizationService);
+    consentAuthorizationService = TestBed.inject(UpdateConsentAuthorizationService);
   });
 
   it('should create', () => {

@@ -21,7 +21,10 @@ describe('ToAspspPageComponent', () => {
         {
           provide: ActivatedRoute,
           useValue: {
-            parent: { params: of({ authId: StubUtilTests.AUTH_ID }) }
+            parent: {
+              params: of({ authId: StubUtilTests.AUTH_ID }),
+              queryParams: of({ redirectCode: StubUtilTests.REDIRECT_ID })
+            }
           }
         }
       ]

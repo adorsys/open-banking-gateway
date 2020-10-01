@@ -3,10 +3,11 @@
 echo "Docker image promotion..."
 
 SCRIPT_DIR="$(dirname "$0")"
-SOURCE_IMAGE_TAG=${TRAVIS_COMMIT:0:7}
-TARGET_IMAGE_TAG="${TRAVIS_TAG#v}" # Strip leading 'v' from image tag
-SOURCE_REGISTRY_DOMAIN=openshift-registry.adorsys.de
-SOURCE_PROJECT_NAME=open-banking-gateway-dev
+SOURCE_IMAGE_TAG=${GITHUB_SHA:0:7}
+GITHUB_TAG=${GITHUB_REF#refs/tags/}
+TARGET_IMAGE_TAG="${GITHUB_TAG#v}" # Strip leading 'v' from image tag
+SOURCE_REGISTRY_DOMAIN="$RELEASE_CANDIDATE_DOMAIN"
+SOURCE_PROJECT_NAME="$RELEASE_CANDIDATE_PROJECT_NAME"
 TARGET_PROJECT_NAME=adorsys
 TARGET_REGISTRY_DOMAIN=docker.io
 
@@ -26,7 +27,7 @@ do
 done < "$SCRIPT_DIR/service.list"
 
 echo "Promoting pulled images"
-docker login -u "$DOCKERHUB_USER" -p "$DOCKERHUB_PASS" "$TARGET_REGISTRY_DOMAIN" || exit 1
+docker login -u "$DOCKERHUB_USERNAME" -p "$DOCKERHUB_PASSWORD" "$TARGET_REGISTRY_DOMAIN" || exit 1
 while IFS="" read -r service_and_context || [ -n "$service_and_context" ]
 do
     SERVICE_NAME=$(echo "$service_and_context" | cut -d"=" -f1)

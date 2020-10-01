@@ -6,6 +6,8 @@ import de.adorsys.opba.protocol.api.services.scoped.consent.ProtocolFacingPaymen
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 
+import java.time.Instant;
+
 @Getter
 @RequiredArgsConstructor
 public class ProtocolFacingPaymentImpl implements ProtocolFacingPayment {
@@ -31,5 +33,10 @@ public class ProtocolFacingPaymentImpl implements ProtocolFacingPayment {
     @Override
     public void setPaymentContext(String context) {
         payment.setContext(encryptionService, context);
+    }
+
+    @Override
+    public Instant getCreatedAtTime() {
+        return payment.getCreatedAt();
     }
 }

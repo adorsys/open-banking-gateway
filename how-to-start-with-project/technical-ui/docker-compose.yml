@@ -18,7 +18,7 @@ x-sandbox-hosts: &sandbox-hosts
   COMMON_APPS_LOCAL_ONLINEBANKING_PORT: 8090
   COMMON_APPS_LOCAL_TPPREST_HOST: x2sa-sandbox-tpprest
   COMMON_APPS_LOCAL_TPPREST_PORT: 8093
-  COMMON_APPS_LOCAL_ONLINEBANKINGUI_HOST: x2sa-sandbox-onlinebankingui
+  COMMON_APPS_LOCAL_ONLINEBANKINGUI_HOST: localhost # This container is launched in the host network
   COMMON_APPS_LOCAL_ONLINEBANKINGUI_PORT: 4400 # this port seem to be used in lot of places, hard to change
 
 services:

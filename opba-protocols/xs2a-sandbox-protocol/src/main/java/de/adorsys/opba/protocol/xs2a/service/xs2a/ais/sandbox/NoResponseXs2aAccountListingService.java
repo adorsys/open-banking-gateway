@@ -1,7 +1,8 @@
 package de.adorsys.opba.protocol.xs2a.service.xs2a.ais.sandbox;
 
-import de.adorsys.opba.protocol.xs2a.context.Xs2aContext;
+import de.adorsys.opba.protocol.xs2a.context.ais.Xs2aAisContext;
 import de.adorsys.opba.protocol.xs2a.service.xs2a.ais.Xs2aAccountListingService;
+import de.adorsys.opba.protocol.xs2a.service.xs2a.ais.Xs2aConsentErrorHandler;
 import de.adorsys.opba.protocol.xs2a.service.xs2a.validation.Xs2aValidator;
 import de.adorsys.xs2a.adapter.service.AccountInformationService;
 import org.flowable.engine.delegate.DelegateExecution;
@@ -14,13 +15,14 @@ import org.springframework.context.ApplicationEventPublisher;
 class NoResponseXs2aAccountListingService extends Xs2aAccountListingService {
 
     NoResponseXs2aAccountListingService(
-            Extractor extractor, Xs2aValidator validator, AccountInformationService ais
+            Extractor extractor, Xs2aValidator validator, AccountInformationService ais,
+            Xs2aConsentErrorHandler consentErrorHandler
     ) {
-        super(new BlackHoleEventPublisher(), extractor, validator, ais);
+        super(new BlackHoleEventPublisher(), extractor, validator, ais, consentErrorHandler);
     }
 
     @Override
-    protected void doRealExecution(DelegateExecution execution, Xs2aContext context) {
+    protected void doRealExecution(DelegateExecution execution, Xs2aAisContext context) {
         super.doRealExecution(execution, context);
     }
 

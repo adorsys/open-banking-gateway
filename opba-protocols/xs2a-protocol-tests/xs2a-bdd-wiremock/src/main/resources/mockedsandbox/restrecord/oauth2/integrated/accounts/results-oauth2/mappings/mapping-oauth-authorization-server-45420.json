@@ -1,0 +1,31 @@
+{
+  "id": "bfff3a4e-154b-3afa-843e-a88807f1d396",
+  "request": {
+    "url": "/oauth/authorization-server?consentId=pLydRVvYTWeVjWykZ2_q5FQlEVe-grenbBQEMfM1RWdPk02OMCkxWoQ8cEBAlp0FyfjJcs_iMK4aR4KtOiYRKcz9MpaJIQIH3NJX8IHgetw=_=_psGLvQpt9Q&redirectId=3dbb1ed5-c470-4391-b2a2-b89d3cc493ad",
+    "method": "GET"
+  },
+  "response": {
+    "status": 200,
+    "bodyFileName": "body-oauth-authorization-server-9082.json",
+    "transformers": ["response-template"],
+    "headers": {
+      "Vary": [
+        "Origin",
+        "Access-Control-Request-Method",
+        "Access-Control-Request-Headers",
+        "Origin",
+        "Access-Control-Request-Method",
+        "Access-Control-Request-Headers"
+      ],
+      "X-Content-Type-Options": "nosniff",
+      "X-XSS-Protection": "1; mode=block",
+      "Cache-Control": "no-cache, no-store, max-age=0, must-revalidate",
+      "Pragma": "no-cache",
+      "Expires": "0",
+      "Content-Type": "application/json",
+      "Date": "Wed, 09 Sep 2020 12:18:07 GMT",
+      "Keep-Alive": "timeout=60"
+    }
+  },
+  "uuid": "bfff3a4e-154b-3afa-843e-a88807f1d396"
+}

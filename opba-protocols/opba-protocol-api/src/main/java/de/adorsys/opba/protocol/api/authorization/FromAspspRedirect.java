@@ -13,6 +13,8 @@ import de.adorsys.opba.protocol.api.dto.result.body.UpdateAuthBody;
  *         {@link de.adorsys.opba.protocol.api.dto.result.fromprotocol.dialog.RedirectionResult}
  *         <p>Returned when request was successful. Points to page showing Consent acquired/Acquisition failed
  *         and respective FinTech OK / FinTech NOK urls associated with that page.</p>
+ *         For OAuth2 consent/payment authentication/authorization is used as the entrypoint to receive {@code code}
+ *         that will be exchanged to token.
  *     </li>
  * </ul>
  */

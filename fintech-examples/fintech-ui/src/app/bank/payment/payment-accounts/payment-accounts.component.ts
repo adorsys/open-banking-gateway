@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
-import { StorageService } from '../../../services/storage.service';
-import { AccountStruct } from '../../redirect-page/redirect-struct';
 import { ActivatedRoute, Router } from '@angular/router';
+import { StorageService } from '../../../services/storage.service';
+import { Consts } from '../../../models/consts';
 
 @Component({
   selector: 'app-list-accounts-for-payment',
@@ -11,18 +11,17 @@ import { ActivatedRoute, Router } from '@angular/router';
 export class PaymentAccountsComponent implements OnInit {
   public static ROUTE = 'accounts';
   selectedAccount;
-  accounts: AccountStruct[] = [];
+  bankId: string;
+  accounts = [];
 
-  constructor(private storageService: StorageService,
-              private router: Router,
-              private route: ActivatedRoute) {
-  }
+  constructor(private storageService: StorageService, private router: Router, private route: ActivatedRoute) {}
 
   ngOnInit() {
-    this.accounts = this.storageService.getLoa();
+    this.bankId = this.route.snapshot.params[Consts.BANK_ID_NAME];
+    this.accounts = this.storageService.getLoa(this.bankId);
   }
 
-  selectAccount(id) {
+  onSelectAccount(id) {
     console.log('router navigate to ../account');
     this.selectedAccount = id;
     this.router.navigate(['../account', id], { relativeTo: this.route });
@@ -31,5 +30,4 @@ export class PaymentAccountsComponent implements OnInit {
   isSelected(id) {
     return id === this.selectedAccount ? 'selected' : 'unselected';
   }
-
 }

@@ -9,6 +9,7 @@ import { ConsentUtil } from '../common/consent-util';
 import { ApiHeaders } from '../../api/api.headers';
 import { Action } from '../../common/utils/action';
 import { AuthStateConsentAuthorizationService, DenyRequest, UpdateConsentAuthorizationService } from '../../api';
+import { combineLatest } from 'rxjs';
 
 @Component({
   selector: 'consent-app-to-aspsp-redirection',
@@ -35,20 +36,27 @@ export class ToAspspRedirectionComponent implements OnInit {
   ) {}
 
   ngOnInit() {
-    this.activatedRoute.parent.params.subscribe(res => {
-      this.authorizationId = res.authId;
-      this.aspspName = this.sessionService.getBankName(res.authId);
-      this.finTechName = this.sessionService.getFintechName(res.authId);
+    combineLatest([this.activatedRoute.parent.params, this.activatedRoute.parent.queryParams]).subscribe((res) => {
+      const pathParams = res[0];
+      const query = res[1];
+
+      this.authorizationId = pathParams.authId;
+      if (query.redirectCode) {
+        this.sessionService.setRedirectCode(this.authorizationId, query.redirectCode);
+      }
+
+      this.aspspName = this.sessionService.getBankName(pathParams.authId);
+      this.finTechName = this.sessionService.getFintechName(pathParams.authId);
       this.aisConsent = ConsentUtil.getOrDefault(this.authorizationId, this.sessionService);
       this.loadRedirectUri();
     });
   }
 
   private loadRedirectUri() {
-    localStorage.setItem(this.authorizationId, "false")
+    localStorage.setItem(this.authorizationId, 'false');
     this.authStateConsentAuthorizationService
       .authUsingGET(this.authorizationId, this.sessionService.getRedirectCode(this.authorizationId), 'response')
-      .subscribe(res => {
+      .subscribe((res) => {
         this.sessionService.setRedirectCode(this.authorizationId, res.headers.get(ApiHeaders.REDIRECT_CODE));
         this.redirectTo = res.headers.get(ApiHeaders.LOCATION);
       });
@@ -63,7 +71,7 @@ export class ToAspspRedirectionComponent implements OnInit {
         {} as DenyRequest,
         'response'
       )
-      .subscribe(res => {
+      .subscribe((res) => {
         window.location.href = res.headers.get(ApiHeaders.LOCATION);
       });
   }

@@ -1,0 +1,37 @@
+{
+  "id": "90417206-3533-3782-8b0f-cf243382289e",
+  "request": {
+    "url": "/v1/accounts",
+    "method": "GET",
+    "headers": {
+      "Authorization": {
+        "equalTo": "Bearer eyJraWQiOiJKTFpybzVlQlRkd256SGhLNDZxcDN3IiwiYWxnIjoiSFMyNTYifQ.eyJzdWIiOiJkMGF1dUlxN1J6QXR6dkNEVDh6bV9vIiwidG9rZW5fdXNhZ2UiOiJMT0dJTiIsInJvbGUiOiJDVVNUT01FUiIsInNjYV9pZCI6IjdUQlNPTFl5UmtzdXc2NjROemRWQjAiLCJhdXRob3Jpc2F0aW9uX2lkIjoiN1RCU09MWXlSa3N1dzY2NE56ZFZCMCIsImV4cCI6MTU5OTY1NDIxMywibG9naW4iOiJhbnRvbi5icnVlY2tuZXIiLCJpYXQiOjE1OTk2NTM5MTMsImp0aSI6InJGR05INVhqVHNBa0huNFk1bVVrSkkifQ.zo0M-yiVE3T7iR38s2tVSnBiNdj6f8muVzAQ_HAqpGA"
+      },
+      "Accept": {
+        "equalTo": "application/json"
+      },
+      "X-Request-ID": {
+        "matches": ".+"
+      },
+      "PSU-ID": {
+        "equalTo": "anton.brueckner"
+      }
+    }
+  },
+  "response": {
+    "status": 200,
+    "bodyFileName": "body-v1-accounts-27115.json",
+    "headers": {
+      "Vary": [
+        "Origin",
+        "Access-Control-Request-Method",
+        "Access-Control-Request-Headers"
+      ],
+      "X-Request-Id": "59a58da0-317f-4a7b-b107-6d91033d2de4",
+      "Content-Type": "application/json",
+      "Date": "Wed, 09 Sep 2020 12:18:42 GMT",
+      "Keep-Alive": "timeout=60"
+    }
+  },
+  "uuid": "90417206-3533-3782-8b0f-cf243382289e"
+}

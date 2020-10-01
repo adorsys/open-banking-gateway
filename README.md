@@ -40,6 +40,13 @@ The following picture displays the overall architecture of this banking gateway:
 The following picture displays the overall security concept of this banking gateway:
 ![Security concept](docs/img/security-concept.png)
 
+Security concept has 2 kinds of flows:
+  - authenticated (for consent sharing)
+  - anonymous (for payments, but can be authenticated too). 
+
+Here are detailed diagrams of each flow:
+ - [Authenticated security concept detailed flow](docs/img/security-details/authenticated-security-concept-details.png)
+ - [Anonymous security concept detailed flow](docs/img/security-details/anonymous-security-concept-details.png)
 
 ## Technical architecture
 
@@ -59,6 +66,12 @@ The following picture displays the overall technical architecture concept of thi
   - [Banking protocol API](opba-protocols/opba-protocol-api)
   - [XS2A compliant banking protocol Impl](opba-protocols/xs2a-protocol)
 
+
+## Running the project locally
+
+ - [docker-compose-dev.yml](https://github.com/adorsys/open-banking-gateway/tree/develop/docker-compose-dev.yml) - docker-compose file in the project root for **Development** (requires building docker images)
+ - [docker-compose.yml](https://github.com/adorsys/open-banking-gateway/tree/develop/docker-compose.yml) - docker-compose file in the project root for **Demo** (Images will be pulled from DockerHub)
+
 ## Information for developers:
  
  - Working with BPMN: As most protocols use BPMN, we have developed 
@@ -67,6 +80,8 @@ The following picture displays the overall technical architecture concept of thi
  as you don't need to leave IntelliJ to change diagram or to see what class is used at which step.
  
  - Starting with project: [How to start with project](https://github.com/adorsys/open-banking-gateway/tree/develop/how-to-start-with-project) 
+ 
+  - Populating database with bank data: [How to fill database with bank data](https://github.com/adorsys/open-banking-gateway/tree/develop/opba-db/README.md) 
 
 ## Documentation
 

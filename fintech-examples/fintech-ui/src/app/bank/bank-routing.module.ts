@@ -1,4 +1,4 @@
-import { NgModule } from '@angular/core';
+import { NgModule, NO_ERRORS_SCHEMA } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
 import { BankComponent } from './bank.component';
 import { SettingsComponent } from './settings/settings.component';
@@ -9,12 +9,12 @@ const routes: Routes = [
     component: BankComponent,
     children: [
       {
-        path: 'account',
-        loadChildren: () => import('./list-accounts/list-accounts.module').then(m => m.ListAccountsModule)
+        path: 'accounts',
+        loadChildren: () => import('./list-accounts/list-accounts.module').then((m) => m.ListAccountsModule)
       },
       {
         path: 'payment',
-        loadChildren: () => import('./payment/payment.module').then(m => m.PaymentModule)
+        loadChildren: () => import('./payment/payment.module').then((m) => m.PaymentModule)
       },
       {
         path: 'settings',

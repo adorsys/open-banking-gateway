@@ -1,0 +1,94 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<definitions xmlns="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:flowable="http://flowable.org/bpmn" xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" xmlns:omgdc="http://www.omg.org/spec/DD/20100524/DC" xmlns:omgdi="http://www.omg.org/spec/DD/20100524/DI" typeLanguage="http://www.w3.org/2001/XMLSchema" expressionLanguage="http://www.w3.org/1999/XPath" targetNamespace="http://www.flowable.org/processdef">
+  <process id="xs2a-single-payments" name="xs2a-single-payments" isExecutable="true">
+    <documentation>XS2A compatible payment</documentation>
+    <startEvent id="start" name="start" flowable:formFieldValidation="true">
+      <documentation>Starts XS2A payment initiation flow</documentation>
+    </startEvent>
+    <serviceTask id="singlePaymentInitiate" name="Initiate single payment" flowable:async="true" flowable:delegateExpression="${xs2aSinglePaymentInitiate}"/>
+    <callActivity id="authorizeAndPersistPayment" name="Authorize and persist singlePaymentBody" flowable:async="true" calledElement="xs2a-authorize-payment" flowable:calledElementType="key" flowable:inheritVariables="true" flowable:fallbackToDefaultTenant="false">
+      <extensionElements>
+        <flowable:out source="CONTEXT" target="CONTEXT"/>
+      </extensionElements>
+    </callActivity>
+    <endEvent id="end" name="end"/>
+    <sequenceFlow id="sid-09AB645C-028E-44F4-B9A7-60C7B7497432" sourceRef="start" targetRef="singlePaymentInitiate"/>
+    <sequenceFlow id="sid-6B97025F-71FD-4841-A386-7AA6BF4A5B69" sourceRef="authorizeAndPersistPayment" targetRef="end"/>
+    <serviceTask id="askUserForIBAN" name="Ask user input IBAN. Suspends to wait" flowable:async="true" flowable:exclusive="false" flowable:delegateExpression="${xs2aAskForIban}" flowable:triggerable="true"/>
+    <exclusiveGateway id="isCreationSuccess" name="Is creation success?" default="singlePaymentInitiated"/>
+    <sequenceFlow id="sid-09CC8063-2903-4548-B70F-057E18F57629" sourceRef="singlePaymentInitiate" targetRef="isCreationSuccess"/>
+    <sequenceFlow id="sid-B8C93561-B988-4F3F-A470-68DFB815999E" sourceRef="askUserForIBAN" targetRef="singlePaymentInitiate"/>
+    <sequenceFlow id="singlePaymentInitiated" name="Payment initiated" sourceRef="isCreationSuccess" targetRef="authorizeAndPersistPayment"/>
+    <sequenceFlow id="wrongIban" name="wrong IBAN" sourceRef="isCreationSuccess" targetRef="askUserForIBAN">
+      <conditionExpression xsi:type="tFormalExpression"><![CDATA[#{xs2aConsentInfo.hasWrongCredentials(CONTEXT)}]]></conditionExpression>
+    </sequenceFlow>
+    <callActivity id="sid-651c305b-a7a0-4976-90ba-56e8252547c5" name="(If needed) Oauth2 pre-step for user authentication" flowable:async="true" calledElement="if-needed-xs2a-oauth2-step" flowable:inheritVariables="true" flowable:calledElementType="key">
+      <extensionElements>
+        <flowable:out source="CONTEXT" target="CONTEXT"/>
+      </extensionElements>
+    </callActivity>
+    <sequenceFlow id="sid-87727001-6c0b-48f2-8169-80190daf459f" sourceRef="sid-651c305b-a7a0-4976-90ba-56e8252547c5" targetRef="singlePaymentInitiate"/>
+    <sequenceFlow id="sid-dc64505c-82b2-468c-907c-e16cc2a10563" name="Oauth2 pre-step required" targetRef="sid-651c305b-a7a0-4976-90ba-56e8252547c5" sourceRef="isCreationSuccess">
+      <conditionExpression xsi:type="tFormalExpression">#{xs2aConsentInfo.isOauth2AuthenticationPreStep(CONTEXT)}</conditionExpression>
+    </sequenceFlow>
+  </process>
+  <bpmndi:BPMNDiagram id="BPMNDiagram_xs2a-single-payments">
+    <bpmndi:BPMNPlane bpmnElement="xs2a-single-payments" id="BPMNPlane_xs2a-single-payments">
+      <bpmndi:BPMNShape bpmnElement="start" id="BPMNShape_start">
+        <omgdc:Bounds height="30.0" width="30.0" x="264.0" y="160.0"/>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape bpmnElement="singlePaymentInitiate" id="BPMNShape_singlePaymentInitiate">
+        <omgdc:Bounds height="79.99999999999997" width="100.0" x="412.80002" y="135.0"/>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape bpmnElement="authorizeAndPersistPayment" id="BPMNShape_authorizeAndPersistPayment">
+        <omgdc:Bounds height="79.99999999999997" width="100.0" x="712.55005" y="135.0"/>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape bpmnElement="end" id="BPMNShape_end">
+        <omgdc:Bounds height="28.0" width="28.0" x="912.80005" y="161.0"/>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape bpmnElement="askUserForIBAN" id="BPMNShape_askUserForIBAN">
+        <omgdc:Bounds height="80.0" width="100.0" x="412.80002" y="273.5"/>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape bpmnElement="isCreationSuccess" id="BPMNShape_isCreationSuccess">
+        <omgdc:Bounds height="40.0" width="40.0" x="547.55005" y="155.0"/>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNEdge bpmnElement="sid-09CC8063-2903-4548-B70F-057E18F57629" id="BPMNEdge_sid-09CC8063-2903-4548-B70F-057E18F57629">
+        <omgdi:waypoint x="512.75" y="175.0"/>
+        <omgdi:waypoint x="547.55005" y="175.0"/>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge bpmnElement="sid-09AB645C-028E-44F4-B9A7-60C7B7497432" id="BPMNEdge_sid-09AB645C-028E-44F4-B9A7-60C7B7497432">
+        <omgdi:waypoint x="293.95" y="175.0"/>
+        <omgdi:waypoint x="412.80005" y="175.0"/>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge bpmnElement="sid-6B97025F-71FD-4841-A386-7AA6BF4A5B69" id="BPMNEdge_sid-6B97025F-71FD-4841-A386-7AA6BF4A5B69">
+        <omgdi:waypoint x="812.5" y="175.0"/>
+        <omgdi:waypoint x="912.80005" y="175.0"/>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge bpmnElement="singlePaymentInitiated" id="BPMNEdge_singlePaymentInitiated">
+        <omgdi:waypoint x="587.4949" y="175.0"/>
+        <omgdi:waypoint x="712.55005" y="175.0"/>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge bpmnElement="sid-B8C93561-B988-4F3F-A470-68DFB815999E" id="BPMNEdge_sid-B8C93561-B988-4F3F-A470-68DFB815999E">
+        <omgdi:waypoint x="462.80002" y="273.5"/>
+        <omgdi:waypoint x="462.80002" y="214.95"/>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge bpmnElement="wrongIban" id="BPMNEdge_wrongIban">
+        <omgdi:waypoint x="567.55005" y="194.94281"/>
+        <omgdi:waypoint x="567.55005" y="313.5"/>
+        <omgdi:waypoint x="512.75" y="313.5"/>
+      </bpmndi:BPMNEdge>
+      <bpmdi:BPMNShape xmlns:bpmdi="http://www.omg.org/spec/BPMN/20100524/DI" id="sid-2b8ad175-2c28-4d49-91b6-74c51ee07bd5" bpmnElement="sid-651c305b-a7a0-4976-90ba-56e8252547c5">
+        <omgdc:Bounds x="412.80005" y="-14.0" width="100.0" height="80.0"/>
+      </bpmdi:BPMNShape>
+      <bpmdi:BPMNEdge xmlns:bpmdi="http://www.omg.org/spec/BPMN/20100524/DI" id="sid-50820207-8bcb-4edd-9211-33ebfe95f369" bpmnElement="sid-87727001-6c0b-48f2-8169-80190daf459f">
+        <omgdi:waypoint x="462.80005" y="66.0"/>
+        <omgdi:waypoint x="462.80005" y="135.0"/>
+      </bpmdi:BPMNEdge>
+      <bpmdi:BPMNEdge xmlns:bpmdi="http://www.omg.org/spec/BPMN/20100524/DI" id="sid-bcc802d8-8cc8-4cd0-80d0-a531fc7af579" bpmnElement="sid-dc64505c-82b2-468c-907c-e16cc2a10563">
+        <omgdi:waypoint x="567.55005" y="155.00002"/>
+        <omgdi:waypoint x="567.55005" y="25.999985"/>
+        <omgdi:waypoint x="512.8001" y="26.0"/>
+      </bpmdi:BPMNEdge>
+    </bpmndi:BPMNPlane>
+  </bpmndi:BPMNDiagram>
+</definitions>

@@ -4,6 +4,7 @@ import { RedirectStruct } from './redirect-struct';
 import { Consent, HeaderConfig } from '../../models/consts';
 import { ConsentAuthorizationService } from '../services/consent-authorization.service';
 import { StorageService } from '../../services/storage.service';
+import { ModalCard } from '../../models/modalCard.model';
 
 @Component({
   selector: 'app-redirect-page',
@@ -12,6 +13,7 @@ import { StorageService } from '../../services/storage.service';
 })
 export class RedirectPageComponent implements OnInit {
   public redirectStruct: RedirectStruct = new RedirectStruct();
+  cardModal = new ModalCard();
 
   constructor(
     private authService: ConsentAuthorizationService,
@@ -21,21 +23,25 @@ export class RedirectPageComponent implements OnInit {
   ) {}
 
   ngOnInit() {
-    this.route.paramMap.subscribe(p => {
+    this.route.paramMap.subscribe((p) => {
       this.redirectStruct = JSON.parse(p.get(HeaderConfig.HEADER_FIELD_LOCATION));
-      console.log('LOCATION IS ', this.redirectStruct.redirectUrl);
+      this.cardModal = {
+        title: 'Redirection',
+        description: 'Now we redirect you to your bank: ' + this.redirectStruct.bankName,
+        imageUrl: 'assets/icons/icons8-network 2.png',
+        confirmBtn: true,
+        cancelBtn: true
+      };
     });
   }
 
-  cancel(): void {
-    console.log('call from consent NOT ok for redirect ' + this.redirectStruct.redirectCode);
-    this.authService.fromConsentOk(Consent.NOT_OK, this.redirectStruct.redirectCode);
-  }
-
-  proceed(): void {
-    console.log('NOW GO TO:', decodeURIComponent(this.redirectStruct.redirectUrl));
-    // save user redirected state
-    this.storageService.isUserRedirected = true;
-    window.location.href = decodeURIComponent(this.redirectStruct.redirectUrl);
+  onSubmit(value: boolean) {
+    if (value) {
+      this.storageService.setUserRedirected(true);
+      window.location.href = decodeURIComponent(this.redirectStruct.redirectUrl);
+    } else {
+      this.storageService.setUserRedirected(false);
+      this.authService.fromConsent(Consent.NOT_OK, this.redirectStruct.redirectCode);
+    }
   }
 }

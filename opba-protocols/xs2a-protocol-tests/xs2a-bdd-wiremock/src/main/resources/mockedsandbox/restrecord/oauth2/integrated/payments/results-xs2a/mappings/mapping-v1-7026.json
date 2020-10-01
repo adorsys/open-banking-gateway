@@ -1,0 +1,34 @@
+{
+  "id": "1d027a31-c466-3143-bd88-6e82a6f0f46f",
+  "request": {
+    "url": "/v1/payments/sepa-credit-transfers/n2p3ojqm6ueavh_0wqdFfQbQa9XyPsnQOW2oFsPfDW3XCdoAx3AMFYiDbe-nvEQ3cgftJbETkzvNvu5mZQqWcA==_=_psGLvQpt9Q/status",
+    "method": "GET",
+    "headers": {
+      "PSU-ID": {
+        "equalTo": ""
+      },
+      "X-Request-ID": {
+        "matches": ".+"
+      },
+      "Authorization": {
+        "equalTo": "Bearer eyJraWQiOiJRMDV4MkItM1M2NGhOTXlRVmpZV1JvIiwiYWxnIjoiSFMyNTYifQ.eyJzdWIiOiJkMGF1dUlxN1J6QXR6dkNEVDh6bV9vIiwidG9rZW5fdXNhZ2UiOiJMT0dJTiIsInJvbGUiOiJDVVNUT01FUiIsInNjYV9pZCI6ImlSU09kajBlVExrc05Tbi1uQk1jTmciLCJhdXRob3Jpc2F0aW9uX2lkIjoiaVJTT2RqMGVUTGtzTlNuLW5CTWNOZyIsImV4cCI6MTU5OTY1NDI4OSwibG9naW4iOiJhbnRvbi5icnVlY2tuZXIiLCJpYXQiOjE1OTk2NTM5ODksImp0aSI6ImJJM3dNZjNNUW5Vc0NIMW1IdjRQR2cifQ.G9Vxzt4dHjV2J-OrEG9GK4bVgAxlHnWD9ItfYANSLKk"
+      }
+    }
+  },
+  "response": {
+    "status": 200,
+    "bodyFileName": "body-v1-7026.json",
+    "headers": {
+      "Vary": [
+        "Origin",
+        "Access-Control-Request-Method",
+        "Access-Control-Request-Headers"
+      ],
+      "X-Request-Id": "89dcaa06-a766-40ac-b877-659da991706a",
+      "Content-Type": "application/json;charset=UTF-8",
+      "Date": "Wed, 09 Sep 2020 12:19:56 GMT",
+      "Keep-Alive": "timeout=60"
+    }
+  },
+  "uuid": "1d027a31-c466-3143-bd88-6e82a6f0f46f"
+}

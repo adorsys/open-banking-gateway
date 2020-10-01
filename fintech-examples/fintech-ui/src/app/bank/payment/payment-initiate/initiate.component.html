@@ -1,37 +1,12 @@
 <div class="card card-frame--big">
-  <div class="lacc-parent">
-
+  <div class="card-body">
     <form [formGroup]="paymentForm">
       <section class="payment">
         <h2 class="card-title--normal">Transfer money</h2>
         <p class="text-secondary">Enter the data of the recipient of your payment</p>
         <div class="row">
-          <div class="form-group col-md-12">
-            <label class="text-secondary" for="creditorIban">IBAN:</label><br/>
-            <input
-              [ngClass]="{
-            'is-invalid': creditorIban.dirty && creditorIban.errors
-          }"
-              class="form-control"
-              formControlName="creditorIban"
-              id="creditorIban"
-              name="creditorIban"
-              type="text"
-            />
-            <div *ngIf="creditorIban.errors" class="invalid-feedback">
-              <div *ngIf="creditorIban.errors.required">
-                IBAN is required.
-              </div>
-              <div *ngIf="creditorIban.errors.iban">
-                IBAN is invalid
-              </div>
-            </div>
-          </div>
-
-        </div>
-        <div class="row">
-          <div class="form-group col-md-12">
-            <label class="text-secondary" for="name">Name:</label><br/>
+          <div class="form-group col-md-6">
+            <label class="text-secondary" for="name">Name:</label><br />
             <input
               [ngClass]="{ 'is-invalid': paymentForm.controls['name'].dirty && paymentForm.controls['name'].errors }"
               class="form-control"
@@ -40,17 +15,36 @@
               name="name"
               type="text"
             />
-            <div *ngIf="paymentForm.controls['name'].dirty && paymentForm.controls['name'].errors"
-                 class="invalid-feedback">
+            <div
+              *ngIf="paymentForm.controls['name'].dirty && paymentForm.controls['name'].errors"
+              class="invalid-feedback"
+            >
               Name is required
             </div>
           </div>
-          <div class="form-group col-md-12">
-            <label class="text-secondary" for="purpose">Purpose of payment:</label><br/>
+          <div class="form-group col-md-6">
+            <label class="text-secondary" for="creditorIban">IBAN:</label><br />
             <input
               [ngClass]="{
-            'is-invalid': paymentForm.controls['purpose'].dirty && paymentForm.controls['purpose'].errors
-          }"
+                'is-invalid': creditorIban.dirty && creditorIban.errors
+              }"
+              class="form-control"
+              formControlName="creditorIban"
+              id="creditorIban"
+              name="creditorIban"
+              type="text"
+            />
+            <div *ngIf="creditorIban.errors" class="invalid-feedback">
+              <div *ngIf="creditorIban.errors.required">IBAN is required.</div>
+              <div *ngIf="creditorIban.errors.iban">IBAN is invalid</div>
+            </div>
+          </div>
+          <div class="form-group col-md-6">
+            <label class="text-secondary" for="purpose">Purpose of payment:</label><br />
+            <input
+              [ngClass]="{
+                'is-invalid': paymentForm.controls['purpose'].dirty && paymentForm.controls['purpose'].errors
+              }"
               class="form-control"
               formControlName="purpose"
               id="purpose"
@@ -58,12 +52,12 @@
               type="text"
             />
           </div>
-          <div class="form-group col-md-6"></div>
-
           <div class="form-group col-md-6">
-            <label class="text-secondary" for="amount">Amount:</label><br/>
+            <label class="text-secondary" for="amount">Amount:</label><br />
             <input
-              [ngClass]="{ 'is-invalid': paymentForm.controls['amount'].dirty && paymentForm.controls['amount'].errors }"
+              [ngClass]="{
+                'is-invalid': paymentForm.controls['amount'].dirty && paymentForm.controls['amount'].errors
+              }"
               class="form-control"
               formControlName="amount"
               id="amount"
@@ -80,13 +74,30 @@
             </div>
           </div>
         </div>
+
+        <div class="row">
+          <div class="form-group col-md-6"></div>
+          <div class="form-group col-md-6">
+            <label>
+              <input type="checkbox" formControlName="instantPayment" />
+              <span>Instant payment</span>
+            </label>
+          </div>
+        </div>
       </section>
 
       <div class="d-sm-flex">
         <button (click)="onDeny()" class="btn btn-outline-secondary w-100 mr-4" id="do_deny">Cancel</button>
-        <button (click)="onConfirm()" [disabled]="paymentForm.invalid" class="btn btn-primary w-100" id="do_submit" type="button">Ok</button>
+        <button
+          (click)="onConfirm()"
+          [disabled]="paymentForm.invalid"
+          class="btn btn-primary w-100"
+          id="do_submit"
+          type="button"
+        >
+          Ok
+        </button>
       </div>
     </form>
-
   </div>
 </div>

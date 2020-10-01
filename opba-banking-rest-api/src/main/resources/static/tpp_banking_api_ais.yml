@@ -7,9 +7,7 @@ info:
 externalDocs:
   url: "https://adorsys.github.com/open-banking-gateway"
 
-
 paths:
-
   /v1/banking/ais/accounts:
     get:
       operationId: getAccounts
@@ -41,16 +39,22 @@ paths:
         - $ref: "./tpp_banking_api_commons.yml#/components/parameters/PSU-Consent-Session"
         - $ref: "./tpp_banking_api_commons.yml#/components/parameters/Service-Session-ID"
         - $ref: "./tpp_banking_api_commons.yml#/components/parameters/X-Request-ID"
+          # query
+        - $ref: "#/components/parameters/withBalance"
+
       security:
         - BearerAuthOAuth: []
       responses:
-        '200':
+        "200":
           $ref: "#/components/responses/200_AccountList"
-        '202':
-          $ref: '#/components/responses/202_AUTHORIZATION_REQUIRED'
-        '401':
-          $ref: './tpp_banking_api_commons.yml#/components/responses/401_UNAUTHORIZED'
-
+        "202":
+          $ref: "#/components/responses/202_AUTHORIZATION_REQUIRED"
+        "401":
+          $ref: "./tpp_banking_api_commons.yml#/components/responses/401_UNAUTHORIZED"
+        "410":
+          $ref: "#/components/responses/ErrorShownInXErrorCodeHeaderField"
+        "429":
+          $ref: "#/components/responses/ErrorShownInXErrorCodeHeaderField"
 
   /v1/banking/ais/accounts/{account-id}/transactions:
     get:
@@ -59,8 +63,8 @@ paths:
       tags:
         - TPP Banking API Account information service (AIS)
       description: >-
-          returns list of transactions for specified account resource ID in case Service-Session-ID is provided
-          and saved consent on tpp by it found. Otherwise initiates creation of new consent
+        returns list of transactions for specified account resource ID in case Service-Session-ID is provided
+        and saved consent on tpp by it found. Otherwise initiates creation of new consent
       parameters:
         #path
         - $ref: "#/components/parameters/account-id"
@@ -83,15 +87,16 @@ paths:
         - $ref: "#/components/parameters/entryReferenceFrom"
         - $ref: "#/components/parameters/bookingStatus"
         - $ref: "#/components/parameters/deltaList"
+
       security:
         - BearerAuthOAuth: []
       responses:
-        '200':
+        "200":
           $ref: "#/components/responses/200_AccountsTransactions"
-        '202':
-          $ref: '#/components/responses/202_AUTHORIZATION_REQUIRED'
-        '401':
-          $ref: './tpp_banking_api_commons.yml#/components/responses/401_UNAUTHORIZED'
+        "202":
+          $ref: "#/components/responses/202_AUTHORIZATION_REQUIRED"
+        "401":
+          $ref: "./tpp_banking_api_commons.yml#/components/responses/401_UNAUTHORIZED"
 
   /v1/banking/ais/transactions:
     get:
@@ -124,12 +129,12 @@ paths:
       security:
         - BearerAuthOAuth: []
       responses:
-        '200':
+        "200":
           $ref: "#/components/responses/200_AccountsTransactions"
-        '202':
-          $ref: '#/components/responses/202_AUTHORIZATION_REQUIRED'
-        '401':
-          $ref: './tpp_banking_api_commons.yml#/components/responses/401_UNAUTHORIZED'
+        "202":
+          $ref: "#/components/responses/202_AUTHORIZATION_REQUIRED"
+        "401":
+          $ref: "./tpp_banking_api_commons.yml#/components/responses/401_UNAUTHORIZED"
 
 components:
   parameters:
@@ -174,7 +179,6 @@ components:
         type: string
         format: date
 
-
     dateTo:
       name: dateTo
       in: query
@@ -192,6 +196,15 @@ components:
       schema:
         type: string
         format: date
+
+    withBalance:
+      name: withBalance
+      in: query
+      description: |
+        For list of accounts this query param defines to not only look for the accounts,
+        but for the balances too.
+      schema:
+        type: boolean
 
     deltaList:
       name: deltaList
@@ -245,6 +258,15 @@ components:
         X-Request-ID:
           $ref: "./tpp_banking_api_commons.yml#/components/headers/X-Request-ID"
       # content - Although content might be present, one should consider it as informative json value that is not actionable
+
+    ErrorShownInXErrorCodeHeaderField:
+      description: |
+        The headerfield tells what exactly was wrong.
+      headers:
+        X-ERROR-CODE:
+          schema:
+            type: string
+
 
     200_AccountList:
       description: OK
@@ -328,6 +350,26 @@ components:
           maxLength: 70
         ownerAddress:
           $ref: "./tpp_banking_api_commons.yml#/components/schemas/address"
+        balances:
+          type: array
+          items:
+            $ref: "#/components/schemas/balance"
+
+    balance:
+      description: |
+        A balance
+      type: object
+      properties:
+        balanceAmount:
+          $ref: "./tpp_banking_api_commons.yml#/components/schemas/amount"
+        balanceType:
+          type: string
+        lastChangedDateTime:
+          type: string
+          format: date-time
+        referenceDate:
+          type: string
+          format: date;
 
     accountList:
       description: |
@@ -874,8 +916,8 @@ components:
       type: oauth2
       flows:
         authorizationCode:
-          authorizationUrl: 'http://example.com/oauth/auth'
-          tokenUrl: 'http://example.com/oauth/token'
+          authorizationUrl: "http://example.com/oauth/auth"
+          tokenUrl: "http://example.com/oauth/token"
           scopes:
             write: allows modifying resources
             read: allows reading resources

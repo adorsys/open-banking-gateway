@@ -105,6 +105,23 @@ public class AccountInformationRequestCommon<SELF extends AccountInformationRequ
         return self();
     }
 
+    // Note that max.musterman is typically used for EMBEDDED (real EMBEDDED that is returned by bank, and not EMBEDDED approach in table)
+    public SELF fintech_calls_list_accounts_for_max_musterman_with_expected_balances(Boolean withBalance) {
+        ExtractableResponse<Response> response = withAccountsHeaders(MAX_MUSTERMAN)
+                .header(SERVICE_SESSION_ID, UUID.randomUUID().toString())
+                .queryParam("withBalance", withBalance)
+            .when()
+                .get(AIS_ACCOUNTS_ENDPOINT)
+            .then()
+                .statusCode(HttpStatus.ACCEPTED.value())
+                .extract();
+
+        updateServiceSessionId(response);
+        updateRedirectCode(response);
+        updateNextConsentAuthorizationUrl(response);
+        return self();
+    }
+
     public SELF fintech_calls_list_accounts_for_max_musterman_missing_ip_address() {
         ExtractableResponse<Response> response = withAccountsHeadersMissingIpAddress(MAX_MUSTERMAN)
                       .header(SERVICE_SESSION_ID, UUID.randomUUID().toString())

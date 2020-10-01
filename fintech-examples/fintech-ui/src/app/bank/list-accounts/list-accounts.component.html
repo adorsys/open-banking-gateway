@@ -1,18 +1,7 @@
-<div>
-  <div class="lacc-parent">
-    <div
-      class="withoutOutline"
-      *ngFor="let account of accounts"
-      (click)="selectAccount(account.resourceId)"
-      [routerLink]="[account.resourceId]"
-    >
-      <div class="lacc-list-container lacc-list-container--{{ isSelected(account.resourceId) }}">
-        <div class="lacc-list-item ">
-          <h1 class="lacc-list-item__headline lacc-list-item__headline--small">{{ account.name }}</h1>
-          <p class="lacc-list-item__subheadline lacc-list-item__subheadline--large">{{ visibleAccountNumber(account)}}</p>
-        </div>
-      </div>
+<div class="header__margin">
+  <div class="d-flex flex-wrap">
+    <div class="add-mr-mb" *ngFor="let account of accounts">
+      <app-account-card [account]="account" (eventEmitter)="onSubmit($event)"></app-account-card>
     </div>
   </div>
-  <router-outlet></router-outlet>
 </div>

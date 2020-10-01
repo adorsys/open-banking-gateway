@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
-import { toLocaleString } from '../models/consts';
+import { Consts, LoARetrievalInformation, LoTRetrievalInformation, toLocaleString } from '../models/consts';
 import { AccountStruct, RedirectTupelForMap, RedirectType } from '../bank/redirect-page/redirect-struct';
+import { SettingsData } from '../bank/settings/settings.component';
 
 @Injectable({
   providedIn: 'root'
@@ -91,19 +92,19 @@ export class StorageService {
     return this.isAnySessionValid();
   }
 
-  public setLoa(accountStruct: AccountStruct[]): void {
-    localStorage.setItem(Session.LOA, JSON.stringify(accountStruct));
+  public setLoa(bankId: string, accountStruct: AccountStruct[]): void {
+    localStorage.setItem(bankId, JSON.stringify(accountStruct));
   }
 
-  public getLoa(): AccountStruct[] {
-    const value = localStorage.getItem(Session.LOA);
+  public getLoa(bankId: string): AccountStruct[] {
+    const value = localStorage.getItem(bankId);
     if (value === null) {
       return null;
     }
     return JSON.parse(value);
   }
 
-  public get isUserRedirected(): boolean {
+  public getUserRedirected(): boolean {
     const value = localStorage.getItem(Session.USER_REDIRECTED);
     if (value === null) {
       return false;
@@ -111,20 +112,8 @@ export class StorageService {
     return JSON.parse(value);
   }
 
-  public set isUserRedirected(redirected: boolean) {
+  public setUserRedirected(redirected: boolean): void {
     localStorage.setItem(Session.USER_REDIRECTED, JSON.stringify(redirected));
-  }
-
-  public get redirectCancelUrl(): string {
-    const value = localStorage.getItem(Session.REDIRECT_CANCEL_URL);
-    if (value === null) {
-      return null;
-    }
-    return value;
-  }
-
-  public set redirectCancelUrl(redirectCancelUrl: string) {
-    localStorage.setItem(Session.REDIRECT_CANCEL_URL, redirectCancelUrl);
   }
 
   private isAnySessionValid(): boolean {
@@ -160,6 +149,27 @@ export class StorageService {
 
   private setRedirectMap(map: Map<string, RedirectTupelForMap>) {
     localStorage.setItem(Session.REDIRECT_MAP, JSON.stringify(Array.from(map.entries())));
+  }
+
+  public getSettings(): SettingsData {
+    const setting = localStorage.getItem(Consts.LOCAL_STORAGE_SETTINGS);
+    if (setting == null) {
+      return {
+        loa: LoARetrievalInformation.FROM_TPP_WITH_AVAILABLE_CONSENT,
+        lot: LoTRetrievalInformation.FROM_TPP_WITH_AVAILABLE_CONSENT,
+        withBalance: true,
+        paymentRequiresAuthentication: false
+      };
+    }
+    return JSON.parse(setting);
+  }
+
+  public setSettings(data: SettingsData) {
+    localStorage.setItem(Consts.LOCAL_STORAGE_SETTINGS, JSON.stringify(data));
+  }
+
+  public deleteSettings(): void {
+    localStorage.removeItem(Consts.LOCAL_STORAGE_SETTINGS);
   }
 }
 

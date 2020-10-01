@@ -1,5 +1,6 @@
 package.json
 package-lock.json
 dist
+src/**/api/
 .angulardoc.json
 .vscode/*

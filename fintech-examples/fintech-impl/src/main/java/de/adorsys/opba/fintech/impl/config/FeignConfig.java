@@ -7,6 +7,7 @@ import de.adorsys.opba.api.security.generator.api.RequestDataToSignNormalizer;
 import de.adorsys.opba.api.security.generator.api.RequestToSign;
 import de.adorsys.opba.api.security.requestsigner.OpenBankingDataToSignProvider;
 import de.adorsys.opba.fintech.impl.properties.TppProperties;
+import de.adorsys.opba.fintech.impl.tppclients.AisErrorDecoder;
 import feign.RequestInterceptor;
 import feign.RequestTemplate;
 import lombok.RequiredArgsConstructor;
@@ -38,6 +39,11 @@ public class FeignConfig {
 
     private final RequestSigningService requestSigningService;
     private final TppProperties tppProperties;
+
+    @Bean
+    public AisErrorDecoder aisErrorDecoder() {
+        return new AisErrorDecoder();
+    }
 
     @Bean
     @Profile("!no-signature-filter")

@@ -11,22 +11,23 @@ import java.time.LocalDate;
 @Value
 @Builder
 public class TransactionDetailsBody {
-  private String transactionId;
-  private String entryReference;
-  private String endToEndId;
-  private String mandateId;
-  private String checkId;
-  private String creditorId;
-  private LocalDate bookingDate;
-  private LocalDate valueDate;
-  private Amount transactionAmount;
-  private String creditorName;
-  private AccountReference creditorAccount;
-  private String ultimateCreditor;
-  private String debtorName;
-  private AccountReference debtorAccount;
-  private String ultimateDebtor;
-  private String remittanceInformationUnstructured;
-  private String remittanceInformationStructured;
-  private String proprietaryBankTransactionCode;
- }
+
+    String transactionId;
+    String entryReference;
+    String endToEndId;
+    String mandateId;
+    String checkId;
+    String creditorId;
+    LocalDate bookingDate;
+    LocalDate valueDate;
+    Amount transactionAmount;
+    String creditorName;
+    AccountReference creditorAccount;
+    String ultimateCreditor;
+    String debtorName;
+    AccountReference debtorAccount;
+    String ultimateDebtor;
+    String remittanceInformationUnstructured;
+    String remittanceInformationStructured;
+    String proprietaryBankTransactionCode;
+}

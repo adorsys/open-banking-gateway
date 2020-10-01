@@ -1,7 +1,7 @@
 import { NgModule } from '@angular/core';
 import { PaymentAccountComponent } from './payment-account.component';
 import { CommonModule } from '@angular/common';
-import { ShareModule } from '../../../common/share.module';
+import { SharedModule } from '../../../common/shared.module';
 import { PaymentAccountRoutingModule } from './payment-account-routing.module';
 import { InitiateComponent } from '../payment-initiate/initiate.component';
 import { ConfirmComponent } from '../payment-confirm/confirm.component';
@@ -16,7 +16,6 @@ import { PaymentAccountPaymentsComponent } from '../payment-account-payments/pay
     PaymentAccountComponent,
     PaymentAccountPaymentsComponent
   ],
-  imports: [CommonModule, ShareModule, PaymentAccountRoutingModule]
+  imports: [CommonModule, SharedModule, PaymentAccountRoutingModule]
 })
-export class PaymentAccountModule {
-}
+export class PaymentAccountModule {}

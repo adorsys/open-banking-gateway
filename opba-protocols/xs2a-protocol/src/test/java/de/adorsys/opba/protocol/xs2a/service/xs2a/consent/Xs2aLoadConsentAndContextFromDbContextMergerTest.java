@@ -1,9 +1,9 @@
 package de.adorsys.opba.protocol.xs2a.service.xs2a.consent;
 
 import de.adorsys.opba.protocol.xs2a.config.MapperTestConfig;
-import de.adorsys.opba.protocol.xs2a.context.Xs2aContext;
 import de.adorsys.opba.protocol.xs2a.context.ais.AccountListXs2aContext;
 import de.adorsys.opba.protocol.xs2a.context.ais.TransactionListXs2aContext;
+import de.adorsys.opba.protocol.xs2a.context.ais.Xs2aAisContext;
 import de.adorsys.opba.protocol.xs2a.util.FixtureProvider;
 import lombok.SneakyThrows;
 import org.junit.jupiter.api.Test;
@@ -26,9 +26,9 @@ public class Xs2aLoadConsentAndContextFromDbContextMergerTest {
     @SneakyThrows
     public void xs2aContextMapperTest() {
         // Given
-        Xs2aContext mappingInput = fixtureProvider.getFromFile(PATH_PREFIX + "xs2a_to_xs2a_input.json", Xs2aContext.class);
-        Xs2aContext expected = fixtureProvider.getFromFile(PATH_PREFIX + "xs2a_to_xs2a_output.json", Xs2aContext.class);
-        Xs2aContext actual = new Xs2aContext();
+        Xs2aAisContext mappingInput = fixtureProvider.getFromFile(PATH_PREFIX + "xs2a_to_xs2a_input.json", Xs2aAisContext.class);
+        Xs2aAisContext expected = fixtureProvider.getFromFile(PATH_PREFIX + "xs2a_to_xs2a_output.json", Xs2aAisContext.class);
+        Xs2aAisContext actual = new Xs2aAisContext();
 
         // When
         mapper.merge(mappingInput, actual);
@@ -41,7 +41,7 @@ public class Xs2aLoadConsentAndContextFromDbContextMergerTest {
     @SneakyThrows
     public void xs2sToTransactionListXs2aContextMapperTest() {
         // Given
-        Xs2aContext mappingInput = fixtureProvider.getFromFile(PATH_PREFIX + "xs2a_to_transaction_list_input.json", Xs2aContext.class);
+        Xs2aAisContext mappingInput = fixtureProvider.getFromFile(PATH_PREFIX + "xs2a_to_transaction_list_input.json", Xs2aAisContext.class);
         TransactionListXs2aContext expected = fixtureProvider.getFromFile(PATH_PREFIX + "xs2a_to_transaction_list_output.json", TransactionListXs2aContext.class);
         TransactionListXs2aContext actual = new TransactionListXs2aContext();
 

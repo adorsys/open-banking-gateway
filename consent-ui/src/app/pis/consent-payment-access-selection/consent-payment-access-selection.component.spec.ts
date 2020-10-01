@@ -14,6 +14,7 @@ import { PaymentsConsentReviewComponent } from '../payments-consent-review/payme
 import { ConsentPaymentAccessSelectionComponent } from './consent-payment-access-selection.component';
 import { PisPayment } from '../common/models/pis-payment.model';
 import { StubUtil } from '../../common/utils/stub-util';
+import { PaymentUtil } from '../common/payment-util';
 
 describe('ConsentPaymentAccessSelectionComponent', () => {
   let component: ConsentPaymentAccessSelectionComponent;
@@ -40,6 +41,7 @@ describe('ConsentPaymentAccessSelectionComponent', () => {
             hasGeneralViolation: () => false,
             getConsentState: () => new AuthConsentState([]),
             getFintechName: (): string => StubUtil.FINTECH_NAME,
+            setPaymentObject: () => new PisPayment(),
             getBankName: (): string => StubUtil.ASPSP_NAME
           }
         }
@@ -52,12 +54,26 @@ describe('ConsentPaymentAccessSelectionComponent', () => {
     fixture = TestBed.createComponent(ConsentPaymentAccessSelectionComponent);
     component = fixture.componentInstance;
     component.paymentReviewPage = PaymentsConsentReviewComponent.ROUTE;
-    sessionService = TestBed.get(SessionService);
+    sessionService = TestBed.inject(SessionService);
     spyOn(component, 'hasGeneralViolations').and.returnValue(false);
     fixture.detectChanges();
   });
 
   it('should create', () => {
     expect(component).toBeTruthy();
+  });
+
+  it('should call onDeny', () => {
+    const onDenySpy = spyOn(component, 'onDeny').and.callThrough();
+    component.onDeny();
+    expect(onDenySpy).toHaveBeenCalled();
+  });
+
+  it('should call onConfirm', () => {
+    const paymentObj = PaymentUtil.getOrDefault(StubUtilTests.AUTH_ID, sessionService);
+    const onConfirmSpy = spyOn(component, 'onConfirm').and.callThrough();
+    spyOn(sessionService, 'setPaymentObject').withArgs(StubUtilTests.AUTH_ID, paymentObj);
+    component.onConfirm();
+    expect(onConfirmSpy).toHaveBeenCalled();
   });
 });

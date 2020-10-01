@@ -2,6 +2,7 @@
 
 @import '~bootstrap/scss/bootstrap';
 @import './assets/themes/fonts';
+
 * {
   margin: 0;
   padding: 0;
@@ -22,18 +23,18 @@ body {
     height: auto;
 
     &--big {
-      width: 761px;
+      max-width: 761px;
     }
   }
 
   &-body {
-    padding: 4rem;
+    padding: 3rem;
     color: $dark-80;
   }
 
   &-title {
     text-align: center;
-    margin-bottom: 2rem;
+    margin-bottom: 1rem;
     font-size: 2rem;
     font-family: geometric-SemiBold, sans-serif;
 
@@ -45,25 +46,13 @@ body {
 
   &-img {
     width: 136px;
-    height: 136px;
+    height: auto;
   }
 }
 
 .font-weight-bold,
 .text-bold {
   font-family: geometric-SemiBold, sans-serif;
-}
-
-.modal {
-  display: block;
-  position: fixed;
-  z-index: 1;
-  left: 0;
-  top: 0;
-  width: 100%;
-  height: 100%;
-  background-color: rgb(0, 0, 0);
-  background-color: rgba(0, 0, 0, 0.4);
 }
 
 .form__margin {
@@ -106,8 +95,39 @@ label {
   }
 }
 
-.payment {
-  margin-bottom: 4rem;
+.payment,
+.settings {
+  margin-bottom: 3rem;
+}
+
+@media (max-width: 767px) {
+  .card {
+    &-title {
+      font-size: 1.5rem;
+    }
+
+    &-body {
+      padding: 2rem;
+    }
+
+    &-img {
+      width: 100px;
+    }
+  }
+}
+
+.header__margin {
+  margin-left: 3rem;
+  margin-right: 3rem;
+  max-width: 761px;
+}
+
+@media (max-width: 767px) {
+  .card {
+    &-body {
+      padding: 2rem;
+    }
+  }
 }
 
 @media (max-width: 576px) {
@@ -121,7 +141,8 @@ label {
     padding-right: 0;
   }
 
-  .payment {
+  .payment,
+  .settings {
     margin-bottom: 2rem;
   }
 }

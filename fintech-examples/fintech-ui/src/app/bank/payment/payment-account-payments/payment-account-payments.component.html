@@ -1,36 +1,10 @@
-  <section class="payment">
+<section class="payment">
+  <app-payment-card [payments]="list"></app-payment-card>
+</section>
 
-    <div>
-      <div *ngIf="list && list.length > 0">
-        <span class="ltx-category">Payments</span>
-        <div *ngFor="let status of list">
-          <div class="ltx-parent ltx-list-container ltx-list-container--shadow">
-            <div class="ltx-description">
-              {{ status.transactionStatus }}
-            </div>
-            <div class="ltx-description">
-              {{ status.initiationDate }}
-            </div>
-            <div class="ltx-description">
-              {{ status.creditorName }}
-            </div>
-            <div class="ltx-description">
-              {{ status.remittanceInformationUnstructured }}
-            </div>
-            <div class="ltx-amount-number">
-              {{ status.instructedAmount.amount }}
-            </div>
-            <div class="ltx-amount-currency">
-              {{ status.instructedAmount.currency }}
-            </div>
-
-          </div>
-        </div>
-      </div>
-    </div>
-  </section>
-
-  <div class="d-sm-flex">
-    <button (click)="onDeny()" class="btn btn-outline-secondary w-100 mr-4" id="do_deny">Cancel</button>
-    <button (click)="initiateSinglePayment()" id="do_iniate" class="btn btn-primary w-100" id="do_submit" type="button">Initiate new payment</button>
-  </div>
+<div class="d-sm-flex">
+  <button (click)="onDeny()" class="btn btn-outline-secondary w-100 mr-4" id="do_deny">Cancel</button>
+  <button (click)="initiateSinglePayment()" class="btn btn-primary w-100" id="do_submit" type="button">
+    Initiate new payment
+  </button>
+</div>

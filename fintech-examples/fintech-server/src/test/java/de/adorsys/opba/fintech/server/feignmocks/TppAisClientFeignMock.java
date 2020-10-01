@@ -26,7 +26,8 @@ public class TppAisClientFeignMock implements TppAisClient {
             String fintechId,
             String bankID,
             String psUConsentSession,
-            UUID serviceSessionID
+            UUID serviceSessionID,
+            Boolean withBalance
     ) {
         return null;
     }

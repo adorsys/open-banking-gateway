@@ -4,6 +4,7 @@ import de.adorsys.opba.protocol.bpmnshared.dto.DtoMapper;
 import de.adorsys.opba.protocol.bpmnshared.dto.messages.ProcessResponse;
 import de.adorsys.opba.protocol.bpmnshared.service.exec.ValidatedExecution;
 import de.adorsys.opba.protocol.xs2a.context.Xs2aContext;
+import de.adorsys.opba.protocol.xs2a.context.ais.Xs2aAisContext;
 import de.adorsys.opba.protocol.xs2a.service.dto.ValidatedQueryHeaders;
 import de.adorsys.opba.protocol.xs2a.service.mapper.QueryHeadersMapperTemplate;
 import de.adorsys.opba.protocol.xs2a.service.xs2a.dto.Xs2aWithBalanceParameters;
@@ -23,40 +24,42 @@ import org.springframework.stereotype.Service;
  */
 @Service("xs2aAccountListing")
 @RequiredArgsConstructor
-public class Xs2aAccountListingService extends ValidatedExecution<Xs2aContext> {
+public class Xs2aAccountListingService extends ValidatedExecution<Xs2aAisContext> {
 
     private final ApplicationEventPublisher eventPublisher;
     private final Extractor extractor;
     private final Xs2aValidator validator;
     private final AccountInformationService ais;
+    private final Xs2aConsentErrorHandler handler;
 
     @Override
-    protected void doValidate(DelegateExecution execution, Xs2aContext context) {
+    protected void doValidate(DelegateExecution execution, Xs2aAisContext context) {
         validator.validate(execution, context, this.getClass(), extractor.forValidation(context));
     }
 
     @Override
-    protected void doRealExecution(DelegateExecution execution, Xs2aContext context) {
+    protected void doRealExecution(DelegateExecution execution, Xs2aAisContext context) {
         ValidatedQueryHeaders<Xs2aWithBalanceParameters, Xs2aWithConsentIdHeaders> params = extractor.forExecution(context);
-        Response<AccountListHolder> accounts = ais.getAccountList(
+        handler.tryActionOrHandleConsentErrors(execution, eventPublisher, () -> {
+            Response<AccountListHolder> accounts = ais.getAccountList(
                 params.getHeaders().toHeaders(),
                 params.getQuery().toParameters()
-        );
-
-        eventPublisher.publishEvent(
+            );
+            eventPublisher.publishEvent(
                 new ProcessResponse(execution.getRootProcessInstanceId(), execution.getId(), accounts.getBody())
-        );
+            );
+        });
     }
 
     @Service
     public static class Extractor extends QueryHeadersMapperTemplate<
-                    Xs2aContext,
-                    Xs2aWithBalanceParameters,
-                    Xs2aWithConsentIdHeaders> {
+        Xs2aAisContext,
+        Xs2aWithBalanceParameters,
+        Xs2aWithConsentIdHeaders> {
 
         public Extractor(
-                DtoMapper<Xs2aContext, Xs2aWithConsentIdHeaders> toHeaders,
-                DtoMapper<Xs2aContext, Xs2aWithBalanceParameters> toQuery) {
+            DtoMapper<Xs2aContext, Xs2aWithConsentIdHeaders> toHeaders,
+            DtoMapper<Xs2aAisContext, Xs2aWithBalanceParameters> toQuery) {
             super(toHeaders, toQuery);
         }
     }

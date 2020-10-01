@@ -25,6 +25,7 @@ import org.mapstruct.Mapping;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.ZoneOffset;
 import java.util.concurrent.CompletableFuture;
 
 import static de.adorsys.opba.protocol.xs2a.constant.GlobalConst.SPRING_KEYWORD;
@@ -36,6 +37,8 @@ import static de.adorsys.opba.protocol.xs2a.constant.GlobalConst.XS2A_MAPPERS_PA
 @Service("xs2aGetPaymentStatusState")
 @RequiredArgsConstructor
 public class Xs2aGetPaymentStatusEntrypoint implements GetPaymentStatusState {
+
+    private final Xs2aPaymentContextLoader contextLoader;
     private final PaymentInitiationService pis;
     private final PaymentStatusToBodyMapper mapper;
     private final Xs2aGetPaymentStatusEntrypoint.Extractor extractor;
@@ -47,7 +50,7 @@ public class Xs2aGetPaymentStatusEntrypoint implements GetPaymentStatusState {
     public CompletableFuture<Result<PaymentStatusBody>> execute(ServiceContext<PaymentStatusRequest> context) {
         ProtocolFacingPayment payment = context.getRequestScoped().paymentAccess().getFirstByCurrentSession();
 
-        ValidatedPathHeaders<PaymentStateParameters, PaymentStateHeaders> params = extractor.forExecution(prepareContext(context));
+        ValidatedPathHeaders<PaymentStateParameters, PaymentStateHeaders> params = extractor.forExecution(prepareContext(context, payment));
 
         Response<PaymentInitiationStatus> paymentStatus = pis.getSinglePaymentInitiationStatus(
                 context.getRequest().getPaymentProduct().toString(),
@@ -56,7 +59,10 @@ public class Xs2aGetPaymentStatusEntrypoint implements GetPaymentStatusState {
                 params.getPath().toParameters()
         );
 
+        // All we can do to return guaranteed payment date is read the payment date directly from our payment entity
+        // As NextGenPSD2 1.3.6 does not guarantee any payment date/time fields at this endpoint
         Result<PaymentStatusBody> result = new SuccessResult<>(mapper.map(paymentStatus.getBody()));
+        result.getBody().setCreatedAt(payment.getCreatedAtTime().atOffset(ZoneOffset.UTC));
         return CompletableFuture.completedFuture(result);
     }
 
@@ -66,8 +72,10 @@ public class Xs2aGetPaymentStatusEntrypoint implements GetPaymentStatusState {
     }
 
 
-    protected Xs2aPisContext prepareContext(ServiceContext<PaymentStatusRequest> serviceContext) {
+    protected Xs2aPisContext prepareContext(ServiceContext<PaymentStatusRequest> serviceContext, ProtocolFacingPayment payment) {
         Xs2aPisContext context = request2ContextMapper.map(serviceContext.getRequest());
+        Xs2aPisContext paymentInitiationContext = contextLoader.loadContext(payment);
+        context.setOauth2Token(paymentInitiationContext.getOauth2Token());
         context.setAction(ProtocolAction.GET_PAYMENT_STATUS);
         extender.extend(context, serviceContext);
         return context;

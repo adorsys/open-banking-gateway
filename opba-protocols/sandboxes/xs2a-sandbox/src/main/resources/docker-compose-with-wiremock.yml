@@ -1,0 +1,9 @@
+version: "3.4"
+
+services:
+  xs2a-wiremock:
+    image: rodolpheche/wiremock:2.27.1
+    ports:
+      - 20014:8080
+    volumes:
+      - ./wiremock-fixtures/:/home/wiremock

@@ -10,6 +10,12 @@ import java.util.Optional;
 
 public interface ConsentRepository extends CrudRepository<ConsentEntity, Long> {
     Optional<ConsentEntity> findByTppAuthId(String authId);
-    Optional<ConsentEntity> findByUserEntityAndBankIdAndConsentTypeAndConsentConfirmed(UserEntity userEntity, String bankId, ConsentType consentType, Boolean consentConfirmed);
-    List<ConsentEntity> findByUserEntityAndBankIdAndAccountIdAndConsentConfirmed(UserEntity userEntity, String bankId, String accountId, Boolean consentConfirmed);
+
+    Optional<ConsentEntity> findFirstByUserEntityAndBankIdAndConsentTypeAndConsentConfirmedOrderByCreationTimeDesc(
+        UserEntity userEntity, String bankId, ConsentType consentType, Boolean consentConfirmed);
+
+    List<ConsentEntity> findListByUserEntityAndBankIdAndConsentTypeAndConsentConfirmed(UserEntity userEntity, String
+        bankId, ConsentType consentType, Boolean consentConfirmed);
+
+    List<ConsentEntity> findByUserEntityAndConsentTypeAndConsentConfirmedOrderByCreationTimeDesc(UserEntity userEntity, ConsentType consentType, Boolean consentConfirmed);
 }

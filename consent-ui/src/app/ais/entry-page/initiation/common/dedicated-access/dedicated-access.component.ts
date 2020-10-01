@@ -1,12 +1,12 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { FormBuilder, FormGroup } from '@angular/forms';
+import { Location } from '@angular/common';
+
 import { SharedRoutes } from '../shared-routes';
-import { StubUtil } from '../../../../../common/utils/stub-util';
 import { AccountReference } from '../accounts-reference/accounts-reference.component';
 import { SessionService } from '../../../../../common/session.service';
 import { ConsentUtil } from '../../../../common/consent-util';
-import { Location } from '@angular/common';
 
 @Component({
   selector: 'consent-app-limited-access',
@@ -37,7 +37,7 @@ export class DedicatedAccessComponent implements OnInit {
 
   ngOnInit() {
     this.wrongIban = this.activatedRoute.snapshot.queryParamMap.get('wrong') === 'true';
-    this.activatedRoute.parent.parent.params.subscribe(res => {
+    this.activatedRoute.parent.parent.params.subscribe((res) => {
       this.authorizationId = res.authId;
       this.aspspName = this.sessionService.getBankName(res.authId);
       this.finTechName = this.sessionService.getFintechName(res.authId);
@@ -51,9 +51,9 @@ export class DedicatedAccessComponent implements OnInit {
     consentObj.consent.access.availableAccounts = null;
     consentObj.consent.access.allPsd2 = null;
 
-    consentObj.consent.access.accounts = this.accounts.map(it => it.iban);
-    consentObj.consent.access.balances = this.accounts.map(it => it.iban);
-    consentObj.consent.access.transactions = this.accounts.map(it => it.iban);
+    consentObj.consent.access.accounts = this.accounts.map((it) => it.iban);
+    consentObj.consent.access.balances = this.accounts.map((it) => it.iban);
+    consentObj.consent.access.transactions = this.accounts.map((it) => it.iban);
 
     this.sessionService.setConsentObject(this.authorizationId, consentObj);
     this.router.navigate([SharedRoutes.REVIEW], { relativeTo: this.activatedRoute.parent });
@@ -75,7 +75,7 @@ export class DedicatedAccessComponent implements OnInit {
     const consentObj = ConsentUtil.getOrDefault(this.authorizationId, this.sessionService);
     if (consentObj.consent.access.accounts) {
       this.accounts = [];
-      consentObj.consent.access.accounts.forEach(it => this.accounts.push(new AccountReference(it)));
+      consentObj.consent.access.accounts.forEach((it) => this.accounts.push(new AccountReference(it)));
     }
   }
 }

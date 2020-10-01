@@ -1,8 +1,9 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
-
-import { PaymentAccountsComponent } from './payment-accounts.component';
 import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { RouterTestingModule } from '@angular/router/testing';
+import { CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
+
+import { PaymentAccountsComponent } from './payment-accounts.component';
 
 describe('PaymentAccountsComponent', () => {
   let component: PaymentAccountsComponent;
@@ -11,9 +12,9 @@ describe('PaymentAccountsComponent', () => {
   beforeEach(async(() => {
     TestBed.configureTestingModule({
       imports: [HttpClientTestingModule, RouterTestingModule],
-      declarations: [ PaymentAccountsComponent ]
-    })
-    .compileComponents();
+      declarations: [PaymentAccountsComponent],
+      schemas: [CUSTOM_ELEMENTS_SCHEMA]
+    }).compileComponents();
   }));
 
   beforeEach(() => {

@@ -48,7 +48,7 @@ export class RegisterComponent implements OnInit {
       login: this.registerForm.value.login,
       password: this.registerForm.value.password
     };
-    this.authService.userRegister(credentials).subscribe(res => {
+    this.authService.userRegister(credentials).subscribe((res) => {
       if (res.status === 201) {
         this.router.navigate([LoginComponent.ROUTE], {
           relativeTo: this.activatedRoute.parent

@@ -46,7 +46,7 @@ public class JsonCustomSerializer implements VariableType {
         }
 
         String value = mapper.writeValueAsString(o);
-        return value.length() < maxLength;
+        return value.length() <= maxLength;
     }
 
     @Override

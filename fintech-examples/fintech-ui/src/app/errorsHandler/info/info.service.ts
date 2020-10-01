@@ -16,18 +16,14 @@ export class InfoService {
   private readonly DEFAULT_OPTIONS: InfoOptions = {
     severity: 'info',
     closable: true,
-    duration: 6000
+    duration: 10000
   };
 
   constructor(private overlay: Overlay) {
     this.overlayRef = this.overlay.create({
       hasBackdrop: false,
       scrollStrategy: this.overlay.scrollStrategies.noop(),
-      positionStrategy: this.overlay
-        .position()
-        .global()
-        .right(this.CORNER_OFFSET)
-        .top(this.CORNER_OFFSET)
+      positionStrategy: this.overlay.position().global().right(this.CORNER_OFFSET).top(this.CORNER_OFFSET)
     });
   }
 

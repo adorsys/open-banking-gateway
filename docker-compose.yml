@@ -1,3 +1,4 @@
+# This Docker-Compose file is DEMO. Will pull released docker images from DockerHub.
 version: "3.3"
 
 networks:
@@ -30,7 +31,7 @@ services:
       - FACADE_ENCRYPTION_KEYSETPATH=/keysetpath/example-keyset.json
       - FACADE_URLS_EMBEDDED-UI-BASE-URL=http://localhost:14200
       - PROTOCOL_GATEWAY-BASE-URL=http://localhost:18085
-    build: opba-embedded-starter
+    image: "adorsys/open-banking-gateway-open-banking-gateway:0.19.1"
     ports:
       - "18085:8085"
     volumes:
@@ -45,9 +46,7 @@ services:
     environment:
       - BACKEND_URL=http://fintech-server:8086
     restart: on-failure
-    build:
-      context: fintech-examples/fintech-ui
-      dockerfile: Dockerfile
+    image: "adorsys/open-banking-gateway-fintech-ui:0.19.1"
     ports:
       - "24200:4200"
     depends_on:
@@ -62,7 +61,7 @@ services:
 
       - FINTECH-UI_HOST=http://localhost:24200
 
-    build: fintech-examples/fintech-server
+    image: "adorsys/open-banking-gateway-fintech-server:0.19.1"
     ports:
       - "18086:8086"
     depends_on:
@@ -74,9 +73,7 @@ services:
     environment:
       - BACKEND_URL=http://open-banking-gateway:8085
     restart: on-failure
-    build:
-      context: consent-ui
-      dockerfile: Dockerfile
+    image: "adorsys/open-banking-gateway-consent-ui:0.19.1"
     ports:
       - "14200:4200"
     depends_on:
@@ -86,9 +83,7 @@ services:
 
   hbci-sandbox-server:
     restart: on-failure
-    build:
-      context: opba-protocols/sandboxes/hbci-sandbox
-      dockerfile: Dockerfile
+    image: "adorsys/open-banking-gateway-hbci-sandbox-server:0.19.1"
     ports:
       - "18090:8090"
     networks:

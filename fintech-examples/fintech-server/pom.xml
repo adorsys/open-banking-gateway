@@ -5,7 +5,7 @@
     <parent>
         <groupId>de.adorsys.opba</groupId>
         <artifactId>fintech-examples</artifactId>
-        <version>0.19.1</version>
+        <version>0.20.0</version>
     </parent>
 
     <artifactId>fintech-server</artifactId>
@@ -123,7 +123,6 @@
                 <version>${spring-boot.version}</version>
                 <configuration>
                     <mainClass>de.adorsys.opba.fintech.server.FinTechServer</mainClass>
-                    <executable>true</executable>
                 </configuration>
                 <executions>
                     <execution>

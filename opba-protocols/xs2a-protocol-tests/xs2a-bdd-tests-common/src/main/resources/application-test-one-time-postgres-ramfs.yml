@@ -24,6 +24,7 @@ spring:
       table-prefix: opb_
       # TODO: Consider changing to adorsys-xs2a-sandbox-url
       adorsys-sandbox-url: http://localhost:20014
+      adorsys-sandbox-oauth-server-url: http://localhost:20015/oauth/authorization-server
       adorsys-hbci-sandbox-url: http://localhost:8090/hbci-mock/
       fill-with-mock-data: true
 
@@ -165,7 +166,7 @@ protocol:
           report-sca-result: ${facade.urls.embedded-ui-base-url}/pis${protocol.xs2a.urls.common.parameters.report-sca-result}
           provide-psu-iban: ${facade.urls.embedded-ui-base-url}/pis${protocol.xs2a.urls.common.parameters.provide-psu-iban}
       common:
-        to-aspsp: /#{context.getAuthorizationSessionIdIfOpened()}/to-aspsp-redirection
+        to-aspsp: /#{context.getAuthorizationSessionIdIfOpened()}/to-aspsp-redirection?redirectCode=#{context.getRedirectCodeIfAuthContinued()}
         web-hooks:
           ok: ${facade.urls.embedded-ui-base-url}/embedded-server/v1/consent/#{context.getAuthorizationSessionIdIfOpened()}/fromAspsp/STUB_STATE/ok?redirectCode=#{context.getAspspRedirectCode()}
           nok: ${facade.urls.embedded-ui-base-url}/embedded-server/v1/consent/#{context.getAuthorizationSessionIdIfOpened()}/fromAspsp/STUB_STATE/nok?redirectCode=#{context.getAspspRedirectCode()}
@@ -179,6 +180,7 @@ protocol:
     aspspmessages:
       invalid-credentials: PSU_CREDENTIALS_INVALID
       invalid-consent: FORMAT_ERROR
+      missing-oauth2-token: UNAUTHORIZED
     pkcs12:
       keystore: sample-qwac.keystore
       password: password
@@ -194,7 +196,7 @@ protocol:
       ais:
         redirect:
           to-aspsp: ${facade.urls.embedded-ui-base-url}/ais/#{context.getAuthorizationSessionIdIfOpened()}/to-aspsp-redirection
-          consent-accounts:
+          web-hooks:
             ok: ${facade.urls.embedded-ui-base-url}/embedded-server/v1/consent/#{context.getAuthorizationSessionIdIfOpened()}/fromAspsp/STUB_STATE/ok?redirectCode=#{context.getAspspRedirectCode()}
             nok: ${facade.urls.embedded-ui-base-url}/embedded-server/v1/consent/#{context.getAuthorizationSessionIdIfOpened()}/fromAspsp/STUB_STATE/nok?redirectCode=#{context.getAspspRedirectCode()}
             result: ${facade.urls.embedded-ui-base-url}/ais/#{context.getAuthorizationSessionIdIfOpened()}/consent-result?redirectCode=#{context.getRedirectCodeIfAuthContinued()}
@@ -208,7 +210,7 @@ protocol:
       pis:
         redirect:
           to-aspsp: ${facade.urls.embedded-ui-base-url}/pis/#{context.getAuthorizationSessionIdIfOpened()}/to-aspsp-redirection
-          consent-accounts:
+          web-hooks:
             ok: ${facade.urls.embedded-ui-base-url}/embedded-server/v1/consent/#{context.getAuthorizationSessionIdIfOpened()}/fromAspsp/STUB_STATE/ok?redirectCode=#{context.getAspspRedirectCode()}
             nok: ${facade.urls.embedded-ui-base-url}/embedded-server/v1/consent/#{context.getAuthorizationSessionIdIfOpened()}/fromAspsp/STUB_STATE/nok?redirectCode=#{context.getAspspRedirectCode()}
             result: ${facade.urls.embedded-ui-base-url}/pis/#{context.getAuthorizationSessionIdIfOpened()}/consent-result?redirectCode=#{context.getRedirectCodeIfAuthContinued()}

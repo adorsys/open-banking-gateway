@@ -12,6 +12,7 @@
 import { AccountStatus } from './accountStatus';
 import { Address } from './address';
 import { LinksAccountDetails } from './linksAccountDetails';
+import { AccountBalance } from './accountBalance';
 
 
 /**
@@ -81,6 +82,7 @@ export interface AccountDetails {
      */
     ownerName?: string;
     ownerAddress?: Address;
+    balances?: Array<AccountBalance>;
 }
 export namespace AccountDetails {
     export type UsageEnum = 'PRIV' | 'ORGA';

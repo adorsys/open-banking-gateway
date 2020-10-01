@@ -14,9 +14,7 @@
             id="username"
             type="text"
           />
-          <div *ngIf="login?.errors?.required && login?.dirty" class="invalid-feedback">
-            Username is Required
-          </div>
+          <div *ngIf="login?.errors?.required && login?.dirty" class="invalid-feedback">Username is Required</div>
         </div>
 
         <div class="form-group">
@@ -29,9 +27,7 @@
             id="password"
             type="password"
           />
-          <div *ngIf="password?.errors?.required && password?.dirty" class="invalid-feedback">
-            Password is Required
-          </div>
+          <div *ngIf="password?.errors?.required && password?.dirty" class="invalid-feedback">Password is Required</div>
         </div>
 
         <div class="form-group">
@@ -48,7 +44,7 @@
             Password is Required
           </div>
           <div *ngIf="confirmPassword?.errors?.compareFields && confirmPassword?.dirty" class="invalid-feedback">
-            The passwords ara not identical.
+            The passwords are not identical.
           </div>
         </div>
       </div>

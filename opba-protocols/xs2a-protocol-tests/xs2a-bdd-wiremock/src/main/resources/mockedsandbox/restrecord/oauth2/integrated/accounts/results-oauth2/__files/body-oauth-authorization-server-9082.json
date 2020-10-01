@@ -1,0 +1,6 @@
+{
+  "authorization_endpoint": "http://localhost:4400/account-information/login?redirectId=3dbb1ed5-c470-4391-b2a2-b89d3cc493ad&encryptedConsentId=pLydRVvYTWeVjWykZ2_q5FQlEVe-grenbBQEMfM1RWdPk02OMCkxWoQ8cEBAlp0FyfjJcs_iMK4aR4KtOiYRKcz9MpaJIQIH3NJX8IHgetw=_=_psGLvQpt9Q&oauth2=true",
+  "token_endpoint": "http://{{request.headers.Host}}/oauth/token",
+  "response_types_supported": ["CODE"],
+  "grant_types_supported": ["AUTHORISATION_CODE"]
+}

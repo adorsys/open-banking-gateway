@@ -84,4 +84,21 @@ class BasicTest extends BaseMockitoTest {
         // Loop forever.
         await().forever().until(() -> false);
     }
+
+    /**
+     * Not really a test, but just launches Wiremock, with Sandbox mocking fixtures for you.
+     * If run with intellij 2018.3 please set VM option to -DSTART_SANDBOX=true and environment-variable ENABLE_HEAVY_TESTS=true
+     */
+    @Test
+    @SneakyThrows
+    @EnabledIfSystemProperty(named = "START_SANDBOX", matches = TRUE_BOOL)
+    void startTheWiremockInDocker() {
+        DockerComposeContainer environment = new DockerComposeContainer(new File("./src/main/resources/docker-compose-with-wiremock.yml"))
+                                                     .withLocalCompose(true)
+                                                     .withTailChildContainers(true);
+        environment.start();
+
+        // Loop forever.
+        await().forever().until(() -> false);
+    }
 }

@@ -11,6 +11,7 @@ import de.adorsys.opba.db.repository.jpa.ConsentRepository;
 import io.restassured.RestAssured;
 import io.restassured.response.ExtractableResponse;
 import io.restassured.response.Response;
+import io.restassured.response.ValidatableResponse;
 import lombok.Getter;
 import lombok.SneakyThrows;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -173,7 +174,14 @@ public class AccountInformationResult<SELF extends AccountInformationResult<SELF
     public SELF open_banking_can_read_max_musterman_account_data_using_consent_bound_to_service_session(
         boolean validateResourceId
     ) {
-        ExtractableResponse<Response> response = withAccountsHeaders(ANTON_BRUECKNER)
+        return open_banking_can_read_max_musterman_account_data_using_consent_bound_to_service_session(validateResourceId, 0);
+    }
+
+    @SneakyThrows
+    public SELF open_banking_can_read_max_musterman_account_data_using_consent_bound_to_service_session(
+        boolean validateResourceId, int expectedBalances
+    ) {
+        ValidatableResponse body = withAccountsHeaders(ANTON_BRUECKNER)
                     .header(SERVICE_SESSION_ID, serviceSessionId)
                 .when()
                     .get(AIS_ACCOUNTS_ENDPOINT)
@@ -183,9 +191,11 @@ public class AccountInformationResult<SELF extends AccountInformationResult<SELF
                     .body("accounts[0].resourceId", validateResourceId ? equalTo("oN7KTVuJSVotMvPPPavhVo") : instanceOf(String.class))
                     .body("accounts[0].currency", equalTo("EUR"))
                     .body("accounts[0].name", equalTo("max.musterman"))
-                    .body("accounts", hasSize(1))
-                    .extract();
-
+                    .body("accounts", hasSize(1));
+        if (expectedBalances > 0) {
+            body.body("accounts[0].balances", hasSize(expectedBalances));
+        }
+        ExtractableResponse<Response> response = body.extract();
         this.responseContent = response.body().asString();
         return self();
     }

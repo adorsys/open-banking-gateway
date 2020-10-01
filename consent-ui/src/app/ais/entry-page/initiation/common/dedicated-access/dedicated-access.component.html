@@ -6,9 +6,7 @@
         <p class="text-secondary">
           Accounts with their details to be visible for <strong class="text-dark">{{ finTechName }}</strong>
         </p>
-        <div class="d-block text-danger mb-2" *ngIf="wrongIban">
-          The IBAN(s) you entered were invalid
-        </div>
+        <div class="d-block text-danger mb-2" *ngIf="wrongIban">The IBAN(s) you entered were invalid</div>
         <consent-app-account-selector
           [targetForm]="limitedAccountAccessForm"
           [accounts]="accounts"

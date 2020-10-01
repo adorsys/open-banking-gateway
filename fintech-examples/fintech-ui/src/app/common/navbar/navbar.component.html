@@ -1,10 +1,9 @@
 <nav class="navbar navbar-light py-3" *ngIf="isLoggedIn()">
   <a class="navbar-brand text-primary mr-4" routerLink="/">
-    <img class="logo" [src]="" />
-    <span class="ml-3">Fintechui</span>
+    <span class="ml-3 text-bold">FintechUI</span>
     <ul class="list-group">
-      <li class="list-group-item tinyRedirect">session expires {{ sessionValidUntil }}</li>
-      <li class="list-group-item tinyRedirect" *ngFor="let validUntil of redirectsValidUntil">
+      <li class="list-group-item">session expires {{ timer?.sessionValidUntil }}</li>
+      <li class="list-group-item" *ngFor="let validUntil of timer?.redirectsValidUntil">
         redirect session {{ validUntil }}
       </li>
     </ul>
@@ -12,21 +11,15 @@
   <ul class="nav">
     <li class="dropdown ml-auto">
       <a
-        class="nav-item dropdown-toggle mr-3 no-underline clickable"
+        class="nav-item dropdown-toggle"
         id="dropdownMenuButton"
         data-toggle="dropdown"
         aria-haspopup="true"
         aria-expanded="false"
+        >{{ getUserName() }}</a
       >
-        {{ getUserName() }}
-      </a>
       <div class="dropdown-menu dropdown-menu-right">
-        <a (click)="onLogout()" [routerLinkActive]="['active']" class="dropdown-item clickable pb-2">
-          <div>
-            <img src="" />
-            <span class="nav__title"> Sign out</span>
-          </div>
-        </a>
+        <span (click)="onLogout()" class="dropdown-item">Sign out</span>
       </div>
     </li>
   </ul>

@@ -11,6 +11,8 @@ describe('AIS ScaSelectPageComponent', () => {
   let component: ScaSelectPageComponent;
   let fixture: ComponentFixture<ScaSelectPageComponent>;
 
+  beforeAll(() => (window.onbeforeunload = jasmine.createSpy()));
+
   beforeEach(async(() => {
     TestBed.configureTestingModule({
       declarations: [ScaSelectPageComponent],

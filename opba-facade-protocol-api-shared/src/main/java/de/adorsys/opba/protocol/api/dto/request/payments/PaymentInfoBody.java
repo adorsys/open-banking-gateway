@@ -6,6 +6,8 @@ import de.adorsys.opba.protocol.api.dto.result.body.Amount;
 import de.adorsys.opba.protocol.api.dto.result.body.ResultBody;
 import lombok.Data;
 
+import java.time.OffsetDateTime;
+
 /**
  * Pis payment information body
  */
@@ -20,4 +22,5 @@ public class PaymentInfoBody implements ResultBody {
     private Address creditorAddress;
     private String remittanceInformationUnstructured;
     private String transactionStatus;
+    private OffsetDateTime createdAt;
 }

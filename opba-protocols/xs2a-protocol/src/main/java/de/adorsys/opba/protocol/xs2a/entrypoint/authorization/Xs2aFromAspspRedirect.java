@@ -34,6 +34,7 @@ public class Xs2aFromAspspRedirect implements FromAspspRedirect {
             executionId,
             (Xs2aContext toUpdate) -> {
                 toUpdate.setRedirectConsentOk(serviceContext.getRequest().getIsOk());
+                toUpdate.setOauth2Code(serviceContext.getRequest().getCode());
                 extender.extend(toUpdate, serviceContext);
                 return toUpdate;
             }

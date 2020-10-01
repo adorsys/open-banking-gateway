@@ -22,8 +22,10 @@ spring:
     parameters:
       table-prefix: opb_
       adorsys-sandbox-url: http://localhost:20014
+      adorsys-sandbox-oauth-server-url: http://localhost:20015/oauth/authorization-server
       adorsys-hbci-sandbox-url: http://localhost:8090/hbci-mock/
       fill-with-mock-data: true
+    contexts: dev
 
 # Actuator:
 management:
@@ -110,7 +112,7 @@ facade:
     authorization-session-key:
       cookie:
         path-templates: /embedded-server/v1/consent/{authorizationSessionId}, /embedded-server/v1/psu/ais/{authorizationSessionId}/renewal-authorization-session-key
-        redirect-path-template: /embedded-server/v1/consent/{authorizationSessionId}/fromAspsp/{redirectState}/*
+        redirect-path-template: /embedded-server/v1/consent/{authorizationSessionId}/fromAspsp/*
   expirable:
     expire-after-write: PT5M # PLEASE SYNC api.security.token-validity-duration, api.cookie.max-age and facade.expirable.expire-after-write
 
@@ -158,7 +160,7 @@ protocol:
           report-sca-result: ${facade.urls.embedded-ui-base-url}/ais${protocol.xs2a.urls.common.parameters.report-sca-result}
           provide-psu-iban: ${facade.urls.embedded-ui-base-url}/ais${protocol.xs2a.urls.common.parameters.provide-psu-iban}
       pis:
-        to-aspsp: ${facade.urls.embedded-ui-base-url}/pis${protocol.xs2a.urls.common.to-aspsp}
+        to-aspsp: ${facade.urls.embedded-ui-base-url}/pis${protocol.xs2a.urls.common.to-aspsp}?redirectCode=#{context.getRedirectCodeIfAuthContinued()}
         web-hooks:
           ok: ${protocol.xs2a.urls.common.web-hooks.ok}
           nok: ${protocol.xs2a.urls.common.web-hooks.nok}
@@ -170,7 +172,7 @@ protocol:
           report-sca-result: ${facade.urls.embedded-ui-base-url}/pis${protocol.xs2a.urls.common.parameters.report-sca-result}
           provide-psu-iban: ${facade.urls.embedded-ui-base-url}/pis${protocol.xs2a.urls.common.parameters.provide-psu-iban}
       common:
-        to-aspsp: /#{context.getAuthorizationSessionIdIfOpened()}/to-aspsp-redirection
+        to-aspsp: /#{context.getAuthorizationSessionIdIfOpened()}/to-aspsp-redirection?redirectCode=#{context.getRedirectCodeIfAuthContinued()}
         web-hooks:
           ok: ${facade.urls.embedded-ui-base-url}/embedded-server/v1/consent/#{context.getAuthorizationSessionIdIfOpened()}/fromAspsp/STUB_STATE/ok?redirectCode=#{context.getAspspRedirectCode()}
           nok: ${facade.urls.embedded-ui-base-url}/embedded-server/v1/consent/#{context.getAuthorizationSessionIdIfOpened()}/fromAspsp/STUB_STATE/nok?redirectCode=#{context.getAspspRedirectCode()}
@@ -184,6 +186,7 @@ protocol:
     aspspmessages:
       invalid-credentials: PSU_CREDENTIALS_INVALID
       invalid-consent: FORMAT_ERROR
+      missing-oauth2-token: UNAUTHORIZED
     pkcs12:
       keystore: sample-qwac.keystore
       password: password
@@ -199,7 +202,7 @@ protocol:
       ais:
         redirect:
           to-aspsp: ${facade.urls.embedded-ui-base-url}/ais/#{context.getAuthorizationSessionIdIfOpened()}/to-aspsp-redirection
-          consent-accounts:
+          web-hooks:
             ok: ${facade.urls.embedded-ui-base-url}/embedded-server/v1/consent/#{context.getAuthorizationSessionIdIfOpened()}/fromAspsp/STUB_STATE/ok?redirectCode=#{context.getAspspRedirectCode()}
             nok: ${facade.urls.embedded-ui-base-url}/embedded-server/v1/consent/#{context.getAuthorizationSessionIdIfOpened()}/fromAspsp/STUB_STATE/nok?redirectCode=#{context.getAspspRedirectCode()}
             result: ${facade.urls.embedded-ui-base-url}/ais/#{context.getAuthorizationSessionIdIfOpened()}/consent-result?redirectCode=#{context.getRedirectCodeIfAuthContinued()}
@@ -213,7 +216,7 @@ protocol:
       pis:
         redirect:
           to-aspsp: ${facade.urls.embedded-ui-base-url}/pis/#{context.getAuthorizationSessionIdIfOpened()}/to-aspsp-redirection
-          consent-accounts:
+          web-hooks:
             ok: ${facade.urls.embedded-ui-base-url}/embedded-server/v1/consent/#{context.getAuthorizationSessionIdIfOpened()}/fromAspsp/STUB_STATE/ok?redirectCode=#{context.getAspspRedirectCode()}
             nok: ${facade.urls.embedded-ui-base-url}/embedded-server/v1/consent/#{context.getAuthorizationSessionIdIfOpened()}/fromAspsp/STUB_STATE/nok?redirectCode=#{context.getAspspRedirectCode()}
             result: ${facade.urls.embedded-ui-base-url}/pis/#{context.getAuthorizationSessionIdIfOpened()}/consent-result?redirectCode=#{context.getRedirectCodeIfAuthContinued()}

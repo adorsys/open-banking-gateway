@@ -3,10 +3,9 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { AisService } from '../services/ais.service';
 import { AccountReport } from '../../api';
 import { RedirectStruct, RedirectType } from '../redirect-page/redirect-struct';
-import { HeaderConfig } from '../../models/consts';
+import { Consts, HeaderConfig } from '../../models/consts';
 import { StorageService } from '../../services/storage.service';
-import { tap } from 'rxjs/operators';
-import { SettingsService } from '../services/settings.service';
+import { RoutingPath } from '../../models/routing-path.model';
 
 @Component({
   selector: 'app-list-transactions',
@@ -17,48 +16,63 @@ export class ListTransactionsComponent implements OnInit {
   accountId = '';
   bankId = '';
   makeVisible = false;
+  account;
   transactions: AccountReport;
-  loTRetrievalInformation;
+
   constructor(
     private router: Router,
     private route: ActivatedRoute,
     private aisService: AisService,
-    private storageService: StorageService,
-    private settingsService: SettingsService
-  ) {
-    this.settingsService.getLoT().pipe(tap(el => this.loTRetrievalInformation = el)).subscribe();
-  }
+    private storageService: StorageService
+  ) {}
 
   ngOnInit() {
-    this.bankId = this.route.parent.snapshot.paramMap.get('bankid');
-    this.accountId = this.route.snapshot.paramMap.get('accountid');
+    this.bankId = this.route.snapshot.params[Consts.BANK_ID_NAME];
+    this.accountId = this.route.snapshot.params[Consts.ACCOUNT_ID_NAME];
     this.loadTransactions();
+    this.account = this.getAccountById(this.accountId);
   }
 
   private loadTransactions(): void {
-    this.aisService.getTransactions(this.bankId, this.accountId, this.loTRetrievalInformation).subscribe(response => {
-      switch (response.status) {
-        case 202:
-          console.log('list tx got REDIRECT');
-          this.storageService.setRedirect(
-            response.headers.get(HeaderConfig.HEADER_FIELD_REDIRECT_CODE),
-            response.headers.get(HeaderConfig.HEADER_FIELD_AUTH_ID),
-            response.headers.get(HeaderConfig.HEADER_FIELD_X_XSRF_TOKEN),
-            parseInt(response.headers.get(HeaderConfig.HEADER_FIELD_X_MAX_AGE), 0),
-            RedirectType.AIS
-          );
-          const r = new RedirectStruct();
-          r.redirectUrl = encodeURIComponent(response.headers.get(HeaderConfig.HEADER_FIELD_LOCATION));
-          r.redirectCode = response.headers.get(HeaderConfig.HEADER_FIELD_REDIRECT_CODE);
-          r.bankId = this.bankId;
-          r.bankName = this.storageService.getBankName();
-          this.router.navigate(['../redirect', JSON.stringify(r)], { relativeTo: this.route });
-          break;
-        case 200:
-          console.log('I got transactions');
-          this.transactions = response.body.transactions;
-          this.makeVisible = true;
+    this.aisService
+      .getTransactions(this.bankId, this.accountId, this.storageService.getSettings().lot)
+      .subscribe((response) => {
+        switch (response.status) {
+          case 202:
+            console.log('list tx got REDIRECT');
+            this.storageService.setRedirect(
+              response.headers.get(HeaderConfig.HEADER_FIELD_REDIRECT_CODE),
+              response.headers.get(HeaderConfig.HEADER_FIELD_AUTH_ID),
+              response.headers.get(HeaderConfig.HEADER_FIELD_X_XSRF_TOKEN),
+              parseInt(response.headers.get(HeaderConfig.HEADER_FIELD_X_MAX_AGE), 0),
+              RedirectType.AIS
+            );
+            const r = new RedirectStruct();
+            r.redirectUrl = encodeURIComponent(response.headers.get(HeaderConfig.HEADER_FIELD_LOCATION));
+            r.redirectCode = response.headers.get(HeaderConfig.HEADER_FIELD_REDIRECT_CODE);
+            r.bankId = this.bankId;
+            r.bankName = this.storageService.getBankName();
+            this.router.navigate(['../redirect', JSON.stringify(r)], { relativeTo: this.route });
+            break;
+          case 200:
+            console.log('I got transactions');
+            this.transactions = response.body.transactions;
+            console.log(this.transactions);
+            this.makeVisible = true;
+        }
+      });
+  }
+
+  navigateToPayment() {
+    this.router.navigate([RoutingPath.PAYMENT], { relativeTo: this.route.parent.parent });
+  }
+
+  private getAccountById(id: string) {
+    for (const acc of this.storageService.getLoa(this.bankId)) {
+      if (acc.resourceId === id) {
+        return acc;
       }
-    });
+    }
+    return null;
   }
 }

@@ -33,4 +33,10 @@ public class ListAccountsRequest implements FacadeServiceableGetter {
      */
     @Builder.Default
     private Map<ExtraRequestParam, Object> extras = new EnumMap<>(ExtraRequestParam.class);
+
+    /**
+     * For list accounts balances can be retrieved too
+     */
+    private Boolean withBalance;
+
 }

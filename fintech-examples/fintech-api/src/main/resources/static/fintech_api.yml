@@ -81,14 +81,14 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/loginRequest'
+              $ref: "#/components/schemas/loginRequest"
         required: true
       x-codegen-request-body-name: loginRequest
       responses:
-        '200':
+        "200":
           $ref: "#/components/responses/200_UserProfile"
-        '401':
-          $ref: '#/components/responses/401_Unauthorized'
+        "401":
+          $ref: "#/components/responses/401_Unauthorized"
 
   /v1/login/oauth2:
     get:
@@ -125,10 +125,10 @@ paths:
           schema:
             type: string
       responses:
-        '200':
+        "200":
           $ref: "#/components/responses/200_UserProfile"
-        '401':
-          $ref: '#/components/responses/401_Unauthorized'
+        "401":
+          $ref: "#/components/responses/401_Unauthorized"
 
   /v1/oauth2/{idpProvider}/login:
     post:
@@ -150,8 +150,8 @@ paths:
           required: true
           description: IDP provider id for Oauth2 authentication (i.e. `gmail`)
       responses:
-        '202':
-          $ref: '#/components/responses/202_ToOauth2'
+        "202":
+          $ref: "#/components/responses/202_ToOauth2"
 
   /v1/logout:
     post:
@@ -163,14 +163,14 @@ paths:
       parameters:
         #headers
         - $ref: "#/components/parameters/X-Request-ID"
-        - $ref: '#/components/parameters/X-XSRF-TOKEN'
+        - $ref: "#/components/parameters/X-XSRF-TOKEN"
       security:
         - sessionCookie: []
       responses:
-        '200':
+        "200":
           description: nothing returned
-        '401':
-          $ref: '#/components/responses/401_Unauthorized'
+        "401":
+          $ref: "#/components/responses/401_Unauthorized"
 
   /v1/search/bankSearch:
     get:
@@ -182,7 +182,7 @@ paths:
       parameters:
         #headers
         - $ref: "#/components/parameters/X-Request-ID"
-        - $ref: '#/components/parameters/X-XSRF-TOKEN'
+        - $ref: "#/components/parameters/X-XSRF-TOKEN"
         #query
         - name: keyword
           in: query
@@ -202,10 +202,10 @@ paths:
       security:
         - sessionCookie: []
       responses:
-        '200':
+        "200":
           $ref: "#/components/responses/200_BankSearchResult"
-        '401':
-          $ref: '#/components/responses/401_Unauthorized'
+        "401":
+          $ref: "#/components/responses/401_Unauthorized"
 
   /v1/search/bankProfile:
     get:
@@ -217,7 +217,7 @@ paths:
       parameters:
         #header
         - $ref: "#/components/parameters/X-Request-ID"
-        - $ref: '#/components/parameters/X-XSRF-TOKEN'
+        - $ref: "#/components/parameters/X-XSRF-TOKEN"
         - name: bankId
           in: query
           description: Identifier of the bank to be loaded.
@@ -227,12 +227,12 @@ paths:
       security:
         - sessionCookie: []
       responses:
-        '200':
+        "200":
           $ref: "#/components/responses/200_BankProfile"
-        '401':
-          $ref: '#/components/responses/401_Unauthorized'
-        '404':
-          $ref: '#/components/responses/404_NotFound'
+        "401":
+          $ref: "#/components/responses/401_Unauthorized"
+        "404":
+          $ref: "#/components/responses/404_NotFound"
 
   /v1/ais/banks/{bank-id}/accounts:
     get:
@@ -255,22 +255,24 @@ paths:
         - $ref: "#/components/parameters/bank-id"
         #header
         - $ref: "#/components/parameters/X-Request-ID"
-        - $ref: '#/components/parameters/X-XSRF-TOKEN'
+        - $ref: "#/components/parameters/X-XSRF-TOKEN"
         - $ref: "#/components/parameters/Fintech-Redirect-URL-OK"
         - $ref: "#/components/parameters/Fintech-Redirect-URL-NOK"
         - $ref: "#/components/parameters/LoARetrievalInformation"
+        #query
+        - $ref: "#/components/parameters/withBalance"
 
       security:
         - sessionCookie: []
       responses:
-        '200':
+        "200":
           $ref: "#/components/responses/200_AccountList"
-        '202':
-          $ref: '#/components/responses/202_ToConsentAuthApi'
-        '401':
-          $ref: '#/components/responses/401_Unauthorized'
-        '404':
-          $ref: '#/components/responses/404_NotFound'
+        "202":
+          $ref: "#/components/responses/202_ToConsentAuthApi"
+        "401":
+          $ref: "#/components/responses/401_Unauthorized"
+        "404":
+          $ref: "#/components/responses/404_NotFound"
 
   /v1/ais/banks/{bank-id}/accounts/{account-id}/transactions:
     get:
@@ -292,7 +294,7 @@ paths:
 
         #header
         - $ref: "#/components/parameters/X-Request-ID"
-        - $ref: '#/components/parameters/X-XSRF-TOKEN'
+        - $ref: "#/components/parameters/X-XSRF-TOKEN"
         - $ref: "#/components/parameters/Fintech-Redirect-URL-OK"
         - $ref: "#/components/parameters/Fintech-Redirect-URL-NOK"
         - $ref: "#/components/parameters/LoTRetrievalInformation"
@@ -300,14 +302,14 @@ paths:
       security:
         - sessionCookie: []
       responses:
-        '200':
-          $ref: '#/components/responses/200_AccountsTransactions'
-        '202':
-          $ref: '#/components/responses/202_ToConsentAuthApi'
-        '401':
-          $ref: '#/components/responses/401_Unauthorized'
-        '404':
-          $ref: '#/components/responses/404_NotFound'
+        "200":
+          $ref: "#/components/responses/200_AccountsTransactions"
+        "202":
+          $ref: "#/components/responses/202_ToConsentAuthApi"
+        "401":
+          $ref: "#/components/responses/401_Unauthorized"
+        "404":
+          $ref: "#/components/responses/404_NotFound"
 
   /v1/{auth-id}/fromConsent/{ok-or-notok}:
     get:
@@ -324,17 +326,17 @@ paths:
         #query
         - $ref: "#/components/parameters/redirectCode"
         #header
-        - $ref: '#/components/parameters/X-Request-ID'
-        - $ref: '#/components/parameters/X-XSRF-TOKEN'
+        - $ref: "#/components/parameters/X-Request-ID"
+        - $ref: "#/components/parameters/X-XSRF-TOKEN"
       security:
         - redirectCookie: []
       responses:
-        '202':
-          $ref: '#/components/responses/202_ReloadUI'
-        '401':
-          $ref: '#/components/responses/401_Unauthorized'
-        '404':
-          $ref: '#/components/responses/404_NotFound'
+        "202":
+          $ref: "#/components/responses/202_ReloadUI"
+        "401":
+          $ref: "#/components/responses/401_Unauthorized"
+        "404":
+          $ref: "#/components/responses/404_NotFound"
 
   /v1/{auth-id}/fromPayment/{ok-or-notok}:
     get:
@@ -351,17 +353,17 @@ paths:
         #query
         - $ref: "#/components/parameters/redirectCode"
         #header
-        - $ref: '#/components/parameters/X-Request-ID'
-        - $ref: '#/components/parameters/X-XSRF-TOKEN'
+        - $ref: "#/components/parameters/X-Request-ID"
+        - $ref: "#/components/parameters/X-XSRF-TOKEN"
       security:
         - redirectCookie: []
       responses:
-        '202':
-          $ref: '#/components/responses/202_ReloadUI'
-        '401':
-          $ref: '#/components/responses/401_Unauthorized'
-        '404':
-          $ref: '#/components/responses/404_NotFound'
+        "202":
+          $ref: "#/components/responses/202_ReloadUI"
+        "401":
+          $ref: "#/components/responses/401_Unauthorized"
+        "404":
+          $ref: "#/components/responses/404_NotFound"
 
   /v1/pis/banks/{bank-id}/accounts/{account-id}/payments/single:
     get:
@@ -376,13 +378,13 @@ paths:
         - $ref: "#/components/parameters/account-id"
         #header
         - $ref: "#/components/parameters/X-Request-ID"
-        - $ref: '#/components/parameters/X-XSRF-TOKEN'
+        - $ref: "#/components/parameters/X-XSRF-TOKEN"
 
       responses:
-        '200':
-          $ref: '#/components/responses/200_PaymentInitiationStatusResponseList'
-        '401':
-          $ref: '#/components/responses/401_Unauthorized'
+        "200":
+          $ref: "#/components/responses/200_PaymentInitiationStatusResponseList"
+        "401":
+          $ref: "#/components/responses/401_Unauthorized"
 
     post:
       summary: Single payment initiation request
@@ -396,8 +398,8 @@ paths:
         - $ref: "#/components/parameters/account-id"
         #header
         - $ref: "#/components/parameters/X-Request-ID"
-        - $ref: '#/components/parameters/X-XSRF-TOKEN'
-        - $ref: '#/components/parameters/X-Pis-Psu-Authentication-Required'
+        - $ref: "#/components/parameters/X-XSRF-TOKEN"
+        - $ref: "#/components/parameters/X-Pis-Psu-Authentication-Required"
         - $ref: "#/components/parameters/Fintech-Redirect-URL-OK"
         - $ref: "#/components/parameters/Fintech-Redirect-URL-NOK"
 
@@ -406,17 +408,37 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/singlePaymentInitiationRequest'
+              $ref: "#/components/schemas/singlePaymentInitiationRequest"
         required: true
       responses:
-        '202':
-          $ref: '#/components/responses/202_ToConsentAuthApi'
-        '401':
-          $ref: '#/components/responses/401_Unauthorized'
+        "202":
+          $ref: "#/components/responses/202_ToConsentAuthApi"
+        "401":
+          $ref: "#/components/responses/401_Unauthorized"
 
+  /v1/consent/{userid}/{password}:
+    get:
+      summary: ask for existing consent of user
+      description: This method is disabled by default. It can be enabled by profile "CONSENT_RETRIEVAL"
+      operationId: retrieveConsent
+      tags:
+        - FintechRetrieveConsent
+      parameters:
+        #path
+        - name: userid
+          in: path
+          schema:
+            type: string
+        - name: password
+          in: path
+          schema:
+            type: string
+
+      responses:
+        "200":
+          $ref: "#/components/responses/200_ConsentRetrievalResult"
 
 components:
-
   securitySchemes:
     sessionCookie:
       type: apiKey
@@ -429,7 +451,6 @@ components:
         used later to check the cookie agains CSRF.
 
   headers:
-
     Set-SessionCookie:
       name: Set-Cookie
       description: |
@@ -516,7 +537,6 @@ components:
         example: http://localhost:8080/finTechUi?sessionState=ejxs.wersdzxxc23r.asdf
 
   parameters:
-
     Fintech-Redirect-URL-OK:
       # the description must not be added. currently fintech-ui codegenerate fails, if non-standard-header field has description
       #    -attribute components.parameters.Fintech-Redirect-URL-OK.[Fintech-Redirect-URL-OK].desription is unexpected
@@ -628,6 +648,13 @@ components:
       schema:
         type: string
 
+    withBalance:
+      name: withBalance
+      in: query
+      description: Provides balances for the given accounts
+      schema:
+        type: boolean
+
     bookingStatus:
       name: bookingStatus
       in: query
@@ -661,7 +688,6 @@ components:
       schema:
         type: string
         format: date
-
 
     dateTo:
       name: dateTo
@@ -710,9 +736,7 @@ components:
       schema:
         type: string
 
-
   responses:
-
     200_PaymentInitiationStatusResponseList:
       description: List of all payments done from fintech
       content:
@@ -728,37 +752,37 @@ components:
         sort of dashboard to the user.
       headers:
         X-Request-ID:
-          $ref: '#/components/headers/X-Request-ID'
+          $ref: "#/components/headers/X-Request-ID"
         Set-Cookie:
-          $ref: '#/components/headers/Set-SessionCookie'
+          $ref: "#/components/headers/Set-SessionCookie"
         X-XSRF-TOKEN:
-          $ref: '#/components/headers/X-XSRF-TOKEN'
+          $ref: "#/components/headers/X-XSRF-TOKEN"
       content:
         application/json:
           schema:
             type: object
             properties:
               userProfile:
-                $ref: '#/components/schemas/userProfile'
+                $ref: "#/components/schemas/userProfile"
 
     200_BankSearchResult:
       description: The result of a bank search.
       headers:
         X-Request-ID:
-          $ref: '#/components/headers/X-Request-ID'
+          $ref: "#/components/headers/X-Request-ID"
         Set-Cookie:
-          $ref: '#/components/headers/Set-SessionCookie'
+          $ref: "#/components/headers/Set-SessionCookie"
         X-XSRF-TOKEN:
-          $ref: '#/components/headers/X-XSRF-TOKEN'
+          $ref: "#/components/headers/X-XSRF-TOKEN"
       content:
         application/json:
           schema:
             type: object
             properties:
-              bankDescriptor :
+              bankDescriptor:
                 type: array
                 items:
-                  $ref: '#/components/schemas/bankDescriptor'
+                  $ref: "#/components/schemas/bankDescriptor"
               keyword:
                 type: string
               start:
@@ -772,58 +796,58 @@ components:
       description: Response containing the service profile of a bank.
       headers:
         X-Request-ID:
-          $ref: '#/components/headers/X-Request-ID'
+          $ref: "#/components/headers/X-Request-ID"
         Set-Cookie:
-          $ref: '#/components/headers/Set-SessionCookie'
+          $ref: "#/components/headers/Set-SessionCookie"
         X-XSRF-TOKEN:
-          $ref: '#/components/headers/X-XSRF-TOKEN'
+          $ref: "#/components/headers/X-XSRF-TOKEN"
       content:
         application/json:
           schema:
             type: object
             properties:
               bankProfile:
-                $ref: '#/components/schemas/bankProfile'
+                $ref: "#/components/schemas/bankProfile"
 
     200_AccountList:
       description: Response containing the list of bank accounts.
       headers:
         X-Request-ID:
-          $ref: '#/components/headers/X-Request-ID'
+          $ref: "#/components/headers/X-Request-ID"
         Set-Cookie:
-          $ref: '#/components/headers/Set-SessionCookie'
+          $ref: "#/components/headers/Set-SessionCookie"
         X-XSRF-TOKEN:
-          $ref: '#/components/headers/X-XSRF-TOKEN'
+          $ref: "#/components/headers/X-XSRF-TOKEN"
       content:
         application/json:
           schema:
-            $ref: '#/components/schemas/accountList'
+            $ref: "#/components/schemas/accountList"
 
     200_AccountsTransactions:
       description: Response with transactions for given account
       headers:
         X-Request-ID:
-          $ref: '#/components/headers/X-Request-ID'
+          $ref: "#/components/headers/X-Request-ID"
         Set-Cookie:
-          $ref: '#/components/headers/Set-SessionCookie'
+          $ref: "#/components/headers/Set-SessionCookie"
         X-XSRF-TOKEN:
-          $ref: '#/components/headers/X-XSRF-TOKEN'
+          $ref: "#/components/headers/X-XSRF-TOKEN"
       content:
         application/json:
           schema:
-            $ref: '#/components/schemas/transactionsResponse'
+            $ref: "#/components/schemas/transactionsResponse"
 
     202_ToConsentAuthApi:
       description: Redirects UserAgent to the ConsentAuthorisationApi.
       headers:
         Location:
-          $ref: '#/components/headers/Location-Consent-Auth'
+          $ref: "#/components/headers/Location-Consent-Auth"
         X-Request-ID:
-          $ref: '#/components/headers/X-Request-ID'
+          $ref: "#/components/headers/X-Request-ID"
         X-XSRF-TOKEN:
-          $ref: '#/components/headers/X-XSRF-TOKEN'
+          $ref: "#/components/headers/X-XSRF-TOKEN"
         Set-Cookie:
-          $ref: '#/components/headers/Set-RedirectCookie'
+          $ref: "#/components/headers/Set-RedirectCookie"
           description: |
             Here the cookie set is called a RedirectCookie. Looks like
             RDC=ejts.adsfa.adfaj; Path=/v1/XYZ/fromConsent. In the case XYZ is the
@@ -847,7 +871,7 @@ components:
         Request to perform Oauth2 authentication
       headers:
         Location:
-          $ref: '#/components/headers/Location-Oauth2-Auth'
+          $ref: "#/components/headers/Location-Oauth2-Auth"
 
     202_ReloadUI:
       description: |
@@ -856,29 +880,29 @@ components:
 
       headers:
         Location:
-          $ref: '#/components/headers/Location-FinTechUI'
+          $ref: "#/components/headers/Location-FinTechUI"
         X-Request-ID:
-          $ref: '#/components/headers/X-Request-ID'
+          $ref: "#/components/headers/X-Request-ID"
         X-XSRF-TOKEN:
-          $ref: '#/components/headers/X-XSRF-TOKEN'
+          $ref: "#/components/headers/X-XSRF-TOKEN"
         Set-Cookie:
-          $ref: '#/components/headers/Set-SessionCookie'
+          $ref: "#/components/headers/Set-SessionCookie"
 
     400_BadRequest:
       description: Bad request
       headers:
         X-Request-ID:
-          $ref: '#/components/headers/X-Request-ID'
+          $ref: "#/components/headers/X-Request-ID"
         X-XSRF-TOKEN:
-          $ref: '#/components/headers/X-XSRF-TOKEN'
+          $ref: "#/components/headers/X-XSRF-TOKEN"
         Set-Cookie:
-          $ref: '#/components/headers/Set-SessionCookie'
+          $ref: "#/components/headers/Set-SessionCookie"
       content:
         application/json:
           schema:
             type: array
             items:
-              $ref: '#/components/schemas/psuMessage'
+              $ref: "#/components/schemas/psuMessage"
 
     401_Unauthorized:
       description: |
@@ -893,30 +917,36 @@ components:
         X-Request-ID:
           $ref: "#/components/headers/X-Request-ID"
         Set-Cookie:
-          $ref: '#/components/headers/Reset-Cookies'
+          $ref: "#/components/headers/Reset-Cookies"
       content:
         application/json:
           schema:
-            $ref: '#/components/schemas/errorResponse'
+            $ref: "#/components/schemas/errorResponse"
 
     404_NotFound:
       description: The specified resource was not found
       headers:
         X-Request-ID:
-          $ref: '#/components/headers/X-Request-ID'
+          $ref: "#/components/headers/X-Request-ID"
         X-XSRF-TOKEN:
-          $ref: '#/components/headers/X-XSRF-TOKEN'
+          $ref: "#/components/headers/X-XSRF-TOKEN"
         Set-Cookie:
-          $ref: '#/components/headers/Set-SessionCookie'
+          $ref: "#/components/headers/Set-SessionCookie"
       content:
         application/json:
           schema:
             type: array
             items:
-              $ref: '#/components/schemas/psuMessage'
+              $ref: "#/components/schemas/psuMessage"
+
+    200_ConsentRetrievalResult:
+      description: List of all consents for all banks of user
+      content:
+        application/json:
+          schema:
+            type: object
 
   schemas:
-
     paymentInitiationWithStatusResponse:
       description: response from open banking gateway
       type: object
@@ -953,7 +983,6 @@ components:
       description: The transaction status
       type: string
 
-
     # Technical data for sessionState and errorResponse
     sessionState:
       title: SessionState
@@ -965,11 +994,11 @@ components:
       type: object
       properties:
         sessionState:
-          $ref: '#/components/schemas/sessionState'
+          $ref: "#/components/schemas/sessionState"
         psuMessages:
           type: array
           items:
-            $ref: '#/components/schemas/psuMessage'
+            $ref: "#/components/schemas/psuMessage"
     psuMessage:
       title: PsuMessage
       type: object
@@ -1010,7 +1039,8 @@ components:
           type: string
         purpose:
           type: string
-
+        instantPayment:
+          type: boolean
 
     # Login
     loginRequest:
@@ -1047,7 +1077,6 @@ components:
           type: string
         uuid:
           type: string
-
 
     bankProfile:
       title: Bank Profile
@@ -1137,6 +1166,10 @@ components:
           maxLength: 70
         ownerAddress:
           $ref: "#/components/schemas/address"
+        balances:
+          type: array
+          items:
+            $ref: "#/components/schemas/AccountBalance"
 
     accountList:
       description: |
@@ -1225,7 +1258,7 @@ components:
           buildingnNumber: "89",
           city: "Paris",
           postalCode: "75000",
-          country: "FR"
+          country: "FR",
         }
 
     amount:
@@ -1238,11 +1271,7 @@ components:
           $ref: "#/components/schemas/currencyCode"
         amount:
           $ref: "#/components/schemas/amountValue"
-      example:
-        {
-          "currency": "EUR",
-          "amount": "123"
-        }
+      example: { "currency": "EUR", "amount": "123" }
 
     amountValue:
       description: |
@@ -1306,7 +1335,6 @@ components:
       description: |
         ExternalCashAccountType1Code from ISO 20022.
       type: string
-
 
     countryCode:
       description: ISO 3166 ALPHA2 country code.
@@ -1844,4 +1872,21 @@ components:
       maxLength: 70
       example: "Ultimate Debtor"
 
-
+    AccountBalance:
+      title: AccountBalance
+      type: object
+      properties:
+        balanceAmount:
+          $ref: "#/components/schemas/Amount"
+        balanceType:
+          type: string
+        iban:
+          type: string
+        lastChangeDateTime:
+          type: string
+          format: date-time
+        lastCommittedTransaction:
+          type: string
+        referenceDate:
+          type: string
+          format: date

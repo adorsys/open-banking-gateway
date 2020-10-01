@@ -56,4 +56,23 @@ describe('ConfirmComponent', () => {
   it('should create', () => {
     expect(component).toBeTruthy();
   });
+
+  it('should call onDeny', () => {
+    const onDenySpy = spyOn(component, 'onDeny');
+    component.onDeny();
+    expect(onDenySpy).toHaveBeenCalled();
+  });
+
+  it('should call onConfirm', () => {
+    const onConfirmSpy = spyOn(component, 'onConfirm');
+    component.onConfirm();
+    expect(onConfirmSpy).toHaveBeenCalled();
+  });
+
+  it('amount of money to be wired should be rounded properly', () => {
+    const numb = 2122;
+    const rest = 2122.0;
+    spyOn(component, 'roundToTwoDigitsAfterComma').withArgs(numb).and.callThrough();
+    expect(numb).toEqual(rest);
+  });
 });

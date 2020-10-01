@@ -2,13 +2,15 @@
   <div class="card">
     <div class="card-body">
       <ng-container [ngSwitch]="tanConfig.type">
-        <section *ngSwitchCase="tanType.FLICKER_CODE" class="text-center">
+        <section *ngSwitchCase="tanType.CHIP_OTP" class="text-center">
           <ngx-chiptan code="{{ tanConfig?.data }}" width="300" height="150" bgColor="#000" barColor="#fff">
           </ngx-chiptan>
         </section>
-        <section *ngSwitchCase="tanType.PHOTO_TAN" class="text-center"></section>
         <section *ngSwitchCase="tanType?.QR_CODE" class="text-center">
           <qrcode [qrdata]="tanConfig.data" [width]="200" [errorCorrectionLevel]="'M'"></qrcode>
+        </section>
+        <section *ngSwitchCase="tanType?.PHOTO_OTP" class="text-center">
+          <img src="{{ tanConfig.data }}" width="200" height="200" alt="image tan" />
         </section>
       </ng-container>
 
@@ -38,9 +40,7 @@
           >
             TAN is required
           </div>
-          <div *ngIf="wrongSca" class="invalid-feedback d-block">
-            SCA challenge is incorrect
-          </div>
+          <div *ngIf="wrongSca" class="invalid-feedback d-block">SCA challenge is incorrect</div>
         </div>
       </section>
       <button id="do_submit" type="submit" class="btn btn-primary w-100" [disabled]="reportScaResultForm.invalid">

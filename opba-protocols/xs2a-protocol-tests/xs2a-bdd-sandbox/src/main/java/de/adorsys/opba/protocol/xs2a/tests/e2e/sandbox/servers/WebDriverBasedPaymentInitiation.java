@@ -43,4 +43,28 @@ public class WebDriverBasedPaymentInitiation<SELF extends WebDriverBasedPaymentI
         acc.sandbox_anton_brueckner_clicks_redirect_back_to_tpp_button_api_localhost_cookie_only(driver, authSessionCookie);
         return self();
     }
+
+    /*
+    * Caused by FIXME https://github.com/adorsys/XS2A-Sandbox/issues/42, should be sandbox_anton_brueckner_clicks_redirect_back_to_tpp_button_api_localhost_cookie_only
+    */
+    public SELF sandbox_anton_brueckner_imitates_click_redirect_back_to_tpp_button_api_localhost_cookie_only_with_oauth2_integrated_hack(WebDriver driver) {
+        acc.sandbox_anton_brueckner_imitates_click_redirect_back_to_tpp_button_api_localhost_cookie_only_with_oauth2_integrated_hack(driver, authSessionCookie);
+        return self();
+    }
+
+    public SELF add_open_banking_auth_session_key_cookie_to_selenium(WebDriver driver) {
+        acc.add_open_banking_auth_session_key_cookie_to_selenium(driver, authSessionCookie);
+        return self();
+    }
+
+    public SELF sandbox_anton_brueckner_inputs_username_and_password_for_oauth2_form(WebDriver driver) {
+        acc.sandbox_anton_brueckner_inputs_username_and_password_for_oauth2_form(driver);
+        return self();
+    }
+
+    public SELF update_redirect_code_from_browser_url(WebDriver driver) {
+        acc.update_redirect_code_from_browser_url(driver);
+        this.redirectCode = acc.getRedirectCode();
+        return self();
+    }
 }

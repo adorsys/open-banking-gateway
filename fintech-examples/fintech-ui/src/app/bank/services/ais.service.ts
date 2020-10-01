@@ -1,36 +1,37 @@
-import {map} from 'rxjs/operators';
-import {FinTechAccountInformationService} from '../../api';
-import {ActivatedRoute, Router} from '@angular/router';
-import {Injectable} from '@angular/core';
+import { Injectable } from '@angular/core';
 import { LoARetrievalInformation, LoTRetrievalInformation } from '../../models/consts';
+import { FinTechAccountInformationService } from '../../api';
 
 @Injectable({
   providedIn: 'root'
 })
 export class AisService {
-  constructor(
-    private router: Router,
-    private route: ActivatedRoute,
-    private finTechAccountInformationService: FinTechAccountInformationService
-  ) {}
+  constructor(private finTechAccountInformationService: FinTechAccountInformationService) {}
 
   private static isoDate(toConvert: Date) {
-    return toConvert.toISOString().split('T')[0]
+    return toConvert.toISOString().split('T')[0];
   }
 
-  getAccounts(bankId: string, loARetrievalInformation: LoARetrievalInformation) {
+  getAccounts(bankId: string, loARetrievalInformation: LoARetrievalInformation, withBalance?: boolean) {
     const okurl = window.location.pathname;
-    const notOkUrl = okurl.replace('/account', '');
+    const notOkUrl = okurl.replace(/account.*/, '');
 
-    console.log('loa ', loARetrievalInformation, ' with ok url',  okurl );
-    return this.finTechAccountInformationService
-      .aisAccountsGET(bankId, '', '', okurl, notOkUrl, loARetrievalInformation, 'response')
-      .pipe(map(response => response));
+    return this.finTechAccountInformationService.aisAccountsGET(
+      bankId,
+      '',
+      '',
+      okurl,
+      notOkUrl,
+      loARetrievalInformation,
+      withBalance,
+      'response'
+    );
   }
 
   getTransactions(bankId: string, accountId: string, loTRetrievalInformation: LoTRetrievalInformation) {
     const okurl = window.location.pathname;
-    const notOkUrl = okurl.replace('/account/.*', '/account');
+    const notOkUrl = okurl.replace(/account.*/, 'accounts');
+
     return this.finTechAccountInformationService.aisTransactionsGET(
       bankId,
       accountId,

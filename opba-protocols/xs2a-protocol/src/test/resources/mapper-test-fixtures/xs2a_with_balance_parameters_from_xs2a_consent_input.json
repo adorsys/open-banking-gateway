@@ -29,5 +29,6 @@
   "redirectCodeIfAuthContinued": "194604cc-6798-4f91-b681-a0298ae674f4",
   "aspspRedirectCode": "a5001521-edd8-4d99-b72d-30670b839d06",
   "violations": [],
-  "lastRedirection": null
+  "lastRedirection": null,
+  "withBalance": "true"
 }

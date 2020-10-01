@@ -28,7 +28,7 @@ export class SidebarComponent implements OnInit {
   }
 
   getBankProfile(id: string) {
-    this.bankProfileService.getBankProfile(id).subscribe(response => {
+    this.bankProfileService.getBankProfile(id).subscribe((response) => {
       this.bankName = response.bankName;
       this.showListAccounts = response.services.includes('LIST_ACCOUNTS');
       this.showListTransactions = response.services.includes('LIST_TRANSACTIONS');
@@ -37,7 +37,7 @@ export class SidebarComponent implements OnInit {
   }
 
   getRouterLinkListAccounts(): string {
-    return this.showListAccounts ? 'account' : '.';
+    return this.showListAccounts ? 'accounts' : '.';
   }
 
   getRouterLinkInitiatePayment(): string {
@@ -45,7 +45,7 @@ export class SidebarComponent implements OnInit {
   }
 
   isLoaDone(): boolean {
-    return this.storageService.getLoa() !== null;
+    return this.storageService.getLoa(this.bankId) !== null;
   }
 
   get showPaymentNav(): boolean {

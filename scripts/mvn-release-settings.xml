@@ -5,11 +5,20 @@
     <servers>
         <server>
             <!-- Maven Central Deployment -->
-            <id>sonatype</id>
+            <!-- Release Deployment (Sonatype) -->
+            <id>release</id>
             <username>${env.SONATYPE_USERNAME}</username>
             <password>${env.SONATYPE_PASSWORD}</password>
         </server>
+        <server>
+            <!--GitHub packages deployment -->
+            <!-- Staging Deployment -->
+            <id>stage</id>
+            <username>${env.STAGE_ARTIFACTORY_USERNAME}</username>
+            <password>${env.STAGE_ARTIFACTORY_PASSWORD}</password>
+        </server>
     </servers>
+
     <profiles>
         <profile>
             <id>sonatype</id>
@@ -18,8 +27,30 @@
             </activation>
             <properties>
                 <gpg.executable>${env.GPG_EXECUTABLE}</gpg.executable>
-		<gpg.passphrase>${env.GPG_PASSPHRASE}</gpg.passphrase>
+                <gpg.passphrase>${env.GPG_PASSPHRASE}</gpg.passphrase>
             </properties>
+            <repositories>
+                <repository>
+                    <id>stage</id>
+                    <url>https://maven.pkg.github.com/adorsys</url>
+                    <snapshots>
+                        <enabled>false</enabled>
+                    </snapshots>
+                    <releases>
+                        <enabled>true</enabled>
+                    </releases>
+                </repository>
+                <repository>
+                    <id>release</id>
+                    <url>https://oss.sonatype.org/service/local/staging/deploy/maven2</url>
+                    <snapshots>
+                        <enabled>false</enabled>
+                    </snapshots>
+                    <releases>
+                        <enabled>true</enabled>
+                    </releases>
+                </repository>
+            </repositories>
         </profile>
     </profiles>
 </settings>

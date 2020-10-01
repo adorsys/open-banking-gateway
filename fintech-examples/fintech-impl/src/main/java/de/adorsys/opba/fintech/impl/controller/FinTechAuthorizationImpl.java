@@ -27,6 +27,7 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.Iterator;
+import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -70,24 +71,38 @@ public class FinTechAuthorizationImpl implements FinTechAuthorizationApi {
     }
 
     @Override
-    public ResponseEntity<Void> fromConsentGET(String authId, String okOrNotokString, String finTechRedirectCode, UUID xRequestID, String xsrfToken) {
+    public ResponseEntity<Void> fromConsentGET(String authId,
+                                               String okOrNotokString,
+                                               String finTechRedirectCode,
+                                               UUID xRequestID,
+                                               String xsrfToken) {
         OkOrNotOk okOrNotOk = OkOrNotOk.valueOf(okOrNotokString);
+
         if (!sessionLogicService.isRedirectAuthorized()) {
             return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
         }
 
+        Optional<ConsentEntity> consent = consentRepository.findByTppAuthId(authId);
+
+        if (!consent.isPresent()) {
+            throw new RuntimeException("consent for authid " + authId + " can not be found");
+        }
+
+        ConsentEntity consentEntity = consent.get();
+
         if (okOrNotOk.equals(OkOrNotOk.OK) && consentService.confirmConsent(authId, xRequestID)) {
 
-            Optional<ConsentEntity> consent = consentRepository.findByTppAuthId(authId);
+            this.handleConsentConfirmation(authId, consentEntity);
 
-            if (!consent.isPresent()) {
-                throw new RuntimeException("consent for authid " + authId + " can not be found");
+        } else {
+            if (Boolean.TRUE.equals(consentEntity.getConsentConfirmed())) {
+                log.info("Ignore cancel {} {}", consentEntity.getConsentType(), consentEntity.getCreationTime());
+            } else {
+                log.info("Delete consent {} {}", consentEntity.getConsentType(), consentEntity.getCreationTime());
+                consentRepository.delete(consentEntity);
             }
-
-            log.debug("consent with authId {} is now valid", authId);
-            consent.get().setConsentConfirmed(true);
-            consentRepository.save(consent.get());
         }
+
         return sessionLogicService.addSessionMaxAgeToHeader(
                 redirectHandlerService.doRedirect(authId, finTechRedirectCode, okOrNotOk));
     }
@@ -147,5 +162,26 @@ public class FinTechAuthorizationImpl implements FinTechAuthorizationApi {
 
         HttpHeaders responseHeaders = sessionLogicService.login(userEntity);
         return new ResponseEntity<>(response, responseHeaders, HttpStatus.OK);
+    }
+
+    private void handleConsentConfirmation(String authId, ConsentEntity consentEntity) {
+        // There may exist a valid consent that has not been used, because client
+        // wanted to retrieve new consent. So we search all valid consents and delete them.
+        List<ConsentEntity> consentList = consentRepository.findListByUserEntityAndBankIdAndConsentTypeAndConsentConfirmed(
+                consentEntity.getUserEntity(),
+                consentEntity.getBankId(),
+                consentEntity.getConsentType(),
+                Boolean.TRUE);
+        for (ConsentEntity oldValidConsent : consentList) {
+            if (Boolean.TRUE.equals(oldValidConsent.getConsentConfirmed())) {
+                log.warn("Consent created at \" + {} + \" must not be confirmed yet (but is OK for HBCI))", oldValidConsent.getCreationTime());
+            } else {
+                log.debug("delete old valid {} consent from {}", oldValidConsent.getConsentType(), oldValidConsent.getCreationTime());
+//                    consentRepository.delete(oldValidConsent); Garbage-collection  in fintech-server for HBCI
+            }
+        }
+        log.info("consent with authId {} is now valid", authId);
+        consentEntity.setConsentConfirmed(true);
+        consentRepository.save(consentEntity);
     }
 }

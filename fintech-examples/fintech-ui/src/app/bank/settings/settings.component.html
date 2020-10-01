@@ -1,91 +1,69 @@
-<div class="container">
-  <div class="row">
-    <div class="card card-frame--big">
-      <div class="card-body">
-        <form [formGroup]="settingsForm">
-          <section class="settings">
-            <h2 class="card-title--normal">Settings for bank {{bankId}}</h2>
-            <p class="text-secondary">These settings affect result of calls</p>
-            <div class="row">
-              <div class="form-group col-md-6">
-                <h4><label class="text-secondary">List of Accounts</label></h4>
-              </div>
-            </div>
-            <div class="group">
-              <div class="row">
-                <div class="col-md-12">
-                  <label>
-                    <input type="radio" value="{{loaFromTppWithAvailableConsent}}" formControlName="loa">
-                    <span>from tpp. if consent available without redirect</span>
-                  </label>
-                </div>
-              </div>
-              <div class="row">
-                <div class="col-md-12">
-                  <label>
-                    <input type="radio" value="{{loaFromTppWithNewConsent}}" formControlName="loa">
-                    <span>from tpp with redirect for new consent</span>
-                  </label>
-                </div>
-              </div>
-            </div>
+<form class="header__margin" [formGroup]="settingsForm">
+  <div class="card card-frame--big">
+    <div class="card-body">
+      <section class="settings">
+        <h2 class="card-title--normal">Settings for bank {{ bankId }}</h2>
+        <p class="text-secondary">These settings affect result of calls</p>
 
-            <div class="row">
-              <div class="form-group col-md-6">
-                <h4><label class="text-secondary">List of Transactions</label></h4>
-              </div>
-            </div>
-            <div class="group">
-              <div class="row">
-                <div class="col-md-12">
-                  <label>
-                    <input type="radio" value="{{lotFromTppWithAvailableConsent}}" formControlName="lot">
-                    <span>from tpp. if consent available without redirect</span>
-                  </label>
-                </div>
-              </div>
-              <div class="row">
-                <div class="col-md-12">
-                  <label>
-                    <input type="radio" value="{{lotFromTppWithNewConsent}}" formControlName="lot">
-                    <span>from tpp with redirect for new consent</span>
-                  </label>
-                </div>
-              </div>
-            </div>
-
-            <div class="row">
-              <div class="form-group col-md-6">
-                <h4><label class="text-secondary">Payments</label></h4>
-              </div>
-            </div>
-            <div class="group">
-              <div class="row">
-                <div class="col-md-12">
-                  <label>
-                    <input type="checkbox" value="{{paymentRequiresAuthentication}}" formControlName="paymentRequiresAuthentication">
-                    <span>Payment requires authentication</span>
-                  </label>
-                </div>
-              </div>
-            </div>
-
-          </section>
-
-          <div class="d-sm-flex">
-            <button (click)="onDeny()" class="btn btn-outline-secondary w-100 mr-4" id="do_deny">Cancel</button>
-            <button
-              (click)="onConfirm()"
-              [disabled]="settingsForm.invalid"
-              class="btn btn-primary w-100"
-              id="do_submit"
-              type="button"
-            >
-              OK
-            </button>
+        <div class="form-group">
+          <h4 class="text-secondary">List of Accounts</h4>
+          <div class="form-check">
+            <input type="radio" value="{{ loaFromTppWithAvailableConsent }}" formControlName="loa" id="loa" />
+            <label for="loa">If consent available without redirect.</label>
           </div>
-        </form>
+          <div class="form-check">
+            <input type="radio" value="{{ loaFromTppWithNewConsent }}" formControlName="loa" id="loa2" />
+            <label for="loa2">Discard propably existing consent ONE TIME ONLY.</label>
+          </div>
+          <div class="form-check">
+            <input
+              type="checkbox"
+              value="{{ settingsForm.get('withBalance') }}"
+              formControlName="withBalance"
+              id="balance"
+            />
+            <label for="balance">Get accounts with balance</label>
+          </div>
+        </div>
+
+        <div class="form-group">
+          <h4 class="text-secondary">List of Transactions</h4>
+          <div class="form-check">
+            <input type="radio" value="{{ lotFromTppWithAvailableConsent }}" formControlName="lot" id="lot" />
+            <label for="lot">If consent available without redirect.</label>
+          </div>
+          <div class="form-check">
+            <input type="radio" value="{{ lotFromTppWithNewConsent }}" formControlName="lot" id="lot2" />
+            <label for="lot2">Discard propably existing consent ONE TIME ONLY.</label>
+          </div>
+        </div>
+
+        <div class="form-group">
+          <h4 class="text-secondary">Payments</h4>
+          <div class="form-check">
+            <input
+              type="checkbox"
+              value="{{ settingsForm.get('paymentRequiresAuthentication') }}"
+              formControlName="paymentRequiresAuthentication"
+              id="payment"
+            />
+            <label for="payment">Payment requires authentication</label>
+          </div>
+        </div>
+      </section>
+
+      <div class="d-sm-flex">
+        <button (click)="onNavigateBack()" class="btn btn-outline-secondary w-100 mr-4" id="do_deny">Cancel</button>
+        <button
+          (click)="onConfirm()"
+          [disabled]="settingsForm.invalid"
+          class="btn btn-primary w-100"
+          id="do_submit"
+          type="submit"
+        >
+          Save
+        </button>
       </div>
     </div>
   </div>
-</div>
+</form>

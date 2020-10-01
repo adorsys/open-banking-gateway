@@ -28,6 +28,35 @@ public class Xs2aConsentInfo {
     }
 
     /**
+     * Is the current consent authorization in OAUTH (not OAUTH pre-step) mode.
+     */
+    public boolean isOauth2Authorization(Xs2aContext ctx) {
+        return ctx.isOauth2IntegratedNeeded();
+    }
+
+    /**
+     * Is the current consent in OAUTH-Pre-step (authentication) mode.
+     */
+    public boolean isOauth2AuthenticationPreStep(Xs2aContext ctx) {
+        return ctx.isOauth2PreStepNeeded();
+    }
+
+    /**
+     * Is the Oauth2 pre-step or authorization required
+     */
+    public boolean isOauth2Required(Xs2aContext ctx) {
+        return isOauth2Authorization(ctx) || isOauth2AuthenticationPreStep(ctx);
+    }
+
+    /**
+     * Is the Oauth2 token available and ready to use (not expired)
+     */
+    public boolean isOauth2TokenAvailableAndReadyToUse(Xs2aContext ctx) {
+        // FIXME - Token validity check
+        return null != ctx.getOauth2Token();
+    }
+
+    /**
      * Is the current consent authorization using multiple SCA methods (SMS,email,etc.)
      */
     public boolean isMultipleScaAvailable(Xs2aContext ctx) {

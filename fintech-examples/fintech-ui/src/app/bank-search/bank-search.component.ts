@@ -3,6 +3,8 @@ import { BankSearchService } from './services/bank-search.service';
 import { ActivatedRoute, Router } from '@angular/router';
 import { BankDescriptor } from '../api';
 import { StorageService } from '../services/storage.service';
+import { TimerService } from '../services/timer.service';
+import { RoutingPath } from '../models/routing-path.model';
 
 @Component({
   selector: 'app-bank-search',
@@ -17,12 +19,15 @@ export class BankSearchComponent {
     private bankSearchService: BankSearchService,
     private storageService: StorageService,
     private route: ActivatedRoute,
-    private router: Router
-  ) {}
+    private router: Router,
+    private timerService: TimerService
+  ) {
+    this.timerService.startTimer();
+  }
 
   onSearch(keyword: string): void {
     if (keyword && keyword.trim()) {
-      this.bankSearchService.searchBanks(keyword).subscribe(bankDescriptor => {
+      this.bankSearchService.searchBanks(keyword).subscribe((bankDescriptor) => {
         this.searchedBanks = bankDescriptor.bankDescriptor;
       });
     } else {
@@ -33,7 +38,7 @@ export class BankSearchComponent {
   onBankSelect(bank: BankDescriptor): void {
     this.selectedBank = bank.uuid;
     this.storageService.setBankName(bank.bankName);
-    this.router.navigate(['/bank', bank.uuid]);
+    this.router.navigate([RoutingPath.BANK, bank.uuid]);
   }
 
   private bankUnselect(): void {

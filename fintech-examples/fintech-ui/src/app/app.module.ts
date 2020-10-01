@@ -6,7 +6,7 @@ import { environment } from '../environments/environment';
 import { ApiModule, Configuration, ConfigurationParameters } from './api';
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
-import { ShareModule } from './common/share.module';
+import { SharedModule } from './common/shared.module';
 import { AuthGuard } from './guards/auth.guard';
 import { AuthInterceptor } from './interceptors/auth.interceptor';
 import { LoginComponent } from './login/login.component';
@@ -20,10 +20,11 @@ import { RedirectAfterConsentDeniedComponent } from './redirect-after-consent-de
 import { SessionExpiredComponent } from './session-expired/session-expired.component';
 import { SimpleTimer } from 'ng2-simple-timer';
 import { NgHttpLoaderModule } from 'ng-http-loader';
-import { RedirectAfterPaymentComponent } from "./redirect-after-payment/redirect-after-payment.component";
-import { RedirectAfterPaymentDeniedComponent } from "./redirect-after-payment-denied/redirect-after-payment-denied.component";
-import { Oauth2LoginComponent } from "./oauth2-login/oauth2-login.component";
-import { ForbiddenOauth2Component } from "./invalid-oauth2/forbidden-oauth2.component";
+import { RedirectAfterPaymentComponent } from './redirect-after-payment/redirect-after-payment.component';
+import { RedirectAfterPaymentDeniedComponent } from './redirect-after-payment-denied/redirect-after-payment-denied.component';
+import { Oauth2LoginComponent } from './oauth2-login/oauth2-login.component';
+import { ForbiddenOauth2Component } from './invalid-oauth2/forbidden-oauth2.component';
+import { TimerService } from './services/timer.service';
 
 export function apiConfigFactory(): Configuration {
   const params: ConfigurationParameters = {
@@ -51,7 +52,7 @@ export function apiConfigFactory(): Configuration {
     AppRoutingModule,
     BrowserModule,
     BrowserAnimationsModule,
-    ShareModule,
+    SharedModule,
     HttpClientModule,
     NgHttpLoaderModule.forRoot(),
     HttpClientXsrfModule.withOptions({
@@ -65,6 +66,7 @@ export function apiConfigFactory(): Configuration {
     AuthGuard,
     ErrorService,
     DocumentCookieService,
+    TimerService,
     {
       provide: HTTP_INTERCEPTORS,
       useClass: AuthInterceptor,

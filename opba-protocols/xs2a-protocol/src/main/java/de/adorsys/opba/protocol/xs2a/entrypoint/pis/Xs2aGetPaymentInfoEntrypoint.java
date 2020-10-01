@@ -25,6 +25,7 @@ import org.mapstruct.Mapping;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.ZoneOffset;
 import java.util.concurrent.CompletableFuture;
 
 import static de.adorsys.opba.protocol.xs2a.constant.GlobalConst.SPRING_KEYWORD;
@@ -36,6 +37,8 @@ import static de.adorsys.opba.protocol.xs2a.constant.GlobalConst.XS2A_MAPPERS_PA
 @Service("xs2aGetPaymentInfoState")
 @RequiredArgsConstructor
 public class Xs2aGetPaymentInfoEntrypoint implements GetPaymentInfoState {
+
+    private final Xs2aPaymentContextLoader contextLoader;
     private final PaymentInitiationService pis;
     private final PaymentInformationToBodyMapper mapper;
     private final Xs2aGetPaymentInfoEntrypoint.Extractor extractor;
@@ -47,7 +50,7 @@ public class Xs2aGetPaymentInfoEntrypoint implements GetPaymentInfoState {
     public CompletableFuture<Result<PaymentInfoBody>> execute(ServiceContext<PaymentInfoRequest> context) {
         ProtocolFacingPayment payment = context.getRequestScoped().paymentAccess().getFirstByCurrentSession();
 
-        ValidatedPathHeaders<PaymentInfoParameters, PaymentInfoHeaders> params = extractor.forExecution(prepareContext(context));
+        ValidatedPathHeaders<PaymentInfoParameters, PaymentInfoHeaders> params = extractor.forExecution(prepareContext(context, payment));
 
         Response<SinglePaymentInitiationInformationWithStatusResponse> paymentInformation = pis.getSinglePaymentInformation(
                 context.getRequest().getPaymentProduct().toString(),
@@ -56,12 +59,17 @@ public class Xs2aGetPaymentInfoEntrypoint implements GetPaymentInfoState {
                 params.getPath().toParameters()
         );
 
+        // All we can do to return guaranteed payment date is read the payment date directly from our payment entity
+        // As NextGenPSD2 1.3.6 does not guarantee any payment date/time fields at this endpoint
         Result<PaymentInfoBody> result = new SuccessResult<>(mapper.map(paymentInformation.getBody()));
+        result.getBody().setCreatedAt(payment.getCreatedAtTime().atOffset(ZoneOffset.UTC));
         return CompletableFuture.completedFuture(result);
     }
 
-    protected Xs2aPisContext prepareContext(ServiceContext<PaymentInfoRequest> serviceContext) {
+    protected Xs2aPisContext prepareContext(ServiceContext<PaymentInfoRequest> serviceContext, ProtocolFacingPayment payment) {
         Xs2aPisContext context = request2ContextMapper.map(serviceContext.getRequest());
+        Xs2aPisContext paymentInitiationContext = contextLoader.loadContext(payment);
+        context.setOauth2Token(paymentInitiationContext.getOauth2Token());
         context.setAction(ProtocolAction.GET_PAYMENT_INFORMATION);
         extender.extend(context, serviceContext);
         return context;

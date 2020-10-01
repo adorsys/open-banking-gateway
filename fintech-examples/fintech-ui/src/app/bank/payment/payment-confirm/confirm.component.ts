@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { Consent, Consts } from '../../../models/consts';
+import { Consts, Payment } from '../../../models/consts';
 import { ConfirmData } from './confirm.data';
 import { ActivatedRoute, Router } from '@angular/router';
 import { ConsentAuthorizationService } from '../../services/consent-authorization.service';
@@ -26,18 +26,22 @@ export class ConfirmComponent implements OnInit {
   confirmData: ConfirmData = new ConfirmData();
 
   ngOnInit() {
-    this.route.paramMap.subscribe(p => {
+    this.route.paramMap.subscribe((p) => {
       this.confirmData = JSON.parse(p.get(Consts.CONFIRM_PAYMENT));
     });
   }
 
   onDeny() {
     console.log('call from consent NOT ok for redirect ' + this.confirmData.redirectStruct.redirectCode);
-    this.consentAuthorizationService.fromConsentOk(Consent.NOT_OK, this.confirmData.redirectStruct.redirectCode);
+    this.consentAuthorizationService.fromPayment(Payment.NOT_OK, this.confirmData.redirectStruct.redirectCode);
   }
 
   onConfirm() {
     console.log('NOW GO TO:', decodeURIComponent(this.confirmData.redirectStruct.redirectUrl));
     window.location.href = decodeURIComponent(this.confirmData.redirectStruct.redirectUrl);
+  }
+
+  roundToTwoDigitsAfterComma(floatNumber) {
+    return (Math.round(floatNumber * 100) / 100).toFixed(2);
   }
 }

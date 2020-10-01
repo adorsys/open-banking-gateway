@@ -23,8 +23,9 @@ public class HbciSandboxPaymentService {
     private final HbciSandboxPaymentRepository paymentRepository;
 
     @Transactional
-    public void createPayment(HbciSandboxContext context) {
-        String paymentBody = MapRegexUtil.getDataRegex(context.getRequestData(), "GV\\.UebSEPA\\d+\\.sepapain");
+    public void createPayment(HbciSandboxContext context, boolean instantPayment) {
+        String paymentBodyKey = instantPayment ? "GV\\.InstantUebSEPA1\\.sepapain" : "GV\\.UebSEPA\\d+\\.sepapain";
+        String paymentBody = MapRegexUtil.getDataRegex(context.getRequestData(), paymentBodyKey);
         HbciSandboxPayment payment = new HbciSandboxPayment();
         payment.setOrderReference(context.getOrderReference());
         payment.setDeduceFrom(findDebitorAccount(paymentBody));
@@ -33,6 +34,7 @@ public class HbciSandboxPaymentService {
         payment.setCurrency(findCurrency(paymentBody));
         payment.setRemittanceUnstructured(findRemittanceUnstructuredWithEmptyDefault(paymentBody));
         payment.setOwnerLogin(context.getUser().getLogin());
+        payment.setInstantPayment(instantPayment);
         if (!payment.getDeduceFrom().endsWith(context.getAccountNumberRequestedBeforeSca())) {
             throw new IllegalStateException("Wrong account number referenced, not matches debitor account number");
         }
@@ -42,7 +44,13 @@ public class HbciSandboxPaymentService {
     @Transactional
     public void createPaymentIfNeededAndPossibleFromContext(HbciSandboxContext context) {
         if (null != MapRegexUtil.getDataRegex(context.getRequestData(), "GV\\.UebSEPA\\d+\\.sepapain")) {
-            createPayment(context);
+            createPayment(context, false);
+            return;
+        }
+
+        if (null != MapRegexUtil.getDataRegex(context.getRequestData(), "GV\\.InstantUebSEPA1\\.sepapain")) {
+            createPayment(context, true);
+            return;
         }
     }
 
@@ -79,7 +87,7 @@ public class HbciSandboxPaymentService {
         Pattern pattern = Pattern.compile("<CdtrAcct><Id><IBAN>([0-9A-Z]+)</IBAN></Id></CdtrAcct>");
         Matcher matcher = pattern.matcher(paymentBody);
         if (!matcher.find()) {
-            throw new IllegalStateException("No debitor account");
+            throw new IllegalStateException("No creditor account");
         }
         return matcher.group(1);
     }

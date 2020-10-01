@@ -57,6 +57,7 @@ public class StartConsentAuthorization extends ValidatedExecution<Xs2aContext> {
         context.setAspspScaApproach(null == aspspSelectedApproach ? config.getPreferredApproach().name() : aspspSelectedApproach);
         context.setAuthorizationId(scaStart.getBody().getAuthorisationId());
         context.setStartScaProcessResponse(scaStart.getBody());
+
         execution.setVariable(CONTEXT, context);
     }
 
@@ -72,9 +73,9 @@ public class StartConsentAuthorization extends ValidatedExecution<Xs2aContext> {
 
     @Service
     public static class Extractor extends PathHeadersMapperTemplate<
-                    Xs2aContext,
-                    Xs2aInitialConsentParameters,
-                    Xs2aStandardHeaders> {
+            Xs2aContext,
+            Xs2aInitialConsentParameters,
+            Xs2aStandardHeaders> {
 
         public Extractor(
                 DtoMapper<Xs2aContext, Xs2aStandardHeaders> toHeaders,
