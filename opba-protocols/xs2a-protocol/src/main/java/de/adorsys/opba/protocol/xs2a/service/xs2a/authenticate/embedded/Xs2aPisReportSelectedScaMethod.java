@@ -7,6 +7,7 @@ import de.adorsys.opba.protocol.xs2a.context.Xs2aContext;
 import de.adorsys.opba.protocol.xs2a.context.pis.Xs2aPisContext;
 import de.adorsys.opba.protocol.xs2a.service.dto.ValidatedPathHeadersBody;
 import de.adorsys.opba.protocol.xs2a.service.mapper.PathHeadersBodyMapperTemplate;
+import de.adorsys.opba.protocol.xs2a.service.xs2a.authenticate.DecoupledWaitingService;
 import de.adorsys.opba.protocol.xs2a.service.xs2a.dto.Xs2aAuthorizedPaymentParameters;
 import de.adorsys.opba.protocol.xs2a.service.xs2a.dto.Xs2aStandardHeaders;
 import de.adorsys.opba.protocol.xs2a.service.xs2a.dto.authenticate.embedded.SelectScaChallengeBody;
@@ -20,6 +21,8 @@ import lombok.RequiredArgsConstructor;
 import org.flowable.engine.delegate.DelegateExecution;
 import org.springframework.stereotype.Service;
 
+import java.util.UUID;
+
 /**
  * Send the selected SCA method by the user to the ASPSP. The challenge is typically provided by
  * {@link de.adorsys.opba.protocol.api.authorization.UpdateAuthorization}.
@@ -31,6 +34,7 @@ public class Xs2aPisReportSelectedScaMethod extends ValidatedExecution<Xs2aPisCo
     private final Extractor extractor;
     private final Xs2aValidator validator;
     private final PaymentInitiationService pis;
+    private final DecoupledWaitingService decoupledWaitingService;
 
     @Override
     protected void doValidate(DelegateExecution execution, Xs2aPisContext context) {
@@ -50,6 +54,10 @@ public class Xs2aPisReportSelectedScaMethod extends ValidatedExecution<Xs2aPisCo
                 RequestParams.empty(),
                 params.getBody()
         );
+
+        if ("APP_OTP".equals(authResponse.getBody().getChosenScaMethod().getAuthenticationMethodId())) {
+            decoupledWaitingService.executeDecoupledWaiting(UUID.randomUUID());
+        }
 
         ContextUtil.getAndUpdateContext(
                 execution,
