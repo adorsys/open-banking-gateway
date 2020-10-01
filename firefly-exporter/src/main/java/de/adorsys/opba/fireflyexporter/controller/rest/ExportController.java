@@ -18,11 +18,11 @@ import org.springframework.web.bind.annotation.RestController;
 import java.time.LocalDate;
 import java.util.Optional;
 
+import static de.adorsys.opba.fireflyexporter.controller.rest.Consts.FIREFLY_TOKEN;
+
 @RestController
 @RequiredArgsConstructor
 public class ExportController {
-
-    private static final String FIREFLY_TOKEN = "FIREFLY-TOKEN";
 
     private final AccountExportJobRepository accountExportJobRepository;
     private final TransactionExportJobRepository transactionExportJobRepository;
