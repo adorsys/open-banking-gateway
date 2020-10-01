@@ -43,7 +43,7 @@ public class AccountExportService {
                 null,
                 bankId,
                 null,
-                consentRepository.findBankConsentByBankId(bankId).map(BankConsent::getConsentId).orElse(null),
+                consentRepository.findFirstByBankIdOrderByModifiedAt(bankId).map(BankConsent::getConsentId).orElse(null),
                 true
         );
 
@@ -53,7 +53,7 @@ public class AccountExportService {
         }
 
         AccountExportJob exportJob = exportJobRepository.save(new AccountExportJob());
-        exporter.exportToFirefly(fireFlyToken, exportJob, accounts.getBody());
+        exporter.exportToFirefly(fireFlyToken, exportJob.getId(), accounts.getBody());
         return ResponseEntity.ok(exportJob.getId());
     }
 }
