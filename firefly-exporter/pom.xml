@@ -250,6 +250,15 @@
 								<library>spring-cloud</library>
 								<swaggerDocketConfig>false</swaggerDocketConfig>
 							</configOptions>
+							<!-- FireFly uses some esoteric date format, so forcing string instead -->
+							<typeMappings>
+								<typeMapping>LocalDate=String</typeMapping>
+								<typeMapping>LocalDateTime=String</typeMapping>
+							</typeMappings>
+							<importMappings>
+								<importMapping>java.time.LocalDate=java.lang.String</importMapping>
+								<importMapping>java.time.LocalDateTime=java.lang.String</importMapping>
+							</importMappings>
 						</configuration>
 					</execution>
 				</executions>
