@@ -11,12 +11,15 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.SequenceGenerator;
+import javax.validation.constraints.Max;
 import java.time.Instant;
 
 @Data
 @Entity
 @EntityListeners(AuditingEntityListener.class)
 public class AccountExportJob {
+
+    private static final int MAX_ERROR_LEN = 64;
 
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "account_export_id_generator")
@@ -27,9 +30,24 @@ public class AccountExportJob {
 
     private long numAccountsToExport;
 
+    private long numAccountsErrored;
+
+    private String lastErrorMessage;
+
+    private boolean completed;
+
     @CreatedDate
     private Instant createdAt;
 
     @LastModifiedDate
     private Instant modifiedAt;
+
+    public void setLastErrorMessage(String lastErrorMessage) {
+        if (null == lastErrorMessage) {
+            this.lastErrorMessage = null;
+            return;
+        }
+
+        this.lastErrorMessage = lastErrorMessage.substring(0, Math.min(lastErrorMessage.length(), MAX_ERROR_LEN));
+    }
 }

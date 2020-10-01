@@ -9,5 +9,5 @@ import java.util.Optional;
 @Repository
 public interface BankConsentRepository extends CrudRepository<BankConsent, Long> {
 
-    Optional<BankConsent> findBankConsentByBankId(String bankId);
+    Optional<BankConsent> findFirstByBankIdOrderByModifiedAt(String bankId);
 }
