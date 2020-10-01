@@ -34,7 +34,7 @@ function callAccountImport(fireflyTokenInputId, bankIdInputId, redirectElementId
         .catch((err) => {console.error(`Failed fetching: ${err}`)});
 }
 
-function callExportableAccounts(fireflyTokenInputId, bankIdInputId, redirectElementId, statusElementId, accountListElementId, apiUrl) {
+function callExportableAccounts(fireflyTokenInputId, bankIdInputId, redirectElementId, statusElementId, accountExportBlockId, accountListElementId, apiUrl) {
     const fireFlyToken = document.getElementById(fireflyTokenInputId).value;
     const bankId = document.getElementById(bankIdInputId).value;
     const accountList = document.getElementById(accountListElementId);
@@ -51,18 +51,22 @@ function callExportableAccounts(fireflyTokenInputId, bankIdInputId, redirectElem
                 redirectLink.className = '';
                 statusElement.className = 'hidden';
             } else if (response.status === 200) {
+                const exportBlock = document.getElementById(accountExportBlockId);
+                exportBlock.className = '';
                 response.json().then((accounts) => {
                     for (var i = 0; i < accounts.length; ++i) {
                         const elem = document.createElement("li");
-                        elem.setAttribute('id', accounts[i].resourceId);
-                        const accountElem = document.createElement('input');
-                        accountElem.type = 'checkbox';
-                        const linkText = document.createTextNode(accounts[i].iban);
-                        accountElem.appendChild(linkText);
-                        elem.appendChild(accountElem);
+                        const checkbox = document.createElement('input');
+                        checkbox.setAttribute('id', accounts[i].resourceId);
+                        checkbox.type = 'checkbox';
+                        checkbox.checked = true
+                        const accountId = document.createTextNode(accounts[i].iban);
+                        elem.appendChild(checkbox);
+                        elem.appendChild(accountId);
                         accountList.appendChild(elem);
                     }
                 });
+                statusElement.className = 'hidden';
             } else {
                 statusElement.innerText = "Error";
             }
