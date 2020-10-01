@@ -516,4 +516,20 @@
                                  referencedColumnNames="id"/>
         <createSequence sequenceName="validation_rule_sequence" incrementBy="50"/>
     </changeSet>
+
+    <changeSet author="iiuex@adorsys.com.ua" id="decoupled_waiting_state">
+        <createTable tableName="${table-prefix}decoupled_waiting_state">
+            <column name="id" type="BIGINT">
+                <constraints primaryKey="true"/>
+            </column>
+            <column name="consent_payment_id" type="UUID">
+                <constraints nullable="false"/>
+            </column>
+            <column name="execution_id" type="UUID">
+                <constraints nullable="false"/>
+            </column>
+            <column name="decoupled_authorisation" type="boolean" defaultValue="false"/>
+        </createTable>
+        <createSequence sequenceName="decoupled_waiting_state_sequence" incrementBy="50"/>
+    </changeSet>
 </databaseChangeLog>
