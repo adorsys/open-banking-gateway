@@ -6,7 +6,7 @@
     <parent>
         <groupId>de.adorsys.opba</groupId>
         <artifactId>fintech-examples</artifactId>
-        <version>0.20.0</version>
+        <version>0.20.1-SNAPSHOT</version>
     </parent>
 
     <packaging>jar</packaging>
