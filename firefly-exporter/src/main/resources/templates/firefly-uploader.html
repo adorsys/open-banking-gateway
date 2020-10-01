@@ -35,9 +35,13 @@
             <a class="hidden" href="#" id="import-accounts-redirect">You need to be redirected to OpenBankingGateway for consent authorization</a>
         </div>
             <div  class="form-group">
-                <input class="form-control" id="import-transactions" type="button" value="Import transactions"/>
+                <input class="form-control" id="import-transactions" type="button" value="Import transactions" onclick="callExportableAccounts('firefly-personal-token', 'bank-id', 'import-transactions-redirect', 'import-transactions-status', 'exportable-account-list', API_URL)"/>
+            <span class="hidden" id="import-transactions-status">Please wait...</span>
             <a class="hidden" href="#" id="import-transactions-redirect">You need to be redirected to OpenBankingGateway for consent authorization</a>
+            <div>
+                <ul id="exportable-account-list"/>
             </div>
+        </div>
         </form>
     </div>
    </div>
