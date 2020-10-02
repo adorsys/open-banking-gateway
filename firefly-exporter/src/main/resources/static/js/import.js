@@ -1,3 +1,5 @@
+var accountClassName = 'opba-account-to-export';
+
 function watchAccountExportJobStatus(statusElement, jobId, apiUrl) {
     const intervalId = setInterval(() => {
         fetch(`${apiUrl}/export-accounts/${jobId}`)
@@ -11,7 +13,7 @@ function watchAccountExportJobStatus(statusElement, jobId, apiUrl) {
     }, 1000);
 }
 
-function callAccountImport(fireflyTokenInputId, bankIdInputId, redirectElementId, statusElementId, apiUrl) {
+function callAccountExport(fireflyTokenInputId, bankIdInputId, redirectElementId, statusElementId, apiUrl) {
     const fireFlyToken = document.getElementById(fireflyTokenInputId).value;
     const bankId = document.getElementById(bankIdInputId).value;
 
@@ -54,12 +56,13 @@ function callExportableAccounts(fireflyTokenInputId, bankIdInputId, redirectElem
                 const exportBlock = document.getElementById(accountExportBlockId);
                 exportBlock.className = '';
                 response.json().then((accounts) => {
-                    for (var i = 0; i < accounts.length; ++i) {
+                    for (let i = 0; i < accounts.length; ++i) {
                         const elem = document.createElement("li");
                         const checkbox = document.createElement('input');
                         checkbox.setAttribute('id', accounts[i].resourceId);
                         checkbox.type = 'checkbox';
-                        checkbox.checked = true
+                        checkbox.checked = true;
+                        checkbox.className = accountClassName;
                         const accountId = document.createTextNode(accounts[i].iban);
                         elem.appendChild(checkbox);
                         elem.appendChild(accountId);
@@ -67,6 +70,45 @@ function callExportableAccounts(fireflyTokenInputId, bankIdInputId, redirectElem
                     }
                 });
                 statusElement.className = 'hidden';
+            } else {
+                statusElement.innerText = "Error";
+            }
+        })
+        .catch((err) => {console.error(`Failed fetching: ${err}`)});
+}
+
+function watchTransactionExportJobStatus(statusElement, jobId, apiUrl) {
+    const intervalId = setInterval(() => {
+        fetch(`${apiUrl}/export-transactions/${jobId}`)
+            .then((response) => response.json())
+            .then((response) => {
+                if (response.completed) {
+                    clearInterval(intervalId);
+                }
+                statusElement.innerText = `Exported ${response.accountsExported} of ${response.numAccountsToExport} accounts' transactions, errors ${response.numAccountsErrored}`
+            })
+    }, 1000);
+}
+
+function callTransactionExport(fireflyTokenInputId, bankIdInputId, startDateElementId, endDateElementId, statusElementId, apiUrl) {
+    const fireFlyToken = document.getElementById(fireflyTokenInputId).value;
+    const bankId = document.getElementById(bankIdInputId).value;
+    const start = document.getElementById(startDateElementId).valueAsDate.toISOString().split('T')[0];
+    const end = document.getElementById(endDateElementId).valueAsDate.toISOString().split('T')[0];
+
+    const statusElement = document.getElementById(statusElementId);
+    statusElement.innerText = "Please wait..."
+    statusElement.className = '';
+    const accounts = document.getElementsByClassName(accountClassName);
+    const accountIds = [];
+    for (let i = 0; i < accounts.length; ++i) {
+        accountIds.push(accounts[i].id);
+    }
+
+    fetch(`${apiUrl}/${bankId}/${accountIds.join(",")}/export-transactions?dateFrom=${start}&dateTo=${end}`, {method: 'POST',  headers: {'FIREFLY-TOKEN': fireFlyToken}})
+        .then((response) => {
+            if (response.status === 200) {
+                response.text().then(id => watchTransactionExportJobStatus(statusElement, id, apiUrl))
             } else {
                 statusElement.innerText = "Error";
             }

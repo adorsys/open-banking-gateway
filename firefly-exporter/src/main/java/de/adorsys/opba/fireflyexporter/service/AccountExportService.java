@@ -27,7 +27,7 @@ public class AccountExportService {
     private final OpenBankingConfig bankingConfig;
     private final BankConsentRepository consentRepository;
     private final ConsentService consentService;
-    private final FireFlyExporter exporter;
+    private final FireFlyAccountExporter exporter;
     private final AccountExportJobRepository exportJobRepository;
 
     @Transactional
