@@ -1,5 +1,5 @@
-let abortController
-let lastValue
+let abortController;
+let lastValue;
 
 function callSearch(bankNameInputId, bankListId, bankIdInput, apiUrl) {
     const bankName = document.getElementById(bankNameInputId);
@@ -11,8 +11,8 @@ function callSearch(bankNameInputId, bankListId, bankIdInput, apiUrl) {
     if (abortController) {
         abortController.abort()
     }
-    abortController = new AbortController()
-    lastValue = bankName.value
+    abortController = new AbortController();
+    lastValue = bankName.value;
 
     fetch(`${apiUrl}/search?q=${bankName.value}`, {signal: abortController.signal})
         .then((response) => response.json())
@@ -22,21 +22,20 @@ function callSearch(bankNameInputId, bankListId, bankIdInput, apiUrl) {
 
 function updateBankList(bankNameInputId, bankListId, bankIdInput, response) {
     const bankList = document.getElementById(bankListId);
-    bankList.innerHTML = ''
+    bankList.innerHTML = '';
 
     response.bankDescriptor.forEach(descriptor => {
         const elem = document.createElement("li");
         elem.setAttribute('id', descriptor.bic);
-        const linkElem = document.createElement('a');
-        linkElem.setAttribute("href", "#");
-        const linkText = document.createTextNode(descriptor.bankName);
-        linkElem.appendChild(linkText);
-        elem.appendChild(linkElem);
+        elem.setAttribute('class', "list-group-item");
+
+        const bankName = document.createTextNode(descriptor.bankName);
+        elem.appendChild(bankName);
         bankList.appendChild(elem);
         elem.addEventListener(
             "click",
                 _ => {
-                bankList.innerText = ''
+                bankList.innerText = '';
                 selectBank(descriptor.bankName, descriptor.uuid, bankNameInputId, bankIdInput);
             }
         );
@@ -44,6 +43,6 @@ function updateBankList(bankNameInputId, bankListId, bankIdInput, response) {
 }
 
 function selectBank(bankName, bankId, bankNameInputId, bankIdInput) {
-    document.getElementById(bankIdInput).value = bankId
-    document.getElementById(bankNameInputId).value = bankName
+    document.getElementById(bankIdInput).value = bankId;
+    document.getElementById(bankNameInputId).value = bankName;
 }
