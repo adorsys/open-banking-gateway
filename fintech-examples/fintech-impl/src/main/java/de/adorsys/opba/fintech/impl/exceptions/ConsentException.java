@@ -1,7 +1,6 @@
 package de.adorsys.opba.fintech.impl.exceptions;
 
 import lombok.Getter;
-import lombok.RequiredArgsConstructor;
 
 @Getter
 public class ConsentException extends RuntimeException {
