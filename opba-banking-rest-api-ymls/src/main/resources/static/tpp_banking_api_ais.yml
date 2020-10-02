@@ -853,7 +853,7 @@ components:
         debtorName:
           $ref: "#/components/schemas/debtorName"
         debtorAccount:
-          $ref: "#/components/schemas/accountReference"
+          $ref: "./tpp_banking_api_commons.yml#/components/schemas/accountReference"
         ultimateDebtor:
           $ref: "#/components/schemas/ultimateDebtor"
         remittanceInformationUnstructured:
@@ -890,7 +890,7 @@ components:
       type: object
       properties:
         account:
-          $ref: "#/components/schemas/accountReference"
+          $ref: "./tpp_banking_api_commons.yml#/components/schemas/accountReference"
         transactions:
           $ref: "#/components/schemas/accountReport"
 
