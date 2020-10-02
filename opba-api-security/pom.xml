@@ -21,12 +21,6 @@
     <dependencies>
         <dependency>
             <groupId>de.adorsys.opba</groupId>
-            <artifactId>opba-banking-rest-api</artifactId>
-            <version>${project.version}</version>
-            <scope>runtime</scope>
-        </dependency>
-        <dependency>
-            <groupId>de.adorsys.opba</groupId>
             <artifactId>opba-api-security-signer-generator-api</artifactId>
             <version>${project.version}</version>
         </dependency>
@@ -125,7 +119,7 @@
                 <version>${maven-remote-resources-plugin.version}</version>
                 <configuration>
                     <resourceBundles>
-                        <resourceBundle>de.adorsys.opba:opba-banking-rest-api:${project.version}</resourceBundle>
+                        <resourceBundle>de.adorsys.opba:opba-banking-rest-api-ymls:${project.version}</resourceBundle>
                     </resourceBundles>
                     <includes>
                         <include>**/*.yml</include>

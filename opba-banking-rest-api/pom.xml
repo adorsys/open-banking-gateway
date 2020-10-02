@@ -15,13 +15,21 @@
     <!-- Hard reference to root directory. Used to reference pmd and checkstyle files from root.
     Change this if depth changes. Current: /open-banking-gateway/opba-banking-rest-api -->
     <main.basedir>${project.parent.basedir}</main.basedir>
-    <openapi-spec-file-location-banking_api_ais>${project.basedir}/src/main/resources/static/tpp_banking_api_ais.yml</openapi-spec-file-location-banking_api_ais>
-    <openapi-spec-file-location-banking_api_pis>${project.basedir}/src/main/resources/static/tpp_banking_api_pis.yml</openapi-spec-file-location-banking_api_pis>
-    <openapi-spec-file-location-tpp_bank_search_api>${project.basedir}/src/main/resources/static/tpp_banking_api_bank_search.yml</openapi-spec-file-location-tpp_bank_search_api>
-    <openapi-spec-file-location-tpp_token_api>${project.basedir}/src/main/resources/static/tpp_banking_api_token.yml</openapi-spec-file-location-tpp_token_api>
+      <ymldir>${project.parent.basedir}/opba-banking-rest-api-ymls/src/main/resources/static</ymldir>
+
+    <openapi-spec-file-location-banking_api_ais>${ymldir}/tpp_banking_api_ais.yml</openapi-spec-file-location-banking_api_ais>
+    <openapi-spec-file-location-banking_api_pis>${ymldir}/tpp_banking_api_pis.yml</openapi-spec-file-location-banking_api_pis>
+    <openapi-spec-file-location-tpp_bank_search_api>${ymldir}/tpp_banking_api_bank_search.yml</openapi-spec-file-location-tpp_bank_search_api>
+    <openapi-spec-file-location-tpp_token_api>${ymldir}/tpp_banking_api_token.yml</openapi-spec-file-location-tpp_token_api>
   </properties>
 
     <dependencies>
+        <dependency>
+            <groupId>de.adorsys.opba</groupId>
+            <artifactId>opba-banking-rest-api-ymls</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+
         <dependency>
             <groupId>org.apache.commons</groupId>
             <artifactId>commons-lang3</artifactId>
@@ -239,24 +247,6 @@
                         </configuration>
                     </execution>
                 </executions>
-            </plugin>
-            <!-- Publishes YAML as resource bundle -->
-            <plugin>
-                <artifactId>maven-remote-resources-plugin</artifactId>
-                <version>${maven-remote-resources-plugin.version}</version>
-                <executions>
-                    <execution>
-                        <goals>
-                            <goal>bundle</goal>
-                        </goals>
-                    </execution>
-                </executions>
-                <configuration>
-                    <excludeScope>test</excludeScope>
-                    <includes>
-                        <include>static/*.yml</include>
-                    </includes>
-                </configuration>
             </plugin>
         </plugins>
     </build>
