@@ -45,14 +45,14 @@ public class PaymentResult<SELF extends PaymentResult<SELF>> extends Stage<SELF>
     private PaymentRepository payments;
 
     @ExpectedScenarioState
-    protected String serviceSessionId;
+    protected String paymentServiceSessionId;
 
     @ExpectedScenarioState
     protected String redirectUriToGetUserParams;
 
     @Transactional
     public SELF open_banking_has_stored_payment() {
-        assertThat(payments.findByServiceSessionIdOrderByModifiedAtDesc(UUID.fromString(serviceSessionId))).isNotEmpty();
+        assertThat(payments.findByServiceSessionIdOrderByModifiedAtDesc(UUID.fromString(paymentServiceSessionId))).isNotEmpty();
         return self();
     }
 
@@ -68,14 +68,14 @@ public class PaymentResult<SELF extends PaymentResult<SELF>> extends Stage<SELF>
                     .queryParam(REDIRECT_CODE_QUERY, fintechUserTempPassword)
                     .contentType(APPLICATION_JSON_VALUE)
                 .when()
-                    .post(PIS_ANONYMOUS_LOGIN_USER_ENDPOINT, serviceSessionId)
+                    .post(PIS_ANONYMOUS_LOGIN_USER_ENDPOINT, paymentServiceSessionId)
                 .then()
                     .statusCode(BAD_REQUEST.value());
         return self();
     }
 
     public SELF fintech_calls_payment_activation_for_current_authorization_id() {
-        fintech_calls_payment_activation_for_current_authorization_id(serviceSessionId);
+        fintech_calls_payment_activation_for_current_authorization_id(paymentServiceSessionId);
         return self();
     }
 
@@ -89,7 +89,7 @@ public class PaymentResult<SELF extends PaymentResult<SELF>> extends Stage<SELF>
 
     public SELF fintech_calls_payment_information(String iban) {
         ExtractableResponse<Response> response = withPaymentInfoHeaders(UUID.randomUUID().toString())
-                .header(SERVICE_SESSION_ID, serviceSessionId)
+                .header(SERVICE_SESSION_ID, paymentServiceSessionId)
             .when()
                 .get(PIS_PAYMENT_INFORMATION_ENDPOINT, StandardPaymentProduct.SEPA_CREDIT_TRANSFERS.getSlug())
             .then()
@@ -126,7 +126,7 @@ public class PaymentResult<SELF extends PaymentResult<SELF>> extends Stage<SELF>
 
     public SELF fintech_calls_payment_information_wiremock(String iban) {
         ExtractableResponse<Response> response = withPaymentInfoHeaders(UUID.randomUUID().toString())
-                    .header(SERVICE_SESSION_ID, serviceSessionId)
+                    .header(SERVICE_SESSION_ID, paymentServiceSessionId)
                 .when()
                     .get(PIS_PAYMENT_INFORMATION_ENDPOINT, StandardPaymentProduct.SEPA_CREDIT_TRANSFERS.getSlug())
                 .then()
@@ -154,7 +154,7 @@ public class PaymentResult<SELF extends PaymentResult<SELF>> extends Stage<SELF>
 
     public SELF fintech_calls_payment_information_hbci(String iban, String bankId, String expectedStatus) {
         ExtractableResponse<Response> response = withPaymentInfoHeaders(UUID.randomUUID().toString(), bankId)
-                    .header(SERVICE_SESSION_ID, serviceSessionId)
+                    .header(SERVICE_SESSION_ID, paymentServiceSessionId)
                 .when()
                     .get(PIS_PAYMENT_INFORMATION_ENDPOINT, StandardPaymentProduct.SEPA_CREDIT_TRANSFERS.getSlug())
                 .then()
@@ -199,7 +199,7 @@ public class PaymentResult<SELF extends PaymentResult<SELF>> extends Stage<SELF>
     }
 
     public SELF fintech_calls_payment_status(String bankId, String expectedStatus) {
-        return fintech_calls_payment_status(bankId, expectedStatus, serviceSessionId);
+        return fintech_calls_payment_status(bankId, expectedStatus, paymentServiceSessionId);
     }
 
     public SELF fintech_calls_payment_activation_for_current_authorization_id(String serviceSessionId) {

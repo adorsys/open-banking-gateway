@@ -102,6 +102,26 @@ public class HbciAccountInformationResult<SELF extends HbciAccountInformationRes
     }
 
     @SneakyThrows
+    public SELF open_banking_can_read_anton_brueckner_new_hbci_account() {
+        ExtractableResponse<Response> response = withAccountsHeaders(ANTON_BRUECKNER, BANK_BLZ_30000003_ID)
+                .header(SERVICE_SESSION_ID, serviceSessionId)
+                .queryParam(ONLINE, false)
+                .when()
+                .get(AIS_ACCOUNTS_ENDPOINT)
+                .then()
+                .statusCode(HttpStatus.OK.value())
+                .body("accounts[2].iban", equalTo("DE26300000033333333333"))
+                .body("accounts[2].resourceId", instanceOf(String.class))
+                .body("accounts[2].currency", equalTo("EUR"))
+                .body("accounts[2].name", equalTo("Extra-Konto"))
+                .body("accounts", hasSize(3))
+                .extract();
+
+        this.responseContent = response.body().asString();
+        return self();
+    }
+
+    @SneakyThrows
     public SELF open_banking_can_read_max_musterman_hbci_transaction_data_using_consent_bound_to_service_session_bank_blz_20000002(
             String resourceId, LocalDate dateFrom, LocalDate dateTo, String bookingStatus
     ) {
