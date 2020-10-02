@@ -2,6 +2,7 @@ package de.adorsys.opba.protocol.xs2a.tests.e2e.stages;
 
 import com.google.common.collect.ImmutableMap;
 import com.tngtech.jgiven.Stage;
+import com.tngtech.jgiven.annotation.ProvidedScenarioState;
 import com.tngtech.jgiven.integration.spring.JGivenStage;
 import de.adorsys.opba.api.security.external.service.RequestSigningService;
 import de.adorsys.opba.api.security.generator.api.DataToSignProvider;
@@ -51,6 +52,9 @@ public class CommonGivenStages<SELF extends CommonGivenStages<SELF>> extends Sta
 
     @Autowired
     private RequestSigningService signingService;
+
+    @ProvidedScenarioState
+    protected boolean userCreated;
 
     @Transactional
     public SELF preferred_sca_approach_selected_for_all_banks_in_opba(Approach expectedApproach) {
@@ -117,7 +121,8 @@ public class CommonGivenStages<SELF extends CommonGivenStages<SELF>> extends Sta
     }
 
     public SELF user_registered_in_opba_with_credentials(String username, String password) {
-        RestAssured
+        if (!userCreated) {
+            RestAssured
                 .given()
                     .header(X_REQUEST_ID, UUID.randomUUID().toString())
                     .contentType(MediaType.APPLICATION_JSON_VALUE)
@@ -126,7 +131,8 @@ public class CommonGivenStages<SELF extends CommonGivenStages<SELF>> extends Sta
                     .post(REGISTER_USER_ENDPOINT)
                 .then()
                     .statusCode(HttpStatus.CREATED.value());
-
+            userCreated = true;
+        }
         return self();
     }
 

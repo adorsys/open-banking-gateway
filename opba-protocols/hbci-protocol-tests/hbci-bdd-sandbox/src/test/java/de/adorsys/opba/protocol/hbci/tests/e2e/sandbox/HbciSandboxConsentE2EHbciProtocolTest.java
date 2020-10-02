@@ -10,6 +10,9 @@ import de.adorsys.opba.protocol.hbci.tests.e2e.sandbox.hbcisteps.HbciAccountInfo
 import de.adorsys.opba.protocol.hbci.tests.e2e.sandbox.hbcisteps.HbciAccountInformationResult;
 import de.adorsys.opba.protocol.hbci.tests.e2e.sandbox.hbcisteps.HbciServers;
 import de.adorsys.opba.protocol.sandbox.hbci.HbciServerApplication;
+import de.adorsys.opba.protocol.sandbox.hbci.config.HbciConfig;
+import de.adorsys.opba.protocol.sandbox.hbci.config.dto.Account;
+import de.adorsys.opba.protocol.sandbox.hbci.config.dto.User;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
@@ -21,6 +24,8 @@ import org.springframework.test.context.ActiveProfiles;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.math.BigDecimal;
+import java.util.Currency;
 import java.util.Set;
 import java.util.UUID;
 
@@ -63,6 +68,9 @@ class HbciSandboxConsentE2EHbciProtocolTest extends SpringScenarioTest<
 
     @Autowired
     private BankProfileJpaRepository bankProfileJpaRepository;
+
+    @Autowired
+    private HbciConfig config;
 
     // TODO: Those dependencies do not need to be mocked, but should be optional
     // Stubbing out xs2a protocol declared dependencies:
@@ -236,13 +244,51 @@ class HbciSandboxConsentE2EHbciProtocolTest extends SpringScenarioTest<
                 );
     }
 
+    @Test
+    void testAccountsListCacheUpdate() {
+        testAccountsListWithConsentNoScaButUserHasOneSca();
+        addAccount();
+        // get accounts without cache update and see that no new account in the result
+        then().open_banking_can_read_anton_brueckner_hbci_account_data_using_consent_bound_to_service_session_bank_blz_30000003();
+        // get accounts with cache update and see new account in the result
+        getUpdatedListAccounts();
+    }
+
+    private void addAccount() {
+        Account newAccount = new Account();
+        newAccount.setNumber("3333333333");
+        newAccount.setBalance(BigDecimal.valueOf(1000));
+        newAccount.setCurrency(Currency.getInstance("EUR"));
+
+        User user = config.getUsers().get(0);
+        user.getAccounts().add(newAccount);
+    }
+
+    private void getUpdatedListAccounts() {
+        when()
+                .fintech_calls_list_accounts_for_anton_brueckner_with_cache_update(BANK_BLZ_30000003_ID)
+                .and()
+                .user_logged_in_into_opba_as_opba_user_with_credentials_using_fintech_supplied_url(OPBA_LOGIN, OPBA_PASSWORD)
+                .and()
+                .user_anton_brueckner_provided_initial_parameters_to_list_accounts_with_all_accounts_consent()
+                .and()
+                .user_anton_brueckner_provided_correct_pin_to_embedded_authorization_and_sees_redirect_to_fintech_ok();
+        then()
+                .open_banking_has_consent_for_anton_brueckner_account_list()
+                .fintech_calls_consent_activation_for_current_authorization_id()
+                .open_banking_can_read_anton_brueckner_new_hbci_account();
+    }
+
+
+    @Test
+    void testTransactionListCacheUpdate() {
+        testDirectTransactionListWithSca();
+    }
+
     private void makeHbciAdapterToPointToHbciMockEndpoints() {
         adapterProperties.getAdorsysMockBanksBlz().stream()
                 .flatMap(it -> bankProfileJpaRepository.findByBankBankCode(String.valueOf(it)).stream())
-                .map(it -> {
-                    it.setUrl("http://localhost:" + port + "/hbci-mock/");
-                    return it;
-                })
+                .peek(it -> it.setUrl("http://localhost:" + port + "/hbci-mock/"))
                 .forEach(it -> bankProfileJpaRepository.save(it));
     }
 }

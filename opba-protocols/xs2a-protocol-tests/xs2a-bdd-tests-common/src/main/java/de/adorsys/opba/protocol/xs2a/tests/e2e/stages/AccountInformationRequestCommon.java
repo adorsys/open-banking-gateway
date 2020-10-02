@@ -19,6 +19,7 @@ import static de.adorsys.opba.api.security.external.domain.HttpHeaders.AUTHORIZA
 import static de.adorsys.opba.protocol.xs2a.tests.HeaderNames.X_REQUEST_ID;
 import static de.adorsys.opba.protocol.xs2a.tests.HeaderNames.X_XSRF_TOKEN;
 import static de.adorsys.opba.protocol.xs2a.tests.e2e.ResourceUtil.readResource;
+import static de.adorsys.opba.protocol.xs2a.tests.e2e.stages.AccountInformationResult.ONLINE;
 import static de.adorsys.opba.protocol.xs2a.tests.e2e.stages.StagesCommonUtil.AIS_ACCOUNTS_ENDPOINT;
 import static de.adorsys.opba.protocol.xs2a.tests.e2e.stages.StagesCommonUtil.AIS_LOGIN_USER_ENDPOINT;
 import static de.adorsys.opba.protocol.xs2a.tests.e2e.stages.StagesCommonUtil.AIS_TRANSACTIONS_ENDPOINT;
@@ -56,13 +57,23 @@ public class AccountInformationRequestCommon<SELF extends AccountInformationRequ
 
     // Note that anton.brueckner is typically used for REDIRECT (real REDIRECT that is returned by bank, and not REDIRECT approach in table)
     public SELF fintech_calls_list_accounts_for_anton_brueckner(String bankId) {
+        return fintech_calls_list_accounts_for_anton_brueckner(bankId, false);
+    }
+
+    public SELF fintech_calls_list_accounts_for_anton_brueckner_with_cache_update(String bankId) {
+        return fintech_calls_list_accounts_for_anton_brueckner(bankId, true);
+    }
+
+
+    public SELF fintech_calls_list_accounts_for_anton_brueckner(String bankId, boolean online) {
         ExtractableResponse<Response> response = withAccountsHeaders(ANTON_BRUECKNER, bankId)
-                    .header(SERVICE_SESSION_ID, UUID.randomUUID().toString())
+                .header(SERVICE_SESSION_ID, UUID.randomUUID().toString())
+                .queryParam(ONLINE, online)
                 .when()
-                    .get(AIS_ACCOUNTS_ENDPOINT)
+                .get(AIS_ACCOUNTS_ENDPOINT)
                 .then()
-                    .statusCode(HttpStatus.ACCEPTED.value())
-                    .extract();
+                .statusCode(HttpStatus.ACCEPTED.value())
+                .extract();
         updateServiceSessionId(response);
         updateRedirectCode(response);
         updateNextConsentAuthorizationUrl(response);
@@ -191,11 +202,16 @@ public class AccountInformationRequestCommon<SELF extends AccountInformationRequ
     }
 
     public SELF fintech_calls_list_transactions_for_max_musterman(String resourceId, String bankId) {
+        return fintech_calls_list_transactions_for_max_musterman(resourceId, bankId, false);
+    }
+
+    public SELF fintech_calls_list_transactions_for_max_musterman(String resourceId, String bankId, boolean online) {
         ExtractableResponse<Response> response = withTransactionsHeaders(MAX_MUSTERMAN, bankId)
                 .header(SERVICE_SESSION_ID, UUID.randomUUID().toString())
-                .when()
+                .queryParam(ONLINE, online)
+            .when()
                 .get(AIS_TRANSACTIONS_ENDPOINT, resourceId)
-                .then()
+            .then()
                 .statusCode(HttpStatus.ACCEPTED.value())
                 .extract();
 
@@ -624,5 +640,22 @@ public class AccountInformationRequestCommon<SELF extends AccountInformationRequ
                     .extract();
 
         return self();
+    }
+
+    protected ExtractableResponse<Response> startInitialInternalConsentAuthorization(String uriPath, String resourceData) {
+        ExtractableResponse<Response> response =
+                startInitialInternalConsentAuthorization(uriPath, resourceData, HttpStatus.ACCEPTED);
+        updateServiceSessionId(response);
+        updateRedirectCode(response);
+
+        return response;
+    }
+
+    protected ExtractableResponse<Response> provideParametersToBankingProtocolWithBody(String uriPath, String body, HttpStatus status) {
+        return provideParametersToBankingProtocolWithBody(uriPath, body, status, serviceSessionId);
+    }
+
+    protected ExtractableResponse<Response> provideGetConsentAuthStateRequest() {
+        return provideGetConsentAuthStateRequest(serviceSessionId);
     }
 }

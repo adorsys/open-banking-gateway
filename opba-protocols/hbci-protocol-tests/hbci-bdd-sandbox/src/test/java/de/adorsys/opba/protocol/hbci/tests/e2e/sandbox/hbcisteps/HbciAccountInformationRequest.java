@@ -39,6 +39,10 @@ public class HbciAccountInformationRequest<SELF extends HbciAccountInformationRe
         return fintech_calls_list_transactions_for_max_musterman(MAX_MUSTERMAN_BANK_BLZ_30000003_ACCOUNT_ID, BANK_BLZ_30000003_ID);
     }
 
+    public SELF fintech_calls_list_transactions_for_max_musterman_for_blz_30000003(boolean online) {
+        return fintech_calls_list_transactions_for_max_musterman(MAX_MUSTERMAN_BANK_BLZ_30000003_ACCOUNT_ID, BANK_BLZ_30000003_ID, online);
+    }
+
     public SELF fintech_calls_list_transactions_for_max_musterman_for_blz_20000002() {
         return fintech_calls_list_transactions_for_max_musterman(MAX_MUSTERMAN_BANK_BLZ_20000002_ACCOUNT_ID, BANK_BLZ_20000002_ID);
     }

@@ -39,9 +39,12 @@ public class HbciPaymentInitiationRequest<SELF extends HbciPaymentInitiationRequ
         return fintech_calls_single_payment_for_max_musterman(resourceId, bankId, remittance, true);
     }
 
-    public SELF fintech_calls_single_payment_for_max_musterman(String resourceId, String bankId, String remittance,
-                                                               boolean authRequired) {
-        return fintech_calls_payment_for_max_musterman(resourceId, bankId, remittance, true, false);
+    public SELF fintech_calls_single_payment_for_max_musterman(String resourceId, String bankId, String remittance, boolean authRequired) {
+        return fintech_calls_payment_for_max_musterman(resourceId, bankId, remittance, authRequired, false);
+    }
+
+    public SELF fintech_calls_instant_payment_for_max_musterman(String resourceId, String bankId, String remittance) {
+        return fintech_calls_payment_for_max_musterman(resourceId, bankId, remittance, true, true);
     }
 
     public SELF fintech_calls_instant_payment_for_max_musterman_for_blz_30000003() {
