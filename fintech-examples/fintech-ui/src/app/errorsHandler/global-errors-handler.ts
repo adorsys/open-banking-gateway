@@ -58,6 +58,8 @@ export class GlobalErrorHandler implements ErrorHandler {
     switch (errorCode) {
       case 'CONSENT_UNKNOWN':
         return 'The consent is unknown. Please request for new consent by changing settings.';
+      case 'CONSENT_EXPIRED':
+        return 'The consent is expired. Please request for new consent by changing settings.';
       case 'CONSENT_ACCESS_EXCEEDED_LIMIT':
         return 'The consent has been used too many time. Please request for new consent by changing settings or wait till tomorrow and try again.';
         break;
