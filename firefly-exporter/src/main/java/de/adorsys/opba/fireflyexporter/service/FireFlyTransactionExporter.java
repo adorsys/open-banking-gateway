@@ -170,10 +170,11 @@ public class FireFlyTransactionExporter {
             split.setBookDate(transaction.getBookingDate().atStartOfDay().atZone(ZoneOffset.UTC).format(FIREFLY_DATE_FORMAT));
         }
 
+        BigDecimal transactionAmount = new BigDecimal(transaction.getTransactionAmount().getAmount());
         if (availableAccountsInFireFlyByIban.contains(transaction.getDebtorAccount().getIban())) {
-            parseTransactionAmount(transaction.getDebtorAccount(), transaction.getCreditorAccount(), transaction.getTransactionAmount().getAmount(), split);
+            parseTransactionAmount(transaction.getDebtorAccount(), transaction.getCreditorAccount(), transactionAmount, split);
         } else {
-            parseTransactionAmount(transaction.getCreditorAccount(), transaction.getDebtorAccount(), transaction.getTransactionAmount().getAmount(), split);
+            parseTransactionAmount(transaction.getCreditorAccount(), transaction.getDebtorAccount(), transactionAmount.negate(), split);
         }
 
         split.setCurrencyCode(transaction.getTransactionAmount().getCurrency());
@@ -182,16 +183,15 @@ public class FireFlyTransactionExporter {
         transactionsApi.storeTransaction(fireflyTransaction);
     }
 
-    private void parseTransactionAmount(AccountReference debtor, AccountReference creditor, String transactionAmount, TransactionSplit split) {
-        BigDecimal amount = new BigDecimal(transactionAmount);
-        if (amount.compareTo(BigDecimal.ZERO) < 0) {
-            split.setAmount(amount.negate().toPlainString());
+    private void parseTransactionAmount(AccountReference debtor, AccountReference creditor, BigDecimal transactionAmount, TransactionSplit split) {
+        if (transactionAmount.compareTo(BigDecimal.ZERO) < 0) {
+            split.setAmount(transactionAmount.negate().toPlainString());
             split.setType(TransactionSplit.TypeEnum.WITHDRAWAL);
             split.setSourceName(debtor.getIban());
             split.setSourceIban(debtor.getIban());
             split.setDestinationIban(null != creditor ? creditor.getIban() : null);
         } else {
-            split.setAmount(transactionAmount);
+            split.setAmount(transactionAmount.toPlainString());
             split.setType(TransactionSplit.TypeEnum.DEPOSIT);
             split.setSourceIban(null != creditor ? creditor.getIban() : null);
             split.setDestinationName(debtor.getIban());
