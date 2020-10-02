@@ -32,6 +32,7 @@
         <module>opba-rest-api-shared</module>
         <module>opba-consent-rest-api</module>
         <module>opba-consent-rest-impl</module>
+        <module>opba-banking-rest-api-ymls</module>
         <module>opba-banking-rest-api</module>
         <module>opba-banking-rest-impl</module>
         <module>opba-auth-rest-api</module>
