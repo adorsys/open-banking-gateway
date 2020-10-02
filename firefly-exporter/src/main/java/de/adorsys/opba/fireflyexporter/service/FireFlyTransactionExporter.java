@@ -7,10 +7,12 @@ import de.adorsys.opba.fireflyexporter.client.FireflyTransactionsApiClient;
 import de.adorsys.opba.fireflyexporter.client.TppAisClient;
 import de.adorsys.opba.fireflyexporter.config.ApiConfig;
 import de.adorsys.opba.fireflyexporter.config.OpenBankingConfig;
+import de.adorsys.opba.fireflyexporter.dto.ExportableAccount;
 import de.adorsys.opba.fireflyexporter.entity.BankConsent;
 import de.adorsys.opba.fireflyexporter.entity.TransactionExportJob;
 import de.adorsys.opba.fireflyexporter.repository.BankConsentRepository;
 import de.adorsys.opba.fireflyexporter.repository.TransactionExportJobRepository;
+import de.adorsys.opba.tpp.ais.api.model.generated.AccountReference;
 import de.adorsys.opba.tpp.ais.api.model.generated.AccountReport;
 import de.adorsys.opba.tpp.ais.api.model.generated.TransactionDetails;
 import de.adorsys.opba.tpp.ais.api.model.generated.TransactionsResponse;
@@ -27,8 +29,12 @@ import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.time.ZoneOffset;
 import java.util.List;
+import java.util.Map;
+import java.util.Set;
 import java.util.UUID;
 import java.util.concurrent.atomic.AtomicInteger;
+import java.util.function.Function;
+import java.util.stream.Collectors;
 
 import static de.adorsys.opba.fireflyexporter.service.Consts.FIREFLY_DATE_FORMAT;
 
@@ -42,6 +48,7 @@ public class FireFlyTransactionExporter {
     private final TransactionOperations txOper;
     private final OpenBankingConfig bankingConfig;
     private final FireFlyTokenProvider tokenProvider;
+    private final ExportableAccountService exportableAccounts;
     private final FireflyTransactionsApiClient transactionsApi;
     private final BankConsentRepository consentRepository;
     private final TransactionExportJobRepository exportJobRepository;
@@ -49,6 +56,10 @@ public class FireFlyTransactionExporter {
     @Async
     public void exportToFirefly(String fireFlyToken, long exportJobId, String bankId, List<String> accountsTransactionsToExport, LocalDate from, LocalDate to) {
         tokenProvider.setToken(fireFlyToken);
+        Set<String> availableAccountsInFireFlyByIban = exportableAccounts.exportableAccounts(fireFlyToken, bankId).getBody().stream()
+                .map(ExportableAccount::getIban)
+                .collect(Collectors.toSet());
+
         int numExported = 0;
         int numErrored = 0;
         AtomicInteger numTransactionsExported = new AtomicInteger();
@@ -56,7 +67,16 @@ public class FireFlyTransactionExporter {
         String lastError = null;
         for (String accountIdToExport : accountsTransactionsToExport) {
             try {
-                exportAccountsTransactionsToFireFly(exportJobId, bankId, accountIdToExport, from, to, numTransactionsExported, numTransactionsErrored);
+                exportAccountsTransactionsToFireFly(
+                        exportJobId,
+                        bankId,
+                        accountIdToExport,
+                        from,
+                        to,
+                        numTransactionsExported,
+                        numTransactionsErrored,
+                        availableAccountsInFireFlyByIban
+                );
             } catch (Exception ex) {
                 log.error("Failed to export account: {}", accountIdToExport, ex);
                 numErrored++;
@@ -90,7 +110,8 @@ public class FireFlyTransactionExporter {
             LocalDate from,
             LocalDate to,
             AtomicInteger numTransactionsExported,
-            AtomicInteger numTransactionsErrored
+            AtomicInteger numTransactionsErrored,
+            Set<String> availableAccountsInFireFlyByIban
     ) {
         ResponseEntity<TransactionsResponse> transactions = aisApi.getTransactions(
                 accountIdToExport,
@@ -124,7 +145,7 @@ public class FireFlyTransactionExporter {
         String lastError = null;
         for (TransactionDetails transaction : report.getBooked()) {
             try {
-                exportFireFlyTransaction(transaction);
+                exportFireFlyTransaction(transaction, availableAccountsInFireFlyByIban);
                 numTransactionsExported.incrementAndGet();
             } catch (Exception ex) {
                 log.error("Failed to export transaction: {}", transaction.getTransactionId(), ex);
@@ -136,12 +157,12 @@ public class FireFlyTransactionExporter {
         }
     }
 
-    private void exportFireFlyTransaction(TransactionDetails transaction) {
+    private void exportFireFlyTransaction(TransactionDetails transaction, Set<String> availableAccountsInFireFlyByIban) {
         Transaction fireflyTransaction = new Transaction();
         fireflyTransaction.setErrorIfDuplicateHash(true);
         TransactionSplit split = new TransactionSplit();
         split.setSepaCtId(transaction.getEndToEndId());
-        split.setImportHashV2(transaction.getTransactionId());
+        split.setInternalReference(transaction.getTransactionId());
         split.setDescription(buildDescription(transaction));
         LocalDate txDate = null != transaction.getValueDate() ? transaction.getValueDate() : LocalDate.now();
         split.setDate(txDate.atStartOfDay().atZone(ZoneOffset.UTC).format(FIREFLY_DATE_FORMAT));
@@ -149,27 +170,32 @@ public class FireFlyTransactionExporter {
             split.setBookDate(transaction.getBookingDate().atStartOfDay().atZone(ZoneOffset.UTC).format(FIREFLY_DATE_FORMAT));
         }
 
-        parseTransactionAmount(transaction, split);
+        if (availableAccountsInFireFlyByIban.contains(transaction.getDebtorAccount().getIban())) {
+            parseTransactionAmount(transaction.getDebtorAccount(), transaction.getCreditorAccount(), transaction.getTransactionAmount().getAmount(), split);
+        } else {
+            parseTransactionAmount(transaction.getCreditorAccount(), transaction.getDebtorAccount(), transaction.getTransactionAmount().getAmount(), split);
+        }
+
         split.setCurrencyCode(transaction.getTransactionAmount().getCurrency());
         fireflyTransaction.setTransactions(ImmutableList.of(split));
 
         transactionsApi.storeTransaction(fireflyTransaction);
     }
 
-    private void parseTransactionAmount(TransactionDetails transaction, TransactionSplit split) {
-        BigDecimal amount = new BigDecimal(transaction.getTransactionAmount().getAmount());
+    private void parseTransactionAmount(AccountReference debtor, AccountReference creditor, String transactionAmount, TransactionSplit split) {
+        BigDecimal amount = new BigDecimal(transactionAmount);
         if (amount.compareTo(BigDecimal.ZERO) < 0) {
             split.setAmount(amount.negate().toPlainString());
             split.setType(TransactionSplit.TypeEnum.WITHDRAWAL);
-            split.setSourceName(transaction.getDebtorAccount().getIban());
-            split.setSourceIban(transaction.getDebtorAccount().getIban());
-            split.setDestinationIban(transaction.getCreditorAccount().getIban());
+            split.setSourceName(debtor.getIban());
+            split.setSourceIban(debtor.getIban());
+            split.setDestinationIban(null != creditor ? creditor.getIban() : null);
         } else {
-            split.setAmount(transaction.getTransactionAmount().getAmount());
+            split.setAmount(transactionAmount);
             split.setType(TransactionSplit.TypeEnum.DEPOSIT);
-            split.setSourceIban(transaction.getCreditorAccount().getIban());
-            split.setDestinationName(transaction.getDebtorAccount().getIban());
-            split.setDestinationIban(transaction.getDebtorAccount().getIban());
+            split.setSourceIban(null != creditor ? creditor.getIban() : null);
+            split.setDestinationName(debtor.getIban());
+            split.setDestinationIban(debtor.getIban());
         }
     }
 
