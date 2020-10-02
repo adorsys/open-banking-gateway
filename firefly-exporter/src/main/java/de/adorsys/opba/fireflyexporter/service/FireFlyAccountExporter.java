@@ -17,14 +17,14 @@ import java.time.LocalDate;
 import java.time.ZoneOffset;
 import java.time.format.DateTimeFormatter;
 
+import static de.adorsys.opba.fireflyexporter.service.Consts.FIREFLY_DATE_FORMAT;
+
 @Slf4j
 @Service
 @RequiredArgsConstructor
 public class FireFlyAccountExporter {
 
     private static final String OPBA_ID_PREFIX = "OPBA-ID:";
-    // Format is: Mon Sep 17 03:00:00 EEST 2018
-    private static final DateTimeFormatter FIREFLY_DATE_FORMAT = DateTimeFormatter.ofPattern("EEE MMM dd HH:mm:ss z yyyy");
 
     private final TransactionOperations txOper;
     private final FireFlyTokenProvider tokenProvider;
@@ -67,23 +67,8 @@ public class FireFlyAccountExporter {
         fireflyAccount.setAccountRole(Account.AccountRoleEnum.DEFAULTASSET);
         fireflyAccount.setType(Account.TypeEnum.ASSET);
         fireflyAccount.setNotes(OPBA_ID_PREFIX + account.getResourceId());
-
-        Balance available = getInterimAvailableBalance(account);
-        if (null != available) {
-            // currentBalance is read-only property
-            fireflyAccount.setOpeningBalance(Double.valueOf(available.getBalanceAmount().getAmount()));
-            LocalDate referenceDate = null != available.getReferenceDate() ? LocalDate.parse(available.getReferenceDate()) : LocalDate.now();
-            fireflyAccount.setOpeningBalanceDate(referenceDate.atStartOfDay().atZone(ZoneOffset.UTC).format(FIREFLY_DATE_FORMAT));
-        }
-
+        // Unfortunately it is unable to push account balance as currentBalance is read-only
         accountsApi.storeAccount(fireflyAccount);
-    }
-
-    private Balance getInterimAvailableBalance(AccountDetails account) {
-        return account.getBalances()
-                .stream().filter(it -> "interimavailable".equalsIgnoreCase(it.getBalanceType()))
-                .findFirst()
-                .orElse(null);
     }
 
     private void updateAccountsExported(long exportJobId, int numExported, int numErrored, int toExport, String lastError) {
