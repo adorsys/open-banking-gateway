@@ -106,6 +106,10 @@ function callTransactionExport(fireflyTokenInputId, bankIdInputId, startDateElem
     const accounts = document.getElementsByClassName(accountClassName);
     const accountIds = [];
     for (let i = 0; i < accounts.length; ++i) {
+        if (!accounts[i].checked) {
+            continue;
+        }
+
         accountIds.push(accounts[i].id);
     }
 
