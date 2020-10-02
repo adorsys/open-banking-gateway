@@ -10,7 +10,9 @@ import de.adorsys.opba.fireflyexporter.config.OpenBankingConfig;
 import feign.RequestInterceptor;
 import feign.RequestTemplate;
 import lombok.RequiredArgsConstructor;
+import org.springframework.cloud.openfeign.FeignFormatterRegistrar;
 import org.springframework.context.annotation.Bean;
+import org.springframework.format.datetime.standard.DateTimeFormatterRegistrar;
 
 import java.io.UnsupportedEncodingException;
 import java.net.URLDecoder;
@@ -32,6 +34,15 @@ public class TppClientConfig {
         return requestTemplate -> {
             requestTemplate.header(COMPUTE_PSU_IP_ADDRESS, Boolean.TRUE.toString());
             fillSecurityHeadersWithSigning(requestTemplate, opbaConfig, requestSigningService);
+        };
+    }
+
+    @Bean
+    public FeignFormatterRegistrar feignFormatterRegistrar() {
+        return formatterRegistry -> {
+            DateTimeFormatterRegistrar registrar = new DateTimeFormatterRegistrar();
+            registrar.setUseIsoFormat(true);
+            registrar.registerFormatters(formatterRegistry);
         };
     }
 

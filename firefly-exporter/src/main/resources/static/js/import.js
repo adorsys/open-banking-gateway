@@ -5,10 +5,11 @@ function watchAccountExportJobStatus(statusElement, jobId, apiUrl) {
         fetch(`${apiUrl}/export-accounts/${jobId}`)
             .then((response) => response.json())
             .then((response) => {
+                statusElement.innerText = `Exported ${response.accountsExported} of ${response.numAccountsToExport} accounts, errors ${response.numAccountsErrored}`
                 if (response.completed) {
                     clearInterval(intervalId);
+                    statusElement.innerText = statusElement.innerText + '. Done'
                 }
-                statusElement.innerText = `Exported ${response.accountsExported} of ${response.numAccountsToExport} accounts, errors ${response.numAccountsErrored}`
             })
     }, 1000);
 }
@@ -40,11 +41,13 @@ function callExportableAccounts(fireflyTokenInputId, bankIdInputId, redirectElem
     const fireFlyToken = document.getElementById(fireflyTokenInputId).value;
     const bankId = document.getElementById(bankIdInputId).value;
     const accountList = document.getElementById(accountListElementId);
-    accountList.innerHTML = ''
+    accountList.innerHTML = '';
 
     const statusElement = document.getElementById(statusElementId);
+    const exportBlock = document.getElementById(accountExportBlockId);
     statusElement.innerText = "Please wait..."
     statusElement.className = '';
+    exportBlock.className = 'hidden';
     fetch(`${apiUrl}/${bankId}/exportable-accounts`, {headers: {'FIREFLY-TOKEN': fireFlyToken}})
         .then((response) => {
             if (response.status === 202) {
@@ -53,8 +56,8 @@ function callExportableAccounts(fireflyTokenInputId, bankIdInputId, redirectElem
                 redirectLink.className = '';
                 statusElement.className = 'hidden';
             } else if (response.status === 200) {
-                const exportBlock = document.getElementById(accountExportBlockId);
                 exportBlock.className = '';
+                accountList.innerHTML = '';
                 response.json().then((accounts) => {
                     for (let i = 0; i < accounts.length; ++i) {
                         const elem = document.createElement("li");
@@ -82,10 +85,11 @@ function watchTransactionExportJobStatus(statusElement, jobId, apiUrl) {
         fetch(`${apiUrl}/export-transactions/${jobId}`)
             .then((response) => response.json())
             .then((response) => {
+                statusElement.innerText = `Exported transactions ${response.numTransactionsExported}, errors ${response.numTransactionsErrored}`
                 if (response.completed) {
                     clearInterval(intervalId);
+                    statusElement.innerText = statusElement.innerText + '. Done'
                 }
-                statusElement.innerText = `Exported ${response.accountsExported} of ${response.numAccountsToExport} accounts' transactions, errors ${response.numAccountsErrored}`
             })
     }, 1000);
 }

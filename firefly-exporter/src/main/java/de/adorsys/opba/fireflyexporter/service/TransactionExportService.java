@@ -25,7 +25,9 @@ public class TransactionExportService {
 
     @Transactional
     public ResponseEntity<Long> exportTransactions(String fireflyToken, String bankId, List<String> accountIds, LocalDate dateFrom, LocalDate dateTo) {
-        TransactionExportJob exportJob = transactionExportJobRepository.save(new TransactionExportJob());
+        TransactionExportJob exportJob = new TransactionExportJob();
+        exportJob.setNumAccountsToExport(accountIds.size());
+        exportJob = transactionExportJobRepository.save(exportJob);
         exporter.exportToFirefly(fireflyToken, exportJob.getId(), bankId, accountIds, dateFrom, dateTo);
         return ResponseEntity.ok(exportJob.getId());
     }

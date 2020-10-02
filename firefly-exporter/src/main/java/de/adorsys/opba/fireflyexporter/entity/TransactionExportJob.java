@@ -19,7 +19,7 @@ import java.time.Instant;
 public class TransactionExportJob {
 
     private static final int MAX_ERROR_LEN = 64;
-    
+
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "transaction_export_id_generator")
     @SequenceGenerator(name = "transaction_export_id_generator", sequenceName = "transaction_export_id_seq")
@@ -30,6 +30,10 @@ public class TransactionExportJob {
     private long numAccountsToExport;
 
     private long numAccountsErrored;
+
+    private long numTransactionsExported;
+
+    private long numTransactionsErrored;
 
     private String lastErrorMessage;
 
