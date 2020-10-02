@@ -1,23 +1,17 @@
 package de.adorsys.opba.fireflyexporter.service;
 
 import com.google.common.collect.ImmutableList;
-import de.adorsys.opba.firefly.api.model.generated.Account;
 import de.adorsys.opba.firefly.api.model.generated.Transaction;
 import de.adorsys.opba.firefly.api.model.generated.TransactionSplit;
-import de.adorsys.opba.fireflyexporter.client.FireflyAccountsApiClient;
 import de.adorsys.opba.fireflyexporter.client.FireflyTransactionsApiClient;
 import de.adorsys.opba.fireflyexporter.client.TppAisClient;
 import de.adorsys.opba.fireflyexporter.config.ApiConfig;
 import de.adorsys.opba.fireflyexporter.config.OpenBankingConfig;
-import de.adorsys.opba.fireflyexporter.entity.AccountExportJob;
 import de.adorsys.opba.fireflyexporter.entity.BankConsent;
 import de.adorsys.opba.fireflyexporter.entity.TransactionExportJob;
-import de.adorsys.opba.fireflyexporter.repository.AccountExportJobRepository;
 import de.adorsys.opba.fireflyexporter.repository.BankConsentRepository;
 import de.adorsys.opba.fireflyexporter.repository.TransactionExportJobRepository;
-import de.adorsys.opba.tpp.ais.api.model.generated.AccountDetails;
 import de.adorsys.opba.tpp.ais.api.model.generated.AccountReport;
-import de.adorsys.opba.tpp.ais.api.model.generated.Balance;
 import de.adorsys.opba.tpp.ais.api.model.generated.TransactionDetails;
 import de.adorsys.opba.tpp.ais.api.model.generated.TransactionsResponse;
 import lombok.RequiredArgsConstructor;
@@ -32,7 +26,6 @@ import org.springframework.transaction.support.TransactionOperations;
 import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.time.ZoneOffset;
-import java.time.format.DateTimeFormatter;
 import java.util.List;
 import java.util.UUID;
 import java.util.concurrent.atomic.AtomicInteger;
@@ -156,6 +149,14 @@ public class FireFlyTransactionExporter {
             split.setBookDate(transaction.getBookingDate().atStartOfDay().atZone(ZoneOffset.UTC).format(FIREFLY_DATE_FORMAT));
         }
 
+        parseTransactionAmount(transaction, split);
+        split.setCurrencyCode(transaction.getTransactionAmount().getCurrency());
+        fireflyTransaction.setTransactions(ImmutableList.of(split));
+
+        transactionsApi.storeTransaction(fireflyTransaction);
+    }
+
+    private void parseTransactionAmount(TransactionDetails transaction, TransactionSplit split) {
         BigDecimal amount = new BigDecimal(transaction.getTransactionAmount().getAmount());
         if (amount.compareTo(BigDecimal.ZERO) < 0) {
             split.setAmount(amount.negate().toPlainString());
@@ -170,11 +171,6 @@ public class FireFlyTransactionExporter {
             split.setDestinationName(transaction.getDebtorAccount().getIban());
             split.setDestinationIban(transaction.getDebtorAccount().getIban());
         }
-
-        split.setCurrencyCode(transaction.getTransactionAmount().getCurrency());
-        fireflyTransaction.setTransactions(ImmutableList.of(split));
-
-        transactionsApi.storeTransaction(fireflyTransaction);
     }
 
     private String buildDescription(TransactionDetails transaction) {
