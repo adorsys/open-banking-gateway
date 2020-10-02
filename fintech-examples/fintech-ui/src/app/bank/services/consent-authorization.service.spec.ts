@@ -5,7 +5,7 @@ import { TestBed } from '@angular/core/testing';
 import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { ConsentAuthorizationService } from './consent-authorization.service';
 import { RouterTestingModule } from '@angular/router/testing';
-import { Consent, LoARetrievalInformation, Payment } from '../../models/consts';
+import { Consent, Payment } from '../../models/consts';
 
 describe('ConsentAuthorizationService', () => {
   let router: Router;

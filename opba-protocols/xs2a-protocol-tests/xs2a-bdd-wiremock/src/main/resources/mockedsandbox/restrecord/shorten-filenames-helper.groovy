@@ -25,7 +25,7 @@ String hashValue(String nameWithoutExt) {
     def result
     def segments = [
             "body", "v1", "accounts", "consents", "parameters", "provide", "more", "psu", "password", "sca", "result",
-            "LIST_TRANSACTIONS", "sagas"
+            "LIST_TRANSACTIONS", "sagas", "server", "token"
     ]
 
     for (int i = 0; i < split.length; i++) {

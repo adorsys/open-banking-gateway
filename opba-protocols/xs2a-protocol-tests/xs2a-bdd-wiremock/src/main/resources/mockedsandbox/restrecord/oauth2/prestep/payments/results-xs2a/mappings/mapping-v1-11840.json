@@ -1,0 +1,45 @@
+{
+  "id": "30a46816-9603-34f6-b9d2-2fc1809be21f",
+  "priority": 100,
+  "request": {
+    "url": "/v1/payments/sepa-credit-transfers",
+    "method": "POST",
+    "headers": {
+      "X-Request-ID": {
+        "matches": ".+"
+      },
+      "PSU-ID": {
+        "equalTo": "anton.brueckner"
+      },
+      "TPP-Nok-Redirect-URI": {
+        "matches": "http://localhost:\\d+/v1/consent/.+/fromAspsp/STUB_STATE/nok\\?redirectCode=.+"
+      },
+      "PSU-IP-Address": {
+        "matches": "\\b((25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)(\\.|$)){4}\\b"
+      },
+      "TPP-Redirect-URI": {
+        "matches": "http://localhost:\\d+/v1/consent/.+/fromAspsp/STUB_STATE/ok\\?redirectCode=.+"
+      },
+      "Content-Type": {
+        "equalTo": "application/json; charset=UTF-8"
+      }
+    },
+    "bodyPatterns": [
+      {
+        "equalToJson": "{\"creditorAccount\":{\"currency\":\"EUR\",\"iban\":\"DE80760700240271232400\"},\"creditorAddress\":{\"buildingNumber\":\"56\",\"townName\":\"Nürnberg\",\"country\":\"DE\",\"postCode\":\"90543\",\"streetName\":\"WBG Straße\"},\"creditorAgent\":\"AAAADEBBXXX\",\"creditorName\":\"WBG\",\"debtorAccount\":{\"currency\":\"EUR\",\"iban\":\"DE80760700240271232400\"},\"endToEndIdentification\":\"WBG-123456789\",\"instructedAmount\":{\"currency\":\"EUR\",\"amount\":\"1.03\"},\"remittanceInformationUnstructured\":\"Ref. Number WBG-1222\"}",
+        "ignoreArrayOrder": true,
+        "ignoreExtraElements": true
+      }
+    ]
+  },
+  "response": {
+    "status": 401,
+    "bodyFileName": "body-v1-11840.json",
+    "headers": {
+      "Content-Type": "application/json;charset=ISO-8859-1",
+      "Date": "Wed, 09 Sep 2020 12:16:47 GMT",
+      "Keep-Alive": "timeout=60"
+    }
+  },
+  "uuid": "30a46816-9603-34f6-b9d2-2fc1809be21f"
+}

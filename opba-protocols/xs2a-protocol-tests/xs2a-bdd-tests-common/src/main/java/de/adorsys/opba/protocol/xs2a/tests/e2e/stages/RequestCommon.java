@@ -18,6 +18,7 @@ import io.restassured.RestAssured;
 import io.restassured.http.Cookie;
 import io.restassured.response.ExtractableResponse;
 import io.restassured.response.Response;
+import lombok.Getter;
 import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -62,6 +63,7 @@ public class RequestCommon<SELF extends RequestCommon<SELF>> extends Stage<SELF>
     @ProvidedScenarioState
     protected String serviceSessionId;
 
+    @Getter
     @ProvidedScenarioState
     protected String redirectCode;
 

@@ -1,0 +1,59 @@
+{
+  "id": "0525d88e-84fb-316a-a7e4-b57a1d1ef1f4",
+  "priority": 10,
+  "request": {
+    "url": "/v1/consents",
+    "method": "POST",
+    "headers": {
+      "Accept": {
+        "equalTo": "application/json"
+      },
+      "X-Request-ID": {
+        "matches": ".+"
+      },
+      "PSU-ID": {
+        "equalTo": "anton.brueckner"
+      },
+      "Authorization": {
+        "equalTo": "Bearer eyJraWQiOiJFWmtfUDNHd1I2OG9iUEwzSGxDbng0IiwiYWxnIjoiSFMyNTYifQ.eyJzdWIiOiJkMGF1dUlxN1J6QXR6dkNEVDh6bV9vIiwidG9rZW5fdXNhZ2UiOiJMT0dJTiIsInJvbGUiOiJDVVNUT01FUiIsInNjYV9pZCI6Im12RU5SbE5pU3NjcXJuWVNqdnZnYlUiLCJhdXRob3Jpc2F0aW9uX2lkIjoibXZFTlJsTmlTc2Nxcm5ZU2p2dmdiVSIsImV4cCI6MTU5OTY1Mzk5NywibG9naW4iOiJhbnRvbi5icnVlY2tuZXIiLCJpYXQiOjE1OTk2NTM2OTcsImp0aSI6ImdMeVZoZlVLUmdRaU9vbmpaMzVqakkifQ.d3A5uBRFkDcpY8IvYHf3niiDA_BmDgp5aIuoaT2t4xE"
+      },
+      "TPP-Nok-Redirect-URI": {
+        "matches": "http://localhost:\\d+/v1/consent/.+/fromAspsp/STUB_STATE/nok\\?redirectCode=.+"
+      },
+      "PSU-IP-Address": {
+        "matches": "\\b((25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)(\\.|$)){4}\\b"
+      },
+      "TPP-Redirect-URI": {
+        "matches": "http://localhost:\\d+/v1/consent/.+/fromAspsp/STUB_STATE/ok\\?redirectCode=.+"
+      },
+      "Content-Type": {
+        "equalTo": "application/json; charset=UTF-8"
+      }
+    },
+    "bodyPatterns": [
+      {
+        "equalToJson": "{\"access\":{\"availableAccounts\":\"allAccounts\"},\"recurringIndicator\":true,\"validUntil\":\"2030-01-31\",\"frequencyPerDay\":12}",
+        "ignoreArrayOrder": true,
+        "ignoreExtraElements": true
+      }
+    ]
+  },
+  "response": {
+    "status": 201,
+    "bodyFileName": "body-v1-consents-55757.json",
+    "headers": {
+      "Vary": [
+        "Origin",
+        "Access-Control-Request-Method",
+        "Access-Control-Request-Headers"
+      ],
+      "Aspsp-Sca-Approach": "REDIRECT",
+      "Location": "http://localhost:30014/v1/consents/_u256Sn8f2aMQeZaiUrWtuh7zXnMpR6o8_SUdooTL5sc4bL8QLEqlKbS7wLoZPA-ZsZpAsGww5pV2fCcy_LdN8z9MpaJIQIH3NJX8IHgetw=_=_psGLvQpt9Q",
+      "X-Request-Id": "12b34483-242a-428b-8295-2f4805bb0a30",
+      "Content-Type": "application/json",
+      "Date": "Wed, 09 Sep 2020 12:14:59 GMT",
+      "Keep-Alive": "timeout=60"
+    }
+  },
+  "uuid": "0525d88e-84fb-316a-a7e4-b57a1d1ef1f4"
+}

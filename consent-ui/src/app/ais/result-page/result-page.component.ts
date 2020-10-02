@@ -44,11 +44,11 @@ export class ResultPageComponent implements OnInit {
     this.loadRedirectUri(this.authorizationId, redirectCode);
   }
 
-  onConfirm() {
+  private onConfirm() {
     window.location.href = this.redirectTo;
   }
 
-  onDeny() {
+  private onDeny() {
     this.updateConsentAuthorizationService
       .denyUsingPOST(
         this.authorizationId,

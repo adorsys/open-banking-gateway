@@ -1,0 +1,6 @@
+{
+  "authorization_endpoint": "http://localhost:4400/payment-initiation/login?redirectId=a0bf9d98-0f52-4e48-8b82-5a05d61eea4a&paymentId=n2p3ojqm6ueavh_0wqdFfQbQa9XyPsnQOW2oFsPfDW3XCdoAx3AMFYiDbe-nvEQ3cgftJbETkzvNvu5mZQqWcA==_=_psGLvQpt9Q&oauth2=true",
+  "token_endpoint": "http://{{request.headers.Host}}/oauth/token",
+  "response_types_supported": ["CODE"],
+  "grant_types_supported": ["AUTHORISATION_CODE"]
+}

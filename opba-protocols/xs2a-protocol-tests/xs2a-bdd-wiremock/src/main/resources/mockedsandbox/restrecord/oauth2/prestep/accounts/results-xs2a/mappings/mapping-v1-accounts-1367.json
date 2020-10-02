@@ -1,0 +1,37 @@
+{
+  "id": "59e2be51-2dd3-3fc1-b19d-8ee049cb28c9",
+  "request": {
+    "url": "/v1/accounts/sCPf7hrmSf4tYXF2X8b7r8/transactions?dateTo=2020-09-09&bookingStatus=both&dateFrom=1970-01-01",
+    "method": "GET",
+    "headers": {
+      "Authorization": {
+        "equalTo": "Bearer eyJraWQiOiJFWmtfUDNHd1I2OG9iUEwzSGxDbng0IiwiYWxnIjoiSFMyNTYifQ.eyJzdWIiOiJkMGF1dUlxN1J6QXR6dkNEVDh6bV9vIiwidG9rZW5fdXNhZ2UiOiJMT0dJTiIsInJvbGUiOiJDVVNUT01FUiIsInNjYV9pZCI6Im12RU5SbE5pU3NjcXJuWVNqdnZnYlUiLCJhdXRob3Jpc2F0aW9uX2lkIjoibXZFTlJsTmlTc2Nxcm5ZU2p2dmdiVSIsImV4cCI6MTU5OTY1Mzk5NywibG9naW4iOiJhbnRvbi5icnVlY2tuZXIiLCJpYXQiOjE1OTk2NTM2OTcsImp0aSI6ImdMeVZoZlVLUmdRaU9vbmpaMzVqakkifQ.d3A5uBRFkDcpY8IvYHf3niiDA_BmDgp5aIuoaT2t4xE"
+      },
+      "Accept": {
+        "equalTo": "application/json"
+      },
+      "X-Request-ID": {
+        "matches": ".+"
+      },
+      "PSU-ID": {
+        "equalTo": "anton.brueckner"
+      }
+    }
+  },
+  "response": {
+    "status": 200,
+    "bodyFileName": "body-v1-accounts-1367.json",
+    "headers": {
+      "Vary": [
+        "Origin",
+        "Access-Control-Request-Method",
+        "Access-Control-Request-Headers"
+      ],
+      "X-Request-Id": "d00299d6-0542-46f1-9054-31ae436c8a3c",
+      "Content-Type": "application/json",
+      "Date": "Wed, 09 Sep 2020 12:15:44 GMT",
+      "Keep-Alive": "timeout=60"
+    }
+  },
+  "uuid": "59e2be51-2dd3-3fc1-b19d-8ee049cb28c9"
+}

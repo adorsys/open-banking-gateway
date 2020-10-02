@@ -2,6 +2,8 @@ package de.adorsys.opba.protocol.xs2a.tests.e2e.wiremock.mocks;
 
 import com.github.tomakehurst.wiremock.WireMockServer;
 import com.github.tomakehurst.wiremock.core.WireMockConfiguration;
+import com.github.tomakehurst.wiremock.extension.responsetemplating.ResponseTemplateTransformer;
+import com.google.common.io.Resources;
 import com.tngtech.jgiven.annotation.AfterScenario;
 import com.tngtech.jgiven.annotation.ProvidedScenarioState;
 import com.tngtech.jgiven.integration.spring.JGivenStage;
@@ -26,6 +28,7 @@ import java.io.File;
 import java.io.IOException;
 import java.net.URL;
 import java.nio.file.Path;
+import java.util.Arrays;
 
 /**
  * Runs Sandbox as json-backed mock.
@@ -68,6 +71,36 @@ public class MockServers<SELF extends MockServers<SELF>> extends CommonGivenStag
         return self();
     }
 
+    public SELF oauth2_prestep_mock_of_sandbox_for_anton_brueckner_accounts_running(Path tempDir) {
+        mergeWireMockFixtures(
+                tempDir,
+                "mockedsandbox/restrecord/oauth2/prestep/accounts/results-oauth2",
+                "mockedsandbox/restrecord/oauth2/prestep/accounts/results-xs2a"
+        );
+
+        WireMockConfiguration config = WireMockConfiguration.options().dynamicPort()
+                .usingFilesUnderClasspath(tempDir.toAbsolutePath().toString())
+                .extensions(new ResponseTemplateTransformer(false));
+        startWireMock(config);
+
+        return self();
+    }
+
+    public SELF oauth2_integrated_mock_of_sandbox_for_anton_brueckner_accounts_running(Path tempDir) {
+        mergeWireMockFixtures(
+                tempDir,
+                "mockedsandbox/restrecord/oauth2/integrated/accounts/results-oauth2",
+                "mockedsandbox/restrecord/oauth2/integrated/accounts/results-xs2a"
+        );
+
+        WireMockConfiguration config = WireMockConfiguration.options().dynamicPort()
+                .usingFilesUnderClasspath(tempDir.toAbsolutePath().toString())
+                .extensions(new ResponseTemplateTransformer(false));
+        startWireMock(config);
+
+        return self();
+    }
+
     public SELF redirect_mock_of_sandbox_for_anton_brueckner_accounts_running_for_non_happy_path() {
         WireMockConfiguration config = WireMockConfiguration.options().dynamicPort()
                                                .usingFilesUnderClasspath("mockedsandbox/restrecord-nonhappy/redirect/accounts/sandbox/");
@@ -79,12 +112,7 @@ public class MockServers<SELF extends MockServers<SELF>> extends CommonGivenStag
     public SELF redirect_mock_of_sandbox_nopsu_for_anton_brueckner_accounts_running_for_non_happy_path(Path tempDir) {
         URL resource = getClass().getClassLoader().getResource("mockedsandbox/restrecord-nonhappy/redirect/accounts/sandbox/");
         URL resource2 = getClass().getClassLoader().getResource("mockedsandbox/restrecord-nonhappy/redirect/accounts/sandboxnopsu/");
-        try {
-            FileSystemUtils.copyRecursively(new File(resource.getFile()), tempDir.toFile());
-            FileSystemUtils.copyRecursively(new File(resource2.getFile()), tempDir.toFile());
-        } catch (IOException e) {
-            log.error("files copy to temporary directory error", e);
-        }
+        mergeWireMockFixtures(tempDir, resource, resource2);
 
         WireMockConfiguration config = WireMockConfiguration.options().dynamicPort()
                                                .usingFilesUnderDirectory(tempDir.toString());
@@ -109,15 +137,40 @@ public class MockServers<SELF extends MockServers<SELF>> extends CommonGivenStag
         return self();
     }
 
+    public SELF oauth2_prestep_mock_of_sandbox_for_anton_brueckner_payments_running(Path tempDir) {
+        mergeWireMockFixtures(
+                tempDir,
+                "mockedsandbox/restrecord/oauth2/prestep/payments/results-oauth2",
+                "mockedsandbox/restrecord/oauth2/prestep/payments/results-xs2a"
+        );
+
+        WireMockConfiguration config = WireMockConfiguration.options().dynamicPort()
+                .usingFilesUnderClasspath(tempDir.toAbsolutePath().toString())
+                .extensions(new ResponseTemplateTransformer(false));
+        startWireMock(config);
+
+        return self();
+    }
+
+    public SELF oauth2_integrated_mock_of_sandbox_for_anton_brueckner_payments_running(Path tempDir) {
+        mergeWireMockFixtures(
+                tempDir,
+                "mockedsandbox/restrecord/oauth2/integrated/payments/results-oauth2",
+                "mockedsandbox/restrecord/oauth2/integrated/payments/results-xs2a"
+        );
+
+        WireMockConfiguration config = WireMockConfiguration.options().dynamicPort()
+                .usingFilesUnderClasspath(tempDir.toAbsolutePath().toString())
+                .extensions(new ResponseTemplateTransformer(false));
+        startWireMock(config);
+
+        return self();
+    }
+
     public SELF embedded_mock_of_sandbox_for_max_musterman_accounts_running_with_balance_for_happy_path(Path tempDir) {
         URL resource1 = getClass().getClassLoader().getResource("mockedsandbox/restrecord/embedded/multi-sca/accounts/sandbox/");
         URL resource2 = getClass().getClassLoader().getResource("mockedsandbox/restrecord/embedded/multi-sca/accounts-with-balance/sandbox/");
-        try {
-            FileSystemUtils.copyRecursively(new File(resource1.getFile()), tempDir.toFile());
-            FileSystemUtils.copyRecursively(new File(resource2.getFile()), tempDir.toFile());
-        } catch (IOException e) {
-            log.error("files copy to temporary directory error", e);
-        }
+        mergeWireMockFixtures(tempDir, resource1, resource2);
 
         WireMockConfiguration config = WireMockConfiguration.options().dynamicPort()
             .usingFilesUnderDirectory(tempDir.toString());
@@ -215,6 +268,7 @@ public class MockServers<SELF extends MockServers<SELF>> extends CommonGivenStag
         sandbox.start();
         BankProfile bankProfile = bankProfileJpaRepository.findByBankUuid("53c47f54-b9a4-465a-8f77-bc6cd5f0cf46").get();
         bankProfile.setUrl("http://localhost:" + sandbox.port());
+        bankProfile.setIdpUrl("http://localhost:" + sandbox.port() + "/oauth/authorization-server");
         bankProfileJpaRepository.save(bankProfile);
 
         Assertions.assertThat(sandbox).isNotNull();
@@ -318,5 +372,20 @@ public class MockServers<SELF extends MockServers<SELF>> extends CommonGivenStag
         ignoreValidationRuleRepository.save(bankValidationRuleForAuth);
 
         return self();
+    }
+
+    private void mergeWireMockFixtures(Path destination, String... resources) {
+        mergeWireMockFixtures(destination, Arrays.stream(resources).map(Resources::getResource).toArray(URL[]::new));
+    }
+
+    private void mergeWireMockFixtures(Path destination, URL... resources) {
+        try {
+            for (URL resource : resources) {
+                FileSystemUtils.copyRecursively(new File(resource.getFile()), destination.toFile());
+            }
+        } catch (IOException ex) {
+            log.error("files copy to temporary directory error", ex);
+            throw new RuntimeException(ex);
+        }
     }
 }
