@@ -18,14 +18,35 @@ import java.time.Instant;
 @EntityListeners(AuditingEntityListener.class)
 public class TransactionExportJob {
 
+    private static final int MAX_ERROR_LEN = 64;
+    
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "transaction_export_id_generator")
     @SequenceGenerator(name = "transaction_export_id_generator", sequenceName = "transaction_export_id_seq")
     private long id;
+
+    private long accountsExported;
+
+    private long numAccountsToExport;
+
+    private long numAccountsErrored;
+
+    private String lastErrorMessage;
+
+    private boolean completed;
 
     @CreatedDate
     private Instant createdAt;
 
     @LastModifiedDate
     private Instant modifiedAt;
+
+    public void setLastErrorMessage(String lastErrorMessage) {
+        if (null == lastErrorMessage) {
+            this.lastErrorMessage = null;
+            return;
+        }
+
+        this.lastErrorMessage = lastErrorMessage.substring(0, Math.min(lastErrorMessage.length(), MAX_ERROR_LEN));
+    }
 }

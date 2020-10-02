@@ -20,7 +20,7 @@ import java.time.format.DateTimeFormatter;
 @Slf4j
 @Service
 @RequiredArgsConstructor
-public class FireFlyExporter {
+public class FireFlyAccountExporter {
 
     private static final String OPBA_ID_PREFIX = "OPBA-ID:";
     // Format is: Mon Sep 17 03:00:00 EEST 2018
