@@ -28,7 +28,7 @@ public class NonHappyPaymentResult<SELF extends NonHappyPaymentResult<SELF>> ext
     protected String authSessionCookie;
 
     @ProvidedScenarioState
-    protected String serviceSessionId;
+    protected String paymentServiceSessionId;
 
     @ProvidedScenarioState
     protected String redirectCode;
@@ -43,7 +43,7 @@ public class NonHappyPaymentResult<SELF extends NonHappyPaymentResult<SELF>> ext
                     .contentType(APPLICATION_JSON_VALUE)
                     .body("{}")
                 .when()
-                    .post(DENY_PAYMENT_ENDPOINT, serviceSessionId)
+                    .post(DENY_PAYMENT_ENDPOINT, paymentServiceSessionId)
                 .then()
                     .statusCode(ACCEPTED.value())
                     .header(LOCATION, "http://localhost:4444/redirect-after-consent-denied");
@@ -61,7 +61,7 @@ public class NonHappyPaymentResult<SELF extends NonHappyPaymentResult<SELF>> ext
                     .contentType(APPLICATION_JSON_VALUE)
                     .body("{}")
                 .when()
-                    .post(DENY_PAYMENT_ENDPOINT, serviceSessionId)
+                    .post(DENY_PAYMENT_ENDPOINT, paymentServiceSessionId)
                 .then()
                     .statusCode(INTERNAL_SERVER_ERROR.value())
                     .body("message", is("Unable to drop payment after it was authorized"));
