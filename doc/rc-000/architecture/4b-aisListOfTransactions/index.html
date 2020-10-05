@@ -1,0 +1,350 @@
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  
+  <link rel="shortcut icon" href="../../img/favicon.ico">
+  <title>List of Transactions - Open Banking Gateway Documentation</title>
+  <link href='https://fonts.googleapis.com/css?family=Lato:400,700|Roboto+Slab:400,700|Inconsolata:400,700' rel='stylesheet' type='text/css'>
+
+  <link rel="stylesheet" href="../../css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../../css/theme_extra.css" type="text/css" />
+  <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/styles/github.min.css">
+  
+  <script>
+    // Current page data
+    var mkdocs_page_name = "List of Transactions";
+    var mkdocs_page_input_path = "architecture/4b-aisListOfTransactions.md";
+    var mkdocs_page_url = null;
+  </script>
+  
+  <script src="../../js/jquery-2.1.1.min.js" defer></script>
+  <script src="../../js/modernizr-2.8.3.min.js" defer></script>
+  <script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/highlight.min.js"></script>
+  <script>hljs.initHighlightingOnLoad();</script> 
+  
+</head>
+
+<body class="wy-body-for-nav" role="document">
+
+  <div class="wy-grid-for-nav">
+
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side stickynav">
+      <div class="wy-side-nav-search">
+        <a href="../.." class="icon icon-home"> Open Banking Gateway Documentation</a>
+        <div role="search">
+  <form id ="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" title="Type search term here" />
+  </form>
+</div>
+      </div>
+
+      <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+	<ul class="current">
+	  
+          
+            <li class="toctree-l1">
+		
+    <a class="" href="../..">Home</a>
+	    </li>
+          
+            <li class="toctree-l1">
+		
+    <a class="" href="../../getting_started/">Getting started</a>
+	    </li>
+          
+            <li class="toctree-l1">
+		
+    <a class="" href="../../ContributionGuidelines/">Contibution Guidelines</a>
+	    </li>
+          
+            <li class="toctree-l1">
+		
+    <a class="" href="../../roadmap/">Roadmap</a>
+	    </li>
+          
+            <li class="toctree-l1">
+		
+    <a class="" href="../../releasenotes/">Release notes</a>
+	    </li>
+          
+            <li class="toctree-l1">
+		
+    <a class="" href="../../version_policy/">Version policy</a>
+	    </li>
+          
+            <li class="toctree-l1">
+		
+    <a class="" href="../drafts/initial_requirements/">Initial Requirements</a>
+	    </li>
+          
+            <li class="toctree-l1">
+		
+    <span class="caption-text">Architecture</span>
+    <ul class="subnav">
+                <li class="">
+                    
+    <a class="" href="../dictionary/">Dictionary</a>
+                </li>
+                <li class="">
+                    
+    <a class="" href="../building_blocks/01.Application_context/">Application context</a>
+                </li>
+                <li class="">
+                    
+    <a class="" href="../building_blocks/02.Component_diagrams/">Component diagrams</a>
+                </li>
+    </ul>
+	    </li>
+          
+            <li class="toctree-l1">
+		
+    <span class="caption-text">Concepts</span>
+    <ul class="subnav">
+                <li class="">
+                    
+    <a class="" href="../concepts/psu-security-concept/">PSU Security Concept</a>
+                </li>
+    </ul>
+	    </li>
+          
+            <li class="toctree-l1">
+		
+    <span class="caption-text">Use cases</span>
+    <ul class="subnav">
+                <li class="">
+                    
+    <a class="" href="../use_cases/">Use cases</a>
+                </li>
+                <li class="">
+                    
+    <a class="" href="../1-loginWithFinTech/">Login with FinTech Application</a>
+                </li>
+                <li class="">
+                    
+    <a class="" href="../2-searchBank/">Search bank</a>
+                </li>
+                <li class="">
+                    
+    <a class="" href="../3-selectBank/">Select bank</a>
+                </li>
+                <li class="">
+                    
+    <a class="" href="../4a-aisListOfAccounts/">List of Accounts</a>
+                </li>
+                <li class=" current">
+                    
+    <a class="current" href="./">List of Transactions</a>
+    <ul class="subnav">
+            
+    <li class="toctree-l3"><a href="#list-of-transactions">List Of Transactions</a></li>
+    
+        <ul>
+        
+            <li><a class="toctree-l4" href="#definition">Definition</a></li>
+        
+            <li><a class="toctree-l4" href="#diagram">Diagram</a></li>
+        
+            <li><a class="toctree-l4" href="#use-cases">Use Cases</a></li>
+        
+        </ul>
+    
+
+    </ul>
+                </li>
+                <li class="">
+                    
+    <a class="" href="../5-redirectPsuToConsentAPI/">Redirect to Consent Authorization API</a>
+                </li>
+                <li class="">
+                    
+    <a class="" href="../5a-psuAuthEmbeddedConsent/">Authorize Consent Embedded Approach</a>
+                </li>
+                <li class="">
+                    
+    <a class="" href="../5b-psuAuthRedirectConsent/">Authorize Consent Redirect Approach</a>
+                </li>
+                <li class="">
+                    
+    <a class="" href="../6-consume_api/">Consume Service</a>
+                </li>
+    </ul>
+	    </li>
+          
+            <li class="toctree-l1">
+		
+    <a class="" href="../drafts/initial_requirements/">Draft</a>
+	    </li>
+          
+            <li class="toctree-l1">
+		
+    <a class="" href="../../initial_requirements/">Initial requirements</a>
+	    </li>
+          
+        </ul>
+      </div>
+      &nbsp;
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" role="navigation" aria-label="top navigation">
+        <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+        <a href="../..">Open Banking Gateway Documentation</a>
+      </nav>
+
+      
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="breadcrumbs navigation">
+  <ul class="wy-breadcrumbs">
+    <li><a href="../..">Docs</a> &raquo;</li>
+    
+      
+        
+          <li>Use cases &raquo;</li>
+        
+      
+    
+    <li>List of Transactions</li>
+    <li class="wy-breadcrumbs-aside">
+      
+        <a href="https://github.com/adorsys/open-banking-gateway/edit/master/docs/architecture/4b-aisListOfTransactions.md"
+          class="icon icon-github"> Edit on GitHub</a>
+      
+    </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main">
+            <div class="section">
+              
+                <h1 id="list-of-transactions">List Of Transactions</h1>
+<p>General terms defined in the <a href="../dictionary/">dictionary</a></p>
+<h2 id="definition">Definition</h2>
+<p>Request the list of transactions for a given bank account. </p>
+<p>If there is any reference to an existing account information consent (AisConsent) stored in the database of the TPP, the TPP will use this consent reference to forward the service request to the OpenBanking interface of the ASPSP.</p>
+<p>If there is no such reference in the database of the TPP, the TPP will respond the FinTech to redirect the PSU to the ConsentAuthorizationApi of the TPP.</p>
+<p>In order to uniquely identify the requesting PSU, the TPP uses a unique reference made out of:
+- the fintechId : the unique identifier of this FinTech in the realm of the TPP. This parameter is read from the <a href="../dictionary/#FinTechContext">FinTechContext</a> transported as jwt-Token in the Authorization header of each FinTech request to the TPP.
+- the psu-id@fintech : the unique identifier of the PSU in the realm of the FinTech.  This parameter is transported in the HttpHeader named: Fintech-User-ID</p>
+<h2 id="diagram">Diagram</h2>
+<p><img alt="Session diagram" src="http://www.plantuml.com/plantuml/proxy?src=https://raw.githubusercontent.com/adorsys/open-banking-gateway/develop/docs/architecture/diagrams/useCases/4b-aisListOfTransactions.puml&amp;fmt=svg&amp;vvv=1&amp;sanitize=true" />  </p>
+<h2 id="use-cases">Use Cases</h2>
+<h3 id="lot-010-fintechuidisplaybankaccountbankaccount">LoT-010 FinTechUI.displayBankAccount(BankAccount)</h3>
+<p>After receiving the list of accounts, the FinTechUI can dsiplay a single bank account to the PSU.</p>
+<h3 id="lot-020-fintechuiselectservicelisttransactions">LoT-020 : FinTechUI.selectService(listTransactions)</h3>
+<p>On of the services available when the FinTechUI present bank account details to the PSU is the "listOfTransactions". If selected by the PSU, the FinTechUI forwards the service call to the FinTechApi. The selection must be accompanied with some mandatory and optional service specifications. For example in the case of listOfTransactions, this the account-id is part of the request path and indicates the target account. The ListTransactionsSpec is used to describe additional optional request parameters.</p>
+<h3 id="loa-021-fintechuireadredirecturlsfintech-redirect-url-okfintech-redirect-url-nok">LoA-021 : FinTechUI.readRedirectUrls(Fintech-Redirect-URL-OK,Fintech-Redirect-URL-NOK)</h3>
+<p>Read the redirect urls associated with this context. These are URL used to start the UI from the ConsentAuthorizeAPI.</p>
+<h3 id="lot-030-fintechapilistoftransactions"><a name="LoT-030"></a>LoT-030 : FinTechApi.listOfTransactions</h3>
+<p>Call specification: See [](See <a href="https://github.com/adorsys/open-banking-gateway/blob/develop/fintech-examples/fintech-api/src/main/resources/static/fintech_api.yml#/v1/ais/banks/{bank-id}/accounts/{account-id}/transactions:">FinTechApi.listOfAccounts</a></p>
+<p>The FinTechUI issues a listOfTransactions request to the FinTechAPI with:
+- <strong>SessionCookie and X-XSRF-TOKEN:</strong> The SessionCookie used to maintain association between FinTechUI and FinTechApi. It holds a session identifier. A corresponding XSRF-TOKEN is sent back and forth though the header and used to authenticate the SessionCookie.
+- <strong>The bank-id:</strong> passed as a query parameter and referencing the given <a href="../dictionary/#BankProfile">BankProfile</a> that contains meta information associated with the selected Bank.
+- <strong>The account-id:</strong> is sent as a path parameter and references the target bank account.
+- <strong>dateFrom:</strong> Starting date (inclusive the date dateFrom) of the transaction list, mandated if no delta access is required. For booked transactions, the relevant date is the booking date. For pending transactions, the relevant date is the entry date, which may not be transparent neither in this API nor other channels of the ASPSP.
+- <strong>dateTo:</strong> End date (inclusive the data dateTo) of the transaction list, default is "now" if not given. Might be ignored if a delta function is used. For booked transactions, the relevant date is the booking date. For pending transactions, the relevant date is the entry date, which may not be transparent neither in this API nor other channels of the ASPSP. 
+- <strong>deltaList:</strong> This data attribute indicates that the FinTech is in favour to get all transactions after the last report access for this PSU on the addressed account.<br />
+- <strong>entryReferenceFrom:</strong> This data attribute indicates that the FinTech is in favour to get all transactions after the transaction with identification entryReferenceFrom alternatively to the above defined period. This is an implementation of a delta access. If this data element is contained, the entries "dateFrom" and "dateTo" might be ignored by the ASPSP.
+- <strong>bookingStatus:</strong> To support the "pending" and "both" feature is optional for the ASPSP, Error code if not supported in the online banking frontend Default is "booked".
+- <strong>X-Request-ID:</strong> unique identifier that identifies this request throughout the entire processing chain. Shall be contained in HTTP Response as well.</p>
+<h3 id="lot-031-fintechapicheckauthorization">LoT-031 : FinTechApi.checkAuthorization</h3>
+<p>Call specification: : checkAuthorization(SessionCookie,\nX-XSRF-TOKEN):psu-id@fintech
+Before proceeding with the request, the FinTechApi must validate the request for it authenticity and extract a unique identifier of the PSU in the world of the FinTech (psu-id@fintech). This validation also include the matching of the used cookie against the provided XSRF-Token.</p>
+<h3 id="lot-032-fintechapiuseragentcontext"><a name="LoT-032"></a>LoT-032 : FinTechApi.userAgentContext</h3>
+<p>Parses the HTTP request and extract information associated with the user agent (see <a href="../dictionary/#UserAgentContext">UserAgentContext</a>).
+The <strong><a href="../dictionary/#UserAgentContext">UserAgentContext</a></strong> describes details associated with the user agent of the PSU. Generally not visible in the API as they are automatically provided by the user agent. The purpose is to transfer context specific information on both current Request and PsuUserAgent. Those information might later be required by the ASPSP like. Below is a non exhaustive list of UserAgent specific context information:
+  * IP-Address,
+  * IP-Port,
+  * Accept,
+  * Accept-Charset,
+  * Accept-Encoding,
+  * Accept-Language,
+  * Device-ID,
+  * User-Agent,
+  * PSU-Geo-Location,
+  * Http-Method.</p>
+<h3 id="lot-033-fintechapiloadservicesession">LoT-033 : FinTechApi.loadServiceSession</h3>
+<p>Uses the given psu-id and service type to load a corresponding service session if the FinTech judges the request of the PSU is the repetition of an existing service request.</p>
+<h3 id="lot-040-tppbankingapilistoftransactions">LoT-040 : TppBankingApi.listOfTransactions</h3>
+<p>Forwards the PSU request to TPP. See <a href="https://github.com/adorsys/open-banking-gateway/blob/develop/opba-banking-rest-api/src/main/resources/static/tpp_banking_api_ais.yml#/v1/banking/ais/accounts/{account-id}/transactions:">TppBankingApi.listOfAccounts</a>.</p>
+<h3 id="lot-041-tppbankingapicheckauthorization">LoT-041 TppBankingApi.checkAuthorization</h3>
+<p>verifies the authenticity of the Authorization header "FinTechContext". Returns the extracted fintechId.</p>
+<h3 id="lot-042-tppbankingapiservicespec">LoT-042 TppBankingApi.serviceSpec</h3>
+<p>Put service parameter in a serviceSpec map for further processing.</p>
+<h3 id="lot-043-tppbankingapiservicecontext">LoT-043 TppBankingApi.serviceContext</h3>
+<p>Put all objects associated with the call into a generic ServiceContext object.</p>
+<h3 id="lot-050-lot-052-bankingprotocolfacadeservice">LoT-050 .. LoT-052 BankingProtocolFacade.service</h3>
+<p>See <a href="../4a-aisListOfAccounts/#LoA-050">ListOfAccounts</a></p>
+<h3 id="lot-060-lot-067-bankingprotocolservice">LoT-060 .. LoT-067 : BankingProtocol.service</h3>
+<p>See <a href="../4a-aisListOfAccounts/#LoA-060">ListOfAccounts</a></p>
+<h3 id="loa-070-080-no-suitable-consent-present-redirect">LoA-070 .. -080 : No Suitable Consent Present. Redirect</h3>
+<p>See <a href="../4a-aisListOfAccounts/#LoA-070">ListOfAccounts</a></p>
+<h3 id="loa-090-suitable-consent-present"><a name="LoA-090"></a>LoA-090 Suitable Consent Present</h3>
+<p>If there is a suitable consent reference in the database of the TPP, this will be loaded and used to forward request to the ASPSP.</p>
+<h3 id="loa-091-forward-service-request-to-aspsp"><a name="LoA-091"></a>LoA-091 : Forward Service Request to ASPSP</h3>
+<p>Service request is forwarded to the <a href="../dictionary/#AspspBankingApi">AspspBankingApi</a> together with a reference to an AisConsent. The Associated <a href="../dictionary/#TppContext">TppContext</a> contains TPP identifying information.</p>
+<h3 id="loa-092-loa-95-returned-service-response">LoA-092 .. LoA-95 : Returned Service Response</h3>
+<p>The returned ListOfTransactionsResponse is wrapped into a BankingProtocolResponse<ListOfTransactions> that will travel through the call chain back to the FinTechApi.</p>
+<h3 id="loa-096-fintechapistoreservicesessionid">LoA-096 FinTechApi.storeServiceSessionId</h3>
+<p>The FinTechApi will first store the service session for future reference.</p>
+<h3 id="loa-096-fintechapi200_accounts">LoA-096 FinTechApi:200_Accounts</h3>
+<p>The FinTechApi returns the payload to the FinTechUI together with a new SessionCookie. </p>
+              
+            </div>
+          </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+        <a href="../5-redirectPsuToConsentAPI/" class="btn btn-neutral float-right" title="Redirect to Consent Authorization API">Next <span class="icon icon-circle-arrow-right"></span></a>
+      
+      
+        <a href="../4a-aisListOfAccounts/" class="btn btn-neutral" title="List of Accounts"><span class="icon icon-circle-arrow-left"></span> Previous</a>
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <!-- Copyright etc -->
+    
+  </div>
+
+  Built with <a href="http://www.mkdocs.org">MkDocs</a> using a <a href="https://github.com/snide/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>.
+</footer>
+      
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+
+  <div class="rst-versions" role="note" style="cursor: pointer">
+    <span class="rst-current-version" data-toggle="rst-current-version">
+      
+          <a href="https://github.com/adorsys/open-banking-gateway/" class="fa fa-github" style="float: left; color: #fcfcfc"> GitHub</a>
+      
+      
+        <span><a href="../4a-aisListOfAccounts/" style="color: #fcfcfc;">&laquo; Previous</a></span>
+      
+      
+        <span style="margin-left: 15px"><a href="../5-redirectPsuToConsentAPI/" style="color: #fcfcfc">Next &raquo;</a></span>
+      
+    </span>
+</div>
+    <script>var base_url = '../..';</script>
+    <script src="../../js/theme.js" defer></script>
+      <script src="../../search/main.js" defer></script>
+
+</body>
+</html>
