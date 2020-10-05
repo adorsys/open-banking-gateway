@@ -27,7 +27,7 @@ jobs:
           GPG_OWNERTRUST: ${{ secrets.GPG_OWNERTRUST }}
           STAGE_ARTIFACTORY_USERNAME: x-access-token
           STAGE_ARTIFACTORY_PASSWORD: ${{ secrets.GITHUB_TOKEN }}
-          GIT_BRANCH: master # Force branch to resolve to master if git resolution fails - otherwise gitflow-helper uses UNDEFINED branch
+          GIT_BRANCH: release # Force branch to resolve to master if git resolution fails - otherwise gitflow-helper uses UNDEFINED branch
 
       - name: Deploy develop artifacts to OpenShift
         run: ./scripts/deploy_openshift_release_candidate.sh
