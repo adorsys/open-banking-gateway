@@ -503,6 +503,9 @@
                             <releaseDeploymentRepository>release</releaseDeploymentRepository>
                             <stageDeploymentRepository>stage</stageDeploymentRepository>
                             <snapshotDeploymentRepository>stage</snapshotDeploymentRepository>
+
+                            <!-- Allow to promote on ANY branch because Github Actions checkouts tag, not branch (and forcing both seem impossible) -->
+                            <masterBranchPattern>.*</masterBranchPattern>
                         </configuration>
                         <executions>
                             <execution>
@@ -609,8 +612,8 @@
                             <stageDeploymentRepository>stage</stageDeploymentRepository>
                             <snapshotDeploymentRepository>stage</snapshotDeploymentRepository>
 
-                            <!-- Allow to promote on release/hotfix branches in addition to master -->
-                            <masterBranchPattern>(master)|(release/.*)|(hotfix/.*)</masterBranchPattern>
+                            <!-- Allow to promote on ANY branch because Github Actions checkouts tag, not branch (and forcing both seem impossible) -->
+                            <masterBranchPattern>.*</masterBranchPattern>
                         </configuration>
                         <executions>
                             <execution>
