@@ -14,7 +14,6 @@
             <!--GitHub packages deployment -->
             <!-- Staging Deployment -->
             <id>stage</id>
-            <username>${env.STAGE_ARTIFACTORY_USERNAME}</username>
             <password>${env.STAGE_ARTIFACTORY_PASSWORD}</password>
         </server>
     </servers>
