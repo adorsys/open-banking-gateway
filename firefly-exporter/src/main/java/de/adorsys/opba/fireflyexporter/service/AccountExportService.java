@@ -31,6 +31,7 @@ public class AccountExportService {
     private final AccountExportJobRepository exportJobRepository;
 
     @Transactional
+    @SuppressWarnings("CPD-START") // This is mostly example code how to use an application
     public ResponseEntity<Long> exportAccounts(String fireFlyToken, String bankId) {
         ResponseEntity<AccountList> accounts = aisApi.getAccounts(
                 bankingConfig.getDataProtectionPassword(),

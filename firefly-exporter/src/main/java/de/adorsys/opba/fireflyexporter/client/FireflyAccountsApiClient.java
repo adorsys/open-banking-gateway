@@ -1,7 +1,6 @@
 package de.adorsys.opba.fireflyexporter.client;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-
 import de.adorsys.opba.firefly.api.resource.generated.AccountsApi;
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.http.HttpHeaders;

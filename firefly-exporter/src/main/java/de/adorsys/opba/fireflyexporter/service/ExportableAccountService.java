@@ -6,9 +6,7 @@ import de.adorsys.opba.fireflyexporter.client.TppAisClient;
 import de.adorsys.opba.fireflyexporter.config.ApiConfig;
 import de.adorsys.opba.fireflyexporter.config.OpenBankingConfig;
 import de.adorsys.opba.fireflyexporter.dto.ExportableAccount;
-import de.adorsys.opba.fireflyexporter.entity.AccountExportJob;
 import de.adorsys.opba.fireflyexporter.entity.BankConsent;
-import de.adorsys.opba.fireflyexporter.repository.AccountExportJobRepository;
 import de.adorsys.opba.fireflyexporter.repository.BankConsentRepository;
 import de.adorsys.opba.tpp.ais.api.model.generated.AccountList;
 import lombok.RequiredArgsConstructor;
@@ -38,6 +36,7 @@ public class ExportableAccountService {
     private final FireFlyTokenProvider tokenProvider;
 
     @Transactional
+    @SuppressWarnings("CPD-START") // This is mostly example code how to use an application
     public ResponseEntity<List<ExportableAccount>> exportableAccounts(String fireFlyToken, String bankId) {
         ResponseEntity<AccountList> accounts = aisApi.getAccounts(
                 bankingConfig.getDataProtectionPassword(),
@@ -58,17 +57,14 @@ public class ExportableAccountService {
             String redirectTo = consentService.createConsentForAccountsAndTransactions(bankId);
             return ResponseEntity.accepted().header(LOCATION, redirectTo).build();
         }
-
         if (accounts.getStatusCode() != HttpStatus.OK) {
             return ResponseEntity.status(accounts.getStatusCode()).build();
         }
-
         tokenProvider.setToken(fireFlyToken);
         ResponseEntity<AccountArray> fireflyAccounts = accountsApi.listAccount(null, null, null);
         if (fireflyAccounts.getStatusCode() != HttpStatus.OK) {
             return ResponseEntity.status(fireflyAccounts.getStatusCode()).build();
         }
-
         Set<String> fireflyIbans = fireflyAccounts.getBody().getData().stream()
                 .map(it -> it.getAttributes().getIban())
                 .filter(Objects::nonNull)

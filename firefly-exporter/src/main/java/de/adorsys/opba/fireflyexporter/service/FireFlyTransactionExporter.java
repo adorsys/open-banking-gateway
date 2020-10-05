@@ -52,6 +52,7 @@ public class FireFlyTransactionExporter {
     private final TransactionExportJobRepository exportJobRepository;
 
     @Async
+    @SuppressWarnings("checkstyle:MethodLength") // Method length is mostly from long argument list to API call
     public void exportToFirefly(String fireFlyToken, long exportJobId, String bankId, List<String> accountsTransactionsToExport, LocalDate from, LocalDate to) {
         tokenProvider.setToken(fireFlyToken);
         Set<String> availableAccountsInFireFlyByIban = exportableAccounts.exportableAccounts(fireFlyToken, bankId).getBody().stream()
@@ -101,6 +102,7 @@ public class FireFlyTransactionExporter {
         });
     }
 
+    @SuppressWarnings("checkstyle:MethodLength") // Method length is mostly from long argument list to API call
     private void exportAccountsTransactionsToFireFly(
             long exportJobId,
             String bankId,
