@@ -99,6 +99,8 @@
         <maven-gpg-plugin.version>1.6</maven-gpg-plugin.version>
         <maven-javadoc-plugin>3.2.0</maven-javadoc-plugin>
 
+        <master-branch-pattern>.*</master-branch-pattern>
+
         <!-- Framework libs -->
         <spring-boot.version>2.2.4.RELEASE</spring-boot.version>
         <aspectj.version>1.9.5</aspectj.version>
@@ -506,7 +508,7 @@
                             <snapshotDeploymentRepository>stage</snapshotDeploymentRepository>
 
                             <!-- Allow to promote on ANY branch because Github Actions checkouts tag, not branch (and forcing both seem impossible) -->
-                            <masterBranchPattern>.*</masterBranchPattern>
+                            <masterBranchPattern>${master-branch-pattern}</masterBranchPattern>
                         </configuration>
                         <executions>
                             <execution>
@@ -614,7 +616,7 @@
                             <snapshotDeploymentRepository>stage</snapshotDeploymentRepository>
 
                             <!-- Allow to promote on ANY branch because Github Actions checkouts tag, not branch (and forcing both seem impossible) -->
-                            <masterBranchPattern>.*</masterBranchPattern>
+                            <masterBranchPattern>${master-branch-pattern}</masterBranchPattern>
                         </configuration>
                         <executions>
                             <execution>
