@@ -505,7 +505,7 @@
                             <snapshotDeploymentRepository>stage</snapshotDeploymentRepository>
 
                             <!-- Allow to promote on ANY branch because Github Actions checkouts tag, not branch (and forcing both seem impossible) -->
-                            <masterBranchPattern>.*</masterBranchPattern>
+                            <releaseBranchPattern>.*</releaseBranchPattern>
                         </configuration>
                         <executions>
                             <execution>
