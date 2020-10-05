@@ -18,6 +18,13 @@ jobs:
       - name: Build project and run test suite
         run: ./scripts/build_and_test.sh
 
+      - name: Deploy develop artifacts to OpenShift
+        run: ./scripts/deploy_openshift_release_candidate.sh
+        env:
+          OPENSHIFT_TOKEN: ${{ secrets.OPENSHIFT_TOKEN }}
+          RELEASE_CANDIDATE_DOMAIN: openshift-registry.adorsys.de
+          RELEASE_CANDIDATE_PROJECT_NAME: open-banking-gateway-integ
+
       - name: Deploy release-candidate JARs to Github packages
         run: ./scripts/deploy_mvn_release_candidate.sh
         env:
@@ -28,10 +35,3 @@ jobs:
           STAGE_ARTIFACTORY_USERNAME: ${{ github.actor }}
           STAGE_ARTIFACTORY_PASSWORD: ${{ secrets.GITHUB_TOKEN }}
           GIT_BRANCH: release # Force branch to resolve to release (stage repo) if git resolution fails - otherwise gitflow-helper uses UNDEFINED branch
-
-      - name: Deploy develop artifacts to OpenShift
-        run: ./scripts/deploy_openshift_release_candidate.sh
-        env:
-          OPENSHIFT_TOKEN: ${{ secrets.OPENSHIFT_TOKEN }}
-          RELEASE_CANDIDATE_DOMAIN: openshift-registry.adorsys.de
-          RELEASE_CANDIDATE_PROJECT_NAME: open-banking-gateway-integ
