@@ -31,9 +31,9 @@
 
             <div class="form-group">
                 <input class="form-control" id="import-accounts" type="button" value="Import accounts" onclick="callAccountExport('firefly-personal-token', 'bank-id', 'import-accounts-redirect', 'import-accounts-status', API_URL)"/>
-            <span class="hidden" id="import-accounts-status">Please wait...</span>
-            <a class="hidden" href="#" id="import-accounts-redirect">You need to be redirected to OpenBankingGateway for consent authorization</a>
-        </div>
+                <span class="hidden" id="import-accounts-status">Please wait...</span>
+                <a class="hidden" href="#" id="import-accounts-redirect">You need to be redirected to OpenBankingGateway for consent authorization</a>
+            </div>
             <div  class="form-group">
                 <input class="form-control" id="import-transactions" type="button" value="Import transactions" onclick="callExportableAccounts('firefly-personal-token', 'bank-id', 'import-transactions-redirect', 'import-transactions-status', 'account-export-block', 'exportable-account-list', API_URL)"/>
             <span class="hidden" id="import-transactions-status">Please wait...</span>
@@ -47,7 +47,7 @@
                     document.getElementById('endDate').valueAsDate = new Date();
                 </script>
                 <ul id="exportable-account-list"></ul>
-                <input id="import-selected-transactions" type="button" value="Import selected accounts transactions" onclick="callTransactionExport('firefly-personal-token', 'bank-id', 'startDate', 'endDate', 'import-selected-transactions-status', API_URL)"/>
+                <input class="form-control" id="import-selected-transactions" type="button" value="Import selected accounts transactions" onclick="callTransactionExport('firefly-personal-token', 'bank-id', 'startDate', 'endDate', 'import-selected-transactions-status', API_URL)"/>
                 <span class="hidden" id="import-selected-transactions-status">Please wait...</span>
             </div>
         </div>
