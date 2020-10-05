@@ -25,6 +25,7 @@ jobs:
           GPG_PASSPHRASE: ${{ secrets.GPG_PASSPHRASE }}
           GPG_SECRET_KEY: ${{ secrets.GPG_SECRET_KEY }}
           GPG_OWNERTRUST: ${{ secrets.GPG_OWNERTRUST }}
+          STAGE_ARTIFACTORY_USERNAME: valb3r
           STAGE_ARTIFACTORY_PASSWORD: ${{ secrets.GITHUB_TOKEN }}
           GIT_BRANCH: release/1.2.3 # Force branch to resolve to release (stage repo) if git resolution fails - otherwise gitflow-helper uses UNDEFINED branch
 

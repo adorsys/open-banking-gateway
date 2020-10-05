@@ -14,6 +14,7 @@
             <!--GitHub packages deployment -->
             <!-- Staging Deployment -->
             <id>stage</id>
+            <username>${env.STAGE_ARTIFACTORY_USERNAME}</username>
             <password>${env.STAGE_ARTIFACTORY_PASSWORD}</password>
         </server>
     </servers>
@@ -31,7 +32,7 @@
             <repositories>
                 <repository>
                     <id>stage</id>
-                    <url>https://maven.pkg.github.com/valb3r</url>
+                    <url>https://maven.pkg.github.com/valb3r/open-banking-gateway</url>
                     <snapshots>
                         <enabled>false</enabled>
                     </snapshots>
