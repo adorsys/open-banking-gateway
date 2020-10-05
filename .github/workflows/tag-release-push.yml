@@ -30,4 +30,7 @@ jobs:
         env:
           SONATYPE_USERNAME: ${{ secrets.SONATYPE_USERNAME }}
           SONATYPE_PASSWORD: ${{ secrets.SONATYPE_PASSWORD }}
+          # These are required for READ access to Github Packages maven:
+          STAGE_ARTIFACTORY_USERNAME: ${{ github.actor }}
+          STAGE_ARTIFACTORY_PASSWORD: ${{ secrets.GITHUB_TOKEN }}
           GIT_BRANCH: master # Force branch to resolve to master if git resolution fails - otherwise gitflow-helper uses UNDEFINED branch
