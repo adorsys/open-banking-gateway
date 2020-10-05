@@ -6,18 +6,11 @@ import de.adorsys.opba.fireflyexporter.entity.AccountExportJob;
 import de.adorsys.opba.fireflyexporter.repository.AccountExportJobRepository;
 import de.adorsys.opba.tpp.ais.api.model.generated.AccountDetails;
 import de.adorsys.opba.tpp.ais.api.model.generated.AccountList;
-import de.adorsys.opba.tpp.ais.api.model.generated.Balance;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.support.TransactionOperations;
-
-import java.time.LocalDate;
-import java.time.ZoneOffset;
-import java.time.format.DateTimeFormatter;
-
-import static de.adorsys.opba.fireflyexporter.service.Consts.FIREFLY_DATE_FORMAT;
 
 @Slf4j
 @Service
@@ -32,6 +25,7 @@ public class FireFlyAccountExporter {
     private final AccountExportJobRepository exportJobRepository;
 
     @Async
+    @SuppressWarnings("checkstyle:MethodLength") // Method length is mostly from long argument list to API call
     public void exportToFirefly(String fireFlyToken, long exportJobId, AccountList accountList) {
         tokenProvider.setToken(fireFlyToken);
         int numExported = 0;

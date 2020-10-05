@@ -5,6 +5,7 @@ import lombok.experimental.UtilityClass;
 import java.time.format.DateTimeFormatter;
 
 @UtilityClass
+@SuppressWarnings("checkstyle:HideUtilityClassConstructor") // Lombok generates private ctor.
 public class Consts {
 
     // Format is: Mon Sep 17 03:00:00 EEST 2018

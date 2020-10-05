@@ -5,7 +5,6 @@ import de.adorsys.opba.fireflyexporter.entity.TransactionExportJob;
 import de.adorsys.opba.fireflyexporter.repository.AccountExportJobRepository;
 import de.adorsys.opba.fireflyexporter.repository.TransactionExportJobRepository;
 import de.adorsys.opba.fireflyexporter.service.AccountExportService;
-import de.adorsys.opba.fireflyexporter.service.FireFlyTransactionExporter;
 import de.adorsys.opba.fireflyexporter.service.TransactionExportService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
