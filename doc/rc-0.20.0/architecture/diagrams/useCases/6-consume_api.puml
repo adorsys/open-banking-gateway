@@ -1,0 +1,57 @@
+@startuml
+
+autonumber 1 1 "<b><color blue>[BankingService-000]"
+actor psu
+
+box "PsuUserAgent" #LightGray
+    participant "FinTechUI" as FinTechUI
+    participant "ConsentAuthorisationUI" as ConsentAuthorisationUI
+    'participant "OnlineBankingUI" as OnlineBankingUI
+end box
+box "FinTechDC" #DarkSeaGreen
+    participant "FinTechApi" as FinTechApi
+end box
+box "TppDC" #LightGray
+    participant "TppBankingApi" as TppBankingApi
+    'participant "TppBankSearchApi" as TppBankSearchApi
+    'participant "ConsentAuthorisationApi" as ConsentAuthorisationApi
+
+    participant "BankingProtocol" as BankingProtocol
+    participant "RedirectSessionStoreApi" as RedirectSessionStoreApi
+end box
+box "AspspDC" #LightSkyBlue
+	participant "AspspBankingApi" as AspspBankingApi
+    'participant "OnlineBankingApi" as OnlineBankingApi
+end box
+
+== Execute PSU transaction display request : call[header](body)<params> return code[header](body) ==
+
+ConsentAuthorisationUI -> FinTechUI ++: loadFinTechUI:GET:Fintech-Redirect-URL-OK\n<q:auth-id,q:redirectCode>
+FinTechUI -> FinTechUI : readXsrfToken(auth-id):xsrfToken
+FinTechUI -> FinTechUI : buildBackendUrl(\n"/v1/{auth-id}/fromConsentOk",\nauth-id, redirectCode)
+autonumber 10 10 "<b><color blue>[BankingService-000]"
+FinTechUI -> FinTechApi ++ : GET:fromConsentOk[UserAgentContext,\nRedirectCookie, xsrfToken]()\n<p:auth-id,q:redirectCode>
+FinTechApi -> FinTechApi : validateRedirectCall\n(xsrfToken,RedirectCookie)
+FinTechApi -> TppBankingApi ++ : GET:code2Token[UserAgentContext,\nFinTechContext]\n()<redirectCode>
+autonumber 40 1 "<b><color blue>[BankingService-000]"
+TppBankingApi -> BankingProtocol ++ : code2Token(redirectCode)
+BankingProtocol -> RedirectSessionStoreApi ++ : redirectSession(redirectCode)
+RedirectSessionStoreApi -> RedirectSessionStoreApi : loadDeryptDeleteRedirectSession\n(redirectCode):TppConsentSession
+RedirectSessionStoreApi -> RedirectSessionStoreApi : confirmConsent\n(TppConsentSession)
+return TppConsentSession
+return TppConsentSession
+TppBankingApi -> TppBankingApi: TppConsentSession.PsuConsentSession()
+return PsuConsentSession
+FinTechApi -> FinTechApi : storePsuConsent(PsuConsentSession)
+return 202_ReloadUI[SessionCookie,X-XSRF-TOKEN](auth-id)
+FinTechUI -> FinTechApi ++ : GET:listOfTransactions\n[SessionCookie,\nX-XSRF-TOKEN,\nX-Request-ID, \nFintech-Redirect-URL-OK,\nFintech-Redirect-URL-NOK]\n()<p:bank-id, p:account-id, \nq:dateFrom, q:dateTo,\nq:entryReferenceFrom,\nq:bookingStatus, q:deltaList>
+autonumber 60 1 "<b><color blue>[BankingService-000]"
+FinTechApi -> TppBankingApi ++ : POST:listTransactions[PsuConsentSession](requestSpec)
+TppBankingApi -> BankingProtocol ++ : listTransactions[TppConsentSession]\n(requestSpec) 
+BankingProtocol -> AspspBankingApi ++ : listTransactions[TppContext](AisConsent, requestSpec) 
+return 200_OK[](Transactions)
+return 200_OK[](Transactions)
+return 200_OK[](Transactions)
+return 200_OK[](Transactions)
+FinTechUI --> psu : displayTransactions()
+@enduml

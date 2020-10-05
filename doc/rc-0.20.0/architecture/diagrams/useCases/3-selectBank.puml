@@ -1,0 +1,37 @@
+@startuml
+
+autonumber "<b><color blue>[SelBnk-000]</color></b>"
+actor psu
+
+box "PsuUserAgent" #LightGray
+    participant "FinTechUI" as FinTechUI
+    'participant "ConsentAuthorisationUI" as ConsentAuthorisationUI
+    'participant "OnlineBankingUI" as OnlineBankingUI
+end box
+box "FinTechDC" #DarkSeaGreen
+    participant "FinTechApi" as FinTechApi
+end box
+box "TppDC" #LightGray
+    'participant "TppBankingApi" as TppBankingApi
+    participant "TppBankSearchApi" as TppBankSearchApi
+    'participant "ConsentAuthorisationApi" as ConsentAuthorisationApi
+
+    'participant "RedirectSessionStoreApi" as RedirectSessionStoreApi
+    'participant "BankingProtocolSelector" as BankingProtocolSelector
+    'participant "BankingProtocol" as BankingProtocol
+end box
+box "AspspDC" #LightSkyBlue
+	'participant "AspspBankingApi" as AspspBankingApi
+    'participant "OnlineBankingApi" as OnlineBankingApi
+end box
+
+== PSU selects bank from ListOf_BankDescriptors : call[header](body)<params> return code[header](body) ==
+
+psu -> FinTechUI ++ : selectBank(BankProfile)
+FinTechUI -> FinTechApi ++ : loadBankProfile[FinTechLoginSessionCookie]\n(bankId)<sessionState>()
+FinTechApi -> TppBankSearchApi ++ : loadBankProfile[](bankId)<>
+return 200_BankProfile[](BankProfile)
+return 200_BankProfile[](BankProfile)
+return displayBankProfile(BankProfile)
+
+@enduml

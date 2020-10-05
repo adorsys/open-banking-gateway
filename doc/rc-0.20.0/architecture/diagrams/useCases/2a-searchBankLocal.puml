@@ -1,0 +1,44 @@
+@startuml
+
+autonumber 100 "<b><color blue>[LocalSearch-000]</color></b>"
+actor psu
+
+box "PsuUserAgent" #LightGray
+    participant "FinTechUI" as FinTechUI
+    participant "LocalSearch" as LocalSearch
+    'participant "ConsentAuthorisationUI" as ConsentAuthorisationUI
+    'participant "OnlineBankingUI" as OnlineBankingUI
+end box
+box "FinTechDC" #DarkSeaGreen
+    participant "FinTechApi" as FinTechApi
+end box
+box "TppDC" #LightGray
+    'participant "TppBankingApi" as TppBankingApi
+    participant "TppBankSearchApi" as TppBankSearchApi
+    'participant "ConsentAuthorisationApi" as ConsentAuthorisationApi
+
+    'participant "RedirectSessionStoreApi" as RedirectSessionStoreApi
+    'participant "BankingProtocolSelector" as BankingProtocolSelector
+    'participant "BankingProtocol" as BankingProtocol
+end box
+box "AspspDC" #LightSkyBlue
+	'participant "AspspBankingApi" as AspspBankingApi
+    'participant "OnlineBankingApi" as OnlineBankingApi
+end box
+
+== PSU searches a bank by keyword : call[header](body)<params> return code[header](body) ==
+
+psu -> FinTechUI ++ : loadFinTechSeachScreen()
+FinTechUI -> FinTechApi ++ : GET:bankSearch[FinTechLoginSessionCookie]()\n<sessionState, keyword='',start=0,max=-1>
+FinTechApi -> TppBankSearchApi ++ : GET:bankSearch[]bankSearch[]()\n<keyword='',start=0,max=-1>
+return 200_BankSearchResult[](List<BankProfile>,\nsearchInput,searchStartIndex,\nsearchMaxResult,searchTotalResult)
+return 200_BankSearchResult[FinTechLoginSessionCookie]\n(sessionState,List<BankProfile>,\nsearchInput,searchStartIndex,\nsearchMaxResult,searchTotalResult))
+return displaySearchScreen()
+psu -> FinTechUI ++ : enterKeyword(keyword)
+loop while(furtherKeyWords)
+FinTechUI -> LocalSearch ++ : search(keyword)
+LocalSearch -> LocalSearch : search(keyWord,List<BankProfile>)
+return List<BankProfile>
+return displaySearchResult(List<BankProfile>)
+end
+@enduml
