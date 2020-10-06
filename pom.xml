@@ -633,6 +633,17 @@
                             <deployAtEnd>true</deployAtEnd>
                         </configuration>
                     </plugin>
+
+                    <plugin>
+                        <groupId>org.sonatype.plugins</groupId>
+                        <artifactId>nexus-staging-maven-plugin</artifactId>
+                        <version>1.6</version>
+                        <extensions>true</extensions>
+                        <configuration>
+                            <serverId>release</serverId>
+                            <nexusUrl>https://oss.sonatype.org/</nexusUrl>
+                        </configuration>
+                    </plugin>
                 </plugins>
             </build>
         </profile>
