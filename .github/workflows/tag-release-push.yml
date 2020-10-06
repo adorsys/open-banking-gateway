@@ -16,15 +16,6 @@ jobs:
         with:
           java-version: 1.8
 
-      - name: Promote artifacts from OpenShift to DockerHub
-        run: ./scripts/promote_oc_image_to_dockerhub.sh
-        env:
-          OPENSHIFT_TOKEN: ${{ secrets.OPENSHIFT_TOKEN }}
-          DOCKERHUB_USERNAME: ${{ secrets.DOCKERHUB_USERNAME }}
-          DOCKERHUB_PASSWORD: ${{ secrets.DOCKERHUB_PASSWORD }}
-          RELEASE_CANDIDATE_DOMAIN: openshift-registry.adorsys.de
-          RELEASE_CANDIDATE_PROJECT_NAME: open-banking-gateway-integ
-
       - name: Promote release-candidate JARs to Maven-central
         run: ./scripts/deploy_mvn.sh
         env:
@@ -34,3 +25,12 @@ jobs:
           STAGE_ARTIFACTORY_USERNAME: ${{ github.actor }}
           STAGE_ARTIFACTORY_PASSWORD: ${{ secrets.GITHUB_TOKEN }}
           GIT_BRANCH: master # Force branch to resolve to master if git resolution fails - otherwise gitflow-helper uses UNDEFINED branch
+
+      - name: Promote artifacts from OpenShift to DockerHub
+        run: ./scripts/promote_oc_image_to_dockerhub.sh
+        env:
+          OPENSHIFT_TOKEN: ${{ secrets.OPENSHIFT_TOKEN }}
+          DOCKERHUB_USERNAME: ${{ secrets.DOCKERHUB_USERNAME }}
+          DOCKERHUB_PASSWORD: ${{ secrets.DOCKERHUB_PASSWORD }}
+          RELEASE_CANDIDATE_DOMAIN: openshift-registry.adorsys.de
+          RELEASE_CANDIDATE_PROJECT_NAME: open-banking-gateway-integ
