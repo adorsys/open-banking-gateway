@@ -89,9 +89,11 @@
       <conditionExpression xsi:type="tFormalExpression"/>
     </sequenceFlow>
     <boundaryEvent id="decoupledAuthorisationCheckTimer" attachedToRef="embeddedScaChallenge">
-      <timerEventDefinition/>
+      <timerEventDefinition>
+        <timeCycle>0 0/5 * * * ?</timeCycle>
+      </timerEventDefinition>
     </boundaryEvent>
-    <serviceTask id="checkDecoupledScaFinalisation" flowable:exclusive="true" name="Check consent decoupled SCA finalisation by PSU"/>
+    <serviceTask id="checkDecoupledScaFinalisation" flowable:exclusive="true" name="Check consent decoupled SCA finalisation by PSU" flowable:delegateExpression="${xs2aAskForScaChallenge}"/>
     <sequenceFlow id="sid-ad3ceef5-1bd7-426d-b91c-9505495d5e4b" sourceRef="decoupledAuthorizationCheckTimer" targetRef="checkDecopledScaFinalisation"/>
     <sequenceFlow id="sid-a1f24d64-aa67-4dfe-b113-0bc39bd7e89f" sourceRef="checkDecopledScaFinalisation" targetRef="sendChallengeResult"/>
   </process>
