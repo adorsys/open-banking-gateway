@@ -6,7 +6,7 @@ SCRIPT_DIR="$(dirname "$0")"
 SOURCE_IMAGE_TAG="ddeea41"
 TARGET_IMAGE_TAG="${TRAVIS_TAG#v}" # Strip leading 'v' from image tag
 SOURCE_REGISTRY_DOMAIN=openshift-registry.adorsys.de
-SOURCE_PROJECT_NAME=open-banking-gateway-dev
+SOURCE_PROJECT_NAME=open-banking-gateway-integ
 TARGET_PROJECT_NAME=adorsys
 TARGET_REGISTRY_DOMAIN=docker.io
 
