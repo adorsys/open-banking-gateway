@@ -3,7 +3,7 @@
 echo "Docker image promotion..."
 
 SCRIPT_DIR="$(dirname "$0")"
-SOURCE_IMAGE_TAG=${GITHUB_SHA:0:7}
+SOURCE_IMAGE_TAG="ddeea41"
 GITHUB_TAG=${GITHUB_REF#refs/tags/}
 TARGET_IMAGE_TAG="${GITHUB_TAG#v}" # Strip leading 'v' from image tag
 SOURCE_REGISTRY_DOMAIN="$RELEASE_CANDIDATE_DOMAIN"
@@ -27,7 +27,14 @@ do
 done < "$SCRIPT_DIR/service.list"
 
 echo "Promoting pulled images"
-docker login -u "$DOCKERHUB_USERNAME" -p "$DOCKERHUB_PASSWORD" "$TARGET_REGISTRY_DOMAIN" || exit 1
+
+if [ "$TARGET_REGISTRY_DOMAIN" = "docker.io" ]; then
+  # Skipping host due to https://stackoverflow.com/questions/43858398/docker-push-error-denied-requested-access-to-the-resource-is-denied
+  docker login -u "$DOCKERHUB_USERNAME" -p "$DOCKERHUB_PASSWORD" || exit 1
+else
+  docker login -u "$DOCKERHUB_USERNAME" -p "$DOCKERHUB_PASSWORD" "$TARGET_REGISTRY_DOMAIN" || exit 1
+fi
+
 while IFS="" read -r service_and_context || [ -n "$service_and_context" ]
 do
     SERVICE_NAME=$(echo "$service_and_context" | cut -d"=" -f1)
