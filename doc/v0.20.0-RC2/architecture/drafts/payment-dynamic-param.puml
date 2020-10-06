@@ -1,0 +1,26 @@
+@startuml
+autonumber "<b><color blue>[00]"
+
+PSU -> "TPP (PISP)" as TPP ++ :  GET PSU client bank id
+return Bank id
+PSU -> TPP ++ : Pay 100EUR to IBAN 12345
+TPP -> "Open banking gateway" as OBA ++ : Initiate payment to\nIBAN 12345 with\nGEO_LOCATION = (54.32,32.32)
+OBA -> TPP : <b>400 Error code</b> : GEO_LOCATION - client location necessary
+TPP -> PSU : Get GEO location
+PSU -> TPP : GEO_LOCATION = (54.32,32.32)
+TPP -> OBA : Initiate payment to\nIBAN 12345 with\nGEO_LOCATION = (54.32,32.32)
+OBA -> BPMN ++ : Initiate payment to\nIBAN 12345 with\nGEO_LOCATION = (54.32,32.32)
+BPMN -> "Computed\nXS2A call sequence" as XS2ASeq ++ : Execute
+XS2ASeq -> ASPSP ++ : Payment initiation request
+return Payment initiation response
+loop SCA Authorization
+  ASPSP -> PSU : SCA challenge
+  PSU -> ASPSP : Challenge result
+end
+XS2ASeq -> ASPSP ++ : Payment status request
+return Payment status response
+return Payment complete
+return Payment complete
+return Payment complete
+return Payment complete
+@enduml

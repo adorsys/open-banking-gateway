@@ -1,0 +1,515 @@
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  
+  <link rel="shortcut icon" href="../../img/favicon.ico">
+  <title>Dictionary - Open Banking Gateway Documentation</title>
+  <link href='https://fonts.googleapis.com/css?family=Lato:400,700|Roboto+Slab:400,700|Inconsolata:400,700' rel='stylesheet' type='text/css'>
+
+  <link rel="stylesheet" href="../../css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../../css/theme_extra.css" type="text/css" />
+  <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/styles/github.min.css">
+  
+  <script>
+    // Current page data
+    var mkdocs_page_name = "Dictionary";
+    var mkdocs_page_input_path = "architecture/dictionary.md";
+    var mkdocs_page_url = null;
+  </script>
+  
+  <script src="../../js/jquery-2.1.1.min.js" defer></script>
+  <script src="../../js/modernizr-2.8.3.min.js" defer></script>
+  <script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/highlight.min.js"></script>
+  <script>hljs.initHighlightingOnLoad();</script> 
+  
+</head>
+
+<body class="wy-body-for-nav" role="document">
+
+  <div class="wy-grid-for-nav">
+
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side stickynav">
+      <div class="wy-side-nav-search">
+        <a href="../.." class="icon icon-home"> Open Banking Gateway Documentation</a>
+        <div role="search">
+  <form id ="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" title="Type search term here" />
+  </form>
+</div>
+      </div>
+
+      <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+	<ul class="current">
+	  
+          
+            <li class="toctree-l1">
+		
+    <a class="" href="../..">Home</a>
+	    </li>
+          
+            <li class="toctree-l1">
+		
+    <a class="" href="../../getting_started/">Getting started</a>
+	    </li>
+          
+            <li class="toctree-l1">
+		
+    <a class="" href="../../ContributionGuidelines/">Contibution Guidelines</a>
+	    </li>
+          
+            <li class="toctree-l1">
+		
+    <a class="" href="../../roadmap/">Roadmap</a>
+	    </li>
+          
+            <li class="toctree-l1">
+		
+    <a class="" href="../../releasenotes/">Release notes</a>
+	    </li>
+          
+            <li class="toctree-l1">
+		
+    <a class="" href="../../version_policy/">Version policy</a>
+	    </li>
+          
+            <li class="toctree-l1">
+		
+    <a class="" href="../drafts/initial_requirements/">Initial Requirements</a>
+	    </li>
+          
+            <li class="toctree-l1">
+		
+    <span class="caption-text">Architecture</span>
+    <ul class="subnav">
+                <li class=" current">
+                    
+    <a class="current" href="./">Dictionary</a>
+    <ul class="subnav">
+            
+    <li class="toctree-l3"><a href="#dictionary">Dictionary</a></li>
+    
+        <ul>
+        
+            <li><a class="toctree-l4" href="#redirection-and-data-sharing">Redirection and Data Sharing</a></li>
+        
+            <li><a class="toctree-l4" href="#keeping-session-information">Keeping Session Information</a></li>
+        
+        </ul>
+    
+
+    <li class="toctree-l3"><a href="#redirectsession"> RedirectSession</a></li>
+    
+
+    </ul>
+                </li>
+                <li class="">
+                    
+    <a class="" href="../building_blocks/01.Application_context/">Application context</a>
+                </li>
+                <li class="">
+                    
+    <a class="" href="../building_blocks/02.Component_diagrams/">Component diagrams</a>
+                </li>
+    </ul>
+	    </li>
+          
+            <li class="toctree-l1">
+		
+    <span class="caption-text">Concepts</span>
+    <ul class="subnav">
+                <li class="">
+                    
+    <a class="" href="../concepts/psu-security-concept/">PSU Security Concept</a>
+                </li>
+    </ul>
+	    </li>
+          
+            <li class="toctree-l1">
+		
+    <span class="caption-text">Use cases</span>
+    <ul class="subnav">
+                <li class="">
+                    
+    <a class="" href="../use_cases/">Use cases</a>
+                </li>
+                <li class="">
+                    
+    <a class="" href="../1-loginWithFinTech/">Login with FinTech Application</a>
+                </li>
+                <li class="">
+                    
+    <a class="" href="../2-searchBank/">Search bank</a>
+                </li>
+                <li class="">
+                    
+    <a class="" href="../3-selectBank/">Select bank</a>
+                </li>
+                <li class="">
+                    
+    <a class="" href="../4a-aisListOfAccounts/">List of Accounts</a>
+                </li>
+                <li class="">
+                    
+    <a class="" href="../4b-aisListOfTransactions/">List of Transactions</a>
+                </li>
+                <li class="">
+                    
+    <a class="" href="../5-redirectPsuToConsentAPI/">Redirect to Consent Authorization API</a>
+                </li>
+                <li class="">
+                    
+    <a class="" href="../5a-psuAuthEmbeddedConsent/">Authorize Consent Embedded Approach</a>
+                </li>
+                <li class="">
+                    
+    <a class="" href="../5b-psuAuthRedirectConsent/">Authorize Consent Redirect Approach</a>
+                </li>
+                <li class="">
+                    
+    <a class="" href="../6-consume_api/">Consume Service</a>
+                </li>
+    </ul>
+	    </li>
+          
+            <li class="toctree-l1">
+		
+    <a class="" href="../drafts/initial_requirements/">Draft</a>
+	    </li>
+          
+            <li class="toctree-l1">
+		
+    <a class="" href="../../initial_requirements/">Initial requirements</a>
+	    </li>
+          
+        </ul>
+      </div>
+      &nbsp;
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" role="navigation" aria-label="top navigation">
+        <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+        <a href="../..">Open Banking Gateway Documentation</a>
+      </nav>
+
+      
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="breadcrumbs navigation">
+  <ul class="wy-breadcrumbs">
+    <li><a href="../..">Docs</a> &raquo;</li>
+    
+      
+        
+          <li>Architecture &raquo;</li>
+        
+      
+    
+    <li>Dictionary</li>
+    <li class="wy-breadcrumbs-aside">
+      
+        <a href="https://github.com/adorsys/open-banking-gateway/edit/master/docs/architecture/dictionary.md"
+          class="icon icon-github"> Edit on GitHub</a>
+      
+    </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main">
+            <div class="section">
+              
+                <h1 id="dictionary">Dictionary</h1>
+<ul>
+<li><a href="./#AisConsentSpec">AisConsentSpec</a></li>
+<li><a href="./#App">App</a></li>
+<li><a href="./#ASPSP">ASPSP</a></li>
+<li><a href="./#AspspBankingApi">AspspBankingApi</a></li>
+<li><a href="./#BankDescriptor">BankDescriptor</a></li>
+<li><a href="./#BankingProtocolSelector">BankingProtocolSelector</a></li>
+<li><a href="./#BankingProtocol">BankingProtocol</a></li>
+<li><a href="./#BankProfile">BankProfile</a></li>
+<li><a href="./#ConsentAuthorisationApi">ConsentAuthorisationApi</a></li>
+<li><a href="./#ConsentAuthorisationUI">ConsentAuthorisationUI</a></li>
+<li><a href="./#ConsentData">ConsentData</a></li>
+<li><a href="./#Dictionary">Dictionary</a></li>
+<li><a href="./#FinTech">FinTech</a></li>
+<li><a href="./#FinTechApi">FinTechApi</a></li>
+<li><a href="./#FinTechContext">FinTechContext</a></li>
+<li><a href="./#FinTechDC">FinTechDC</a></li>
+<li><a href="./#FinTechUI">FinTechUI</a></li>
+<li><a href="./#Information">Information</a></li>
+<li><a href="./#OnlineBanking2ConsentAuthRedirectInfoPage">OnlineBanking2ConsentAuthRedirectInfoPage</a></li>
+<li><a href="./#OnlineBankingApi">OnlineBankingApi</a></li>
+<li><a href="./#OnlineBankingConsentSessionCookie">OnlineBankingConsentSessionCookie</a></li>
+<li><a href="./#OnlineBankingLoginSessionCookie">OnlineBankingLoginSessionCookie</a></li>
+<li><a href="./#OnlineBankingUI">OnlineBankingUI</a></li>
+<li><a href="./#PSU">PSU</a></li>
+<li><a href="./#PsuConsentSession">PsuConsentSession</a></li>
+<li><a href="./#PsuIdentifier">PsuIdentifier</a></li>
+<li><a href="./#PsuUserAgent">PsuUserAgent</a></li>
+<li><a href="./#PsuUserDevice">PsuUserDevice</a></li>
+<li><a href="./#RedirectSession">RedirectSession</a></li>
+<li><a href="./#SessionCookie">SessionCookie</a></li>
+<li><a href="./#Sharing">Sharing</a></li>
+<li><a href="./#TppBankingApi">TppBankingApi</a></li>
+<li><a href="./#TppBankSearchApi">TppBankSearchApi</a></li>
+<li><a href="./#TppConsentSession">TppConsentSession</a></li>
+<li><a href="./#TppContext">TppContext</a></li>
+<li><a href="./#TPP">TPP</a></li>
+<li><a href="./#UserAgentContext">UserAgentContext</a></li>
+<li><a href="./#WebBrowser">WebBrowser</a></li>
+</ul>
+<h2 id="consentdata"><a name="ConsentData"></a> ConsentData</h2>
+<p>In the context of Open Banking, a consent encompasses all information necessary to provide a third party with the authorization to access banking services on behalf of the PSU. These are:
+- PSU banking identifier information known as (psuId, psuCorporateId)
+- PSU account details information (like account numbers, iban, ...)
+- PSU payment orders (including beneficiary names, amounts, ...)
+- PSU authentication methods</p>
+<p>All these information are stored in different devices during the consent authorization session. Form of storages are among others:
+- Held in the browser page for display to the PSU
+- Stored in the Cookie for reuse by the corresponding backend
+- Stored in backend databases for transfer to other server components
+- Stored in backend databases for reuse by server components.</p>
+<p>For the purpose of protecting these data, framework is designed to always have consent data encrypted while at rest or on transit. General logic is that encrypted payload and encryption key do not reside in the same environment, unless need for decryption and processing of those data.</p>
+<p>Following object hold consent data
+- <a href="./#TppConsentSession">TppConsentSession</a>
+- <a href="./#RedirectSession">RedirectSession</a>
+- <a href="./#PsuConsentSession">PsuConsentSession</a></p>
+<h2 id="psuuserdevice"><a name="PsuUserDevice"></a> PsuUserDevice</h2>
+<p>A PSU user device runs applications used by the PSU to access banking functionality. Those applications are generally called PsuUgerAgents.</p>
+<h2 id="psuuseragent"><a name="PsuUserAgent"></a> PsuUserAgent</h2>
+<p>Application running on a PSU device and used by the PSU to access banking functionality. We are describing the two main types of PsuUserAgents.</p>
+<h3 id="webbrowser"><a name="WebBrowser"></a>WebBrowser</h3>
+<p>A Web browser is considered compliant in the context of this framework when it can protect specific information used between the PusUserDevice and the the corresponding server application to track the user session. For session tracking, this framework uses <a href="https://tools.ietf.org/html/rfc6265">Cookies RFC6265</a>. </p>
+<h4 id="redirection-and-data-sharing">Redirection and Data Sharing</h4>
+<p>We assume all three applications FinTechApi, ConsentAuthorisationApi, OnlineBankingApi are hosted on different domains. This is, we are not expecting Cookies set by one application to be visible to another application (this might still happen on some local development environment, where everything runs on localhost). 
+We also do not advice adding persistent information to <strong>RedirectUrl</strong>, as these are log files everywhere on infrastructure components in data centers. <strong>RedirectUrl</strong> shall instead carry <strong>OneTime</strong> and <strong>ShortLived</strong> authorization code we call <strong>code</strong>, that can be used to retrieved shared payload through an authenticated back channel connection. This is the practice borrowed from <a href="https://tools.ietf.org/html/rfc6749">oAuth2 RFC6749</a>. Following table shows defined redirects and corresponding back chanel endpoints.</p>
+<table>
+<thead>
+<tr>
+<th>Origin Application</th>
+<th>Redirecting Application</th>
+<th>Response Code; Location ; AuthCodeParam; Expiration</th>
+<th>Redirect Target Application</th>
+<th>Destination Application</th>
+<th>Data EndPoint at Origin Application</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>TppBankingApi</td>
+<td>FinTechApi</td>
+<td>302 ; /auth ; code ; 5s</td>
+<td>ConsentAuthorisationApi</td>
+<td>ConsentAuthorisationApi</td>
+<td>/loadTppConsentSession</td>
+</tr>
+<tr>
+<td>ConsentAuthorisationApi</td>
+<td>ConsentAuthorisationApi</td>
+<td>Proprietary banking API. Assume RFC6749. /auth</td>
+<td>OnlineBankingApi</td>
+<td>OnlineBankingApi</td>
+<td>none</td>
+</tr>
+<tr>
+<td>OnlineBankingApi</td>
+<td>OnlineBankingApi</td>
+<td>302 ; [/ok|/nok] ; code ; 5s</td>
+<td>ConsentAuthorisationApi</td>
+<td>ConsentAuthorisationApi</td>
+<td>/token</td>
+</tr>
+<tr>
+<td>ConsentAuthorisationApi</td>
+<td>ConsentAuthorisationApi</td>
+<td>302 ; [/ok|/nok] ; code ; 5s</td>
+<td>FinTechApi</td>
+<td>TppBankingApi</td>
+<td>/loadTppConsentSession</td>
+</tr>
+</tbody>
+</table>
+<h4 id="keeping-session-information">Keeping Session Information</h4>
+<p>We assume all three applications FinTechApi, ConsentAuthorisationApi, OnlineBankingApi maintain their own session information. This framework uses following terms to name the session information held by an application on the UserAgent of the PSU.</p>
+<table>
+<thead>
+<tr>
+<th>Application</th>
+<th>SessionCookie</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>FinTechApi</td>
+<td>Psu2FintechLoginSession</td>
+</tr>
+<tr>
+<td>ConsentAuthorisationApi</td>
+<td>ConsentAuthSessionCookie</td>
+</tr>
+<tr>
+<td>OnlineBankingApi</td>
+<td>OnlineBankingConsentSessionCookie</td>
+</tr>
+</tbody>
+</table>
+<p>Session information can also be kept across redirect life cycles. Upon redirecting the UserAgent to another application, the redirecting application can set Cookies that will be resent to the domain with future requests. This way, there will be no need to maintain user session information in temporary databases on the server, thus keeping server tiny.    </p>
+<h3 id="native-app"><a name="App"></a>Native App</h3>
+<p>The UserAgent might be a native application running on a user mobile device or a desktop computer. In this case, redirection might still take place, but with consideration of the physical transition between source and target UI-Application. Following specifications deal with security threads associated with the redirection between UI-Application on a user device: <a href="https://tools.ietf.org/html/rfc8252">RFC8252:OAuth 2.0 for Native Apps</a>,<a href="https://tools.ietf.org/html/rfc7636">RFC7636:Proof Key for Code Exchange by OAuth Public Clients</a> 
+For the purpose of kepping the overall architecture of this framework simple, we will require native applications to provide the same behavior as the WebBrowser described above.</p>
+<h3 id="useragentcontext"><a name="UserAgentContext"></a> UserAgentContext</h3>
+<p>Independent on the type of PsuUgerAgent, OpenBanking interfaces will require transmission of a class of information associated with the PsuUserAgent so they can perform verification of the authenticity of the original PSU request and customize the response produced for intermediary layers. We group these data under the name "UserAgentContext". Following header names account among the UserAgentContext: IP-Address, IP-Port, Accept, Accept-Charset, Accept-Encoding, Accept-Language, Device-ID, User-Agent, Geo-Location, Http-Method.</p>
+<h3 id="fintechui"><a name="FinTechUI"></a> FinTechUI</h3>
+<p>UI Application running on the PsuUserAgent and used by the PSU to access the FinTechApi</p>
+<h3 id="consentauthorisationui"><a name="ConsentAuthorisationUI"></a> ConsentAuthorisationUI</h3>
+<p>UI used by PSU to authoraise consent in embedded case.</p>
+<h3 id="onlinebankingui"><a name="OnlineBankingUI"></a> OnlineBankingUI</h3>
+<p>This UI manages the interaction between the PSU and the ASPSP in redirect cases.</p>
+<h2 id="fintech"><a name="FinTech"></a> FinTech</h2>
+<p>Organisation that uses Online Banking Services provided by TPP to service PSU with additional services.
+FinTech may or may not have own TPP License.</p>
+<h2 id="fintechdc"><a name="FinTechDC"></a> FinTechDC</h2>
+<p>Data center environment of the FinTech. Host the FinTechApi.</p>
+<h3 id="fintechapi"><a name="FinTechApi"></a> FinTechApi</h3>
+<p>Financial web service provided by the FinTech.</p>
+<h2 id="tpp-data-center"><a name="TppDC"></a> Tpp Data Center</h2>
+<p>Data center environment of the TPP</p>
+<h3 id="tppbankingapi"><a name="TppBankingApi"></a> TppBankingApi</h3>
+<p>Tpp backend providing access to ASPSP banking functionality. This interface is not directly accessed by the PSU but by the FinTechApi. FinTechApi will use a FinTechContext to authenticate with the TppBankingApi.</p>
+<h3 id="tppbanksearchapi"><a name="TppBankSearchApi"></a> TppBankSearchApi</h3>
+<p>Repository of banks maintained in the TPP's banking gateway. The banking search API will later presen an interface to configure profiles attached to listed banks.</p>
+<h3 id="bankdescriptor"><a name="BankDescriptor"></a> BankDescriptor</h3>
+<p>Descriptive information assocaited with a bank like:
+- The name of the Bank
+- The address of the bank
+- The bank identification code</p>
+<h3 id="bankprofile"><a name="BankProfile"></a> BankProfile</h3>
+<p>BankingApi profile information associated with a bank like:
+- The BankingProtocol used to connect with the bank
+- List of Banking services provided by the BankingApi of the bank
+- SCA approcahes associated with the BankingApi
+- ScaUIMetadaData: Screens and field used to collect user authentication data.
+- Actions to be performed by the PSU prior to using the BankingProtocol</p>
+<h4 id="aisconsentspec"><a name="AisConsentSpec"></a> AisConsentSpec</h4>
+<p>Specification associated with an AisConsent. This is highly dependent on the BankProfile. Following information might be carried by an AisConsentSpec object:
+- recurringIndicator
+- validUntil
+- frequencyPerDay
+- combinedService
+- accountAccessTemplate
+- availableAccounts[availableAccountsWithBalances, allAccounts]
+- allPsd2[allAccounts]</p>
+<h3 id="fintechcontext"><a name="FinTechContext"></a> FinTechContext</h3>
+<p>Information used to identify the FinTech application at the TppBankingApi. For example a FinTech SSL client certificate or an APIKey or an oAuth2 Password Grant Credential.</p>
+<h3 id="psu"><a name="PSU"></a> PSU</h3>
+<p>A Payment Services User is a natural or legal person making use of a payment service as a payee, payer or both.</p>
+<h3 id="psuconsentsession"><a name="PsuConsentSession"></a> PsuConsentSession</h3>
+<p>Information associated with the consent as exchanged between the FinTechApi and the TppBankingApi. Generally contains:
+- Data needed to customize psu access at the ConsentAuthorisationApi (showInfoPanel, fintechStateHash)
+- Data needed to manage redirection of PSU from the TppConsentSession to the FintechUI like (FinTech-Redirect-URI, FinTech-Nok-Redirect-URI, FinTech-Explicit-Authorisation-Preferred, FinTech-Content-Negotiation)</p>
+<p>Object also contains information associated with the PSU requesting service if available.
+- The identifier of the PSU in the realm of the Tpp PsuIdentifier
+- Existing Consent References if any.</p>
+<h4 id="psuidentifier"><a name="PsuIdentifier"></a> PsuIdentifier</h4>
+<p>This is the identifier of the PSU in the FinTech2Tpp relationship. This identifier can be saved once a consent has been successfully established to allow for reuse of existing consent in future sessions.</p>
+<h3 id="consentauthorisationapi"><a name="ConsentAuthorisationApi"></a> ConsentAuthorisationApi</h3>
+<p>Interface used by the PSU to authorize a consent.</p>
+<h3 id="sessioncookie-and-xsrf"><a name="SessionCookie"></a> SessionCookie and XSRF</h3>
+<p>We assume all three applications FinTeApi, ConsentAuthorisationApi, OnlineBakingApi maintain their own session information with corresponding UIs. We assume those APIs use cookies to maintain session with the corresponding user agents. In the context of this framework, those cookies are called SessionCookies. We also expect a following behavior from APIs and UserAgents:</p>
+<ul>
+<li>A response that sets a SessionCookie also carries a corresponding X-XSRF-TOKEN in the response header.</li>
+<li>A request that authenticates with a session cookie must also add the X-XSRF-TOKEN to the request header.</li>
+</ul>
+<h3 id="redirectsession"><a name="RedirectSession"> RedirectSession</h3>
+<p>Holds consent information for the duration of a redirect. Redirect patterns are described <a href="./#Redirection">below</a>.</p>
+<h3 id="bankingprotocol"><a name="BankingProtocol"></a> BankingProtocol</h3>
+<p>Component managing access to a banking interface initiative. WE will have to deal with many protocols like NextGenPSD2, HBCI, OpenBanking UK, PolishAPI.</p>
+<h3 id="bankingprotocolselector"><a name="BankingProtocolSelector"></a> BankingProtocolSelector</h3>
+<p>Help select a banking protocol.</p>
+<h2 id="aspsp-data-center"><a name="AspspDC"></a> Aspsp Data Center</h2>
+<p>Data center environment of the ASPSP</p>
+<h2 id="aspsp"><a name="ASPSP"></a> ASPSP</h2>
+<p>Account Servicing Payment Service Providers provide and maintain a payment account for a payer as defined by the PSRs and, in the context of the Open Banking Ecosystem are entities that publish Read/Write APIs to permit, with customer consent, payments initiated by third party providers and/or make their customers’ account transaction data available to third party providers via their API end points.</p>
+<h3 id="aspspbankingapi"><a name="AspspBankingApi"></a> AspspBankingApi</h3>
+<p>Api banking provided by ASPSP. This interface is not directly accessed by the PSU but by the TppBankingApi. TppBankingApi will use a TppContext to authenticate with the TppBankingApi.</p>
+<h3 id="tppcontext"><a name="TppContext"></a> TppContext</h3>
+<p>Information used to identify the Tpp application in the ASPSP environment. Like a TPP QWAC certificate.</p>
+<h3 id="tppconsentsession"><a name="TppConsentSession"></a> TppConsentSession</h3>
+<p>Storage for consent data in the realm of the BankingProtocol. The banking protocol is both accessible to the TppBankingApi and the ConsentAuthorizationApi.</p>
+<p>The cryptographic key needed to recover the TppConsentSession is always delivered by the calling layer. These are:
+- FinTechUI -&gt; FinTechApi -&gt; TppBankingApi -&gt; BankingProtocol : in this case the key needed to recover the TppConsentSession in contained in the PsuConsentSession. Generally that key will transitively originate from an interaction with the user agent. 
+- CosentAuthorizationUI -&gt; CosentAuthorizationApi -&gt; BankingProtocol : in this case the key needed to recover the TppConsentSession originate from the ConsentAuthSessionCookie.</p>
+<p>Beside consent data, additional data might be held in the TppConsentSession: 
+- <a href="./#FinTechContext">FinTechContext</a>: Data needed to authorize the FinTechApi (FinTechSSLCertificate, ApiKey, SignedJWT)
+- Additional information needed for interaction between TPP and ASPSP but without any concern to the PSU.</p>
+<h3 id="onlinebankingapi"><a name="OnlineBankingApi"></a> OnlineBankingApi</h3>
+<p>Generally the online banking application on an ASPSP. In redirect cases, the ASPSP OnlineBankingApi establishes a direct session with the PSU to allow the PSU to identify himself, review and authorize the consent. </p>
+<h3 id="onlinebankingconsentsessioncookie"><a name="OnlineBankingConsentSessionCookie"></a> OnlineBankingConsentSessionCookie</h3>
+<p>This is a Cookie used to maintain the session between the OnlineBankingUI and the OnlineBankingApi. As a recommendation, the validity of this Cookie shall be limited to the life span of the consent session. As the OnlineBankingApi redirects the PSU back to the ConsentAuthorisationApi up on completion of the consent session. Redirection happens independently on whether the consent was authorized or not.</p>
+<h3 id="onlinebanking2consentauthredirectinfopage"><a name="OnlineBanking2ConsentAuthRedirectInfoPage"></a> OnlineBanking2ConsentAuthRedirectInfoPage</h3>
+<p>It is recommended to inform the PSU prior to redirecting the PSU back to the TPP. This UI-Panel will be called OnlineBanking2ConsentAuthRedirectInfoPage. If the ASPSP is using a trusted environment (Native App) and wants to keep the relationship to the PSU alive, it is necessary to store this relationship in a separated OnlineBankingLoginSessionCookie.</p>
+<h3 id="onlinebankingloginsessioncookie"><a name="OnlineBankingLoginSessionCookie"></a> OnlineBankingLoginSessionCookie</h3>
+<p>This Cookie will be used by the ASPSP to keep a login session of the PSU over the life span of consent session. This will prevent the PSU from performing the login step for upcoming consent sessions.</p>
+<h2 id="tpp"><a name="TPP"></a> TPP</h2>
+<p>A TPP is a Third Party Provider - a legal entity that holds a TPP License provided by NCA (PISP, AISP etc). and operates with corresponding QWAC Certificate.
+TPP may serve FinTech companies with XS2A Services.</p>
+              
+            </div>
+          </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+        <a href="../building_blocks/01.Application_context/" class="btn btn-neutral float-right" title="Application context">Next <span class="icon icon-circle-arrow-right"></span></a>
+      
+      
+        <a href="../drafts/initial_requirements/" class="btn btn-neutral" title="Initial Requirements"><span class="icon icon-circle-arrow-left"></span> Previous</a>
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <!-- Copyright etc -->
+    
+  </div>
+
+  Built with <a href="http://www.mkdocs.org">MkDocs</a> using a <a href="https://github.com/snide/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>.
+</footer>
+      
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+
+  <div class="rst-versions" role="note" style="cursor: pointer">
+    <span class="rst-current-version" data-toggle="rst-current-version">
+      
+          <a href="https://github.com/adorsys/open-banking-gateway/" class="fa fa-github" style="float: left; color: #fcfcfc"> GitHub</a>
+      
+      
+        <span><a href="../drafts/initial_requirements/" style="color: #fcfcfc;">&laquo; Previous</a></span>
+      
+      
+        <span style="margin-left: 15px"><a href="../building_blocks/01.Application_context/" style="color: #fcfcfc">Next &raquo;</a></span>
+      
+    </span>
+</div>
+    <script>var base_url = '../..';</script>
+    <script src="../../js/theme.js" defer></script>
+      <script src="../../search/main.js" defer></script>
+
+</body>
+</html>
