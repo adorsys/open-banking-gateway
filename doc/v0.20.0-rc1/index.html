@@ -1,0 +1,388 @@
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Provides tools, adapter and connector for transparent access to open banking APIs">
+  
+  <link rel="shortcut icon" href="img/favicon.ico">
+  <title>Home - Open Banking Gateway Documentation</title>
+  <link href='https://fonts.googleapis.com/css?family=Lato:400,700|Roboto+Slab:400,700|Inconsolata:400,700' rel='stylesheet' type='text/css'>
+
+  <link rel="stylesheet" href="css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="css/theme_extra.css" type="text/css" />
+  <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/styles/github.min.css">
+  
+  <script>
+    // Current page data
+    var mkdocs_page_name = "Home";
+    var mkdocs_page_input_path = "README.md";
+    var mkdocs_page_url = null;
+  </script>
+  
+  <script src="js/jquery-2.1.1.min.js" defer></script>
+  <script src="js/modernizr-2.8.3.min.js" defer></script>
+  <script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/highlight.min.js"></script>
+  <script>hljs.initHighlightingOnLoad();</script> 
+  
+</head>
+
+<body class="wy-body-for-nav" role="document">
+
+  <div class="wy-grid-for-nav">
+
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side stickynav">
+      <div class="wy-side-nav-search">
+        <a href="." class="icon icon-home"> Open Banking Gateway Documentation</a>
+        <div role="search">
+  <form id ="rtd-search-form" class="wy-form" action="./search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" title="Type search term here" />
+  </form>
+</div>
+      </div>
+
+      <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+	<ul class="current">
+	  
+          
+            <li class="toctree-l1 current">
+		
+    <a class="current" href=".">Home</a>
+    <ul class="subnav">
+            
+    <li class="toctree-l2"><a href="#open-banking-gateway">Open Banking Gateway</a></li>
+    
+        <ul>
+        
+            <li><a class="toctree-l3" href="#what-this-project-is-about">What this Project is about</a></li>
+        
+            <li><a class="toctree-l3" href="#project-demo">Project Demo</a></li>
+        
+            <li><a class="toctree-l3" href="#big-picture">Big Picture</a></li>
+        
+            <li><a class="toctree-l3" href="#security-concept">Security concept</a></li>
+        
+            <li><a class="toctree-l3" href="#technical-architecture">Technical architecture</a></li>
+        
+            <li><a class="toctree-l3" href="#running-the-project-locally">Running the project locally</a></li>
+        
+            <li><a class="toctree-l3" href="#information-for-developers">Information for developers:</a></li>
+        
+            <li><a class="toctree-l3" href="#documentation">Documentation</a></li>
+        
+            <li><a class="toctree-l3" href="#third-parties-contribution">Third Parties Contribution</a></li>
+        
+            <li><a class="toctree-l3" href="#authors-contact">Authors &amp; Contact</a></li>
+        
+            <li><a class="toctree-l3" href="#license">License</a></li>
+        
+        </ul>
+    
+
+    </ul>
+	    </li>
+          
+            <li class="toctree-l1">
+		
+    <a class="" href="getting_started/">Getting started</a>
+	    </li>
+          
+            <li class="toctree-l1">
+		
+    <a class="" href="ContributionGuidelines/">Contibution Guidelines</a>
+	    </li>
+          
+            <li class="toctree-l1">
+		
+    <a class="" href="roadmap/">Roadmap</a>
+	    </li>
+          
+            <li class="toctree-l1">
+		
+    <a class="" href="releasenotes/">Release notes</a>
+	    </li>
+          
+            <li class="toctree-l1">
+		
+    <a class="" href="version_policy/">Version policy</a>
+	    </li>
+          
+            <li class="toctree-l1">
+		
+    <a class="" href="architecture/drafts/initial_requirements/">Initial Requirements</a>
+	    </li>
+          
+            <li class="toctree-l1">
+		
+    <span class="caption-text">Architecture</span>
+    <ul class="subnav">
+                <li class="">
+                    
+    <a class="" href="architecture/dictionary/">Dictionary</a>
+                </li>
+                <li class="">
+                    
+    <a class="" href="architecture/building_blocks/01.Application_context/">Application context</a>
+                </li>
+                <li class="">
+                    
+    <a class="" href="architecture/building_blocks/02.Component_diagrams/">Component diagrams</a>
+                </li>
+    </ul>
+	    </li>
+          
+            <li class="toctree-l1">
+		
+    <span class="caption-text">Concepts</span>
+    <ul class="subnav">
+                <li class="">
+                    
+    <a class="" href="architecture/concepts/psu-security-concept/">PSU Security Concept</a>
+                </li>
+    </ul>
+	    </li>
+          
+            <li class="toctree-l1">
+		
+    <span class="caption-text">Use cases</span>
+    <ul class="subnav">
+                <li class="">
+                    
+    <a class="" href="architecture/use_cases/">Use cases</a>
+                </li>
+                <li class="">
+                    
+    <a class="" href="architecture/1-loginWithFinTech/">Login with FinTech Application</a>
+                </li>
+                <li class="">
+                    
+    <a class="" href="architecture/2-searchBank/">Search bank</a>
+                </li>
+                <li class="">
+                    
+    <a class="" href="architecture/3-selectBank/">Select bank</a>
+                </li>
+                <li class="">
+                    
+    <a class="" href="architecture/4a-aisListOfAccounts/">List of Accounts</a>
+                </li>
+                <li class="">
+                    
+    <a class="" href="architecture/4b-aisListOfTransactions/">List of Transactions</a>
+                </li>
+                <li class="">
+                    
+    <a class="" href="architecture/5-redirectPsuToConsentAPI/">Redirect to Consent Authorization API</a>
+                </li>
+                <li class="">
+                    
+    <a class="" href="architecture/5a-psuAuthEmbeddedConsent/">Authorize Consent Embedded Approach</a>
+                </li>
+                <li class="">
+                    
+    <a class="" href="architecture/5b-psuAuthRedirectConsent/">Authorize Consent Redirect Approach</a>
+                </li>
+                <li class="">
+                    
+    <a class="" href="architecture/6-consume_api/">Consume Service</a>
+                </li>
+    </ul>
+	    </li>
+          
+            <li class="toctree-l1">
+		
+    <a class="" href="architecture/drafts/initial_requirements/">Draft</a>
+	    </li>
+          
+            <li class="toctree-l1">
+		
+    <a class="" href="initial_requirements/">Initial requirements</a>
+	    </li>
+          
+        </ul>
+      </div>
+      &nbsp;
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" role="navigation" aria-label="top navigation">
+        <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+        <a href=".">Open Banking Gateway Documentation</a>
+      </nav>
+
+      
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="breadcrumbs navigation">
+  <ul class="wy-breadcrumbs">
+    <li><a href=".">Docs</a> &raquo;</li>
+    
+      
+    
+    <li>Home</li>
+    <li class="wy-breadcrumbs-aside">
+      
+        <a href="https://github.com/adorsys/open-banking-gateway/edit/master/docs/README.md"
+          class="icon icon-github"> Edit on GitHub</a>
+      
+    </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main">
+            <div class="section">
+              
+                <p><a href="https://travis-ci.com/adorsys/open-banking-gateway"><img alt="Build Status" src="https://travis-ci.com/adorsys/open-banking-gateway.svg?branch=develop" /></a>
+<a href="https://gitter.im/adorsys/open-banking-gateway?utm_source=badge&amp;utm_medium=badge&amp;utm_campaign=pr-badge"><img alt="Gitter" src="https://badges.gitter.im/adorsys/open-banking-gateway.svg" /></a></p>
+<p><strong>Code coverage</strong>
+ - Backend: <a href="https://codecov.io/gh/adorsys/open-banking-gateway"><img alt="codecov-backend" src="https://codecov.io/gh/adorsys/open-banking-gateway/branch/develop/graph/badge.svg?flag=backend" /></a>
+ - Frontend: <a href="https://codecov.io/gh/adorsys/open-banking-gateway"><img alt="codecov-frontend" src="https://codecov.io/gh/adorsys/open-banking-gateway/branch/develop/graph/badge.svg?flag=frontend" /></a>
+ - Example code: <a href="https://codecov.io/gh/adorsys/open-banking-gateway"><img alt="codecov-examples" src="https://codecov.io/gh/adorsys/open-banking-gateway/branch/develop/graph/badge.svg?flag=fintech" /></a></p>
+<h1 id="open-banking-gateway">Open Banking Gateway</h1>
+<p>Provides tools, adapters and connectors for transparent access to open banking apis. The initial effort focuses on the connectivity to banks that implement the European PSD2 directive either through one of the common market initiatives like : <a href="https://www.berlin-group.org/psd2-access-to-bank-accounts">The Berlin Group NextGenPSD2</a>, <a href="https://www.openbanking.org.uk/">The Open Banking UK</a>, <a href="https://polishapi.org/en/">The Polish PSD2 API</a> or even through proprietary bank api like  <a href="https://developer.ing.com/openbanking/">the ING’s PSD2 API</a>.</p>
+<h2 id="what-this-project-is-about">What this Project is about</h2>
+<h3 id="tackle-the-key-challenge-for-third-party-providers-of-payment-services">Tackle the Key Challenge for Third Party Providers of Payment Services</h3>
+<p>The European PSD2 as the first regulator driven Open Banking initiative offers many opportunities for both banks, known as traditional provider of payment services (called ASPSPs in this context) and other Third Party Providers of payment services (TPPs). TPPs can use account information and payment services provided by banks to offer new innovative services to bank account holders. The more banks and TPPs can interact with each other, the more payment account holders can be provided with reacher banking solutions, which in turn simplifies and leverage commercial value chains.</p>
+<p>Being able to interact with different banking APIs can be a time and cost consuming challenge. Even though the PSD2 requires European banks to provide APIs and despite the effort of market initiatives to provide common standard interfaces, there is still a multitude of divergent authorization schemes involved and a lot of space for implementation options. A bank can even decide not to join one of the known market initiatives and define it's own PSD2 compliant API. </p>
+<p>The purpose of this open banking gateway is to provide the community with a common and simple interface for accessing major Open Banking APIs.</p>
+<h3 id="introducing-the-fintech-as-a-major-role">Introducing the FinTech as a Major Role</h3>
+<p>Being a regulator driven initiative, PSD2 mandates the regulation of TPPs. With this additional detail, the market is experiencing a distinction between regulated TPPs and non regulated FinTechs. This framework is therefore designed taking in consideration the existence of the category of payment service providers called FinTech that used APIs exposed by a regulated TPP to access payment services exposed by banks.</p>
+<h3 id="address-security-issues-associated-with-psu-access-to-multiple-interfaces">Address Security Issues associated with PSU Access to Multiple Interfaces</h3>
+<p>In the Open Banking Context, a payment service user (PSU or banking account holder) might have to deal with up to 3 different user interface to initiate, authorize and get the requested banking service executed. There being redirected back and forth from one UserAgent (resp. device) to another. This intensive use of redirection in Open Banking bearing a lot of risk of impersonating the PSU, we set a goal of this Framework to dissect the complexity involved with those redirection processes and open forums for discussion of possible solutions and sample implementations. Following papers are the first attempt to capture the problem (<a href="architecture/concepts/psu-device-redirection/">UserAgent Redirection</a>, <a href="architecture/concepts/psu-security-concept/">PSU Access Security Design</a>).  </p>
+<h2 id="project-demo">Project Demo</h2>
+<ul>
+<li><a href="demo_env/">Demo deployment and guide</a></li>
+</ul>
+<h2 id="big-picture">Big Picture</h2>
+<p>The following picture displays the overall architecture of this banking gateway:
+<img alt="High level architecture" src="img/open-banking-gateway-arch-14-01-2020.png" /></p>
+<h2 id="security-concept">Security concept</h2>
+<p>The following picture displays the overall security concept of this banking gateway:
+<img alt="Security concept" src="img/security-concept.png" /></p>
+<p>Security concept has 2 kinds of flows:
+  - authenticated (for consent sharing)
+  - anonymous (for payments, but can be authenticated too). </p>
+<p>Here are detailed diagrams of each flow:
+ - <a href="img/security-details/authenticated-security-concept-details.png">Authenticated security concept detailed flow</a>
+ - <a href="img/security-details/anonymous-security-concept-details.png">Anonymous security concept detailed flow</a></p>
+<h2 id="technical-architecture">Technical architecture</h2>
+<p>The following picture displays the overall technical architecture concept of this banking gateway:
+<img alt="Technical architecture" src="img/technical-architecture.svg" /></p>
+<p><strong>Key components as shown on diagram</strong>:</p>
+<p><strong>APIs:</strong>
+ - <a href="opba-banking-rest-api">Banking API</a> and its implementation <a href="opba-banking-rest-impl">Banking API Impl</a>
+ - <a href="opba-consent-rest-api">Consent API</a> and its implementation <a href="opba-consent-rest-impl">Consent API Impl</a></p>
+<p><strong>Facade:</strong>
+ - <a href="opba-banking-protocol-facade">Banking protocol facade</a></p>
+<p><strong>Protocol:</strong>
+  - <a href="opba-protocols/opba-protocol-api">Banking protocol API</a>
+  - <a href="opba-protocols/xs2a-protocol">XS2A compliant banking protocol Impl</a></p>
+<h2 id="running-the-project-locally">Running the project locally</h2>
+<ul>
+<li><a href="https://github.com/adorsys/open-banking-gateway/tree/develop/docker-compose-dev.yml">docker-compose-dev.yml</a> - docker-compose file in the project root for <strong>Development</strong> (requires building docker images)</li>
+<li><a href="https://github.com/adorsys/open-banking-gateway/tree/develop/docker-compose.yml">docker-compose.yml</a> - docker-compose file in the project root for <strong>Demo</strong> (Images will be pulled from DockerHub)</li>
+</ul>
+<h2 id="information-for-developers">Information for developers:</h2>
+<ul>
+<li>
+<p>Working with BPMN: As most protocols use BPMN, we have developed 
+ the <a href="https://plugins.jetbrains.com/plugin/14318-flowable-bpmn-visualizer">plugin 'Flowable BPMN visualizer'</a> that directly integrates into IntelliJ
+ with code navigation, refactoring and other stuff for <strong>Flowable BPMN engine</strong>. It will make your work a lot easier
+ as you don't need to leave IntelliJ to change diagram or to see what class is used at which step.</p>
+</li>
+<li>
+<p>Starting with project: <a href="https://github.com/adorsys/open-banking-gateway/tree/develop/how-to-start-with-project">How to start with project</a> </p>
+</li>
+<li>
+<p>Populating database with bank data: <a href="https://github.com/adorsys/open-banking-gateway/tree/develop/opba-db/README.md">How to fill database with bank data</a> </p>
+</li>
+</ul>
+<h2 id="documentation">Documentation</h2>
+<p>Please take a look into our <a href="https://adorsys.github.io/open-banking-gateway/doc/develop/"><strong>documentation</strong></a> to know more about:</p>
+<h3 id="planned-and-released-versions">Planned and released versions</h3>
+<ul>
+<li><a href="version_policy/">Versioning, Release and Support policy</a></li>
+<li><a href="releasenotes/">Release notes</a> </li>
+<li><a href="roadmap/">Roadmap for next features development</a></li>
+</ul>
+<h3 id="architecture">Architecture</h3>
+<ul>
+<li><a href="architecture/dictionary/">Dictionary</a></li>
+<li><a href="architecture/use_cases/">Use Cases</a></li>
+<li><a href="architecture/technical-details/">Banking Protoсol Design</a></li>
+<li><a href="architecture/concepts/psu-device-redirection/">User Agent Redirection</a></li>
+<li><a href="architecture/concepts/psu-security-concept/">PSU Access Security Design</a></li>
+<li><a href="https://adorsys.github.io/open-banking-gateway/javadoc/latest/index.html">JavaDoc</a></li>
+</ul>
+<h2 id="third-parties-contribution">Third Parties Contribution</h2>
+<p>This project is designed to enable contribution from different sources, as the open banking challenge will start with a magnitude of discrepancies in individual bank implementations, even for banks implementing a common standards.</p>
+<h3 id="how-to-contribute">How to contribute</h3>
+<ul>
+<li><a href="getting_started/">Getting started</a></li>
+<li><a href="ContributionGuidelines/">Contribution Guidelines</a> </li>
+</ul>
+<h2 id="authors-contact">Authors &amp; Contact</h2>
+<ul>
+<li><strong><a href="mailto:fpo@adorsys.de">Francis Pouatcha</a></strong> - <em>Initial work</em> - <a href="https://www.adorsys.de">adorsys</a></li>
+</ul>
+<p>See also the list of <a href="https://github.com/adorsys/open-banking-gateway/graphs/contributors">contributors</a> who participated in this project.</p>
+<p>For commercial support please contact <strong><a href="https://adorsys.de/">adorsys Team</a></strong>.</p>
+<h2 id="license">License</h2>
+<p>This project is licensed under the Apache License version 2.0 - see the <a href="LICENSE">LICENSE</a> file for details</p>
+              
+            </div>
+          </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+        <a href="getting_started/" class="btn btn-neutral float-right" title="Getting started">Next <span class="icon icon-circle-arrow-right"></span></a>
+      
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <!-- Copyright etc -->
+    
+  </div>
+
+  Built with <a href="http://www.mkdocs.org">MkDocs</a> using a <a href="https://github.com/snide/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>.
+</footer>
+      
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+
+  <div class="rst-versions" role="note" style="cursor: pointer">
+    <span class="rst-current-version" data-toggle="rst-current-version">
+      
+          <a href="https://github.com/adorsys/open-banking-gateway/" class="fa fa-github" style="float: left; color: #fcfcfc"> GitHub</a>
+      
+      
+      
+        <span style="margin-left: 15px"><a href="getting_started/" style="color: #fcfcfc">Next &raquo;</a></span>
+      
+    </span>
+</div>
+    <script>var base_url = '.';</script>
+    <script src="js/theme.js" defer></script>
+      <script src="search/main.js" defer></script>
+
+</body>
+</html>
+
+<!--
+MkDocs version : 1.0.4
+Build Date UTC : 2020-10-06 07:54:30
+-->

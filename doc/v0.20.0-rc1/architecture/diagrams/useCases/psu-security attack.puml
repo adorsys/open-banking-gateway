@@ -1,0 +1,71 @@
+@startuml
+
+autonumber "<b><color blue>[Sec-000]</color></b>"
+actor "bob" as psu
+actor "alice" as alice
+
+box "BobUserAgent" #LightGray
+    participant "MaliciousFinTechUI" as FinTechUI
+end box
+box "AliceUserAgent" #LightGray
+    participant "FinTechUI" as AliceFinTechUI
+    participant "ConsentAuthorisationUI" as ConsentAuthorisationUI
+    'participant "OnlineBankingUI" as OnlineBankingUI
+end box
+box "FinTechDC" #DarkSeaGreen
+    participant "FinTechApi" as FinTechApi
+end box
+box "TppDC" #LightGray
+    participant "TppBankingApi" as TppBankingApi
+    'participant "TppBankSearchApi" as TppBankSearchApi
+    participant "ConsentAuthorisationApi" as ConsentAuthorisationApi
+
+    'participant "RedirectSessionStoreApi" as RedirectSessionStoreApi
+    participant "BankingProtocolFacade" as BankingProtocolFacade
+    'participant "BankingProtocol" as BankingProtocol
+end box
+box "AspspDC" #LightSkyBlue
+	participant "AspspBankingApi" as AspspBankingApi
+    'participant "OnlineBankingApi" as OnlineBankingApi
+end box
+
+psu -> FinTechUI ++ : login
+FinTechUI -> FinTechApi ++ : login
+FinTechApi -> TppBankingApi ++ : service(psu-id@fintech,PsuFinTechPassword)
+TppBankingApi -> BankingProtocolFacade ++ : service(psu-id@fintech,PsuFinTechPassword)
+BankingProtocolFacade -> BankingProtocolFacade : registerFinTechUser():\nPsuFinTechPublicKey,\nEncryptedPsuFinTechDataStore \n[Keystore,Inbox]
+BankingProtocolFacade -> BankingProtocolFacade : PsuFinTechDataStore.storeRequestParams():\nRequest params stored elsewhere but\nencrypted with PsuFinTechSecretKey
+return 202_RedirectToConsent(redirectCode,auth-id)
+return 202_RedirectToConsent(redirectCode,auth-id)
+return 202_RedirectToConsent[RedirectCookie]\n()<redirectCode,auth-id>
+FinTechUI -> FinTechUI : storeRedirectCookie()
+FinTechUI -> ConsentAuthorisationUI ++ : activateUI(redirectCode)
+== Here Bob tric Alice to login to the consent autorize ui ==
+ConsentAuthorisationUI -> alice : login
+alice -> ConsentAuthorisationUI : enterLoginData()
+ConsentAuthorisationUI -> ConsentAuthorisationApi ++ : login(PsuTppLoginData, redirectCode)
+ConsentAuthorisationApi -> BankingProtocolFacade ++ : tppLogin(PsuTppLoginData, redirectCode)
+BankingProtocolFacade -> BankingProtocolFacade : checkLoginData():PsuTppDataStore
+BankingProtocolFacade -> BankingProtocolFacade : lookupPsuFinTechDataStore(redirectCode):PsuFinTechDataStore
+BankingProtocolFacade -> BankingProtocolFacade : PsuFinTechDataStore.inbox(PsuTppEncryptionKey)
+return 202_RedirectToFinTech<auth-id>
+return 202_RedirectToFinTech<auth-id>
+ConsentAuthorisationUI -> AliceFinTechUI : activateFinTechUI
+'return activateFinTechUI<auth-id>
+AliceFinTechUI -> FinTechApi : fromConsentOk[RedirectCookie]()<auth-id,authCode>\n ERROR
+== THis is the confirmation step in the normal case. It is not running here because of the error. ==
+FinTechUI -> FinTechApi ++ : fromConsentOk[RedirectCookie]()<auth-id,authCode>\n ERROR
+FinTechApi -> TppBankingApi ++ : associateIdentity(auth-id, authCode, PsuFinTechPassword)
+TppBankingApi -> BankingProtocolFacade ++ : associateIdentity(auth-id, authCode, PsuFinTechPassword)
+BankingProtocolFacade -> BankingProtocolFacade : loadPsuFinTechDataStore: PsuFinTechDataStore
+BankingProtocolFacade -> BankingProtocolFacade : PsuFinTechDataStore.importInbox(authCode)
+== Here Allice is out of the game. Bob keeps poling ==
+psu -> FinTechUI ++ : pull response
+FinTechUI -> FinTechApi : service()
+FinTechApi -> FinTechApi : authorizePSU(RedirectCookie):PsuFinTechPassword
+'FinTechApi -> TppBankingApi : associateIdentity():PsuFinTechPassword
+FinTechApi -> TppBankingApi ++ : service():PsuFinTechPassword
+TppBankingApi -> BankingProtocolFacade ++ : service()
+BankingProtocolFacade -> BankingProtocolFacade : loadConsent()
+
+@enduml
