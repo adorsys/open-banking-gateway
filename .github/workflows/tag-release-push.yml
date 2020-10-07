@@ -19,11 +19,6 @@ jobs:
       - name: Promote release-candidate JARs to Maven-central
         run: ./scripts/deploy_mvn.sh
         env:
-          # GPG is needed to sign catalog.txt
-          GPG_EXECUTABLE: gpg
-          GPG_PASSPHRASE: ${{ secrets.GPG_PASSPHRASE }}
-          GPG_SECRET_KEY: ${{ secrets.GPG_SECRET_KEY }}
-          GPG_OWNERTRUST: ${{ secrets.GPG_OWNERTRUST }}
           SONATYPE_USERNAME: ${{ secrets.SONATYPE_USERNAME }}
           SONATYPE_PASSWORD: ${{ secrets.SONATYPE_PASSWORD }}
           # These are required for READ access to Github Packages maven:
