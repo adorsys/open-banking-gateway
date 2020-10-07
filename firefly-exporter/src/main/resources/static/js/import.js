@@ -5,7 +5,7 @@ function watchAccountExportJobStatus(statusElement, jobId, apiUrl) {
         fetch(`${apiUrl}/export-accounts/${jobId}`)
             .then((response) => response.json())
             .then((response) => {
-                statusElement.innerText = `Exported ${response.accountsExported} of ${response.numAccountsToExport} accounts, errors ${response.numAccountsErrored}`
+                statusElement.innerText = `Exported ${response.accountsExported} of ${response.numAccountsToExport} accounts, errors ${response.numAccountsErrored}`;
                 if (response.completed) {
                     clearInterval(intervalId);
                     statusElement.innerText = statusElement.innerText + '. Done'
@@ -19,14 +19,15 @@ function callAccountExport(fireflyTokenInputId, bankIdInputId, redirectElementId
     const bankId = document.getElementById(bankIdInputId).value;
 
     const statusElement = document.getElementById(statusElementId);
-    statusElement.innerText = "Please wait..."
-    statusElement.className = '';
-    fetch(`${apiUrl}/${bankId}/export-accounts`, {method: 'POST',  headers: {'FIREFLY-TOKEN': fireFlyToken}})
+    statusElement.innerText = "Please wait...";
+    statusElement.className = 'status';
+    fetch(`${apiUrl}/${bankId}/export-accounts`, {method: 'POST', headers: {'FIREFLY-TOKEN': fireFlyToken}})
         .then((response) => {
             if (response.status === 202) {
                 const redirectLink = document.getElementById(redirectElementId);
                 redirectLink.href = response.headers.get('location');
                 redirectLink.className = '';
+                redirectLink.className = 'status';
                 statusElement.className = 'hidden';
             } else if (response.status === 200) {
                 response.text().then(id => watchAccountExportJobStatus(statusElement, id, apiUrl))
@@ -34,7 +35,9 @@ function callAccountExport(fireflyTokenInputId, bankIdInputId, redirectElementId
                 statusElement.innerText = "Error";
             }
         })
-        .catch((err) => {console.error(`Failed fetching: ${err}`)});
+        .catch((err) => {
+            console.error(`Failed fetching: ${err}`)
+        });
 }
 
 function callExportableAccounts(fireflyTokenInputId, bankIdInputId, redirectElementId, statusElementId, accountExportBlockId, accountListElementId, apiUrl) {
@@ -45,8 +48,8 @@ function callExportableAccounts(fireflyTokenInputId, bankIdInputId, redirectElem
 
     const statusElement = document.getElementById(statusElementId);
     const exportBlock = document.getElementById(accountExportBlockId);
-    statusElement.innerText = "Please wait..."
-    statusElement.className = '';
+    statusElement.innerText = "Please wait...";
+    statusElement.className = 'status';
     exportBlock.className = 'hidden';
     fetch(`${apiUrl}/${bankId}/exportable-accounts`, {headers: {'FIREFLY-TOKEN': fireFlyToken}})
         .then((response) => {
@@ -56,7 +59,7 @@ function callExportableAccounts(fireflyTokenInputId, bankIdInputId, redirectElem
                 redirectLink.className = '';
                 statusElement.className = 'hidden';
             } else if (response.status === 200) {
-                exportBlock.className = '';
+                exportBlock.className = 'mt-2';
                 accountList.innerHTML = '';
                 response.json().then((accounts) => {
                     for (let i = 0; i < accounts.length; ++i) {
@@ -65,7 +68,7 @@ function callExportableAccounts(fireflyTokenInputId, bankIdInputId, redirectElem
                         checkbox.setAttribute('id', accounts[i].resourceId);
                         checkbox.type = 'checkbox';
                         checkbox.checked = true;
-                        checkbox.className = accountClassName;
+                        checkbox.className = accountClassName + ' mr-2';
                         const accountId = document.createTextNode(accounts[i].iban);
                         elem.appendChild(checkbox);
                         elem.appendChild(accountId);
@@ -77,7 +80,9 @@ function callExportableAccounts(fireflyTokenInputId, bankIdInputId, redirectElem
                 statusElement.innerText = "Error";
             }
         })
-        .catch((err) => {console.error(`Failed fetching: ${err}`)});
+        .catch((err) => {
+            console.error(`Failed fetching: ${err}`)
+        });
 }
 
 function watchTransactionExportJobStatus(statusElement, jobId, apiUrl) {
@@ -101,8 +106,8 @@ function callTransactionExport(fireflyTokenInputId, bankIdInputId, startDateElem
     const end = document.getElementById(endDateElementId).valueAsDate.toISOString().split('T')[0];
 
     const statusElement = document.getElementById(statusElementId);
-    statusElement.innerText = "Please wait..."
-    statusElement.className = '';
+    statusElement.innerText = "Please wait...";
+    statusElement.className = 'status';
     const accounts = document.getElementsByClassName(accountClassName);
     const accountIds = [];
     for (let i = 0; i < accounts.length; ++i) {
@@ -113,7 +118,10 @@ function callTransactionExport(fireflyTokenInputId, bankIdInputId, startDateElem
         accountIds.push(accounts[i].id);
     }
 
-    fetch(`${apiUrl}/${bankId}/${accountIds.join(",")}/export-transactions?dateFrom=${start}&dateTo=${end}`, {method: 'POST',  headers: {'FIREFLY-TOKEN': fireFlyToken}})
+    fetch(`${apiUrl}/${bankId}/${accountIds.join(",")}/export-transactions?dateFrom=${start}&dateTo=${end}`, {
+        method: 'POST',
+        headers: {'FIREFLY-TOKEN': fireFlyToken}
+    })
         .then((response) => {
             if (response.status === 200) {
                 response.text().then(id => watchTransactionExportJobStatus(statusElement, id, apiUrl))
@@ -121,5 +129,7 @@ function callTransactionExport(fireflyTokenInputId, bankIdInputId, startDateElem
                 statusElement.innerText = "Error";
             }
         })
-        .catch((err) => {console.error(`Failed fetching: ${err}`)});
+        .catch((err) => {
+            console.error(`Failed fetching: ${err}`)
+        });
 }
