@@ -56,7 +56,6 @@ public class FireFlyAccountExporter {
         fireflyAccount.setName(account.getIban());
         fireflyAccount.setIban(account.getIban());
         fireflyAccount.setCurrencyCode(account.getCurrency());
-        fireflyAccount.setBic(account.getBic());
         fireflyAccount.setActive(true);
         fireflyAccount.setAccountRole(Account.AccountRoleEnum.DEFAULTASSET);
         fireflyAccount.setType(Account.TypeEnum.ASSET);

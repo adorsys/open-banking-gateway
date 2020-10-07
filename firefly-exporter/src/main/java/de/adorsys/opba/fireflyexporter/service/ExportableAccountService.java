@@ -54,7 +54,7 @@ public class ExportableAccountService {
         );
 
         if (accounts.getStatusCode() == HttpStatus.ACCEPTED) {
-            String redirectTo = consentService.createConsentForAccountsAndTransactions(bankId);
+            String redirectTo = consentService.createConsentForAccountsAndTransactionsAndSaveSession(bankId);
             return ResponseEntity.accepted().header(LOCATION, redirectTo).build();
         }
         if (accounts.getStatusCode() != HttpStatus.OK) {

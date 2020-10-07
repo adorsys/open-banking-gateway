@@ -30,8 +30,11 @@ public class ConsentService {
     private final RedirectStateRepository redirectStateRepository;
     private final OpenBankingConfig bankingConfig;
 
+    /**
+     * Ask for global (transactions and accounts) consent.
+     */
     @Transactional
-    public String createConsentForAccountsAndTransactions(String bankId) {
+    public String createConsentForAccountsAndTransactionsAndSaveSession(String bankId) {
         UUID redirectCode = UUID.randomUUID();
         UUID serviceSessionId = UUID.randomUUID();
 
@@ -55,17 +58,21 @@ public class ConsentService {
         );
 
         if (apiResponse.getStatusCode() == HttpStatus.ACCEPTED) {
-            RedirectState redirectState = new RedirectState();
-            redirectState.setId(redirectCode);
-            redirectState.setServiceSessionId(serviceSessionId);
-            redirectState.setBankId(bankId);
-            redirectState.setAuthorizationSessionId(apiResponse.getHeaders().get("Authorization-Session-ID").get(0));
-            redirectStateRepository.save(redirectState);
-
+            saveSession(bankId, redirectCode, serviceSessionId, apiResponse);
             return apiResponse.getHeaders().get(HttpHeaders.LOCATION).get(0);
         }
 
         throw new IllegalStateException("Bad API return code: " + apiResponse.getStatusCode());
+    }
+
+    @Transactional
+    public void saveSession(String bankId, UUID redirectCode, UUID serviceSessionId, ResponseEntity apiResponse) {
+        RedirectState redirectState = new RedirectState();
+        redirectState.setId(redirectCode);
+        redirectState.setServiceSessionId(serviceSessionId);
+        redirectState.setBankId(bankId);
+        redirectState.setAuthorizationSessionId(apiResponse.getHeaders().get("Authorization-Session-ID").get(0));
+        redirectStateRepository.save(redirectState);
     }
 
     @Transactional

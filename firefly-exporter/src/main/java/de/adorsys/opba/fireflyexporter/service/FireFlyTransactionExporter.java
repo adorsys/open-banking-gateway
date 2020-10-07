@@ -123,7 +123,7 @@ public class FireFlyTransactionExporter {
                 null,
                 bankId,
                 null,
-                consentRepository.findFirstByBankIdOrderByModifiedAt(bankId).map(BankConsent::getConsentId).orElse(null),
+                consentRepository.findFirstByBankIdOrderByModifiedAt(bankId).map(BankConsent::getConsentId).orElse(UUID.randomUUID()),
                 from,
                 to,
                 null,
