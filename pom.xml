@@ -602,15 +602,21 @@
             <build>
                 <plugins>
                     <plugin>
+                        <!-- This custom plugin version disables deploy of catalog.txt (that does not have signature)
+                        This plugin version is installed to local maven repository by pre-script.
+                        Modified plugin sources: https://github.com/valb3r/gitflow-helper-maven-plugin
+                        -->
                         <groupId>com.e-gineering</groupId>
                         <artifactId>gitflow-helper-maven-plugin</artifactId>
-                        <version>${gitflow.helper.plugin.version}</version>
+                        <version>3.0.1-SKIP-CATALOG-SNAPSHOT</version>
                         <extensions>true</extensions>
                         <configuration>
                             <!-- Tell the plugins what repositories to use (by id) -->
                             <releaseDeploymentRepository>release</releaseDeploymentRepository>
                             <stageDeploymentRepository>stage</stageDeploymentRepository>
                             <snapshotDeploymentRepository>stage</snapshotDeploymentRepository>
+                            <!-- This property comes from modified plugin version -->
+                            <skipExistingCatalogFileArtifactAttach>true</skipExistingCatalogFileArtifactAttach>
 
                             <!-- Allow to promote on ANY branch because Github Actions checkouts tag, not branch (and forcing both seem impossible) -->
                             <masterBranchPattern>.*</masterBranchPattern>
