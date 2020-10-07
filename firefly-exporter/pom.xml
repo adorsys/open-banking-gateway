@@ -22,14 +22,14 @@
 
 		<main.basedir>..</main.basedir>
 		<tpp-bank-search-location>
-			${main.basedir}/opba-banking-rest-api/src/main/resources/static/tpp_banking_api_bank_search.yml
+			${main.basedir}/opba-banking-rest-api-ymls/src/main/resources/static/tpp_banking_api_bank_search.yml
 		</tpp-bank-search-location>
 		<tpp-bank-search-prefix>de.adorsys.opba.tpp.banksearch</tpp-bank-search-prefix>
 		<tpp-ais-location>
-			${main.basedir}/opba-banking-rest-api/src/main/resources/static/tpp_banking_api_ais.yml
+			${main.basedir}/opba-banking-rest-api-ymls/src/main/resources/static/tpp_banking_api_ais.yml
 		</tpp-ais-location>
 		<tpp-token-location>
-			${main.basedir}/opba-banking-rest-api/src/main/resources/static/tpp_banking_api_token.yml
+			${main.basedir}/opba-banking-rest-api-ymls/src/main/resources/static/tpp_banking_api_token.yml
 		</tpp-token-location>
 		<tpp-ais-prefix>de.adorsys.opba.tpp.ais</tpp-ais-prefix>
 		<tpp-token-prefix>de.adorsys.opba.tpp.token</tpp-token-prefix>
@@ -43,6 +43,13 @@
 			<groupId>de.adorsys.opba</groupId>
 			<artifactId>opba-api-security</artifactId>
 			<version>${project.version}</version>
+		</dependency>
+
+		<dependency>
+			<groupId>org.postgresql</groupId>
+			<artifactId>postgresql</artifactId>
+			<scope>runtime</scope>
+			<optional>true</optional>
 		</dependency>
 
 		<dependency>
@@ -245,12 +252,12 @@
 								<java8>false</java8>
 								<useTags>true</useTags>
 								<defaultInterfaces>false</defaultInterfaces>
-								<implicitHeaders>true</implicitHeaders>
+								<implicitHeaders>false</implicitHeaders>
 								<generateForOpenFeign>true</generateForOpenFeign>
 								<library>spring-cloud</library>
 								<swaggerDocketConfig>false</swaggerDocketConfig>
 							</configOptions>
-							<!-- FireFly uses some esoteric date format, so forcing string instead -->
+							<!-- FireFly uses returns OffsetDateTime instead of Date, so forcing OffsetDateTime instead -->
 							<typeMappings>
 								<typeMapping>LocalDate=String</typeMapping>
 								<typeMapping>LocalDateTime=String</typeMapping>

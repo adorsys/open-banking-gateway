@@ -27,14 +27,12 @@ import org.springframework.transaction.support.TransactionOperations;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
-import java.time.ZoneOffset;
+import java.time.format.DateTimeFormatter;
 import java.util.List;
 import java.util.Set;
 import java.util.UUID;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.stream.Collectors;
-
-import static de.adorsys.opba.fireflyexporter.service.Consts.FIREFLY_DATE_FORMAT;
 
 @Slf4j
 @Service
@@ -165,9 +163,9 @@ public class FireFlyTransactionExporter {
         split.setInternalReference(transaction.getTransactionId());
         split.setDescription(buildDescription(transaction));
         LocalDate txDate = null != transaction.getValueDate() ? transaction.getValueDate() : LocalDate.now();
-        split.setDate(txDate.atStartOfDay().atZone(ZoneOffset.UTC).format(FIREFLY_DATE_FORMAT));
+        split.setDate(DateTimeFormatter.ISO_DATE.format(txDate));
         if (null != transaction.getBookingDate()) {
-            split.setBookDate(transaction.getBookingDate().atStartOfDay().atZone(ZoneOffset.UTC).format(FIREFLY_DATE_FORMAT));
+            split.setBookDate(DateTimeFormatter.ISO_DATE.format(transaction.getBookingDate()));
         }
 
         BigDecimal transactionAmount = new BigDecimal(transaction.getTransactionAmount().getAmount());
