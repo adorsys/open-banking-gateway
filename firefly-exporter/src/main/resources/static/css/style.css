@@ -33,6 +33,19 @@ body {
     margin-bottom: 1rem;
 }
 
+.d-flex {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.status{
+    display: block;
+    margin-top: 10px;
+    font-size: .85rem;
+    color: gray;
+}
+
 label {
     display: inline-block;
     padding-bottom: 5px;
@@ -90,6 +103,22 @@ input:focus {
 
 .hidden {
     display: none
+}
+
+.mt-2 {
+    margin-top: 1rem;
+}
+
+.mb-2 {
+    margin-bottom: 1rem;
+}
+
+.mr-2 {
+    margin-right: 1rem;
+}
+
+ul {
+    list-style-type: none;
 }
 
 @media screen and (max-width: 410px) {
