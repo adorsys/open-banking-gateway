@@ -2,7 +2,6 @@ package de.adorsys.opba.protocol.xs2a.tests.e2e.stages;
 
 import com.google.common.collect.ImmutableMap;
 import com.tngtech.jgiven.Stage;
-import com.tngtech.jgiven.annotation.ProvidedScenarioState;
 import com.tngtech.jgiven.integration.spring.JGivenStage;
 import de.adorsys.opba.api.security.external.service.RequestSigningService;
 import de.adorsys.opba.api.security.generator.api.DataToSignProvider;
@@ -25,7 +24,9 @@ import org.springframework.http.MediaType;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Map;
+import java.util.Set;
 import java.util.UUID;
 import java.util.stream.Collectors;
 
@@ -53,8 +54,7 @@ public class CommonGivenStages<SELF extends CommonGivenStages<SELF>> extends Sta
     @Autowired
     private RequestSigningService signingService;
 
-    @ProvidedScenarioState
-    protected boolean userCreated;
+    protected Set<String> createdUsers = new HashSet<>();
 
     @Transactional
     public SELF preferred_sca_approach_selected_for_all_banks_in_opba(Approach expectedApproach) {
@@ -121,18 +121,19 @@ public class CommonGivenStages<SELF extends CommonGivenStages<SELF>> extends Sta
     }
 
     public SELF user_registered_in_opba_with_credentials(String username, String password) {
-        if (!userCreated) {
-            RestAssured
-                .given()
-                    .header(X_REQUEST_ID, UUID.randomUUID().toString())
-                    .contentType(MediaType.APPLICATION_JSON_VALUE)
-                    .body(ImmutableMap.of(LOGIN, username, PASSWORD, password))
-                .when()
-                    .post(REGISTER_USER_ENDPOINT)
-                .then()
-                    .statusCode(HttpStatus.CREATED.value());
-            userCreated = true;
+        if (createdUsers.contains(username)) {
+            return self();
         }
+        RestAssured
+            .given()
+                .header(X_REQUEST_ID, UUID.randomUUID().toString())
+                .contentType(MediaType.APPLICATION_JSON_VALUE)
+                .body(ImmutableMap.of(LOGIN, username, PASSWORD, password))
+            .when()
+                .post(REGISTER_USER_ENDPOINT)
+            .then()
+                .statusCode(HttpStatus.CREATED.value());
+        createdUsers.add(username);
         return self();
     }
 
