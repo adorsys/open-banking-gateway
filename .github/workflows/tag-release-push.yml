@@ -30,3 +30,4 @@ jobs:
         env:
           SONATYPE_USERNAME: ${{ secrets.SONATYPE_USERNAME }}
           SONATYPE_PASSWORD: ${{ secrets.SONATYPE_PASSWORD }}
+          GIT_BRANCH: master # Force branch to resolve to master if git resolution fails - otherwise gitflow-helper uses UNDEFINED branch
