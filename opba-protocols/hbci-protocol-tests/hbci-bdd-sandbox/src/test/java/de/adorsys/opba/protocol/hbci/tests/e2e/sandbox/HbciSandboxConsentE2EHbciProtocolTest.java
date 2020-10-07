@@ -1,6 +1,7 @@
 package de.adorsys.opba.protocol.hbci.tests.e2e.sandbox;
 
 import com.tngtech.jgiven.integration.spring.junit5.SpringScenarioTest;
+import de.adorsys.multibanking.domain.spi.OnlineBankingService;
 import de.adorsys.opba.db.repository.jpa.BankProfileJpaRepository;
 import de.adorsys.opba.protocol.api.dto.ValidationIssue;
 import de.adorsys.opba.protocol.api.dto.result.body.ValidationError;
@@ -19,6 +20,7 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.boot.test.mock.mockito.SpyBean;
 import org.springframework.boot.web.server.LocalServerPort;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.transaction.annotation.Propagation;
@@ -39,6 +41,9 @@ import static de.adorsys.opba.protocol.xs2a.tests.TestProfiles.ONE_TIME_POSTGRES
 import static de.adorsys.opba.protocol.xs2a.tests.e2e.wiremock.mocks.WiremockConst.BOTH_BOOKING;
 import static de.adorsys.opba.protocol.xs2a.tests.e2e.wiremock.mocks.WiremockConst.DATE_FROM;
 import static de.adorsys.opba.protocol.xs2a.tests.e2e.wiremock.mocks.WiremockConst.DATE_TO;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
 import static org.springframework.boot.test.context.SpringBootTest.WebEnvironment.RANDOM_PORT;
 
 /**
@@ -71,6 +76,9 @@ class HbciSandboxConsentE2EHbciProtocolTest extends SpringScenarioTest<
 
     @Autowired
     private HbciConfig config;
+
+    @SpyBean
+    OnlineBankingService onlineBankingService;
 
     // TODO: Those dependencies do not need to be mocked, but should be optional
     // Stubbing out xs2a protocol declared dependencies:
@@ -250,8 +258,10 @@ class HbciSandboxConsentE2EHbciProtocolTest extends SpringScenarioTest<
         addAccount();
         // get accounts without cache update and see that no new account in the result
         then().open_banking_can_read_anton_brueckner_hbci_account_data_using_consent_bound_to_service_session_bank_blz_30000003();
+        verify(onlineBankingService, times(1)).loadBankAccounts(any());
         // get accounts with cache update and see new account in the result
         getUpdatedListAccounts();
+        verify(onlineBankingService, times(2)).loadBankAccounts(any());
     }
 
     private void addAccount() {
@@ -288,7 +298,10 @@ class HbciSandboxConsentE2EHbciProtocolTest extends SpringScenarioTest<
     private void makeHbciAdapterToPointToHbciMockEndpoints() {
         adapterProperties.getAdorsysMockBanksBlz().stream()
                 .flatMap(it -> bankProfileJpaRepository.findByBankBankCode(String.valueOf(it)).stream())
-                .peek(it -> it.setUrl("http://localhost:" + port + "/hbci-mock/"))
+                .map(it -> {
+                    it.setUrl("http://localhost:" + port + "/hbci-mock/");
+                    return it;
+                })
                 .forEach(it -> bankProfileJpaRepository.save(it));
     }
 }
