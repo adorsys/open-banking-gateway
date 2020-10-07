@@ -211,9 +211,9 @@ protocol:
         redirect:
           to-aspsp: ${facade.urls.embedded-ui-base-url}/pis/{sessionId}/to-aspsp-redirection
           web-hooks:
-            ok: ${facade.urls.embedded-ui-base-url}/embedded-server/v1/consent/{sessionId}/fromAspsp/STUB_STATE/ok?redirectCode=#{context.getAspspRedirectCode()}
-            nok: ${facade.urls.embedded-ui-base-url}/embedded-server/v1/consent/{sessionId}/fromAspsp/STUB_STATE/nok?redirectCode=#{context.getAspspRedirectCode()}
-            result: ${facade.urls.embedded-ui-base-url}/pis/{sessionId}/consent-result?redirectCode=#{context.getRedirectCodeIfAuthContinued()}
+            ok: ${facade.urls.embedded-ui-base-url}/embedded-server/v1/consent/{sessionId}/fromAspsp/STUB_STATE/ok
+            nok: ${facade.urls.embedded-ui-base-url}/embedded-server/v1/consent/{sessionId}/fromAspsp/STUB_STATE/nok
+            result: ${facade.urls.embedded-ui-base-url}/pis/{sessionId}/consent-result
           parameters:
             max-array-size: 32
             provide-more: ${facade.urls.embedded-ui-base-url}/pis/{sessionId}
