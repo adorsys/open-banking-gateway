@@ -82,7 +82,7 @@
             <plugin>
                 <groupId>org.sonatype.plugins</groupId>
                 <artifactId>nexus-staging-maven-plugin</artifactId>
-                <version>1.6</version>
+                <version>${maven-nexus-staging-plugin.version}</version>
                 <extensions>true</extensions>
                 <configuration>
                     <skipNexusStagingDeployMojo>true</skipNexusStagingDeployMojo>
