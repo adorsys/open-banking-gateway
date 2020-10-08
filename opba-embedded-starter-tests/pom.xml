@@ -68,26 +68,41 @@
         </dependency>
     </dependencies>
 
-    <build>
-        <plugins>
-            <plugin>
-                <!-- This is non-deployable artifact -->
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-deploy-plugin</artifactId>
-                <version>${maven-deploy-plugin.version}</version>
-                <configuration>
-                    <skip>true</skip>
-                </configuration>
-            </plugin>
-            <plugin>
-                <groupId>org.sonatype.plugins</groupId>
-                <artifactId>nexus-staging-maven-plugin</artifactId>
-                <version>${maven-nexus-staging-plugin.version}</version>
-                <extensions>true</extensions>
-                <configuration>
-                    <skipNexusStagingDeployMojo>true</skipNexusStagingDeployMojo>
-                </configuration>
-            </plugin>
-        </plugins>
-    </build>
+    <profiles>
+        <!-- Skipping this module from deployment at `release-candidate` -->
+        <profile>
+            <id>release-candidate</id>
+            <build>
+                <plugins>
+                    <plugin>
+                        <!-- This is non-deployable artifact -->
+                        <groupId>org.apache.maven.plugins</groupId>
+                        <artifactId>maven-deploy-plugin</artifactId>
+                        <version>${maven-deploy-plugin.version}</version>
+                        <configuration>
+                            <skip>true</skip>
+                        </configuration>
+                    </plugin>
+                </plugins>
+            </build>
+        </profile>
+        <!-- Skipping this module from deployment at `release` -->
+        <profile>
+            <id>release</id>
+            <build>
+                <plugins>
+                    <plugin>
+                        <!-- This is non-deployable artifact -->
+                        <groupId>org.sonatype.plugins</groupId>
+                        <artifactId>nexus-staging-maven-plugin</artifactId>
+                        <version>${maven-nexus-staging-plugin.version}</version>
+                        <extensions>true</extensions>
+                        <configuration>
+                            <skipNexusStagingDeployMojo>true</skipNexusStagingDeployMojo>
+                        </configuration>
+                    </plugin>
+                </plugins>
+            </build>
+        </profile>
+    </profiles>
 </project>
