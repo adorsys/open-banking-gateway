@@ -60,10 +60,6 @@ public class AccountInformationRequestCommon<SELF extends AccountInformationRequ
         return fintech_calls_list_accounts_for_anton_brueckner(bankId, false);
     }
 
-    public SELF fintech_calls_list_accounts_for_anton_brueckner_with_cache_update(String bankId) {
-        return fintech_calls_list_accounts_for_anton_brueckner(bankId, true);
-    }
-
 
     public SELF fintech_calls_list_accounts_for_anton_brueckner(String bankId, boolean online) {
         ExtractableResponse<Response> response = withAccountsHeaders(ANTON_BRUECKNER, bankId)

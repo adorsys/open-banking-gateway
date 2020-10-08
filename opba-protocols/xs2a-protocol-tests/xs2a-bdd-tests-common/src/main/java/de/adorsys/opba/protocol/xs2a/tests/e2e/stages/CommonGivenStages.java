@@ -24,10 +24,9 @@ import org.springframework.http.MediaType;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.Map;
-import java.util.Set;
 import java.util.UUID;
+import java.util.concurrent.ConcurrentHashMap;
 import java.util.stream.Collectors;
 
 import static de.adorsys.opba.protocol.xs2a.tests.HeaderNames.X_REQUEST_ID;
@@ -54,7 +53,7 @@ public class CommonGivenStages<SELF extends CommonGivenStages<SELF>> extends Sta
     @Autowired
     private RequestSigningService signingService;
 
-    protected Set<String> createdUsers = new HashSet<>();
+    protected ConcurrentHashMap.KeySetView<String, Boolean> createdUsers = ConcurrentHashMap.newKeySet();
 
     @Transactional
     public SELF preferred_sca_approach_selected_for_all_banks_in_opba(Approach expectedApproach) {
