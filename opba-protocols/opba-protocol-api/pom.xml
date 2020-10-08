@@ -6,7 +6,7 @@
     <parent>
         <groupId>de.adorsys.opba</groupId>
         <artifactId>opba-protocols</artifactId>
-        <version>0.20.0.2</version>
+        <version>0.20.0.2-RC0</version>
     </parent>
 
     <artifactId>opba-protocol-api</artifactId>
