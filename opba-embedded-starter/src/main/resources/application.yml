@@ -182,7 +182,7 @@ protocol:
           provide-more: /{sessionId}
           provide-psu-password: /{sessionId}/authenticate?wrong={wrong}
           select-sca-method: /{sessionId}/select-sca-method
-          report-sca-result: /{sessionId}/sca-result?wrong={wrong}
+          report-sca-result: /{sessionId}/sca-result/{userSelectScaType}?wrong={wrong}
           provide-psu-iban: /{sessionId}/entry-consent-transactions/dedicated-account-access?wrong={wrong}
     aspspmessages:
       invalid-credentials: PSU_CREDENTIALS_INVALID
