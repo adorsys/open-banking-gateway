@@ -92,6 +92,15 @@
             <build>
                 <plugins>
                     <plugin>
+                        <!-- This is non-deployable artifact, avoid pulling it from GitHub packages -->
+                        <groupId>org.apache.maven.plugins</groupId>
+                        <artifactId>maven-deploy-plugin</artifactId>
+                        <version>${maven-deploy-plugin.version}</version>
+                        <configuration>
+                            <skip>true</skip>
+                        </configuration>
+                    </plugin>
+                    <plugin>
                         <!-- This is non-deployable artifact -->
                         <groupId>org.sonatype.plugins</groupId>
                         <artifactId>nexus-staging-maven-plugin</artifactId>
