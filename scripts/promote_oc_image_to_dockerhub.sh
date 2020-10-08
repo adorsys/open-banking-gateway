@@ -27,14 +27,7 @@ do
 done < "$SCRIPT_DIR/service.list"
 
 echo "Promoting pulled images"
-
-if [ "$TARGET_REGISTRY_DOMAIN" = "docker.io" ]; then
-  # Skipping host due to https://stackoverflow.com/questions/43858398/docker-push-error-denied-requested-access-to-the-resource-is-denied
-  docker login -u "$DOCKERHUB_USERNAME" -p "$DOCKERHUB_PASSWORD" || exit 1
-else
-  docker login -u "$DOCKERHUB_USERNAME" -p "$DOCKERHUB_PASSWORD" "$TARGET_REGISTRY_DOMAIN" || exit 1
-fi
-
+docker login -u "$DOCKERHUB_USERNAME" -p "$DOCKERHUB_PASSWORD" "$TARGET_REGISTRY_DOMAIN" || exit 1
 while IFS="" read -r service_and_context || [ -n "$service_and_context" ]
 do
     SERVICE_NAME=$(echo "$service_and_context" | cut -d"=" -f1)
