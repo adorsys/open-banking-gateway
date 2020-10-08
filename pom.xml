@@ -20,7 +20,7 @@
     <modelVersion>4.0.0</modelVersion>
     <groupId>de.adorsys.opba</groupId>
     <artifactId>open-banking-gateway</artifactId>
-    <version>0.20.0</version>
+    <version>0.20.0.1</version>
     <packaging>pom</packaging>
 
     <name>open-banking-gateway</name>
@@ -94,6 +94,7 @@
         NoFileAssignedException: The packaging plugin for this project did not assign a main file to the project but it has attachments. Change packaging to 'pom'
         -->
         <maven-deploy-plugin.version>2.8.2</maven-deploy-plugin.version>
+        <maven-nexus-staging-plugin.version>1.6.8</maven-nexus-staging-plugin.version>
         <maven-source-plugin.version>3.0.1</maven-source-plugin.version>
         <maven-gpg-plugin.version>1.6</maven-gpg-plugin.version>
         <maven-javadoc-plugin>3.2.0</maven-javadoc-plugin>
@@ -602,15 +603,21 @@
             <build>
                 <plugins>
                     <plugin>
+                        <!-- This custom plugin version disables deploy of catalog.txt (that does not have signature)
+                        This plugin version is installed to local maven repository by pre-script.
+                        Modified plugin sources: https://github.com/valb3r/gitflow-helper-maven-plugin
+                        -->
                         <groupId>com.e-gineering</groupId>
                         <artifactId>gitflow-helper-maven-plugin</artifactId>
-                        <version>${gitflow.helper.plugin.version}</version>
+                        <version>3.0.1-SKIP-CATALOG-SNAPSHOT</version>
                         <extensions>true</extensions>
                         <configuration>
                             <!-- Tell the plugins what repositories to use (by id) -->
                             <releaseDeploymentRepository>release</releaseDeploymentRepository>
                             <stageDeploymentRepository>stage</stageDeploymentRepository>
                             <snapshotDeploymentRepository>stage</snapshotDeploymentRepository>
+                            <!-- This property comes from modified plugin version -->
+                            <skipExistingCatalogFileArtifactAttach>true</skipExistingCatalogFileArtifactAttach>
 
                             <!-- Allow to promote on ANY branch because Github Actions checkouts tag, not branch (and forcing both seem impossible) -->
                             <masterBranchPattern>.*</masterBranchPattern>
@@ -625,6 +632,7 @@
                         </executions>
                     </plugin>
 
+                    <!-- Bridges gitflow-helper-maven-plugin to nexus-staging-maven-plugin -->
                     <plugin>
                         <groupId>org.apache.maven.plugins</groupId>
                         <artifactId>maven-deploy-plugin</artifactId>
@@ -637,11 +645,12 @@
                     <plugin>
                         <groupId>org.sonatype.plugins</groupId>
                         <artifactId>nexus-staging-maven-plugin</artifactId>
-                        <version>1.6</version>
+                        <version>${maven-nexus-staging-plugin.version}</version>
                         <extensions>true</extensions>
                         <configuration>
                             <serverId>release</serverId>
                             <nexusUrl>https://oss.sonatype.org/</nexusUrl>
+                            <autoReleaseAfterClose>true</autoReleaseAfterClose>
                         </configuration>
                     </plugin>
                 </plugins>
