@@ -72,11 +72,9 @@ public class Xs2aRedirectUserToOauth2AuthorizationServer extends ValidatedExecut
 
     private void enrichParametersAndContext(DelegateExecution execution, Xs2aContext context, Xs2aOauth2Parameters parameters) {
         ProtocolUrlsConfiguration.UrlSet urlSet = urlsConfiguration.getUrlAisOrPisSetBasedOnContext(context);
-        String redirectBack = ContextUtil.evaluateSpelForCtx(
-                urlSet.getWebHooks().getOk(),
-                execution,
-                context
-        );
+        String redirectBack = ContextUtil.buildAndExpandQueryParameters(
+                urlSet.getWebHooks().getOk(), context, context.getAspspRedirectCode(), context.getUserSelectScaType()
+        ).toString();
 
         parameters.setScaOauthLink(context.getScaOauth2Link());
         parameters.setOauth2RedirectBackLink(redirectBack);
