@@ -63,7 +63,6 @@ class HbciSandboxPaymentAndTransactionsAfterE2EHbciProtocolTest extends SpringSc
         HbciPaymentInitiationResult<? extends HbciPaymentInitiationResult<?>>
     > {
 
-    public static final BigDecimal[] EMPTY_BIG_DECIMALS = {};
     private final String OPBA_LOGIN = UUID.randomUUID().toString();
     private final String OPBA_PASSWORD = UUID.randomUUID().toString();
 
