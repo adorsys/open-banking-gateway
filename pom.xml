@@ -605,15 +605,21 @@
             <build>
                 <plugins>
                     <plugin>
+                        <!-- This custom plugin version disables deploy of catalog.txt (that does not have signature)
+                        This plugin version is installed to local maven repository by pre-script.
+                        Modified plugin sources: https://github.com/valb3r/gitflow-helper-maven-plugin
+                        -->
                         <groupId>com.e-gineering</groupId>
                         <artifactId>gitflow-helper-maven-plugin</artifactId>
-                        <version>${gitflow.helper.plugin.version}</version>
+                        <version>3.0.1-SKIP-CATALOG-SNAPSHOT</version>
                         <extensions>true</extensions>
                         <configuration>
                             <!-- Tell the plugins what repositories to use (by id) -->
                             <releaseDeploymentRepository>release</releaseDeploymentRepository>
                             <stageDeploymentRepository>stage</stageDeploymentRepository>
                             <snapshotDeploymentRepository>stage</snapshotDeploymentRepository>
+                            <!-- This property comes from modified plugin version -->
+                            <skipExistingCatalogFileArtifactAttach>true</skipExistingCatalogFileArtifactAttach>
 
                             <!-- Allow to promote on ANY branch because Github Actions checkouts tag, not branch (and forcing both seem impossible) -->
                             <masterBranchPattern>${master-branch-pattern}</masterBranchPattern>
@@ -628,12 +634,24 @@
                         </executions>
                     </plugin>
 
+                    <!-- Bridges gitflow-helper-maven-plugin to nexus-staging-maven-plugin -->
                     <plugin>
                         <groupId>org.apache.maven.plugins</groupId>
                         <artifactId>maven-deploy-plugin</artifactId>
                         <version>${maven-deploy-plugin.version}</version>
                         <configuration>
                             <deployAtEnd>true</deployAtEnd>
+                        </configuration>
+                    </plugin>
+
+                    <plugin>
+                        <groupId>org.sonatype.plugins</groupId>
+                        <artifactId>nexus-staging-maven-plugin</artifactId>
+                        <version>${maven-nexus-staging-plugin.version}</version>
+                        <extensions>true</extensions>
+                        <configuration>
+                            <serverId>release</serverId>
+                            <nexusUrl>https://oss.sonatype.org/</nexusUrl>
                         </configuration>
                     </plugin>
                 </plugins>
