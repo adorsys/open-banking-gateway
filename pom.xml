@@ -622,7 +622,7 @@
                             <skipExistingCatalogFileArtifactAttach>true</skipExistingCatalogFileArtifactAttach>
 
                             <!-- Allow to promote on ANY branch because Github Actions checkouts tag, not branch (and forcing both seem impossible) -->
-                            <masterBranchPattern>.*</masterBranchPattern>
+                            <masterBranchPattern>${master-branch-pattern}</masterBranchPattern>
                         </configuration>
                         <executions>
                             <execution>
