@@ -6,3 +6,8 @@ test:
       ui-uri: http://127.0.0.1:4200
     aspsp-profile:
       server-uri: http://localhost:20010
+    tpp:
+      server-uri: http://localhost:20016
+      management:
+        username: obg
+        password: 12345
