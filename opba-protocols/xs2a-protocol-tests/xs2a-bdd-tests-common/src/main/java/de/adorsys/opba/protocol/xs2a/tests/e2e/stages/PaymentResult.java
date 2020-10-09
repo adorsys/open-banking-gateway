@@ -63,14 +63,14 @@ public class PaymentResult<SELF extends PaymentResult<SELF>> extends Stage<SELF>
                 .getFirst(REDIRECT_CODE_QUERY);
 
         RestAssured
-                .given()
-                    .header(X_REQUEST_ID, UUID.randomUUID().toString())
-                    .queryParam(REDIRECT_CODE_QUERY, fintechUserTempPassword)
-                    .contentType(APPLICATION_JSON_VALUE)
-                .when()
-                    .post(PIS_ANONYMOUS_LOGIN_USER_ENDPOINT, paymentServiceSessionId)
-                .then()
-                    .statusCode(BAD_REQUEST.value());
+            .given()
+                .header(X_REQUEST_ID, UUID.randomUUID().toString())
+                .queryParam(REDIRECT_CODE_QUERY, fintechUserTempPassword)
+                .contentType(APPLICATION_JSON_VALUE)
+            .when()
+                .post(PIS_ANONYMOUS_LOGIN_USER_ENDPOINT, paymentServiceSessionId)
+            .then()
+                .statusCode(BAD_REQUEST.value());
         return self();
     }
 
@@ -126,27 +126,27 @@ public class PaymentResult<SELF extends PaymentResult<SELF>> extends Stage<SELF>
 
     public SELF fintech_calls_payment_information_wiremock(String iban) {
         ExtractableResponse<Response> response = withPaymentInfoHeaders(UUID.randomUUID().toString())
-                    .header(SERVICE_SESSION_ID, paymentServiceSessionId)
-                .when()
-                    .get(PIS_PAYMENT_INFORMATION_ENDPOINT, StandardPaymentProduct.SEPA_CREDIT_TRANSFERS.getSlug())
-                .then()
-                    .statusCode(OK.value())
-                    .body("endToEndIdentification", emptyOrNullString())
-                    .body("debtorAccount.iban", equalTo(iban))
-                    .body("debtorAccount.currency", equalTo("EUR"))
-                    .body("instructedAmount.currency", equalTo("EUR"))
-                    .body("instructedAmount.amount", equalTo("12.34"))
-                    .body("creditorAccount.iban", equalTo("AL90208110080000001039531801"))
-                    .body("creditorAccount.currency", equalTo("EUR"))
-                    .body("creditorAgent", emptyOrNullString())
-                    .body("creditorName", equalTo("peter"))
-                    .body("creditorAddress.streetName", emptyOrNullString())
-                    .body("creditorAddress.buildingNumber", emptyOrNullString())
-                    .body("creditorAddress.postCode", emptyOrNullString())
-                    .body("creditorAddress.country", emptyOrNullString())
-                    .body("remittanceInformationUnstructured", equalTo("test transfer"))
-                    .body("transactionStatus", equalTo(TransactionStatus.ACSC.name()))
-                    .extract();
+                .header(SERVICE_SESSION_ID, paymentServiceSessionId)
+            .when()
+                .get(PIS_PAYMENT_INFORMATION_ENDPOINT, StandardPaymentProduct.SEPA_CREDIT_TRANSFERS.getSlug())
+            .then()
+                .statusCode(OK.value())
+                .body("endToEndIdentification", emptyOrNullString())
+                .body("debtorAccount.iban", equalTo(iban))
+                .body("debtorAccount.currency", equalTo("EUR"))
+                .body("instructedAmount.currency", equalTo("EUR"))
+                .body("instructedAmount.amount", equalTo("12.34"))
+                .body("creditorAccount.iban", equalTo("AL90208110080000001039531801"))
+                .body("creditorAccount.currency", equalTo("EUR"))
+                .body("creditorAgent", emptyOrNullString())
+                .body("creditorName", equalTo("peter"))
+                .body("creditorAddress.streetName", emptyOrNullString())
+                .body("creditorAddress.buildingNumber", emptyOrNullString())
+                .body("creditorAddress.postCode", emptyOrNullString())
+                .body("creditorAddress.country", emptyOrNullString())
+                .body("remittanceInformationUnstructured", equalTo("test transfer"))
+                .body("transactionStatus", equalTo(TransactionStatus.ACSC.name()))
+                .extract();
 
         assertThat(ZonedDateTime.now(ZoneOffset.UTC)).isAfterOrEqualTo(ZonedDateTime.parse(response.body().jsonPath().getString("createdAt")));
         return self();
@@ -154,28 +154,28 @@ public class PaymentResult<SELF extends PaymentResult<SELF>> extends Stage<SELF>
 
     public SELF fintech_calls_payment_information_hbci(String iban, String bankId, String expectedStatus) {
         ExtractableResponse<Response> response = withPaymentInfoHeaders(UUID.randomUUID().toString(), bankId)
-                    .header(SERVICE_SESSION_ID, paymentServiceSessionId)
-                .when()
-                    .get(PIS_PAYMENT_INFORMATION_ENDPOINT, StandardPaymentProduct.SEPA_CREDIT_TRANSFERS.getSlug())
-                .then()
-                    .statusCode(OK.value())
-                    .body("endToEndIdentification", equalTo("WBG-123456789"))
-                    .body("debtorAccount.iban", equalTo(iban))
-                    .body("debtorAccount.currency", equalTo("EUR"))
-                    .body("instructedAmount.currency", equalTo("EUR"))
-                    .body("instructedAmount.amount", equalTo("1.03"))
-                    .body("creditorAccount.iban", equalTo("DE38760700240320465700"))
-                    .body("creditorAccount.currency", equalTo("EUR"))
-                    .body("creditorAgent", equalTo("AAAADEBBXXX"))
-                    .body("creditorName", equalTo("WBG"))
-                    .body("creditorAddress.streetName", equalTo("WBG Straße"))
-                    .body("creditorAddress.buildingNumber", equalTo("56"))
-                    .body("creditorAddress.townName", equalTo("Nürnberg"))
-                    .body("creditorAddress.postCode", equalTo("90543"))
-                    .body("creditorAddress.country", equalTo("DE"))
-                    .body("remittanceInformationUnstructured", equalTo("Ref. Number WBG-1222"))
-                    .body("transactionStatus", equalTo(expectedStatus))
-                    .extract();
+                .header(SERVICE_SESSION_ID, paymentServiceSessionId)
+            .when()
+                .get(PIS_PAYMENT_INFORMATION_ENDPOINT, StandardPaymentProduct.SEPA_CREDIT_TRANSFERS.getSlug())
+            .then()
+                .statusCode(OK.value())
+                .body("endToEndIdentification", equalTo("WBG-123456789"))
+                .body("debtorAccount.iban", equalTo(iban))
+                .body("debtorAccount.currency", equalTo("EUR"))
+                .body("instructedAmount.currency", equalTo("EUR"))
+                .body("instructedAmount.amount", equalTo("1.03"))
+                .body("creditorAccount.iban", equalTo("DE38760700240320465700"))
+                .body("creditorAccount.currency", equalTo("EUR"))
+                .body("creditorAgent", equalTo("AAAADEBBXXX"))
+                .body("creditorName", equalTo("WBG"))
+                .body("creditorAddress.streetName", equalTo("WBG Straße"))
+                .body("creditorAddress.buildingNumber", equalTo("56"))
+                .body("creditorAddress.townName", equalTo("Nürnberg"))
+                .body("creditorAddress.postCode", equalTo("90543"))
+                .body("creditorAddress.country", equalTo("DE"))
+                .body("remittanceInformationUnstructured", equalTo("Ref. Number WBG-1222"))
+                .body("transactionStatus", equalTo(expectedStatus))
+                .extract();
 
         assertThat(ZonedDateTime.now(ZoneOffset.UTC)).isAfterOrEqualTo(ZonedDateTime.parse(response.body().jsonPath().getString("createdAt")));
         return self();
@@ -188,11 +188,11 @@ public class PaymentResult<SELF extends PaymentResult<SELF>> extends Stage<SELF>
     public SELF fintech_calls_payment_status(String bankId, String expectedStatus, String serviceSessionId) {
         ExtractableResponse<Response> response = withPaymentInfoHeaders(UUID.randomUUID().toString(), bankId)
                 .header(SERVICE_SESSION_ID, serviceSessionId)
-                .when()
-                    .get(PIS_PAYMENT_STATUS_ENDPOINT, StandardPaymentProduct.SEPA_CREDIT_TRANSFERS.getSlug())
-                .then()
-                    .statusCode(OK.value())
-                    .body("transactionStatus", equalTo(expectedStatus))
+            .when()
+                .get(PIS_PAYMENT_STATUS_ENDPOINT, StandardPaymentProduct.SEPA_CREDIT_TRANSFERS.getSlug())
+            .then()
+                .statusCode(OK.value())
+                .body("transactionStatus", equalTo(expectedStatus))
                 .extract();
         assertThat(ZonedDateTime.now(ZoneOffset.UTC)).isAfterOrEqualTo(ZonedDateTime.parse(response.body().jsonPath().getString("createdAt")));
         return self();
@@ -204,13 +204,13 @@ public class PaymentResult<SELF extends PaymentResult<SELF>> extends Stage<SELF>
 
     public SELF fintech_calls_payment_activation_for_current_authorization_id(String serviceSessionId) {
         withSignatureHeaders(RestAssured
-                                     .given()
-                                     .header(SERVICE_SESSION_PASSWORD, SESSION_PASSWORD)
-                                     .contentType(APPLICATION_JSON_VALUE))
-                .when()
-                    .post(CONFIRM_PAYMENT_ENDPOINT, serviceSessionId)
-                .then()
-                    .statusCode(HttpStatus.OK.value());
+            .given()
+                .header(SERVICE_SESSION_PASSWORD, SESSION_PASSWORD)
+                .contentType(APPLICATION_JSON_VALUE))
+            .when()
+                .post(CONFIRM_PAYMENT_ENDPOINT, serviceSessionId)
+            .then()
+                .statusCode(HttpStatus.OK.value());
         return self();
     }
 }

@@ -65,9 +65,9 @@ public class AccountInformationRequestCommon<SELF extends AccountInformationRequ
         ExtractableResponse<Response> response = withAccountsHeaders(ANTON_BRUECKNER, bankId)
                 .header(SERVICE_SESSION_ID, UUID.randomUUID().toString())
                 .queryParam(ONLINE, online)
-                .when()
+            .when()
                 .get(AIS_ACCOUNTS_ENDPOINT)
-                .then()
+            .then()
                 .statusCode(HttpStatus.ACCEPTED.value())
                 .extract();
         updateServiceSessionId(response);
@@ -78,12 +78,12 @@ public class AccountInformationRequestCommon<SELF extends AccountInformationRequ
 
     public SELF fintech_calls_list_accounts_for_user(String user) {
         ExtractableResponse<Response> response = withAccountsHeaders(user)
-                        .header(SERVICE_SESSION_ID, UUID.randomUUID().toString())
-                     .when()
-                        .get(AIS_ACCOUNTS_ENDPOINT)
-                     .then()
-                        .statusCode(HttpStatus.ACCEPTED.value())
-                        .extract();
+                .header(SERVICE_SESSION_ID, UUID.randomUUID().toString())
+            .when()
+                .get(AIS_ACCOUNTS_ENDPOINT)
+            .then()
+                .statusCode(HttpStatus.ACCEPTED.value())
+                .extract();
 
         updateServiceSessionId(response);
         updateRedirectCode(response);
@@ -99,12 +99,12 @@ public class AccountInformationRequestCommon<SELF extends AccountInformationRequ
     // Note that max.musterman is typically used for EMBEDDED (real EMBEDDED that is returned by bank, and not EMBEDDED approach in table)
     public SELF fintech_calls_list_accounts_for_max_musterman(String bankId) {
         ExtractableResponse<Response> response = withAccountsHeaders(MAX_MUSTERMAN, bankId)
-                    .header(SERVICE_SESSION_ID, UUID.randomUUID().toString())
-                .when()
-                    .get(AIS_ACCOUNTS_ENDPOINT)
-                .then()
-                    .statusCode(HttpStatus.ACCEPTED.value())
-                    .extract();
+                .header(SERVICE_SESSION_ID, UUID.randomUUID().toString())
+            .when()
+                .get(AIS_ACCOUNTS_ENDPOINT)
+            .then()
+                .statusCode(HttpStatus.ACCEPTED.value())
+                .extract();
 
         updateServiceSessionId(response);
         updateRedirectCode(response);
@@ -131,12 +131,12 @@ public class AccountInformationRequestCommon<SELF extends AccountInformationRequ
 
     public SELF fintech_calls_list_accounts_for_max_musterman_missing_ip_address() {
         ExtractableResponse<Response> response = withAccountsHeadersMissingIpAddress(MAX_MUSTERMAN)
-                      .header(SERVICE_SESSION_ID, UUID.randomUUID().toString())
-                 .when()
-                      .get(AIS_ACCOUNTS_ENDPOINT)
-                 .then()
-                      .statusCode(HttpStatus.ACCEPTED.value())
-                      .extract();
+                  .header(SERVICE_SESSION_ID, UUID.randomUUID().toString())
+             .when()
+                  .get(AIS_ACCOUNTS_ENDPOINT)
+             .then()
+                  .statusCode(HttpStatus.ACCEPTED.value())
+                  .extract();
 
         updateServiceSessionId(response);
         updateRedirectCode(response);
@@ -146,12 +146,12 @@ public class AccountInformationRequestCommon<SELF extends AccountInformationRequ
 
     public SELF fintech_calls_list_transactions_for_anton_brueckner() {
         ExtractableResponse<Response> response = withTransactionsHeaders(ANTON_BRUECKNER)
-                    .header(SERVICE_SESSION_ID, UUID.randomUUID().toString())
-                .when()
-                    .get(AIS_TRANSACTIONS_WITHOUT_RESOURCE_ID_ENDPOINT)
-                .then()
-                    .statusCode(HttpStatus.ACCEPTED.value())
-                    .extract();
+                .header(SERVICE_SESSION_ID, UUID.randomUUID().toString())
+            .when()
+                .get(AIS_TRANSACTIONS_WITHOUT_RESOURCE_ID_ENDPOINT)
+            .then()
+                .statusCode(HttpStatus.ACCEPTED.value())
+                .extract();
 
         updateServiceSessionId(response);
         updateRedirectCode(response);
@@ -161,12 +161,12 @@ public class AccountInformationRequestCommon<SELF extends AccountInformationRequ
 
     public SELF fintech_calls_list_transactions_for_anton_brueckner(String resourceId) {
         ExtractableResponse<Response> response = withTransactionsHeaders(ANTON_BRUECKNER)
-                    .header(SERVICE_SESSION_ID, UUID.randomUUID().toString())
-                .when()
-                    .get(AIS_TRANSACTIONS_ENDPOINT, resourceId)
-                .then()
-                    .statusCode(HttpStatus.ACCEPTED.value())
-                    .extract();
+                .header(SERVICE_SESSION_ID, UUID.randomUUID().toString())
+            .when()
+                .get(AIS_TRANSACTIONS_ENDPOINT, resourceId)
+            .then()
+                .statusCode(HttpStatus.ACCEPTED.value())
+                .extract();
 
         updateServiceSessionId(response);
         updateRedirectCode(response);
@@ -176,12 +176,12 @@ public class AccountInformationRequestCommon<SELF extends AccountInformationRequ
 
     public SELF fintech_calls_list_transactions_for_user(String user, String resourceId) {
         ExtractableResponse<Response> response = withTransactionsHeaders(user)
-                    .header(SERVICE_SESSION_ID, UUID.randomUUID().toString())
-                 .when()
-                    .get(AIS_TRANSACTIONS_ENDPOINT, resourceId)
-                 .then()
-                    .statusCode(HttpStatus.ACCEPTED.value())
-                    .extract();
+                .header(SERVICE_SESSION_ID, UUID.randomUUID().toString())
+             .when()
+                .get(AIS_TRANSACTIONS_ENDPOINT, resourceId)
+             .then()
+                .statusCode(HttpStatus.ACCEPTED.value())
+                .extract();
 
         updateServiceSessionId(response);
         updateRedirectCode(response);
@@ -224,16 +224,16 @@ public class AccountInformationRequestCommon<SELF extends AccountInformationRequ
                 .getFirst(REDIRECT_CODE_QUERY);
 
         ExtractableResponse<Response> response =  RestAssured
-                .given()
-                    .header(X_REQUEST_ID, UUID.randomUUID().toString())
-                    .contentType(MediaType.APPLICATION_JSON_VALUE)
-                    .queryParam(REDIRECT_CODE_QUERY, fintechUserTempPassword)
-                    .body(ImmutableMap.of(LOGIN, username, PASSWORD, password))
-                .when()
-                    .post(AIS_LOGIN_USER_ENDPOINT, serviceSessionId)
-                .then()
-                    .statusCode(HttpStatus.ACCEPTED.value())
-                    .extract();
+            .given()
+                .header(X_REQUEST_ID, UUID.randomUUID().toString())
+                .contentType(MediaType.APPLICATION_JSON_VALUE)
+                .queryParam(REDIRECT_CODE_QUERY, fintechUserTempPassword)
+                .body(ImmutableMap.of(LOGIN, username, PASSWORD, password))
+            .when()
+                .post(AIS_LOGIN_USER_ENDPOINT, serviceSessionId)
+            .then()
+                .statusCode(HttpStatus.ACCEPTED.value())
+                .extract();
 
         this.authSessionCookie = response.cookie(AUTHORIZATION_SESSION_KEY);
         return self();
@@ -267,18 +267,18 @@ public class AccountInformationRequestCommon<SELF extends AccountInformationRequ
 
     public SELF user_denied_consent() {
         ExtractableResponse<Response> response = RestAssured
-                .given()
-                    .header(X_REQUEST_ID, UUID.randomUUID().toString())
-                    .header(X_XSRF_TOKEN, UUID.randomUUID().toString())
-                    .cookie(AUTHORIZATION_SESSION_KEY, authSessionCookie)
-                    .queryParam(REDIRECT_CODE_QUERY, redirectCode)
-                    .contentType(MediaType.APPLICATION_JSON_VALUE)
-                    .body("{}")
-                .when()
-                    .post(DENY_CONSENT_AUTH_ENDPOINT, serviceSessionId)
-                .then()
-                    .statusCode(HttpStatus.ACCEPTED.value())
-                .extract();
+            .given()
+                .header(X_REQUEST_ID, UUID.randomUUID().toString())
+                .header(X_XSRF_TOKEN, UUID.randomUUID().toString())
+                .cookie(AUTHORIZATION_SESSION_KEY, authSessionCookie)
+                .queryParam(REDIRECT_CODE_QUERY, redirectCode)
+                .contentType(MediaType.APPLICATION_JSON_VALUE)
+                .body("{}")
+            .when()
+                .post(DENY_CONSENT_AUTH_ENDPOINT, serviceSessionId)
+            .then()
+                .statusCode(HttpStatus.ACCEPTED.value())
+            .extract();
 
         assertThat(response.header(LOCATION)).isEqualTo(FINTECH_REDIR_NOK);
         return self();
@@ -302,13 +302,13 @@ public class AccountInformationRequestCommon<SELF extends AccountInformationRequ
 
     public SELF user_sees_that_he_needs_to_be_redirected_to_aspsp_and_redirects_to_aspsp(String user) {
         ExtractableResponse<Response> response = withDefaultHeaders(user)
-                        .cookie(AUTHORIZATION_SESSION_KEY, authSessionCookie)
-                        .queryParam(REDIRECT_CODE_QUERY, redirectCode)
-                     .when()
-                        .get(GET_CONSENT_AUTH_STATE, serviceSessionId)
-                     .then()
-                        .statusCode(HttpStatus.OK.value())
-                        .extract();
+                .cookie(AUTHORIZATION_SESSION_KEY, authSessionCookie)
+                .queryParam(REDIRECT_CODE_QUERY, redirectCode)
+            .when()
+                .get(GET_CONSENT_AUTH_STATE, serviceSessionId)
+            .then()
+                .statusCode(HttpStatus.OK.value())
+                .extract();
 
         this.redirectUriToGetUserParams = response.header(LOCATION);
         updateServiceSessionId(response);
@@ -498,13 +498,13 @@ public class AccountInformationRequestCommon<SELF extends AccountInformationRequ
 
     public SELF ui_can_read_image_data_from_obg(String user) {
         ExtractableResponse<Response> response = withDefaultHeaders(user)
-                                                            .cookie(AUTHORIZATION_SESSION_KEY, authSessionCookie)
-                                                            .queryParam(REDIRECT_CODE_QUERY, redirectCode)
-                                                         .when()
-                                                            .get(GET_CONSENT_AUTH_STATE, serviceSessionId)
-                                                         .then()
-                                                            .statusCode(HttpStatus.OK.value())
-                                                            .extract();
+                .cookie(AUTHORIZATION_SESSION_KEY, authSessionCookie)
+                .queryParam(REDIRECT_CODE_QUERY, redirectCode)
+            .when()
+                .get(GET_CONSENT_AUTH_STATE, serviceSessionId)
+            .then()
+                .statusCode(HttpStatus.OK.value())
+                .extract();
 
         assertThatResponseContainsCorrectChallengeData(response, "restrecord/tpp-ui-input/params/max-musterman-embedded-consent-challenge-data.json");
         updateServiceSessionId(response);

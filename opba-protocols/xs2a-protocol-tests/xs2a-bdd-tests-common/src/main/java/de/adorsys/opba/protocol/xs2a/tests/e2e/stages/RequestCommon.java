@@ -98,14 +98,14 @@ public abstract class RequestCommon<SELF extends RequestCommon<SELF>> extends St
                 .getFirst(REDIRECT_CODE_QUERY);
 
         ExtractableResponse<Response> response =  RestAssured
-                .given()
+            .given()
                 .header(X_REQUEST_ID, UUID.randomUUID().toString())
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
                 .queryParam(REDIRECT_CODE_QUERY, fintechUserTempPassword)
                 .body(ImmutableMap.of(LOGIN, username, PASSWORD, password))
-                .when()
+            .when()
                 .post(path, serviceSessionId)
-                .then()
+            .then()
                 .statusCode(HttpStatus.ACCEPTED.value())
                 .extract();
 
@@ -133,17 +133,17 @@ public abstract class RequestCommon<SELF extends RequestCommon<SELF>> extends St
 
     protected ExtractableResponse<Response> provideParametersToBankingProtocolWithBody(String uriPath, String body, HttpStatus status, String serviceSessionId) {
         ExtractableResponse<Response> response = RestAssured
-                .given()
-                    .header(X_REQUEST_ID, UUID.randomUUID().toString())
-                    .header(X_XSRF_TOKEN, UUID.randomUUID().toString())
-                    .cookie(AUTHORIZATION_SESSION_KEY, authSessionCookie)
-                    .queryParam(REDIRECT_CODE_QUERY, redirectCode)
-                    .contentType(MediaType.APPLICATION_JSON_VALUE)
-                    .body(body)
-                .when()
-                    .post(uriPath, serviceSessionId)
-                .then()
-                    .statusCode(status.value())
+            .given()
+                .header(X_REQUEST_ID, UUID.randomUUID().toString())
+                .header(X_XSRF_TOKEN, UUID.randomUUID().toString())
+                .cookie(AUTHORIZATION_SESSION_KEY, authSessionCookie)
+                .queryParam(REDIRECT_CODE_QUERY, redirectCode)
+                .contentType(MediaType.APPLICATION_JSON_VALUE)
+                .body(body)
+            .when()
+                .post(uriPath, serviceSessionId)
+            .then()
+                .statusCode(status.value())
                 .extract();
 
         this.responseContent = response.body().asString();
@@ -220,15 +220,15 @@ public abstract class RequestCommon<SELF extends RequestCommon<SELF>> extends St
 
     protected ExtractableResponse<Response> provideGetConsentAuthStateRequest(String serviceSessionId) {
         return RestAssured
-                .given()
-                    .header(X_REQUEST_ID, UUID.randomUUID().toString())
-                    .header(X_XSRF_TOKEN, UUID.randomUUID().toString())
-                    .cookie(AUTHORIZATION_SESSION_KEY, authSessionCookie)
-                    .queryParam(REDIRECT_CODE_QUERY, redirectCode)
-                .when()
-                    .get(GET_CONSENT_AUTH_STATE, serviceSessionId)
-                    .then()
-                    .statusCode(HttpStatus.OK.value())
+            .given()
+                .header(X_REQUEST_ID, UUID.randomUUID().toString())
+                .header(X_XSRF_TOKEN, UUID.randomUUID().toString())
+                .cookie(AUTHORIZATION_SESSION_KEY, authSessionCookie)
+                .queryParam(REDIRECT_CODE_QUERY, redirectCode)
+            .when()
+                .get(GET_CONSENT_AUTH_STATE, serviceSessionId)
+                .then()
+                .statusCode(HttpStatus.OK.value())
                 .extract();
     }
 
