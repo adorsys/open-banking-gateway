@@ -129,17 +129,17 @@ public class AccountInformationResult<SELF extends AccountInformationResult<SELF
         boolean validateResourceId
     ) {
         ExtractableResponse<Response> response = withAccountsHeaders(ANTON_BRUECKNER)
-                    .header(SERVICE_SESSION_ID, serviceSessionId)
-                .when()
-                    .get(AIS_ACCOUNTS_ENDPOINT)
-                .then()
-                    .statusCode(HttpStatus.OK.value())
-                    .body("accounts[0].iban", equalTo(ANTON_BRUECKNER_IBAN))
-                    .body("accounts[0].resourceId", validateResourceId ? equalTo("cmD4EYZeTkkhxRuIV1diKA") : instanceOf(String.class))
-                    .body("accounts[0].currency", equalTo("EUR"))
-                    .body("accounts[0].name", equalTo("anton.brueckner"))
-                    .body("accounts", hasSize(1))
-                .extract();
+                .header(SERVICE_SESSION_ID, serviceSessionId)
+            .when()
+                .get(AIS_ACCOUNTS_ENDPOINT)
+            .then()
+                .statusCode(HttpStatus.OK.value())
+                .body("accounts[0].iban", equalTo(ANTON_BRUECKNER_IBAN))
+                .body("accounts[0].resourceId", validateResourceId ? equalTo("cmD4EYZeTkkhxRuIV1diKA") : instanceOf(String.class))
+                .body("accounts[0].currency", equalTo("EUR"))
+                .body("accounts[0].name", equalTo("anton.brueckner"))
+                .body("accounts", hasSize(1))
+            .extract();
 
         this.responseContent = response.body().asString();
         return self();
@@ -150,17 +150,17 @@ public class AccountInformationResult<SELF extends AccountInformationResult<SELF
             String user, boolean validateResourceId
     ) {
         ExtractableResponse<Response> response = withAccountsHeaders(user)
-                        .header(SERVICE_SESSION_ID, serviceSessionId)
-                     .when()
-                        .get(AIS_ACCOUNTS_ENDPOINT)
-                     .then()
-                         .statusCode(HttpStatus.OK.value())
-                         .body("accounts[0].iban", equalTo(iban))
-                         .body("accounts[0].resourceId", validateResourceId ? equalTo(accountResourceId) : instanceOf(String.class))
-                         .body("accounts[0].currency", equalTo("EUR"))
-                         .body("accounts[0].name", equalTo(user))
-                         .body("accounts", hasSize(1))
-                         .extract();
+                .header(SERVICE_SESSION_ID, serviceSessionId)
+            .when()
+                .get(AIS_ACCOUNTS_ENDPOINT)
+            .then()
+                .statusCode(HttpStatus.OK.value())
+                .body("accounts[0].iban", equalTo(iban))
+                .body("accounts[0].resourceId", validateResourceId ? equalTo(accountResourceId) : instanceOf(String.class))
+                .body("accounts[0].currency", equalTo("EUR"))
+                .body("accounts[0].name", equalTo(user))
+                .body("accounts", hasSize(1))
+                .extract();
 
         this.responseContent = response.body().asString();
         return self();
@@ -183,16 +183,16 @@ public class AccountInformationResult<SELF extends AccountInformationResult<SELF
         boolean validateResourceId, int expectedBalances
     ) {
         ValidatableResponse body = withAccountsHeaders(ANTON_BRUECKNER)
-                    .header(SERVICE_SESSION_ID, serviceSessionId)
-                .when()
-                    .get(AIS_ACCOUNTS_ENDPOINT)
-                .then()
-                    .statusCode(HttpStatus.OK.value())
-                    .body("accounts[0].iban", equalTo(MAX_MUSTERMAN_IBAN))
-                    .body("accounts[0].resourceId", validateResourceId ? equalTo("oN7KTVuJSVotMvPPPavhVo") : instanceOf(String.class))
-                    .body("accounts[0].currency", equalTo("EUR"))
-                    .body("accounts[0].name", equalTo("max.musterman"))
-                    .body("accounts", hasSize(1));
+                .header(SERVICE_SESSION_ID, serviceSessionId)
+            .when()
+                .get(AIS_ACCOUNTS_ENDPOINT)
+            .then()
+                .statusCode(HttpStatus.OK.value())
+                .body("accounts[0].iban", equalTo(MAX_MUSTERMAN_IBAN))
+                .body("accounts[0].resourceId", validateResourceId ? equalTo("oN7KTVuJSVotMvPPPavhVo") : instanceOf(String.class))
+                .body("accounts[0].currency", equalTo("EUR"))
+                .body("accounts[0].name", equalTo("max.musterman"))
+                .body("accounts", hasSize(1));
         if (expectedBalances > 0) {
             body.body("accounts[0].balances", hasSize(expectedBalances));
         }
@@ -329,16 +329,16 @@ public class AccountInformationResult<SELF extends AccountInformationResult<SELF
                 .get(AIS_TRANSACTIONS_ENDPOINT, resourceId)
             .then()
                 .statusCode(HttpStatus.OK.value())
-            .body("transactions.booked.transactionId",
-                containsInAnyOrder(
-                    "VHF5-8R1RCcskezln6CJAY",
-                    "etA9KGhIT9ohX9dYXrhzc8",
-                    "LjwVWzBBQtwpyQ6WBBTiwk",
-                    "pkOyTAHDTb0uCF2R55HKKo",
-                    "F3qVhSXlQswswIN2nk1rBo"
+                .body("transactions.booked.transactionId",
+                    containsInAnyOrder(
+                        "VHF5-8R1RCcskezln6CJAY",
+                        "etA9KGhIT9ohX9dYXrhzc8",
+                        "LjwVWzBBQtwpyQ6WBBTiwk",
+                        "pkOyTAHDTb0uCF2R55HKKo",
+                        "F3qVhSXlQswswIN2nk1rBo"
+                    )
                 )
-            )
-            .body("transactions.booked", hasSize(MAX_MUSTERMAN_BOOKED_TRANSACTIONS_COUNT));
+                .body("transactions.booked", hasSize(MAX_MUSTERMAN_BOOKED_TRANSACTIONS_COUNT));
         return self();
     }
 
@@ -381,18 +381,18 @@ public class AccountInformationResult<SELF extends AccountInformationResult<SELF
         String body = readResource("restrecord/tpp-ui-input/params/anton-brueckner-account-all-accounts-consent.json");
 
         ExtractableResponse<Response> response = RestAssured
-                .given()
-                    .header(X_REQUEST_ID, UUID.randomUUID().toString())
-                    .header(X_XSRF_TOKEN, UUID.randomUUID().toString())
-                    .queryParam(REDIRECT_CODE_QUERY, redirectCode)
-                    .cookie(AUTHORIZATION_SESSION_KEY, authSessionCookie)
-                    .contentType(MediaType.APPLICATION_JSON_VALUE)
-                    .body(body)
-                .when()
-                    .post(AUTHORIZE_CONSENT_ENDPOINT, serviceSessionId)
-                .then()
-                    .statusCode(HttpStatus.ACCEPTED.value())
-                .extract();
+            .given()
+                .header(X_REQUEST_ID, UUID.randomUUID().toString())
+                .header(X_XSRF_TOKEN, UUID.randomUUID().toString())
+                .queryParam(REDIRECT_CODE_QUERY, redirectCode)
+                .cookie(AUTHORIZATION_SESSION_KEY, authSessionCookie)
+                .contentType(MediaType.APPLICATION_JSON_VALUE)
+                .body(body)
+            .when()
+                .post(AUTHORIZE_CONSENT_ENDPOINT, serviceSessionId)
+            .then()
+                .statusCode(HttpStatus.ACCEPTED.value())
+            .extract();
 
         assertThat(response.header(LOCATION)).matches(".+/ais/.+");
         return self();
@@ -400,13 +400,13 @@ public class AccountInformationResult<SELF extends AccountInformationResult<SELF
 
     public SELF fintech_calls_consent_activation_for_current_authorization_id(String serviceSessionId) {
         withSignatureHeaders(RestAssured
-                .given()
-                    .header(SERVICE_SESSION_PASSWORD, SESSION_PASSWORD)
-                    .contentType(MediaType.APPLICATION_JSON_VALUE))
-                .when()
-                    .post(CONFIRM_CONSENT_ENDPOINT, serviceSessionId)
-                .then()
-                    .statusCode(HttpStatus.OK.value());
+            .given()
+                .header(SERVICE_SESSION_PASSWORD, SESSION_PASSWORD)
+                .contentType(MediaType.APPLICATION_JSON_VALUE))
+            .when()
+                .post(CONFIRM_CONSENT_ENDPOINT, serviceSessionId)
+            .then()
+                .statusCode(HttpStatus.OK.value());
         return self();
     }
 
