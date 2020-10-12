@@ -249,7 +249,8 @@ public class WebDriverBasedAccountInformation<SELF extends WebDriverBasedAccount
         return self();
     }
 
-    public SELF update_redirect_code_from_browser_url(WebDriver driver) {
+    public SELF update_redirect_code_from_browser_on_redirect_back_url(WebDriver driver) {
+        waitForPageLoadAndUrlContains(driver, "/fromAspsp");
         MultiValueMap<String, String> parameters =
                 UriComponentsBuilder.fromUriString(driver.getCurrentUrl()).build().getQueryParams();
         this.redirectCode = parameters.getFirst(REDIRECT_CODE_QUERY);
