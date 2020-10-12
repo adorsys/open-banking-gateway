@@ -87,4 +87,9 @@ public class FacadeServiceableRequest {
      * Allows to skip user login form to OpenBanking to perform payment.
      */
     private final boolean anonymousPsuAllowed;
+
+    /**
+     * When false then account or transaction list will be loaded from cache. Otherwise cache will be updated with new data.
+     */
+    private final boolean online;
 }

@@ -33,7 +33,9 @@ export class ListAccountsComponent implements OnInit {
 
   private loadAccount(): void {
     const settings = this.storageService.getSettings();
-    this.aisService.getAccounts(this.bankId, settings.loa, settings.withBalance).subscribe((response) => {
+    const online = !this.storageService.isAfterRedirect() && !settings.cacheLoa;
+    this.storageService.setAfterRedirect(false);
+    this.aisService.getAccounts(this.bankId, settings.loa, settings.withBalance, online).subscribe((response) => {
       switch (response.status) {
         case 202:
           this.storageService.setRedirect(
