@@ -248,7 +248,7 @@ public class WebDriverBasedAccountInformation<SELF extends WebDriverBasedAccount
         doFillLoginFormByAntonBruecknerInSandbox(driver, ANTON_BRUECKNER, PIN_VALUE);
         return self();
     }
-    
+
     public SELF update_redirect_code_from_browser_on_redirect_back_url(WebDriver driver) {
         // Is mostly hackish way to get redirectCode back
         waitForPageLoadAndUrlContainsNoReadyStateCheck(driver, "/to-aspsp-redirection");
