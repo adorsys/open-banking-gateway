@@ -2,7 +2,6 @@ package de.adorsys.opba.protocol.xs2a.tests.e2e.sandbox.servers;
 
 import com.tngtech.jgiven.integration.spring.JGivenStage;
 import de.adorsys.opba.protocol.xs2a.tests.e2e.stages.AccountInformationRequestCommon;
-import lombok.SneakyThrows;
 import org.openqa.selenium.By;
 import org.openqa.selenium.Cookie;
 import org.openqa.selenium.JavascriptExecutor;
@@ -249,8 +248,7 @@ public class WebDriverBasedAccountInformation<SELF extends WebDriverBasedAccount
         doFillLoginFormByAntonBruecknerInSandbox(driver, ANTON_BRUECKNER, PIN_VALUE);
         return self();
     }
-
-    @SneakyThrows
+    
     public SELF update_redirect_code_from_browser_on_redirect_back_url(WebDriver driver) {
         // Is mostly hackish way to get redirectCode back
         waitForPageLoadAndUrlContainsNoReadyStateCheck(driver, "/to-aspsp-redirection");
