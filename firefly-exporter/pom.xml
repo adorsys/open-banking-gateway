@@ -2,10 +2,12 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 		 xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
 	<modelVersion>4.0.0</modelVersion>
+	<!-- Aiming to have this project decoupled from OPBA -->
 	<parent>
-		<groupId>de.adorsys.opba</groupId>
-		<artifactId>open-banking-gateway</artifactId>
-		<version>0.20.1-SNAPSHOT</version>
+		<groupId>org.springframework.boot</groupId>
+		<artifactId>spring-boot-starter-parent</artifactId>
+		<version>2.3.4.RELEASE</version>
+		<relativePath/> <!-- lookup parent from repository -->
 	</parent>
 
 	<artifactId>fireflyexporter</artifactId>
@@ -42,7 +44,7 @@
 		<dependency>
 			<groupId>de.adorsys.opba</groupId>
 			<artifactId>opba-api-security</artifactId>
-			<version>${project.version}</version>
+			<version>0.20.0.2</version>
 		</dependency>
 
 		<dependency>
