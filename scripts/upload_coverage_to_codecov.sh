@@ -1,11 +1,15 @@
 #!/usr/bin/env bash
 
-BRANCH="$TRAVIS_BRANCH"
-if [[ -n "$TRAVIS_PULL_REQUEST_BRANCH" ]]; then
-    BRANCH="$TRAVIS_PULL_REQUEST_BRANCH"
-    echo "Pull request branch identified: $TRAVIS_PULL_REQUEST_BRANCH"
+BRANCH_REGEX="refs/heads/.+"
+if [[ $GITHUB_REF_SLUG =~ $BRANCH_REGEX ]]; then
+    split=(${GITHUB_REF_SLUG//\// })
+    GITHUB_BRANCH=${split[2]}
+else
+  echo "Can't parse branch name from $GITHUB_REF_SLUG"
+  exit 1
 fi
 
+BRANCH="$GITHUB_BRANCH"
 echo "Sending test results to codecov using $BRANCH"
 
 # Production code

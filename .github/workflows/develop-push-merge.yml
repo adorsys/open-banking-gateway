@@ -39,6 +39,8 @@ jobs:
 
       - name: Update GitHub pages
         run: ./scripts/deploy_doc.sh
+        env:
+          - GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
-      - name: Validate DEV deployment status
+      - name: Validate OpenShift DEV env deployment status
         run: ./scripts/validate_dev_deploy.sh

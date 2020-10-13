@@ -7,15 +7,15 @@ if [[ "$DISABLE_SMOKE_TESTS"  == "true" ]]; then
   exit 0
 fi
 
-if [[ $TRAVIS_REPO_SLUG != "adorsys/open-banking-gateway"
-    || $TRAVIS_PULL_REQUEST != "false"
+if [[ $GITHUB_REPOSITORY != "adorsys/open-banking-gateway"
+    || $GITHUB_EVENT_NAME == "pull_request"
     || -z "$TRAVIS_COMMIT" ]];
 then
   echo "ERROR: Deployment validation not allowed"
   exit 1
 fi
 
-COMMIT="$TRAVIS_COMMIT"
+COMMIT="$GITHUB_SHA"
 OPBA_URL=https://obg-dev-openbankinggateway.cloud.adorsys.de
 
 function fail() {

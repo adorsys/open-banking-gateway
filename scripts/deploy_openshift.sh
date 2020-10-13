@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 
 SCRIPT_DIR="$(dirname "$0")"
-IMAGE_TAG=${TRAVIS_COMMIT:0:7}
+IMAGE_TAG=${GITHUB_SHA:0:7}
 REGISTRY_DOMAIN=openshift-registry.adorsys.de
 PROJECT_NAME=open-banking-gateway-dev
 
