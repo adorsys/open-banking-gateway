@@ -2,6 +2,7 @@ package de.adorsys.opba.protocol.xs2a.tests.e2e.sandbox.servers;
 
 import com.tngtech.jgiven.integration.spring.JGivenStage;
 import de.adorsys.opba.protocol.xs2a.tests.e2e.stages.AccountInformationRequestCommon;
+import lombok.SneakyThrows;
 import org.openqa.selenium.By;
 import org.openqa.selenium.Cookie;
 import org.openqa.selenium.JavascriptExecutor;
@@ -249,8 +250,10 @@ public class WebDriverBasedAccountInformation<SELF extends WebDriverBasedAccount
         return self();
     }
 
+    @SneakyThrows
     public SELF update_redirect_code_from_browser_on_redirect_back_url(WebDriver driver) {
-        waitForPageLoadAndUrlContains(driver, "/fromAspsp");
+        // Is mostly hackish way to get redirectCode back
+        waitForPageLoadAndUrlContainsNoReadyStateCheck(driver, "/to-aspsp-redirection");
         MultiValueMap<String, String> parameters =
                 UriComponentsBuilder.fromUriString(driver.getCurrentUrl()).build().getQueryParams();
         this.redirectCode = parameters.getFirst(REDIRECT_CODE_QUERY);
@@ -395,6 +398,10 @@ public class WebDriverBasedAccountInformation<SELF extends WebDriverBasedAccount
     private void waitForPageLoad(WebDriver driver) {
         new WebDriverWait(driver, timeout.getSeconds())
                 .until(wd -> ((JavascriptExecutor) wd).executeScript("return document.readyState").equals("complete"));
+    }
+
+    private void waitForPageLoadAndUrlContainsNoReadyStateCheck(WebDriver driver, String urlContains) {
+        new WebDriverWait(driver, timeout.getSeconds()).until(wd -> driver.getCurrentUrl().contains(urlContains));
     }
 
     private void waitForPageLoadAndUrlContains(WebDriver driver, String urlContains) {
