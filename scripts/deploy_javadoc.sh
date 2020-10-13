@@ -28,8 +28,8 @@ cd gh-pages || exit 1
   ln -s "$GITHUB_TAG" latest
 )
 
-git config --global user.email "travis@travis-ci.org"
-git config --global user.name "travis-ci"
+git config --global user.email "github-actions@github.org"
+git config --global user.name "$GITHUB_ACTOR"
 git add -f .
 git commit -m "Latest javadoc on successful travis build $GITHUB_RUN_NUMBER for tag $GITHUB_TAG auto-pushed to gh-pages"
 git push -fq origin gh-pages > /dev/null
