@@ -19,7 +19,7 @@
 
 <div class="d-sm-flex">
   <button (click)="onDeny()" class="btn btn-outline-secondary w-100 mr-4" id="do_deny">Cancel</button>
-  <button (click)="initiateSinglePayment()" class="btn btn-primary w-100" id="do_submit" type="button" [disabled]="!ibanForm.valid">
+  <button (click)="initiateSinglePayment()" class="btn btn-primary w-100" id="do_submit" type="button" [disabled]="!ibanForm.valid && isRandomAccountId">
     Initiate new payment
   </button>
 </div>

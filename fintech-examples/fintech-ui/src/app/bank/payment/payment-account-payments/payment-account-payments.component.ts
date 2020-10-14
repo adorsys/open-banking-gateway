@@ -1,12 +1,13 @@
 import {Component, OnInit} from '@angular/core';
 import {ActivatedRoute, Router} from '@angular/router';
-import {FintechRetrieveAllSinglePaymentsService, PaymentInitiationWithStatusResponse} from '../../../api';
-import {map} from 'rxjs/operators';
-import {Consts} from '../../../models/consts';
-import {FormBuilder, FormGroup, Validators} from '@angular/forms';
-import {StorageService} from '../../../services/storage.service';
 import {Location} from '@angular/common';
+import {FormBuilder, FormGroup, Validators} from '@angular/forms';
+import {map} from 'rxjs/operators';
 import {ValidatorService} from "angular-iban";
+
+import {FintechRetrieveAllSinglePaymentsService, PaymentInitiationWithStatusResponse} from '../../../api';
+import {Consts} from '../../../models/consts';
+import {StorageService} from '../../../services/storage.service';
 
 @Component({
   selector: 'app-list-payments',
