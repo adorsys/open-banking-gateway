@@ -1,7 +1,9 @@
-import { Component, OnInit } from '@angular/core';
-import { BankProfileService } from '../../bank-search/services/bank-profile.service';
-import { ActivatedRoute, Router } from '@angular/router';
-import { StorageService } from '../../services/storage.service';
+import {Component, OnInit} from '@angular/core';
+import {BankProfileService} from '../../bank-search/services/bank-profile.service';
+import {ActivatedRoute, Router} from '@angular/router';
+import {StorageService} from '../../services/storage.service';
+import {Consts} from '../../models/consts';
+import {AccountStruct} from "../redirect-page/redirect-struct";
 
 @Component({
   selector: 'app-sidebar',
@@ -19,6 +21,7 @@ export class SidebarComponent implements OnInit {
   constructor(
     private bankProfileService: BankProfileService,
     private route: ActivatedRoute,
+    private router: Router,
     private storageService: StorageService
   ) {}
 
@@ -40,15 +43,20 @@ export class SidebarComponent implements OnInit {
     return this.showListAccounts ? 'accounts' : '.';
   }
 
-  getRouterLinkInitiatePayment(): string {
-    return this.showInitiatePayment && this.isLoaDone() ? 'payment' : '.';
+  onInitiatePayment() {
+    if (!this.isLoaDone()) {
+      this.router.navigate(['payment/account', Consts.RANDOM_ACCOUNT_ID, 'payments'], {relativeTo: this.route});
+    } else {
+      this.router.navigate(['payment'], {relativeTo: this.route});
+    }
   }
 
   isLoaDone(): boolean {
-    return this.storageService.getLoa(this.bankId) !== null;
+    const loa: AccountStruct[] = this.storageService.getLoa(this.bankId);
+    return loa !== null && (loa.length == 1? loa[0].resourceId !== Consts.RANDOM_ACCOUNT_ID : false);
   }
 
   get showPaymentNav(): boolean {
-    return this.showInitiatePayment && this.isLoaDone();
+    return this.showInitiatePayment;
   }
 }

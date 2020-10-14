@@ -20,7 +20,10 @@ export class PaymentAccountComponent implements OnInit {
   ngOnInit() {
     this.bankId = this.route.snapshot.params[Consts.BANK_ID_NAME];
     const accountId = this.route.snapshot.params[Consts.ACCOUNT_ID_NAME];
-    this.account = { ...this.getSelectedAccount(accountId), currency: '' };
+    const isRandomAccountId = accountId === Consts.RANDOM_ACCOUNT_ID;
+    if (!isRandomAccountId) {
+      this.account = {...this.getSelectedAccount(accountId), currency: ''};
+    }
     this.router.navigate(['payments'], { relativeTo: this.route });
   }
 
