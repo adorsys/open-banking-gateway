@@ -1,13 +1,14 @@
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { HttpResponse } from '@angular/common/http';
+import {Location} from "@angular/common";
+import { ActivatedRoute, Router } from '@angular/router';
 import { ValidatorService } from 'angular-iban';
 import { FintechSinglePaymentInitiationService, SinglePaymentInitiationRequest } from '../../../api';
-import { ActivatedRoute, Router } from '@angular/router';
 import { Consts, HeaderConfig } from '../../../models/consts';
 import { RedirectStruct, RedirectType } from '../../redirect-page/redirect-struct';
 import { StorageService } from '../../../services/storage.service';
 import { ConfirmData } from '../payment-confirm/confirm.data';
-import { HttpResponse } from '@angular/common/http';
 
 @Component({
   selector: 'app-initiate',
@@ -20,16 +21,19 @@ export class InitiateComponent implements OnInit {
   accountId = '';
   debitorIban = '';
   paymentForm: FormGroup;
+  isRandomAccountId: boolean;
 
   constructor(
     private formBuilder: FormBuilder,
     private fintechSinglePaymentInitiationService: FintechSinglePaymentInitiationService,
     private router: Router,
     private route: ActivatedRoute,
+    private location: Location,
     private storageService: StorageService
   ) {
     this.bankId = this.route.snapshot.params[Consts.BANK_ID_NAME];
     this.accountId = this.route.snapshot.params[Consts.ACCOUNT_ID_NAME];
+    this.isRandomAccountId = this.accountId === Consts.RANDOM_ACCOUNT_ID;
   }
 
   ngOnInit() {
@@ -76,7 +80,7 @@ export class InitiateComponent implements OnInit {
   }
 
   onDeny(): void {
-    this.router.navigate(['../../../accounts'], { relativeTo: this.route });
+    this.location.back();
   }
 
   get creditorIban() {

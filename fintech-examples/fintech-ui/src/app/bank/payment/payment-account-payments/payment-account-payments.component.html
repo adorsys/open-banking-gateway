@@ -1,10 +1,25 @@
 <section class="payment">
   <app-payment-card [payments]="list"></app-payment-card>
+
+  <form *ngIf="isRandomAccountId" (ngSubmit)="initiateSinglePayment()" [formGroup]="ibanForm" class="mr-4">
+    <div class="form-group">
+      <label for="iban">Enter IBAN you want to transfer money from</label>
+      <input [ngClass]="{ 'is-invalid': iban?.errors && iban?.dirty }"
+             autocomplete="off"
+             class="form-control w-50"
+             formControlName="iban"
+             id="iban"
+             type="text"/>
+      <div *ngIf="iban?.errors?.required && iban?.dirty" class="invalid-feedback d-block">IBAN is Required</div>
+      <div *ngIf="iban?.errors?.iban && iban?.dirty" class="invalid-feedback">IBAN is invalid</div>
+    </div>
+  </form>
+
 </section>
 
 <div class="d-sm-flex">
   <button (click)="onDeny()" class="btn btn-outline-secondary w-100 mr-4" id="do_deny">Cancel</button>
-  <button (click)="initiateSinglePayment()" class="btn btn-primary w-100" id="do_submit" type="button">
+  <button (click)="initiateSinglePayment()" class="btn btn-primary w-100" id="do_submit" type="button" [disabled]="!ibanForm.valid">
     Initiate new payment
   </button>
 </div>
