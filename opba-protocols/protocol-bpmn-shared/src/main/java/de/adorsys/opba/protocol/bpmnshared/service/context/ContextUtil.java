@@ -65,7 +65,7 @@ public class ContextUtil {
 
         expansionContext.put("sessionId", context.getAuthorizationSessionIdIfOpened());
         expansionContext.put("wrong", null == context.getWrongAuthCredentials() ? null : context.getWrongAuthCredentials().toString());
-        expansionContext.put("userSelectScaType", null == scaType ? null : scaType);
+        expansionContext.put("userSelectScaType", scaType);
 
         URI uri = UriComponentsBuilder.fromHttpUrl(urlTemplate)
                 .buildAndExpand(expansionContext)
