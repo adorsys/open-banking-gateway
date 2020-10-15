@@ -110,8 +110,5 @@
       }
     }
   },
-  "defaultProject": "consent-ui",
-  "cli": {
-    "analytics": "27a13de4-7184-42f7-8e9d-8e51be1a6219"
-  }
+  "defaultProject": "consent-ui"
 }
