@@ -17,6 +17,8 @@ jobs:
           java-version: 1.8
       - name: Build project and run test suite
         run: ./scripts/build_and_test.sh
+        env:
+          MOZ_HEADLESS: 1
 
       - name: Deploy release-candidate artifacts to OpenShift
         run: ./scripts/deploy_openshift_release_candidate.sh
