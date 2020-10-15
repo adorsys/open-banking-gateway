@@ -23,7 +23,7 @@
     <exclusiveGateway id="isMultipleScaAvailable" name="Multiple SCA available?" default="oneScaAvailable"/>
     <exclusiveGateway id="isScaFinalized" name="SCA finalized?" default="moreScaChallenges"/>
     <serviceTask id="persistPaymentAndContext" name="Persist singlePaymentBody and its context for future service session invocation" flowable:async="true" flowable:exclusive="false" flowable:delegateExpression="${xs2aPisPersistPaymentAndContext}"/>
-    <sequenceFlow id="oneScaAvailable" name="One SCA" sourceRef="isMultipleScaAvailable" targetRef="embeddedScaChallenge"/>
+    <sequenceFlow id="oneScaAvailable" name="One SCA" sourceRef="isMultipleScaAvailable" targetRef="isDecoupledScaSelected"/>
     <exclusiveGateway id="isPasswordPresent" name="Password/OTA present?" default="noUserPasswordPresent"/>
     <serviceTask id="askUserForPassword" name="Ask user to input OTP/password. Suspends to wait" flowable:async="true" flowable:exclusive="false" flowable:delegateExpression="${xs2aAskForPassword}" flowable:triggerable="true"/>
     <sequenceFlow id="sid-54FE7BD4-78A9-4391-8A37-1D323F32A029" sourceRef="authenticateUser" targetRef="isMultipleScaAvailable"/>
@@ -56,7 +56,7 @@
       <conditionExpression xsi:type="tFormalExpression"><![CDATA[#{xs2aConsentInfo.isWrongPassword(CONTEXT)}]]></conditionExpression>
     </sequenceFlow>
     <sequenceFlow id="sid-C9002EF3-5531-4787-8754-96515CEFCE8C" sourceRef="askUserForPassword" targetRef="authenticateUser"/>
-    <sequenceFlow id="sid-4C32CFE7-9B58-463D-85E7-4DB93064F2BB" sourceRef="reportSelectedScaMethod" targetRef="embeddedScaChallenge"/>
+    <sequenceFlow id="sid-4C32CFE7-9B58-463D-85E7-4DB93064F2BB" sourceRef="reportSelectedScaMethod" targetRef="isDecoupledScaSelected"/>
     <serviceTask id="callFintechWebhook" name="Calls FinTech webhook to notify completed authorization" flowable:delegateExpression="${xs2aReportToFintechPaymentAuthorized}"/>
     <sequenceFlow id="sid-7985590B-669B-4877-AFEF-B3BD5824C52B" sourceRef="callFintechWebhook" targetRef="end"/>
     <sequenceFlow id="sid-59AE4CB4-9545-4CD9-9495-6A5D8AF74CBE" sourceRef="persistPaymentAndContext" targetRef="callFintechWebhook"/>
@@ -88,6 +88,10 @@
     <sequenceFlow id="noOauth2Authorization" sourceRef="sid-3ac85279-91f9-41fc-8644-369b8d2c9ee5" targetRef="startAuthorization">
       <conditionExpression xsi:type="tFormalExpression"/>
     </sequenceFlow>
+    <exclusiveGateway id="isDecoupledScaSelected" name="Is the selected SCA decoupled"/>
+    <sequenceFlow id="nonDecoupledScaSelected" sourceRef="isDecoupledScaSelected" targetRef="embeddedScaChallenge">
+      <conditionExpression xsi:type="tFormalExpression"/>
+    </sequenceFlow>
   </process>
   <bpmndi:BPMNDiagram id="BPMNDiagram_xs2a-authorize-singlePaymentBody">
     <bpmndi:BPMNPlane bpmnElement="xs2a-authorize-payment" id="BPMNPlane_xs2a-authorize-singlePaymentBody">
@@ -113,7 +117,7 @@
         <omgdc:Bounds height="80.0" width="100.0" x="810.0" y="64.0"/>
       </bpmndi:BPMNShape>
       <bpmndi:BPMNShape bpmnElement="embeddedScaChallenge" id="BPMNShape_embeddedScaChallenge">
-        <omgdc:Bounds height="80.0" width="100.0" x="1040.0" y="195.0"/>
+        <omgdc:Bounds height="80.0" width="100.0" x="1071.6799" y="195.0"/>
       </bpmndi:BPMNShape>
       <bpmndi:BPMNShape bpmnElement="isMultipleScaAvailable" id="BPMNShape_isMultipleScaAvailable">
         <omgdc:Bounds height="40.0" width="40.0" x="745.0" y="215.0"/>
@@ -131,7 +135,7 @@
         <omgdc:Bounds height="80.0" width="100.0" x="500.0" y="304.0"/>
       </bpmndi:BPMNShape>
       <bpmndi:BPMNShape bpmnElement="sendChallengeResult" id="BPMNShape_sendChallengeResult">
-        <omgdc:Bounds height="80.0" width="100.0" x="1190.0" y="195.0"/>
+        <omgdc:Bounds height="80.0" width="100.0" x="1211.6" y="195.0"/>
       </bpmndi:BPMNShape>
       <bpmndi:BPMNShape bpmnElement="reportSelectedScaMethod" id="BPMNShape_reportSelectedScaMethod">
         <omgdc:Bounds height="80.0" width="100.0" x="945.0" y="64.0"/>
@@ -170,12 +174,12 @@
         <omgdi:waypoint x="1360.0" y="215.0"/>
         <omgdi:waypoint x="1360.0" y="103.0"/>
         <omgdi:waypoint x="1115.0" y="103.0"/>
-        <omgdi:waypoint x="1097.566287878788" y="195.0"/>
+        <omgdi:waypoint x="1129.2462" y="195.0"/>
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNEdge bpmnElement="sid-4C32CFE7-9B58-463D-85E7-4DB93064F2BB" id="BPMNEdge_sid-4C32CFE7-9B58-463D-85E7-4DB93064F2BB">
         <omgdi:waypoint x="1044.9499999999928" y="104.0"/>
         <omgdi:waypoint x="1065.0" y="104.0"/>
-        <omgdi:waypoint x="1082.3664122137404" y="195.0"/>
+        <omgdi:waypoint x="933.55994" y="215.0"/>
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNEdge bpmnElement="sid-F821ADB7-7314-4ADE-B811-D8A7F49E2DAE" id="BPMNEdge_sid-F821ADB7-7314-4ADE-B811-D8A7F49E2DAE">
         <omgdi:waypoint x="879.95" y="475.0"/>
@@ -195,7 +199,7 @@
         <omgdi:waypoint x="1360.0" y="254.94267083027182"/>
         <omgdi:waypoint x="1360.0" y="371.0"/>
         <omgdi:waypoint x="1090.0" y="371.0"/>
-        <omgdi:waypoint x="1090.0" y="274.95000000000005"/>
+        <omgdi:waypoint x="1121.6799" y="274.95"/>
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNEdge bpmnElement="sid-7985590B-669B-4877-AFEF-B3BD5824C52B" id="BPMNEdge_sid-7985590B-669B-4877-AFEF-B3BD5824C52B">
         <omgdi:waypoint x="1640.0" y="379.95000000000005"/>
@@ -203,7 +207,7 @@
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNEdge bpmnElement="oneScaAvailable" id="BPMNEdge_oneScaAvailable">
         <omgdi:waypoint x="784.946931713082" y="235.0"/>
-        <omgdi:waypoint x="1039.9999999999827" y="235.0"/>
+        <omgdi:waypoint x="913.55994" y="235.0"/>
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNEdge bpmnElement="scaFinalized" id="BPMNEdge_scaFinalized">
         <omgdi:waypoint x="1379.9420263788604" y="235.0"/>
@@ -229,8 +233,8 @@
         <omgdi:waypoint x="810.0" y="104.0"/>
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNEdge bpmnElement="sid-7485A215-3632-43C3-A3FE-3B3F33F30FA6" id="BPMNEdge_sid-7485A215-3632-43C3-A3FE-3B3F33F30FA6">
-        <omgdi:waypoint x="1139.95" y="235.0"/>
-        <omgdi:waypoint x="1190.0" y="235.0"/>
+        <omgdi:waypoint x="1171.6299" y="235.0"/>
+        <omgdi:waypoint x="1211.6" y="235.0"/>
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNEdge bpmnElement="sid-74F0F25F-E309-400F-ABEF-378D608C16C1" id="BPMNEdge_sid-74F0F25F-E309-400F-ABEF-378D608C16C1">
         <omgdi:waypoint x="1560.5667" y="475.00003"/>
@@ -238,7 +242,7 @@
         <omgdi:waypoint x="1640.0" y="443.0"/>
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNEdge bpmnElement="sid-BC0026EE-A538-4399-8BA7-080F7C2383C9" id="BPMNEdge_sid-BC0026EE-A538-4399-8BA7-080F7C2383C9">
-        <omgdi:waypoint x="1289.9499999999755" y="235.0"/>
+        <omgdi:waypoint x="1311.5499" y="235.0"/>
         <omgdi:waypoint x="1340.0" y="235.0"/>
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNEdge bpmnElement="passwordAvailable" id="BPMNEdge_passwordAvailable">
@@ -290,6 +294,13 @@
       <bpmdi:BPMNEdge xmlns:bpmdi="http://www.omg.org/spec/BPMN/20100524/DI" id="edge-69839283-a476-4b5f-867d-f7de8d5c4ab4" bpmnElement="noOauth2Authorization">
         <omgdi:waypoint x="81.959984" y="337.9999"/>
         <omgdi:waypoint x="143.66205" y="337.99994"/>
+      </bpmdi:BPMNEdge>
+      <bpmdi:BPMNShape xmlns:bpmdi="http://www.omg.org/spec/BPMN/20100524/DI" id="shape-cfbd9cda-f7b5-4e19-b07b-66880b746a22" bpmnElement="isDecoupledScaSelected">
+        <omgdc:Bounds x="913.55994" y="215.0" width="40.0" height="40.0"/>
+      </bpmdi:BPMNShape>
+      <bpmdi:BPMNEdge xmlns:bpmdi="http://www.omg.org/spec/BPMN/20100524/DI" id="edge-955f15f7-7702-4aba-88f9-66ff2fc637da" bpmnElement="nonDecoupledScaSelected">
+        <omgdi:waypoint x="953.55994" y="235.0"/>
+        <omgdi:waypoint x="1071.6799" y="235.0"/>
       </bpmdi:BPMNEdge>
     </bpmndi:BPMNPlane>
   </bpmndi:BPMNDiagram>
