@@ -36,7 +36,7 @@ jobs:
           GIT_BRANCH: master # Force branch to resolve to master if git resolution fails - otherwise gitflow-helper uses UNDEFINED branch
 
       - name: Release JavaDocs
-      - run: ./scripts/deploy_javadoc.sh
+        run: ./scripts/deploy_javadoc.sh
         env:
           GITHUB_ACTOR: ${{ github.actor }}
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
