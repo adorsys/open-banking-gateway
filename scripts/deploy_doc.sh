@@ -17,7 +17,7 @@ then
   GITHUB_TAG="develop"
 fi
 
-docker run -it --rm -v "$PWD":/src -w /src -u "$(id -u "${USER}"):$(id -g "${USER}")" --env GITHUB_TAG g0lden/mkdocs make site || exit 1
+docker run -i --rm -v "$PWD":/src -w /src -u "$(id -u "${USER}"):$(id -g "${USER}")" --env GITHUB_TAG g0lden/mkdocs make site || exit 1
 
 echo -e "Publishing Documentation...\n"
 
