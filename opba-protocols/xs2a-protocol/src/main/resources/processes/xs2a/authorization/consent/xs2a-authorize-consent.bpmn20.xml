@@ -88,14 +88,6 @@
     <sequenceFlow id="noOauth2Authorization" sourceRef="sid-28d87700-36b4-4ef7-9f81-42473767bb7e" targetRef="startAuthorization">
       <conditionExpression xsi:type="tFormalExpression"/>
     </sequenceFlow>
-    <boundaryEvent id="decoupledAuthorisationCheckTimer" attachedToRef="embeddedScaChallenge">
-      <timerEventDefinition>
-        <timeCycle>0 0/5 * * * ?</timeCycle>
-      </timerEventDefinition>
-    </boundaryEvent>
-    <serviceTask id="checkDecoupledScaFinalisation" flowable:exclusive="true" name="Check consent decoupled SCA finalisation by PSU" flowable:delegateExpression="${xs2aAskForScaChallenge}"/>
-    <sequenceFlow id="sid-ad3ceef5-1bd7-426d-b91c-9505495d5e4b" sourceRef="decoupledAuthorizationCheckTimer" targetRef="checkDecopledScaFinalisation"/>
-    <sequenceFlow id="sid-a1f24d64-aa67-4dfe-b113-0bc39bd7e89f" sourceRef="checkDecopledScaFinalisation" targetRef="sendChallengeResult"/>
   </process>
   <bpmndi:BPMNDiagram id="BPMNDiagram_xs2a-authorize-consent">
     <bpmndi:BPMNPlane bpmnElement="xs2a-authorize-consent" id="BPMNPlane_xs2a-authorize-consent">
@@ -297,21 +289,6 @@
       <bpmdi:BPMNEdge xmlns:bpmdi="http://www.omg.org/spec/BPMN/20100524/DI" id="edge-27891167-bae7-4d6c-84c4-5b40903f233d" bpmnElement="noOauth2Authorization">
         <omgdi:waypoint x="93.27999" y="337.99997"/>
         <omgdi:waypoint x="137.0278" y="338.00003"/>
-      </bpmdi:BPMNEdge>
-      <bpmdi:BPMNShape xmlns:bpmdi="http://www.omg.org/spec/BPMN/20100524/DI" id="shape-85e3ecf6-9434-4dcb-bf6c-5d06a7509682" bpmnElement="decoupledAuthorizationCheckTimer">
-        <omgdc:Bounds x="1039.4916" y="262.6939" width="30.0" height="30.0"/>
-      </bpmdi:BPMNShape>
-      <bpmdi:BPMNShape xmlns:bpmdi="http://www.omg.org/spec/BPMN/20100524/DI" id="shape-fd569e83-7cc1-4893-a7d3-1d4146edef7c" bpmnElement="checkDecopledScaFinalisation">
-        <omgdc:Bounds x="919.49164" y="321.02722" width="100.0" height="80.0"/>
-      </bpmdi:BPMNShape>
-      <bpmdi:BPMNEdge xmlns:bpmdi="http://www.omg.org/spec/BPMN/20100524/DI" id="edge-fc09f5dc-47de-4a66-b5f2-8ea94db0c4d0" bpmnElement="sid-ad3ceef5-1bd7-426d-b91c-9505495d5e4b">
-        <omgdi:waypoint x="1036.6667" y="274.1667"/>
-        <omgdi:waypoint x="969.4916" y="321.02722"/>
-      </bpmdi:BPMNEdge>
-      <bpmdi:BPMNEdge xmlns:bpmdi="http://www.omg.org/spec/BPMN/20100524/DI" id="edge-89797ee4-094d-44a4-83e7-d4282e6354e5" bpmnElement="sid-a1f24d64-aa67-4dfe-b113-0bc39bd7e89f">
-        <omgdi:waypoint x="1019.49164" y="384.0"/>
-        <omgdi:waypoint x="1215.0" y="384.0"/>
-        <omgdi:waypoint x="1215.0" y="275.0"/>
       </bpmdi:BPMNEdge>
     </bpmndi:BPMNPlane>
   </bpmndi:BPMNDiagram>

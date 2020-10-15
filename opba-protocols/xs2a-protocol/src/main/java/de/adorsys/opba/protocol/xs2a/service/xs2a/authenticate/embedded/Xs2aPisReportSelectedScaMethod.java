@@ -28,6 +28,8 @@ import org.springframework.stereotype.Service;
 @RequiredArgsConstructor
 public class Xs2aPisReportSelectedScaMethod extends ValidatedExecution<Xs2aPisContext> {
 
+    private static final String DECOUPLED_AUTHENTICATION_ID = "APP_OTP";
+
     private final Extractor extractor;
     private final Xs2aValidator validator;
     private final PaymentInitiationService pis;
@@ -56,6 +58,7 @@ public class Xs2aPisReportSelectedScaMethod extends ValidatedExecution<Xs2aPisCo
                 (Xs2aContext ctx) -> {
                     ctx.setScaSelected(authResponse.getBody().getChosenScaMethod());
                     ctx.setChallengeData(authResponse.getBody().getChallengeData());
+                    ctx.setSelectedScaDecoupled(DECOUPLED_AUTHENTICATION_ID.equals(authResponse.getBody().getChosenScaMethod().getAuthenticationMethodId()));
                 }
         );
     }

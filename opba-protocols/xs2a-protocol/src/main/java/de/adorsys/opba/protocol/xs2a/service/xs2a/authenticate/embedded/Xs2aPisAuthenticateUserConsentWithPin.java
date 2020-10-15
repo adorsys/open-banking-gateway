@@ -35,6 +35,8 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 public class Xs2aPisAuthenticateUserConsentWithPin extends ValidatedExecution<Xs2aPisContext> {
 
+    private static final String DECOUPLED_AUTHENTICATION_ID = "APP_OTP";
+
     private final Extractor extractor;
     private final Xs2aValidator validator;
     private final PaymentInitiationService pis;
@@ -80,6 +82,7 @@ public class Xs2aPisAuthenticateUserConsentWithPin extends ValidatedExecution<Xs
                     ctx.setScaSelected(authResponse.getBody().getChosenScaMethod());
                     ctx.setChallengeData(authResponse.getBody().getChallengeData());
                     ctx.setScaStatus(null == scaStatus ? null : scaStatus.getValue());
+                    setSelectedScaDecoupledIfCanBeChosen(authResponse, ctx);
                 }
         );
     }
@@ -106,6 +109,16 @@ public class Xs2aPisAuthenticateUserConsentWithPin extends ValidatedExecution<Xs
                         .map(ScaMethod.FROM_AUTH::map)
                         .collect(Collectors.toList())
         );
+    }
+
+    private void setSelectedScaDecoupledIfCanBeChosen(
+            Response<UpdatePsuAuthenticationResponse> authResponse, Xs2aPisContext ctx
+    ) {
+        if (null == authResponse.getBody().getChosenScaMethod()) {
+            return;
+        }
+
+        ctx.setSelectedScaDecoupled(DECOUPLED_AUTHENTICATION_ID.equals(authResponse.getBody().getChosenScaMethod().getAuthenticationMethodId()));
     }
 
     @Service
