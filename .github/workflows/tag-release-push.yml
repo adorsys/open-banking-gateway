@@ -17,7 +17,7 @@ jobs:
           java-version: 1.8
 
       - name: Promote artifacts from OpenShift to DockerHub
-        run: ./scripts/promote_oc_image_to_dockerhub.sh
+        run: ./scripts/promote_oc_image_to_dockerhub.sh scripts/service.list
         env:
           OPENSHIFT_TOKEN: ${{ secrets.OPENSHIFT_TOKEN }}
           DOCKERHUB_USERNAME: ${{ secrets.DOCKERHUB_USERNAME }}
@@ -40,3 +40,12 @@ jobs:
         env:
           GITHUB_ACTOR: ${{ github.actor }}
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Promote FireFly artifacts from OpenShift to DockerHub
+        run: ./scripts/promote_oc_image_to_dockerhub.sh scripts/firefly-service.list
+        env:
+          OPENSHIFT_TOKEN: ${{ secrets.OPENSHIFT_TOKEN }}
+          DOCKERHUB_USERNAME: ${{ secrets.DOCKERHUB_USERNAME }}
+          DOCKERHUB_PASSWORD: ${{ secrets.DOCKERHUB_PASSWORD }}
+          RELEASE_CANDIDATE_DOMAIN: openshift-registry.adorsys.de
+          RELEASE_CANDIDATE_PROJECT_NAME: open-banking-gateway-integ

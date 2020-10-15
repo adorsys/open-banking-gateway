@@ -30,8 +30,16 @@ jobs:
           GPG_OWNERTRUST: ${{ secrets.DEVELOP_GPG_OWNERTRUST }}
           MOZ_HEADLESS: 1
 
+      - name: Build FireFly improter
+        run: ./scripts/build_firefly_exporter_mvn.sh
+
       - name: Deploy develop artifacts to OpenShift
-        run: ./scripts/deploy_openshift.sh
+        run: ./scripts/deploy_openshift.sh scripts/service.list
+        env:
+          OPENSHIFT_TOKEN: ${{ secrets.OPENSHIFT_TOKEN }}
+
+      - name: Deploy FireFly-importer to OpenShift
+        run: ./scripts/deploy_openshift.sh scripts/firefly-service.list
         env:
           OPENSHIFT_TOKEN: ${{ secrets.OPENSHIFT_TOKEN }}
 
