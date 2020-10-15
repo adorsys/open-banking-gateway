@@ -64,6 +64,13 @@ public class Xs2aConsentInfo {
     }
 
     /**
+     * Is decoupled SCA was finalised bt PSU with mobile or other type of device
+     */
+    public boolean isDecoupledScaFinalizedByPSU(Xs2aContext ctx) {
+        return ctx.isDecoupledScaFinished();
+    }
+
+    /**
      * Is the current consent authorization using zero SCA flow
      */
     public boolean isZeroScaAvailable(Xs2aContext ctx) {
