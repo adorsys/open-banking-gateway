@@ -15,6 +15,7 @@ jobs:
         uses: actions/setup-java@v1
         with:
           java-version: 1.8
+
       - name: Build project and run default test suite
         run: ./scripts/build_and_test.sh
 
@@ -27,8 +28,20 @@ jobs:
           GPG_PASSPHRASE: ${{ secrets.DEVELOP_GPG_PASSPHRASE }}
           GPG_SECRET_KEY: ${{ secrets.DEVELOP_GPG_SECRET_KEY }}
           GPG_OWNERTRUST: ${{ secrets.DEVELOP_GPG_OWNERTRUST }}
-# TODO: Enable when Travis is removed
-#      - name: Deploy develop artifacts to OpenShift
-#        run: ./scripts/deploy_openshift.sh
-#        env:
-#          OPENSHIFT_TOKEN: ${{ secrets.OPENSHIFT_TOKEN }}
+
+      - name: Deploy develop artifacts to OpenShift
+        run: ./scripts/deploy_openshift.sh
+        env:
+          OPENSHIFT_TOKEN: ${{ secrets.OPENSHIFT_TOKEN }}
+
+      - name: Upload coverage to CodeCov
+        run: ./scripts/upload_coverage_to_codecov.sh
+
+      - name: Update GitHub pages
+        run: ./scripts/deploy_doc.sh
+        env:
+          - GITHUB_ACTOR: ${{ github.actor }}
+          - GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Validate OpenShift DEV env deployment status
+        run: ./scripts/validate_dev_deploy.sh
