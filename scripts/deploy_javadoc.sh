@@ -2,8 +2,11 @@
 
 TAG_REGEX="refs/tags/.+"
 if [[ $GITHUB_REF =~ $TAG_REGEX ]]; then
-    split=(${GITHUB_REF_SLUG//\// })
+    split=(${GITHUB_REF//\// })
     GITHUB_TAG=${split[2]}
+else
+  echo "Can't parse tag name from $GITHUB_REF"
+  exit 1
 fi
 
 if [[ $GITHUB_REPOSITORY != "adorsys/open-banking-gateway"

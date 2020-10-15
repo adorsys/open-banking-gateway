@@ -2,7 +2,7 @@
 
 BRANCH_REGEX="refs/heads/.+"
 if [[ $GITHUB_REF =~ $BRANCH_REGEX ]]; then
-    split=(${GITHUB_REF_SLUG//\// })
+    split=(${GITHUB_REF//\// })
     GITHUB_BRANCH=${split[2]}
 else
   echo "Can't parse branch name from $GITHUB_REF"
