@@ -9,7 +9,7 @@ fi
 
 if [[ $GITHUB_REPOSITORY != "adorsys/open-banking-gateway"
     || $GITHUB_EVENT_NAME == "pull_request"
-    || -z "$TRAVIS_COMMIT" ]];
+    || -z "$GITHUB_SHA" ]];
 then
   echo "ERROR: Deployment validation not allowed"
   exit 1
