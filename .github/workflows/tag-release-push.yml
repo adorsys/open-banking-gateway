@@ -35,7 +35,7 @@ jobs:
           STAGE_ARTIFACTORY_PASSWORD: ${{ secrets.GITHUB_TOKEN }}
           GIT_BRANCH: master # Force branch to resolve to master if git resolution fails - otherwise gitflow-helper uses UNDEFINED branch
 
-      -name: Release JavaDocs
+      - name: Release JavaDocs
       - run: ./scripts/deploy_javadoc.sh
         env:
           GITHUB_ACTOR: ${{ github.actor }}
