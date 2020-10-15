@@ -1,11 +1,11 @@
 #!/usr/bin/env bash
 
 BRANCH_REGEX="refs/heads/.+"
-if [[ $GITHUB_REF_SLUG =~ $BRANCH_REGEX ]]; then
+if [[ $GITHUB_REF =~ $BRANCH_REGEX ]]; then
     split=(${GITHUB_REF_SLUG//\// })
     GITHUB_BRANCH=${split[2]}
 else
-  echo "Can't parse branch name from $GITHUB_REF_SLUG"
+  echo "Can't parse branch name from $GITHUB_REF"
   exit 1
 fi
 
