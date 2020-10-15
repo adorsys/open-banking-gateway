@@ -28,6 +28,7 @@ jobs:
           GPG_PASSPHRASE: ${{ secrets.DEVELOP_GPG_PASSPHRASE }}
           GPG_SECRET_KEY: ${{ secrets.DEVELOP_GPG_SECRET_KEY }}
           GPG_OWNERTRUST: ${{ secrets.DEVELOP_GPG_OWNERTRUST }}
+          MOZ_HEADLESS: 1
 
       - name: Deploy develop artifacts to OpenShift
         run: ./scripts/deploy_openshift.sh
@@ -45,3 +46,5 @@ jobs:
 
       - name: Validate OpenShift DEV env deployment status
         run: ./scripts/validate_dev_deploy.sh
+        env:
+          MOZ_HEADLESS: 1
