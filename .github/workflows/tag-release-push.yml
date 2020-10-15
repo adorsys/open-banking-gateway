@@ -38,5 +38,5 @@ jobs:
       -name: Release JavaDocs
       - run: ./scripts/deploy_javadoc.sh
         env:
-          - GITHUB_ACTOR: ${{ github.actor }}
-          - GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GITHUB_ACTOR: ${{ github.actor }}
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

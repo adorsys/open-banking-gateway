@@ -40,8 +40,8 @@ jobs:
       - name: Update GitHub pages
         run: ./scripts/deploy_doc.sh
         env:
-          - GITHUB_ACTOR: ${{ github.actor }}
-          - GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GITHUB_ACTOR: ${{ github.actor }}
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Validate OpenShift DEV env deployment status
         run: ./scripts/validate_dev_deploy.sh
