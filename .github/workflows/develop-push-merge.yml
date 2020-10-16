@@ -1,5 +1,5 @@
 # Builds pushes and merges on develop branch
-name: Develop branch develop and testing
+name: Develop branch build
 
 on:
   push:
