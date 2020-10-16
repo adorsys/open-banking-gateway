@@ -4,6 +4,12 @@ SCRIPT_DIR="$(dirname "$0")"
 IMAGE_TAG=${GITHUB_SHA:0:7}
 REGISTRY_DOMAIN="$RELEASE_CANDIDATE_DOMAIN"
 PROJECT_NAME="$RELEASE_CANDIDATE_PROJECT_NAME"
+SERVICE_LIST_FILE="$SCRIPT_DIR/service.list"
+
+if [[ -n "$1" ]]; then
+    SERVICE_LIST_FILE="$1"
+    echo "Using custom service.list $SERVICE_LIST_FILE"
+fi
 
 docker login -u github-image-pusher -p "$OPENSHIFT_TOKEN" "$REGISTRY_DOMAIN" || exit 1
 
@@ -19,4 +25,4 @@ do
     docker tag "$IMAGE_NAME" "$LATEST_IMAGE_NAME"
     docker push "$IMAGE_NAME"
     docker push "$LATEST_IMAGE_NAME"
-done < "$SCRIPT_DIR/service.list"
+done < "$SERVICE_LIST_FILE"

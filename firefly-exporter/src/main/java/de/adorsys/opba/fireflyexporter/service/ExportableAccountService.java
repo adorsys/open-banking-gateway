@@ -50,6 +50,7 @@ public class ExportableAccountService {
                 bankId,
                 null,
                 consentRepository.findFirstByBankIdOrderByModifiedAt(bankId).map(BankConsent::getConsentId).orElse(null),
+                true,
                 true
         );
 
