@@ -15,7 +15,7 @@
 	<description>OpenBanking to FireFly III exporter</description>
 
 	<properties>
-		<java.version>11</java.version>
+		<java.version>8</java.version>
 		<spring-cloud.version>Hoxton.SR8</spring-cloud.version>
 
 		<swagger-codegen-generators.version>1.0.19</swagger-codegen-generators.version>
