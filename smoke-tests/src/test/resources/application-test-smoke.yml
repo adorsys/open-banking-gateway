@@ -21,7 +21,7 @@ test:
     timeout: PT10S
   api:
     cookie:
-      redirect-path-template: /embedded-server/v1/consent/{authorizationSessionId}/fromAspsp/{redirectState}/*
+      redirect-path-template: /embedded-server/v1/consent/{authorizationSessionId}/fromAspsp/*
       max-age: PT5M
       redirect-max-age: PT60M
       http-only: true
