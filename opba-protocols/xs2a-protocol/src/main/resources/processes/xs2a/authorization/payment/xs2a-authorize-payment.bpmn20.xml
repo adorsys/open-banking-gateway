@@ -115,7 +115,6 @@
         <timerEventDefinition/>
       </intermediateCatchEvent>
       <sequenceFlow id="decoupledSubprocessFailure" sourceRef="subprocessTimeLimit" targetRef="sid-xs2aReportToFintechPaymentDenied" name="Decoupled authorithation failed by timeout"/>
-      <sequenceFlow id="decoupledSubprocessFailure" sourceRef="subprocessTimeLimit" targetRef="sid-xs2aReportToFintechPaymentDenied"/>
     </subProcess>
     <sequenceFlow id="decoupledScaSelected" sourceRef="isDecoupledScaSelected" targetRef="decoupledScaStatusChecking">
       <conditionExpression xsi:type="tFormalExpression">#{xs2aConsentInfo.isDecoupledScaSelected(CONTEXT)}</conditionExpression>
@@ -381,22 +380,18 @@
       <bpmdi:BPMNShape xmlns:bpmdi="http://www.omg.org/spec/BPMN/20100524/DI" id="shape-c3376f53-f442-4c21-9516-43ad54263ca2" bpmnElement="isAuthrizationSucceded">
         <omgdc:Bounds x="1705.9393" y="-103.22604" width="40.0" height="40.0"/>
       </bpmdi:BPMNShape>
-      <bpmdi:BPMNEdge xmlns:bpmdi="http://www.omg.org/spec/BPMN/20100524/DI" id="edge-c89f32c3-0fd6-4926-986d-03d83e999092" bpmnElement="decoupledSubprocessFailure">
+      <bpmdi:BPMNEdge xmlns:bpmdi="http://www.omg.org/spec/BPMN/20100524/DI" id="edge-c89f32c3-0fd6-4926-986d-03d83e999092" bpmnElement="decoupledSubprocessSuccess">
         <omgdi:waypoint x="1556.0" y="-7.4077454"/>
         <omgdi:waypoint x="1405.6" y="215.00002"/>
       </bpmdi:BPMNEdge>
       <bpmdi:BPMNShape xmlns:bpmdi="http://www.omg.org/spec/BPMN/20100524/DI" id="shape-c9adc030-190c-4a00-b19a-eabf12a34bcd" bpmnElement="subprocessTimeLimit">
         <omgdc:Bounds x="1763.2" y="-15.200024" width="30.0" height="30.0"/>
       </bpmdi:BPMNShape>
-      <bpmdi:BPMNEdge xmlns:bpmdi="http://www.omg.org/spec/BPMN/20100524/DI" id="edge-d23baa1b-4de6-441f-9e34-bf2062d6bb3b" bpmnElement="decoupledSubprocessFailure">
+      <bpmdi:BPMNEdge xmlns:bpmdi="http://www.omg.org/spec/BPMN/20100524/DI" id="edge-a3a25113-d615-4c25-b9f7-94599f5a164a" bpmnElement="decoupledSubprocessFailure">
         <omgdi:waypoint x="1778.2" y="14.799976"/>
-        <omgdi:waypoint x="1778.1998" y="548.5801"/>
-        <omgdi:waypoint x="1510.5668" y="548.58"/>
-        <omgdi:waypoint x="1510.5667" y="514.99994"/>
-      </bpmdi:BPMNEdge>
-      <bpmdi:BPMNEdge xmlns:bpmdi="http://www.omg.org/spec/BPMN/20100524/DI" id="edge-0347071a-2456-421a-975f-218988b96bf4" bpmnElement="decoupledSubprocessSuccess">
-        <omgdi:waypoint x="1556.0" y="-7.4077454"/>
-        <omgdi:waypoint x="1405.6" y="215.00002"/>
+        <omgdi:waypoint x="1778.2" y="556.472"/>
+        <omgdi:waypoint x="1510.5665" y="556.4719"/>
+        <omgdi:waypoint x="1510.5665" y="515.0"/>
       </bpmdi:BPMNEdge>
     </bpmndi:BPMNPlane>
   </bpmndi:BPMNDiagram>
