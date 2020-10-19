@@ -106,7 +106,7 @@
       <sequenceFlow id="startTimer" sourceRef="authrizationSucceded" targetRef="waitAuthorizationConfirmation" name="Starts timer to wait for PSU actions">
         <conditionExpression xsi:type="tFormalExpression">#{!xs2aConsentInfo.isDecoupledScaFinalizedByPSU(CONTEXT)}</conditionExpression>
       </sequenceFlow>
-      <sequenceFlow id="sid-c54a3091-cc6e-474a-93ee-c54718b87124" sourceRef="waitAuthorizationConfirmation" targetRef="checkIfDecoupledScaFinalized"/>
+      <sequenceFlow id="restartAuthorizationCheck" sourceRef="waitAuthorizationConfirmation" targetRef="checkIfDecoupledScaFinalized" name="Starts authorization check after some delay"/>
       <intermediateCatchEvent id="subprocessTimeLimit" name="Time limit of subprocess execution">
         <timerEventDefinition>
           <timeDuration>${flowable.timer.maxDuration}</timeDuration>
@@ -116,11 +116,12 @@
       <sequenceFlow id="finishSubprocess" sourceRef="authrizationSucceded" targetRef="subprocessEnd" name="Successful proceeding to the subprocess end">
         <conditionExpression xsi:type="tFormalExpression"/>
       </sequenceFlow>
+      <sequenceFlow id="decoupledSubprocessFailure" sourceRef="subprocessTimeLimit" targetRef="sid-xs2aReportToFintechConsentDenied" name="Decoupled authorithation failed by timeout"/>
     </subProcess>
     <sequenceFlow id="decoupledScaSelected" sourceRef="isDecoupledScaSelected" targetRef="decoupledScaStatusChecking">
       <conditionExpression xsi:type="tFormalExpression">#{xs2aConsentInfo.isDecoupledScaSelected(CONTEXT)}</conditionExpression>
     </sequenceFlow>
-    <sequenceFlow id="decoupledSubprocessSuccess" sourceRef="decoupledScaStatusChecking" targetRef="isScaFinalized"/>
+    <sequenceFlow id="decoupledSubprocessSuccess" sourceRef="decoupledScaStatusChecking" targetRef="isScaFinalized" name="Decoupled authorithation was successful"/>
   </process>
   <bpmndi:BPMNDiagram id="BPMNDiagram_xs2a-authorize-consent">
     <bpmndi:BPMNPlane bpmnElement="xs2a-authorize-consent" id="BPMNPlane_xs2a-authorize-consent">
@@ -372,7 +373,7 @@
         <omgdi:waypoint x="1721.4" y="-42.299988"/>
         <omgdi:waypoint x="1721.4" y="-141.69722"/>
       </bpmdi:BPMNEdge>
-      <bpmdi:BPMNEdge xmlns:bpmdi="http://www.omg.org/spec/BPMN/20100524/DI" id="edge-83d364e9-5240-43a3-9f2e-a04c32e9fff6" bpmnElement="sid-c54a3091-cc6e-474a-93ee-c54718b87124">
+      <bpmdi:BPMNEdge xmlns:bpmdi="http://www.omg.org/spec/BPMN/20100524/DI" id="edge-83d364e9-5240-43a3-9f2e-a04c32e9fff6" bpmnElement="restartAuthorizationCheck">
         <omgdi:waypoint x="1706.4" y="-156.69722"/>
         <omgdi:waypoint x="1603.8002" y="-156.69722"/>
         <omgdi:waypoint x="1603.8" y="-62.299995"/>
@@ -383,6 +384,12 @@
       <bpmdi:BPMNEdge xmlns:bpmdi="http://www.omg.org/spec/BPMN/20100524/DI" id="edge-3cdad096-727a-4c3c-908c-64414d2a72cf" bpmnElement="decoupledSubprocessSuccess">
         <omgdi:waypoint x="1527.9" y="46.90001"/>
         <omgdi:waypoint x="1383.0" y="215.0"/>
+      </bpmdi:BPMNEdge>
+      <bpmdi:BPMNEdge xmlns:bpmdi="http://www.omg.org/spec/BPMN/20100524/DI" id="edge-21a71140-566b-4605-b9c9-f2b24337cee8" bpmnElement="decoupledSubprocessFailure">
+        <omgdi:waypoint x="1775.0" y="65.0"/>
+        <omgdi:waypoint x="1775.0" y="559.0"/>
+        <omgdi:waypoint x="1533.6001" y="559.0"/>
+        <omgdi:waypoint x="1533.6001" y="515.0"/>
       </bpmdi:BPMNEdge>
     </bpmndi:BPMNPlane>
   </bpmndi:BPMNDiagram>
