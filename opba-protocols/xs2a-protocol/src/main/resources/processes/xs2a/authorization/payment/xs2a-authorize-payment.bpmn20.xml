@@ -93,12 +93,12 @@
       <conditionExpression xsi:type="tFormalExpression"/>
     </sequenceFlow>
     <subProcess id="decoupledScaStatusChecking" flowable:exclusive="true" name="Decoupled Sca status checking subprocess">
-      <serviceTask id="checkIfDecoupledScaFinalised" flowable:exclusive="true" flowable:delegateExpression="${xs2aCheckDecoupledAuthorizationStatus}" name="Checks authorization status to be finalised"/>
+      <serviceTask id="checkIfDecoupledScaFinalized" flowable:exclusive="true" flowable:delegateExpression="${xs2aCheckDecoupledAuthorizationStatus}" name="Checks authorization status to be finalized"/>
       <startEvent id="decoupledSubProcessStart" name="Start of decoupled Sca subprocess"/>
-      <sequenceFlow id="startAuthoriztionChecking" sourceRef="decoupledSubProcessStart" targetRef="checkIfDecoupledScaFinalised" name="Start authoriztion checking"/>
-      <sequenceFlow id="sid-ed27275e-353c-4cf7-92d6-0d017cd2d8f0" sourceRef="checkIfDecoupledScaFinalised" targetRef="authrizationSucceded"/>
+      <sequenceFlow id="startAuthoriztionChecking" sourceRef="decoupledSubProcessStart" targetRef="checkIfDecoupledScaFinalized" name="Start authoriztion checking"/>
+      <sequenceFlow id="sid-ed27275e-353c-4cf7-92d6-0d017cd2d8f0" sourceRef="checkIfDecoupledScaFinalized" targetRef="isAuthrizationSucceded"/>
       <endEvent id="subprocessEnd" name="End of decoupled Sca status checking subprocess"/>
-      <sequenceFlow id="finishSubprocess" sourceRef="authrizationSucceded" targetRef="subprocessEnd" name="Successful proceeding to the subprocess end">
+      <sequenceFlow id="finishSubprocess" sourceRef="isAuthrizationSucceded" targetRef="subprocessEnd" name="Successful proceeding to the subprocess end">
         <conditionExpression xsi:type="tFormalExpression"/>
       </sequenceFlow>
       <intermediateCatchEvent id="waitAuthorizationConfirmation" name="Waits until authorization is finished by PSU">
@@ -106,11 +106,11 @@
           <timeDuration>${EndDate}</timeDuration>
         </timerEventDefinition>
       </intermediateCatchEvent>
-      <sequenceFlow id="startTimer" sourceRef="authrizationSucceded" targetRef="waitAuthorizationConfirmation" name="Starts timer to wait for PSU actions">
+      <sequenceFlow id="startTimer" sourceRef="isAuthrizationSucceded" targetRef="waitAuthorizationConfirmation" name="Starts timer to wait for PSU actions">
         <conditionExpression xsi:type="tFormalExpression">#{xs2aConsentInfo.isZeroScaAvailable(CONTEXT)}</conditionExpression>
       </sequenceFlow>
-      <sequenceFlow id="restartAuthorizationCheck" sourceRef="waitAuthorizationConfirmation" targetRef="checkIfDecoupledScaFinalised" name="Starts authorization check after some delay"/>
-      <exclusiveGateway id="authrizationSucceded" name="Authirization finalised?" default="finishSubprocess"/>
+      <sequenceFlow id="restartAuthorizationCheck" sourceRef="waitAuthorizationConfirmation" targetRef="checkIfDecoupledScaFinalized" name="Starts authorization check after some delay"/>
+      <exclusiveGateway id="isAuthrizationSucceded" name="Authirization finalised?" default="finishSubprocess"/>
       <boundaryEvent id="subprocessTimeLimit" name="Time limit of subprocess execution">
         <timerEventDefinition>
           <timeDuration>${flowable.timer.maxDuration}</timeDuration>
@@ -207,7 +207,7 @@
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNEdge bpmnElement="sid-4C32CFE7-9B58-463D-85E7-4DB93064F2BB" id="BPMNEdge_sid-4C32CFE7-9B58-463D-85E7-4DB93064F2BB">
         <omgdi:waypoint x="1044.95" y="104.0"/>
-        <omgdi:waypoint x="1065.0" y="104.0"/>
+        <omgdi:waypoint x="1067.313" y="104.0"/>
         <omgdi:waypoint x="1067.313" y="214.99998"/>
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNEdge bpmnElement="sid-F821ADB7-7314-4ADE-B811-D8A7F49E2DAE" id="BPMNEdge_sid-F821ADB7-7314-4ADE-B811-D8A7F49E2DAE">
@@ -335,12 +335,12 @@
       <bpmdi:BPMNShape xmlns:bpmdi="http://www.omg.org/spec/BPMN/20100524/DI" id="shape-7ae95780-6529-41ab-bb25-31d78ad70f61" bpmnElement="decoupledScaStatusChecking">
         <omgdc:Bounds x="1465.0" y="-239.40775" width="364.0" height="232.0"/>
       </bpmdi:BPMNShape>
-      <bpmdi:BPMNShape xmlns:bpmdi="http://www.omg.org/spec/BPMN/20100524/DI" id="shape-d55ae506-5c13-4679-8c2d-df002fde979d" bpmnElement="checkIfDecoupledScaFinalised">
+      <bpmdi:BPMNShape xmlns:bpmdi="http://www.omg.org/spec/BPMN/20100524/DI" id="shape-d55ae506-5c13-4679-8c2d-df002fde979d" bpmnElement="checkIfDecoupledScaFinalized">
         <omgdc:Bounds x="1563.0702" y="-123.22604" width="100.0" height="80.0"/>
       </bpmdi:BPMNShape>
       <bpmdi:BPMNEdge xmlns:bpmdi="http://www.omg.org/spec/BPMN/20100524/DI" id="edge-a721be12-5770-445d-b2b7-0bafce9c8b20" bpmnElement="decoupledScaSelected">
-        <omgdi:waypoint x="1073.073" y="214.99998"/>
-        <omgdi:waypoint x="1073.0729" y="-163.80775"/>
+        <omgdi:waypoint x="1067.313" y="214.99998"/>
+        <omgdi:waypoint x="1067.3131" y="-163.80775"/>
         <omgdi:waypoint x="1465.0" y="-163.80775"/>
       </bpmdi:BPMNEdge>
       <bpmdi:BPMNShape xmlns:bpmdi="http://www.omg.org/spec/BPMN/20100524/DI" id="shape-52db005e-db45-49e4-84dd-31dbcc5156c0" bpmnElement="decoupledSubProcessStart">
@@ -378,7 +378,7 @@
         <omgdi:waypoint x="1613.0702" y="-185.19595"/>
         <omgdi:waypoint x="1613.0702" y="-123.22604"/>
       </bpmdi:BPMNEdge>
-      <bpmdi:BPMNShape xmlns:bpmdi="http://www.omg.org/spec/BPMN/20100524/DI" id="shape-c3376f53-f442-4c21-9516-43ad54263ca2" bpmnElement="authrizationSucceded">
+      <bpmdi:BPMNShape xmlns:bpmdi="http://www.omg.org/spec/BPMN/20100524/DI" id="shape-c3376f53-f442-4c21-9516-43ad54263ca2" bpmnElement="isAuthrizationSucceded">
         <omgdc:Bounds x="1705.9393" y="-103.22604" width="40.0" height="40.0"/>
       </bpmdi:BPMNShape>
       <bpmdi:BPMNShape xmlns:bpmdi="http://www.omg.org/spec/BPMN/20100524/DI" id="shape-a43ea177-3143-4db9-ace4-2a224f78adb0" bpmnElement="subprocessTimeLimit">

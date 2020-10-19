@@ -95,7 +95,12 @@
     <subProcess id="decoupledScaStatusChecking" flowable:exclusive="true" name="Decoupled Sca status checking subprocess">
       <startEvent id="decoupledSubProcessStart" name="Start of decoupled Sca subprocess"/>
       <endEvent id="subprocessEnd" name="End of decoupled Sca status checking subprocess"/>
+      <serviceTask id="checkIfDecoupledScaFinalized" flowable:exclusive="true" name="Checks authorization status to be finalized"/>
+      <exclusiveGateway id="authrizationSucceded" name="Authirization finalised?"/>
     </subProcess>
+    <sequenceFlow id="decoupledScaSelected" sourceRef="isDecoupledScaSelected" targetRef="decoupledScaStatusChecking">
+      <conditionExpression xsi:type="tFormalExpression">#{xs2aConsentInfo.isDecoupledScaSelected(CONTEXT)}</conditionExpression>
+    </sequenceFlow>
   </process>
   <bpmndi:BPMNDiagram id="BPMNDiagram_xs2a-authorize-consent">
     <bpmndi:BPMNPlane bpmnElement="xs2a-authorize-consent" id="BPMNPlane_xs2a-authorize-consent">
@@ -316,6 +321,17 @@
       </bpmdi:BPMNShape>
       <bpmdi:BPMNShape xmlns:bpmdi="http://www.omg.org/spec/BPMN/20100524/DI" id="shape-aad7fc7c-a4bb-4f0a-8896-3185efdfcfcd" bpmnElement="subprocessEnd">
         <omgdc:Bounds x="1685.0" y="-75.0" width="30.0" height="30.0"/>
+      </bpmdi:BPMNShape>
+      <bpmdi:BPMNEdge xmlns:bpmdi="http://www.omg.org/spec/BPMN/20100524/DI" id="edge-efbdcb24-f5f8-49a2-a4fc-582cbe3c25ed" bpmnElement="decoupledScaSelected">
+        <omgdi:waypoint x="1058.2" y="215.0"/>
+        <omgdi:waypoint x="1059.0" y="-72.0"/>
+        <omgdi:waypoint x="1421.0" y="-72.0"/>
+      </bpmdi:BPMNEdge>
+      <bpmdi:BPMNShape xmlns:bpmdi="http://www.omg.org/spec/BPMN/20100524/DI" id="shape-75c9ffcb-744e-437f-8558-977a738d9932" bpmnElement="checkIfDecoupledScaFinalized">
+        <omgdc:Bounds x="1522.0" y="-65.0" width="100.0" height="80.0"/>
+      </bpmdi:BPMNShape>
+      <bpmdi:BPMNShape xmlns:bpmdi="http://www.omg.org/spec/BPMN/20100524/DI" id="shape-93779664-d8c4-4f81-9b33-ec218565d349" bpmnElement="authrizationSucceded">
+        <omgdc:Bounds x="1637.6" y="-86.199974" width="40.0" height="40.0"/>
       </bpmdi:BPMNShape>
     </bpmndi:BPMNPlane>
   </bpmndi:BPMNDiagram>
