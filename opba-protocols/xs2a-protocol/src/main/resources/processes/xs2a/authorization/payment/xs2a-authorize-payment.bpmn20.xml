@@ -112,7 +112,9 @@
       <sequenceFlow id="restartAuthorizationCheck" sourceRef="waitAuthorizationConfirmation" targetRef="checkIfDecoupledScaFinalized" name="Starts authorization check after some delay"/>
       <exclusiveGateway id="isAuthrizationSucceded" name="Authirization finalised?" default="finishSubprocess"/>
       <intermediateCatchEvent id="subprocessTimeLimit" name="Time limit of subprocess execution">
-        <timerEventDefinition/>
+        <timerEventDefinition>
+          <timeDuration>${flowable.timer.maxDuration}</timeDuration>
+        </timerEventDefinition>
       </intermediateCatchEvent>
       <sequenceFlow id="decoupledSubprocessFailure" sourceRef="subprocessTimeLimit" targetRef="sid-xs2aReportToFintechPaymentDenied" name="Decoupled authorithation failed by timeout"/>
     </subProcess>

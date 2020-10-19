@@ -163,3 +163,6 @@ hbci:
 
 flowable:
   process-definition-location-prefix: classpath*:/processes/**/
+  timer:
+    maxDuration: PT5M
+    delayDuration: PT1M
