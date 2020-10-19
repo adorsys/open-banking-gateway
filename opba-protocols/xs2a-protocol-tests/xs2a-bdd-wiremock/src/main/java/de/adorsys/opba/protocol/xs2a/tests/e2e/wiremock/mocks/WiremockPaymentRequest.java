@@ -19,7 +19,6 @@ import static de.adorsys.opba.protocol.xs2a.tests.e2e.stages.StagesCommonUtil.wi
 import static de.adorsys.xs2a.adapter.service.RequestHeaders.TPP_REDIRECT_URI;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.awaitility.Awaitility.await;
-import static org.springframework.http.HttpHeaders.LOCATION;
 
 @JGivenStage
 @SuppressWarnings("checkstyle:MethodName") // Jgiven prettifies snake-case names not camelCase

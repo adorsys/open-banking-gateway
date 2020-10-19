@@ -33,7 +33,6 @@ import static de.adorsys.xs2a.adapter.service.RequestHeaders.TPP_NOK_REDIRECT_UR
 import static de.adorsys.xs2a.adapter.service.RequestHeaders.TPP_REDIRECT_URI;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.awaitility.Awaitility.await;
-import static org.springframework.http.HttpHeaders.LOCATION;
 
 @JGivenStage
 @SuppressWarnings("checkstyle:MethodName") // Jgiven prettifies snake-case names not camelCase
