@@ -4,6 +4,7 @@ import com.github.tomakehurst.wiremock.WireMockServer;
 import com.github.tomakehurst.wiremock.verification.LoggedRequest;
 import com.tngtech.jgiven.annotation.ExpectedScenarioState;
 import com.tngtech.jgiven.integration.spring.JGivenStage;
+import de.adorsys.opba.protocol.xs2a.tests.e2e.LocationExtractorUtil;
 import de.adorsys.opba.protocol.xs2a.tests.e2e.stages.PaymentRequestCommon;
 import io.restassured.RestAssured;
 import io.restassured.response.ExtractableResponse;
@@ -42,7 +43,7 @@ public class WiremockPaymentRequest<SELF extends WiremockPaymentRequest<SELF>> e
                              .statusCode(HttpStatus.SEE_OTHER.value())
                              .extract();
 
-        assertThat(response.header(LOCATION)).contains("pis").contains("consent-result");
+        assertThat(LocationExtractorUtil.getLocation(response)).contains("pis").contains("consent-result");
 
         return self();
     }

@@ -4,6 +4,7 @@ import com.google.common.collect.ImmutableMap;
 import com.tngtech.jgiven.integration.spring.JGivenStage;
 import de.adorsys.opba.consentapi.model.generated.ConsentAuth;
 import de.adorsys.opba.consentapi.model.generated.SinglePayment;
+import de.adorsys.opba.protocol.xs2a.tests.e2e.LocationExtractorUtil;
 import de.adorsys.xs2a.adapter.adapter.StandardPaymentProduct;
 import io.restassured.RestAssured;
 import io.restassured.response.ExtractableResponse;
@@ -220,7 +221,7 @@ public class PaymentRequestCommon<SELF extends PaymentRequestCommon<SELF>> exten
     public SELF user_max_musterman_provided_sca_challenge_result_to_embedded_authorization_and_sees_redirect_to_fintech_ok() {
         assertThat(this.redirectUriToGetUserParams).contains("sca-result").doesNotContain("wrong=true");
         ExtractableResponse<Response> response = max_musterman_provides_sca_challenge_result();
-        assertThat(response.header(LOCATION)).contains("pis").contains("consent-result");
+        assertThat(LocationExtractorUtil.getLocation(response)).contains("pis").contains("consent-result");
         return self();
     }
 
@@ -311,7 +312,7 @@ public class PaymentRequestCommon<SELF extends PaymentRequestCommon<SELF>> exten
     }
 
     protected void updateNextPaymentAuthorizationUrl(ExtractableResponse<Response> response) {
-        this.redirectUriToGetUserParams = response.header(LOCATION);
+        this.redirectUriToGetUserParams = LocationExtractorUtil.getLocation(response);
     }
 
     @SneakyThrows

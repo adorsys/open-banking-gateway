@@ -4,6 +4,7 @@ import com.google.common.collect.ImmutableMap;
 import com.tngtech.jgiven.annotation.ExpectedScenarioState;
 import com.tngtech.jgiven.integration.spring.JGivenStage;
 import de.adorsys.opba.consentapi.model.generated.AuthViolation;
+import de.adorsys.opba.protocol.xs2a.tests.e2e.LocationExtractorUtil;
 import io.restassured.RestAssured;
 import io.restassured.response.ExtractableResponse;
 import io.restassured.response.Response;
@@ -280,7 +281,7 @@ public class AccountInformationRequestCommon<SELF extends AccountInformationRequ
                 .statusCode(HttpStatus.ACCEPTED.value())
             .extract();
 
-        assertThat(response.header(LOCATION)).isEqualTo(FINTECH_REDIR_NOK);
+        assertThat(LocationExtractorUtil.getLocation(response)).isEqualTo(FINTECH_REDIR_NOK);
         return self();
     }
 
@@ -294,7 +295,7 @@ public class AccountInformationRequestCommon<SELF extends AccountInformationRequ
                 .statusCode(HttpStatus.OK.value())
                 .extract();
 
-        this.redirectUriToGetUserParams = response.header(LOCATION);
+        this.redirectUriToGetUserParams = LocationExtractorUtil.getLocation(response);
         updateServiceSessionId(response);
         updateRedirectCode(response);
         return self();
@@ -310,7 +311,7 @@ public class AccountInformationRequestCommon<SELF extends AccountInformationRequ
                 .statusCode(HttpStatus.OK.value())
                 .extract();
 
-        this.redirectUriToGetUserParams = response.header(LOCATION);
+        this.redirectUriToGetUserParams = LocationExtractorUtil.getLocation(response);
         updateServiceSessionId(response);
         updateRedirectCode(response);
         return self();
@@ -465,7 +466,7 @@ public class AccountInformationRequestCommon<SELF extends AccountInformationRequ
                 HttpStatus.ACCEPTED
         );
 
-        assertThat(response.header(LOCATION)).contains("authenticate").contains("wrong=true");
+        assertThat(LocationExtractorUtil.getLocation(response)).contains("authenticate").contains("wrong=true");
         return self();
     }
 
@@ -524,21 +525,21 @@ public class AccountInformationRequestCommon<SELF extends AccountInformationRequ
     public SELF user_max_musterman_provided_correct_sca_challenge_result_after_wrong_to_embedded_authorization_and_sees_redirect_to_fintech_ok() {
         assertThat(this.redirectUriToGetUserParams).contains("sca-result").contains("wrong=true");
         ExtractableResponse<Response> response = max_musterman_provides_sca_challenge_result();
-        assertThat(response.header(LOCATION)).contains("ais").contains("consent-result");
+        assertThat(LocationExtractorUtil.getLocation(response)).contains("ais").contains("consent-result");
         return self();
     }
 
     public SELF user_max_musterman_provided_sca_challenge_result_to_embedded_authorization_and_sees_redirect_to_fintech_ok() {
         assertThat(this.redirectUriToGetUserParams).contains("sca-result").doesNotContain("wrong=true");
         ExtractableResponse<Response> response = max_musterman_provides_sca_challenge_result();
-        assertThat(response.header(LOCATION)).contains("ais").contains("consent-result");
+        assertThat(LocationExtractorUtil.getLocation(response)).contains("ais").contains("consent-result");
         return self();
     }
 
     public SELF user_provided_sca_challenge_result_to_embedded_authorization_and_sees_redirect_to_fintech_ok() {
         assertThat(this.redirectUriToGetUserParams).contains("sca-result").doesNotContain("wrong=true");
         ExtractableResponse<Response> response = user_provides_sca_challenge_result();
-        assertThat(response.header(LOCATION)).contains("ais").contains("consent-result");
+        assertThat(LocationExtractorUtil.getLocation(response)).contains("ais").contains("consent-result");
         return self();
     }
 
@@ -549,7 +550,7 @@ public class AccountInformationRequestCommon<SELF extends AccountInformationRequ
                 HttpStatus.ACCEPTED
         );
 
-        assertThat(response.header(LOCATION)).contains("sca-result").contains("wrong=true");
+        assertThat(LocationExtractorUtil.getLocation(response)).contains("sca-result").contains("wrong=true");
         return self();
     }
 
