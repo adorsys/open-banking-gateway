@@ -4,7 +4,6 @@ export class Consts {
   public static CONFIRM_PAYMENT = 'confirmationData';
   public static BANK_ID_NAME = 'bankid';
   public static ACCOUNT_ID_NAME = 'accountid';
-  public static RANDOM_ACCOUNT_ID = '0bff0a80-4522-4081-9a4e-a9c0a2ec1d0a';
 }
 
 export class HeaderConfig {

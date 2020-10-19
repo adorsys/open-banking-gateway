@@ -1,9 +1,7 @@
 import {Component, OnInit} from '@angular/core';
 import {ActivatedRoute, Router} from '@angular/router';
 import {Location} from '@angular/common';
-import {FormBuilder, FormGroup, Validators} from '@angular/forms';
 import {map} from 'rxjs/operators';
-import {ValidatorService} from "angular-iban";
 
 import {FintechRetrieveAllSinglePaymentsService, PaymentInitiationWithStatusResponse} from '../../../api';
 import {Consts} from '../../../models/consts';
@@ -17,15 +15,12 @@ import {StorageService} from '../../../services/storage.service';
 export class PaymentAccountPaymentsComponent implements OnInit {
   public static ROUTE = 'payments';
   list: PaymentInitiationWithStatusResponse[];
-  ibanForm: FormGroup;
-  isRandomAccountId: boolean;
   bankId: string;
   accountId: string;
 
   constructor(
     private router: Router,
     private route: ActivatedRoute,
-    private formBuilder: FormBuilder,
     private location: Location,
     private storageService: StorageService,
     private fintechRetrieveAllSinglePaymentsService: FintechRetrieveAllSinglePaymentsService
@@ -36,38 +31,20 @@ export class PaymentAccountPaymentsComponent implements OnInit {
     this.bankId = this.route.snapshot.params[Consts.BANK_ID_NAME];
     this.accountId = this.route.snapshot.params[Consts.ACCOUNT_ID_NAME];
 
-    this.isRandomAccountId = this.accountId === Consts.RANDOM_ACCOUNT_ID;
-    this.ibanForm = this.formBuilder.group({
-      iban: ['', [ValidatorService.validateIban, Validators.required]]
-    });
-
-    if (!this.isRandomAccountId) {
-      this.fintechRetrieveAllSinglePaymentsService
-        .retrieveAllSinglePayments(this.bankId, this.accountId, '', '', 'response')
-        .pipe(map((response) => response))
-        .subscribe((response) => {
-          this.list = response.body;
-        });
-    }
+    this.fintechRetrieveAllSinglePaymentsService
+      .retrieveAllSinglePayments(this.bankId, this.accountId, '', '', 'response')
+      .pipe(map((response) => response))
+      .subscribe((response) => {
+        this.list = response.body;
+      });
   }
 
   initiateSinglePayment() {
     console.log('go to initiate');
-    if (this.isRandomAccountId) {
-      this.storageService.setLoa(this.bankId, [{
-        resourceId: this.accountId,
-        iban: this.ibanForm.get('iban').value.replace(/\s/g, ""), //remove white space
-        name: ''
-      }])
-    }
     this.router.navigate(['../initiate'], {relativeTo: this.route});
   }
 
   onDeny() {
     this.location.back();
-  }
-
-  get iban() {
-    return this.ibanForm.get('iban');
   }
 }
