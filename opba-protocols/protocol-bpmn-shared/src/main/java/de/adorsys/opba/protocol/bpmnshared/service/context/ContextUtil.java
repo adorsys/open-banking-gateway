@@ -1,16 +1,9 @@
 package de.adorsys.opba.protocol.bpmnshared.service.context;
 
-import com.google.common.net.UrlEscapers;
 import de.adorsys.opba.protocol.bpmnshared.GlobalConst;
 import de.adorsys.opba.protocol.bpmnshared.dto.context.BaseContext;
-import lombok.Getter;
-import lombok.RequiredArgsConstructor;
 import lombok.experimental.UtilityClass;
 import org.flowable.engine.delegate.DelegateExecution;
-import org.springframework.expression.ExpressionParser;
-import org.springframework.expression.common.TemplateParserContext;
-import org.springframework.expression.spel.standard.SpelExpressionParser;
-import org.springframework.expression.spel.support.StandardEvaluationContext;
 import org.springframework.web.util.UriComponentsBuilder;
 
 import java.net.URI;
@@ -56,23 +49,5 @@ public class ContextUtil {
         return UriComponentsBuilder.fromHttpUrl(urlTemplate)
                 .buildAndExpand(expansionContext)
                 .toUri();
-    }
-
-    /**
-     * Helper class for string interpolation that allows:
-     * <ul>
-     *     <li>to generate URL safe versions of values: {@link SpelCtx#urlSafe(String)}</li>
-     * </ul>
-     */
-    @Getter
-    @RequiredArgsConstructor
-    private class SpelCtx<T> {
-
-        private final DelegateExecution execution;
-        private final T context;
-
-        public String urlSafe(String original) {
-            return UrlEscapers.urlPathSegmentEscaper().escape(original);
-        }
     }
 }
