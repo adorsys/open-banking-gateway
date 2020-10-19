@@ -92,6 +92,10 @@
     <sequenceFlow id="nonDecoupledScaSelected" sourceRef="isDecoupledScaSelected" targetRef="embeddedScaChallenge">
       <conditionExpression xsi:type="tFormalExpression"/>
     </sequenceFlow>
+    <subProcess id="decoupledScaStatusChecking" flowable:exclusive="true" name="Decoupled Sca status checking subprocess">
+      <startEvent id="decoupledSubProcessStart" name="Start of decoupled Sca subprocess"/>
+      <endEvent id="subprocessEnd" name="End of decoupled Sca status checking subprocess"/>
+    </subProcess>
   </process>
   <bpmndi:BPMNDiagram id="BPMNDiagram_xs2a-authorize-consent">
     <bpmndi:BPMNPlane bpmnElement="xs2a-authorize-consent" id="BPMNPlane_xs2a-authorize-consent">
@@ -304,6 +308,15 @@
         <omgdi:waypoint x="1101.0" y="235.0"/>
         <omgdi:waypoint x="1101.0" y="235.0"/>
       </bpmdi:BPMNEdge>
+      <bpmdi:BPMNShape xmlns:bpmdi="http://www.omg.org/spec/BPMN/20100524/DI" id="shape-0bc0337f-5ca2-405e-b855-c56d1b00164f" bpmnElement="decoupledScaStatusChecking">
+        <omgdc:Bounds x="1421.0" y="-170.0" width="334.0" height="196.0"/>
+      </bpmdi:BPMNShape>
+      <bpmdi:BPMNShape xmlns:bpmdi="http://www.omg.org/spec/BPMN/20100524/DI" id="shape-c759801f-0901-4044-890e-53fd682acf62" bpmnElement="decoupledSubProcessStart">
+        <omgdc:Bounds x="1449.0" y="-87.0" width="30.0" height="30.0"/>
+      </bpmdi:BPMNShape>
+      <bpmdi:BPMNShape xmlns:bpmdi="http://www.omg.org/spec/BPMN/20100524/DI" id="shape-aad7fc7c-a4bb-4f0a-8896-3185efdfcfcd" bpmnElement="subprocessEnd">
+        <omgdc:Bounds x="1685.0" y="-75.0" width="30.0" height="30.0"/>
+      </bpmdi:BPMNShape>
     </bpmndi:BPMNPlane>
   </bpmndi:BPMNDiagram>
 </definitions>
