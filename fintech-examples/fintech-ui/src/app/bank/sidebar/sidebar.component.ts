@@ -1,9 +1,6 @@
 import {Component, OnInit} from '@angular/core';
-import {BankProfileService} from '../../bank-search/services/bank-profile.service';
 import {ActivatedRoute, Router} from '@angular/router';
-import {StorageService} from '../../services/storage.service';
-import {Consts} from '../../models/consts';
-import {AccountStruct} from "../redirect-page/redirect-struct";
+import {BankProfileService} from '../../bank-search/services/bank-profile.service';
 
 @Component({
   selector: 'app-sidebar',
@@ -22,7 +19,6 @@ export class SidebarComponent implements OnInit {
     private bankProfileService: BankProfileService,
     private route: ActivatedRoute,
     private router: Router,
-    private storageService: StorageService
   ) {}
 
   ngOnInit() {
@@ -44,16 +40,7 @@ export class SidebarComponent implements OnInit {
   }
 
   onInitiatePayment() {
-    if (!this.isLoaDone()) {
-      this.router.navigate(['payment/account', Consts.RANDOM_ACCOUNT_ID, 'payments'], {relativeTo: this.route});
-    } else {
-      this.router.navigate(['payment'], {relativeTo: this.route});
-    }
-  }
-
-  isLoaDone(): boolean {
-    const loa: AccountStruct[] = this.storageService.getLoa(this.bankId);
-    return loa !== null && (loa.length == 1? loa[0].resourceId !== Consts.RANDOM_ACCOUNT_ID : false);
+    this.router.navigate(['payment'], {relativeTo: this.route});
   }
 
   get showPaymentNav(): boolean {
