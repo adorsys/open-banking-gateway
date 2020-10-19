@@ -36,18 +36,27 @@ public class ContextUtil {
     }
 
     /**
-     * Allows to perform string interpolation like '/ais/{sessionId}' using the process context.
+     * Allows to perform string interpolation like '/ais/{sessionId}' using the process context. Appends redirectCode
+     * if necessary.
      */
     public URI buildAndExpandQueryParameters(String urlTemplate, BaseContext context, String redirectCode, String scaType) {
         Map<String, String> expansionContext = new HashMap<>();
 
         expansionContext.put("sessionId", context.getAuthorizationSessionIdIfOpened());
-        expansionContext.put("redirectCode", redirectCode);
         expansionContext.put("wrong", null == context.getWrongAuthCredentials() ? null : context.getWrongAuthCredentials().toString());
         expansionContext.put("userSelectScaType", scaType);
 
-        return UriComponentsBuilder.fromHttpUrl(urlTemplate)
+        URI uri = UriComponentsBuilder.fromHttpUrl(urlTemplate)
                 .buildAndExpand(expansionContext)
                 .toUri();
+
+        if (redirectCode != null) {
+            uri = UriComponentsBuilder
+                    .fromUri(uri)
+                    .queryParam("redirectCode", redirectCode)
+                    .build()
+                    .toUri();
+        }
+        return uri;
     }
 }
