@@ -236,7 +236,7 @@ class SandboxE2EProtocolAisTest extends SandboxCommonTest<
                 .and()
                 .sandbox_anton_brueckner_inputs_username_and_password_for_oauth2_form(firefoxDriver)
                 .and()
-                .update_redirect_code_from_browser_url(firefoxDriver)
+                .update_redirect_code_from_browser_on_redirect_back_url(firefoxDriver)
                 .and()
                 .user_anton_brueckner_sees_that_he_needs_to_be_redirected_to_aspsp_and_redirects_to_aspsp()
                 .and()

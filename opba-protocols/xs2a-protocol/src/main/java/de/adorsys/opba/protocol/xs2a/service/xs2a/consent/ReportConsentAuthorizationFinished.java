@@ -1,6 +1,7 @@
 package de.adorsys.opba.protocol.xs2a.service.xs2a.consent;
 
 import de.adorsys.opba.protocol.bpmnshared.dto.messages.ConsentAcquired;
+import de.adorsys.opba.protocol.bpmnshared.service.context.ContextUtil;
 import de.adorsys.opba.protocol.bpmnshared.service.exec.ValidatedExecution;
 import de.adorsys.opba.protocol.xs2a.config.protocol.ProtocolUrlsConfiguration;
 import de.adorsys.opba.protocol.xs2a.context.Xs2aContext;
@@ -22,10 +23,13 @@ public class ReportConsentAuthorizationFinished extends ValidatedExecution<Xs2aC
     @Override
     protected void doRealExecution(DelegateExecution execution, Xs2aContext context) {
         redirectExecutor.redirect(
-            execution,
-            context,
-            urlsConfiguration.getAis().getWebHooks().getResult(),
-            context.getFintechRedirectUriOk(),
-            redirect -> new ConsentAcquired(redirect.build()));
+                execution,
+                context,
+                ContextUtil.buildAndExpandQueryParameters(urlsConfiguration.getAis().getWebHooks().getResult(),
+                        context, context.getRedirectCodeIfAuthContinued(), context.getUserSelectScaType()
+                ).toString(),
+                context.getFintechRedirectUriOk(),
+                redirect -> new ConsentAcquired(redirect.build()));
     }
+
 }

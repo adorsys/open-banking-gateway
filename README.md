@@ -1,4 +1,4 @@
-[![Build Status](https://travis-ci.com/adorsys/open-banking-gateway.svg?branch=develop)](https://travis-ci.com/adorsys/open-banking-gateway)
+[![Build Status](https://github.com/adorsys/open-banking-gateway/workflows/Develop%20branch%20build/badge.svg)](https://github.com/adorsys/open-banking-gateway/actions)
 [![Gitter](https://badges.gitter.im/adorsys/open-banking-gateway.svg)](https://gitter.im/adorsys/open-banking-gateway?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge)
 
 **Code coverage**

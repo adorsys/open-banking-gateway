@@ -249,7 +249,9 @@ public class WebDriverBasedAccountInformation<SELF extends WebDriverBasedAccount
         return self();
     }
 
-    public SELF update_redirect_code_from_browser_url(WebDriver driver) {
+    public SELF update_redirect_code_from_browser_on_redirect_back_url(WebDriver driver) {
+        // Is mostly hackish way to get redirectCode back
+        waitForPageLoadAndUrlContainsNoReadyStateCheck(driver, "/to-aspsp-redirection");
         MultiValueMap<String, String> parameters =
                 UriComponentsBuilder.fromUriString(driver.getCurrentUrl()).build().getQueryParams();
         this.redirectCode = parameters.getFirst(REDIRECT_CODE_QUERY);
@@ -394,6 +396,10 @@ public class WebDriverBasedAccountInformation<SELF extends WebDriverBasedAccount
     private void waitForPageLoad(WebDriver driver) {
         new WebDriverWait(driver, timeout.getSeconds())
                 .until(wd -> ((JavascriptExecutor) wd).executeScript("return document.readyState").equals("complete"));
+    }
+
+    private void waitForPageLoadAndUrlContainsNoReadyStateCheck(WebDriver driver, String urlContains) {
+        new WebDriverWait(driver, timeout.getSeconds()).until(wd -> driver.getCurrentUrl().contains(urlContains));
     }
 
     private void waitForPageLoadAndUrlContains(WebDriver driver, String urlContains) {

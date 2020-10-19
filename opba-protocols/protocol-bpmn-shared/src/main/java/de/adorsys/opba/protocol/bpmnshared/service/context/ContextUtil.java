@@ -2,6 +2,7 @@ package de.adorsys.opba.protocol.bpmnshared.service.context;
 
 import com.google.common.net.UrlEscapers;
 import de.adorsys.opba.protocol.bpmnshared.GlobalConst;
+import de.adorsys.opba.protocol.bpmnshared.dto.context.BaseContext;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.UtilityClass;
@@ -10,7 +11,11 @@ import org.springframework.expression.ExpressionParser;
 import org.springframework.expression.common.TemplateParserContext;
 import org.springframework.expression.spel.standard.SpelExpressionParser;
 import org.springframework.expression.spel.support.StandardEvaluationContext;
+import org.springframework.web.util.UriComponentsBuilder;
 
+import java.net.URI;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.function.Consumer;
 
 /**
@@ -54,7 +59,27 @@ public class ContextUtil {
         StandardEvaluationContext parseContext = new StandardEvaluationContext(new SpelCtx<>(execution, context));
         return parser.parseExpression(expression, new TemplateParserContext()).getValue(parseContext, resultClass);
     }
+    public URI buildAndExpandQueryParameters(String urlTemplate, BaseContext context,
+                                             String redirectCode, String scaType) {
+        Map<String, String> expansionContext = new HashMap<>();
 
+        expansionContext.put("sessionId", context.getAuthorizationSessionIdIfOpened());
+        expansionContext.put("wrong", null == context.getWrongAuthCredentials() ? null : context.getWrongAuthCredentials().toString());
+        expansionContext.put("userSelectScaType", scaType);
+
+        URI uri = UriComponentsBuilder.fromHttpUrl(urlTemplate)
+                .buildAndExpand(expansionContext)
+                .toUri();
+
+        if (redirectCode != null) {
+            uri = UriComponentsBuilder
+                    .fromUri(uri)
+                    .queryParam("redirectCode", redirectCode)
+                    .build()
+                    .toUri();
+        }
+        return uri;
+    }
     /**
      * Helper class for string interpolation that allows:
      * <ul>

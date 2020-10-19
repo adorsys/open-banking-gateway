@@ -1,6 +1,7 @@
 package de.adorsys.opba.protocol.xs2a.service.xs2a.payment;
 
 import de.adorsys.opba.protocol.bpmnshared.dto.messages.PaymentAcquired;
+import de.adorsys.opba.protocol.bpmnshared.service.context.ContextUtil;
 import de.adorsys.opba.protocol.bpmnshared.service.exec.ValidatedExecution;
 import de.adorsys.opba.protocol.xs2a.config.protocol.ProtocolUrlsConfiguration;
 import de.adorsys.opba.protocol.xs2a.context.pis.Xs2aPisContext;
@@ -24,7 +25,9 @@ public class ReportPaymentAuthorizationFinished extends ValidatedExecution<Xs2aP
         redirectExecutor.redirect(
                 execution,
                 context,
-                urlsConfiguration.getPis().getWebHooks().getResult(),
+                ContextUtil.buildAndExpandQueryParameters(urlsConfiguration.getPis().getWebHooks().getResult(),
+                        context, context.getRedirectCodeIfAuthContinued(), context.getUserSelectScaType()
+                ).toString(),
                 context.getFintechRedirectUriOk(),
                 redirect -> new PaymentAcquired(redirect.build()));
     }

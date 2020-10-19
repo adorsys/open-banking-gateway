@@ -13,8 +13,6 @@ import org.flowable.engine.delegate.JavaDelegate;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.stereotype.Service;
 
-import java.net.URI;
-
 import static de.adorsys.opba.protocol.xs2a.constant.GlobalConst.LAST_REDIRECTION_TARGET;
 import static de.adorsys.opba.protocol.xs2a.constant.GlobalConst.LAST_VALIDATION_ISSUES;
 
@@ -47,9 +45,8 @@ public class Xs2aReportValidationError implements JavaDelegate {
                         .processId(current.getSagaId())
                         .executionId(execution.getId())
                         .provideMoreParamsDialog(
-                                ContextUtil.evaluateSpelForCtx(
-                                        urlSet.getParameters().getProvideMore(), execution, current, URI.class
-                                )
+                                ContextUtil.buildAndExpandQueryParameters(urlSet.getParameters()
+                                        .getProvideMore(), current, current.getRedirectCodeIfAuthContinued(), null)
                         )
                         .issues(current.getViolations())
                         .build()
