@@ -10,7 +10,6 @@ import lombok.RequiredArgsConstructor;
 import org.flowable.engine.delegate.DelegateExecution;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.stereotype.Service;
-import org.springframework.web.util.UriComponentsBuilder;
 
 import java.net.URI;
 import java.util.function.Function;
@@ -78,10 +77,7 @@ public class HbciRedirectExecutor {
     ) {
         setDestinationUriInContext(execution, destinationUri);
 
-        URI screenUri = URI.create(
-                UriComponentsBuilder.fromHttpUrl(uiScreenUriSpel)
-                .toUriString()
-        );
+        URI screenUri = ContextUtil.buildAndExpandQueryParameters(uiScreenUriSpel, context, context.getRedirectCodeIfAuthContinued(), null);
         Redirect.RedirectBuilder redirect = Redirect.builder();
         redirect.processId(execution.getRootProcessInstanceId());
         redirect.executionId(execution.getId());

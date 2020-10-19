@@ -1,6 +1,7 @@
 package de.adorsys.opba.protocol.hbci.tests.e2e.sandbox.hbcisteps;
 
 import com.tngtech.jgiven.integration.spring.JGivenStage;
+import de.adorsys.opba.protocol.xs2a.tests.e2e.LocationExtractorUtil;
 import de.adorsys.opba.protocol.xs2a.tests.e2e.stages.AccountInformationRequestCommon;
 import io.restassured.response.ExtractableResponse;
 import io.restassured.response.Response;
@@ -17,7 +18,6 @@ import static de.adorsys.opba.protocol.xs2a.tests.e2e.stages.StagesCommonUtil.MA
 import static de.adorsys.opba.protocol.xs2a.tests.e2e.stages.StagesCommonUtil.withTransactionsHeaders;
 import static de.adorsys.opba.restapi.shared.HttpHeaders.SERVICE_SESSION_ID;
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.springframework.http.HttpHeaders.LOCATION;
 import static org.springframework.http.HttpStatus.ACCEPTED;
 
 @JGivenStage
@@ -74,13 +74,13 @@ public class HbciAccountInformationRequest<SELF extends HbciAccountInformationRe
 
     public SELF user_anton_brueckner_provided_correct_pin_to_embedded_authorization_and_sees_redirect_to_fintech_ok() {
         ExtractableResponse<Response> response = anton_brueckner_provides_password();
-        assertThat(response.header(LOCATION)).contains("ais").contains("consent-result");
+        assertThat(LocationExtractorUtil.getLocation(response)).contains("ais").contains("consent-result");
         return self();
     }
 
     public SELF user_max_musterman_provided_correct_pin_to_embedded_authorization_and_sees_redirect_to_fintech_ok() {
         ExtractableResponse<Response> response = max_musterman_provides_password();
-        assertThat(response.header(LOCATION)).contains("ais").contains("consent-result");
+        assertThat(LocationExtractorUtil.getLocation(response)).contains("ais").contains("consent-result");
         return self();
     }
 

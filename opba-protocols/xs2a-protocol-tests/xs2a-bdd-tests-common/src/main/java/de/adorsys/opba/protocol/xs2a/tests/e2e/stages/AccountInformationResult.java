@@ -8,6 +8,7 @@ import com.tngtech.jgiven.annotation.ProvidedScenarioState;
 import com.tngtech.jgiven.integration.spring.JGivenStage;
 import de.adorsys.opba.api.security.external.service.RequestSigningService;
 import de.adorsys.opba.db.repository.jpa.ConsentRepository;
+import de.adorsys.opba.protocol.xs2a.tests.e2e.LocationExtractorUtil;
 import io.restassured.RestAssured;
 import io.restassured.response.ExtractableResponse;
 import io.restassured.response.Response;
@@ -48,7 +49,6 @@ import static org.hamcrest.Matchers.containsInAnyOrder;
 import static org.hamcrest.Matchers.equalTo;
 import static org.hamcrest.Matchers.hasSize;
 import static org.hamcrest.Matchers.instanceOf;
-import static org.springframework.http.HttpHeaders.LOCATION;
 
 @JGivenStage
 @SuppressWarnings("checkstyle:MethodName") // Jgiven prettifies snake-case names not camelCase
@@ -394,7 +394,7 @@ public class AccountInformationResult<SELF extends AccountInformationResult<SELF
                 .statusCode(HttpStatus.ACCEPTED.value())
             .extract();
 
-        assertThat(response.header(LOCATION)).matches(".+/ais/.+");
+        assertThat(LocationExtractorUtil.getLocation(response)).matches(".+/ais/.+");
         return self();
     }
 

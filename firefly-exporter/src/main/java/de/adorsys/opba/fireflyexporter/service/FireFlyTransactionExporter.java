@@ -129,7 +129,7 @@ public class FireFlyTransactionExporter {
                 null,
                 "both",
                 false,
-                true
+                null
         );
 
         if (transactions.getStatusCode() == HttpStatus.ACCEPTED) {

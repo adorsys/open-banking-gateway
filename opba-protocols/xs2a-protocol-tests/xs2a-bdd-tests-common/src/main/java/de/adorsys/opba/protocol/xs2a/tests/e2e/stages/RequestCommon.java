@@ -14,6 +14,7 @@ import de.adorsys.opba.consentapi.model.generated.ChallengeData;
 import de.adorsys.opba.consentapi.model.generated.ConsentAuth;
 import de.adorsys.opba.consentapi.model.generated.ScaUserData;
 import de.adorsys.opba.protocol.facade.config.auth.UriExpandConst;
+import de.adorsys.opba.protocol.xs2a.tests.e2e.LocationExtractorUtil;
 import io.restassured.RestAssured;
 import io.restassured.http.Cookie;
 import io.restassured.response.ExtractableResponse;
@@ -40,7 +41,6 @@ import static de.adorsys.opba.protocol.xs2a.tests.e2e.stages.StagesCommonUtil.PA
 import static de.adorsys.opba.restapi.shared.HttpHeaders.REDIRECT_CODE;
 import static de.adorsys.opba.restapi.shared.HttpHeaders.SERVICE_SESSION_ID;
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.springframework.http.HttpHeaders.LOCATION;
 
 @Slf4j
 @JGivenStage
@@ -147,7 +147,7 @@ public abstract class RequestCommon<SELF extends RequestCommon<SELF>> extends St
                 .extract();
 
         this.responseContent = response.body().asString();
-        this.redirectUriToGetUserParams = response.header(LOCATION);
+        this.redirectUriToGetUserParams = LocationExtractorUtil.getLocation(response);
         updateRedirectCode(response);
         return response;
     }
@@ -171,7 +171,7 @@ public abstract class RequestCommon<SELF extends RequestCommon<SELF>> extends St
     }
 
     protected void updateNextConsentAuthorizationUrl(ExtractableResponse<Response> response) {
-        this.redirectUriToGetUserParams = response.header(LOCATION);
+        this.redirectUriToGetUserParams = LocationExtractorUtil.getLocation(response);
     }
 
     protected void updateServiceSessionId(ExtractableResponse<Response> response) {
