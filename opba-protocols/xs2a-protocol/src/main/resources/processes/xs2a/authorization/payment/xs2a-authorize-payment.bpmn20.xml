@@ -88,7 +88,7 @@
     <sequenceFlow id="noOauth2Authorization" sourceRef="sid-3ac85279-91f9-41fc-8644-369b8d2c9ee5" targetRef="startAuthorization">
       <conditionExpression xsi:type="tFormalExpression"/>
     </sequenceFlow>
-    <exclusiveGateway id="isDecoupledScaSelected" name="Is the selected SCA decoupled"/>
+    <exclusiveGateway id="isDecoupledScaSelected" name="Is the selected SCA decoupled" default="nonDecoupledScaSelected"/>
     <sequenceFlow id="nonDecoupledScaSelected" sourceRef="isDecoupledScaSelected" targetRef="embeddedScaChallenge">
       <conditionExpression xsi:type="tFormalExpression"/>
     </sequenceFlow>
@@ -117,8 +117,8 @@
         </timerEventDefinition>
       </boundaryEvent>
     </subProcess>
-    <sequenceFlow id="sid-519f66b0-84bb-415d-8de0-b44008abee98" sourceRef="isDecoupledScaSelected" targetRef="decoupledScaStatusChecking">
-      <conditionExpression xsi:type="tFormalExpression"/>
+    <sequenceFlow id="decoupledScaSelected" sourceRef="isDecoupledScaSelected" targetRef="decoupledScaStatusChecking">
+      <conditionExpression xsi:type="tFormalExpression">#{xs2aConsentInfo.isDecoupledScaSelected(CONTEXT)}</conditionExpression>
     </sequenceFlow>
     <sequenceFlow id="sid-76d7dd61-f8e2-4bda-b743-ecf3c7400389" sourceRef="decoupledScaStatusChecking" targetRef="isScaFinalized"/>
   </process>
@@ -338,7 +338,7 @@
       <bpmdi:BPMNShape xmlns:bpmdi="http://www.omg.org/spec/BPMN/20100524/DI" id="shape-d55ae506-5c13-4679-8c2d-df002fde979d" bpmnElement="checkIfDecoupledScaFinalised">
         <omgdc:Bounds x="1563.0702" y="-123.22604" width="100.0" height="80.0"/>
       </bpmdi:BPMNShape>
-      <bpmdi:BPMNEdge xmlns:bpmdi="http://www.omg.org/spec/BPMN/20100524/DI" id="edge-a721be12-5770-445d-b2b7-0bafce9c8b20" bpmnElement="sid-519f66b0-84bb-415d-8de0-b44008abee98">
+      <bpmdi:BPMNEdge xmlns:bpmdi="http://www.omg.org/spec/BPMN/20100524/DI" id="edge-a721be12-5770-445d-b2b7-0bafce9c8b20" bpmnElement="decoupledScaSelected">
         <omgdi:waypoint x="1073.073" y="214.99998"/>
         <omgdi:waypoint x="1073.0729" y="-163.80775"/>
         <omgdi:waypoint x="1465.0" y="-163.80775"/>

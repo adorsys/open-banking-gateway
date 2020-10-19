@@ -4,6 +4,7 @@ import de.adorsys.opba.protocol.bpmnshared.dto.DtoMapper;
 import de.adorsys.opba.protocol.bpmnshared.service.context.ContextUtil;
 import de.adorsys.opba.protocol.bpmnshared.service.exec.ValidatedExecution;
 import de.adorsys.opba.protocol.xs2a.context.Xs2aContext;
+import de.adorsys.opba.protocol.xs2a.context.pis.Xs2aPisContext;
 import de.adorsys.opba.protocol.xs2a.domain.dto.forms.ScaMethod;
 import de.adorsys.opba.protocol.xs2a.service.dto.ValidatedPathHeadersBody;
 import de.adorsys.opba.protocol.xs2a.service.mapper.PathHeadersBodyMapperTemplate;
@@ -32,6 +33,8 @@ import java.util.stream.Collectors;
 @Service("xs2aAuthenticateUserConsentWithPin")
 @RequiredArgsConstructor
 public class Xs2aAisAuthenticateUserConsentWithPin extends ValidatedExecution<Xs2aContext> {
+
+    private static final String DECOUPLED_AUTHENTICATION_ID = "APP_OTP";
 
     private final Extractor extractor;
     private final Xs2aValidator validator;
@@ -75,6 +78,7 @@ public class Xs2aAisAuthenticateUserConsentWithPin extends ValidatedExecution<Xs
                     ctx.setScaSelected(authResponse.getBody().getChosenScaMethod());
                     ctx.setChallengeData(authResponse.getBody().getChallengeData());
                     ctx.setScaStatus(null == scaStatus ? null : scaStatus.getValue());
+                    setSelectedScaDecoupledIfCanBeChosen(authResponse, ctx);
                 }
         );
     }
@@ -101,6 +105,16 @@ public class Xs2aAisAuthenticateUserConsentWithPin extends ValidatedExecution<Xs
                 .map(ScaMethod.FROM_AUTH::map)
                 .collect(Collectors.toList())
         );
+    }
+
+    private void setSelectedScaDecoupledIfCanBeChosen(
+            Response<UpdatePsuAuthenticationResponse> authResponse, Xs2aContext ctx
+    ) {
+        if (null == authResponse.getBody().getChosenScaMethod()) {
+            return;
+        }
+
+        ctx.setSelectedScaDecoupled(DECOUPLED_AUTHENTICATION_ID.equals(authResponse.getBody().getChosenScaMethod().getAuthenticationMethodId()));
     }
 
     @Service

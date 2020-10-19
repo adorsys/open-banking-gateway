@@ -57,6 +57,13 @@ public class Xs2aConsentInfo {
     }
 
     /**
+     * Is selected SCA method decoupled
+     */
+    public boolean isDecoupledScaSelected(Xs2aContext ctx) {
+        return ctx.isSelectedScaDecoupled();
+    }
+
+    /**
      * Is the current consent authorization using multiple SCA methods (SMS,email,etc.)
      */
     public boolean isMultipleScaAvailable(Xs2aContext ctx) {
