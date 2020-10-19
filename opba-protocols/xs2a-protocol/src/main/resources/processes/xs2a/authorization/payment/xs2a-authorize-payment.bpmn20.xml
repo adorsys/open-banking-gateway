@@ -93,7 +93,7 @@
       <conditionExpression xsi:type="tFormalExpression"/>
     </sequenceFlow>
     <subProcess id="decoupledScaStatusChecking" flowable:exclusive="true" name="Decoupled Sca status checking subprocess">
-      <serviceTask id="checkIfDecoupledScaFinalized" flowable:exclusive="true" flowable:delegateExpression="${xs2aCheckDecoupledAuthorizationStatus}" name="Checks authorization status to be finalized"/>
+      <serviceTask id="checkIfDecoupledScaFinalized" flowable:exclusive="true" flowable:delegateExpression="${xs2aPisCheckDecoupledAuthorizationStatus}" name="Checks authorization status to be finalized"/>
       <startEvent id="decoupledSubProcessStart" name="Start of decoupled Sca subprocess"/>
       <sequenceFlow id="startAuthoriztionChecking" sourceRef="decoupledSubProcessStart" targetRef="checkIfDecoupledScaFinalized" name="Start authoriztion checking"/>
       <sequenceFlow id="sid-ed27275e-353c-4cf7-92d6-0d017cd2d8f0" sourceRef="checkIfDecoupledScaFinalized" targetRef="isAuthrizationSucceded"/>

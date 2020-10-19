@@ -94,7 +94,7 @@
     </sequenceFlow>
     <subProcess id="decoupledScaStatusChecking" flowable:exclusive="true" name="Decoupled Sca status checking subprocess">
       <startEvent id="decoupledSubProcessStart" name="Start of decoupled Sca subprocess"/>
-      <serviceTask id="checkIfDecoupledScaFinalized" flowable:exclusive="true" name="Checks authorization status to be finalized"/>
+      <serviceTask id="checkIfDecoupledScaFinalized" flowable:exclusive="true" name="Checks authorization status to be finalized" flowable:delegateExpression="${xs2aAisCheckDecoupledAuthorizationStatus}"/>
       <exclusiveGateway id="authrizationSucceded" name="Authirization finalised?"/>
       <sequenceFlow id="startAuthoriztionChecking" sourceRef="decoupledSubProcessStart" targetRef="checkIfDecoupledScaFinalized" name="Start authoriztion checking"/>
       <sequenceFlow id="sid-f525dcb0-40f2-4159-a992-729ee3e02130" sourceRef="checkIfDecoupledScaFinalized" targetRef="authrizationSucceded"/>
