@@ -103,11 +103,11 @@
       </sequenceFlow>
       <intermediateCatchEvent id="waitAuthorizationConfirmation" name="Waits until authorization is finished by PSU">
         <timerEventDefinition>
-          <timeDuration>${EndDate}</timeDuration>
+          <timeDuration>${flowable.timer.delayDuration}</timeDuration>
         </timerEventDefinition>
       </intermediateCatchEvent>
       <sequenceFlow id="startTimer" sourceRef="isAuthrizationSucceded" targetRef="waitAuthorizationConfirmation" name="Starts timer to wait for PSU actions">
-        <conditionExpression xsi:type="tFormalExpression">#{xs2aConsentInfo.isZeroScaAvailable(CONTEXT)}</conditionExpression>
+        <conditionExpression xsi:type="tFormalExpression">#{!xs2aConsentInfo.isDecoupledScaFinalizedByPSU(CONTEXT)}</conditionExpression>
       </sequenceFlow>
       <sequenceFlow id="restartAuthorizationCheck" sourceRef="waitAuthorizationConfirmation" targetRef="checkIfDecoupledScaFinalized" name="Starts authorization check after some delay"/>
       <exclusiveGateway id="isAuthrizationSucceded" name="Authirization finalised?" default="finishSubprocess"/>
@@ -384,9 +384,8 @@
       <bpmdi:BPMNShape xmlns:bpmdi="http://www.omg.org/spec/BPMN/20100524/DI" id="shape-a43ea177-3143-4db9-ace4-2a224f78adb0" bpmnElement="subprocessTimeLimit">
         <omgdc:Bounds x="1724.1902" y="-15.459963" width="30.0" height="30.0"/>
       </bpmdi:BPMNShape>
-      <bpmdi:BPMNEdge xmlns:bpmdi="http://www.omg.org/spec/BPMN/20100524/DI" id="edge-74586716-0908-4433-84ec-3b59ba1c6841" bpmnElement="decoupledSubprocessSuccess">
+      <bpmdi:BPMNEdge xmlns:bpmdi="http://www.omg.org/spec/BPMN/20100524/DI" id="edge-c89f32c3-0fd6-4926-986d-03d83e999092" bpmnElement="decoupledSubprocessSuccess">
         <omgdi:waypoint x="1556.0" y="-7.4077454"/>
-        <omgdi:waypoint x="1460.0" y="144.0"/>
         <omgdi:waypoint x="1405.6" y="215.00002"/>
       </bpmdi:BPMNEdge>
     </bpmndi:BPMNPlane>
