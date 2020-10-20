@@ -4,7 +4,6 @@ import de.adorsys.opba.protocol.bpmnshared.dto.DtoMapper;
 import de.adorsys.opba.protocol.bpmnshared.service.context.ContextUtil;
 import de.adorsys.opba.protocol.bpmnshared.service.exec.ValidatedExecution;
 import de.adorsys.opba.protocol.xs2a.context.Xs2aContext;
-import de.adorsys.opba.protocol.xs2a.context.pis.Xs2aPisContext;
 import de.adorsys.opba.protocol.xs2a.domain.dto.forms.ScaMethod;
 import de.adorsys.opba.protocol.xs2a.service.dto.ValidatedPathHeadersBody;
 import de.adorsys.opba.protocol.xs2a.service.mapper.PathHeadersBodyMapperTemplate;
@@ -94,16 +93,16 @@ public class Xs2aAisAuthenticateUserConsentWithPin extends ValidatedExecution<Xs
     }
 
     private void setScaAvailableMethodsIfCanBeChosen(
-        Response<UpdatePsuAuthenticationResponse> authResponse, Xs2aContext ctx
+            Response<UpdatePsuAuthenticationResponse> authResponse, Xs2aContext ctx
     ) {
         if (null == authResponse.getBody().getScaMethods()) {
-           return;
+            return;
         }
 
         ctx.setAvailableSca(
-            authResponse.getBody().getScaMethods().stream()
-                .map(ScaMethod.FROM_AUTH::map)
-                .collect(Collectors.toList())
+                authResponse.getBody().getScaMethods().stream()
+                        .map(ScaMethod.FROM_AUTH::map)
+                        .collect(Collectors.toList())
         );
     }
 
@@ -119,11 +118,11 @@ public class Xs2aAisAuthenticateUserConsentWithPin extends ValidatedExecution<Xs
 
     @Service
     public static class Extractor extends PathHeadersBodyMapperTemplate<
-                        Xs2aContext,
-                        Xs2aAuthorizedConsentParameters,
-                        Xs2aStandardHeaders,
-                        ProvidePsuPasswordBody,
-                        UpdatePsuAuthentication> {
+                                                                               Xs2aContext,
+                                                                               Xs2aAuthorizedConsentParameters,
+                                                                               Xs2aStandardHeaders,
+                                                                               ProvidePsuPasswordBody,
+                                                                               UpdatePsuAuthentication> {
 
         public Extractor(
                 DtoMapper<Xs2aContext, ProvidePsuPasswordBody> toValidatableBody,
