@@ -24,13 +24,13 @@ public class ReportConsentAuthorizationFinished extends ValidatedExecution<HbciC
     protected void doRealExecution(DelegateExecution execution, HbciContext context) {
         ContextUtil.getAndUpdateContext(execution, (HbciContext ctx) -> ctx.setConsentIncompatible(false));
         redirectExecutor.redirect(
-            execution,
-            context,
-            ContextUtil.buildAndExpandQueryParameters(
-                    context.getActiveUrlSet(configuration).getRedirect().getWebHooks().getResult(),
-                    context, context.getRedirectCodeIfAuthContinued(), context.getUserSelectScaType()
-            ).toString(),
-            context.getFintechRedirectUriOk(),
-            redirect -> new ConsentAcquired(redirect.build()));
+                execution,
+                context,
+                ContextUtil.buildAndExpandQueryParameters(
+                        context.getActiveUrlSet(configuration).getRedirect().getWebHooks().getResult(),
+                        context, context.getRedirectCodeIfAuthContinued(), context.getUserSelectScaType()
+                ).toString(),
+                context.getFintechRedirectUriOk(),
+                redirect -> new ConsentAcquired(redirect.build()));
     }
 }

@@ -14,6 +14,7 @@ import { EntryPagePaymentsComponent } from '../entry-page-payments/entry-page-pa
 export class PaymentInitiateComponent implements OnInit {
   private redirectCode: string;
   private route: ActivatedRouteSnapshot;
+
   constructor(
     private activatedRoute: ActivatedRoute,
     private router: Router,

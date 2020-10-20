@@ -9,7 +9,7 @@ public class TppRedirectPreferredResolver {
 
     public Boolean isRedirectApproachPreferred(CurrentBankProfile config) {
         return config.isTryToUsePreferredApproach()
-                       ? config.getPreferredApproach() == Approach.REDIRECT
-                       : null;
+                ? config.getPreferredApproach() == Approach.REDIRECT
+                : null;
     }
 }

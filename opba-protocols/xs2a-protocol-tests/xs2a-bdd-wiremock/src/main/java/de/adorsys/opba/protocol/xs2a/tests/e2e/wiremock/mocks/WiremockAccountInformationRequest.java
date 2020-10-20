@@ -49,12 +49,12 @@ public class WiremockAccountInformationRequest<SELF extends WiremockAccountInfor
         extractRedirectOkUriSentByOpbaFromWiremock(consentCreationRequestIndex);
         ExtractableResponse<Response> response = withSignatureHeaders(RestAssured
                 .given()
-                    .cookie(AUTHORIZATION_SESSION_KEY, authSessionCookie))
+                .cookie(AUTHORIZATION_SESSION_KEY, authSessionCookie))
                 .when()
-                    .get(redirectOkUri)
+                .get(redirectOkUri)
                 .then()
-                    .statusCode(HttpStatus.SEE_OTHER.value())
-                    .extract();
+                .statusCode(HttpStatus.SEE_OTHER.value())
+                .extract();
 
         assertThat(LocationExtractorUtil.getLocation(response)).contains("ais").contains("consent-result");
 
@@ -65,11 +65,11 @@ public class WiremockAccountInformationRequest<SELF extends WiremockAccountInfor
         extractRedirectOkUriSentByOpbaFromWiremock();
         ExtractableResponse<Response> response = RestAssured
                 .given()
-                    .cookie(AUTHORIZATION_SESSION_KEY, authSessionCookie)
+                .cookie(AUTHORIZATION_SESSION_KEY, authSessionCookie)
                 .when()
-                    .get(redirectOkUri + "&code=" + code)
+                .get(redirectOkUri + "&code=" + code)
                 .then()
-                    .statusCode(HttpStatus.SEE_OTHER.value())
+                .statusCode(HttpStatus.SEE_OTHER.value())
                 .extract();
 
         updateRedirectCode(response);
@@ -78,18 +78,18 @@ public class WiremockAccountInformationRequest<SELF extends WiremockAccountInfor
 
     public SELF open_banking_redirect_from_aspsp_not_ok_webhook_called_for_api_test() {
         LoggedRequest consentInitiateRequest = await().atMost(Durations.TEN_SECONDS)
-                                                       .until(() ->
-                                                                      wireMock.findAll(postRequestedFor(urlMatching("/v1/consents.*"))), it -> !it.isEmpty()
-                                                       ).get(0);
+                .until(() ->
+                        wireMock.findAll(postRequestedFor(urlMatching("/v1/consents.*"))), it -> !it.isEmpty()
+                ).get(0);
         this.redirectNotOkUri = consentInitiateRequest.getHeader(TPP_NOK_REDIRECT_URI);
         ExtractableResponse<Response> response = withSignatureHeaders(RestAssured
-                    .given()
-                        .cookie(AUTHORIZATION_SESSION_KEY, authSessionCookie))
-                    .when()
-                        .get(redirectNotOkUri)
-                    .then()
-                        .statusCode(HttpStatus.SEE_OTHER.value())
-                        .extract();
+                .given()
+                .cookie(AUTHORIZATION_SESSION_KEY, authSessionCookie))
+                .when()
+                .get(redirectNotOkUri)
+                .then()
+                .statusCode(HttpStatus.SEE_OTHER.value())
+                .extract();
 
         assertThat(LocationExtractorUtil.getLocation(response)).contains("redirect-after-consent-denied");
 
@@ -98,12 +98,12 @@ public class WiremockAccountInformationRequest<SELF extends WiremockAccountInfor
 
     public SELF fintech_calls_list_accounts_for_anton_brueckner_ip_address_compute() {
         ExtractableResponse<Response> response = withAccountsHeaders(ANTON_BRUECKNER) // FIX HEADERS
-                    .header(SERVICE_SESSION_ID, UUID.randomUUID().toString())
-                    .header(COMPUTE_PSU_IP_ADDRESS, true)
+                .header(SERVICE_SESSION_ID, UUID.randomUUID().toString())
+                .header(COMPUTE_PSU_IP_ADDRESS, true)
                 .when()
-                    .get(AIS_ACCOUNTS_ENDPOINT)
+                .get(AIS_ACCOUNTS_ENDPOINT)
                 .then()
-                    .statusCode(HttpStatus.ACCEPTED.value())
+                .statusCode(HttpStatus.ACCEPTED.value())
                 .extract();
         updateServiceSessionId(response);
         updateRedirectCode(response);
@@ -113,12 +113,12 @@ public class WiremockAccountInformationRequest<SELF extends WiremockAccountInfor
 
     public SELF fintech_calls_list_accounts_for_anton_brueckner_no_ip_address() {
         ExtractableResponse<Response> response = withAccountsHeaders(ANTON_BRUECKNER)// FIX HEADERS
-                    .header(SERVICE_SESSION_ID, UUID.randomUUID().toString())
-                    .header(COMPUTE_PSU_IP_ADDRESS, false)
+                .header(SERVICE_SESSION_ID, UUID.randomUUID().toString())
+                .header(COMPUTE_PSU_IP_ADDRESS, false)
                 .when()
-                    .get(AIS_ACCOUNTS_ENDPOINT)
+                .get(AIS_ACCOUNTS_ENDPOINT)
                 .then()
-                    .statusCode(HttpStatus.ACCEPTED.value())
+                .statusCode(HttpStatus.ACCEPTED.value())
                 .extract();
         updateServiceSessionId(response);
         updateRedirectCode(response);
@@ -130,18 +130,18 @@ public class WiremockAccountInformationRequest<SELF extends WiremockAccountInfor
         String body = readResource("restrecord/tpp-ui-input/params/unknown-user-all-accounts-consent.json");
 
         ExtractableResponse<Response> response = RestAssured
-                 .given()
-                     .header(X_REQUEST_ID, UUID.randomUUID().toString())
-                     .header(X_XSRF_TOKEN, UUID.randomUUID().toString())
-                     .cookie(AUTHORIZATION_SESSION_KEY, authSessionCookie)
-                     .queryParam(REDIRECT_CODE_QUERY, redirectCode)
-                     .contentType(MediaType.APPLICATION_JSON_VALUE)
-                     .body(body)
-                 .when()
-                    .post(AUTHORIZE_CONSENT_ENDPOINT, serviceSessionId)
-                 .then()
-                     .statusCode(HttpStatus.ACCEPTED.value())
-                     .extract();
+                .given()
+                .header(X_REQUEST_ID, UUID.randomUUID().toString())
+                .header(X_XSRF_TOKEN, UUID.randomUUID().toString())
+                .cookie(AUTHORIZATION_SESSION_KEY, authSessionCookie)
+                .queryParam(REDIRECT_CODE_QUERY, redirectCode)
+                .contentType(MediaType.APPLICATION_JSON_VALUE)
+                .body(body)
+                .when()
+                .post(AUTHORIZE_CONSENT_ENDPOINT, serviceSessionId)
+                .then()
+                .statusCode(HttpStatus.ACCEPTED.value())
+                .extract();
 
         assertThat(LocationExtractorUtil.getLocation(response)).contains("redirectCode").doesNotContain("consent-result");
 
@@ -174,23 +174,23 @@ public class WiremockAccountInformationRequest<SELF extends WiremockAccountInfor
 
     public SELF user_provided_initial_parameters_in_body_to_list_accounts_with_all_accounts_consent_with_ip_address_check(String body) {
         ExtractableResponse<Response> response = RestAssured
-                 .given()
-                    .header(X_REQUEST_ID, UUID.randomUUID().toString())
-                    .header(X_XSRF_TOKEN, UUID.randomUUID().toString())
-                    .cookie(AUTHORIZATION_SESSION_KEY, authSessionCookie)
-                    .queryParam(REDIRECT_CODE_QUERY, redirectCode)
-                    .contentType(MediaType.APPLICATION_JSON_VALUE)
-                    .body(body)
-                 .when()
-                    .post(AUTHORIZE_CONSENT_ENDPOINT, serviceSessionId)
-                 .then()
-                    .statusCode(HttpStatus.ACCEPTED.value())
-                    .extract();
+                .given()
+                .header(X_REQUEST_ID, UUID.randomUUID().toString())
+                .header(X_XSRF_TOKEN, UUID.randomUUID().toString())
+                .cookie(AUTHORIZATION_SESSION_KEY, authSessionCookie)
+                .queryParam(REDIRECT_CODE_QUERY, redirectCode)
+                .contentType(MediaType.APPLICATION_JSON_VALUE)
+                .body(body)
+                .when()
+                .post(AUTHORIZE_CONSENT_ENDPOINT, serviceSessionId)
+                .then()
+                .statusCode(HttpStatus.ACCEPTED.value())
+                .extract();
 
         LoggedRequest loggedRequest = await().atMost(Durations.TEN_SECONDS)
-                  .until(() ->
-                                 wireMock.findAll(postRequestedFor(urlMatching("/v1/consents.*"))), it -> !it.isEmpty()
-                  ).get(0);
+                .until(() ->
+                        wireMock.findAll(postRequestedFor(urlMatching("/v1/consents.*"))), it -> !it.isEmpty()
+                ).get(0);
 
         assertThat(loggedRequest.getHeader(PSU_IP_ADDRESS)).isNotEmpty();
         assertThat(LocationExtractorUtil.getLocation(response)).contains("ais").contains("to-aspsp-redirection");
@@ -208,17 +208,17 @@ public class WiremockAccountInformationRequest<SELF extends WiremockAccountInfor
         String body = readResource("restrecord/tpp-ui-input/params/anton-brueckner-account-wrong-ibans.json");
 
         ExtractableResponse<Response> response = RestAssured
-                 .given()
-                     .header(X_REQUEST_ID, UUID.randomUUID().toString())
-                     .header(X_XSRF_TOKEN, UUID.randomUUID().toString())
-                     .queryParam(REDIRECT_CODE_QUERY, redirectCode)
-                     .cookie(AUTHORIZATION_SESSION_KEY, authSessionCookie)
-                     .contentType(MediaType.APPLICATION_JSON_VALUE)
-                     .body(body)
-                 .when()
-                    .post(AUTHORIZE_CONSENT_ENDPOINT, serviceSessionId)
-                 .then().statusCode(HttpStatus.INTERNAL_SERVER_ERROR.value())
-                 .extract();
+                .given()
+                .header(X_REQUEST_ID, UUID.randomUUID().toString())
+                .header(X_XSRF_TOKEN, UUID.randomUUID().toString())
+                .queryParam(REDIRECT_CODE_QUERY, redirectCode)
+                .cookie(AUTHORIZATION_SESSION_KEY, authSessionCookie)
+                .contentType(MediaType.APPLICATION_JSON_VALUE)
+                .body(body)
+                .when()
+                .post(AUTHORIZE_CONSENT_ENDPOINT, serviceSessionId)
+                .then().statusCode(HttpStatus.INTERNAL_SERVER_ERROR.value())
+                .extract();
 
         this.responseContent = response.body().asString();
 
@@ -234,11 +234,11 @@ public class WiremockAccountInformationRequest<SELF extends WiremockAccountInfor
         extractRedirectOkUriSentByOpbaFromWiremock();
 
         withSignatureHeaders(RestAssured.given())
-                 .when()
-                    .get(redirectOkUri)
-                 .then()
-                    .statusCode(HttpStatus.UNAUTHORIZED.value())
-                 .extract();
+                .when()
+                .get(redirectOkUri)
+                .then()
+                .statusCode(HttpStatus.UNAUTHORIZED.value())
+                .extract();
 
         return self();
     }

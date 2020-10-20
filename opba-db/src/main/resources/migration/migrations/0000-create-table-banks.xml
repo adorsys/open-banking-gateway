@@ -2,7 +2,7 @@
                    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
                    xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.8.xsd">
 
-    <changeSet id="create-sequence-bank" author="mhr" >
+    <changeSet id="create-sequence-bank" author="mhr">
         <createSequence sequenceName="bank_id_sequence" incrementBy="50"/>
     </changeSet>
 
@@ -44,7 +44,8 @@
                 <constraints nullable="false"/>
             </column>
         </createTable>
-        <addNotNullConstraint tableName="${table-prefix}bank_profile" columnName="bank_uuid" columnDataType="VARCHAR(255)"/>
+        <addNotNullConstraint tableName="${table-prefix}bank_profile" columnName="bank_uuid"
+                              columnDataType="VARCHAR(255)"/>
     </changeSet>
 
     <changeSet id="add-relation-bank-to-bank-profile" author="mhr">
@@ -62,16 +63,16 @@
                 file="banks.csv"
                 catalogName=""
                 tableName="${table-prefix}bank">
-            <column header="uuid"       name="uuid"         type="STRING"/>
-            <column header="name"       name="name"         type="STRING"/>
-            <column header="bic"        name="bic"          type="STRING"/>
-            <column header="url"                            type="skip"/>
-            <column header="adapter_id"                     type="skip"/>
-            <column header="bank_code"  name="bank_code"    type="STRING"/>
-            <column header="idp_url"                        type="skip"/>
-            <column header="aspsp_sca_approaches"           type="skip"/>
+            <column header="uuid" name="uuid" type="STRING"/>
+            <column header="name" name="name" type="STRING"/>
+            <column header="bic" name="bic" type="STRING"/>
+            <column header="url" type="skip"/>
+            <column header="adapter_id" type="skip"/>
+            <column header="bank_code" name="bank_code" type="STRING"/>
+            <column header="idp_url" type="skip"/>
+            <column header="aspsp_sca_approaches" type="skip"/>
         </loadData>
-        <rollback />
+        <rollback/>
     </changeSet>
 
     <changeSet id="load_csv_bank_profile" author="mhr">
@@ -81,18 +82,18 @@
                 file="banks.csv"
                 catalogName=""
                 tableName="${table-prefix}bank_profile">
-            <column header="uuid"       name="bank_uuid"                type="STRING"/>
-            <column header="name"       name="name"                     type="skip"/>
-            <column header="bic"        name="bic"                      type="skip"/>
-            <column header="url"        name="url"                      type="STRING"/>
-            <column header="adapter_id" name="adapter_id"               type="STRING"/>
-            <column header="bank_code"  name="bank_code"                type="skip"/>
-            <column header="idp_url"    name="idp_url"                  type="STRING"/>
+            <column header="uuid" name="bank_uuid" type="STRING"/>
+            <column header="name" name="name" type="skip"/>
+            <column header="bic" name="bic" type="skip"/>
+            <column header="url" name="url" type="STRING"/>
+            <column header="adapter_id" name="adapter_id" type="STRING"/>
+            <column header="bank_code" name="bank_code" type="skip"/>
+            <column header="idp_url" name="idp_url" type="STRING"/>
             <column header="aspsp_sca_approaches" name="sca_approaches" type="STRING"/>
         </loadData>
-        <rollback />
+        <rollback/>
     </changeSet>
-    
+
     <changeSet id="create_index" author="mhr">
         <sql dbms="postgresql" stripComments="true">
             CREATE INDEX bank_trgm_idx1 ON opb_bank USING gin (name gin_trgm_ops);

@@ -24,8 +24,9 @@ public class AuthorizationPossibleErrorHandler {
 
     /**
      * Swallows retryable (like wrong password) authorization exceptions.
+     *
      * @param tryAuthorize Authorization function to call
-     * @param onFail Fallback function to call if retryable exception occurred.
+     * @param onFail       Fallback function to call if retryable exception occurred.
      */
     public void handlePossibleAuthorizationError(Runnable tryAuthorize, Consumer<ErrorResponseException> onFail) {
         try {
@@ -45,7 +46,7 @@ public class AuthorizationPossibleErrorHandler {
                 .map(TppMessage::getCode)
                 .collect(Collectors.toSet());
 
-        if (Sets.intersection(messageConfig.getInvalidCredentials(), tppMessageCodes).isEmpty())  {
+        if (Sets.intersection(messageConfig.getInvalidCredentials(), tppMessageCodes).isEmpty()) {
             throw ex;
         }
     }

@@ -1,1 +1,18 @@
-{"consentStatus":"received","consentId":"P937HnJRX_NOET7Vx-kmhASgVs-B0sC1unn6emAwa2mb9yrWeUMow5bIaUPU--Mrda2Q8V_Vf4IqIfhCjTMdosz9MpaJIQIH3NJX8IHgetw=_=_psGLvQpt9Q","_links":{"scaRedirect":{"href":"http://localhost:4400/account-information/login?encryptedConsentId=P937HnJRX_NOET7Vx-kmhASgVs-B0sC1unn6emAwa2mb9yrWeUMow5bIaUPU--Mrda2Q8V_Vf4IqIfhCjTMdosz9MpaJIQIH3NJX8IHgetw=_=_psGLvQpt9Q&redirectId=187e8ccb-2733-484f-b487-1c586e18ddb3"},"self":{"href":"http://127.0.0.1:20014/v1/consents/P937HnJRX_NOET7Vx-kmhASgVs-B0sC1unn6emAwa2mb9yrWeUMow5bIaUPU--Mrda2Q8V_Vf4IqIfhCjTMdosz9MpaJIQIH3NJX8IHgetw=_=_psGLvQpt9Q"},"status":{"href":"http://127.0.0.1:20014/v1/consents/P937HnJRX_NOET7Vx-kmhASgVs-B0sC1unn6emAwa2mb9yrWeUMow5bIaUPU--Mrda2Q8V_Vf4IqIfhCjTMdosz9MpaJIQIH3NJX8IHgetw=_=_psGLvQpt9Q/status"},"scaStatus":{"href":"http://127.0.0.1:20014/v1/consents/P937HnJRX_NOET7Vx-kmhASgVs-B0sC1unn6emAwa2mb9yrWeUMow5bIaUPU--Mrda2Q8V_Vf4IqIfhCjTMdosz9MpaJIQIH3NJX8IHgetw=_=_psGLvQpt9Q/authorisations/187e8ccb-2733-484f-b487-1c586e18ddb3"}}}
+{
+  "consentStatus": "received",
+  "consentId": "P937HnJRX_NOET7Vx-kmhASgVs-B0sC1unn6emAwa2mb9yrWeUMow5bIaUPU--Mrda2Q8V_Vf4IqIfhCjTMdosz9MpaJIQIH3NJX8IHgetw=_=_psGLvQpt9Q",
+  "_links": {
+    "scaRedirect": {
+      "href": "http://localhost:4400/account-information/login?encryptedConsentId=P937HnJRX_NOET7Vx-kmhASgVs-B0sC1unn6emAwa2mb9yrWeUMow5bIaUPU--Mrda2Q8V_Vf4IqIfhCjTMdosz9MpaJIQIH3NJX8IHgetw=_=_psGLvQpt9Q&redirectId=187e8ccb-2733-484f-b487-1c586e18ddb3"
+    },
+    "self": {
+      "href": "http://127.0.0.1:20014/v1/consents/P937HnJRX_NOET7Vx-kmhASgVs-B0sC1unn6emAwa2mb9yrWeUMow5bIaUPU--Mrda2Q8V_Vf4IqIfhCjTMdosz9MpaJIQIH3NJX8IHgetw=_=_psGLvQpt9Q"
+    },
+    "status": {
+      "href": "http://127.0.0.1:20014/v1/consents/P937HnJRX_NOET7Vx-kmhASgVs-B0sC1unn6emAwa2mb9yrWeUMow5bIaUPU--Mrda2Q8V_Vf4IqIfhCjTMdosz9MpaJIQIH3NJX8IHgetw=_=_psGLvQpt9Q/status"
+    },
+    "scaStatus": {
+      "href": "http://127.0.0.1:20014/v1/consents/P937HnJRX_NOET7Vx-kmhASgVs-B0sC1unn6emAwa2mb9yrWeUMow5bIaUPU--Mrda2Q8V_Vf4IqIfhCjTMdosz9MpaJIQIH3NJX8IHgetw=_=_psGLvQpt9Q/authorisations/187e8ccb-2733-484f-b487-1c586e18ddb3"
+    }
+  }
+}

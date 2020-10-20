@@ -58,11 +58,11 @@ public class CommonGivenStages<SELF extends CommonGivenStages<SELF>> extends Sta
     @Transactional
     public SELF preferred_sca_approach_selected_for_all_banks_in_opba(Approach expectedApproach) {
         profiles.findAll().stream()
-            .map(it -> {
-                it.setPreferredApproach(expectedApproach);
-                return it;
-            })
-            .forEach(profiles::save);
+                .map(it -> {
+                    it.setPreferredApproach(expectedApproach);
+                    return it;
+                })
+                .forEach(profiles::save);
 
         return self();
     }
@@ -124,13 +124,13 @@ public class CommonGivenStages<SELF extends CommonGivenStages<SELF>> extends Sta
             return self();
         }
         RestAssured
-            .given()
+                .given()
                 .header(X_REQUEST_ID, UUID.randomUUID().toString())
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
                 .body(ImmutableMap.of(LOGIN, username, PASSWORD, password))
-            .when()
+                .when()
                 .post(REGISTER_USER_ENDPOINT)
-            .then()
+                .then()
                 .statusCode(HttpStatus.CREATED.value());
         createdUsers.add(username);
         return self();

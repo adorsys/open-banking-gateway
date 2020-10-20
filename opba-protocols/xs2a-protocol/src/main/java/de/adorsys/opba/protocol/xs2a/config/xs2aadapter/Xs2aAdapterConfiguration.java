@@ -91,7 +91,8 @@ public class Xs2aAdapterConfiguration {
 
     /**
      * The keystore for QWAC and QSEAL certificates.
-     * @param keystorePath Location of the keystore.
+     *
+     * @param keystorePath     Location of the keystore.
      * @param keystorePassword Keystore password.
      */
     @Bean

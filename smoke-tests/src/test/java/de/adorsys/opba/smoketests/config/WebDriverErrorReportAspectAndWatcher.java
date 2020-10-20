@@ -44,8 +44,7 @@ public class WebDriverErrorReportAspectAndWatcher implements TestWatcher {
         Thread.currentThread().setName(threadId);
         try {
             return joinPoint.proceed();
-        }
-        catch (Throwable ex) {
+        } catch (Throwable ex) {
             logWebDriverHistoryForFailure(threadId, ex);
             throw ex;
         } finally {

@@ -9,6 +9,7 @@ import { ActivatedRoute } from '@angular/router';
 })
 export class EntryPageComponent implements OnInit {
   private authid;
+
   constructor(private route: ActivatedRoute, private cookieRenewalService: CookieRenewalService) {}
 
   ngOnInit() {

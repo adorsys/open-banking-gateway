@@ -28,13 +28,13 @@ public class AuthorizationContinuationService {
     private final DtoMapper<Set<ValidationIssue>, Set<ValidationError>> errorMapper;
 
     public <T> CompletableFuture<Result<T>> handleAuthorizationProcessContinuation(
-        String executionId,
-        Function<CompletableFuture<Result<T>>, Xs2aOutcomeMapper<T>> mapperFactory
+            String executionId,
+            Function<CompletableFuture<Result<T>>, Xs2aOutcomeMapper<T>> mapperFactory
     ) {
         CompletableFuture<Result<T>> result = new CompletableFuture<>();
         registrar.addHandler(
-            runtimeService.createExecutionQuery().executionId(executionId).singleResult().getRootProcessInstanceId(),
-            mapperFactory.apply(result)
+                runtimeService.createExecutionQuery().executionId(executionId).singleResult().getRootProcessInstanceId(),
+                mapperFactory.apply(result)
         );
 
         runtimeService.trigger(executionId);
@@ -44,8 +44,8 @@ public class AuthorizationContinuationService {
 
     public CompletableFuture<Result<UpdateAuthBody>> handleAuthorizationProcessContinuation(String executionId) {
         return handleAuthorizationProcessContinuation(
-            executionId,
-            res -> new Xs2aOutcomeMapper<>(res, resp -> new UpdateAuthBody(), errorMapper)
+                executionId,
+                res -> new Xs2aOutcomeMapper<>(res, resp -> new UpdateAuthBody(), errorMapper)
         );
     }
 }

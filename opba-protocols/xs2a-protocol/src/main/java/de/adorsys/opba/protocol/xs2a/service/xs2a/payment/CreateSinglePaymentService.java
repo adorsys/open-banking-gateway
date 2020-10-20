@@ -93,10 +93,10 @@ public class CreateSinglePaymentService extends ValidatedExecution<Xs2aPisContex
 
     @Service
     public static class Extractor extends PathHeadersBodyMapperTemplate<Xs2aPisContext,
-                                                                                   Xs2aInitialPaymentParameters,
-                                                                               PaymentInitiateHeaders,
-                                                                               PaymentInitiateBody,
-                                                                               SinglePaymentInitiationBody> {
+            Xs2aInitialPaymentParameters,
+            PaymentInitiateHeaders,
+            PaymentInitiateBody,
+            SinglePaymentInitiationBody> {
 
         public Extractor(
                 DtoMapper<Xs2aPisContext, PaymentInitiateBody> toValidatableBody,

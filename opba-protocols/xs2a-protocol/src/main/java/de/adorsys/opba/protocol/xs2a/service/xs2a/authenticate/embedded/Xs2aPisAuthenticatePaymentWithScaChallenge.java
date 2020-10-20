@@ -86,11 +86,11 @@ public class Xs2aPisAuthenticatePaymentWithScaChallenge extends ValidatedExecuti
 
     @Service
     public static class Extractor extends PathHeadersBodyMapperTemplate<
-                                                                               Xs2aPisContext,
-                                                                               Xs2aAuthorizedPaymentParameters,
-                                                                               Xs2aStandardHeaders,
-                                                                               ProvideScaChallengeResultBody,
-                                                                               TransactionAuthorisation> {
+            Xs2aPisContext,
+            Xs2aAuthorizedPaymentParameters,
+            Xs2aStandardHeaders,
+            ProvideScaChallengeResultBody,
+            TransactionAuthorisation> {
 
         public Extractor(
                 DtoMapper<Xs2aContext, ProvideScaChallengeResultBody> toValidatableBody,

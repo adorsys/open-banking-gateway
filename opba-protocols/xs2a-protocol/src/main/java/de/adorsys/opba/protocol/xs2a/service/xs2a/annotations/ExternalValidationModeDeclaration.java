@@ -13,6 +13,8 @@ public interface ExternalValidationModeDeclaration {
     }
 
     Set<FieldCode> appliesTo();
+
     boolean appliesToContext(Xs2aContext context);
+
     ValidationMode computeValidationMode(Xs2aContext context);
 }

@@ -25,6 +25,7 @@ export class SessionService {
   public getRedirectCode(authorizationId: string): string {
     return sessionStorage.getItem(authorizationId + Session.REDIRECT_CODE);
   }
+
   public setRedirectCode(authorizationId: string, redirectCode: string) {
     sessionStorage.setItem(authorizationId + Session.REDIRECT_CODE, redirectCode);
   }
@@ -96,6 +97,7 @@ export class SessionService {
   public setXsrfToken(token: string) {
     sessionStorage.setItem(Session.XSRF_TOKEN, token);
   }
+
   public getXsrfToken() {
     sessionStorage.getItem(Session.XSRF_TOKEN);
   }

@@ -1,168 +1,228 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<definitions xmlns="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" xmlns:flowable="http://flowable.org/bpmn" xmlns:omgdc="http://www.omg.org/spec/DD/20100524/DC" xmlns:omgdi="http://www.omg.org/spec/DD/20100524/DI" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" expressionLanguage="http://www.w3.org/1999/XPath" targetNamespace="http://www.flowable.org/processdef" typeLanguage="http://www.w3.org/2001/XMLSchema">
-  <process id="hbci-request-saga" isExecutable="true" name="hbci-request-saga">
-    <documentation>Saga that manages full cycle of request - from getting user initial input to providing additional data that is required by ASPSP during runtime</documentation>
-    <startEvent flowable:formFieldValidation="true" id="start" name="start"/>
-    <endEvent id="end" name="end"/>
-    <callActivity calledElement="${hbciFlowNameSelector.getNameForExecution(CONTEXT)}" flowable:async="true" flowable:calledElementType="key" flowable:fallbackToDefaultTenant="false" flowable:inheritVariables="true" id="execution" name="Perform real bank call sequence">
-      <extensionElements>
-        <flowable:out source="CONTEXT" target="CONTEXT"/>
-      </extensionElements>
-    </callActivity>
-    <callActivity calledElement="${hbciFlowNameSelector.getNameForValidation(CONTEXT)}" flowable:async="true" flowable:calledElementType="key" flowable:fallbackToDefaultTenant="false" flowable:inheritVariables="true" id="validation" name="Perform validation process sequence">
-      <extensionElements>
-        <flowable:out source="CONTEXT" target="CONTEXT"/>
-      </extensionElements>
-    </callActivity>
-    <boundaryEvent attachedToRef="execution" id="sid-0B988308-D4BC-4E58-ACE3-0DB7A8D87B0A">
-      <errorEventDefinition errorRef="VALIDATION"/>
-    </boundaryEvent>
-    <sequenceFlow id="sid-AA3814A7-D245-4099-ABA7-449E203665F1" sourceRef="execution" targetRef="end"/>
-    <sequenceFlow id="sid-C66278C4-EC81-438B-8264-C15C99FDDD18" sourceRef="sid-0B988308-D4BC-4E58-ACE3-0DB7A8D87B0A" targetRef="handleExecutionErrors"/>
-    <serviceTask flowable:async="true" flowable:delegateExpression="${hbciFillBpmnContext}" id="fillInitialContext" name="Fill context with bpmn-related information"/>
-    <sequenceFlow id="sid-846BCBC1-F77B-4252-92F3-2C0340C8245B" sourceRef="start" targetRef="sid-a3b65390-eabb-4ae6-bdb1-3f6453e7960d"/>
-    <serviceTask flowable:async="true" flowable:delegateExpression="${hbciExecutionErrorHandler}" flowable:triggerable="true" id="handleExecutionErrors" name="Handle execution errors"/>
-    <exclusiveGateway default="noValidationErrors" id="hasValidationErrors" name="Validation errors?"/>
-    <serviceTask flowable:async="true" flowable:delegateExpression="${hbciUpdateToRealModeBpmnContext}" flowable:exclusive="false" id="updateContextToRealMode" name="Update context to real mode"/>
-    <sequenceFlow id="sid-4039FF01-F14C-4D95-BD50-0AD769DCBD8C" sourceRef="updateContextToRealMode" targetRef="execution"/>
-    <serviceTask flowable:async="true" flowable:delegateExpression="${hbciStorePreValidationContext}" flowable:exclusive="false" id="persistCurrentContext" name="Persist context before validation"/>
-    <sequenceFlow id="sid-BE22A9B7-11C3-41BC-A8F7-9CD8809C8C55" sourceRef="fillInitialContext" targetRef="persistCurrentContext"/>
-    <sequenceFlow id="sid-C865530D-39E8-4602-8D61-61B3CECFA9EE" sourceRef="persistCurrentContext" targetRef="validation"/>
-    <serviceTask flowable:async="true" flowable:delegateExpression="${hbciRestorePreValidationContext}" flowable:exclusive="false" id="reportErrorAndRestoreContextBefore" name="Restore context that was before validation"/>
-    <sequenceFlow id="sid-275DF142-FA3D-4C53-A4A0-8DF179406C8C" sourceRef="validation" targetRef="hasValidationErrors"/>
-    <serviceTask flowable:async="true" flowable:delegateExpression="${hbciRestorePreValidationContext}" flowable:exclusive="false" id="restoreCurrentContextOnOk" name="Restore context that was before validation"/>
-    <sequenceFlow id="sid-254FCF56-028D-4204-9F41-7E9AAB8D1AB3" sourceRef="restoreCurrentContextOnOk" targetRef="updateContextToRealMode"/>
-    <sequenceFlow id="sid-8D9A83E7-C86F-4397-BC7F-CCA2A6F2EBD4" sourceRef="reportViolations" targetRef="persistCurrentContext"/>
-    <serviceTask flowable:async="true" flowable:delegateExpression="${hbciReportValidationError}" flowable:exclusive="false" flowable:triggerable="true" id="reportViolations" name="Report context violations to user"/>
-    <sequenceFlow id="sid-E8282976-16E7-4A3F-AB10-2E9630924B35" sourceRef="reportErrorAndRestoreContextBefore" targetRef="reportViolations"/>
-    <sequenceFlow id="noValidationErrors" name="No errors" sourceRef="hasValidationErrors" targetRef="restoreCurrentContextOnOk"/>
-    <sequenceFlow id="sid-B4A38440-9E24-479E-A358-56B7529066F4" name="Validation errors" sourceRef="hasValidationErrors" targetRef="reportErrorAndRestoreContextBefore">
-      <conditionExpression xsi:type="tFormalExpression"><![CDATA[#{hbciValidationErrors.isPresent(CONTEXT)}]]></conditionExpression>
-    </sequenceFlow>
-    <serviceTask id="loadConsentUnderFintechScope" isForCompensation="false" flowable:async="true" flowable:exclusive="false" flowable:triggerable="false" name="Load consent under FinTech request scope" flowable:delegateExpression="${hbciLoadConsentUnderFintechKey}">
-      <documentation>Loads consent using FinTech secret key</documentation>
-    </serviceTask>
-    <exclusiveGateway id="sid-a3b65390-eabb-4ae6-bdb1-3f6453e7960d" name="Is under FinTech request scope" default="finTechEncryptionKeyIsMissing">
-      <documentation>Checks if FinTech encryption key is available</documentation>
-    </exclusiveGateway>
-    <sequenceFlow id="sid-29c869f7-4508-4734-a8f8-87639c8e4249" sourceRef="loadConsentUnderFintechScope" targetRef="fillInitialContext"/>
-    <sequenceFlow id="finTechEncryptionKeyIsMissing" sourceRef="sid-a3b65390-eabb-4ae6-bdb1-3f6453e7960d" targetRef="fillInitialContext">
-      <conditionExpression xsi:type="tFormalExpression"/>
-    </sequenceFlow>
-    <sequenceFlow id="fintechEncryptionKeyIsPresent" sourceRef="sid-a3b65390-eabb-4ae6-bdb1-3f6453e7960d" targetRef="loadConsentUnderFintechScope" name="Is FinTech encryption key present?">
-      <conditionExpression xsi:type="tFormalExpression">#{hbciConsentInfo.isUnderFintechScope(CONTEXT)}</conditionExpression>
-    </sequenceFlow>
-  </process>
-  <bpmndi:BPMNDiagram id="BPMNDiagram_hbci-request-saga">
-    <bpmndi:BPMNPlane bpmnElement="hbci-request-saga" id="BPMNPlane_hbci-request-saga">
-      <bpmndi:BPMNShape bpmnElement="start" id="BPMNShape_start">
-        <omgdc:Bounds height="30.0" width="30.0" x="-8.0" y="160.0"/>
-      </bpmndi:BPMNShape>
-      <bpmndi:BPMNShape bpmnElement="end" id="BPMNShape_end">
-        <omgdc:Bounds height="28.0" width="28.0" x="1312.0" y="161.0"/>
-      </bpmndi:BPMNShape>
-      <bpmndi:BPMNShape bpmnElement="execution" id="BPMNShape_execution">
-        <omgdc:Bounds height="80.0" width="100.0" x="1147.0" y="135.0"/>
-      </bpmndi:BPMNShape>
-      <bpmndi:BPMNShape bpmnElement="validation" id="BPMNShape_validation">
-        <omgdc:Bounds height="80.0" width="100.0" x="504.0" y="135.0"/>
-      </bpmndi:BPMNShape>
-      <bpmndi:BPMNShape bpmnElement="sid-0B988308-D4BC-4E58-ACE3-0DB7A8D87B0A" id="BPMNShape_sid-0B988308-D4BC-4E58-ACE3-0DB7A8D87B0A">
-        <omgdc:Bounds height="30.0" width="30.0" x="1187.0" y="201.0"/>
-      </bpmndi:BPMNShape>
-      <bpmndi:BPMNShape bpmnElement="fillInitialContext" id="BPMNShape_fillInitialContext">
-        <omgdc:Bounds height="80.0" width="100.0" x="164.75" y="135.0"/>
-      </bpmndi:BPMNShape>
-      <bpmndi:BPMNShape bpmnElement="handleExecutionErrors" id="BPMNShape_handleExecutionErrors">
-        <omgdc:Bounds height="80.0" width="100.0" x="1152.018993230683" y="312.0"/>
-      </bpmndi:BPMNShape>
-      <bpmndi:BPMNShape bpmnElement="hasValidationErrors" id="BPMNShape_hasValidationErrors">
-        <omgdc:Bounds height="40.0" width="40.0" x="657.0" y="155.0"/>
-      </bpmndi:BPMNShape>
-      <bpmndi:BPMNShape bpmnElement="updateContextToRealMode" id="BPMNShape_updateContextToRealMode">
-        <omgdc:Bounds height="80.0" width="100.0" x="967.0" y="135.0"/>
-      </bpmndi:BPMNShape>
-      <bpmndi:BPMNShape bpmnElement="persistCurrentContext" id="BPMNShape_persistCurrentContext">
-        <omgdc:Bounds height="80.0" width="100.0" x="330.0" y="135.0"/>
-      </bpmndi:BPMNShape>
-      <bpmndi:BPMNShape bpmnElement="reportErrorAndRestoreContextBefore" id="BPMNShape_reportErrorAndRestoreContextBefore">
-        <omgdc:Bounds height="80.0" width="100.0" x="540.0" y="330.0"/>
-      </bpmndi:BPMNShape>
-      <bpmndi:BPMNShape bpmnElement="restoreCurrentContextOnOk" id="BPMNShape_restoreCurrentContextOnOk">
-        <omgdc:Bounds height="80.0" width="100.0" x="810.0" y="135.0"/>
-      </bpmndi:BPMNShape>
-      <bpmndi:BPMNShape bpmnElement="reportViolations" id="BPMNShape_reportViolations">
-        <omgdc:Bounds height="80.0" width="100.0" x="405.0" y="330.0"/>
-      </bpmndi:BPMNShape>
-      <bpmndi:BPMNEdge bpmnElement="sid-C66278C4-EC81-438B-8264-C15C99FDDD18" id="BPMNEdge_sid-C66278C4-EC81-438B-8264-C15C99FDDD18">
-        <omgdi:waypoint x="1202.002087738753" y="230.94999811889036"/>
-        <omgdi:waypoint x="1202.0134069863645" y="312.0"/>
-      </bpmndi:BPMNEdge>
-      <bpmndi:BPMNEdge bpmnElement="sid-C865530D-39E8-4602-8D61-61B3CECFA9EE" id="BPMNEdge_sid-C865530D-39E8-4602-8D61-61B3CECFA9EE">
-        <omgdi:waypoint x="429.95000000000005" y="175.0"/>
-        <omgdi:waypoint x="503.9999999999947" y="175.0"/>
-      </bpmndi:BPMNEdge>
-      <bpmndi:BPMNEdge bpmnElement="sid-E8282976-16E7-4A3F-AB10-2E9630924B35" id="BPMNEdge_sid-E8282976-16E7-4A3F-AB10-2E9630924B35">
-        <omgdi:waypoint x="540.0" y="370.0"/>
-        <omgdi:waypoint x="504.95000000000005" y="370.0"/>
-      </bpmndi:BPMNEdge>
-      <bpmndi:BPMNEdge bpmnElement="sid-BE22A9B7-11C3-41BC-A8F7-9CD8809C8C55" id="BPMNEdge_sid-BE22A9B7-11C3-41BC-A8F7-9CD8809C8C55">
-        <omgdi:waypoint x="264.70000000000005" y="175.0"/>
-        <omgdi:waypoint x="330.0" y="175.0"/>
-      </bpmndi:BPMNEdge>
-      <bpmndi:BPMNEdge bpmnElement="sid-AA3814A7-D245-4099-ABA7-449E203665F1" id="BPMNEdge_sid-AA3814A7-D245-4099-ABA7-449E203665F1">
-        <omgdi:waypoint x="1246.95" y="175.0"/>
-        <omgdi:waypoint x="1312.0" y="175.0"/>
-      </bpmndi:BPMNEdge>
-      <bpmndi:BPMNEdge bpmnElement="sid-4039FF01-F14C-4D95-BD50-0AD769DCBD8C" id="BPMNEdge_sid-4039FF01-F14C-4D95-BD50-0AD769DCBD8C">
-        <omgdi:waypoint x="1066.95" y="175.0"/>
-        <omgdi:waypoint x="1147.0" y="175.0"/>
-      </bpmndi:BPMNEdge>
-      <bpmndi:BPMNEdge bpmnElement="sid-254FCF56-028D-4204-9F41-7E9AAB8D1AB3" id="BPMNEdge_sid-254FCF56-028D-4204-9F41-7E9AAB8D1AB3">
-        <omgdi:waypoint x="909.9499999999713" y="175.0"/>
-        <omgdi:waypoint x="967.0" y="175.0"/>
-      </bpmndi:BPMNEdge>
-      <bpmndi:BPMNEdge bpmnElement="noValidationErrors" id="BPMNEdge_noValidationErrors">
-        <omgdi:waypoint x="696.9445521572401" y="175.0"/>
-        <omgdi:waypoint x="810.0" y="175.0"/>
-      </bpmndi:BPMNEdge>
-      <bpmndi:BPMNEdge bpmnElement="sid-846BCBC1-F77B-4252-92F3-2C0340C8245B" id="BPMNEdge_sid-846BCBC1-F77B-4252-92F3-2C0340C8245B">
-        <omgdi:waypoint x="21.949997" y="175.0"/>
-        <omgdi:waypoint x="80.466675" y="175.0"/>
-      </bpmndi:BPMNEdge>
-      <bpmndi:BPMNEdge bpmnElement="sid-275DF142-FA3D-4C53-A4A0-8DF179406C8C" id="BPMNEdge_sid-275DF142-FA3D-4C53-A4A0-8DF179406C8C">
-        <omgdi:waypoint x="603.9499999999841" y="175.0"/>
-        <omgdi:waypoint x="657.0" y="175.0"/>
-      </bpmndi:BPMNEdge>
-      <bpmndi:BPMNEdge bpmnElement="sid-B4A38440-9E24-479E-A358-56B7529066F4" id="BPMNEdge_sid-B4A38440-9E24-479E-A358-56B7529066F4">
-        <omgdi:waypoint x="677.0" y="194.94488723731428"/>
-        <omgdi:waypoint x="677.0" y="370.0"/>
-        <omgdi:waypoint x="639.9499999999999" y="370.0"/>
-      </bpmndi:BPMNEdge>
-      <bpmndi:BPMNEdge bpmnElement="sid-8D9A83E7-C86F-4397-BC7F-CCA2A6F2EBD4" id="BPMNEdge_sid-8D9A83E7-C86F-4397-BC7F-CCA2A6F2EBD4">
-        <omgdi:waypoint x="405.0" y="370.0"/>
-        <omgdi:waypoint x="380.0" y="370.0"/>
-        <omgdi:waypoint x="380.0" y="214.95000000000002"/>
-      </bpmndi:BPMNEdge>
-      <bpmdi:BPMNShape xmlns:bpmdi="http://www.omg.org/spec/BPMN/20100524/DI" id="shape-4c80c3a3-a1a4-4163-b7c7-56628551b748" bpmnElement="loadConsentUnderFintechScope">
-        <omgdc:Bounds x="164.75002" y="-3.4666748" width="100.0" height="80.0"/>
-      </bpmdi:BPMNShape>
-      <bpmdi:BPMNShape xmlns:bpmdi="http://www.omg.org/spec/BPMN/20100524/DI" id="shape-28c14ec2-c254-41e5-8579-06b44382d439" bpmnElement="sid-a3b65390-eabb-4ae6-bdb1-3f6453e7960d">
-        <omgdc:Bounds x="80.46668" y="155.0" width="40.0" height="40.0"/>
-      </bpmdi:BPMNShape>
-      <bpmdi:BPMNEdge xmlns:bpmdi="http://www.omg.org/spec/BPMN/20100524/DI" id="edge-74c304c7-e888-460e-ac9a-c3c45d043aa2" bpmnElement="sid-29c869f7-4508-4734-a8f8-87639c8e4249">
-        <omgdi:waypoint x="214.75" y="76.533325"/>
-        <omgdi:waypoint x="214.75" y="135.0"/>
-      </bpmdi:BPMNEdge>
-      <bpmdi:BPMNEdge xmlns:bpmdi="http://www.omg.org/spec/BPMN/20100524/DI" id="edge-1b9aec8a-99b7-4003-9b12-6e77b48dea9f" bpmnElement="finTechEncryptionKeyIsMissing">
-        <omgdi:waypoint x="120.46668" y="175.0"/>
-        <omgdi:waypoint x="164.75" y="175.0"/>
-      </bpmdi:BPMNEdge>
-      <bpmdi:BPMNEdge xmlns:bpmdi="http://www.omg.org/spec/BPMN/20100524/DI" id="edge-bb90a596-b38c-4909-af25-aafc3c5f14ed" bpmnElement="fintechEncryptionKeyIsPresent">
-        <omgdi:waypoint x="100.46668" y="154.99998"/>
-        <omgdi:waypoint x="100.46668" y="36.533325"/>
-        <omgdi:waypoint x="164.75003" y="36.533325"/>
-      </bpmdi:BPMNEdge>
-    </bpmndi:BPMNPlane>
-  </bpmndi:BPMNDiagram>
+<definitions xmlns="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI"
+             xmlns:flowable="http://flowable.org/bpmn" xmlns:omgdc="http://www.omg.org/spec/DD/20100524/DC"
+             xmlns:omgdi="http://www.omg.org/spec/DD/20100524/DI" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+             expressionLanguage="http://www.w3.org/1999/XPath" targetNamespace="http://www.flowable.org/processdef"
+             typeLanguage="http://www.w3.org/2001/XMLSchema">
+    <process id="hbci-request-saga" isExecutable="true" name="hbci-request-saga">
+        <documentation>Saga that manages full cycle of request - from getting user initial input to providing additional
+            data that is required by ASPSP during runtime
+        </documentation>
+        <startEvent flowable:formFieldValidation="true" id="start" name="start"/>
+        <endEvent id="end" name="end"/>
+        <callActivity calledElement="${hbciFlowNameSelector.getNameForExecution(CONTEXT)}" flowable:async="true"
+                      flowable:calledElementType="key" flowable:fallbackToDefaultTenant="false"
+                      flowable:inheritVariables="true" id="execution" name="Perform real bank call sequence">
+            <extensionElements>
+                <flowable:out source="CONTEXT" target="CONTEXT"/>
+            </extensionElements>
+        </callActivity>
+        <callActivity calledElement="${hbciFlowNameSelector.getNameForValidation(CONTEXT)}" flowable:async="true"
+                      flowable:calledElementType="key" flowable:fallbackToDefaultTenant="false"
+                      flowable:inheritVariables="true" id="validation" name="Perform validation process sequence">
+            <extensionElements>
+                <flowable:out source="CONTEXT" target="CONTEXT"/>
+            </extensionElements>
+        </callActivity>
+        <boundaryEvent attachedToRef="execution" id="sid-0B988308-D4BC-4E58-ACE3-0DB7A8D87B0A">
+            <errorEventDefinition errorRef="VALIDATION"/>
+        </boundaryEvent>
+        <sequenceFlow id="sid-AA3814A7-D245-4099-ABA7-449E203665F1" sourceRef="execution" targetRef="end"/>
+        <sequenceFlow id="sid-C66278C4-EC81-438B-8264-C15C99FDDD18" sourceRef="sid-0B988308-D4BC-4E58-ACE3-0DB7A8D87B0A"
+                      targetRef="handleExecutionErrors"/>
+        <serviceTask flowable:async="true" flowable:delegateExpression="${hbciFillBpmnContext}" id="fillInitialContext"
+                     name="Fill context with bpmn-related information"/>
+        <sequenceFlow id="sid-846BCBC1-F77B-4252-92F3-2C0340C8245B" sourceRef="start"
+                      targetRef="sid-a3b65390-eabb-4ae6-bdb1-3f6453e7960d"/>
+        <serviceTask flowable:async="true" flowable:delegateExpression="${hbciExecutionErrorHandler}"
+                     flowable:triggerable="true" id="handleExecutionErrors" name="Handle execution errors"/>
+        <exclusiveGateway default="noValidationErrors" id="hasValidationErrors" name="Validation errors?"/>
+        <serviceTask flowable:async="true" flowable:delegateExpression="${hbciUpdateToRealModeBpmnContext}"
+                     flowable:exclusive="false" id="updateContextToRealMode" name="Update context to real mode"/>
+        <sequenceFlow id="sid-4039FF01-F14C-4D95-BD50-0AD769DCBD8C" sourceRef="updateContextToRealMode"
+                      targetRef="execution"/>
+        <serviceTask flowable:async="true" flowable:delegateExpression="${hbciStorePreValidationContext}"
+                     flowable:exclusive="false" id="persistCurrentContext" name="Persist context before validation"/>
+        <sequenceFlow id="sid-BE22A9B7-11C3-41BC-A8F7-9CD8809C8C55" sourceRef="fillInitialContext"
+                      targetRef="persistCurrentContext"/>
+        <sequenceFlow id="sid-C865530D-39E8-4602-8D61-61B3CECFA9EE" sourceRef="persistCurrentContext"
+                      targetRef="validation"/>
+        <serviceTask flowable:async="true" flowable:delegateExpression="${hbciRestorePreValidationContext}"
+                     flowable:exclusive="false" id="reportErrorAndRestoreContextBefore"
+                     name="Restore context that was before validation"/>
+        <sequenceFlow id="sid-275DF142-FA3D-4C53-A4A0-8DF179406C8C" sourceRef="validation"
+                      targetRef="hasValidationErrors"/>
+        <serviceTask flowable:async="true" flowable:delegateExpression="${hbciRestorePreValidationContext}"
+                     flowable:exclusive="false" id="restoreCurrentContextOnOk"
+                     name="Restore context that was before validation"/>
+        <sequenceFlow id="sid-254FCF56-028D-4204-9F41-7E9AAB8D1AB3" sourceRef="restoreCurrentContextOnOk"
+                      targetRef="updateContextToRealMode"/>
+        <sequenceFlow id="sid-8D9A83E7-C86F-4397-BC7F-CCA2A6F2EBD4" sourceRef="reportViolations"
+                      targetRef="persistCurrentContext"/>
+        <serviceTask flowable:async="true" flowable:delegateExpression="${hbciReportValidationError}"
+                     flowable:exclusive="false" flowable:triggerable="true" id="reportViolations"
+                     name="Report context violations to user"/>
+        <sequenceFlow id="sid-E8282976-16E7-4A3F-AB10-2E9630924B35" sourceRef="reportErrorAndRestoreContextBefore"
+                      targetRef="reportViolations"/>
+        <sequenceFlow id="noValidationErrors" name="No errors" sourceRef="hasValidationErrors"
+                      targetRef="restoreCurrentContextOnOk"/>
+        <sequenceFlow id="sid-B4A38440-9E24-479E-A358-56B7529066F4" name="Validation errors"
+                      sourceRef="hasValidationErrors" targetRef="reportErrorAndRestoreContextBefore">
+            <conditionExpression xsi:type="tFormalExpression">
+                <![CDATA[#{hbciValidationErrors.isPresent(CONTEXT)}]]></conditionExpression>
+        </sequenceFlow>
+        <serviceTask id="loadConsentUnderFintechScope" isForCompensation="false" flowable:async="true"
+                     flowable:exclusive="false" flowable:triggerable="false"
+                     name="Load consent under FinTech request scope"
+                     flowable:delegateExpression="${hbciLoadConsentUnderFintechKey}">
+            <documentation>Loads consent using FinTech secret key</documentation>
+        </serviceTask>
+        <exclusiveGateway id="sid-a3b65390-eabb-4ae6-bdb1-3f6453e7960d" name="Is under FinTech request scope"
+                          default="finTechEncryptionKeyIsMissing">
+            <documentation>Checks if FinTech encryption key is available</documentation>
+        </exclusiveGateway>
+        <sequenceFlow id="sid-29c869f7-4508-4734-a8f8-87639c8e4249" sourceRef="loadConsentUnderFintechScope"
+                      targetRef="fillInitialContext"/>
+        <sequenceFlow id="finTechEncryptionKeyIsMissing" sourceRef="sid-a3b65390-eabb-4ae6-bdb1-3f6453e7960d"
+                      targetRef="fillInitialContext">
+            <conditionExpression xsi:type="tFormalExpression"/>
+        </sequenceFlow>
+        <sequenceFlow id="fintechEncryptionKeyIsPresent" sourceRef="sid-a3b65390-eabb-4ae6-bdb1-3f6453e7960d"
+                      targetRef="loadConsentUnderFintechScope" name="Is FinTech encryption key present?">
+            <conditionExpression xsi:type="tFormalExpression">#{hbciConsentInfo.isUnderFintechScope(CONTEXT)}
+            </conditionExpression>
+        </sequenceFlow>
+    </process>
+    <bpmndi:BPMNDiagram id="BPMNDiagram_hbci-request-saga">
+        <bpmndi:BPMNPlane bpmnElement="hbci-request-saga" id="BPMNPlane_hbci-request-saga">
+            <bpmndi:BPMNShape bpmnElement="start" id="BPMNShape_start">
+                <omgdc:Bounds height="30.0" width="30.0" x="-8.0" y="160.0"/>
+            </bpmndi:BPMNShape>
+            <bpmndi:BPMNShape bpmnElement="end" id="BPMNShape_end">
+                <omgdc:Bounds height="28.0" width="28.0" x="1312.0" y="161.0"/>
+            </bpmndi:BPMNShape>
+            <bpmndi:BPMNShape bpmnElement="execution" id="BPMNShape_execution">
+                <omgdc:Bounds height="80.0" width="100.0" x="1147.0" y="135.0"/>
+            </bpmndi:BPMNShape>
+            <bpmndi:BPMNShape bpmnElement="validation" id="BPMNShape_validation">
+                <omgdc:Bounds height="80.0" width="100.0" x="504.0" y="135.0"/>
+            </bpmndi:BPMNShape>
+            <bpmndi:BPMNShape bpmnElement="sid-0B988308-D4BC-4E58-ACE3-0DB7A8D87B0A"
+                              id="BPMNShape_sid-0B988308-D4BC-4E58-ACE3-0DB7A8D87B0A">
+                <omgdc:Bounds height="30.0" width="30.0" x="1187.0" y="201.0"/>
+            </bpmndi:BPMNShape>
+            <bpmndi:BPMNShape bpmnElement="fillInitialContext" id="BPMNShape_fillInitialContext">
+                <omgdc:Bounds height="80.0" width="100.0" x="164.75" y="135.0"/>
+            </bpmndi:BPMNShape>
+            <bpmndi:BPMNShape bpmnElement="handleExecutionErrors" id="BPMNShape_handleExecutionErrors">
+                <omgdc:Bounds height="80.0" width="100.0" x="1152.018993230683" y="312.0"/>
+            </bpmndi:BPMNShape>
+            <bpmndi:BPMNShape bpmnElement="hasValidationErrors" id="BPMNShape_hasValidationErrors">
+                <omgdc:Bounds height="40.0" width="40.0" x="657.0" y="155.0"/>
+            </bpmndi:BPMNShape>
+            <bpmndi:BPMNShape bpmnElement="updateContextToRealMode" id="BPMNShape_updateContextToRealMode">
+                <omgdc:Bounds height="80.0" width="100.0" x="967.0" y="135.0"/>
+            </bpmndi:BPMNShape>
+            <bpmndi:BPMNShape bpmnElement="persistCurrentContext" id="BPMNShape_persistCurrentContext">
+                <omgdc:Bounds height="80.0" width="100.0" x="330.0" y="135.0"/>
+            </bpmndi:BPMNShape>
+            <bpmndi:BPMNShape bpmnElement="reportErrorAndRestoreContextBefore"
+                              id="BPMNShape_reportErrorAndRestoreContextBefore">
+                <omgdc:Bounds height="80.0" width="100.0" x="540.0" y="330.0"/>
+            </bpmndi:BPMNShape>
+            <bpmndi:BPMNShape bpmnElement="restoreCurrentContextOnOk" id="BPMNShape_restoreCurrentContextOnOk">
+                <omgdc:Bounds height="80.0" width="100.0" x="810.0" y="135.0"/>
+            </bpmndi:BPMNShape>
+            <bpmndi:BPMNShape bpmnElement="reportViolations" id="BPMNShape_reportViolations">
+                <omgdc:Bounds height="80.0" width="100.0" x="405.0" y="330.0"/>
+            </bpmndi:BPMNShape>
+            <bpmndi:BPMNEdge bpmnElement="sid-C66278C4-EC81-438B-8264-C15C99FDDD18"
+                             id="BPMNEdge_sid-C66278C4-EC81-438B-8264-C15C99FDDD18">
+                <omgdi:waypoint x="1202.002087738753" y="230.94999811889036"/>
+                <omgdi:waypoint x="1202.0134069863645" y="312.0"/>
+            </bpmndi:BPMNEdge>
+            <bpmndi:BPMNEdge bpmnElement="sid-C865530D-39E8-4602-8D61-61B3CECFA9EE"
+                             id="BPMNEdge_sid-C865530D-39E8-4602-8D61-61B3CECFA9EE">
+                <omgdi:waypoint x="429.95000000000005" y="175.0"/>
+                <omgdi:waypoint x="503.9999999999947" y="175.0"/>
+            </bpmndi:BPMNEdge>
+            <bpmndi:BPMNEdge bpmnElement="sid-E8282976-16E7-4A3F-AB10-2E9630924B35"
+                             id="BPMNEdge_sid-E8282976-16E7-4A3F-AB10-2E9630924B35">
+                <omgdi:waypoint x="540.0" y="370.0"/>
+                <omgdi:waypoint x="504.95000000000005" y="370.0"/>
+            </bpmndi:BPMNEdge>
+            <bpmndi:BPMNEdge bpmnElement="sid-BE22A9B7-11C3-41BC-A8F7-9CD8809C8C55"
+                             id="BPMNEdge_sid-BE22A9B7-11C3-41BC-A8F7-9CD8809C8C55">
+                <omgdi:waypoint x="264.70000000000005" y="175.0"/>
+                <omgdi:waypoint x="330.0" y="175.0"/>
+            </bpmndi:BPMNEdge>
+            <bpmndi:BPMNEdge bpmnElement="sid-AA3814A7-D245-4099-ABA7-449E203665F1"
+                             id="BPMNEdge_sid-AA3814A7-D245-4099-ABA7-449E203665F1">
+                <omgdi:waypoint x="1246.95" y="175.0"/>
+                <omgdi:waypoint x="1312.0" y="175.0"/>
+            </bpmndi:BPMNEdge>
+            <bpmndi:BPMNEdge bpmnElement="sid-4039FF01-F14C-4D95-BD50-0AD769DCBD8C"
+                             id="BPMNEdge_sid-4039FF01-F14C-4D95-BD50-0AD769DCBD8C">
+                <omgdi:waypoint x="1066.95" y="175.0"/>
+                <omgdi:waypoint x="1147.0" y="175.0"/>
+            </bpmndi:BPMNEdge>
+            <bpmndi:BPMNEdge bpmnElement="sid-254FCF56-028D-4204-9F41-7E9AAB8D1AB3"
+                             id="BPMNEdge_sid-254FCF56-028D-4204-9F41-7E9AAB8D1AB3">
+                <omgdi:waypoint x="909.9499999999713" y="175.0"/>
+                <omgdi:waypoint x="967.0" y="175.0"/>
+            </bpmndi:BPMNEdge>
+            <bpmndi:BPMNEdge bpmnElement="noValidationErrors" id="BPMNEdge_noValidationErrors">
+                <omgdi:waypoint x="696.9445521572401" y="175.0"/>
+                <omgdi:waypoint x="810.0" y="175.0"/>
+            </bpmndi:BPMNEdge>
+            <bpmndi:BPMNEdge bpmnElement="sid-846BCBC1-F77B-4252-92F3-2C0340C8245B"
+                             id="BPMNEdge_sid-846BCBC1-F77B-4252-92F3-2C0340C8245B">
+                <omgdi:waypoint x="21.949997" y="175.0"/>
+                <omgdi:waypoint x="80.466675" y="175.0"/>
+            </bpmndi:BPMNEdge>
+            <bpmndi:BPMNEdge bpmnElement="sid-275DF142-FA3D-4C53-A4A0-8DF179406C8C"
+                             id="BPMNEdge_sid-275DF142-FA3D-4C53-A4A0-8DF179406C8C">
+                <omgdi:waypoint x="603.9499999999841" y="175.0"/>
+                <omgdi:waypoint x="657.0" y="175.0"/>
+            </bpmndi:BPMNEdge>
+            <bpmndi:BPMNEdge bpmnElement="sid-B4A38440-9E24-479E-A358-56B7529066F4"
+                             id="BPMNEdge_sid-B4A38440-9E24-479E-A358-56B7529066F4">
+                <omgdi:waypoint x="677.0" y="194.94488723731428"/>
+                <omgdi:waypoint x="677.0" y="370.0"/>
+                <omgdi:waypoint x="639.9499999999999" y="370.0"/>
+            </bpmndi:BPMNEdge>
+            <bpmndi:BPMNEdge bpmnElement="sid-8D9A83E7-C86F-4397-BC7F-CCA2A6F2EBD4"
+                             id="BPMNEdge_sid-8D9A83E7-C86F-4397-BC7F-CCA2A6F2EBD4">
+                <omgdi:waypoint x="405.0" y="370.0"/>
+                <omgdi:waypoint x="380.0" y="370.0"/>
+                <omgdi:waypoint x="380.0" y="214.95000000000002"/>
+            </bpmndi:BPMNEdge>
+            <bpmdi:BPMNShape xmlns:bpmdi="http://www.omg.org/spec/BPMN/20100524/DI"
+                             id="shape-4c80c3a3-a1a4-4163-b7c7-56628551b748" bpmnElement="loadConsentUnderFintechScope">
+                <omgdc:Bounds x="164.75002" y="-3.4666748" width="100.0" height="80.0"/>
+            </bpmdi:BPMNShape>
+            <bpmdi:BPMNShape xmlns:bpmdi="http://www.omg.org/spec/BPMN/20100524/DI"
+                             id="shape-28c14ec2-c254-41e5-8579-06b44382d439"
+                             bpmnElement="sid-a3b65390-eabb-4ae6-bdb1-3f6453e7960d">
+                <omgdc:Bounds x="80.46668" y="155.0" width="40.0" height="40.0"/>
+            </bpmdi:BPMNShape>
+            <bpmdi:BPMNEdge xmlns:bpmdi="http://www.omg.org/spec/BPMN/20100524/DI"
+                            id="edge-74c304c7-e888-460e-ac9a-c3c45d043aa2"
+                            bpmnElement="sid-29c869f7-4508-4734-a8f8-87639c8e4249">
+                <omgdi:waypoint x="214.75" y="76.533325"/>
+                <omgdi:waypoint x="214.75" y="135.0"/>
+            </bpmdi:BPMNEdge>
+            <bpmdi:BPMNEdge xmlns:bpmdi="http://www.omg.org/spec/BPMN/20100524/DI"
+                            id="edge-1b9aec8a-99b7-4003-9b12-6e77b48dea9f" bpmnElement="finTechEncryptionKeyIsMissing">
+                <omgdi:waypoint x="120.46668" y="175.0"/>
+                <omgdi:waypoint x="164.75" y="175.0"/>
+            </bpmdi:BPMNEdge>
+            <bpmdi:BPMNEdge xmlns:bpmdi="http://www.omg.org/spec/BPMN/20100524/DI"
+                            id="edge-bb90a596-b38c-4909-af25-aafc3c5f14ed" bpmnElement="fintechEncryptionKeyIsPresent">
+                <omgdi:waypoint x="100.46668" y="154.99998"/>
+                <omgdi:waypoint x="100.46668" y="36.533325"/>
+                <omgdi:waypoint x="164.75003" y="36.533325"/>
+            </bpmdi:BPMNEdge>
+        </bpmndi:BPMNPlane>
+    </bpmndi:BPMNDiagram>
 </definitions>

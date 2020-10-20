@@ -35,16 +35,16 @@ public class NonHappyPaymentResult<SELF extends NonHappyPaymentResult<SELF>> ext
 
     public SELF user_anton_brueckner_requests_payment_denial_and_he_is_redirected_back_to_fintech_ok() {
         RestAssured
-            .given()
+                .given()
                 .header(X_XSRF_TOKEN, UUID.randomUUID().toString())
                 .header(X_REQUEST_ID, UUID.randomUUID().toString())
                 .cookie(AUTHORIZATION_SESSION_KEY, authSessionCookie)
                 .queryParam(REDIRECT_CODE_QUERY, redirectCode)
                 .contentType(APPLICATION_JSON_VALUE)
                 .body("{}")
-            .when()
+                .when()
                 .post(DENY_PAYMENT_ENDPOINT, paymentServiceSessionId)
-            .then()
+                .then()
                 .statusCode(ACCEPTED.value())
                 .header(LOCATION, "http://localhost:4444/redirect-after-consent-denied");
 
@@ -53,16 +53,16 @@ public class NonHappyPaymentResult<SELF extends NonHappyPaymentResult<SELF>> ext
 
     public SELF user_anton_brueckner_requests_payment_denial_and_it_is_impossible_as_payment_is_authorized() {
         RestAssured
-            .given()
+                .given()
                 .header(X_XSRF_TOKEN, UUID.randomUUID().toString())
                 .header(X_REQUEST_ID, UUID.randomUUID().toString())
                 .cookie(AUTHORIZATION_SESSION_KEY, authSessionCookie)
                 .queryParam(REDIRECT_CODE_QUERY, redirectCode)
                 .contentType(APPLICATION_JSON_VALUE)
                 .body("{}")
-            .when()
+                .when()
                 .post(DENY_PAYMENT_ENDPOINT, paymentServiceSessionId)
-            .then()
+                .then()
                 .statusCode(INTERNAL_SERVER_ERROR.value())
                 .body("message", is("Unable to drop payment after it was authorized"));
 

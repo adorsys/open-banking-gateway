@@ -23,13 +23,14 @@ public class ProcessEventHandlerRegistrar {
 
     /**
      * Adds handler for BPMN event.
+     *
      * @param processId BPMN process id event source. BPMN can have multiple executions of same process, this is
      *                  the id of the process that identifies the execution uniquely.
-     * @param mapper Mapper to transform internal event that is sent by BPMN to higher-level result, i.e. to
-     *               {@link de.adorsys.opba.protocol.api.dto.result.fromprotocol.Result} that is expected by
-     *               an entrypoint that triggered the process.
-     * @param <T> Expected result class. This class will be mapped from internal process result
-     * ({@link de.adorsys.opba.protocol.bpmnshared.dto.messages.InternalProcessResult}) by {@code mapper}
+     * @param mapper    Mapper to transform internal event that is sent by BPMN to higher-level result, i.e. to
+     *                  {@link de.adorsys.opba.protocol.api.dto.result.fromprotocol.Result} that is expected by
+     *                  an entrypoint that triggered the process.
+     * @param <T>       Expected result class. This class will be mapped from internal process result
+     *                  ({@link de.adorsys.opba.protocol.bpmnshared.dto.messages.InternalProcessResult}) by {@code mapper}
      */
     public <T> void addHandler(String processId, OutcomeMapper<T> mapper) {
         handler.add(

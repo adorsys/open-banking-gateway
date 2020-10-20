@@ -1,36 +1,38 @@
 {
-  "id" : "c8a82a58-d183-3402-9b4f-f1995cb6d524",
-  "request" : {
-    "url" : "/v1/consents",
-    "method" : "POST",
-    "headers" : {
-      "X-Request-ID" : {
-        "matches" : "[0-9a-zA-z\\-]+"
+  "id": "c8a82a58-d183-3402-9b4f-f1995cb6d524",
+  "request": {
+    "url": "/v1/consents",
+    "method": "POST",
+    "headers": {
+      "X-Request-ID": {
+        "matches": "[0-9a-zA-z\\-]+"
       },
-      "PSU-ID" : {
-        "equalTo" : "max.musterman"
+      "PSU-ID": {
+        "equalTo": "max.musterman"
       },
-      "PSU-IP-Address" : {
-        "equalTo" : "1.1.1.1"
+      "PSU-IP-Address": {
+        "equalTo": "1.1.1.1"
       },
-      "Content-Type" : {
-        "equalTo" : "application/json; charset=UTF-8"
+      "Content-Type": {
+        "equalTo": "application/json; charset=UTF-8"
       }
     },
-    "bodyPatterns" : [ {
-      "equalToJson" : "{\"access\":{\"transactions\":[{\"iban\":\"111111111111111\",\"currency\":\"EUR\"}]},\"recurringIndicator\":true,\"validUntil\":\"2030-01-31\",\"frequencyPerDay\":12}",
-      "ignoreArrayOrder" : true,
-      "ignoreExtraElements" : true
-    } ]
+    "bodyPatterns": [
+      {
+        "equalToJson": "{\"access\":{\"transactions\":[{\"iban\":\"111111111111111\",\"currency\":\"EUR\"}]},\"recurringIndicator\":true,\"validUntil\":\"2030-01-31\",\"frequencyPerDay\":12}",
+        "ignoreArrayOrder": true,
+        "ignoreExtraElements": true
+      }
+    ]
   },
-  "response" : {
-    "status" : 400,
-    "bodyFileName" : "body-v1-consents-63123.json",
-    "headers" : {
-      "X-Request-Id" : "b75eb6bd-3233-11ea-b535-e2b5b1f1970b",
-      "Content-Type" : "application/json;charset=UTF-8",
-      "Date" : "Wed, 08 Jan 2020 16:27:27 GMT"
+  "response": {
+    "status": 400,
+    "bodyFileName": "body-v1-consents-63123.json",
+    "headers": {
+      "X-Request-Id": "b75eb6bd-3233-11ea-b535-e2b5b1f1970b",
+      "Content-Type": "application/json;charset=UTF-8",
+      "Date": "Wed, 08 Jan 2020 16:27:27 GMT"
     }
   },
-  "uuid" : "c8a82a58-d183-3402-9b4f-f1995cb6d524"
+  "uuid": "c8a82a58-d183-3402-9b4f-f1995cb6d524"
 }

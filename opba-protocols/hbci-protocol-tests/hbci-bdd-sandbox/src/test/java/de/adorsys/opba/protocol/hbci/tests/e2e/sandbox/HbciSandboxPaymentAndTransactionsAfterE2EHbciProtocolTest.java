@@ -49,7 +49,8 @@ import static org.springframework.boot.test.context.SpringBootTest.WebEnvironmen
 /**
  * Happy-path payment test that uses HBCI Sandbox to drive banking-protocol.
  */
-@Sql(executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD, statements = "DELETE FROM opb_hbci_sandbox_payment") // Cleanup after test
+@Sql(executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD, statements = "DELETE FROM opb_hbci_sandbox_payment")
+// Cleanup after test
 @Transactional(propagation = Propagation.NOT_SUPPORTED)
 @SpringBootTest(classes = {
         HbciProtocolApplication.class,
@@ -61,7 +62,7 @@ class HbciSandboxPaymentAndTransactionsAfterE2EHbciProtocolTest extends SpringSc
         HbciServers,
         HbciPaymentInitiationRequest<? extends HbciPaymentInitiationRequest<?>>,
         HbciPaymentInitiationResult<? extends HbciPaymentInitiationResult<?>>
-    > {
+        > {
 
     private final String OPBA_LOGIN = UUID.randomUUID().toString();
     private final String OPBA_PASSWORD = UUID.randomUUID().toString();
@@ -128,71 +129,71 @@ class HbciSandboxPaymentAndTransactionsAfterE2EHbciProtocolTest extends SpringSc
     @Test
     void makeSinglePaymentWithStatusAndSca() {
         given()
-            .rest_assured_points_to_opba_server_with_fintech_signer_on_banking_api()
-            .user_registered_in_opba_with_credentials(OPBA_LOGIN, OPBA_PASSWORD);
+                .rest_assured_points_to_opba_server_with_fintech_signer_on_banking_api()
+                .user_registered_in_opba_with_credentials(OPBA_LOGIN, OPBA_PASSWORD);
         when()
-            .fintech_calls_single_payment_for_max_musterman(MAX_MUSTERMAN_BANK_BLZ_30000003_ACCOUNT_ID, BANK_BLZ_30000003_ID, MAGIC_FLAG_TO_ACCEPT_PAYMENT_IMMEDIATELY)
-            .and()
-            .user_logged_in_into_opba_as_opba_user_with_credentials_using_fintech_supplied_url(OPBA_LOGIN, OPBA_PASSWORD)
-            .and()
-            .user_max_musterman_provided_initial_parameters_to_make_payment()
-            .and()
-            .user_max_musterman_provided_password_to_embedded_authorization()
-            .and()
-            .user_max_musterman_selected_sca_challenge_type_push_tan_to_embedded_authorization()
-            .and()
-            .user_max_musterman_provided_sca_challenge_result_to_embedded_authorization_and_sees_redirect_to_fintech_ok();
+                .fintech_calls_single_payment_for_max_musterman(MAX_MUSTERMAN_BANK_BLZ_30000003_ACCOUNT_ID, BANK_BLZ_30000003_ID, MAGIC_FLAG_TO_ACCEPT_PAYMENT_IMMEDIATELY)
+                .and()
+                .user_logged_in_into_opba_as_opba_user_with_credentials_using_fintech_supplied_url(OPBA_LOGIN, OPBA_PASSWORD)
+                .and()
+                .user_max_musterman_provided_initial_parameters_to_make_payment()
+                .and()
+                .user_max_musterman_provided_password_to_embedded_authorization()
+                .and()
+                .user_max_musterman_selected_sca_challenge_type_push_tan_to_embedded_authorization()
+                .and()
+                .user_max_musterman_provided_sca_challenge_result_to_embedded_authorization_and_sees_redirect_to_fintech_ok();
         then()
-            .open_banking_has_stored_payment()
-            .fintech_calls_payment_activation_for_current_authorization_id()
-            .fintech_calls_payment_status(BANK_BLZ_30000003_ID, TransactionStatus.ACSC.name());
+                .open_banking_has_stored_payment()
+                .fintech_calls_payment_activation_for_current_authorization_id()
+                .fintech_calls_payment_status(BANK_BLZ_30000003_ID, TransactionStatus.ACSC.name());
     }
 
     @Test
     void makeInstantPaymentWithStatusAndSca() {
         given()
-            .rest_assured_points_to_opba_server_with_fintech_signer_on_banking_api()
-            .user_registered_in_opba_with_credentials(OPBA_LOGIN, OPBA_PASSWORD);
+                .rest_assured_points_to_opba_server_with_fintech_signer_on_banking_api()
+                .user_registered_in_opba_with_credentials(OPBA_LOGIN, OPBA_PASSWORD);
         when()
-            .fintech_calls_instant_payment_for_max_musterman(MAX_MUSTERMAN_BANK_BLZ_30000003_ACCOUNT_ID, BANK_BLZ_30000003_ID, MAGIC_FLAG_TO_ACCEPT_PAYMENT_IMMEDIATELY)
-            .and()
-            .user_logged_in_into_opba_as_opba_user_with_credentials_using_fintech_supplied_url(OPBA_LOGIN, OPBA_PASSWORD)
-            .and()
-            .user_max_musterman_provided_initial_parameters_to_make_payment()
-            .and()
-            .user_max_musterman_provided_password_to_embedded_authorization()
-            .and()
-            .user_max_musterman_selected_sca_challenge_type_push_tan_to_embedded_authorization()
-            .and()
-            .user_max_musterman_provided_sca_challenge_result_to_embedded_authorization_and_sees_redirect_to_fintech_ok();
+                .fintech_calls_instant_payment_for_max_musterman(MAX_MUSTERMAN_BANK_BLZ_30000003_ACCOUNT_ID, BANK_BLZ_30000003_ID, MAGIC_FLAG_TO_ACCEPT_PAYMENT_IMMEDIATELY)
+                .and()
+                .user_logged_in_into_opba_as_opba_user_with_credentials_using_fintech_supplied_url(OPBA_LOGIN, OPBA_PASSWORD)
+                .and()
+                .user_max_musterman_provided_initial_parameters_to_make_payment()
+                .and()
+                .user_max_musterman_provided_password_to_embedded_authorization()
+                .and()
+                .user_max_musterman_selected_sca_challenge_type_push_tan_to_embedded_authorization()
+                .and()
+                .user_max_musterman_provided_sca_challenge_result_to_embedded_authorization_and_sees_redirect_to_fintech_ok();
         then()
-            .open_banking_has_stored_payment()
-            .fintech_calls_payment_activation_for_current_authorization_id()
-            .fintech_calls_payment_status(BANK_BLZ_30000003_ID, TransactionStatus.ACSC.name());
+                .open_banking_has_stored_payment()
+                .fintech_calls_payment_activation_for_current_authorization_id()
+                .fintech_calls_payment_status(BANK_BLZ_30000003_ID, TransactionStatus.ACSC.name());
     }
 
     void getTransactions(BigDecimal[] extraTransactions, boolean online) {
         given()
-            .rest_assured_points_to_opba_server_with_fintech_signer_on_banking_api()
-            .user_registered_in_opba_with_credentials(OPBA_LOGIN, OPBA_PASSWORD);
+                .rest_assured_points_to_opba_server_with_fintech_signer_on_banking_api()
+                .user_registered_in_opba_with_credentials(OPBA_LOGIN, OPBA_PASSWORD);
         accountInformationRequest
-            .fintech_calls_list_transactions_for_max_musterman_for_blz_30000003(online)
-            .and()
-            .user_logged_in_into_opba_as_opba_user_with_credentials_using_fintech_supplied_url(OPBA_LOGIN, OPBA_PASSWORD)
-            .and()
-            .user_max_musterman_provided_initial_parameters_to_list_transactions_with_single_account_consent()
-            .and()
-            .user_max_musterman_provided_password_to_embedded_authorization()
-            .and()
-            .user_max_musterman_selected_sca_challenge_type_push_tan_to_embedded_authorization()
-            .and()
-            .user_max_musterman_provided_sca_challenge_result_to_embedded_authorization_and_sees_redirect_to_fintech_ok();
+                .fintech_calls_list_transactions_for_max_musterman_for_blz_30000003(online)
+                .and()
+                .user_logged_in_into_opba_as_opba_user_with_credentials_using_fintech_supplied_url(OPBA_LOGIN, OPBA_PASSWORD)
+                .and()
+                .user_max_musterman_provided_initial_parameters_to_list_transactions_with_single_account_consent()
+                .and()
+                .user_max_musterman_provided_password_to_embedded_authorization()
+                .and()
+                .user_max_musterman_selected_sca_challenge_type_push_tan_to_embedded_authorization()
+                .and()
+                .user_max_musterman_provided_sca_challenge_result_to_embedded_authorization_and_sees_redirect_to_fintech_ok();
         accountInformationResult
-            .open_banking_has_consent_for_max_musterman_account_list()
-            .fintech_calls_consent_activation_for_current_authorization_id()
-            .open_banking_can_read_max_musterman_hbci_transaction_data_using_consent_bound_to_service_session_with_extra_transactions(
-                    MAX_MUSTERMAN_BANK_BLZ_30000003_ACCOUNT_ID, BANK_BLZ_30000003_ID, DATE_FROM, DATE_TO, BOTH_BOOKING, extraTransactions
-            );
+                .open_banking_has_consent_for_max_musterman_account_list()
+                .fintech_calls_consent_activation_for_current_authorization_id()
+                .open_banking_can_read_max_musterman_hbci_transaction_data_using_consent_bound_to_service_session_with_extra_transactions(
+                        MAX_MUSTERMAN_BANK_BLZ_30000003_ACCOUNT_ID, BANK_BLZ_30000003_ID, DATE_FROM, DATE_TO, BOTH_BOOKING, extraTransactions
+                );
     }
 
     private void getTransactions() {

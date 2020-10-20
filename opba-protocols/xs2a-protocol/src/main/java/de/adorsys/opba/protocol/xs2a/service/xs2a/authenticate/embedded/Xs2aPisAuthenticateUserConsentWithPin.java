@@ -57,7 +57,7 @@ public class Xs2aPisAuthenticateUserConsentWithPin extends ValidatedExecution<Xs
 
     private void pisAuthorizeWithPassword(
             DelegateExecution execution,
-            ValidatedPathHeadersBody<Xs2aAuthorizedPaymentParameters, Xs2aStandardHeaders, UpdatePsuAuthentication>  params) {
+            ValidatedPathHeadersBody<Xs2aAuthorizedPaymentParameters, Xs2aStandardHeaders, UpdatePsuAuthentication> params) {
 
         Response<UpdatePsuAuthenticationResponse> authResponse = pis.updatePaymentPsuData(
                 params.getPath().getPaymentType().getValue(),
@@ -110,10 +110,10 @@ public class Xs2aPisAuthenticateUserConsentWithPin extends ValidatedExecution<Xs
 
     @Service
     public static class Extractor extends PathHeadersBodyMapperTemplate<Xs2aPisContext,
-                                                                               Xs2aAuthorizedPaymentParameters,
-                                                                               Xs2aStandardHeaders,
-                                                                               ProvidePsuPasswordBody,
-                                                                               UpdatePsuAuthentication> {
+            Xs2aAuthorizedPaymentParameters,
+            Xs2aStandardHeaders,
+            ProvidePsuPasswordBody,
+            UpdatePsuAuthentication> {
 
         public Extractor(
                 DtoMapper<Xs2aContext, ProvidePsuPasswordBody> toValidatableBody,

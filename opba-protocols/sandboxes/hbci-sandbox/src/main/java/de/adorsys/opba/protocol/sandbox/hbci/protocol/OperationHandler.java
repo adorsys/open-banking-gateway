@@ -28,6 +28,7 @@ public abstract class OperationHandler implements JavaDelegate {
     }
 
     protected abstract HbciSandboxContext doExecute(DelegateExecution execution, HbciSandboxContext context);
+
     protected abstract Operation handledRequestType();
 
     protected boolean usesCustomHandlingAndHandles(HbciSandboxContext context) {

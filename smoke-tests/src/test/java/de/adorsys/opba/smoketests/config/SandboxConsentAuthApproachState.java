@@ -20,12 +20,13 @@ public class SandboxConsentAuthApproachState {
     public void memoize() {
         ExtractableResponse<Response> response = RestAssured
                 .when()
-                    .get(aspspProfileServerUri + "/api/v1/aspsp-profile/sca-approaches")
+                .get(aspspProfileServerUri + "/api/v1/aspsp-profile/sca-approaches")
                 .then()
-                    .statusCode(HttpStatus.OK.value())
+                .statusCode(HttpStatus.OK.value())
                 .extract();
 
-        this.memoizedApproaches = response.body().as(new TypeRef<List<String>>() {});
+        this.memoizedApproaches = response.body().as(new TypeRef<List<String>>() {
+        });
     }
 
     public void restore() {
@@ -35,12 +36,12 @@ public class SandboxConsentAuthApproachState {
 
         RestAssured
                 .given()
-                    .contentType(MediaType.APPLICATION_JSON_VALUE)
-                    .body(memoizedApproaches)
+                .contentType(MediaType.APPLICATION_JSON_VALUE)
+                .body(memoizedApproaches)
                 .when()
-                    .put(aspspProfileServerUri + "/api/v1/aspsp-profile/for-debug/sca-approaches")
+                .put(aspspProfileServerUri + "/api/v1/aspsp-profile/for-debug/sca-approaches")
                 .then()
-                    .statusCode(HttpStatus.OK.value());
+                .statusCode(HttpStatus.OK.value());
 
         this.memoizedApproaches = null;
     }

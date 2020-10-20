@@ -69,11 +69,11 @@ public class Xs2aGetAuthorizationState implements GetAuthorizationState {
         }
 
         return CompletableFuture.completedFuture(
-            new ContextBasedValidationErrorResult<>(
-                    null == result.getRedirectTo() ? null : URI.create(result.getRedirectTo()),
-                    executionId,
-                    result
-            )
+                new ContextBasedValidationErrorResult<>(
+                        null == result.getRedirectTo() ? null : URI.create(result.getRedirectTo()),
+                        executionId,
+                        result
+                )
         );
     }
 
@@ -95,16 +95,16 @@ public class Xs2aGetAuthorizationState implements GetAuthorizationState {
     private AuthStateBody readFromHistory(String executionId) {
         // Ended processes has very coarse information:
         HistoricActivityInstance finished = historyService.createHistoricActivityInstanceQuery()
-            .executionId(executionId)
-            .finished()
-            .listPage(0, 1)
-            .get(0);
+                .executionId(executionId)
+                .finished()
+                .listPage(0, 1)
+                .get(0);
 
         Xs2aContext ctx = (Xs2aContext) historyService.createHistoricVariableInstanceQuery()
-                                                .processInstanceId(finished.getProcessInstanceId())
-                                                .variableName(CONTEXT)
-                                                .singleResult()
-                                                .getValue();
+                .processInstanceId(finished.getProcessInstanceId())
+                .variableName(CONTEXT)
+                .singleResult()
+                .getValue();
 
         return buildBody(ctx, new LastViolations(ctx.getViolations()), ctx.getLastRedirection());
     }
@@ -159,8 +159,8 @@ public class Xs2aGetAuthorizationState implements GetAuthorizationState {
             }
 
             return accounts.stream()
-                           .map(AisConsentInitiateBody.AccountReferenceBody::getIban)
-                           .collect(Collectors.toList());
+                    .map(AisConsentInitiateBody.AccountReferenceBody::getIban)
+                    .collect(Collectors.toList());
         }
     }
 }

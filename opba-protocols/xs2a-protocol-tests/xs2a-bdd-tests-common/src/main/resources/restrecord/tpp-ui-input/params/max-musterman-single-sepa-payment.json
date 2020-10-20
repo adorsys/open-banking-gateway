@@ -12,7 +12,7 @@
     "currency": "EUR",
     "iban": "DE38760700240320465700"
   },
-  "creditorAgent" : "AAAADEBBXXX",
+  "creditorAgent": "AAAADEBBXXX",
   "creditorName": "WBG",
   "creditorAddress": {
     "buildingNumber": "56",

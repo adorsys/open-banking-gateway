@@ -11,7 +11,7 @@ public class ObjectMapperConfig {
     @Bean
     public ObjectMapper objectMapper() {
         return new ObjectMapper()
-                       .registerModule(new JavaTimeModule())
-                       .enable(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES);
+                .registerModule(new JavaTimeModule())
+                .enable(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES);
     }
 }

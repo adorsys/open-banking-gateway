@@ -6,7 +6,7 @@ import de.adorsys.opba.protocol.api.dto.result.body.UpdateAuthBody;
 
 /**
  * Called when returning from ASPSP in Redirect consent authorization (handles both OK and NOK redirect cases).
- *
+ * <p>
  * Typical outcomes:
  * <ul>
  *     <li>

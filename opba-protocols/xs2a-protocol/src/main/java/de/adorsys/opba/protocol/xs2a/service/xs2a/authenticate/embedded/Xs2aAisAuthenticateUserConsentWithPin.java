@@ -90,26 +90,26 @@ public class Xs2aAisAuthenticateUserConsentWithPin extends ValidatedExecution<Xs
     }
 
     private void setScaAvailableMethodsIfCanBeChosen(
-        Response<UpdatePsuAuthenticationResponse> authResponse, Xs2aContext ctx
+            Response<UpdatePsuAuthenticationResponse> authResponse, Xs2aContext ctx
     ) {
         if (null == authResponse.getBody().getScaMethods()) {
-           return;
+            return;
         }
 
         ctx.setAvailableSca(
-            authResponse.getBody().getScaMethods().stream()
-                .map(ScaMethod.FROM_AUTH::map)
-                .collect(Collectors.toList())
+                authResponse.getBody().getScaMethods().stream()
+                        .map(ScaMethod.FROM_AUTH::map)
+                        .collect(Collectors.toList())
         );
     }
 
     @Service
     public static class Extractor extends PathHeadersBodyMapperTemplate<
-                        Xs2aContext,
-                        Xs2aAuthorizedConsentParameters,
-                        Xs2aStandardHeaders,
-                        ProvidePsuPasswordBody,
-                        UpdatePsuAuthentication> {
+            Xs2aContext,
+            Xs2aAuthorizedConsentParameters,
+            Xs2aStandardHeaders,
+            ProvidePsuPasswordBody,
+            UpdatePsuAuthentication> {
 
         public Extractor(
                 DtoMapper<Xs2aContext, ProvidePsuPasswordBody> toValidatableBody,

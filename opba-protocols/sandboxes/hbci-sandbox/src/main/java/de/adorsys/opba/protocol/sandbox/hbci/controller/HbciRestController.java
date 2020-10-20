@@ -21,18 +21,18 @@ public class HbciRestController {
 
     private final HbciMockService hbciMockService;
 
-    @PostMapping(produces = { MediaType.TEXT_PLAIN_VALUE }, consumes = MediaType.APPLICATION_OCTET_STREAM_VALUE)
+    @PostMapping(produces = {MediaType.TEXT_PLAIN_VALUE}, consumes = MediaType.APPLICATION_OCTET_STREAM_VALUE)
     public String hbciPostRequest(@RequestBody String requestEncoded) {
         return doHandle(requestEncoded);
     }
 
-    @PostMapping(produces = { MediaType.TEXT_PLAIN_VALUE }, consumes = MediaType.TEXT_PLAIN_VALUE)
+    @PostMapping(produces = {MediaType.TEXT_PLAIN_VALUE}, consumes = MediaType.TEXT_PLAIN_VALUE)
     public String hbciPostRequestPlain(@RequestBody String requestEncoded) {
         return doHandle(requestEncoded);
     }
 
     private String doHandle(@RequestBody String requestEncoded) {
-        log.info("request: \nRQ-->:\n{}\n",  decode(requestEncoded));
+        log.info("request: \nRQ-->:\n{}\n", decode(requestEncoded));
         String result = hbciMockService.handleRequest(requestEncoded);
         log.info("response: \nRS-->:\n{}\n", result);
         return encode(result);

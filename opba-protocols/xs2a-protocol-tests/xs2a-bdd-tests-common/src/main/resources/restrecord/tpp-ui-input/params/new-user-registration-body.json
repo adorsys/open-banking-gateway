@@ -15,5 +15,7 @@
   "email": "%email%",
   "login": "%login%",
   "pin": "%password%",
-  "userRoles": ["CUSTOMER"]
+  "userRoles": [
+    "CUSTOMER"
+  ]
 }

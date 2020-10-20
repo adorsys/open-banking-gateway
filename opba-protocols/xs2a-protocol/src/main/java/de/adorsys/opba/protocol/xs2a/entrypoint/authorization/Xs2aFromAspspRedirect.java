@@ -31,13 +31,13 @@ public class Xs2aFromAspspRedirect implements FromAspspRedirect {
         String executionId = serviceContext.getAuthContext();
 
         ctxUpdater.updateContext(
-            executionId,
-            (Xs2aContext toUpdate) -> {
-                toUpdate.setRedirectConsentOk(serviceContext.getRequest().getIsOk());
-                toUpdate.setOauth2Code(serviceContext.getRequest().getCode());
-                extender.extend(toUpdate, serviceContext);
-                return toUpdate;
-            }
+                executionId,
+                (Xs2aContext toUpdate) -> {
+                    toUpdate.setRedirectConsentOk(serviceContext.getRequest().getIsOk());
+                    toUpdate.setOauth2Code(serviceContext.getRequest().getCode());
+                    extender.extend(toUpdate, serviceContext);
+                    return toUpdate;
+                }
         );
 
         return continuationService.handleAuthorizationProcessContinuation(executionId);

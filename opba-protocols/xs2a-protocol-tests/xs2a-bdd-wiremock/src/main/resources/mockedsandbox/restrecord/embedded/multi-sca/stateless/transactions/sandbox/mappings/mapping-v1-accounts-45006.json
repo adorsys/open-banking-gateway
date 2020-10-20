@@ -1,28 +1,28 @@
 {
-  "id" : "1e97f446-1392-3cc8-b42c-6f8f6cbd0a86",
-  "request" : {
-    "url" : "/v1/accounts",
-    "method" : "GET",
-    "headers" : {
-      "X-Request-ID" : {
-        "matches" : "[0-9a-zA-z\\-]+"
+  "id": "1e97f446-1392-3cc8-b42c-6f8f6cbd0a86",
+  "request": {
+    "url": "/v1/accounts",
+    "method": "GET",
+    "headers": {
+      "X-Request-ID": {
+        "matches": "[0-9a-zA-z\\-]+"
       },
-      "PSU-ID" : {
-        "equalTo" : "max.musterman"
+      "PSU-ID": {
+        "equalTo": "max.musterman"
       },
-      "Consent-ID" : {
-        "matches" : "[=_0-9a-zA-z\\-]+"
+      "Consent-ID": {
+        "matches": "[=_0-9a-zA-z\\-]+"
       }
     }
   },
-  "response" : {
-    "status" : 200,
-    "bodyFileName" : "body-v1-accounts-45006.json",
-    "headers" : {
-      "X-Request-Id" : "b75eb6bd-3233-11ea-b535-e2b5b1f1970b",
-      "Content-Type" : "application/json;charset=UTF-8",
-      "Date" : "Wed, 08 Jan 2020 16:27:40 GMT"
+  "response": {
+    "status": 200,
+    "bodyFileName": "body-v1-accounts-45006.json",
+    "headers": {
+      "X-Request-Id": "b75eb6bd-3233-11ea-b535-e2b5b1f1970b",
+      "Content-Type": "application/json;charset=UTF-8",
+      "Date": "Wed, 08 Jan 2020 16:27:40 GMT"
     }
   },
-  "uuid" : "1e97f446-1392-3cc8-b42c-6f8f6cbd0a86"
+  "uuid": "1e97f446-1392-3cc8-b42c-6f8f6cbd0a86"
 }

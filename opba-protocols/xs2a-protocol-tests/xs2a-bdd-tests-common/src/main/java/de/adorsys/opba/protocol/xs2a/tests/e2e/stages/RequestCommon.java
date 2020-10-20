@@ -49,8 +49,8 @@ public abstract class RequestCommon<SELF extends RequestCommon<SELF>> extends St
     private static final String TPP_SERVER_PASSWORD_PLACEHOLDER = "%password%";
 
     public static final ObjectMapper JSON_MAPPER = new ObjectMapper()
-               .registerModule(new JavaTimeModule())
-               .enable(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES);
+            .registerModule(new JavaTimeModule())
+            .enable(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES);
 
     public static final String REDIRECT_CODE_QUERY = "redirectCode";
 
@@ -97,15 +97,15 @@ public abstract class RequestCommon<SELF extends RequestCommon<SELF>> extends St
                 .getQueryParams()
                 .getFirst(REDIRECT_CODE_QUERY);
 
-        ExtractableResponse<Response> response =  RestAssured
-            .given()
+        ExtractableResponse<Response> response = RestAssured
+                .given()
                 .header(X_REQUEST_ID, UUID.randomUUID().toString())
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
                 .queryParam(REDIRECT_CODE_QUERY, fintechUserTempPassword)
                 .body(ImmutableMap.of(LOGIN, username, PASSWORD, password))
-            .when()
+                .when()
                 .post(path, serviceSessionId)
-            .then()
+                .then()
                 .statusCode(HttpStatus.ACCEPTED.value())
                 .extract();
 
@@ -133,16 +133,16 @@ public abstract class RequestCommon<SELF extends RequestCommon<SELF>> extends St
 
     protected ExtractableResponse<Response> provideParametersToBankingProtocolWithBody(String uriPath, String body, HttpStatus status, String serviceSessionId) {
         ExtractableResponse<Response> response = RestAssured
-            .given()
+                .given()
                 .header(X_REQUEST_ID, UUID.randomUUID().toString())
                 .header(X_XSRF_TOKEN, UUID.randomUUID().toString())
                 .cookie(AUTHORIZATION_SESSION_KEY, authSessionCookie)
                 .queryParam(REDIRECT_CODE_QUERY, redirectCode)
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
                 .body(body)
-            .when()
+                .when()
                 .post(uriPath, serviceSessionId)
-            .then()
+                .then()
                 .statusCode(status.value())
                 .extract();
 
@@ -220,12 +220,12 @@ public abstract class RequestCommon<SELF extends RequestCommon<SELF>> extends St
 
     protected ExtractableResponse<Response> provideGetConsentAuthStateRequest(String serviceSessionId) {
         return RestAssured
-            .given()
+                .given()
                 .header(X_REQUEST_ID, UUID.randomUUID().toString())
                 .header(X_XSRF_TOKEN, UUID.randomUUID().toString())
                 .cookie(AUTHORIZATION_SESSION_KEY, authSessionCookie)
                 .queryParam(REDIRECT_CODE_QUERY, redirectCode)
-            .when()
+                .when()
                 .get(GET_CONSENT_AUTH_STATE, serviceSessionId)
                 .then()
                 .statusCode(HttpStatus.OK.value())
@@ -241,9 +241,9 @@ public abstract class RequestCommon<SELF extends RequestCommon<SELF>> extends St
 
     private String getRedirectPath(String authorizationId, String redirectState) {
         return UriComponentsBuilder.fromPath(cookieProperties.getRedirectPathTemplate())
-                       .buildAndExpand(ImmutableMap.of(UriExpandConst.AUTHORIZATION_SESSION_ID, authorizationId,
-                                                       UriExpandConst.REDIRECT_STATE, redirectState))
-                       .toUriString();
+                .buildAndExpand(ImmutableMap.of(UriExpandConst.AUTHORIZATION_SESSION_ID, authorizationId,
+                        UriExpandConst.REDIRECT_STATE, redirectState))
+                .toUriString();
     }
 
     @SneakyThrows

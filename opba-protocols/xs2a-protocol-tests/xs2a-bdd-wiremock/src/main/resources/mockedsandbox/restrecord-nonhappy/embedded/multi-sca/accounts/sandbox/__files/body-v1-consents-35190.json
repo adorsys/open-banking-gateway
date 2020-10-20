@@ -5,7 +5,9 @@
     "name": "max.musterman2@mail.de"
   },
   "challengeData": {
-    "data": [null],
+    "data": [
+      null
+    ],
     "otpMaxLength": 6,
     "otpFormat": "integer",
     "additionalInformation": "SCA method EMAIL: tan is 123456 . sent email to max.musterman2@mail.de."

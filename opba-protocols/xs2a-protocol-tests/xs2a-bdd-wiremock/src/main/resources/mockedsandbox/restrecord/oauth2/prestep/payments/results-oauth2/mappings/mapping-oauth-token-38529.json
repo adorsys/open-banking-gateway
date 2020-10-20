@@ -1,23 +1,33 @@
 {
-  "id" : "859b6118-3455-3977-89d1-66f566647ac2",
-  "request" : {
-    "url" : "/oauth/token?code=jCLPmAuBugTKfOkmxcmGKsiq",
-    "method" : "POST"
+  "id": "859b6118-3455-3977-89d1-66f566647ac2",
+  "request": {
+    "url": "/oauth/token?code=jCLPmAuBugTKfOkmxcmGKsiq",
+    "method": "POST"
   },
-  "response" : {
-    "status" : 200,
-    "bodyFileName" : "body-oauth-token-38529.json",
-    "headers" : {
-      "Vary" : [ "Origin", "Access-Control-Request-Method", "Access-Control-Request-Headers", "Origin", "Access-Control-Request-Method", "Access-Control-Request-Headers", "Access-Control-Request-Headers", "Access-Control-Request-Method", "Origin" ],
-      "cache-control" : "no-cache, no-store, max-age=0, must-revalidate",
-      "date" : "Wed, 09 Sep 2020 12:16:54 GMT",
-      "expires" : "0",
-      "keep-alive" : "timeout=60",
-      "pragma" : "no-cache",
-      "x-content-type-options" : "nosniff",
-      "x-xss-protection" : "1; mode=block",
-      "Content-Type" : "application/json"
+  "response": {
+    "status": 200,
+    "bodyFileName": "body-oauth-token-38529.json",
+    "headers": {
+      "Vary": [
+        "Origin",
+        "Access-Control-Request-Method",
+        "Access-Control-Request-Headers",
+        "Origin",
+        "Access-Control-Request-Method",
+        "Access-Control-Request-Headers",
+        "Access-Control-Request-Headers",
+        "Access-Control-Request-Method",
+        "Origin"
+      ],
+      "cache-control": "no-cache, no-store, max-age=0, must-revalidate",
+      "date": "Wed, 09 Sep 2020 12:16:54 GMT",
+      "expires": "0",
+      "keep-alive": "timeout=60",
+      "pragma": "no-cache",
+      "x-content-type-options": "nosniff",
+      "x-xss-protection": "1; mode=block",
+      "Content-Type": "application/json"
     }
   },
-  "uuid" : "859b6118-3455-3977-89d1-66f566647ac2"
+  "uuid": "859b6118-3455-3977-89d1-66f566647ac2"
 }

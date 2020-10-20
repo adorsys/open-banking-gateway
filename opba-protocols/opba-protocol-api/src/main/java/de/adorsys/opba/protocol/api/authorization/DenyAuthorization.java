@@ -6,7 +6,7 @@ import de.adorsys.opba.protocol.api.dto.result.body.DenyAuthBody;
 
 /**
  * Called within embedded Consent authorization to deny consent.
- *
+ * <p>
  * Typical outcomes:
  * <ul>
  *     <li>

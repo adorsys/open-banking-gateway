@@ -7,6 +7,7 @@ import java.net.URI;
 
 /**
  * The result that represents that we need certain fields to be served as required inputs from the user.
+ *
  * @param <T>
  */
 public class ContextBasedValidationErrorResult<T> extends ValidationErrorResult<T, AuthStateBody> {

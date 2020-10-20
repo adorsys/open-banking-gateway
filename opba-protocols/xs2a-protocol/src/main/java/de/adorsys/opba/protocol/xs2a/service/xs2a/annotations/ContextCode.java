@@ -12,7 +12,7 @@ import static java.lang.annotation.RetentionPolicy.RUNTIME;
 /**
  * Represents the validation issue type and location in the context.
  */
-@Target({ FIELD })
+@Target({FIELD})
 @Retention(RUNTIME)
 public @interface ContextCode {
 

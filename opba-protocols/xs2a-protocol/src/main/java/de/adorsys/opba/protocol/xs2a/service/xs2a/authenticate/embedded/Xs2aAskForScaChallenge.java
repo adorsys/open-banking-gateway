@@ -35,11 +35,11 @@ public class Xs2aAskForScaChallenge extends ValidatedExecution<Xs2aContext> {
     @Override
     protected void doMockedExecution(DelegateExecution execution, Xs2aContext context) {
         ContextUtil.getAndUpdateContext(
-            execution,
-            (Xs2aContext ctx) -> {
-                ctx.setLastScaChallenge("mock-challenge");
-                ctx.setScaStatus(CONSENT_FINALIZED);
-            }
+                execution,
+                (Xs2aContext ctx) -> {
+                    ctx.setLastScaChallenge("mock-challenge");
+                    ctx.setScaStatus(CONSENT_FINALIZED);
+                }
         );
         runtimeService.trigger(execution.getId());
     }

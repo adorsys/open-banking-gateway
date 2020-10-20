@@ -56,12 +56,12 @@ public class Xs2aDenyAuthorization implements DenyAuthorization {
     }
 
     private Xs2aContext readContext(String executionId) {
-       try {
-           return (Xs2aContext) runtimeService.getVariable(executionId, CONTEXT);
-       } catch (FlowableObjectNotFoundException ex) {
-           log.info("Can't find runtime instance of execution {} - looking in history tables", executionId);
-           return readHistoricalContext(executionId);
-       }
+        try {
+            return (Xs2aContext) runtimeService.getVariable(executionId, CONTEXT);
+        } catch (FlowableObjectNotFoundException ex) {
+            log.info("Can't find runtime instance of execution {} - looking in history tables", executionId);
+            return readHistoricalContext(executionId);
+        }
     }
 
     private Xs2aContext readHistoricalContext(String executionId) {

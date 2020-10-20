@@ -14,9 +14,9 @@
     <packaging>pom</packaging>
 
     <properties>
-      <!-- Hard reference to root directory. Used to reference pmd and checkstyle files from root.
-      Change this if depth changes. Current: /open-banking-gateway/core -->
-      <main.basedir>${project.parent.basedir}</main.basedir>
+        <!-- Hard reference to root directory. Used to reference pmd and checkstyle files from root.
+        Change this if depth changes. Current: /open-banking-gateway/core -->
+        <main.basedir>${project.parent.basedir}</main.basedir>
     </properties>
 
     <modules>

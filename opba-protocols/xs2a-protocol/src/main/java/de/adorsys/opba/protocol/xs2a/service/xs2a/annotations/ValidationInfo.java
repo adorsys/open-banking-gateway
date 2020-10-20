@@ -22,7 +22,7 @@ import static java.lang.annotation.RetentionPolicy.RUNTIME;
  * This snippet will cause {@link de.adorsys.opba.protocol.xs2a.service.xs2a.validation.Xs2aValidator} to throw an
  * {@link de.adorsys.opba.protocol.api.dto.ValidationIssue} in validation phase if `recurringIndicator` is null
  */
-@Target({ FIELD })
+@Target({FIELD})
 @Retention(RUNTIME)
 public @interface ValidationInfo {
 
@@ -37,7 +37,7 @@ public @interface ValidationInfo {
     ContextCode ctx();
 
     /**
-     *  Shows the ability to control the validation mode for specific fields.
+     * Shows the ability to control the validation mode for specific fields.
      */
     ValidationMode validationMode() default ValidationMode.MANDATORY;
 }

@@ -34,13 +34,13 @@ public class WiremockPaymentRequest<SELF extends WiremockPaymentRequest<SELF>> e
     public SELF open_banking_redirect_from_aspsp_ok_webhook_called_for_api_test(int paymentCreationRequestIndex) {
         extractRedirectOkUriSentByOpbaFromWiremock(paymentCreationRequestIndex);
         ExtractableResponse<Response> response = withSignatureHeaders(RestAssured
-                        .given()
-                              .cookie(AUTHORIZATION_SESSION_KEY, authSessionCookie))
-                        .when()
-                            .get(redirectOkUri)
-                        .then()
-                             .statusCode(HttpStatus.SEE_OTHER.value())
-                             .extract();
+                .given()
+                .cookie(AUTHORIZATION_SESSION_KEY, authSessionCookie))
+                .when()
+                .get(redirectOkUri)
+                .then()
+                .statusCode(HttpStatus.SEE_OTHER.value())
+                .extract();
 
         assertThat(LocationExtractorUtil.getLocation(response)).contains("pis").contains("consent-result");
 
@@ -50,12 +50,12 @@ public class WiremockPaymentRequest<SELF extends WiremockPaymentRequest<SELF>> e
     public SELF open_banking_redirect_from_aspsp_ok_webhook_called_for_api_test_without_cookie_unauthorized() {
         extractRedirectOkUriSentByOpbaFromWiremock();
         withSignatureHeaders(RestAssured
-                                        .given())
-                                        .when()
-                                                .get(redirectOkUri)
-                                        .then()
-                                                .statusCode(HttpStatus.UNAUTHORIZED.value())
-                                                .extract();
+                .given())
+                .when()
+                .get(redirectOkUri)
+                .then()
+                .statusCode(HttpStatus.UNAUTHORIZED.value())
+                .extract();
 
         return self();
     }
@@ -64,11 +64,11 @@ public class WiremockPaymentRequest<SELF extends WiremockPaymentRequest<SELF>> e
         extractRedirectOkUriSentByOpbaFromWiremock();
         ExtractableResponse<Response> response = RestAssured
                 .given()
-                    .cookie(AUTHORIZATION_SESSION_KEY, authSessionCookie)
+                .cookie(AUTHORIZATION_SESSION_KEY, authSessionCookie)
                 .when()
-                    .get(redirectOkUri + "&code=" + code)
+                .get(redirectOkUri + "&code=" + code)
                 .then()
-                    .statusCode(HttpStatus.SEE_OTHER.value())
+                .statusCode(HttpStatus.SEE_OTHER.value())
                 .extract();
 
         updateRedirectCode(response);

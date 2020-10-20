@@ -33,8 +33,8 @@ public class Xs2aAskForPassword extends ValidatedExecution<Xs2aContext> {
     @Override
     protected void doMockedExecution(DelegateExecution execution, Xs2aContext context) {
         ContextUtil.getAndUpdateContext(
-            execution,
-            (Xs2aContext ctx) -> ctx.setPsuPassword("mock-password")
+                execution,
+                (Xs2aContext ctx) -> ctx.setPsuPassword("mock-password")
         );
         runtimeService.trigger(execution.getId());
     }

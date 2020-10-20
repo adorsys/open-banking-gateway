@@ -274,7 +274,7 @@ class HbciStubGenerator {
             double logValue = Math.log10(value);
             long min = (long) Math.pow(10.0, (int) logValue);
             long max = (long) Math.pow(10.0, (int) (logValue + 1.0));
-            return min + (long)(RANDOM.nextDouble() * (max - min));
+            return min + (long) (RANDOM.nextDouble() * (max - min));
         } catch (NumberFormatException ex) {
             return null;
         }
@@ -322,7 +322,7 @@ class HbciStubGenerator {
 
                 // End loop on 1st element
                 result = msg;
-               // break;
+                // break;
             } catch (RuntimeException ex) {
                 log.info("Fail at {} due to {}", msgName, ex.getMessage().substring(0, Math.min(50, ex.getMessage().length())));
             }

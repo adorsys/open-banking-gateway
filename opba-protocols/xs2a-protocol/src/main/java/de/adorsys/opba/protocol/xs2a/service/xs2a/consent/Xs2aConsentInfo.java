@@ -68,7 +68,7 @@ public class Xs2aConsentInfo {
      */
     public boolean isZeroScaAvailable(Xs2aContext ctx) {
         return null == ctx.getAvailableSca()
-                       || null != ctx.getAvailableSca() && ctx.getAvailableSca().isEmpty();
+                || null != ctx.getAvailableSca() && ctx.getAvailableSca().isEmpty();
     }
 
     /**

@@ -78,7 +78,9 @@
                 <version>${spring-boot.version}</version>
                 <configuration>
                     <agent>
-                        <aspectj>${user.home}/.m2/repository/org/aspectj/aspectjweaver/${aspectj.version}/aspectjweaver-${aspectj.version}.jar</aspectj>
+                        <aspectj>
+                            ${user.home}/.m2/repository/org/aspectj/aspectjweaver/${aspectj.version}/aspectjweaver-${aspectj.version}.jar
+                        </aspectj>
                     </agent>
                 </configuration>
                 <dependencies>
@@ -93,7 +95,9 @@
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-surefire-plugin</artifactId>
                 <configuration>
-                    <argLine>-javaagent:${user.home}/.m2/repository/org/aspectj/aspectjweaver/${aspectj.version}/aspectjweaver-${aspectj.version}.jar</argLine>
+                    <argLine>
+                        -javaagent:${user.home}/.m2/repository/org/aspectj/aspectjweaver/${aspectj.version}/aspectjweaver-${aspectj.version}.jar
+                    </argLine>
                 </configuration>
             </plugin>
             <plugin>

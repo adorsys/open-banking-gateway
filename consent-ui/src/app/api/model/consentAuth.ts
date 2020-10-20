@@ -9,59 +9,60 @@
  * https://openapi-generator.tech
  * Do not edit the class manually.
  */
-import { PeriodicPayment } from './periodicPayment';
-import { ScaStatus } from './scaStatus';
-import { AisConsentRequest } from './aisConsentRequest';
-import { AuthViolation } from './authViolation';
-import { BulkPayment } from './bulkPayment';
-import { ScaUserData } from './scaUserData';
-import { SinglePayment } from './singlePayment';
-import { AccountDetails } from './accountDetails';
+import {PeriodicPayment} from './periodicPayment';
+import {ScaStatus} from './scaStatus';
+import {AisConsentRequest} from './aisConsentRequest';
+import {AuthViolation} from './authViolation';
+import {BulkPayment} from './bulkPayment';
+import {ScaUserData} from './scaUserData';
+import {SinglePayment} from './singlePayment';
+import {AccountDetails} from './accountDetails';
 
 
 /**
  * Transport object for consent API request response
  */
 export interface ConsentAuth {
-    action?: ConsentAuth.ActionEnum;
-    violations?: Array<AuthViolation>;
-    accounts?: Array<AccountDetails>;
-    authMessageTemplate?: string;
-    /**
-     * An identification provided by the ASPSP for the later identification of the authentication method selection.
-     */
-    authenticationMethodId?: string;
-    bulkPayment?: BulkPayment;
-    consent?: AisConsentRequest;
-    /**
-     * Name of current bank
-     */
-    bankName?: string;
-    /**
-     * Name of current fintech
-     */
-    fintechName?: string;
-    /**
-     * This is the CSRF-State String of the ConsentAuthorisationApi. It is a transient reference of the consent request. It encodes a key that is used to encrypt information stored in the corresponding ConsentAuthSessionCookie.
-     */
-    consentAuthState?: string;
-    periodicPayment?: PeriodicPayment;
-    psuCorporateId?: string;
-    psuId?: string;
-    /**
-     * List of sca methods for selection if necessary.
-     */
-    scaMethods?: Array<ScaUserData>;
-    scaStatus?: ScaStatus;
-    singlePayment?: SinglePayment;
+  action?: ConsentAuth.ActionEnum;
+  violations?: Array<AuthViolation>;
+  accounts?: Array<AccountDetails>;
+  authMessageTemplate?: string;
+  /**
+   * An identification provided by the ASPSP for the later identification of the authentication method selection.
+   */
+  authenticationMethodId?: string;
+  bulkPayment?: BulkPayment;
+  consent?: AisConsentRequest;
+  /**
+   * Name of current bank
+   */
+  bankName?: string;
+  /**
+   * Name of current fintech
+   */
+  fintechName?: string;
+  /**
+   * This is the CSRF-State String of the ConsentAuthorisationApi. It is a transient reference of the consent request. It encodes a key that is used to encrypt information stored in the corresponding ConsentAuthSessionCookie.
+   */
+  consentAuthState?: string;
+  periodicPayment?: PeriodicPayment;
+  psuCorporateId?: string;
+  psuId?: string;
+  /**
+   * List of sca methods for selection if necessary.
+   */
+  scaMethods?: Array<ScaUserData>;
+  scaStatus?: ScaStatus;
+  singlePayment?: SinglePayment;
 }
+
 export namespace ConsentAuth {
-    export type ActionEnum = 'LIST_ACCOUNTS' | 'LIST_TRANSACTIONS' | 'INITIATE_PAYMENT';
-    export const ActionEnum = {
-        LISTACCOUNTS: 'LIST_ACCOUNTS' as ActionEnum,
-        LISTTRANSACTIONS: 'LIST_TRANSACTIONS' as ActionEnum,
-        INITIATEPAYMENT: 'INITIATE_PAYMENT' as ActionEnum
-    };
+  export type ActionEnum = 'LIST_ACCOUNTS' | 'LIST_TRANSACTIONS' | 'INITIATE_PAYMENT';
+  export const ActionEnum = {
+    LISTACCOUNTS: 'LIST_ACCOUNTS' as ActionEnum,
+    LISTTRANSACTIONS: 'LIST_TRANSACTIONS' as ActionEnum,
+    INITIATEPAYMENT: 'INITIATE_PAYMENT' as ActionEnum
+  };
 }
 
 

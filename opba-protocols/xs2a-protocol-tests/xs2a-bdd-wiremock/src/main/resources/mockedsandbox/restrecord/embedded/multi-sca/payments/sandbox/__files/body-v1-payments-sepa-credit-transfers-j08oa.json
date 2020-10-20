@@ -1,1 +1,17 @@
-{"debtorAccount":{"iban":"DE38760700240320465700","currency":"EUR"},"instructedAmount":{"currency":"EUR","amount":"12.34"},"creditorAccount":{"iban":"AL90208110080000001039531801","currency":"EUR"},"creditorName":"peter","remittanceInformationUnstructured":"test transfer","transactionStatus":"ACSC"}
+{
+  "debtorAccount": {
+    "iban": "DE38760700240320465700",
+    "currency": "EUR"
+  },
+  "instructedAmount": {
+    "currency": "EUR",
+    "amount": "12.34"
+  },
+  "creditorAccount": {
+    "iban": "AL90208110080000001039531801",
+    "currency": "EUR"
+  },
+  "creditorName": "peter",
+  "remittanceInformationUnstructured": "test transfer",
+  "transactionStatus": "ACSC"
+}

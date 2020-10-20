@@ -182,7 +182,7 @@ public class JsonTemplateInterpolation {
             );
         }
         result.propagateValue(result.getPath() + ".MsgHead.MsgRef.dialogid", context.getDialogId(), true, true);
-        result.propagateValue(result.getPath() + ".MsgHead.MsgRef.msgnum",  message.getValueOfDE(message.getPath() + ".MsgHead.msgnum"), true, true);
+        result.propagateValue(result.getPath() + ".MsgHead.MsgRef.msgnum", message.getValueOfDE(message.getPath() + ".MsgHead.msgnum"), true, true);
         result.validate();
         result.enumerateSegs(1, SyntaxElement.ALLOW_OVERWRITE);
         result.autoSetMsgSize();
@@ -222,7 +222,8 @@ public class JsonTemplateInterpolation {
     @SneakyThrows
     public Map<String, String> interpolate(String templateResourcePath, HbciSandboxContext context) {
         String templateToParse = Resources.asByteSource(Resources.getResource(templateResourcePath)).asCharSource(StandardCharsets.UTF_8).read();
-        Map<String, String> template = mapper.readValue(templateToParse,  new TypeReference<Map<String, String>>() { });
+        Map<String, String> template = mapper.readValue(templateToParse, new TypeReference<Map<String, String>>() {
+        });
         List<Entry> mt940TransactionLoop = extractAndRemoveFromTemplateTransactionLoopMt940Entries(template);
         List<Entry> accountLoop = extractAndRemoveFromTemplateAccountLoopEntries(template);
         List<Entry> scaLoop = extractAndRemoveFromTemplateScaLoopEntries(template);
@@ -405,7 +406,7 @@ public class JsonTemplateInterpolation {
                     .filter(it -> it.matches("GV\\.KUmsZeit\\d+\\.KTV\\.number"))
                     .findFirst()
                     .orElseThrow(() -> new IllegalStateException("No account number for transaction list provided in request"));
-            accNumber =  context.getRequest().getData().get(accKey);
+            accNumber = context.getRequest().getData().get(accKey);
         }
 
         for (int pos = 0; pos < user.getAccounts().size(); ++pos) {

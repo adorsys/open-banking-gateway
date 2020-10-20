@@ -17,10 +17,10 @@ public class ReportConsentAuthorizationDenied extends ValidatedExecution<Xs2aCon
     @Override
     protected void doRealExecution(DelegateExecution execution, Xs2aContext context) {
         redirectExecutor.redirect(
-            execution,
-            context,
-            context.getFintechRedirectUriNok(),
-            context.getFintechRedirectUriNok(),
-            redirect -> new ConsentAcquired(redirect.build()));
+                execution,
+                context,
+                context.getFintechRedirectUriNok(),
+                context.getFintechRedirectUriNok(),
+                redirect -> new ConsentAcquired(redirect.build()));
     }
 }

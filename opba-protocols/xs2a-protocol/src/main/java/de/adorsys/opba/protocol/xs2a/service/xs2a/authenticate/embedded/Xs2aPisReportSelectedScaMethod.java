@@ -62,10 +62,10 @@ public class Xs2aPisReportSelectedScaMethod extends ValidatedExecution<Xs2aPisCo
 
     @Service
     public static class Extractor extends PathHeadersBodyMapperTemplate<Xs2aPisContext,
-                                                                               Xs2aAuthorizedPaymentParameters,
-                                                                               Xs2aStandardHeaders,
-                                                                               SelectScaChallengeBody,
-                                                                               SelectPsuAuthenticationMethod> {
+            Xs2aAuthorizedPaymentParameters,
+            Xs2aStandardHeaders,
+            SelectScaChallengeBody,
+            SelectPsuAuthenticationMethod> {
 
         public Extractor(
                 DtoMapper<Xs2aContext, SelectScaChallengeBody> toValidatableBody,

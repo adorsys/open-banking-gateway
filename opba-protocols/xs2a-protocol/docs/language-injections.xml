@@ -1,21 +1,25 @@
 <LanguageInjectionConfiguration>
-  <injection language="SpEL" injector-id="xml">
-    <display-name>callActivity/@calledElement</display-name>
-    <value-pattern>\$(.+)</value-pattern>
-    <place><![CDATA[xmlAttribute().withLocalName(string().equalTo("calledElement")).withParent(xmlTag().withLocalName(string().equalTo("callActivity")).withNamespace(string().equalTo("http://www.omg.org/spec/BPMN/20100524/MODEL")))]]></place>
-  </injection>
-  <injection language="SpEL" injector-id="xml">
-    <display-name>conditionExpression</display-name>
-    <place><![CDATA[xmlTag().withLocalName(string().equalTo("conditionExpression")).withNamespace(string().equalTo("http://www.omg.org/spec/BPMN/20100524/MODEL"))]]></place>
-  </injection>
-  <injection language="SpEL" injector-id="xml">
-    <display-name>errorEventDefinition/@delegateExpression</display-name>
-    <value-pattern>\$\{(.+)}</value-pattern>
-    <place><![CDATA[xmlAttribute().withLocalName(string().equalTo("delegateExpression")).withNamespace(string().equalTo("http://flowable.org/bpmn")).withParent(xmlTag().withLocalName(string().equalTo("errorEventDefinition")).withNamespace(string().equalTo("http://www.omg.org/spec/BPMN/20100524/MODEL")))]]></place>
-  </injection>
-  <injection language="spring-bean-name" injector-id="xml">
-    <display-name>serviceTask/@delegateExpression</display-name>
-    <value-pattern>[$#]\{(.*?)\}</value-pattern>
-    <place><![CDATA[xmlAttribute().withLocalName(string().equalTo("delegateExpression")).withNamespace(string().equalTo("http://flowable.org/bpmn")).withParent(xmlTag().withLocalName(string().equalTo("serviceTask")).withNamespace(string().equalTo("http://www.omg.org/spec/BPMN/20100524/MODEL")))]]></place>
-  </injection>
+    <injection language="SpEL" injector-id="xml">
+        <display-name>callActivity/@calledElement</display-name>
+        <value-pattern>\$(.+)</value-pattern>
+        <place>
+            <![CDATA[xmlAttribute().withLocalName(string().equalTo("calledElement")).withParent(xmlTag().withLocalName(string().equalTo("callActivity")).withNamespace(string().equalTo("http://www.omg.org/spec/BPMN/20100524/MODEL")))]]></place>
+    </injection>
+    <injection language="SpEL" injector-id="xml">
+        <display-name>conditionExpression</display-name>
+        <place>
+            <![CDATA[xmlTag().withLocalName(string().equalTo("conditionExpression")).withNamespace(string().equalTo("http://www.omg.org/spec/BPMN/20100524/MODEL"))]]></place>
+    </injection>
+    <injection language="SpEL" injector-id="xml">
+        <display-name>errorEventDefinition/@delegateExpression</display-name>
+        <value-pattern>\$\{(.+)}</value-pattern>
+        <place>
+            <![CDATA[xmlAttribute().withLocalName(string().equalTo("delegateExpression")).withNamespace(string().equalTo("http://flowable.org/bpmn")).withParent(xmlTag().withLocalName(string().equalTo("errorEventDefinition")).withNamespace(string().equalTo("http://www.omg.org/spec/BPMN/20100524/MODEL")))]]></place>
+    </injection>
+    <injection language="spring-bean-name" injector-id="xml">
+        <display-name>serviceTask/@delegateExpression</display-name>
+        <value-pattern>[$#]\{(.*?)\}</value-pattern>
+        <place>
+            <![CDATA[xmlAttribute().withLocalName(string().equalTo("delegateExpression")).withNamespace(string().equalTo("http://flowable.org/bpmn")).withParent(xmlTag().withLocalName(string().equalTo("serviceTask")).withNamespace(string().equalTo("http://www.omg.org/spec/BPMN/20100524/MODEL")))]]></place>
+    </injection>
 </LanguageInjectionConfiguration>

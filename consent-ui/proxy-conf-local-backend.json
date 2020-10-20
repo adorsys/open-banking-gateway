@@ -7,6 +7,8 @@
       "^/embedded-server/": ""
     },
     "logLevel": "debug",
-    "headers": { "Access-Control-Expose-Headers": "*" }
+    "headers": {
+      "Access-Control-Expose-Headers": "*"
+    }
   }
 }

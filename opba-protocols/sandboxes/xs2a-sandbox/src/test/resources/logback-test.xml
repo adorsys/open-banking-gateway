@@ -5,9 +5,9 @@
         </encoder>
     </appender>
 
-    <variable name="SANDBOX_LOG_LEVEL" value="${SANDBOX_LOG_LEVEL:-INFO}" />
+    <variable name="SANDBOX_LOG_LEVEL" value="${SANDBOX_LOG_LEVEL:-INFO}"/>
 
     <root level="${SANDBOX_LOG_LEVEL}">
-        <appender-ref ref="STDOUT" />
+        <appender-ref ref="STDOUT"/>
     </root>
 </configuration>

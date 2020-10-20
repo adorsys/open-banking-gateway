@@ -16,6 +16,7 @@ import ActionEnum = ConsentAuth.ActionEnum;
 export class ConsentInitiateComponent implements OnInit {
   private redirectCode: string;
   private route: ActivatedRouteSnapshot;
+
   constructor(
     private activatedRoute: ActivatedRoute,
     private router: Router,

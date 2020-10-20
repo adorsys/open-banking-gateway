@@ -29,13 +29,13 @@ public class HbciAuthorizationContinuationService {
     private final DtoMapper<Set<ValidationIssue>, Set<ValidationError>> errorMapper;
 
     public <T> CompletableFuture<Result<T>> handleAuthorizationProcessContinuation(
-        String executionId,
-        Function<CompletableFuture<Result<T>>, HbciOutcomeMapper<T>> mapperFactory
+            String executionId,
+            Function<CompletableFuture<Result<T>>, HbciOutcomeMapper<T>> mapperFactory
     ) {
         CompletableFuture<Result<T>> result = new CompletableFuture<>();
         registrar.addHandler(
-            runtimeService.createExecutionQuery().executionId(executionId).singleResult().getRootProcessInstanceId(),
-            mapperFactory.apply(result)
+                runtimeService.createExecutionQuery().executionId(executionId).singleResult().getRootProcessInstanceId(),
+                mapperFactory.apply(result)
         );
 
         runtimeService.trigger(executionId);
@@ -45,8 +45,8 @@ public class HbciAuthorizationContinuationService {
 
     public CompletableFuture<Result<UpdateAuthBody>> handleAuthorizationProcessContinuation(String executionId) {
         return handleAuthorizationProcessContinuation(
-            executionId,
-            res -> new HbciOutcomeMapper<>(res, resp -> new UpdateAuthBody(), errorMapper)
+                executionId,
+                res -> new HbciOutcomeMapper<>(res, resp -> new UpdateAuthBody(), errorMapper)
         );
     }
 }

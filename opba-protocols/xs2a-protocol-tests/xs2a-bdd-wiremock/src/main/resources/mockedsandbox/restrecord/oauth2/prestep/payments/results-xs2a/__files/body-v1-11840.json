@@ -1,1 +1,9 @@
-{"tppMessages":[{"category":"ERROR","code":"UNAUTHORIZED","text":"Please retrieve token first from http://localhost:20015/oauth/authorization-server"}]}
+{
+  "tppMessages": [
+    {
+      "category": "ERROR",
+      "code": "UNAUTHORIZED",
+      "text": "Please retrieve token first from http://localhost:20015/oauth/authorization-server"
+    }
+  ]
+}

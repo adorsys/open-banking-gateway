@@ -46,10 +46,10 @@ class BasicTest extends BaseMockitoTest {
         assertThat(SandboxApp.values()).extracting(it -> ctx.getLoader().get(it)).isNotNull();
         // Dockerized UI can reach backend
         given().when()
-            .post("http://localhost:4400/oba-proxy/ais/FOO=BAR/authorisation/12345/login?pin=12345")
-            .then()
-            .body(containsString("Internal Server Error"))
-            .statusCode(500);
+                .post("http://localhost:4400/oba-proxy/ais/FOO=BAR/authorisation/12345/login?pin=12345")
+                .then()
+                .body(containsString("Internal Server Error"))
+                .statusCode(500);
     }
 
     /**
@@ -77,8 +77,8 @@ class BasicTest extends BaseMockitoTest {
     @EnabledIfSystemProperty(named = "START_SANDBOX", matches = TRUE_BOOL)
     void startTheSandboxInDocker() {
         DockerComposeContainer environment = new DockerComposeContainer(new File("./../../../how-to-start-with-project/xs2a-sandbox-only/docker-compose.yml"))
-                                                     .withLocalCompose(true)
-                                                     .withTailChildContainers(true);
+                .withLocalCompose(true)
+                .withTailChildContainers(true);
         environment.start();
 
         // Loop forever.
@@ -94,8 +94,8 @@ class BasicTest extends BaseMockitoTest {
     @EnabledIfSystemProperty(named = "START_SANDBOX", matches = TRUE_BOOL)
     void startTheWiremockInDocker() {
         DockerComposeContainer environment = new DockerComposeContainer(new File("./src/main/resources/docker-compose-with-wiremock.yml"))
-                                                     .withLocalCompose(true)
-                                                     .withTailChildContainers(true);
+                .withLocalCompose(true)
+                .withTailChildContainers(true);
         environment.start();
 
         // Loop forever.

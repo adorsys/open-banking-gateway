@@ -14,10 +14,10 @@ import org.springframework.stereotype.Service;
  */
 @Service
 public class AisConsentInitiateExtractor extends HeadersBodyMapperTemplate<
-    Xs2aAisContext,
-    ConsentInitiateHeaders,
-    AisConsentInitiateBody,
-    Consents> {
+        Xs2aAisContext,
+        ConsentInitiateHeaders,
+        AisConsentInitiateBody,
+        Consents> {
 
     public AisConsentInitiateExtractor(
             DtoMapper<Xs2aAisContext, AisConsentInitiateBody> toValidatableBody,

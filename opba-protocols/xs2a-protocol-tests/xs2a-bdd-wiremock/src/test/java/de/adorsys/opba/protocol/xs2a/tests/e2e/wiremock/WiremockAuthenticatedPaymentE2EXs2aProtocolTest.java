@@ -68,7 +68,7 @@ public class WiremockAuthenticatedPaymentE2EXs2aProtocolTest extends SpringScena
                 .fintech_calls_initiate_payment_for_anton_brueckner();
 
         then()
-            .user_logged_in_into_opba_as_anonymous_user_with_credentials_using_fintech_supplied_url_is_forbidden();
+                .user_logged_in_into_opba_as_anonymous_user_with_credentials_using_fintech_supplied_url_is_forbidden();
     }
 
     @ParameterizedTest

@@ -18,7 +18,7 @@ import java.util.concurrent.ThreadFactory;
  * because URL is shared system class.
  * 2. To provide access to ClassLoaders that are created by Spring - to be able to manipulate child Spring
  * application state.
- *
+ * <p>
  * TODO: Most probably it should be removed and all stuff should be done using custom Thread class.
  */
 @Slf4j
@@ -56,7 +56,7 @@ class SandboxAppsThreadFactory implements ThreadFactory {
 
             super.setContextClassLoader(
                     new URLClassLoader(
-                            new URL[] {/* Here you can add extra jars */ },
+                            new URL[]{/* Here you can add extra jars */},
                             loader
                     )
             );

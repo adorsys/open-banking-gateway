@@ -94,9 +94,9 @@ public class Xs2aGetPaymentInfoEntrypoint implements GetPaymentInfoState {
 
     @Service
     public static class Extractor extends PathHeadersMapperTemplate<
-                Xs2aPisContext,
-                PaymentInfoParameters,
-                PaymentInfoHeaders> {
+            Xs2aPisContext,
+            PaymentInfoParameters,
+            PaymentInfoHeaders> {
 
         public Extractor(
                 DtoMapper<Xs2aPisContext, PaymentInfoHeaders> toHeaders,

@@ -97,7 +97,8 @@ public class HbciAccountListing extends ValidatedExecution<AccountListHbciContex
         return account;
     }
 
-    @SuppressWarnings("PMD.EmptyCatchBlock") // IbanFormatException is skippable exception if account IBAN can't be calculated
+    @SuppressWarnings("PMD.EmptyCatchBlock")
+    // IbanFormatException is skippable exception if account IBAN can't be calculated
     private void tryToParseIban(BankAccount account) {
         if (Strings.isNullOrEmpty(account.getCountry())) {
             return;

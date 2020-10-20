@@ -57,6 +57,7 @@ public class HbciUpdateAuthorization implements UpdateAuthorization {
             context.setPsuId((String) extras.get(ExtraAuthRequestParam.PSU_ID));
         }
     }
+
     private void updateWithScaChallenges(HbciContext context, Map<String, String> scaChallenges) {
         if (null == scaChallenges) {
             return;

@@ -38,10 +38,10 @@ import static org.springframework.boot.test.context.SpringBootTest.WebEnvironmen
 @SuppressWarnings("CPD-START") // Same steps are used, but that's fine for readability
 @EnabledIfEnvironmentVariable(named = ENABLE_HEAVY_TESTS, matches = TRUE_BOOL)
 @EnableAutoConfiguration(exclude = {
-    HypermediaAutoConfiguration.class,
-    Xs2aCmsAutoConfiguration.class,
-    ManagementWebSecurityAutoConfiguration.class,
-    SecurityAutoConfiguration.class,
+        HypermediaAutoConfiguration.class,
+        Xs2aCmsAutoConfiguration.class,
+        ManagementWebSecurityAutoConfiguration.class,
+        SecurityAutoConfiguration.class,
 })
 @ExtendWith(SeleniumExtension.class)
 @Transactional(propagation = Propagation.NOT_SUPPORTED)

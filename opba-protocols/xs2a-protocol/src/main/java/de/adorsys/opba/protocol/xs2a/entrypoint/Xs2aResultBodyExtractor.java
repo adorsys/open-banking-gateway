@@ -42,6 +42,7 @@ public class Xs2aResultBodyExtractor {
     @Mapper(componentModel = SPRING_KEYWORD, implementationPackage = XS2A_MAPPERS_PACKAGE)
     public interface Xs2aToFacadeMapper {
         AccountListBody map(AccountListHolder accountList);
+
         TransactionsResponseBody map(TransactionsReport transactions);
 
         @Mapping(source = "singlePaymentInitiationBody.creditorAddress.townName", target = "creditorAddress.city")
@@ -61,7 +62,7 @@ public class Xs2aResultBodyExtractor {
 
         default void append(StringBuilder builder, String referenceType) {
             if (Strings.isNullOrEmpty(referenceType)) {
-               return;
+                return;
             }
 
             builder.append(referenceType);

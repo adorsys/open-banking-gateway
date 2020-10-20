@@ -63,7 +63,7 @@ public class PaymentStagesCommonUtil {
         Instant xTimestampUtc = Instant.now();
 
         return RestAssured
-            .given()
+                .given()
                 .header(BANK_ID, bankId)
                 .header(FINTECH_REDIRECT_URL_OK, FINTECH_REDIR_OK)
                 .header(FINTECH_REDIRECT_URL_NOK, FINTECH_REDIR_NOK)
@@ -86,7 +86,7 @@ public class PaymentStagesCommonUtil {
         Instant xTimestampUtc = Instant.now();
 
         return RestAssured
-            .given()
+                .given()
                 .header(BANK_ID, bankId)
                 .header(SERVICE_SESSION_PASSWORD, SESSION_PASSWORD)
                 .header(FINTECH_USER_ID, fintechUserId)

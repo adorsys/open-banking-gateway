@@ -34,6 +34,7 @@ export interface Favicon {
 
 export interface CSSVariables {
   [key: string]: string;
+
   colorPrimary?: string;
   fontFamily?: string;
   bodyBG?: string;

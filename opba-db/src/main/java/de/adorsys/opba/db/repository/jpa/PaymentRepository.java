@@ -17,6 +17,7 @@ import java.util.UUID;
 public interface PaymentRepository extends JpaRepository<Payment, Long> {
 
     List<Payment> findByServiceSessionIdOrderByModifiedAtDesc(UUID serviceSessionId);
+
     Collection<Payment> findByPsu(Psu owner);
 
     @Modifying

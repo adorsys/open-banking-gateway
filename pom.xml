@@ -125,7 +125,8 @@
         <datasafe.version>1.0.0.1</datasafe.version>
         <liquibase.version>3.8.0</liquibase.version>
         <mapstruct.version>1.3.1.Final</mapstruct.version>
-        <hibernate.version>5.4.9.Final</hibernate.version> <!-- Currently only for bytecode enhancer plugin, can't inherit Spring BOM -->
+        <hibernate.version>5.4.9.Final
+        </hibernate.version> <!-- Currently only for bytecode enhancer plugin, can't inherit Spring BOM -->
         <jjwt.version>0.11.1</jjwt.version>
         <nimbus.version>8.18</nimbus.version>
         <javapoet.version>1.13.0</javapoet.version>

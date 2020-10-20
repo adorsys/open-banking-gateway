@@ -1,11 +1,11 @@
 {
-  "id" : "48c14db7-d90a-3271-a407-31626f248723",
+  "id": "48c14db7-d90a-3271-a407-31626f248723",
   "scenarioName": "Embedded max.musterman initiate payment",
   "requiredScenarioState": "PsuAuthenticated",
   "newScenarioState": "ScaMethodSelected",
-  "request" : {
-    "url" : "/v1/payments/sepa-credit-transfers/XWE3m-MOSgiyLSbxm0gs9cTpUIYh6Zd7AGdfJFpzoL6i92f92FPqxs78swMVBY91cgftJbETkzvNvu5mZQqWcA==_=_psGLvQpt9Q/authorisations/d378c26d-eec8-4612-953f-e034501c38ce",
-    "method" : "PUT",
+  "request": {
+    "url": "/v1/payments/sepa-credit-transfers/XWE3m-MOSgiyLSbxm0gs9cTpUIYh6Zd7AGdfJFpzoL6i92f92FPqxs78swMVBY91cgftJbETkzvNvu5mZQqWcA==_=_psGLvQpt9Q/authorisations/d378c26d-eec8-4612-953f-e034501c38ce",
+    "method": "PUT",
     "headers": {
       "X-Request-ID": {
         "matches": "[0-9a-zA-z\\-]+"
@@ -17,23 +17,29 @@
         "equalTo": "application/json; charset=UTF-8"
       }
     },
-    "bodyPatterns" : [ {
-      "equalToJson" : "{\"authenticationMethodId\":\"AeuDkGzDQtAh8u3eHYPWqw\"}",
-      "ignoreArrayOrder" : true,
-      "ignoreExtraElements" : true
-    } ]
+    "bodyPatterns": [
+      {
+        "equalToJson": "{\"authenticationMethodId\":\"AeuDkGzDQtAh8u3eHYPWqw\"}",
+        "ignoreArrayOrder": true,
+        "ignoreExtraElements": true
+      }
+    ]
   },
-  "response" : {
-    "status" : 200,
-    "bodyFileName" : "body-v1-payments-sepa-credit-transfers-authorisations-W96vG.json",
-    "headers" : {
-      "Vary" : [ "Origin", "Access-Control-Request-Method", "Access-Control-Request-Headers" ],
-      "Aspsp-Sca-Approach" : "EMBEDDED",
-      "X-Request-Id" : "a8b24683-242a-428b-8295-2f4805bb0a30",
-      "Content-Type" : "application/json",
-      "Date" : "Wed, 29 Jul 2020 08:48:46 GMT",
-      "Keep-Alive" : "timeout=60"
+  "response": {
+    "status": 200,
+    "bodyFileName": "body-v1-payments-sepa-credit-transfers-authorisations-W96vG.json",
+    "headers": {
+      "Vary": [
+        "Origin",
+        "Access-Control-Request-Method",
+        "Access-Control-Request-Headers"
+      ],
+      "Aspsp-Sca-Approach": "EMBEDDED",
+      "X-Request-Id": "a8b24683-242a-428b-8295-2f4805bb0a30",
+      "Content-Type": "application/json",
+      "Date": "Wed, 29 Jul 2020 08:48:46 GMT",
+      "Keep-Alive": "timeout=60"
     }
   },
-  "uuid" : "48c14db7-d90a-3271-a407-31626f248723"
+  "uuid": "48c14db7-d90a-3271-a407-31626f248723"
 }

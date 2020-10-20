@@ -13,6 +13,8 @@ import java.util.Set;
 public interface HbciSandboxPaymentRepository extends JpaRepository<HbciSandboxPayment, Long> {
 
     Optional<HbciSandboxPayment> findByOwnerLoginAndOrderReference(String ownerLogin, String orderReference);
+
     List<HbciSandboxPayment> findByStatus(PaymentStatus paymentStatus);
+
     List<HbciSandboxPayment> findByOwnerLoginAndStatusInOrderByCreatedAtDesc(String ownerLogin, Set<PaymentStatus> statuses);
 }

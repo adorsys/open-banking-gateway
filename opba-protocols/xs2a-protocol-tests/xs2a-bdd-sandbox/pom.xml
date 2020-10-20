@@ -13,9 +13,9 @@
     <name>opba-protocols/xs2a-protocol-tests/xs2a-bdd-sandbox</name>
 
     <properties>
-      <!-- Hard reference to root directory. Used to reference pmd and checkstyle files from root.
-      Change this if depth changes. Current: /open-banking-gateway/opba-protocols/xs2a-protocol-tests/xs2a-bdd-sandbox -->
-      <main.basedir>${project.parent.parent.parent.basedir}</main.basedir>
+        <!-- Hard reference to root directory. Used to reference pmd and checkstyle files from root.
+        Change this if depth changes. Current: /open-banking-gateway/opba-protocols/xs2a-protocol-tests/xs2a-bdd-sandbox -->
+        <main.basedir>${project.parent.parent.parent.basedir}</main.basedir>
     </properties>
 
     <dependencies>

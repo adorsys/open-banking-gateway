@@ -34,7 +34,9 @@
   "response": {
     "status": 201,
     "bodyFileName": "body-v1-27380.json",
-    "transformers": ["response-template"],
+    "transformers": [
+      "response-template"
+    ],
     "headers": {
       "Vary": [
         "Origin",

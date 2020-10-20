@@ -19,7 +19,7 @@ import java.util.List;
 /**
  * This class is to share and join two worlds of Flowable (as we don't have OSGi here so either can be picked by configuration scan)
  * - Xs2a/HBCI Production Flowable and Hbci-Sandbox Flowable. However as these are tests, some hacks are acceptable.
- *
+ * <p>
  * TODO: Improve code isolation so such hack is not used
  */
 @Configuration
@@ -30,7 +30,8 @@ public class FlowableTestConfig {
      * is determined by variable type.
      */
     @Bean
-    @Primary // Select this one instead of FlowableConfig and HbciSandboxFlowableConfig
+    @Primary
+    // Select this one instead of FlowableConfig and HbciSandboxFlowableConfig
     EngineConfigurationConfigurer<SpringProcessEngineConfiguration> hbciTestCustomizeListenerAndJsonSerializer(
             RequestScopedServicesProvider scopedServicesProvider,
             FlowableProperties flowableProperties,

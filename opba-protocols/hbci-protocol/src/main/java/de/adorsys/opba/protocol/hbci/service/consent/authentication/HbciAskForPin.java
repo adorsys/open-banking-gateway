@@ -28,8 +28,8 @@ public class HbciAskForPin extends ValidatedExecution<HbciContext> {
     @Override
     protected void doMockedExecution(DelegateExecution execution, HbciContext context) {
         ContextUtil.getAndUpdateContext(
-            execution,
-            (HbciContext ctx) -> ctx.setPsuPin("mock-password")
+                execution,
+                (HbciContext ctx) -> ctx.setPsuPin("mock-password")
         );
         runtimeService.trigger(execution.getId());
     }

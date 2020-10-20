@@ -57,7 +57,7 @@ public class HbciPaymentInitiationRequest<SELF extends HbciPaymentInitiationRequ
     }
 
     public SELF fintech_calls_payment_for_max_musterman(String resourceId, String bankId, String remittance,
-                                                               boolean authRequired, boolean instantPayment) {
+                                                        boolean authRequired, boolean instantPayment) {
         String path = instantPayment ?
                 "restrecord-input-params/hbci-max-musterman-instant-sepa-payment.json" :
                 "restrecord-input-params/hbci-max-musterman-single-sepa-payment.json";
@@ -67,9 +67,9 @@ public class HbciPaymentInitiationRequest<SELF extends HbciPaymentInitiationRequ
         ExtractableResponse<Response> response = withPaymentHeaders(MAX_MUSTERMAN, bankId, authRequired)
                 .contentType(APPLICATION_JSON_VALUE)
                 .body(body)
-            .when()
+                .when()
                 .post(PIS_SINGLE_PAYMENT_ENDPOINT, StandardPaymentProduct.SEPA_CREDIT_TRANSFERS.getSlug())
-            .then()
+                .then()
                 .statusCode(ACCEPTED.value())
                 .extract();
 

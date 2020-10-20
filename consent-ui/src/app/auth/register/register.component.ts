@@ -60,9 +60,11 @@ export class RegisterComponent implements OnInit {
   get login() {
     return this.registerForm.get('login');
   }
+
   get password() {
     return this.registerForm.get('password');
   }
+
   get confirmPassword() {
     return this.registerForm.get('confirmPassword');
   }

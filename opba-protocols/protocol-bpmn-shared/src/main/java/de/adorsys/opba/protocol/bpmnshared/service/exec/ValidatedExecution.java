@@ -12,6 +12,7 @@ import org.springframework.transaction.annotation.Transactional;
 /**
  * Class that provides generic functionality for Services that can be called in Validation({@link ContextMode#MOCK_REAL_CALLS}
  * execution mode and Real ASPSP API calls ({@link ContextMode#REAL_CALLS}.
+ *
  * @param <T> Context type
  */
 @RequiredArgsConstructor

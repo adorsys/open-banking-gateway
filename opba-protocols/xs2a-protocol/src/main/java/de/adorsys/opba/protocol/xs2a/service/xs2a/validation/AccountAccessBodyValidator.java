@@ -35,32 +35,32 @@ public class AccountAccessBodyValidator implements ConstraintValidator<ValidCons
 
     private boolean isValidDedicatedConsent(AisConsentInitiateBody.AccountAccessBody body) {
         boolean validDedicatedWithAccounts = !isEmptyAccountInfo(body)
-                                                     && Strings.isNullOrEmpty(body.getAllPsd2())
-                                                     && Strings.isNullOrEmpty(body.getAvailableAccounts());
+                && Strings.isNullOrEmpty(body.getAllPsd2())
+                && Strings.isNullOrEmpty(body.getAvailableAccounts());
 
         boolean validDedicatedWithoutAccounts = isEmptyAccountInfo(body)
-                                                        && Strings.isNullOrEmpty(body.getAllPsd2())
-                                                        && (ALL_ACCOUNTS.getApiName().equals(body.getAvailableAccounts())
-                                                                    || ALL_ACCOUNTS_WITH_BALANCES.getApiName().equals(body.getAvailableAccounts()));
+                && Strings.isNullOrEmpty(body.getAllPsd2())
+                && (ALL_ACCOUNTS.getApiName().equals(body.getAvailableAccounts())
+                || ALL_ACCOUNTS_WITH_BALANCES.getApiName().equals(body.getAvailableAccounts()));
 
         return validDedicatedWithAccounts || validDedicatedWithoutAccounts;
     }
 
     private boolean isValidGlobalConsent(AisConsentInitiateBody.AccountAccessBody body) {
         return isEmptyAccountInfo(body)
-                       && ALL_ACCOUNTS.getApiName().equals(body.getAllPsd2())
-                       && Strings.isNullOrEmpty(body.getAvailableAccounts());
+                && ALL_ACCOUNTS.getApiName().equals(body.getAllPsd2())
+                && Strings.isNullOrEmpty(body.getAvailableAccounts());
     }
 
     private boolean isValidBankOfferedConsent(AisConsentInitiateBody.AccountAccessBody body) {
         return isEmptyAccountInfo(body)
-                       && Strings.isNullOrEmpty(body.getAllPsd2())
-                       && Strings.isNullOrEmpty(body.getAvailableAccounts());
+                && Strings.isNullOrEmpty(body.getAllPsd2())
+                && Strings.isNullOrEmpty(body.getAvailableAccounts());
     }
 
     private boolean isEmptyAccountInfo(AisConsentInitiateBody.AccountAccessBody body) {
         return CollectionUtils.isEmpty(body.getAccounts())
-                       && CollectionUtils.isEmpty(body.getBalances())
-                       && CollectionUtils.isEmpty(body.getTransactions());
+                && CollectionUtils.isEmpty(body.getBalances())
+                && CollectionUtils.isEmpty(body.getTransactions());
     }
 }

@@ -38,14 +38,14 @@ public class Xs2aUpdateAuthorization implements UpdateAuthorization {
     public CompletableFuture<Result<UpdateAuthBody>> execute(ServiceContext<AuthorizationRequest> serviceContext) {
         String executionId = serviceContext.getAuthContext();
         ctxUpdater.updateContext(
-            executionId,
-            (Xs2aContext toUpdate) -> {
-                toUpdate = mapper.updateContext(toUpdate, serviceContext.getRequest());
-                updateWithExtras(toUpdate, serviceContext.getRequest().getExtras());
-                updateWithScaChallenges(toUpdate, serviceContext.getRequest().getScaAuthenticationData());
-                toUpdate = extender.extend(toUpdate, serviceContext);
-                return toUpdate;
-            }
+                executionId,
+                (Xs2aContext toUpdate) -> {
+                    toUpdate = mapper.updateContext(toUpdate, serviceContext.getRequest());
+                    updateWithExtras(toUpdate, serviceContext.getRequest().getExtras());
+                    updateWithScaChallenges(toUpdate, serviceContext.getRequest().getScaAuthenticationData());
+                    toUpdate = extender.extend(toUpdate, serviceContext);
+                    return toUpdate;
+                }
         );
 
         return continuationService.handleAuthorizationProcessContinuation(executionId);

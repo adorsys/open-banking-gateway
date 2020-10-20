@@ -42,24 +42,24 @@ public class Xs2aAccountListingService extends ValidatedExecution<Xs2aAisContext
         ValidatedQueryHeaders<Xs2aWithBalanceParameters, Xs2aWithConsentIdHeaders> params = extractor.forExecution(context);
         handler.tryActionOrHandleConsentErrors(execution, eventPublisher, () -> {
             Response<AccountListHolder> accounts = ais.getAccountList(
-                params.getHeaders().toHeaders(),
-                params.getQuery().toParameters()
+                    params.getHeaders().toHeaders(),
+                    params.getQuery().toParameters()
             );
             eventPublisher.publishEvent(
-                new ProcessResponse(execution.getRootProcessInstanceId(), execution.getId(), accounts.getBody())
+                    new ProcessResponse(execution.getRootProcessInstanceId(), execution.getId(), accounts.getBody())
             );
         });
     }
 
     @Service
     public static class Extractor extends QueryHeadersMapperTemplate<
-        Xs2aAisContext,
-        Xs2aWithBalanceParameters,
-        Xs2aWithConsentIdHeaders> {
+            Xs2aAisContext,
+            Xs2aWithBalanceParameters,
+            Xs2aWithConsentIdHeaders> {
 
         public Extractor(
-            DtoMapper<Xs2aContext, Xs2aWithConsentIdHeaders> toHeaders,
-            DtoMapper<Xs2aAisContext, Xs2aWithBalanceParameters> toQuery) {
+                DtoMapper<Xs2aContext, Xs2aWithConsentIdHeaders> toHeaders,
+                DtoMapper<Xs2aAisContext, Xs2aWithBalanceParameters> toQuery) {
             super(toHeaders, toQuery);
         }
     }

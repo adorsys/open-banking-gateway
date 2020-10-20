@@ -406,7 +406,7 @@ public class WebDriverBasedAccountInformation<SELF extends WebDriverBasedAccount
         new WebDriverWait(driver, timeout.getSeconds())
                 .until(wd ->
                         driver.getCurrentUrl().contains(urlContains)
-                        && ((JavascriptExecutor) wd).executeScript("return document.readyState").equals("complete")
+                                && ((JavascriptExecutor) wd).executeScript("return document.readyState").equals("complete")
                 );
     }
 
@@ -414,7 +414,7 @@ public class WebDriverBasedAccountInformation<SELF extends WebDriverBasedAccount
         new WebDriverWait(driver, timeout.getSeconds())
                 .until(wd ->
                         URI.create(driver.getCurrentUrl()).getPath().endsWith(urlEndsWithPath)
-                        && ((JavascriptExecutor) wd).executeScript("return document.readyState").equals("complete")
+                                && ((JavascriptExecutor) wd).executeScript("return document.readyState").equals("complete")
                 );
     }
 

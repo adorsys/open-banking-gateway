@@ -19,7 +19,8 @@ import static de.adorsys.opba.restapi.shared.HttpHeaders.COMPUTE_PSU_IP_ADDRESS;
 import static de.adorsys.opba.restapi.shared.HttpHeaders.UserAgentContext.PSU_IP_ADDRESS;
 
 @UtilityClass
-@SuppressWarnings({"checkstyle:HideUtilityClassConstructor", "PMD.AvoidUsingHardCodedIP"}) //Checkstyle doesn't recognise Lombok
+@SuppressWarnings({"checkstyle:HideUtilityClassConstructor", "PMD.AvoidUsingHardCodedIP"})
+//Checkstyle doesn't recognise Lombok
 public class StagesCommonUtil {
 
     public static final String GET_CONSENT_AUTH_STATE = "/v1/consent/{serviceSessionId}";
@@ -70,8 +71,8 @@ public class StagesCommonUtil {
         Instant xTimestampUtc = Instant.now();
 
         return headersWithoutIpAddress(fintechUserId, xRequestId, xTimestampUtc)
-                       .header(COMPUTE_PSU_IP_ADDRESS, COMPUTE_IP_ADDRESS)
-                       .header(PSU_IP_ADDRESS, IP_ADDRESS);
+                .header(COMPUTE_PSU_IP_ADDRESS, COMPUTE_IP_ADDRESS)
+                .header(PSU_IP_ADDRESS, IP_ADDRESS);
     }
 
     public static RequestSpecification withAccountsHeaders(String fintechUserId, String bankId) {
@@ -88,7 +89,7 @@ public class StagesCommonUtil {
         Instant xTimestampUtc = Instant.now();
 
         return headersWithoutIpAddress(fintechUserId, xRequestId, xTimestampUtc)
-                       .header(COMPUTE_PSU_IP_ADDRESS, COMPUTE_IP_ADDRESS);
+                .header(COMPUTE_PSU_IP_ADDRESS, COMPUTE_IP_ADDRESS);
     }
 
     public static RequestSpecification withTransactionsHeaders(String fintechUserId) {
@@ -103,8 +104,8 @@ public class StagesCommonUtil {
         Instant xTimestampUtc = Instant.now();
 
         return headersWithoutIpAddress(fintechUserId, bankId, xRequestId, xTimestampUtc)
-                       .header(COMPUTE_PSU_IP_ADDRESS, COMPUTE_IP_ADDRESS)
-                       .header(PSU_IP_ADDRESS, IP_ADDRESS);
+                .header(COMPUTE_PSU_IP_ADDRESS, COMPUTE_IP_ADDRESS)
+                .header(PSU_IP_ADDRESS, IP_ADDRESS);
     }
 
     public static RequestSpecification withDefaultHeaders(String fintechUserId) {
@@ -112,8 +113,8 @@ public class StagesCommonUtil {
         Instant xTimestampUtc = Instant.now();
 
         return headersWithoutIpAddress(fintechUserId, xRequestId, xTimestampUtc)
-                       .header(COMPUTE_PSU_IP_ADDRESS, COMPUTE_IP_ADDRESS)
-                       .header(PSU_IP_ADDRESS, IP_ADDRESS);
+                .header(COMPUTE_PSU_IP_ADDRESS, COMPUTE_IP_ADDRESS)
+                .header(PSU_IP_ADDRESS, IP_ADDRESS);
     }
 
     public static RequestSpecification withSignatureHeaders(RequestSpecification specification) {
@@ -121,9 +122,9 @@ public class StagesCommonUtil {
         Instant xTimestampUtc = Instant.now();
 
         return specification
-                       .header(FINTECH_ID, DEFAULT_FINTECH_ID)
-                       .header(X_REQUEST_ID, xRequestId.toString())
-                       .header(X_TIMESTAMP_UTC, xTimestampUtc.toString());
+                .header(FINTECH_ID, DEFAULT_FINTECH_ID)
+                .header(X_REQUEST_ID, xRequestId.toString())
+                .header(X_TIMESTAMP_UTC, xTimestampUtc.toString());
     }
 
     private static RequestSpecification headersWithoutIpAddress(String fintechUserId, UUID xRequestId, Instant xTimestampUtc) {
@@ -132,7 +133,7 @@ public class StagesCommonUtil {
 
     private static RequestSpecification headersWithoutIpAddress(String fintechUserId, String bankId, UUID xRequestId, Instant xTimestampUtc) {
         return RestAssured
-            .given()
+                .given()
                 .header(BANK_ID, bankId)
                 .header(FINTECH_REDIRECT_URL_OK, FINTECH_REDIR_OK)
                 .header(FINTECH_REDIRECT_URL_NOK, FINTECH_REDIR_NOK)

@@ -107,7 +107,7 @@ public class HbciGetAuthorizationState implements GetAuthorizationState {
         return buildBody(ctx, new LastViolations(ctx.getViolations()), ctx.getLastRedirection());
     }
 
-    private AuthStateBody buildBody(HbciContext ctx,  LastViolations issues, LastRedirectionTarget redirectionTarget) {
+    private AuthStateBody buildBody(HbciContext ctx, LastViolations issues, LastRedirectionTarget redirectionTarget) {
         ProtocolAction action = ctx.getAction();
         List<ScaMethod> scaMethods = ctx.getAvailableSca();
         String redirectTo = null == redirectionTarget ? null : redirectionTarget.getRedirectTo();

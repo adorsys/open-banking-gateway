@@ -201,7 +201,7 @@ public class Xs2aContext extends BaseContext {
     @JsonIgnore
     public Approach getActiveScaApproach() {
         return this.getAspspScaApproach() == null
-                ?  this.getRequestScoped().aspspProfile().getPreferredApproach()
+                ? this.getRequestScoped().aspspProfile().getPreferredApproach()
                 : Approach.valueOf(this.getAspspScaApproach());
     }
 }

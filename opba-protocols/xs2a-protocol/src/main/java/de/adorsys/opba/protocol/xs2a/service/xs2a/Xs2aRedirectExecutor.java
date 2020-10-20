@@ -28,8 +28,9 @@ public class Xs2aRedirectExecutor {
     /**
      * Redirects PSU to some page (or emits FinTech redirection required) by performing interpolation of the
      * string returned by {@code urlSelector}
-     * @param execution Execution context of the current process
-     * @param context Current XS2A context
+     *
+     * @param execution   Execution context of the current process
+     * @param context     Current XS2A context
      * @param urlSelector Redirection URL configurer - selects which URL template to use
      */
     public void redirect(
@@ -43,17 +44,18 @@ public class Xs2aRedirectExecutor {
     /**
      * Redirects PSU to some page (or emits FinTech redirection required) by performing interpolation of the
      * string returned by {@code uiScreenUriSpel}
-     * @param execution Execution context of the current process
-     * @param context Current XS2A context
+     *
+     * @param execution       Execution context of the current process
+     * @param context         Current XS2A context
      * @param uiScreenUriSpel UI screen SpEL expression to interpolate
-     * @param destinationUri URL where UI screen should redirect user to if he clicks OK (i.e. to ASPSP redirection
-     *                       where user must click OK button in order to be redirected to ASPSP)
+     * @param destinationUri  URL where UI screen should redirect user to if he clicks OK (i.e. to ASPSP redirection
+     *                        where user must click OK button in order to be redirected to ASPSP)
      */
     public void redirect(
-        DelegateExecution execution,
-        Xs2aContext context,
-        String uiScreenUriSpel,
-        String destinationUri
+            DelegateExecution execution,
+            Xs2aContext context,
+            String uiScreenUriSpel,
+            String destinationUri
     ) {
         redirect(execution, context, uiScreenUriSpel, destinationUri, Redirect.RedirectBuilder::build);
     }
@@ -61,19 +63,20 @@ public class Xs2aRedirectExecutor {
     /**
      * Redirects PSU to some page (or emits FinTech redirection required) by performing interpolation of the
      * string returned by {@code uiScreenUriSpel}
-     * @param execution Execution context of the current process
-     * @param context Current XS2A context
+     *
+     * @param execution       Execution context of the current process
+     * @param context         Current XS2A context
      * @param uiScreenUriSpel UI screen SpEL expression to interpolate
-     * @param destinationUri URL where UI screen should redirect user to if he clicks OK (i.e. to ASPSP redirection
-     *                       where user must click OK button in order to be redirected to ASPSP)
-     * @param eventFactory Allows to construct custom event with redirection parameters.
+     * @param destinationUri  URL where UI screen should redirect user to if he clicks OK (i.e. to ASPSP redirection
+     *                        where user must click OK button in order to be redirected to ASPSP)
+     * @param eventFactory    Allows to construct custom event with redirection parameters.
      */
     public void redirect(
-        DelegateExecution execution,
-        Xs2aContext context,
-        String uiScreenUriSpel,
-        String destinationUri,
-        Function<Redirect.RedirectBuilder, ? extends Redirect> eventFactory
+            DelegateExecution execution,
+            Xs2aContext context,
+            String uiScreenUriSpel,
+            String destinationUri,
+            Function<Redirect.RedirectBuilder, ? extends Redirect> eventFactory
     ) {
         setDestinationUriInContext(execution, destinationUri);
 
@@ -93,23 +96,23 @@ public class Xs2aRedirectExecutor {
 
     private void setUiUriInContext(DelegateExecution execution, URI screenUri) {
         ContextUtil.getAndUpdateContext(
-            execution,
-            (BaseContext ctx) -> {
-                LastRedirectionTarget target = getOrCreateLastRedirection(ctx);
-                target.setRedirectToUiScreen(screenUri.toASCIIString());
-                ctx.setLastRedirection(target);
-            }
+                execution,
+                (BaseContext ctx) -> {
+                    LastRedirectionTarget target = getOrCreateLastRedirection(ctx);
+                    target.setRedirectToUiScreen(screenUri.toASCIIString());
+                    ctx.setLastRedirection(target);
+                }
         );
     }
 
     private void setDestinationUriInContext(DelegateExecution execution, String destinationUri) {
         ContextUtil.getAndUpdateContext(
-            execution,
-            (BaseContext ctx) -> {
-                LastRedirectionTarget target = getOrCreateLastRedirection(ctx);
-                target.setRedirectTo(destinationUri);
-                ctx.setLastRedirection(target);
-            }
+                execution,
+                (BaseContext ctx) -> {
+                    LastRedirectionTarget target = getOrCreateLastRedirection(ctx);
+                    target.setRedirectTo(destinationUri);
+                    ctx.setLastRedirection(target);
+                }
         );
     }
 

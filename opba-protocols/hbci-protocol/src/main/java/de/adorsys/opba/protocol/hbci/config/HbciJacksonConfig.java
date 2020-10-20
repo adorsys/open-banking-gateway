@@ -24,6 +24,7 @@ public class HbciJacksonConfig {
                 @JsonProperty("userId") String userId,
                 @JsonProperty("pin") String pin,
                 @JsonProperty("pin2") String pin2
-        ) { }
+        ) {
+        }
     }
 }

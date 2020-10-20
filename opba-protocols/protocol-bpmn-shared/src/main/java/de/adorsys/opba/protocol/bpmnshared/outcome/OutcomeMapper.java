@@ -8,14 +8,20 @@ import de.adorsys.opba.protocol.bpmnshared.dto.messages.ValidationProblem;
 
 /**
  * Mapper to convert from internal protocol result to facade facing protocol result.
+ *
  * @param <T>
  */
 public interface OutcomeMapper<T> {
 
     void onSuccess(ProcessResponse responseResult);
+
     void onRedirect(Redirect redirectResult);
+
     void onValidationProblem(ValidationProblem problem);
+
     void onConsentAcquired(ConsentAcquired acquired);
+
     void onReturnableProcessError(InternalReturnableProcessError internalReturnableProcessError);
+
     void onError();
 }

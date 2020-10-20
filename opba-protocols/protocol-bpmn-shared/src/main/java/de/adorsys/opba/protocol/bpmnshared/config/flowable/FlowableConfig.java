@@ -33,12 +33,12 @@ public class FlowableConfig {
 
         return processConfiguration -> {
             processConfiguration.setCustomPreVariableTypes(
-                new ArrayList<>(
-                    ImmutableList.of(
-                        new JsonCustomSerializer(scopedServicesProvider, mapper.getMapper(), serializeOnlyPackages, maxLength),
-                        new LargeJsonCustomSerializer(scopedServicesProvider, mapper.getMapper(), serializeOnlyPackages, maxLength)
+                    new ArrayList<>(
+                            ImmutableList.of(
+                                    new JsonCustomSerializer(scopedServicesProvider, mapper.getMapper(), serializeOnlyPackages, maxLength),
+                                    new LargeJsonCustomSerializer(scopedServicesProvider, mapper.getMapper(), serializeOnlyPackages, maxLength)
+                            )
                     )
-                )
             );
 
             processConfiguration.setEnableEventDispatcher(true);

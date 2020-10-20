@@ -247,7 +247,8 @@
                                     <artifactId>${project.artifactId}</artifactId>
                                     <version>${project.version}</version>
                                     <pomFile>${pom.basedir}/pom.xml</pomFile>
-                                    <file>${project.build.directory}${file.separator}${project.build.finalName}.jar</file>
+                                    <file>${project.build.directory}${file.separator}${project.build.finalName}.jar
+                                    </file>
                                 </configuration>
                                 <phase>pre-integration-test</phase>
                                 <goals>

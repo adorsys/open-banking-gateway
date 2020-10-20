@@ -78,8 +78,8 @@ public class HbciResultBodyExtractor {
     public interface HbciToAccountBodyMapper {
 
         @Mapping(
-            expression = "java(com.google.common.base.Strings.isNullOrEmpty(account.getIban()) ? account.getAccountNumber() : account.getIban())",
-            target = "resourceId"
+                expression = "java(com.google.common.base.Strings.isNullOrEmpty(account.getIban()) ? account.getAccountNumber() : account.getIban())",
+                target = "resourceId"
         )
         @Mapping(source = "accountNumber", target = "bban")
         @Mapping(source = "balances", target = "balances", qualifiedByName = "hbciBalancesToProtocolBalances")
@@ -106,10 +106,10 @@ public class HbciResultBodyExtractor {
                 return;
             }
             protocolBalances.add(Balance.builder()
-                .balanceType(type)
-                .lastChangeDateTime(hbciBalance.getDate().atStartOfDay(ZoneOffset.UTC).toOffsetDateTime())
-                .balanceAmount(Amount.builder().amount(hbciBalance.getAmount().toString()).currency(hbciBalance.getCurrency()).build())
-                .build());
+                    .balanceType(type)
+                    .lastChangeDateTime(hbciBalance.getDate().atStartOfDay(ZoneOffset.UTC).toOffsetDateTime())
+                    .balanceAmount(Amount.builder().amount(hbciBalance.getAmount().toString()).currency(hbciBalance.getCurrency()).build())
+                    .build());
 
         }
 

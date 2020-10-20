@@ -34,24 +34,24 @@ class E2EStress extends ScenarioTest<CommonGivenStages<? extends CommonGivenStag
         prepareContext();
 
         given()
-            .user_registered_in_opba_with_credentials(ACCOUNTS_OPBA_USERNAME, ACCOUNTS_OPBA_PASSWORD);
+                .user_registered_in_opba_with_credentials(ACCOUNTS_OPBA_USERNAME, ACCOUNTS_OPBA_PASSWORD);
 
         when()
-            .fintech_calls_list_accounts_for_max_musterman()
-            .and()
-            .user_logged_in_into_opba_as_opba_user_with_credentials_using_fintech_supplied_url(ACCOUNTS_OPBA_USERNAME, ACCOUNTS_OPBA_PASSWORD)
-            .and()
-            .user_max_musterman_provided_initial_parameters_to_list_accounts_all_accounts_consent()
-            .and()
-            .user_max_musterman_provided_password_to_embedded_authorization()
-            .and()
-            .user_max_musterman_selected_sca_challenge_type_email2_to_embedded_authorization()
-            .and()
-            .user_max_musterman_provided_sca_challenge_result_to_embedded_authorization_and_sees_redirect_to_fintech_ok();
+                .fintech_calls_list_accounts_for_max_musterman()
+                .and()
+                .user_logged_in_into_opba_as_opba_user_with_credentials_using_fintech_supplied_url(ACCOUNTS_OPBA_USERNAME, ACCOUNTS_OPBA_PASSWORD)
+                .and()
+                .user_max_musterman_provided_initial_parameters_to_list_accounts_all_accounts_consent()
+                .and()
+                .user_max_musterman_provided_password_to_embedded_authorization()
+                .and()
+                .user_max_musterman_selected_sca_challenge_type_email2_to_embedded_authorization()
+                .and()
+                .user_max_musterman_provided_sca_challenge_result_to_embedded_authorization_and_sees_redirect_to_fintech_ok();
 
         then()
-            .fintech_calls_consent_activation_for_current_authorization_id()
-            .open_banking_can_read_max_musterman_account_data_using_consent_bound_to_service_session();
+                .fintech_calls_consent_activation_for_current_authorization_id()
+                .open_banking_can_read_max_musterman_account_data_using_consent_bound_to_service_session();
     }
 
     @Test
@@ -60,26 +60,26 @@ class E2EStress extends ScenarioTest<CommonGivenStages<? extends CommonGivenStag
         prepareContext();
 
         given()
-            .user_registered_in_opba_with_credentials(TRANSACTIONS_OPBA_USERNAME, TRANSACTIONS_OPBA_PASSWORD);
+                .user_registered_in_opba_with_credentials(TRANSACTIONS_OPBA_USERNAME, TRANSACTIONS_OPBA_PASSWORD);
 
         when()
-            .fintech_calls_list_transactions_for_max_musterman()
-            .and()
-            .user_logged_in_into_opba_as_opba_user_with_credentials_using_fintech_supplied_url(TRANSACTIONS_OPBA_USERNAME, TRANSACTIONS_OPBA_PASSWORD)
-            .and()
-            .user_max_musterman_provided_initial_parameters_to_list_transactions_with_single_account_consent()
-            .and()
-            .user_max_musterman_provided_password_to_embedded_authorization()
-            .and()
-            .user_max_musterman_selected_sca_challenge_type_email1_to_embedded_authorization()
-            .and()
-            .user_max_musterman_provided_sca_challenge_result_to_embedded_authorization_and_sees_redirect_to_fintech_ok();
+                .fintech_calls_list_transactions_for_max_musterman()
+                .and()
+                .user_logged_in_into_opba_as_opba_user_with_credentials_using_fintech_supplied_url(TRANSACTIONS_OPBA_USERNAME, TRANSACTIONS_OPBA_PASSWORD)
+                .and()
+                .user_max_musterman_provided_initial_parameters_to_list_transactions_with_single_account_consent()
+                .and()
+                .user_max_musterman_provided_password_to_embedded_authorization()
+                .and()
+                .user_max_musterman_selected_sca_challenge_type_email1_to_embedded_authorization()
+                .and()
+                .user_max_musterman_provided_sca_challenge_result_to_embedded_authorization_and_sees_redirect_to_fintech_ok();
 
         then()
-            .fintech_calls_consent_activation_for_current_authorization_id()
-            .open_banking_can_read_max_musterman_transactions_data_using_consent_bound_to_service_session(
-                MAX_MUSTERMAN_RESOURCE_ID, DATE_FROM, DATE_TO, BOTH_BOOKING
-            );
+                .fintech_calls_consent_activation_for_current_authorization_id()
+                .open_banking_can_read_max_musterman_transactions_data_using_consent_bound_to_service_session(
+                        MAX_MUSTERMAN_RESOURCE_ID, DATE_FROM, DATE_TO, BOTH_BOOKING
+                );
     }
 
     private void prepareContext() {

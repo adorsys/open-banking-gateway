@@ -11,12 +11,18 @@
       "linkedAccounts": "emhdu3sbSsckP8ueB9T4vU",
       "balances": [
         {
-          "balanceAmount": { "currency": "EUR", "amount": "10120.00" },
+          "balanceAmount": {
+            "currency": "EUR",
+            "amount": "10120.00"
+          },
           "balanceType": "interimAvailable",
           "referenceDate": "2020-09-01"
         },
         {
-          "balanceAmount": { "currency": "EUR", "amount": "10120.00" },
+          "balanceAmount": {
+            "currency": "EUR",
+            "amount": "10120.00"
+          },
           "balanceType": "closingBooked",
           "referenceDate": "2020-09-01"
         }

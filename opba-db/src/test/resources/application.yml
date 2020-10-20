@@ -1,6 +1,6 @@
 bank-action-generator:
-    action:
-        start-id: 10000
-    sub-action:
-        start-id: 10000
-    skip-banks: 9
+  action:
+    start-id: 10000
+  sub-action:
+    start-id: 10000
+  skip-banks: 9

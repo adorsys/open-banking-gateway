@@ -37,11 +37,11 @@ public class Xs2AToFacadeMapperTest {
     @SneakyThrows
     void transactionsMapperTest() {
         TransactionsReport mappingInput = fixtureProvider.getFromFile(PATH_PREFIX + "transactions_input.json",
-                                                                      TransactionsReport.class);
+                TransactionsReport.class);
         TransactionsResponseBody mappingResult = mapper.map(mappingInput);
 
         TransactionsResponseBody expected = fixtureProvider.getFromFile(PATH_PREFIX + "transactions_output.json",
-                                                                        TransactionsResponseBody.class);
+                TransactionsResponseBody.class);
         assertThat(expected).isEqualToComparingFieldByField(mappingResult);
     }
 }

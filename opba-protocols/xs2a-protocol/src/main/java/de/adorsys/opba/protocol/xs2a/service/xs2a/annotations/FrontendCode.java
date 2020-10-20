@@ -11,7 +11,7 @@ import static java.lang.annotation.RetentionPolicy.RUNTIME;
 /**
  * Represents field type that should be used as input for current violation on frontend UI (i.e. date, password, etc.).
  */
-@Target({ FIELD })
+@Target({FIELD})
 @Retention(RUNTIME)
 public @interface FrontendCode {
 

@@ -36,16 +36,16 @@ import java.util.UUID;
 @AllArgsConstructor
 @NoArgsConstructor
 @EntityListeners(AuditingEntityListener.class)
-public class ServiceSession implements IdAssignable<UUID>  {
+public class ServiceSession implements IdAssignable<UUID> {
 
     @Id
     @GenericGenerator(
-        name = AssignedUuidGenerator.ASSIGNED_ID_GENERATOR,
-        strategy = AssignedUuidGenerator.ASSIGNED_ID_STRATEGY
+            name = AssignedUuidGenerator.ASSIGNED_ID_GENERATOR,
+            strategy = AssignedUuidGenerator.ASSIGNED_ID_STRATEGY
     )
     @GeneratedValue(
-        generator = AssignedUuidGenerator.ASSIGNED_ID_GENERATOR,
-        strategy = GenerationType.AUTO
+            generator = AssignedUuidGenerator.ASSIGNED_ID_GENERATOR,
+            strategy = GenerationType.AUTO
     )
     private UUID id;
 

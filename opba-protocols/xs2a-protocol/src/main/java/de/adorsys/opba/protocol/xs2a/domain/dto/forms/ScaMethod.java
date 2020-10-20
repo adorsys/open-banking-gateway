@@ -46,9 +46,9 @@ public class ScaMethod {
     @Override
     public String toString() {
         return "{"
-                       + "\"key\":\"" + key + "\""
-                       + ", \"value\":\"" + value + "\""
-                       + ", \"type\":\"" + type + "\""
-                       + "}";
+                + "\"key\":\"" + key + "\""
+                + ", \"value\":\"" + value + "\""
+                + ", \"type\":\"" + type + "\""
+                + "}";
     }
 }

@@ -116,7 +116,7 @@ public class BankProtocolActionsSqlGeneratorTest {
     private void createOrClearFile(String path) {
         boolean exists = new File(path).exists();
 
-        if (!exists){
+        if (!exists) {
             createFile(path);
             return;
         }

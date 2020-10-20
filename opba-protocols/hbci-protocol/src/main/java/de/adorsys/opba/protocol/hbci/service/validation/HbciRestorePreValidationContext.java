@@ -28,12 +28,12 @@ public class HbciRestorePreValidationContext implements JavaDelegate {
     public void execute(DelegateExecution execution) {
         HbciContext current = ContextUtil.getContext(execution, HbciContext.class);
         execution.setVariable(
-            LAST_VALIDATION_ISSUES,
-            new LastViolations(current.getViolations(), current.isConsentIncompatible(), current.getRequestScoped())
+                LAST_VALIDATION_ISSUES,
+                new LastViolations(current.getViolations(), current.isConsentIncompatible(), current.getRequestScoped())
         );
         execution.setVariable(
-            LAST_REDIRECTION_TARGET,
-            lastRedirectionTarget(current)
+                LAST_REDIRECTION_TARGET,
+                lastRedirectionTarget(current)
         );
         HbciContext restored = (HbciContext) execution.getVariable(BEFORE_VALIDATION_CONTEXT);
         restored.setConsentIncompatible(current.isConsentIncompatible());

@@ -7,7 +7,9 @@
   "response": {
     "status": 200,
     "bodyFileName": "body-oauth-authorization-server-32275.json",
-    "transformers": ["response-template"],
+    "transformers": [
+      "response-template"
+    ],
     "headers": {
       "Vary": [
         "Origin",

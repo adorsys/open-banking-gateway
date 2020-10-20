@@ -53,12 +53,12 @@ public class SandboxServers<SELF extends SandboxServers<SELF>> extends CommonGiv
     public SELF enabled_embedded_sandbox_mode(String aspspProfileUri) {
         RestAssured
                 .given()
-                    .contentType(MediaType.APPLICATION_JSON_VALUE)
-                    .body("[\"EMBEDDED\",\"REDIRECT\",\"DECOUPLED\"]")
+                .contentType(MediaType.APPLICATION_JSON_VALUE)
+                .body("[\"EMBEDDED\",\"REDIRECT\",\"DECOUPLED\"]")
                 .when()
-                    .put(aspspProfileUri + "/api/v1/aspsp-profile/for-debug/sca-approaches")
+                .put(aspspProfileUri + "/api/v1/aspsp-profile/for-debug/sca-approaches")
                 .then()
-                    .statusCode(HttpStatus.OK.value());
+                .statusCode(HttpStatus.OK.value());
 
         return self();
     }
@@ -66,12 +66,12 @@ public class SandboxServers<SELF extends SandboxServers<SELF>> extends CommonGiv
     public SELF enabled_redirect_sandbox_mode(String aspspProfileUri) {
         RestAssured
                 .given()
-                    .contentType(MediaType.APPLICATION_JSON_VALUE)
-                    .body("[\"REDIRECT\",\"EMBEDDED\",\"DECOUPLED\",\"OAUTH\"]")
+                .contentType(MediaType.APPLICATION_JSON_VALUE)
+                .body("[\"REDIRECT\",\"EMBEDDED\",\"DECOUPLED\",\"OAUTH\"]")
                 .when()
-                    .put(aspspProfileUri + "/api/v1/aspsp-profile/for-debug/sca-approaches")
+                .put(aspspProfileUri + "/api/v1/aspsp-profile/for-debug/sca-approaches")
                 .then()
-                    .statusCode(HttpStatus.OK.value());
+                .statusCode(HttpStatus.OK.value());
 
         return self();
     }
@@ -80,10 +80,10 @@ public class SandboxServers<SELF extends SandboxServers<SELF>> extends CommonGiv
     private void updateScaRedirectFlow(String aspspProfileUri, String scaRedirectFlowValue) {
         ExtractableResponse<Response> response = RestAssured
                 .when()
-                    .get(aspspProfileUri + "/api/v1/aspsp-profile")
+                .get(aspspProfileUri + "/api/v1/aspsp-profile")
                 .then()
-                    .statusCode(HttpStatus.OK.value())
-                    .extract();
+                .statusCode(HttpStatus.OK.value())
+                .extract();
 
 
         JsonNode tree = MAPPER.readTree(response.body().asString());
@@ -95,11 +95,11 @@ public class SandboxServers<SELF extends SandboxServers<SELF>> extends CommonGiv
 
         RestAssured
                 .given()
-                    .contentType(MediaType.APPLICATION_JSON_VALUE)
-                    .body(writer.toString())
+                .contentType(MediaType.APPLICATION_JSON_VALUE)
+                .body(writer.toString())
                 .when()
-                    .put(aspspProfileUri + "/api/v1/aspsp-profile/for-debug/aspsp-settings")
+                .put(aspspProfileUri + "/api/v1/aspsp-profile/for-debug/aspsp-settings")
                 .then()
-                    .statusCode(HttpStatus.OK.value());
+                .statusCode(HttpStatus.OK.value());
     }
 }

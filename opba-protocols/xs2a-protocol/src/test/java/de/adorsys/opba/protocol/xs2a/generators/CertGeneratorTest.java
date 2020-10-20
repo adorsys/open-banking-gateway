@@ -68,7 +68,7 @@ class CertGeneratorTest {
         PrivateKey privateKey = kp.getPrivate();
         CertificateFactory certFactory = CertificateFactory.getInstance("X.509");
         X509Certificate cert = (X509Certificate) certFactory.generateCertificate(readRaw(cerResourcePath));
-        keyStore.setKeyEntry(keyStoreAlias, privateKey, PASSWORD, new Certificate[] { cert });
+        keyStore.setKeyEntry(keyStoreAlias, privateKey, PASSWORD, new Certificate[]{cert});
     }
 
     @SneakyThrows

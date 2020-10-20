@@ -14,9 +14,9 @@ import java.nio.file.Paths
 def root = Paths.get("/tmp/open-banking-gateway/core/banking-protocol/src/test/resources/mockedsandbox/restrecord")
 
 def targetFiles = Files.walk(root)
-        .filter {Files.isRegularFile(it)}
-        .filter {it -> it.toString().endsWith("json") || it.toString().endsWith("txt")}
-        .collect {it}
+        .filter { Files.isRegularFile(it) }
+        .filter { it -> it.toString().endsWith("json") || it.toString().endsWith("txt") }
+        .collect { it }
 
 def renames = [:]
 
@@ -47,14 +47,14 @@ for (def file : targetFiles) {
     def hash = hashValue(origName.split("\\.")[0])
     println(hash)
     def crc = new CRC16()
-    hash.getBytes(StandardCharsets.UTF_8).each {crc.update(it)}
+    hash.getBytes(StandardCharsets.UTF_8).each { crc.update(it) }
     def newName = origName.replaceAll("-" + hash, '-' + crc.value)
     renames[origName] = newName
 }
 
 for (def file : targetFiles) {
     String text = file.toFile().text
-    renames.each {key, value ->
+    renames.each { key, value ->
         println("$key : $value")
         text = text.replace(key, value)
     }

@@ -12,9 +12,9 @@
     <name>opba-protocols/sandboxes/hbci-sandbox</name>
 
     <properties>
-      <!-- Hard reference to root directory. Used to reference pmd and checkstyle files from root.
-      Change this if depth changes. Current: /open-banking-gateway/opba-protocols/hbci-sandbox -->
-      <main.basedir>${project.parent.parent.parent.basedir}</main.basedir>
+        <!-- Hard reference to root directory. Used to reference pmd and checkstyle files from root.
+        Change this if depth changes. Current: /open-banking-gateway/opba-protocols/hbci-sandbox -->
+        <main.basedir>${project.parent.parent.parent.basedir}</main.basedir>
     </properties>
 
     <dependencies>

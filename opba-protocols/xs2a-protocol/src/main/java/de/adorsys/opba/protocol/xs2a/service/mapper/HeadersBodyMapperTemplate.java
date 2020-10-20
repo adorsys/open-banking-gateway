@@ -9,6 +9,7 @@ import lombok.RequiredArgsConstructor;
 /**
  * Mapper class to map from context object like {@link de.adorsys.opba.protocol.xs2a.context.Xs2aContext}
  * to ASPSP API request parameters (headers and body).
+ *
  * @param <C> Context class
  * @param <H> ASPSP API headers class
  * @param <V> ASPSP API object to validate after mapping, compatible with {@link de.adorsys.opba.protocol.xs2a.service.xs2a.validation.Xs2aValidator}
@@ -23,6 +24,7 @@ public class HeadersBodyMapperTemplate<C extends BaseContext, H, V, B> {
 
     /**
      * Converts context object into object that can be used for validation.
+     *
      * @param context Context to convert
      * @return Validatable object that can be used with {@link de.adorsys.opba.protocol.xs2a.service.xs2a.validation.Xs2aValidator}
      * to check if all necessary parameters are present
@@ -36,6 +38,7 @@ public class HeadersBodyMapperTemplate<C extends BaseContext, H, V, B> {
 
     /**
      * Converts context object into object that can be used for ASPSP API call.
+     *
      * @param context Context to convert
      * @return Object that can be used with {@code Xs2aAdapter} to perform ASPSP API calls
      */

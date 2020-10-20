@@ -1,1 +1,8 @@
-{"_links":{"scaStatus":{"href":"http://localhost:20014/v1/payments/sepa-credit-transfers/XWE3m-MOSgiyLSbxm0gs9cTpUIYh6Zd7AGdfJFpzoL6i92f92FPqxs78swMVBY91cgftJbETkzvNvu5mZQqWcA==_=_psGLvQpt9Q/authorisations/d378c26d-eec8-4612-953f-e034501c38ce"}},"scaStatus":"finalised"}
+{
+  "_links": {
+    "scaStatus": {
+      "href": "http://localhost:20014/v1/payments/sepa-credit-transfers/XWE3m-MOSgiyLSbxm0gs9cTpUIYh6Zd7AGdfJFpzoL6i92f92FPqxs78swMVBY91cgftJbETkzvNvu5mZQqWcA==_=_psGLvQpt9Q/authorisations/d378c26d-eec8-4612-953f-e034501c38ce"
+    }
+  },
+  "scaStatus": "finalised"
+}

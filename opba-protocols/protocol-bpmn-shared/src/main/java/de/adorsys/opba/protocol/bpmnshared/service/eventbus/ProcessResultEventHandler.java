@@ -83,9 +83,9 @@ class ProcessResultEventHandler {
         }
 
         String rootProcessId = runtimeService.createProcessInstanceQuery()
-            .processInstanceId(error.getProcessId())
-            .singleResult()
-            .getRootProcessInstanceId();
+                .processInstanceId(error.getProcessId())
+                .singleResult()
+                .getRootProcessInstanceId();
 
         return error.toBuilder().processId(rootProcessId).build();
     }

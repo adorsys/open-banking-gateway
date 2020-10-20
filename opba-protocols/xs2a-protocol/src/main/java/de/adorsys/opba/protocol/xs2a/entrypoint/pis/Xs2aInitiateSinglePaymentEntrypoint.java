@@ -75,8 +75,8 @@ public class Xs2aInitiateSinglePaymentEntrypoint implements SinglePayment {
         extender.extend(context, serviceContext);
 
         Optional<String> psuIdOptional = Optional.ofNullable(request.getExtras())
-                                                 .map(ex -> ex.get(ExtraAuthRequestParam.PSU_ID))
-                                                 .map(Object::toString);
+                .map(ex -> ex.get(ExtraAuthRequestParam.PSU_ID))
+                .map(Object::toString);
 
         psuIdOptional.ifPresent(context::setPsuId);
 

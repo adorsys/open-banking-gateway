@@ -11,18 +11,19 @@
  */
 /* tslint:disable:no-unused-variable member-ordering */
 
-import { Inject, Injectable, Optional }                      from '@angular/core';
-import { HttpClient, HttpHeaders, HttpParams,
-         HttpResponse, HttpEvent, HttpParameterCodec }       from '@angular/common/http';
-import { CustomHttpParameterCodec }                          from '../encoder';
-import { Observable }                                        from 'rxjs';
+import {Inject, Injectable, Optional} from '@angular/core';
+import {
+  HttpClient, HttpHeaders, HttpParams,
+  HttpResponse, HttpEvent, HttpParameterCodec
+} from '@angular/common/http';
+import {CustomHttpParameterCodec} from '../encoder';
+import {Observable} from 'rxjs';
 
-import { ConsentAuth } from '../model/consentAuth';
-import { PsuMessage } from '../model/psuMessage';
+import {ConsentAuth} from '../model/consentAuth';
+import {PsuMessage} from '../model/psuMessage';
 
-import { BASE_PATH, COLLECTION_FORMATS }                     from '../variables';
-import { Configuration }                                     from '../configuration';
-
+import {BASE_PATH, COLLECTION_FORMATS} from '../variables';
+import {Configuration} from '../configuration';
 
 
 @Injectable({
@@ -30,68 +31,67 @@ import { Configuration }                                     from '../configurat
 })
 export class AuthStateConsentAuthorizationService {
 
-    protected basePath = 'http://localhost';
-    public defaultHeaders = new HttpHeaders();
-    public configuration = new Configuration();
-    public encoder: HttpParameterCodec;
+  protected basePath = 'http://localhost';
+  public defaultHeaders = new HttpHeaders();
+  public configuration = new Configuration();
+  public encoder: HttpParameterCodec;
 
-    constructor(protected httpClient: HttpClient, @Optional()@Inject(BASE_PATH) basePath: string, @Optional() configuration: Configuration) {
-        if (configuration) {
-            this.configuration = configuration;
-        }
-        if (typeof this.configuration.basePath !== 'string') {
-            if (typeof basePath !== 'string') {
-                basePath = this.basePath;
-            }
-            this.configuration.basePath = basePath;
-        }
-        this.encoder = this.configuration.encoder || new CustomHttpParameterCodec();
+  constructor(protected httpClient: HttpClient, @Optional() @Inject(BASE_PATH) basePath: string, @Optional() configuration: Configuration) {
+    if (configuration) {
+      this.configuration = configuration;
+    }
+    if (typeof this.configuration.basePath !== 'string') {
+      if (typeof basePath !== 'string') {
+        basePath = this.basePath;
+      }
+      this.configuration.basePath = basePath;
+    }
+    this.encoder = this.configuration.encoder || new CustomHttpParameterCodec();
+  }
+
+
+  /**
+   * Redirect entry point for initiating a consent authorization process.
+   * This is the &lt;b&gt;entry point&lt;/b&gt; for processing a consent redirected by the TppBankingApi to this ConsentAuthorisationApi.  At this entry point, the ConsentAuthorisationApi will use the redirectCode to retrieve the RedirectSession from the TppServer. An analysis of the RedirectSession will help decide if the ConsentAuthorisationApi will proceed with an embedded approach (E&lt;sub&gt;1&lt;/sub&gt;) or a redirect approach (R&lt;sub&gt;1&lt;/sub&gt;).
+   * @param authId Used to distinguish between different consent authorization processes started by the same PSU. Also included in the corresponding cookie path to limit visibility of the consent cookie to the corresponding consent process.
+   * @param redirectCode Code used to retrieve a redirect session. This is generaly transported as a query parameter
+   * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
+   * @param reportProgress flag to report request and response progress.
+   */
+  public authUsingGET(authId: string, redirectCode?: string, observe?: 'body', reportProgress?: boolean): Observable<ConsentAuth>;
+  public authUsingGET(authId: string, redirectCode?: string, observe?: 'response', reportProgress?: boolean): Observable<HttpResponse<ConsentAuth>>;
+  public authUsingGET(authId: string, redirectCode?: string, observe?: 'events', reportProgress?: boolean): Observable<HttpEvent<ConsentAuth>>;
+  public authUsingGET(authId: string, redirectCode?: string, observe: any = 'body', reportProgress: boolean = false): Observable<any> {
+    if (authId === null || authId === undefined) {
+      throw new Error('Required parameter authId was null or undefined when calling authUsingGET.');
+    }
+
+    let queryParameters = new HttpParams({encoder: this.encoder});
+    if (redirectCode !== undefined && redirectCode !== null) {
+      queryParameters = queryParameters.set('redirectCode', <any>redirectCode);
+    }
+
+    let headers = this.defaultHeaders;
+
+    // to determine the Accept header
+    const httpHeaderAccepts: string[] = [
+      'application/json'
+    ];
+    const httpHeaderAcceptSelected: string | undefined = this.configuration.selectHeaderAccept(httpHeaderAccepts);
+    if (httpHeaderAcceptSelected !== undefined) {
+      headers = headers.set('Accept', httpHeaderAcceptSelected);
     }
 
 
-
-    /**
-     * Redirect entry point for initiating a consent authorization process.
-     * This is the &lt;b&gt;entry point&lt;/b&gt; for processing a consent redirected by the TppBankingApi to this ConsentAuthorisationApi.  At this entry point, the ConsentAuthorisationApi will use the redirectCode to retrieve the RedirectSession from the TppServer. An analysis of the RedirectSession will help decide if the ConsentAuthorisationApi will proceed with an embedded approach (E&lt;sub&gt;1&lt;/sub&gt;) or a redirect approach (R&lt;sub&gt;1&lt;/sub&gt;).
-     * @param authId Used to distinguish between different consent authorization processes started by the same PSU. Also included in the corresponding cookie path to limit visibility of the consent cookie to the corresponding consent process.
-     * @param redirectCode Code used to retrieve a redirect session. This is generaly transported as a query parameter
-     * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
-     * @param reportProgress flag to report request and response progress.
-     */
-    public authUsingGET(authId: string, redirectCode?: string, observe?: 'body', reportProgress?: boolean): Observable<ConsentAuth>;
-    public authUsingGET(authId: string, redirectCode?: string, observe?: 'response', reportProgress?: boolean): Observable<HttpResponse<ConsentAuth>>;
-    public authUsingGET(authId: string, redirectCode?: string, observe?: 'events', reportProgress?: boolean): Observable<HttpEvent<ConsentAuth>>;
-    public authUsingGET(authId: string, redirectCode?: string, observe: any = 'body', reportProgress: boolean = false ): Observable<any> {
-        if (authId === null || authId === undefined) {
-            throw new Error('Required parameter authId was null or undefined when calling authUsingGET.');
-        }
-
-        let queryParameters = new HttpParams({encoder: this.encoder});
-        if (redirectCode !== undefined && redirectCode !== null) {
-            queryParameters = queryParameters.set('redirectCode', <any>redirectCode);
-        }
-
-        let headers = this.defaultHeaders;
-
-        // to determine the Accept header
-        const httpHeaderAccepts: string[] = [
-            'application/json'
-        ];
-        const httpHeaderAcceptSelected: string | undefined = this.configuration.selectHeaderAccept(httpHeaderAccepts);
-        if (httpHeaderAcceptSelected !== undefined) {
-            headers = headers.set('Accept', httpHeaderAcceptSelected);
-        }
-
-
-        return this.httpClient.get<ConsentAuth>(`${this.configuration.basePath}/v1/consent/${encodeURIComponent(String(authId))}`,
-            {
-                params: queryParameters,
-                withCredentials: this.configuration.withCredentials,
-                headers: headers,
-                observe: observe,
-                reportProgress: reportProgress
-            }
-        );
-    }
+    return this.httpClient.get<ConsentAuth>(`${this.configuration.basePath}/v1/consent/${encodeURIComponent(String(authId))}`,
+      {
+        params: queryParameters,
+        withCredentials: this.configuration.withCredentials,
+        headers: headers,
+        observe: observe,
+        reportProgress: reportProgress
+      }
+    );
+  }
 
 }

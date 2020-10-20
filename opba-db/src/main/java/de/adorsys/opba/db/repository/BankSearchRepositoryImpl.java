@@ -18,7 +18,7 @@ import static de.adorsys.opba.tppbankingapi.config.ConfigConst.BANKING_API_CONFI
 @Slf4j
 public class BankSearchRepositoryImpl {
 
-    @Value("${" + BANKING_API_CONFIG_PREFIX +  "bank-search.query}")
+    @Value("${" + BANKING_API_CONFIG_PREFIX + "bank-search.query}")
     private String query;
 
     private static final BeanPropertyRowMapper<Bank> ROW_MAPPER = BeanPropertyRowMapper.newInstance(Bank.class);

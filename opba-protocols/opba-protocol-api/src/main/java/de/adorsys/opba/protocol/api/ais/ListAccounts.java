@@ -6,7 +6,7 @@ import de.adorsys.opba.protocol.api.dto.result.body.AccountListBody;
 
 /**
  * Called to get PSU account list from ASPSP using AIS (Account Information Service).
- *
+ * <p>
  * Typical outcomes:
  * <ul>
  *     <li>

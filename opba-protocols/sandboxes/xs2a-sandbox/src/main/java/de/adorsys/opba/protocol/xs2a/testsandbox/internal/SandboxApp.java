@@ -49,16 +49,16 @@ import static org.awaitility.Awaitility.await;
  * is called in own thread). This way all services are launched in same JVM and we can easily manipulate
  * their state. Shared context (except system classes!) is not a problem, because it is shaded by Spring - each
  * application has its own class loader and context.
- *
+ * <p>
  * Each application will receive spring profile based on its lowercase name. I.e. LEDGERS_GATEWAY assumes to have
  * sandbox/application-test-ledgers-gateway.yml as well as common sandbox/application-test-common.yml
  * property files on resources path.
- *
+ * <p>
  * You can specify database type using System property / Environment variable (in order of precedence) `DB_TYPE`:
  * 1. DB_TYPE = LOCAL_POSTGRES - will connect to local postgres db on port 5432
  * 2. (DEFAULT) DB_TYPE = TEST_CONTAINERS_POSTGRES - will start Postgres using TestContainers and use port 15432 for it
  * (you need to prepare schema and users - see prepare-postgres.sql)
- *
+ * <p>
  * Startup order is roughly adherent to:
  * https://github.com/adorsys/XS2A-Sandbox/blob/master/docker-compose.yml
  */
@@ -228,8 +228,8 @@ public enum SandboxApp {
             // Hack for linux as it does not have `host.docker.internal` so directly placing into host network
             if (System.getProperty("os.name").toLowerCase().contains("linux")) {
                 container.withExtraHost(
-                    "host.docker.internal",
-                    new InetSocketAddress(0).getAddress().getHostAddress()
+                        "host.docker.internal",
+                        new InetSocketAddress(0).getAddress().getHostAddress()
                 );
                 container.withNetworkMode("host");
             } else {
@@ -291,7 +291,7 @@ public enum SandboxApp {
             buildSpringConfigLocation(ctx);
             getMainEntryPoint(classloaderWithJar).invoke(
                     null,
-                    (Object) new String[] {
+                    (Object) new String[]{
                             "--spring.profiles.include=" + Joiner.on(",").join(activeProfilesForTest()),
                             "--spring.config.location=" + buildSpringConfigLocation(ctx),
                             "--primary.profile=" + getPrimaryConfigFile(),
@@ -418,6 +418,7 @@ public enum SandboxApp {
 
         return level;
     }
+
     @Data
     private static class ClassloaderWithJar {
 
@@ -435,7 +436,7 @@ public enum SandboxApp {
 
             loader = new URLClassLoader(
                     // It makes no sense to provide anything else except Spring JAR as it will use its own classloader
-                    new URL[] {Paths.get(jarPath).toUri().toURL()},
+                    new URL[]{Paths.get(jarPath).toUri().toURL()},
                     null
             );
         }

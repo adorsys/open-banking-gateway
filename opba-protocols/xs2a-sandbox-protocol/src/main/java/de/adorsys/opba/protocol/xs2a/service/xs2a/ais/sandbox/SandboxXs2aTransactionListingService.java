@@ -16,12 +16,12 @@ public class SandboxXs2aTransactionListingService extends Xs2aTransactionListing
     private final NoResponseXs2aAccountListingService accountListingService;
 
     public SandboxXs2aTransactionListingService(
-        ApplicationEventPublisher eventPublisher,
-        Xs2aTransactionListingService.Extractor extractor,
-        Xs2aAccountListingService.Extractor accountListExtractor,
-        Xs2aValidator validator,
-        AccountInformationService ais,
-        Xs2aConsentErrorHandler consentErrorHandler) {
+            ApplicationEventPublisher eventPublisher,
+            Xs2aTransactionListingService.Extractor extractor,
+            Xs2aAccountListingService.Extractor accountListExtractor,
+            Xs2aValidator validator,
+            AccountInformationService ais,
+            Xs2aConsentErrorHandler consentErrorHandler) {
         super(eventPublisher, extractor, validator, ais, consentErrorHandler);
         this.accountListingService = new NoResponseXs2aAccountListingService(accountListExtractor, validator, ais, consentErrorHandler);
     }

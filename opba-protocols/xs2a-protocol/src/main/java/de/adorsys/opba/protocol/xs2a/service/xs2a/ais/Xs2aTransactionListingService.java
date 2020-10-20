@@ -51,16 +51,16 @@ public class Xs2aTransactionListingService extends ValidatedExecution<Transactio
     @SuppressWarnings("checkstyle:MagicNumber") // Hardcoded as it is POC, these should be read from context
     protected void doRealExecution(DelegateExecution execution, TransactionListXs2aContext context) {
         ValidatedPathQueryHeaders<Xs2aResourceParameters, Xs2aTransactionParameters, Xs2aWithConsentIdHeaders> params =
-            extractor.forExecution(context);
+                extractor.forExecution(context);
 
         handler.tryActionOrHandleConsentErrors(execution, eventPublisher, () -> {
             Response<TransactionsReport> transactionList = ais.getTransactionList(
-                params.getPath().getResourceId(),
-                params.getHeaders().toHeaders(),
-                params.getQuery().toParameters()
+                    params.getPath().getResourceId(),
+                    params.getHeaders().toHeaders(),
+                    params.getQuery().toParameters()
             );
             eventPublisher.publishEvent(
-                new ProcessResponse(execution.getRootProcessInstanceId(), execution.getId(), transactionList.getBody())
+                    new ProcessResponse(execution.getRootProcessInstanceId(), execution.getId(), transactionList.getBody())
             );
         });
 
@@ -68,15 +68,15 @@ public class Xs2aTransactionListingService extends ValidatedExecution<Transactio
 
     @Service
     public static class Extractor extends PathQueryHeadersMapperTemplate<
-        TransactionListXs2aContext,
-        Xs2aResourceParameters,
-        Xs2aTransactionParameters,
-        Xs2aWithConsentIdHeaders> {
+            TransactionListXs2aContext,
+            Xs2aResourceParameters,
+            Xs2aTransactionParameters,
+            Xs2aWithConsentIdHeaders> {
 
         public Extractor(
-            DtoMapper<Xs2aContext, Xs2aWithConsentIdHeaders> toHeaders,
-            DtoMapper<TransactionListXs2aContext, Xs2aResourceParameters> toPath,
-            DtoMapper<TransactionListXs2aContext, Xs2aTransactionParameters> toQuery) {
+                DtoMapper<Xs2aContext, Xs2aWithConsentIdHeaders> toHeaders,
+                DtoMapper<TransactionListXs2aContext, Xs2aResourceParameters> toPath,
+                DtoMapper<TransactionListXs2aContext, Xs2aTransactionParameters> toQuery) {
             super(toHeaders, toPath, toQuery);
         }
     }
@@ -96,8 +96,8 @@ public class Xs2aTransactionListingService extends ValidatedExecution<Transactio
         @Override
         public boolean appliesToContext(Xs2aContext context) {
             return ProtocolAction.LIST_TRANSACTIONS.equals(context.getAction())
-                && context.getServiceSessionId() != null
-                && context.getMode() == ContextMode.MOCK_REAL_CALLS;
+                    && context.getServiceSessionId() != null
+                    && context.getMode() == ContextMode.MOCK_REAL_CALLS;
         }
 
         @Override

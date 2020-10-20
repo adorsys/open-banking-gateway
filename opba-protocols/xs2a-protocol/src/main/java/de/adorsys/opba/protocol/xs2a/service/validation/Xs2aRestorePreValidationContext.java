@@ -27,12 +27,12 @@ public class Xs2aRestorePreValidationContext implements JavaDelegate {
     public void execute(DelegateExecution execution) {
         BaseContext current = ContextUtil.getContext(execution, BaseContext.class);
         execution.setVariable(
-            LAST_VALIDATION_ISSUES,
-            new LastViolations(current.getViolations(), current.getRequestScoped())
+                LAST_VALIDATION_ISSUES,
+                new LastViolations(current.getViolations(), current.getRequestScoped())
         );
         execution.setVariable(
-            LAST_REDIRECTION_TARGET,
-            lastRedirectionTarget(current)
+                LAST_REDIRECTION_TARGET,
+                lastRedirectionTarget(current)
         );
         execution.setVariable(CONTEXT, execution.getVariable(BEFORE_VALIDATION_CONTEXT));
         execution.removeVariable(BEFORE_VALIDATION_CONTEXT);

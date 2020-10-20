@@ -1,6 +1,10 @@
 {
   "authorization_endpoint": "http://localhost:4400/auth/authorize?redirect_uri=",
   "token_endpoint": "http://{{request.headers.Host}}/oauth/token",
-  "response_types_supported": ["CODE"],
-  "grant_types_supported": ["AUTHORISATION_CODE"]
+  "response_types_supported": [
+    "CODE"
+  ],
+  "grant_types_supported": [
+    "AUTHORISATION_CODE"
+  ]
 }

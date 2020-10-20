@@ -81,11 +81,11 @@ public class Xs2aAisAuthenticateConsentWithScaChallenge extends ValidatedExecuti
 
     @Service
     public static class Extractor extends PathHeadersBodyMapperTemplate<
-                                Xs2aContext,
-                                Xs2aAuthorizedConsentParameters,
-                                Xs2aStandardHeaders,
-                                ProvideScaChallengeResultBody,
-                                TransactionAuthorisation> {
+            Xs2aContext,
+            Xs2aAuthorizedConsentParameters,
+            Xs2aStandardHeaders,
+            ProvideScaChallengeResultBody,
+            TransactionAuthorisation> {
 
         public Extractor(
                 DtoMapper<Xs2aContext, ProvideScaChallengeResultBody> toValidatableBody,

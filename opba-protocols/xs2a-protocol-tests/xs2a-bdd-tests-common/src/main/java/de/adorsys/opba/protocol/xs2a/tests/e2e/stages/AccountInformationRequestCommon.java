@@ -65,9 +65,9 @@ public class AccountInformationRequestCommon<SELF extends AccountInformationRequ
         ExtractableResponse<Response> response = withAccountsHeaders(ANTON_BRUECKNER, bankId)
                 .header(SERVICE_SESSION_ID, UUID.randomUUID().toString())
                 .queryParam(ONLINE, online)
-            .when()
+                .when()
                 .get(AIS_ACCOUNTS_ENDPOINT)
-            .then()
+                .then()
                 .statusCode(HttpStatus.ACCEPTED.value())
                 .extract();
         updateServiceSessionId(response);
@@ -79,9 +79,9 @@ public class AccountInformationRequestCommon<SELF extends AccountInformationRequ
     public SELF fintech_calls_list_accounts_for_user(String user) {
         ExtractableResponse<Response> response = withAccountsHeaders(user)
                 .header(SERVICE_SESSION_ID, UUID.randomUUID().toString())
-            .when()
+                .when()
                 .get(AIS_ACCOUNTS_ENDPOINT)
-            .then()
+                .then()
                 .statusCode(HttpStatus.ACCEPTED.value())
                 .extract();
 
@@ -100,9 +100,9 @@ public class AccountInformationRequestCommon<SELF extends AccountInformationRequ
     public SELF fintech_calls_list_accounts_for_max_musterman(String bankId) {
         ExtractableResponse<Response> response = withAccountsHeaders(MAX_MUSTERMAN, bankId)
                 .header(SERVICE_SESSION_ID, UUID.randomUUID().toString())
-            .when()
+                .when()
                 .get(AIS_ACCOUNTS_ENDPOINT)
-            .then()
+                .then()
                 .statusCode(HttpStatus.ACCEPTED.value())
                 .extract();
 
@@ -117,9 +117,9 @@ public class AccountInformationRequestCommon<SELF extends AccountInformationRequ
         ExtractableResponse<Response> response = withAccountsHeaders(MAX_MUSTERMAN)
                 .header(SERVICE_SESSION_ID, UUID.randomUUID().toString())
                 .queryParam("withBalance", withBalance)
-            .when()
+                .when()
                 .get(AIS_ACCOUNTS_ENDPOINT)
-            .then()
+                .then()
                 .statusCode(HttpStatus.ACCEPTED.value())
                 .extract();
 
@@ -131,12 +131,12 @@ public class AccountInformationRequestCommon<SELF extends AccountInformationRequ
 
     public SELF fintech_calls_list_accounts_for_max_musterman_missing_ip_address() {
         ExtractableResponse<Response> response = withAccountsHeadersMissingIpAddress(MAX_MUSTERMAN)
-                  .header(SERVICE_SESSION_ID, UUID.randomUUID().toString())
-             .when()
-                  .get(AIS_ACCOUNTS_ENDPOINT)
-             .then()
-                  .statusCode(HttpStatus.ACCEPTED.value())
-                  .extract();
+                .header(SERVICE_SESSION_ID, UUID.randomUUID().toString())
+                .when()
+                .get(AIS_ACCOUNTS_ENDPOINT)
+                .then()
+                .statusCode(HttpStatus.ACCEPTED.value())
+                .extract();
 
         updateServiceSessionId(response);
         updateRedirectCode(response);
@@ -147,9 +147,9 @@ public class AccountInformationRequestCommon<SELF extends AccountInformationRequ
     public SELF fintech_calls_list_transactions_for_anton_brueckner() {
         ExtractableResponse<Response> response = withTransactionsHeaders(ANTON_BRUECKNER)
                 .header(SERVICE_SESSION_ID, UUID.randomUUID().toString())
-            .when()
+                .when()
                 .get(AIS_TRANSACTIONS_WITHOUT_RESOURCE_ID_ENDPOINT)
-            .then()
+                .then()
                 .statusCode(HttpStatus.ACCEPTED.value())
                 .extract();
 
@@ -162,9 +162,9 @@ public class AccountInformationRequestCommon<SELF extends AccountInformationRequ
     public SELF fintech_calls_list_transactions_for_anton_brueckner(String resourceId) {
         ExtractableResponse<Response> response = withTransactionsHeaders(ANTON_BRUECKNER)
                 .header(SERVICE_SESSION_ID, UUID.randomUUID().toString())
-            .when()
+                .when()
                 .get(AIS_TRANSACTIONS_ENDPOINT, resourceId)
-            .then()
+                .then()
                 .statusCode(HttpStatus.ACCEPTED.value())
                 .extract();
 
@@ -177,9 +177,9 @@ public class AccountInformationRequestCommon<SELF extends AccountInformationRequ
     public SELF fintech_calls_list_transactions_for_user(String user, String resourceId) {
         ExtractableResponse<Response> response = withTransactionsHeaders(user)
                 .header(SERVICE_SESSION_ID, UUID.randomUUID().toString())
-             .when()
+                .when()
                 .get(AIS_TRANSACTIONS_ENDPOINT, resourceId)
-             .then()
+                .then()
                 .statusCode(HttpStatus.ACCEPTED.value())
                 .extract();
 
@@ -205,9 +205,9 @@ public class AccountInformationRequestCommon<SELF extends AccountInformationRequ
         ExtractableResponse<Response> response = withTransactionsHeaders(MAX_MUSTERMAN, bankId)
                 .header(SERVICE_SESSION_ID, UUID.randomUUID().toString())
                 .queryParam(ONLINE, online)
-            .when()
+                .when()
                 .get(AIS_TRANSACTIONS_ENDPOINT, resourceId)
-            .then()
+                .then()
                 .statusCode(HttpStatus.ACCEPTED.value())
                 .extract();
 
@@ -223,15 +223,15 @@ public class AccountInformationRequestCommon<SELF extends AccountInformationRequ
                 .getQueryParams()
                 .getFirst(REDIRECT_CODE_QUERY);
 
-        ExtractableResponse<Response> response =  RestAssured
-            .given()
+        ExtractableResponse<Response> response = RestAssured
+                .given()
                 .header(X_REQUEST_ID, UUID.randomUUID().toString())
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
                 .queryParam(REDIRECT_CODE_QUERY, fintechUserTempPassword)
                 .body(ImmutableMap.of(LOGIN, username, PASSWORD, password))
-            .when()
+                .when()
                 .post(AIS_LOGIN_USER_ENDPOINT, serviceSessionId)
-            .then()
+                .then()
                 .statusCode(HttpStatus.ACCEPTED.value())
                 .extract();
 
@@ -260,25 +260,25 @@ public class AccountInformationRequestCommon<SELF extends AccountInformationRequ
 
     public SELF user_anton_brueckner_provided_initial_parameters_to_list_accounts_with_all_accounts_consent_without_psu_id() {
         startInitialInternalConsentAuthorization(AUTHORIZE_CONSENT_ENDPOINT,
-                                                 readResource("restrecord/tpp-ui-input/params/anton-brueckner-account-all-accounts-consent-without-psu-id.json")
+                readResource("restrecord/tpp-ui-input/params/anton-brueckner-account-all-accounts-consent-without-psu-id.json")
         );
         return self();
     }
 
     public SELF user_denied_consent() {
         ExtractableResponse<Response> response = RestAssured
-            .given()
+                .given()
                 .header(X_REQUEST_ID, UUID.randomUUID().toString())
                 .header(X_XSRF_TOKEN, UUID.randomUUID().toString())
                 .cookie(AUTHORIZATION_SESSION_KEY, authSessionCookie)
                 .queryParam(REDIRECT_CODE_QUERY, redirectCode)
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
                 .body("{}")
-            .when()
+                .when()
                 .post(DENY_CONSENT_AUTH_ENDPOINT, serviceSessionId)
-            .then()
+                .then()
                 .statusCode(HttpStatus.ACCEPTED.value())
-            .extract();
+                .extract();
 
         assertThat(LocationExtractorUtil.getLocation(response)).isEqualTo(FINTECH_REDIR_NOK);
         return self();
@@ -288,9 +288,9 @@ public class AccountInformationRequestCommon<SELF extends AccountInformationRequ
         ExtractableResponse<Response> response = withDefaultHeaders(ANTON_BRUECKNER)
                 .cookie(AUTHORIZATION_SESSION_KEY, authSessionCookie)
                 .queryParam(REDIRECT_CODE_QUERY, redirectCode)
-            .when()
+                .when()
                 .get(GET_CONSENT_AUTH_STATE, serviceSessionId)
-            .then()
+                .then()
                 .statusCode(HttpStatus.OK.value())
                 .extract();
 
@@ -304,9 +304,9 @@ public class AccountInformationRequestCommon<SELF extends AccountInformationRequ
         ExtractableResponse<Response> response = withDefaultHeaders(user)
                 .cookie(AUTHORIZATION_SESSION_KEY, authSessionCookie)
                 .queryParam(REDIRECT_CODE_QUERY, redirectCode)
-            .when()
+                .when()
                 .get(GET_CONSENT_AUTH_STATE, serviceSessionId)
-            .then()
+                .then()
                 .statusCode(HttpStatus.OK.value())
                 .extract();
 
@@ -472,8 +472,8 @@ public class AccountInformationRequestCommon<SELF extends AccountInformationRequ
     public SELF user_max_musterman_selected_sca_challenge_type_email1_to_embedded_authorization() {
         provideParametersToBankingProtocolWithBody(
                 AUTHORIZE_CONSENT_ENDPOINT,
-            selectedScaBody("EMAIL:max.musterman@mail.de"),
-            HttpStatus.ACCEPTED
+                selectedScaBody("EMAIL:max.musterman@mail.de"),
+                HttpStatus.ACCEPTED
         );
         return self();
     }
@@ -481,8 +481,8 @@ public class AccountInformationRequestCommon<SELF extends AccountInformationRequ
     public SELF user_max_musterman_selected_sca_challenge_type_email2_to_embedded_authorization() {
         provideParametersToBankingProtocolWithBody(
                 AUTHORIZE_CONSENT_ENDPOINT,
-            selectedScaBody("EMAIL:max.musterman2@mail.de"),
-            HttpStatus.ACCEPTED
+                selectedScaBody("EMAIL:max.musterman2@mail.de"),
+                HttpStatus.ACCEPTED
         );
         return self();
     }
@@ -500,9 +500,9 @@ public class AccountInformationRequestCommon<SELF extends AccountInformationRequ
         ExtractableResponse<Response> response = withDefaultHeaders(user)
                 .cookie(AUTHORIZATION_SESSION_KEY, authSessionCookie)
                 .queryParam(REDIRECT_CODE_QUERY, redirectCode)
-            .when()
+                .when()
                 .get(GET_CONSENT_AUTH_STATE, serviceSessionId)
-            .then()
+                .then()
                 .statusCode(HttpStatus.OK.value())
                 .extract();
 
@@ -558,10 +558,10 @@ public class AccountInformationRequestCommon<SELF extends AccountInformationRequ
         readViolations();
 
         AuthViolation authViolationIpAddress = new AuthViolation()
-                                                       .type("STRING")
-                                                       .scope("GENERAL")
-                                                       .code("PSU_IP_ADDRESS")
-                                                       .captionMessage("{no.ctx.psuIpAddress}");
+                .type("STRING")
+                .scope("GENERAL")
+                .code("PSU_IP_ADDRESS")
+                .captionMessage("{no.ctx.psuIpAddress}");
         assertThat(this.violations).contains(authViolationIpAddress);
 
         return self();
@@ -572,10 +572,10 @@ public class AccountInformationRequestCommon<SELF extends AccountInformationRequ
         readViolations();
 
         AuthViolation authViolationIpAddress = new AuthViolation()
-                                                       .type("STRING")
-                                                       .scope("GENERAL")
-                                                       .code("PSU_IP_ADDRESS")
-                                                       .captionMessage("{no.ctx.psuIpAddress}");
+                .type("STRING")
+                .scope("GENERAL")
+                .code("PSU_IP_ADDRESS")
+                .captionMessage("{no.ctx.psuIpAddress}");
         assertThat(this.violations).doesNotContain(authViolationIpAddress);
 
         return self();
@@ -586,10 +586,10 @@ public class AccountInformationRequestCommon<SELF extends AccountInformationRequ
         readViolations();
 
         AuthViolation authViolationIpPort = new AuthViolation()
-                                                       .type("STRING")
-                                                       .scope("GENERAL")
-                                                       .code("PSU_IP_PORT")
-                                                       .captionMessage("{no.ctx.psuIpPort}");
+                .type("STRING")
+                .scope("GENERAL")
+                .code("PSU_IP_PORT")
+                .captionMessage("{no.ctx.psuIpPort}");
         assertThat(this.violations).contains(authViolationIpPort);
 
         return self();
@@ -600,10 +600,10 @@ public class AccountInformationRequestCommon<SELF extends AccountInformationRequ
         readViolations();
 
         AuthViolation authViolationIpPort = new AuthViolation()
-                                                    .type("STRING")
-                                                    .scope("GENERAL")
-                                                    .code("PSU_IP_PORT")
-                                                    .captionMessage("{no.ctx.psuIpPort}");
+                .type("STRING")
+                .scope("GENERAL")
+                .code("PSU_IP_PORT")
+                .captionMessage("{no.ctx.psuIpPort}");
         assertThat(this.violations).doesNotContain(authViolationIpPort);
 
         return self();
@@ -612,28 +612,28 @@ public class AccountInformationRequestCommon<SELF extends AccountInformationRequ
     public SELF user_anton_brueckner_provided_initial_parameters_to_list_accounts_with_all_accounts_consent_without_cookie_unauthorized() {
         RestAssured
                 .given()
-                    .header(X_REQUEST_ID, UUID.randomUUID().toString())
-                    .header(X_XSRF_TOKEN, UUID.randomUUID().toString())
-                    .queryParam(REDIRECT_CODE_QUERY, redirectCode)
-                    .contentType(MediaType.APPLICATION_JSON_VALUE)
-                    .body(readResource("restrecord/tpp-ui-input/params/anton-brueckner-account-all-accounts-consent.json"))
+                .header(X_REQUEST_ID, UUID.randomUUID().toString())
+                .header(X_XSRF_TOKEN, UUID.randomUUID().toString())
+                .queryParam(REDIRECT_CODE_QUERY, redirectCode)
+                .contentType(MediaType.APPLICATION_JSON_VALUE)
+                .body(readResource("restrecord/tpp-ui-input/params/anton-brueckner-account-all-accounts-consent.json"))
                 .when()
-                    .post(AUTHORIZE_CONSENT_ENDPOINT, serviceSessionId)
+                .post(AUTHORIZE_CONSENT_ENDPOINT, serviceSessionId)
                 .then()
-                    .statusCode(HttpStatus.UNAUTHORIZED.value())
-                    .extract();
+                .statusCode(HttpStatus.UNAUTHORIZED.value())
+                .extract();
 
         return self();
     }
 
     public SELF user_anton_brueckner_sees_that_he_needs_to_be_redirected_to_aspsp_and_redirects_to_aspsp_without_cookie_unauthorized() {
-                withDefaultHeaders(ANTON_BRUECKNER)
-                    .queryParam(REDIRECT_CODE_QUERY, redirectCode)
+        withDefaultHeaders(ANTON_BRUECKNER)
+                .queryParam(REDIRECT_CODE_QUERY, redirectCode)
                 .when()
-                    .get(GET_CONSENT_AUTH_STATE, serviceSessionId)
+                .get(GET_CONSENT_AUTH_STATE, serviceSessionId)
                 .then()
-                    .statusCode(HttpStatus.UNAUTHORIZED.value())
-                    .extract();
+                .statusCode(HttpStatus.UNAUTHORIZED.value())
+                .extract();
 
         return self();
     }

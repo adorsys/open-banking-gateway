@@ -1,1 +1,24 @@
-{"chosenScaMethod":{"authenticationType":"EMAIL","authenticationMethodId":"AeuDkGzDQtAh8u3eHYPWqw","name":"max.musterman2@mail.de"},"challengeData":{"data":[null],"otpMaxLength":6,"otpFormat":"integer","additionalInformation":"SCA method EMAIL: tan is 123456 . sent email to max.musterman2@mail.de."},"_links":{"scaStatus":{"href":"http://localhost:20014/v1/payments/sepa-credit-transfers/XWE3m-MOSgiyLSbxm0gs9cTpUIYh6Zd7AGdfJFpzoL6i92f92FPqxs78swMVBY91cgftJbETkzvNvu5mZQqWcA==_=_psGLvQpt9Q/authorisations/d378c26d-eec8-4612-953f-e034501c38ce"},"authoriseTransaction":{"href":"http://localhost:20014/v1/payments/sepa-credit-transfers/XWE3m-MOSgiyLSbxm0gs9cTpUIYh6Zd7AGdfJFpzoL6i92f92FPqxs78swMVBY91cgftJbETkzvNvu5mZQqWcA==_=_psGLvQpt9Q/authorisations/d378c26d-eec8-4612-953f-e034501c38ce"}},"scaStatus":"scaMethodSelected"}
+{
+  "chosenScaMethod": {
+    "authenticationType": "EMAIL",
+    "authenticationMethodId": "AeuDkGzDQtAh8u3eHYPWqw",
+    "name": "max.musterman2@mail.de"
+  },
+  "challengeData": {
+    "data": [
+      null
+    ],
+    "otpMaxLength": 6,
+    "otpFormat": "integer",
+    "additionalInformation": "SCA method EMAIL: tan is 123456 . sent email to max.musterman2@mail.de."
+  },
+  "_links": {
+    "scaStatus": {
+      "href": "http://localhost:20014/v1/payments/sepa-credit-transfers/XWE3m-MOSgiyLSbxm0gs9cTpUIYh6Zd7AGdfJFpzoL6i92f92FPqxs78swMVBY91cgftJbETkzvNvu5mZQqWcA==_=_psGLvQpt9Q/authorisations/d378c26d-eec8-4612-953f-e034501c38ce"
+    },
+    "authoriseTransaction": {
+      "href": "http://localhost:20014/v1/payments/sepa-credit-transfers/XWE3m-MOSgiyLSbxm0gs9cTpUIYh6Zd7AGdfJFpzoL6i92f92FPqxs78swMVBY91cgftJbETkzvNvu5mZQqWcA==_=_psGLvQpt9Q/authorisations/d378c26d-eec8-4612-953f-e034501c38ce"
+    }
+  },
+  "scaStatus": "scaMethodSelected"
+}

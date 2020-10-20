@@ -49,7 +49,8 @@ public class SmokeConfig {
     @SuppressWarnings("PMD.UnusedPrivateField") // Injecting into Spring context
     private BankProfileJpaRepository profiles;
 
-    @MockBean // Stubbing out as they are not available, but currently breaking hierarchy has no sense as we can replace this with REST in future
+    @MockBean
+    // Stubbing out as they are not available, but currently breaking hierarchy has no sense as we can replace this with REST in future
     @SuppressWarnings("PMD.UnusedPrivateField") // Injecting into Spring context
     private ConsentRepository consents;
 

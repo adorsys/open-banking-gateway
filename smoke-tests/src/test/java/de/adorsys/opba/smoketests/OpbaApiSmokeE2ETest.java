@@ -76,40 +76,40 @@ class OpbaApiSmokeE2ETest extends SpringScenarioTest<SmokeSandboxServers, WebDri
     @Test
     public void testTransactionListWithConsentUsingRedirect(FirefoxDriver firefoxDriver) {
         String accountResourceId = JsonPath
-            .parse(redirectListUserAccounts(firefoxDriver)).read("$.accounts[0].resourceId");
+                .parse(redirectListUserAccounts(firefoxDriver)).read("$.accounts[0].resourceId");
 
         given()
-            .enabled_redirect_sandbox_mode(config.getAspspProfileServerUri())
-            .rest_assured_points_to_opba_server_with_fintech_signer_on_banking_api(config.getOpbaServerUri());
+                .enabled_redirect_sandbox_mode(config.getAspspProfileServerUri())
+                .rest_assured_points_to_opba_server_with_fintech_signer_on_banking_api(config.getOpbaServerUri());
 
         when()
-            .fintech_calls_list_transactions_for_user(sandboxUserLogin, accountResourceId)
-            .and()
-            .user_logged_in_into_opba_as_opba_user_with_credentials_using_fintech_supplied_url(OPBA_LOGIN, OPBA_PASSWORD)
-            .and()
-            .user_provided_initial_parameters_to_list_transactions_with_single_account_consent(sandboxUserLogin)
-            .and()
-            .user_sees_that_he_needs_to_be_redirected_to_aspsp_and_redirects_to_aspsp(sandboxUserLogin)
-            .and()
-            .manually_set_authorization_cookie_on_domain(firefoxDriver, config.getUiUri())
-            .and()
-            .sandbox_user_navigates_to_bank_auth_page(firefoxDriver)
-            .and()
-            .sandbox_user_inputs_username_and_password(firefoxDriver, sandboxUserLogin, sandboxUserPassword)
-            .and()
-            .sandbox_user_confirms_consent_information(firefoxDriver)
-            .and()
-            .sandbox_user_selects_sca_method(firefoxDriver)
-            .and()
-            .sandbox_user_provides_sca_challenge_result(firefoxDriver)
-            .and()
-            .sandbox_user_clicks_redirect_back_to_tpp_button_api_localhost_cookie_only(firefoxDriver);
+                .fintech_calls_list_transactions_for_user(sandboxUserLogin, accountResourceId)
+                .and()
+                .user_logged_in_into_opba_as_opba_user_with_credentials_using_fintech_supplied_url(OPBA_LOGIN, OPBA_PASSWORD)
+                .and()
+                .user_provided_initial_parameters_to_list_transactions_with_single_account_consent(sandboxUserLogin)
+                .and()
+                .user_sees_that_he_needs_to_be_redirected_to_aspsp_and_redirects_to_aspsp(sandboxUserLogin)
+                .and()
+                .manually_set_authorization_cookie_on_domain(firefoxDriver, config.getUiUri())
+                .and()
+                .sandbox_user_navigates_to_bank_auth_page(firefoxDriver)
+                .and()
+                .sandbox_user_inputs_username_and_password(firefoxDriver, sandboxUserLogin, sandboxUserPassword)
+                .and()
+                .sandbox_user_confirms_consent_information(firefoxDriver)
+                .and()
+                .sandbox_user_selects_sca_method(firefoxDriver)
+                .and()
+                .sandbox_user_provides_sca_challenge_result(firefoxDriver)
+                .and()
+                .sandbox_user_clicks_redirect_back_to_tpp_button_api_localhost_cookie_only(firefoxDriver);
 
         then()
-            .fintech_calls_consent_activation_for_current_authorization_id()
-            .open_banking_reads_user_transactions_using_consent_bound_to_service_session_data_validated_by_iban(
-                    sandboxUserLogin, DATE_FROM, DATE_TO, BOTH_BOOKING
-            );
+                .fintech_calls_consent_activation_for_current_authorization_id()
+                .open_banking_reads_user_transactions_using_consent_bound_to_service_session_data_validated_by_iban(
+                        sandboxUserLogin, DATE_FROM, DATE_TO, BOTH_BOOKING
+                );
     }
 
     @Test
@@ -120,92 +120,92 @@ class OpbaApiSmokeE2ETest extends SpringScenarioTest<SmokeSandboxServers, WebDri
     @Test
     void testTransactionsListWithConsentUsingEmbedded() {
         String accountResourceId = JsonPath
-            .parse(embeddedListAccounts())
-            .read("$.accounts[0].resourceId");
+                .parse(embeddedListAccounts())
+                .read("$.accounts[0].resourceId");
 
         given()
-            .enabled_embedded_sandbox_mode(config.getAspspProfileServerUri())
-            .rest_assured_points_to_opba_server_with_fintech_signer_on_banking_api(config.getOpbaServerUri());
+                .enabled_embedded_sandbox_mode(config.getAspspProfileServerUri())
+                .rest_assured_points_to_opba_server_with_fintech_signer_on_banking_api(config.getOpbaServerUri());
 
         when()
-            .fintech_calls_list_transactions_for_user(sandboxUserLogin, accountResourceId)
-            .and()
-            .user_logged_in_into_opba_as_opba_user_with_credentials_using_fintech_supplied_url(OPBA_LOGIN, OPBA_PASSWORD)
-            .and()
-            .user_provided_initial_parameters_to_list_transactions_with_single_account_consent(sandboxUserLogin)
-            .and()
-            .user_provided_password_to_embedded_authorization(sandboxUserPassword)
-            .and()
-            .user_selected_sca_challenge_type_email1_to_embedded_authorization()
-            .and()
-            .user_provided_sca_challenge_result_to_embedded_authorization_and_sees_redirect_to_fintech_ok();
+                .fintech_calls_list_transactions_for_user(sandboxUserLogin, accountResourceId)
+                .and()
+                .user_logged_in_into_opba_as_opba_user_with_credentials_using_fintech_supplied_url(OPBA_LOGIN, OPBA_PASSWORD)
+                .and()
+                .user_provided_initial_parameters_to_list_transactions_with_single_account_consent(sandboxUserLogin)
+                .and()
+                .user_provided_password_to_embedded_authorization(sandboxUserPassword)
+                .and()
+                .user_selected_sca_challenge_type_email1_to_embedded_authorization()
+                .and()
+                .user_provided_sca_challenge_result_to_embedded_authorization_and_sees_redirect_to_fintech_ok();
         then()
-            .fintech_calls_consent_activation_for_current_authorization_id()
-            .open_banking_reads_user_transactions_using_consent_bound_to_service_session_data_validated_by_iban(
-                sandboxUserLogin, DATE_FROM, DATE_TO, BOTH_BOOKING
-            );
+                .fintech_calls_consent_activation_for_current_authorization_id()
+                .open_banking_reads_user_transactions_using_consent_bound_to_service_session_data_validated_by_iban(
+                        sandboxUserLogin, DATE_FROM, DATE_TO, BOTH_BOOKING
+                );
     }
 
     private String embeddedListAccounts() {
         given()
-            .create_new_user_in_sandbox_tpp_management(sandboxUserLogin, sandboxUserPassword)
-            .enabled_embedded_sandbox_mode(config.getAspspProfileServerUri())
-            .rest_assured_points_to_opba_server_with_fintech_signer_on_banking_api(config.getOpbaServerUri())
-            .user_registered_in_opba_with_credentials(OPBA_LOGIN, OPBA_PASSWORD);
+                .create_new_user_in_sandbox_tpp_management(sandboxUserLogin, sandboxUserPassword)
+                .enabled_embedded_sandbox_mode(config.getAspspProfileServerUri())
+                .rest_assured_points_to_opba_server_with_fintech_signer_on_banking_api(config.getOpbaServerUri())
+                .user_registered_in_opba_with_credentials(OPBA_LOGIN, OPBA_PASSWORD);
 
         when()
-            .fintech_calls_list_accounts_for_user(sandboxUserLogin)
-            .and()
-            .user_logged_in_into_opba_as_opba_user_with_credentials_using_fintech_supplied_url(OPBA_LOGIN, OPBA_PASSWORD)
-            .and()
-            .user_provided_initial_parameters_to_list_accounts_all_accounts_consent(sandboxUserLogin)
-            .and()
-            .user_provided_password_to_embedded_authorization(sandboxUserPassword)
-            .and()
-            .user_selected_sca_challenge_type_email1_to_embedded_authorization()
-            .and()
-            .user_provided_sca_challenge_result_to_embedded_authorization_and_sees_redirect_to_fintech_ok();
+                .fintech_calls_list_accounts_for_user(sandboxUserLogin)
+                .and()
+                .user_logged_in_into_opba_as_opba_user_with_credentials_using_fintech_supplied_url(OPBA_LOGIN, OPBA_PASSWORD)
+                .and()
+                .user_provided_initial_parameters_to_list_accounts_all_accounts_consent(sandboxUserLogin)
+                .and()
+                .user_provided_password_to_embedded_authorization(sandboxUserPassword)
+                .and()
+                .user_selected_sca_challenge_type_email1_to_embedded_authorization()
+                .and()
+                .user_provided_sca_challenge_result_to_embedded_authorization_and_sees_redirect_to_fintech_ok();
 
         AccountInformationResult result = then()
-            .fintech_calls_consent_activation_for_current_authorization_id()
-            .open_banking_can_read_user_account_data_using_consent_bound_to_service_session(sandboxUserLogin, false);
+                .fintech_calls_consent_activation_for_current_authorization_id()
+                .open_banking_can_read_user_account_data_using_consent_bound_to_service_session(sandboxUserLogin, false);
 
         return result.getResponseContent();
     }
 
     private String redirectListUserAccounts(FirefoxDriver firefoxDriver) {
         given()
-            .create_new_user_in_sandbox_tpp_management(sandboxUserLogin, sandboxUserPassword)
-            .enabled_redirect_sandbox_mode(config.getAspspProfileServerUri())
-            .rest_assured_points_to_opba_server_with_fintech_signer_on_banking_api(config.getOpbaServerUri())
-            .user_registered_in_opba_with_credentials(OPBA_LOGIN, OPBA_PASSWORD);
+                .create_new_user_in_sandbox_tpp_management(sandboxUserLogin, sandboxUserPassword)
+                .enabled_redirect_sandbox_mode(config.getAspspProfileServerUri())
+                .rest_assured_points_to_opba_server_with_fintech_signer_on_banking_api(config.getOpbaServerUri())
+                .user_registered_in_opba_with_credentials(OPBA_LOGIN, OPBA_PASSWORD);
 
         when()
-            .fintech_calls_list_accounts_for_user(sandboxUserLogin)
-            .and()
-            .user_logged_in_into_opba_as_opba_user_with_credentials_using_fintech_supplied_url(OPBA_LOGIN, OPBA_PASSWORD)
-            .and()
-            .user_provided_initial_parameters_to_list_accounts_with_all_accounts_consent_with_cookie_validation(sandboxUserLogin)
-            .and()
-            .user_sees_that_he_needs_to_be_redirected_to_aspsp_and_redirects_to_aspsp(sandboxUserLogin)
-            .and()
-            .manually_set_authorization_cookie_on_domain(firefoxDriver, config.getUiUri())
-            .and()
-            .sandbox_user_navigates_to_bank_auth_page(firefoxDriver)
-            .and()
-            .sandbox_user_inputs_username_and_password(firefoxDriver, sandboxUserLogin, sandboxUserPassword)
-            .and()
-            .sandbox_user_confirms_consent_information(firefoxDriver)
-            .and()
-            .sandbox_user_selects_sca_method(firefoxDriver)
-            .and()
-            .sandbox_user_provides_sca_challenge_result(firefoxDriver)
-            .and()
-            .sandbox_user_clicks_redirect_back_to_tpp_button_api_localhost_cookie_only(firefoxDriver);
+                .fintech_calls_list_accounts_for_user(sandboxUserLogin)
+                .and()
+                .user_logged_in_into_opba_as_opba_user_with_credentials_using_fintech_supplied_url(OPBA_LOGIN, OPBA_PASSWORD)
+                .and()
+                .user_provided_initial_parameters_to_list_accounts_with_all_accounts_consent_with_cookie_validation(sandboxUserLogin)
+                .and()
+                .user_sees_that_he_needs_to_be_redirected_to_aspsp_and_redirects_to_aspsp(sandboxUserLogin)
+                .and()
+                .manually_set_authorization_cookie_on_domain(firefoxDriver, config.getUiUri())
+                .and()
+                .sandbox_user_navigates_to_bank_auth_page(firefoxDriver)
+                .and()
+                .sandbox_user_inputs_username_and_password(firefoxDriver, sandboxUserLogin, sandboxUserPassword)
+                .and()
+                .sandbox_user_confirms_consent_information(firefoxDriver)
+                .and()
+                .sandbox_user_selects_sca_method(firefoxDriver)
+                .and()
+                .sandbox_user_provides_sca_challenge_result(firefoxDriver)
+                .and()
+                .sandbox_user_clicks_redirect_back_to_tpp_button_api_localhost_cookie_only(firefoxDriver);
 
         AccountInformationResult result = then()
-            .fintech_calls_consent_activation_for_current_authorization_id()
-            .open_banking_can_read_user_account_data_using_consent_bound_to_service_session(sandboxUserLogin,false);
+                .fintech_calls_consent_activation_for_current_authorization_id()
+                .open_banking_can_read_user_account_data_using_consent_bound_to_service_session(sandboxUserLogin, false);
 
         return result.getResponseContent();
     }

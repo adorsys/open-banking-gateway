@@ -77,7 +77,7 @@ class OpbaApiWithConsentUiSmokeE2ETest extends SpringScenarioTest<SmokeSandboxSe
     @Test
     public void testTransactionListWithConsentUsingRedirectAllAccountsConsent(FirefoxDriver firefoxDriver) {
         String accountResourceId = JsonPath
-                                           .parse(redirectListUserAccounts(firefoxDriver)).read("$.accounts[0].resourceId");
+                .parse(redirectListUserAccounts(firefoxDriver)).read("$.accounts[0].resourceId");
 
         given()
                 .enabled_redirect_sandbox_mode(config.getAspspProfileServerUri())
@@ -125,8 +125,8 @@ class OpbaApiWithConsentUiSmokeE2ETest extends SpringScenarioTest<SmokeSandboxSe
     @Test
     void testTransactionsListWithConsentUsingEmbeddedAllAccountConsent(FirefoxDriver firefoxDriver) {
         String accountResourceId = JsonPath
-                                           .parse(embeddedListAccountsAllAccountConsent(firefoxDriver))
-                                           .read("$.accounts[0].resourceId");
+                .parse(embeddedListAccountsAllAccountConsent(firefoxDriver))
+                .read("$.accounts[0].resourceId");
 
         given()
                 .enabled_embedded_sandbox_mode(config.getAspspProfileServerUri())
@@ -165,8 +165,8 @@ class OpbaApiWithConsentUiSmokeE2ETest extends SpringScenarioTest<SmokeSandboxSe
     @Test
     void testTransactionsListWithConsentUsingEmbeddedDedicatedOneAccountConsent(FirefoxDriver firefoxDriver) {
         String accountResourceId = JsonPath
-                                           .parse(embeddedListAccountsDedicatedOneAccountConsent(firefoxDriver))
-                                           .read("$.accounts[0].resourceId");
+                .parse(embeddedListAccountsDedicatedOneAccountConsent(firefoxDriver))
+                .read("$.accounts[0].resourceId");
 
         given()
                 .enabled_embedded_sandbox_mode(config.getAspspProfileServerUri())
@@ -227,8 +227,8 @@ class OpbaApiWithConsentUiSmokeE2ETest extends SpringScenarioTest<SmokeSandboxSe
                 .user_in_consent_ui_sees_thank_you_for_consent_and_clicks_to_tpp(firefoxDriver);
 
         AccountInformationResult result = then()
-                                                  .fintech_calls_consent_activation_for_current_authorization_id()
-                                                  .open_banking_can_read_user_account_data_using_consent_bound_to_service_session(sandboxUserLogin, false);
+                .fintech_calls_consent_activation_for_current_authorization_id()
+                .open_banking_can_read_user_account_data_using_consent_bound_to_service_session(sandboxUserLogin, false);
 
         return result.getResponseContent();
     }
@@ -263,8 +263,8 @@ class OpbaApiWithConsentUiSmokeE2ETest extends SpringScenarioTest<SmokeSandboxSe
                 .user_in_consent_ui_sees_thank_you_for_consent_and_clicks_to_tpp(firefoxDriver);
 
         AccountInformationResult result = then()
-                                                  .fintech_calls_consent_activation_for_current_authorization_id()
-                                                  .open_banking_can_read_user_account_data_using_consent_bound_to_service_session(sandboxUserLogin, false);
+                .fintech_calls_consent_activation_for_current_authorization_id()
+                .open_banking_can_read_user_account_data_using_consent_bound_to_service_session(sandboxUserLogin, false);
 
         return result.getResponseContent();
     }
@@ -305,8 +305,8 @@ class OpbaApiWithConsentUiSmokeE2ETest extends SpringScenarioTest<SmokeSandboxSe
                 .user_in_consent_ui_sees_thank_you_for_consent_and_clicks_to_tpp(firefoxDriver);
 
         AccountInformationResult result = then()
-                                                  .fintech_calls_consent_activation_for_current_authorization_id()
-                                                  .open_banking_can_read_user_account_data_using_consent_bound_to_service_session(sandboxUserLogin, false);
+                .fintech_calls_consent_activation_for_current_authorization_id()
+                .open_banking_can_read_user_account_data_using_consent_bound_to_service_session(sandboxUserLogin, false);
 
         return result.getResponseContent();
     }

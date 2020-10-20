@@ -1,1 +1,12 @@
-{"scaStatus":"psuIdentified","authorisationId":"01421490-6136-48c6-acb5-f7e3f8db0bd6","_links":{"scaRedirect":{"href":"http://localhost:4400/account-information/login?encryptedConsentId=P937HnJRX_NOET7Vx-kmhASgVs-B0sC1unn6emAwa2mb9yrWeUMow5bIaUPU--Mrda2Q8V_Vf4IqIfhCjTMdosz9MpaJIQIH3NJX8IHgetw=_=_psGLvQpt9Q&redirectId=01421490-6136-48c6-acb5-f7e3f8db0bd6"},"scaStatus":{"href":"http://127.0.0.1:20014/v1/consents/P937HnJRX_NOET7Vx-kmhASgVs-B0sC1unn6emAwa2mb9yrWeUMow5bIaUPU--Mrda2Q8V_Vf4IqIfhCjTMdosz9MpaJIQIH3NJX8IHgetw=_=_psGLvQpt9Q/authorisations/01421490-6136-48c6-acb5-f7e3f8db0bd6"}}}
+{
+  "scaStatus": "psuIdentified",
+  "authorisationId": "01421490-6136-48c6-acb5-f7e3f8db0bd6",
+  "_links": {
+    "scaRedirect": {
+      "href": "http://localhost:4400/account-information/login?encryptedConsentId=P937HnJRX_NOET7Vx-kmhASgVs-B0sC1unn6emAwa2mb9yrWeUMow5bIaUPU--Mrda2Q8V_Vf4IqIfhCjTMdosz9MpaJIQIH3NJX8IHgetw=_=_psGLvQpt9Q&redirectId=01421490-6136-48c6-acb5-f7e3f8db0bd6"
+    },
+    "scaStatus": {
+      "href": "http://127.0.0.1:20014/v1/consents/P937HnJRX_NOET7Vx-kmhASgVs-B0sC1unn6emAwa2mb9yrWeUMow5bIaUPU--Mrda2Q8V_Vf4IqIfhCjTMdosz9MpaJIQIH3NJX8IHgetw=_=_psGLvQpt9Q/authorisations/01421490-6136-48c6-acb5-f7e3f8db0bd6"
+    }
+  }
+}

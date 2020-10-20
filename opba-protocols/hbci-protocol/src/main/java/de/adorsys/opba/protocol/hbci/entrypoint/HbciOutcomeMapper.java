@@ -26,6 +26,7 @@ import java.util.function.Function;
 
 /**
  * Mapper to convert from internal protocol result to facade facing protocol result.
+ *
  * @param <T>
  */
 @RequiredArgsConstructor
@@ -64,9 +65,9 @@ public class HbciOutcomeMapper<T> implements OutcomeMapper<T> {
 
         channel.complete(
                 new ContextBasedValidationErrorResult(
-                    problem.getProvideMoreParamsDialog(),
-                    problem.getExecutionId(),
-                    new AuthStateBody(errorMapper.map(problem.getIssues()))
+                        problem.getProvideMoreParamsDialog(),
+                        problem.getExecutionId(),
+                        new AuthStateBody(errorMapper.map(problem.getIssues()))
                 )
         );
     }
@@ -74,8 +75,8 @@ public class HbciOutcomeMapper<T> implements OutcomeMapper<T> {
     @Override
     public void onConsentAcquired(ConsentAcquired acquired) {
         channel.complete(
-            // Facade knows redirection target
-            new ConsentAcquiredResult<>(null, null)
+                // Facade knows redirection target
+                new ConsentAcquiredResult<>(null, null)
         );
     }
 

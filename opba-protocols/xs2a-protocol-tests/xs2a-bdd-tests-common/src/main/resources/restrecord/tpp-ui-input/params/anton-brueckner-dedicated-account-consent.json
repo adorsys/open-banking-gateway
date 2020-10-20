@@ -7,9 +7,15 @@
       "recurringIndicator": true,
       "combinedServiceIndicator": false,
       "access": {
-        "accounts": ["DE80760700240271232400"],
-        "balances": ["DE80760700240271232400"],
-        "transactions": ["DE80760700240271232400"]
+        "accounts": [
+          "DE80760700240271232400"
+        ],
+        "balances": [
+          "DE80760700240271232400"
+        ],
+        "transactions": [
+          "DE80760700240271232400"
+        ]
       },
       "frequencyPerDay": 12,
       "validUntil": "2030-01-31"

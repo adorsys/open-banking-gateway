@@ -63,13 +63,13 @@ public class PaymentResult<SELF extends PaymentResult<SELF>> extends Stage<SELF>
                 .getFirst(REDIRECT_CODE_QUERY);
 
         RestAssured
-            .given()
+                .given()
                 .header(X_REQUEST_ID, UUID.randomUUID().toString())
                 .queryParam(REDIRECT_CODE_QUERY, fintechUserTempPassword)
                 .contentType(APPLICATION_JSON_VALUE)
-            .when()
+                .when()
                 .post(PIS_ANONYMOUS_LOGIN_USER_ENDPOINT, paymentServiceSessionId)
-            .then()
+                .then()
                 .statusCode(BAD_REQUEST.value());
         return self();
     }
@@ -90,9 +90,9 @@ public class PaymentResult<SELF extends PaymentResult<SELF>> extends Stage<SELF>
     public SELF fintech_calls_payment_information(String iban) {
         ExtractableResponse<Response> response = withPaymentInfoHeaders(UUID.randomUUID().toString())
                 .header(SERVICE_SESSION_ID, paymentServiceSessionId)
-            .when()
+                .when()
                 .get(PIS_PAYMENT_INFORMATION_ENDPOINT, StandardPaymentProduct.SEPA_CREDIT_TRANSFERS.getSlug())
-            .then()
+                .then()
                 .statusCode(OK.value())
                 .body("endToEndIdentification", equalTo("WBG-123456789"))
                 .body("debtorAccount.iban", equalTo(iban))
@@ -127,9 +127,9 @@ public class PaymentResult<SELF extends PaymentResult<SELF>> extends Stage<SELF>
     public SELF fintech_calls_payment_information_wiremock(String iban) {
         ExtractableResponse<Response> response = withPaymentInfoHeaders(UUID.randomUUID().toString())
                 .header(SERVICE_SESSION_ID, paymentServiceSessionId)
-            .when()
+                .when()
                 .get(PIS_PAYMENT_INFORMATION_ENDPOINT, StandardPaymentProduct.SEPA_CREDIT_TRANSFERS.getSlug())
-            .then()
+                .then()
                 .statusCode(OK.value())
                 .body("endToEndIdentification", emptyOrNullString())
                 .body("debtorAccount.iban", equalTo(iban))
@@ -155,9 +155,9 @@ public class PaymentResult<SELF extends PaymentResult<SELF>> extends Stage<SELF>
     public SELF fintech_calls_payment_information_hbci(String iban, String bankId, String expectedStatus) {
         ExtractableResponse<Response> response = withPaymentInfoHeaders(UUID.randomUUID().toString(), bankId)
                 .header(SERVICE_SESSION_ID, paymentServiceSessionId)
-            .when()
+                .when()
                 .get(PIS_PAYMENT_INFORMATION_ENDPOINT, StandardPaymentProduct.SEPA_CREDIT_TRANSFERS.getSlug())
-            .then()
+                .then()
                 .statusCode(OK.value())
                 .body("endToEndIdentification", equalTo("WBG-123456789"))
                 .body("debtorAccount.iban", equalTo(iban))
@@ -188,9 +188,9 @@ public class PaymentResult<SELF extends PaymentResult<SELF>> extends Stage<SELF>
     public SELF fintech_calls_payment_status(String bankId, String expectedStatus, String serviceSessionId) {
         ExtractableResponse<Response> response = withPaymentInfoHeaders(UUID.randomUUID().toString(), bankId)
                 .header(SERVICE_SESSION_ID, serviceSessionId)
-            .when()
+                .when()
                 .get(PIS_PAYMENT_STATUS_ENDPOINT, StandardPaymentProduct.SEPA_CREDIT_TRANSFERS.getSlug())
-            .then()
+                .then()
                 .statusCode(OK.value())
                 .body("transactionStatus", equalTo(expectedStatus))
                 .extract();
@@ -204,12 +204,12 @@ public class PaymentResult<SELF extends PaymentResult<SELF>> extends Stage<SELF>
 
     public SELF fintech_calls_payment_activation_for_current_authorization_id(String serviceSessionId) {
         withSignatureHeaders(RestAssured
-            .given()
+                .given()
                 .header(SERVICE_SESSION_PASSWORD, SESSION_PASSWORD)
                 .contentType(APPLICATION_JSON_VALUE))
-            .when()
+                .when()
                 .post(CONFIRM_PAYMENT_ENDPOINT, serviceSessionId)
-            .then()
+                .then()
                 .statusCode(HttpStatus.OK.value());
         return self();
     }

@@ -7,7 +7,7 @@ import de.adorsys.opba.protocol.api.dto.result.body.AuthStateBody;
 /**
  * Called within embedded Consent authorization to get fields that are necessary to be provided by user at current stage.
  * Is used to show the user which fields he needs to provide for complex forms.
- *
+ * <p>
  * Typical outcomes:
  * <ul>
  *     <li>

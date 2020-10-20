@@ -49,11 +49,11 @@ public class HbciAccountInformationRequest<SELF extends HbciAccountInformationRe
 
     public SELF fintech_calls_list_transactions_for_max_musterman_using_already_granted_service_session(String resourceId, String bankId) {
         ExtractableResponse<Response> response = withTransactionsHeaders(MAX_MUSTERMAN, bankId)
-                    .header(SERVICE_SESSION_ID, serviceSessionId)
+                .header(SERVICE_SESSION_ID, serviceSessionId)
                 .when()
-                    .get(AIS_TRANSACTIONS_ENDPOINT, resourceId)
+                .get(AIS_TRANSACTIONS_ENDPOINT, resourceId)
                 .then()
-                    .statusCode(HttpStatus.ACCEPTED.value())
+                .statusCode(HttpStatus.ACCEPTED.value())
                 .extract();
 
         updateServiceSessionId(response);

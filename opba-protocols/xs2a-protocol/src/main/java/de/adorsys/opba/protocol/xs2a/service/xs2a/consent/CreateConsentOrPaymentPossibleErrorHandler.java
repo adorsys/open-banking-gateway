@@ -30,6 +30,7 @@ public class CreateConsentOrPaymentPossibleErrorHandler {
 
     /**
      * Swallows retryable (like wrong IBAN) consent initiation exceptions.
+     *
      * @param tryCreate Consent/payment creation function to call
      */
     public void tryCreateAndHandleErrors(DelegateExecution execution, Runnable tryCreate) {

@@ -1,1 +1,18 @@
-{"transactionStatus":"RCVD","paymentId":"XWE3m-MOSgiyLSbxm0gs9cTpUIYh6Zd7AGdfJFpzoL6i92f92FPqxs78swMVBY91cgftJbETkzvNvu5mZQqWcA==_=_psGLvQpt9Q","_links":{"scaRedirect":{"href":"http://localhost:4400/payment-initiation/login?paymentId=XWE3m-MOSgiyLSbxm0gs9cTpUIYh6Zd7AGdfJFpzoL6i92f92FPqxs78swMVBY91cgftJbETkzvNvu5mZQqWcA==_=_psGLvQpt9Q&redirectId=04352232-9f0a-44cc-901c-dd0a3e4bdd53"},"self":{"href":"http://localhost:20014/v1/payments/sepa-credit-transfers/XWE3m-MOSgiyLSbxm0gs9cTpUIYh6Zd7AGdfJFpzoL6i92f92FPqxs78swMVBY91cgftJbETkzvNvu5mZQqWcA==_=_psGLvQpt9Q"},"status":{"href":"http://localhost:20014/v1/payments/sepa-credit-transfers/XWE3m-MOSgiyLSbxm0gs9cTpUIYh6Zd7AGdfJFpzoL6i92f92FPqxs78swMVBY91cgftJbETkzvNvu5mZQqWcA==_=_psGLvQpt9Q/status"},"scaStatus":{"href":"http://localhost:20014/v1/payments/sepa-credit-transfers/XWE3m-MOSgiyLSbxm0gs9cTpUIYh6Zd7AGdfJFpzoL6i92f92FPqxs78swMVBY91cgftJbETkzvNvu5mZQqWcA==_=_psGLvQpt9Q/authorisations/04352232-9f0a-44cc-901c-dd0a3e4bdd53"}}}
+{
+  "transactionStatus": "RCVD",
+  "paymentId": "XWE3m-MOSgiyLSbxm0gs9cTpUIYh6Zd7AGdfJFpzoL6i92f92FPqxs78swMVBY91cgftJbETkzvNvu5mZQqWcA==_=_psGLvQpt9Q",
+  "_links": {
+    "scaRedirect": {
+      "href": "http://localhost:4400/payment-initiation/login?paymentId=XWE3m-MOSgiyLSbxm0gs9cTpUIYh6Zd7AGdfJFpzoL6i92f92FPqxs78swMVBY91cgftJbETkzvNvu5mZQqWcA==_=_psGLvQpt9Q&redirectId=04352232-9f0a-44cc-901c-dd0a3e4bdd53"
+    },
+    "self": {
+      "href": "http://localhost:20014/v1/payments/sepa-credit-transfers/XWE3m-MOSgiyLSbxm0gs9cTpUIYh6Zd7AGdfJFpzoL6i92f92FPqxs78swMVBY91cgftJbETkzvNvu5mZQqWcA==_=_psGLvQpt9Q"
+    },
+    "status": {
+      "href": "http://localhost:20014/v1/payments/sepa-credit-transfers/XWE3m-MOSgiyLSbxm0gs9cTpUIYh6Zd7AGdfJFpzoL6i92f92FPqxs78swMVBY91cgftJbETkzvNvu5mZQqWcA==_=_psGLvQpt9Q/status"
+    },
+    "scaStatus": {
+      "href": "http://localhost:20014/v1/payments/sepa-credit-transfers/XWE3m-MOSgiyLSbxm0gs9cTpUIYh6Zd7AGdfJFpzoL6i92f92FPqxs78swMVBY91cgftJbETkzvNvu5mZQqWcA==_=_psGLvQpt9Q/authorisations/04352232-9f0a-44cc-901c-dd0a3e4bdd53"
+    }
+  }
+}

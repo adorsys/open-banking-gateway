@@ -14,6 +14,7 @@ import org.springframework.stereotype.Service;
 
 import static de.adorsys.opba.protocol.hbci.constant.GlobalConst.LAST_REDIRECTION_TARGET;
 import static de.adorsys.opba.protocol.hbci.constant.GlobalConst.LAST_VALIDATION_ISSUES;
+
 /**
  * Reports that there were validation errors on context. As the result user should be redirected to the form,
  * where he can provide missing data to the context to proceed with authorization. Typically that data is passed
@@ -42,8 +43,8 @@ public class HbciReportValidationError implements JavaDelegate {
                         .consentIncompatible(violations.isConsentIncompatible())
                         .provideMoreParamsDialog(
                                 ContextUtil.buildAndExpandQueryParameters(
-                                                configuration.getAis().getRedirect().getParameters().getProvideMore(),
-                                                current, current.getRedirectCodeIfAuthContinued(), current.getUserSelectScaType()
+                                        configuration.getAis().getRedirect().getParameters().getProvideMore(),
+                                        current, current.getRedirectCodeIfAuthContinued(), current.getUserSelectScaType()
                                 )
                         )
                         .issues(current.getViolations())

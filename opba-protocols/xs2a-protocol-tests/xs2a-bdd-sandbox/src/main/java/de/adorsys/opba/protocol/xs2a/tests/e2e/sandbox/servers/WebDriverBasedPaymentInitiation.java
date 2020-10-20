@@ -45,8 +45,8 @@ public class WebDriverBasedPaymentInitiation<SELF extends WebDriverBasedPaymentI
     }
 
     /*
-    * Caused by FIXME https://github.com/adorsys/XS2A-Sandbox/issues/42, should be sandbox_anton_brueckner_clicks_redirect_back_to_tpp_button_api_localhost_cookie_only
-    */
+     * Caused by FIXME https://github.com/adorsys/XS2A-Sandbox/issues/42, should be sandbox_anton_brueckner_clicks_redirect_back_to_tpp_button_api_localhost_cookie_only
+     */
     public SELF sandbox_anton_brueckner_imitates_click_redirect_back_to_tpp_button_api_localhost_cookie_only_with_oauth2_integrated_hack(WebDriver driver) {
         acc.sandbox_anton_brueckner_imitates_click_redirect_back_to_tpp_button_api_localhost_cookie_only_with_oauth2_integrated_hack(driver, authSessionCookie);
         return self();
