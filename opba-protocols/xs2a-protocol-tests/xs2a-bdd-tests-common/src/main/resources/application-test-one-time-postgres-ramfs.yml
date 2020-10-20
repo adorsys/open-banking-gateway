@@ -237,6 +237,6 @@ bpmnshared:
     number-of-retries: 0
 flowable:
   process-definition-location-prefix: classpath*:/processes/**/
-  timer:
-    maxDuration: PT5M
-    delayDuration: PT1M
+  decoupled:
+    timeout: PT5M
+    pollInterval: PT1M

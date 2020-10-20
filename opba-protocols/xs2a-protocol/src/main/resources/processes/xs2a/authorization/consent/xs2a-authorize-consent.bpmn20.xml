@@ -96,18 +96,18 @@
       <startEvent id="decoupledSubProcessStart" name="Start of decoupled Sca subprocess"/>
       <serviceTask id="checkIfDecoupledScaFinalized" flowable:exclusive="true" name="Checks authorization status to be finalized" flowable:delegateExpression="${xs2aAisCheckDecoupledAuthorizationStatus}"/>
       <exclusiveGateway id="authrizationSucceded" name="Authirization finalised?"/>
-      <sequenceFlow id="startAuthoriztionChecking" sourceRef="decoupledSubProcessStart" targetRef="checkIfDecoupledScaFinalized" name="Start authoriztion checking"/>
+      <sequenceFlow id="startAuthorizationChecking" sourceRef="decoupledSubProcessStart" targetRef="checkIfDecoupledScaFinalized" name="Start authorization checking"/>
       <sequenceFlow id="sid-f525dcb0-40f2-4159-a992-729ee3e02130" sourceRef="checkIfDecoupledScaFinalized" targetRef="authrizationSucceded"/>
       <intermediateCatchEvent id="waitAuthorizationConfirmation" name="Waits until authorization is finished by PSU">
         <timerEventDefinition>
           <timeDuration>${flowable.timer.delayDuration}</timeDuration>
         </timerEventDefinition>
       </intermediateCatchEvent>
-      <sequenceFlow id="startTimer" sourceRef="authrizationSucceded" targetRef="waitAuthorizationConfirmation" name="Starts timer to wait for PSU actions">
+      <sequenceFlow id="startTimer" sourceRef="authrizationSucceded" targetRef="waitAuthorizationConfirmation" name="Waits for user to authorize in 3rd party using decoupled approach">
         <conditionExpression xsi:type="tFormalExpression">#{!xs2aConsentInfo.isDecoupledScaFinalizedByPSU(CONTEXT)}</conditionExpression>
       </sequenceFlow>
       <sequenceFlow id="restartAuthorizationCheck" sourceRef="waitAuthorizationConfirmation" targetRef="checkIfDecoupledScaFinalized" name="Starts authorization check after some delay"/>
-      <intermediateCatchEvent id="subprocessTimeLimit" name="Time limit of subprocess execution">
+      <intermediateCatchEvent id="subprocessTimeLimit" name="Decoupled authorization timelimit (timeout)">
         <timerEventDefinition>
           <timeDuration>${flowable.timer.maxDuration}</timeDuration>
         </timerEventDefinition>
@@ -354,7 +354,7 @@
       <bpmdi:BPMNShape xmlns:bpmdi="http://www.omg.org/spec/BPMN/20100524/DI" id="shape-93779664-d8c4-4f81-9b33-ec218565d349" bpmnElement="authrizationSucceded">
         <omgdc:Bounds x="1701.4" y="-42.299988" width="40.0" height="40.0"/>
       </bpmdi:BPMNShape>
-      <bpmdi:BPMNEdge xmlns:bpmdi="http://www.omg.org/spec/BPMN/20100524/DI" id="edge-2321e0df-4246-41e5-b198-72c93df71913" bpmnElement="startAuthoriztionChecking">
+      <bpmdi:BPMNEdge xmlns:bpmdi="http://www.omg.org/spec/BPMN/20100524/DI" id="edge-2321e0df-4246-41e5-b198-72c93df71913" bpmnElement="startAuthorizationChecking">
         <omgdi:waypoint x="1477.2001" y="-22.299988"/>
         <omgdi:waypoint x="1553.8" y="-22.29999"/>
       </bpmdi:BPMNEdge>
@@ -382,7 +382,9 @@
         <omgdc:Bounds x="1760.0" y="35.0" width="30.0" height="30.0"/>
       </bpmdi:BPMNShape>
       <bpmdi:BPMNEdge xmlns:bpmdi="http://www.omg.org/spec/BPMN/20100524/DI" id="edge-3cdad096-727a-4c3c-908c-64414d2a72cf" bpmnElement="decoupledSubprocessSuccess">
-        <omgdi:waypoint x="1527.9" y="46.90001"/>
+        <omgdi:waypoint x="1633.0" y="46.90001"/>
+        <omgdi:waypoint x="1633.0" y="135.9444"/>
+        <omgdi:waypoint x="1383.0" y="135.9444"/>
         <omgdi:waypoint x="1383.0" y="215.0"/>
       </bpmdi:BPMNEdge>
       <bpmdi:BPMNEdge xmlns:bpmdi="http://www.omg.org/spec/BPMN/20100524/DI" id="edge-21a71140-566b-4605-b9c9-f2b24337cee8" bpmnElement="decoupledSubprocessFailure">
