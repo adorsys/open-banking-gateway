@@ -12,6 +12,8 @@ describe('RedirectPageComponent', () => {
   let component: RedirectPageComponent;
   let fixture: ComponentFixture<RedirectPageComponent>;
 
+  beforeAll(() => (window.onbeforeunload = jasmine.createSpy()));
+
   beforeEach(async(() => {
     TestBed.configureTestingModule({
       imports: [RouterTestingModule, HttpClientTestingModule],

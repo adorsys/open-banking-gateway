@@ -26,8 +26,4 @@ export class PaymentAccountsComponent implements OnInit {
     this.selectedAccount = id;
     this.router.navigate(['../account', id], { relativeTo: this.route });
   }
-
-  isSelected(id) {
-    return id === this.selectedAccount ? 'selected' : 'unselected';
-  }
 }

@@ -8,6 +8,8 @@ describe('AisService', () => {
   let finTechAccountInformationService: FinTechAccountInformationService;
   let aisService: AisService;
 
+  beforeAll(() => (window.onbeforeunload = jasmine.createSpy()));
+
   beforeEach(() => {
     TestBed.configureTestingModule({
       imports: [HttpClientTestingModule],

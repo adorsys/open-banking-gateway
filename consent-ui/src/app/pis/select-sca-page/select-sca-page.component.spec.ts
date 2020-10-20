@@ -11,6 +11,8 @@ describe('PIS SelectScaPageComponent', () => {
   let component: SelectScaPageComponent;
   let fixture: ComponentFixture<SelectScaPageComponent>;
 
+  beforeAll(() => (window.onbeforeunload = jasmine.createSpy()));
+
   beforeEach(async(() => {
     TestBed.configureTestingModule({
       declarations: [SelectScaPageComponent],
