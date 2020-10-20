@@ -51,7 +51,7 @@ public class ExportableAccountService {
                 null,
                 consentRepository.findFirstByBankIdOrderByModifiedAt(bankId).map(BankConsent::getConsentId).orElse(null),
                 true,
-                true
+                null
         );
 
         if (accounts.getStatusCode() == HttpStatus.ACCEPTED) {
