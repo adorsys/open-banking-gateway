@@ -76,11 +76,8 @@ public class Xs2aRedirectExecutor {
         Function<Redirect.RedirectBuilder, ? extends Redirect> eventFactory
     ) {
         setDestinationUriInContext(execution, destinationUri);
-
-
-        URI screenUri = ContextUtil.buildAndExpandQueryParameters(uiScreenUriSpel, context, null, context.getUserSelectScaType());
-
-
+        URI screenUri = ContextUtil.buildAndExpandQueryParameters(
+                uiScreenUriSpel, context, null, context.getUserSelectScaType());
         Redirect.RedirectBuilder redirect = Redirect.builder();
         redirect.processId(execution.getRootProcessInstanceId());
         redirect.executionId(execution.getId());

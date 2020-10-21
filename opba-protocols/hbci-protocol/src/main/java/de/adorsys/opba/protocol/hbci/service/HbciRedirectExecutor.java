@@ -77,7 +77,8 @@ public class HbciRedirectExecutor {
     ) {
         setDestinationUriInContext(execution, destinationUri);
 
-        URI screenUri = ContextUtil.buildAndExpandQueryParameters(uiScreenUriSpel, context, context.getRedirectCodeIfAuthContinued(), null);
+        URI screenUri = ContextUtil.buildAndExpandQueryParameters(
+                uiScreenUriSpel, context, context.getRedirectCodeIfAuthContinued(), context.getUserSelectScaType());
         Redirect.RedirectBuilder redirect = Redirect.builder();
         redirect.processId(execution.getRootProcessInstanceId());
         redirect.executionId(execution.getId());
