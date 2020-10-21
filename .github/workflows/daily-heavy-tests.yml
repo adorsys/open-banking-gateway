@@ -26,4 +26,5 @@ jobs:
         run: ./scripts/build_and_test.sh
         env:
           ENABLE_HEAVY_TESTS: true
+          MOZ_HEADLESS: 1
 
