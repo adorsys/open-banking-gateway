@@ -1,6 +1,5 @@
 ## Prerequisites:
 1. BasicTest sandbox started
-1. technical-ui started
 1. OpenBankingEmbeddedApplication started with updated Sandbox port to `30000`
 
 ## Recording
