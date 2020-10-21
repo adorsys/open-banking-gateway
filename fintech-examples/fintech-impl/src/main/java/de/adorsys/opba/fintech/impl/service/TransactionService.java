@@ -65,7 +65,7 @@ public class TransactionService {
             UUID.fromString(restRequestContext.getRequestId()),
             COMPUTE_X_TIMESTAMP_UTC,
             COMPUTE_X_REQUEST_SIGNATURE,
-            COMPUTE_FINTECH_ID, bankId, null,
+            COMPUTE_FINTECH_ID, bankId,
             optionalConsent.map(ConsentEntity::getTppServiceSessionId).orElse(null),
             dateFrom, dateTo, entryReferenceFrom, bookingStatus, deltaList, online);
         switch (transactions.getStatusCode()) {

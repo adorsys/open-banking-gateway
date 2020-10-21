@@ -47,7 +47,6 @@ public class TppBankingApiAisController implements TppBankingApiAccountInformati
         String xRequestSignature,
         String fintechId,
         String bankID,
-        String psUConsentSession,
         UUID serviceSessionId,
         Boolean withBalance,
         Boolean online
@@ -85,7 +84,6 @@ public class TppBankingApiAisController implements TppBankingApiAccountInformati
         String xRequestSignature,
         String fintechId,
         String bankID,
-        String psUConsentSession,
         UUID serviceSessionId,
         LocalDate dateFrom,
         LocalDate dateTo,
@@ -131,7 +129,6 @@ public class TppBankingApiAisController implements TppBankingApiAccountInformati
         String xRequestSignature,
         String fintechId,
         String bankId,
-        String psUConsentSession,
         UUID serviceSessionId,
         LocalDate dateFrom,
         LocalDate dateTo,
