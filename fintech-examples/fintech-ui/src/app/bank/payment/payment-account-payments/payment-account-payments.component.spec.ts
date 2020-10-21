@@ -1,8 +1,9 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
-import { ActivatedRoute, convertToParamMap } from '@angular/router';
+import { ActivatedRoute } from '@angular/router';
 import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
 import { RouterTestingModule } from '@angular/router/testing';
+import {ReactiveFormsModule} from "@angular/forms";
 
 import { PaymentAccountPaymentsComponent } from './payment-account-payments.component';
 
@@ -12,7 +13,7 @@ describe('PaymentAccountPaymentsComponent', () => {
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      imports: [HttpClientTestingModule, RouterTestingModule],
+      imports: [HttpClientTestingModule, RouterTestingModule, ReactiveFormsModule],
       declarations: [PaymentAccountPaymentsComponent],
       schemas: [CUSTOM_ELEMENTS_SCHEMA],
       providers: [
