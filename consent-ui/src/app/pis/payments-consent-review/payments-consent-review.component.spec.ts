@@ -17,6 +17,8 @@ describe('PaymentsConsentReviewComponent', () => {
   let sessionService: SessionService;
   let updateConsentAuthorizationServiceSpy;
 
+  beforeAll(() => (window.onbeforeunload = jasmine.createSpy()));
+
   beforeEach(async(() => {
     TestBed.configureTestingModule({
       declarations: [PaymentsConsentReviewComponent],

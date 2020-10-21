@@ -12,6 +12,8 @@ describe('ToAspspPageComponent', () => {
   let component: ToAspspPageComponent;
   let fixture: ComponentFixture<ToAspspPageComponent>;
 
+  beforeAll(() => (window.onbeforeunload = jasmine.createSpy()));
+
   beforeEach(async(() => {
     TestBed.configureTestingModule({
       declarations: [ToAspspPageComponent],

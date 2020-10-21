@@ -12,6 +12,8 @@ describe('EnterPinPageComponent', () => {
   let component: EnterPinPageComponent;
   let fixture: ComponentFixture<EnterPinPageComponent>;
 
+  beforeAll(() => (window.onbeforeunload = jasmine.createSpy()));
+
   beforeEach(async(() => {
     TestBed.configureTestingModule({
       declarations: [EnterPinPageComponent],

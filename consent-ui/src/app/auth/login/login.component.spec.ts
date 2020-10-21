@@ -30,6 +30,8 @@ describe('LoginComponent', () => {
   const usernameInput = 'alex';
   const passwordInput = '1234';
 
+  beforeAll(() => (window.onbeforeunload = jasmine.createSpy()));
+
   beforeEach(async(() => {
     route = new MockActivatedRoute();
     route.snapshot = {
