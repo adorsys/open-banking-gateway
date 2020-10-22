@@ -118,7 +118,7 @@ public class DatasafeConfig {
 
     @SneakyThrows
     private EncryptionConfig mapToEncryptionConfig(byte[] data) {
-        return mapper.readValue(data, EncryptionConfig.class);
+        return mapper.readValue(new String(data), EncryptionConfig.class);
     }
 
     @PostConstruct
