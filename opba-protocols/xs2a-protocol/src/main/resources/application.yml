@@ -27,6 +27,38 @@ spring:
 facade:
   urls:
     embedded-ui-base-url: http://localhost:4200
+    # Datasafe security configuration
+    datasafe:
+      # Which keystore to use and how to encrypt keys in it
+      key-store:
+        type: BCFKS
+        encryption-algo: AES256_KWP
+        pbkdf:
+          pbkdf2:
+          scrypt:
+        mac-algo: HmacSHA3_512
+        password-keys-algo: PBEWithHmacSHA256AndAES_256
+      # Which keys to create in keystore
+      key-creation:
+        enc-key-number: 1
+        sign-key-number: 1
+        # Secret key creation
+        secret:
+          algo: AES
+          size: 256
+        # Encrypting key creation
+        encrypting:
+          algo: RSA
+          size: 2048
+          sig-algo: SHA256withRSA
+        # Signing key creation
+        signing:
+          algo: RSA
+          size: 2048
+          sig-algo: SHA256withRSA
+      # How to encrypt documents
+      cms-encryption:
+        algo: AES256_GCM
 
 protocol:
   xs2a:
