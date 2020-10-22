@@ -44,7 +44,7 @@ protocol:
           report-sca-result: ${facade.urls.embedded-ui-base-url}/ais${protocol.xs2a.urls.common.parameters.report-sca-result}
           provide-psu-iban: ${facade.urls.embedded-ui-base-url}/ais${protocol.xs2a.urls.common.parameters.provide-psu-iban}
       pis:
-        to-aspsp: ${facade.urls.embedded-ui-base-url}/pis${protocol.xs2a.urls.common.to-aspsp}
+        to-aspsp: ${facade.urls.embedded-ui-base-url}/pis${protocol.xs2a.urls.common.to-aspsp}?redirectCode={redirectCode}
         web-hooks:
           ok: ${protocol.xs2a.urls.common.web-hooks.ok}
           nok: ${protocol.xs2a.urls.common.web-hooks.nok}
@@ -56,17 +56,17 @@ protocol:
           report-sca-result: ${facade.urls.embedded-ui-base-url}/pis${protocol.xs2a.urls.common.parameters.report-sca-result}
           provide-psu-iban: ${facade.urls.embedded-ui-base-url}/pis${protocol.xs2a.urls.common.parameters.provide-psu-iban}
       common:
-        to-aspsp: /{sessionId}/to-aspsp-redirection
+        to-aspsp: /{authSessionId}/to-aspsp-redirection?redirectCode={redirectCode}
         web-hooks:
-          ok: ${facade.urls.embedded-ui-base-url}/embedded-server/v1/consent/{sessionId}/fromAspsp/STUB_STATE/ok
-          nok: ${facade.urls.embedded-ui-base-url}/embedded-server/v1/consent/{sessionId}/fromAspsp/STUB_STATE/nok
-          result: /{sessionId}/consent-result
+          ok: ${facade.urls.embedded-ui-base-url}/embedded-server/v1/consent/{authSessionId}/fromAspsp/STUB_STATE/ok?redirectCode={aspspRedirectCode}
+          nok: ${facade.urls.embedded-ui-base-url}/embedded-server/v1/consent/{authSessionId}/fromAspsp/STUB_STATE/nok?redirectCode={aspspRedirectCode}
+          result: /{authSessionId}/consent-result?redirectCode={redirectCode}
         parameters:
-          provide-more: /{sessionId}
-          provide-psu-password: /{sessionId}/authenticate?wrong={wrong}
-          select-sca-method: /{sessionId}/select-sca-method
-          report-sca-result: /{sessionId}/sca-result?wrong={wrong}
-          provide-psu-iban: /{sessionId}/entry-consent-transactions/dedicated-account-access?wrong={wrong}
+          provide-more: /{authSessionId}?redirectCode={redirectCode}
+          provide-psu-password: /{authSessionId}/authenticate?wrong={isWrongCreds}
+          select-sca-method: /{authSessionId}/select-sca-method
+          report-sca-result: /{authSessionId}/sca-result/#{context.getUserSelectScaType()}?wrong={isWrongCreds}
+          provide-psu-iban: /{authSessionId}/entry-consent-transactions/dedicated-account-access?wrong={isWrongCreds}
     aspspmessages:
       invalid-credentials: PSU_CREDENTIALS_INVALID
       invalid-consent: FORMAT_ERROR
