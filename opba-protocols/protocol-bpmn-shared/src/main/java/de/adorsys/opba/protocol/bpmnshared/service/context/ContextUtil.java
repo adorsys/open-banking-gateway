@@ -5,6 +5,9 @@ import de.adorsys.opba.protocol.bpmnshared.dto.context.BaseContext;
 import lombok.Data;
 import lombok.experimental.UtilityClass;
 import org.flowable.engine.delegate.DelegateExecution;
+import org.mapstruct.Mapper;
+import org.mapstruct.Mapping;
+import org.mapstruct.factory.Mappers;
 import org.springframework.web.util.UriComponentsBuilder;
 
 import java.net.URI;
@@ -36,29 +39,29 @@ public class ContextUtil {
         execution.setVariable(GlobalConst.CONTEXT, ctx);
     }
 
+    public URI buildAndExpandQueryParameters(String urlTemplate, BaseContext context) {
+        return buildAndExpandQueryParameters(urlTemplate, context, Mappers.getMapper(DefaultContextMapper.class));
+    }
+
+    public URI buildAndExpandQueryParameters(String urlTemplate, BaseContext context, ContextMapper mapper) {
+        return buildAndExpandQueryParameters(urlTemplate, mapper.map(context));
+    }
+
     /**
-     * Allows to perform string interpolation like '/ais/{sessionId}' using the process context. Appends redirectCode
-     * if necessary.
+     * Allows to perform string interpolation like '/ais/{sessionId}' using the process context.
      */
     public URI buildAndExpandQueryParameters(String urlTemplate, UrlContext context) {
         Map<String, String> expansionContext = new HashMap<>();
 
-        expansionContext.put("sessionId", context.getAuthorizationSessionIdIfOpened());
-        expansionContext.put("wrong", null == context.getWrongAuthCredentials() ? null : context.getWrongAuthCredentials().toString());
-        expansionContext.put("userSelectScaType", scaType);
+        expansionContext.put("authSessionId", context.getAuthSessionId());
+        expansionContext.put("selectedScaType", context.getSelectedScaType());
+        expansionContext.put("redirectCode", context.getRedirectCode());
+        expansionContext.put("aspspRedirectCode", context.getAspspRedirectCode());
+        expansionContext.put("isWrongCreds", null == context.getIsWrongCreds() ? null : context.getIsWrongCreds().toString());
 
-        URI uri = UriComponentsBuilder.fromHttpUrl(urlTemplate)
+        return UriComponentsBuilder.fromHttpUrl(urlTemplate)
                 .buildAndExpand(expansionContext)
                 .toUri();
-
-        if (redirectCode != null) {
-            uri = UriComponentsBuilder
-                    .fromUri(uri)
-                    .queryParam("redirectCode", redirectCode)
-                    .build()
-                    .toUri();
-        }
-        return uri;
     }
 
     @Data
@@ -68,6 +71,22 @@ public class ContextUtil {
         private String selectedScaType;
         private String redirectCode;
         private String aspspRedirectCode;
-        private Boolean isWrongAuthCreds;
+        private Boolean isWrongCreds;
+    }
+
+    @FunctionalInterface
+    public interface ContextMapper {
+
+        UrlContext map(BaseContext context);
+    }
+
+    @Mapper
+    public interface DefaultContextMapper extends ContextMapper {
+
+        @Mapping(source = "userSelectedScaType", target = "selectedScaType")
+        @Mapping(source = "authorizationSessionIdIfOpened", target = "authSessionId")
+        @Mapping(source = "redirectCodeIfAuthContinued", target = "redirectCode")
+        @Mapping(source = "wrongAuthCredentials", target = "isWrongCreds")
+        UrlContext map(BaseContext context);
     }
 }
