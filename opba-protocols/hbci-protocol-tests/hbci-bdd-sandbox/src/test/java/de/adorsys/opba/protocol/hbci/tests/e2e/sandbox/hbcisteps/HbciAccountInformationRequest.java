@@ -5,7 +5,6 @@ import de.adorsys.opba.protocol.xs2a.tests.e2e.LocationExtractorUtil;
 import de.adorsys.opba.protocol.xs2a.tests.e2e.stages.AccountInformationRequestCommon;
 import io.restassured.response.ExtractableResponse;
 import io.restassured.response.Response;
-import org.springframework.http.HttpStatus;
 
 import static de.adorsys.opba.protocol.hbci.tests.e2e.sandbox.hbcisteps.FixtureConst.BANK_BLZ_20000002_ID;
 import static de.adorsys.opba.protocol.hbci.tests.e2e.sandbox.hbcisteps.FixtureConst.BANK_BLZ_30000003_ID;
@@ -53,7 +52,7 @@ public class HbciAccountInformationRequest<SELF extends HbciAccountInformationRe
                 .when()
                     .get(AIS_TRANSACTIONS_ENDPOINT, resourceId)
                 .then()
-                    .statusCode(HttpStatus.ACCEPTED.value())
+                    .statusCode(ACCEPTED.value())
                 .extract();
 
         updateServiceSessionId(response);

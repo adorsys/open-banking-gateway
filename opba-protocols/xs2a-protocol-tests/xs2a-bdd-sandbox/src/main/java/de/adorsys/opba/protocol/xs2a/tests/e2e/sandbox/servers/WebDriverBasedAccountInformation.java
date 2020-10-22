@@ -87,6 +87,13 @@ public class WebDriverBasedAccountInformation<SELF extends WebDriverBasedAccount
         return self();
     }
 
+    public SELF user_provided_to_consent_ui_initial_parameters_to_list_transactions_with_hbci_consent(WebDriver driver, String user) {
+        waitForPageLoadAndUrlEndsWithPath(driver, "entry-consent-transactions");
+        sendText(driver, By.id("PSU_ID"), user);
+        clickOnButton(driver, By.id(SUBMIT_ID));
+        return self();
+    }
+
     public SELF user_provided_to_consent_ui_initial_parameters_to_list_accounts_with_dedicated_accounts_consent(WebDriver driver, String user) {
         waitForPageLoadAndUrlEndsWithPath(driver, "entry-consent-accounts");
         sendText(driver, By.id("PSU_ID"), user);
@@ -199,7 +206,7 @@ public class WebDriverBasedAccountInformation<SELF extends WebDriverBasedAccount
         return self();
     }
 
-    public SELF user_max_musterman_in_consent_ui_provides_pin(WebDriver driver) {
+    public SELF user_in_consent_ui_provides_pin(WebDriver driver) {
         waitForPageLoadAndUrlEndsWithPath(driver, "authenticate");
         sendText(driver, By.id("pin"), PIN_VALUE);
         clickOnButton(driver, By.id(SUBMIT_ID));

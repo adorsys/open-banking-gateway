@@ -33,7 +33,10 @@ public class HbciAskToSelectTanChallenge extends ValidatedExecution<HbciContext>
             // Nothing to select by user, autoselect
             ContextUtil.getAndUpdateContext(
                     execution,
-                    (HbciContext ctx) -> ctx.setUserSelectScaId(ctx.getAvailableSca().get(0).getKey())
+                    (HbciContext ctx) -> {
+                        ctx.setUserSelectScaId(ctx.getAvailableSca().get(0).getKey());
+                        ctx.setUserSelectedScaType(ctx.getAvailableSca().get(0).getType());
+                    }
             );
 
             runtimeService.trigger(execution.getId());

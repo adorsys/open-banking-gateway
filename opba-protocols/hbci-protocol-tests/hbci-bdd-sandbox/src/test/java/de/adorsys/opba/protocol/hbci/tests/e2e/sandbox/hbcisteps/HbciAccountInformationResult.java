@@ -77,32 +77,6 @@ public class HbciAccountInformationResult<SELF extends HbciAccountInformationRes
     }
 
     @SneakyThrows
-    public SELF open_banking_can_read_max_musterman_hbci_transaction_data_using_consent_bound_to_service_session(
-            String resourceId, String bankId, LocalDate dateFrom, LocalDate dateTo, String bookingStatus
-    ) {
-        ExtractableResponse<Response> response = getTransactionListFor(MAX_MUSTERMAN, bankId, resourceId, dateFrom, dateTo, bookingStatus);
-
-        this.responseContent = response.body().asString();
-        DocumentContext body = JsonPath.parse(responseContent);
-
-        // TODO: Currently no IBANs as mapping is not yet completed
-        assertThat(body).extracting(it -> it.read("$.transactions.booked[*]")).asList().hasSize(1);
-        assertThat(body).extracting(it -> it.read("$.transactions.pending[*]")).asList().isEmpty();
-        assertThat(body)
-                .extracting(it -> it.read("$.transactions.booked[*].transactionAmount.amount"))
-                .asList()
-                .extracting(it -> new BigDecimal((String) it))
-                .usingElementComparator(BIG_DECIMAL_COMPARATOR)
-                // Looks like returned order by Sandbox is not stable
-                .containsOnly(
-                        new BigDecimal("-100.00")
-                );
-        assertThat(body).extracting(it -> it.read("$.transactions.booked[*].remittanceInformationUnstructured"))
-                .asList().containsOnly("Payment For Account Insurance");
-        return self();
-    }
-
-    @SneakyThrows
     public SELF open_banking_can_read_max_musterman_hbci_transaction_data_using_consent_bound_to_service_session_with_extra_transactions(
             String resourceId, String bankId, LocalDate dateFrom, LocalDate dateTo, String bookingStatus, BigDecimal[] extraTransactions
     ) {
