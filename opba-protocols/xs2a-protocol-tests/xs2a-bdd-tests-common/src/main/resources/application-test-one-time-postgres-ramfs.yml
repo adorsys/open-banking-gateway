@@ -175,7 +175,7 @@ protocol:
           provide-more: /{authSessionId}?redirectCode={redirectCode}
           provide-psu-password: /{authSessionId}/authenticate?wrong={isWrongCreds}
           select-sca-method: /{authSessionId}/select-sca-method
-          report-sca-result: /{authSessionId}/sca-result/#{context.getUserSelectScaType()}?wrong={isWrongCreds}
+          report-sca-result: /{authSessionId}/sca-result/{selectedScaType}?wrong={isWrongCreds}
           provide-psu-iban: /{authSessionId}/entry-consent-transactions/dedicated-account-access?wrong={isWrongCreds}
     aspspmessages:
       invalid-credentials: PSU_CREDENTIALS_INVALID
@@ -205,7 +205,7 @@ protocol:
             provide-more: ${facade.urls.embedded-ui-base-url}/ais/{authSessionId}?redirectCode={redirectCode}
             provide-psu-password: ${facade.urls.embedded-ui-base-url}/ais/{authSessionId}/authenticate?wrong={isWrongCreds}
             select-sca-method: ${facade.urls.embedded-ui-base-url}/ais/{authSessionId}/select-sca-method
-            report-sca-result: ${facade.urls.embedded-ui-base-url}/ais/{authSessionId}/sca-result/#{context.getUserSelectScaType()}?wrong={isWrongCreds}
+            report-sca-result: ${facade.urls.embedded-ui-base-url}/ais/{authSessionId}/sca-result/{selectedScaType}?wrong={isWrongCreds}
             provide-psu-iban: ${facade.urls.embedded-ui-base-url}/ais/{authSessionId}/entry-consent-transactions/dedicated-account-access?wrong={isWrongCreds}
       pis:
         redirect:
@@ -219,7 +219,7 @@ protocol:
             provide-more: ${facade.urls.embedded-ui-base-url}/pis/{authSessionId}?redirectCode={redirectCode}
             provide-psu-password: ${facade.urls.embedded-ui-base-url}/pis/{authSessionId}/authenticate?wrong={isWrongCreds}
             select-sca-method: ${facade.urls.embedded-ui-base-url}/pis/{authSessionId}/select-sca-method
-            report-sca-result: ${facade.urls.embedded-ui-base-url}/pis/{authSessionId}/sca-result/#{context.getUserSelectScaType()}?wrong={isWrongCreds}
+            report-sca-result: ${facade.urls.embedded-ui-base-url}/pis/{authSessionId}/sca-result/{selectedScaType}?wrong={isWrongCreds}
             provide-psu-iban: ${facade.urls.embedded-ui-base-url}/pis/{authSessionId}/entry-consent-transactions/dedicated-account-access?wrong={isWrongCreds}
 
 # Flowable comes for all protocols shared
