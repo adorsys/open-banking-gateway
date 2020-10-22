@@ -25,9 +25,7 @@ public class ReportPaymentAuthorizationFinished extends ValidatedExecution<Xs2aP
         redirectExecutor.redirect(
                 execution,
                 context,
-                ContextUtil.buildAndExpandQueryParameters(urlsConfiguration.getPis().getWebHooks().getResult(),
-                        context, context.getRedirectCodeIfAuthContinued(), context.getUserSelectScaType()
-                ).toString(),
+                ContextUtil.buildAndExpandQueryParameters(urlsConfiguration.getPis().getWebHooks().getResult(), context).toASCIIString(),
                 context.getFintechRedirectUriOk(),
                 redirect -> new PaymentAcquired(redirect.build()));
     }

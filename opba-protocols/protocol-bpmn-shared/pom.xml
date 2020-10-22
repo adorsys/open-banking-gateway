@@ -35,6 +35,13 @@
             <artifactId>spring-retry</artifactId>
         </dependency>
 
+        <!-- Mappers/Validators -->
+        <dependency>
+            <groupId>org.mapstruct</groupId>
+            <artifactId>mapstruct</artifactId>
+            <version>${mapstruct.version}</version>
+        </dependency>
+
         <!-- Flowable BPMN -->
         <dependency>
             <groupId>org.flowable</groupId>

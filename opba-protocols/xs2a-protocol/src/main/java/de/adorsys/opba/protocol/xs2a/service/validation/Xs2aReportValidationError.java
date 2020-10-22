@@ -44,10 +44,7 @@ public class Xs2aReportValidationError implements JavaDelegate {
                 ValidationProblem.builder()
                         .processId(current.getSagaId())
                         .executionId(execution.getId())
-                        .provideMoreParamsDialog(
-                                ContextUtil.buildAndExpandQueryParameters(urlSet.getParameters()
-                                        .getProvideMore(), current, current.getRedirectCodeIfAuthContinued(), null)
-                        )
+                        .provideMoreParamsDialog(ContextUtil.buildAndExpandQueryParameters(urlSet.getParameters().getProvideMore(), current))
                         .issues(current.getViolations())
                         .build()
         );
