@@ -5,11 +5,13 @@ import de.adorsys.datasafe.business.impl.service.DaggerDefaultDatasafeServices;
 import de.adorsys.datasafe.directory.api.config.DFSConfig;
 import de.adorsys.datasafe.directory.impl.profile.operations.actions.ProfileRetrievalServiceImplRuntimeDelegatable;
 import de.adorsys.datasafe.encrypiton.api.types.UserIDAuth;
+import de.adorsys.datasafe.encrypiton.api.types.encryption.EncryptionConfig;
 import de.adorsys.datasafe.encrypiton.impl.pathencryption.PathEncryptionImpl;
 import de.adorsys.datasafe.encrypiton.impl.pathencryption.PathEncryptionImplRuntimeDelegatable;
 import de.adorsys.datasafe.types.api.context.BaseOverridesRegistry;
 import de.adorsys.datasafe.types.api.context.overrides.OverridesRegistry;
 import de.adorsys.datasafe.types.api.resource.Uri;
+import de.adorsys.opba.db.repository.jpa.DatasafeConfigRepository;
 import de.adorsys.opba.protocol.facade.config.encryption.datasafe.BaseDatasafeDbStorageService;
 import de.adorsys.opba.protocol.facade.config.encryption.impl.fintech.FintechConsentSpecDatasafeStorage;
 import de.adorsys.opba.protocol.facade.config.encryption.impl.fintech.FintechConsentSpecSecureStorage;
@@ -19,6 +21,7 @@ import de.adorsys.opba.protocol.facade.config.encryption.impl.psu.PsuDatasafeSto
 import de.adorsys.opba.protocol.facade.config.encryption.impl.psu.PsuSecureStorage;
 import de.adorsys.opba.protocol.facade.services.EncryptionKeySerde;
 import lombok.RequiredArgsConstructor;
+import lombok.SneakyThrows;
 import org.bouncycastle.jce.provider.BouncyCastleProvider;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
@@ -40,6 +43,7 @@ public class DatasafeConfig {
     private final FintechDatasafeStorage fintechStorage;
     private final PsuDatasafeStorage psuStorage;
     private final FintechConsentSpecDatasafeStorage fintechUserStorage;
+    private final DatasafeConfigRepository datasafeConfigRepository;
 
     @Bean
     public FintechSecureStorage fintechDatasafeServices(
@@ -53,6 +57,7 @@ public class DatasafeConfig {
         return new FintechSecureStorage(
                 DaggerDefaultDatasafeServices.builder()
                         .config(config)
+                        .encryption(buildEncryptionConfig())
                         .storage(fintechStorage)
                         .overridesRegistry(overridesRegistry)
                         .build(),
@@ -74,6 +79,7 @@ public class DatasafeConfig {
         return new PsuSecureStorage(
                 DaggerDefaultDatasafeServices.builder()
                         .config(config)
+                        .encryption(buildEncryptionConfig())
                         .storage(psuStorage)
                         .overridesRegistry(overridesRegistry)
                         .build(),
@@ -94,12 +100,25 @@ public class DatasafeConfig {
         return new FintechConsentSpecSecureStorage(
                 DaggerDefaultDatasafeServices.builder()
                         .config(config)
+                        .encryption(buildEncryptionConfig())
                         .storage(fintechUserStorage)
                         .overridesRegistry(overridesRegistry)
                         .build(),
                 config,
                 mapper
         );
+    }
+
+    private EncryptionConfig buildEncryptionConfig() {
+        return datasafeConfigRepository.findAll().stream()
+                       .findFirst()
+                       .map(e -> mapToEncryptionConfig(e.getConfig()))
+                       .orElseGet(EncryptionConfig.builder()::build);
+    }
+
+    @SneakyThrows
+    private EncryptionConfig mapToEncryptionConfig(byte[] data) {
+        return mapper.readValue(data, EncryptionConfig.class);
     }
 
     @PostConstruct
