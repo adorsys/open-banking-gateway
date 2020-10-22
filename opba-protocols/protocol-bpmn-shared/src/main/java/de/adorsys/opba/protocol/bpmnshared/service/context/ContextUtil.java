@@ -2,6 +2,7 @@ package de.adorsys.opba.protocol.bpmnshared.service.context;
 
 import de.adorsys.opba.protocol.bpmnshared.GlobalConst;
 import de.adorsys.opba.protocol.bpmnshared.dto.context.BaseContext;
+import lombok.Data;
 import lombok.experimental.UtilityClass;
 import org.flowable.engine.delegate.DelegateExecution;
 import org.springframework.web.util.UriComponentsBuilder;
@@ -39,7 +40,7 @@ public class ContextUtil {
      * Allows to perform string interpolation like '/ais/{sessionId}' using the process context. Appends redirectCode
      * if necessary.
      */
-    public URI buildAndExpandQueryParameters(String urlTemplate, BaseContext context, String redirectCode, String scaType) {
+    public URI buildAndExpandQueryParameters(String urlTemplate, UrlContext context) {
         Map<String, String> expansionContext = new HashMap<>();
 
         expansionContext.put("sessionId", context.getAuthorizationSessionIdIfOpened());
@@ -58,5 +59,15 @@ public class ContextUtil {
                     .toUri();
         }
         return uri;
+    }
+
+    @Data
+    public static class UrlContext {
+
+        private String authSessionId;
+        private String selectedScaType;
+        private String redirectCode;
+        private String aspspRedirectCode;
+        private Boolean isWrongAuthCreds;
     }
 }
