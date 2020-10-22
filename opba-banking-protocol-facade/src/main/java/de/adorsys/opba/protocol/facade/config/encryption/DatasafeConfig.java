@@ -24,6 +24,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.SneakyThrows;
 import org.bouncycastle.jce.provider.BouncyCastleProvider;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
@@ -109,11 +110,17 @@ public class DatasafeConfig {
         );
     }
 
+    @Bean
+    @ConfigurationProperties(prefix = "facade.datasafe")
+    public EncryptionConfig encryptionConfig() {
+        return EncryptionConfig.builder().build();
+    }
+
     private EncryptionConfig buildEncryptionConfig() {
         return datasafeConfigRepository.findAll().stream()
                        .findFirst()
                        .map(e -> mapToEncryptionConfig(e.getConfig()))
-                       .orElseGet(EncryptionConfig.builder()::build);
+                       .orElseGet(this::encryptionConfig);
     }
 
     @SneakyThrows
