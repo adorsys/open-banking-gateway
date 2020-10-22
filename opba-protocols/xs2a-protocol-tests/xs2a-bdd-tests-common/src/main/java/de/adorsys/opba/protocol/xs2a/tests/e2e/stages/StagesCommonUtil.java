@@ -55,6 +55,7 @@ public class StagesCommonUtil {
 
     public static final String DEFAULT_FINTECH_ID = "MY-SUPER-FINTECH-ID";
     public static final String SANDBOX_BANK_ID = "53c47f54-b9a4-465a-8f77-bc6cd5f0cf46";
+    public static final String HBCI_SANDBOX_BANK_SCA_ID = "125ef2c6-f414-4a10-a865-e3cdddf9753d";
     public static final String SANDBOX_OAUTH2_INTEGRATED_BANK_ID = "867a53d8-4cca-4365-a393-7febb0bbd38e";
     public static final String FINTECH_REDIR_OK = "http://localhost:4444/redirect-after-consent";
     public static final String FINTECH_REDIR_NOK = "http://localhost:4444/redirect-after-consent-denied";

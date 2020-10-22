@@ -72,10 +72,9 @@ public class WebDriverBasedAccountInformation<SELF extends WebDriverBasedAccount
         return self();
     }
 
-    public SELF user_anton_brueckner_provided_to_consent_ui_initial_parameters_to_list_accounts_with_all_accounts_transactions_consent(WebDriver driver) {
-        waitForPageLoadAndUrlEndsWithPath(driver, "entry-consent-transactions");
-        sendText(driver, By.id("PSU_ID"), ANTON_BRUECKNER);
-        clickOnButton(driver, By.id("ALL_PSD2"));
+    public SELF user_provided_to_consent_ui_initial_parameters_to_list_accounts_with_hbci_consent(WebDriver driver, String user) {
+        waitForPageLoadAndUrlEndsWithPath(driver, "entry-consent-accounts");
+        sendText(driver, By.id("PSU_ID"), user);
         clickOnButton(driver, By.id(SUBMIT_ID));
         return self();
     }
