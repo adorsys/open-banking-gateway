@@ -33,5 +33,7 @@ echo "Run smoke tests"
 export ENABLE_SMOKE_TESTS=true
 echo "Run API smoke tests"
 ./mvnw test --no-transfer-progress -Djgiven.report.text=false -DfailIfNoTests=false -Dtest=de.adorsys.opba.smoketests.OpbaApiSmokeE2ETest || exit 1
-echo "Run Consent UI and API smoke tests"
-./mvnw test --no-transfer-progress -Djgiven.report.text=false -DfailIfNoTests=false -Dtest=de.adorsys.opba.smoketests.OpbaApiWithConsentUiSmokeE2ETest || exit 1
+echo "Run XS2A Consent UI and API smoke tests"
+./mvnw test --no-transfer-progress -Djgiven.report.text=false -DfailIfNoTests=false -Dtest=de.adorsys.opba.smoketests.OpbaApiWithXs2aConsentUiSmokeE2ETest || exit 1
+echo "Run HBCI Consent UI and API smoke tests"
+./mvnw test --no-transfer-progress -Djgiven.report.text=false -DfailIfNoTests=false -Dtest=de.adorsys.opba.smoketests.OpbaApiWithHbciConsentUiSmokeE2ETest || exit 1
