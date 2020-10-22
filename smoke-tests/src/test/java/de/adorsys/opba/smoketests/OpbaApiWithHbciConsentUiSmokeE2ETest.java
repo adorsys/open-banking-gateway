@@ -1,6 +1,5 @@
 package de.adorsys.opba.smoketests;
 
-import com.jayway.jsonpath.JsonPath;
 import com.tngtech.jgiven.integration.spring.junit5.SpringScenarioTest;
 import de.adorsys.opba.protocol.xs2a.tests.e2e.JGivenConfig;
 import de.adorsys.opba.protocol.xs2a.tests.e2e.sandbox.servers.WebDriverBasedAccountInformation;
@@ -29,9 +28,6 @@ import static de.adorsys.opba.protocol.xs2a.tests.Const.ENABLE_SMOKE_TESTS;
 import static de.adorsys.opba.protocol.xs2a.tests.Const.TRUE_BOOL;
 import static de.adorsys.opba.protocol.xs2a.tests.TestProfiles.SMOKE_TEST;
 import static de.adorsys.opba.protocol.xs2a.tests.e2e.stages.StagesCommonUtil.HBCI_SANDBOX_BANK_SCA_ID;
-import static de.adorsys.opba.smoketests.config.SmokeConfig.BOTH_BOOKING;
-import static de.adorsys.opba.smoketests.config.SmokeConfig.DATE_FROM;
-import static de.adorsys.opba.smoketests.config.SmokeConfig.DATE_TO;
 import static org.springframework.boot.test.context.SpringBootTest.WebEnvironment.NONE;
 
 /**
