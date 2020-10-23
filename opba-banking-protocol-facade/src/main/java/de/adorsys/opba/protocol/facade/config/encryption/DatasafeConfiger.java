@@ -22,6 +22,7 @@ import de.adorsys.opba.protocol.facade.config.encryption.impl.psu.PsuSecureStora
 import de.adorsys.opba.protocol.facade.services.EncryptionKeySerde;
 import lombok.RequiredArgsConstructor;
 import lombok.SneakyThrows;
+import lombok.extern.slf4j.Slf4j;
 import org.bouncycastle.jce.provider.BouncyCastleProvider;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.context.properties.ConfigurationProperties;
@@ -34,9 +35,10 @@ import java.util.function.Function;
 
 import static de.adorsys.opba.protocol.facade.config.ConfigConst.FACADE_CONFIG_PREFIX;
 
+@Slf4j
 @Configuration
 @RequiredArgsConstructor
-public class DatasafeConfig {
+public class DatasafeConfiger {
 
     private static final String ENCRYPTION_DATASAFE_READ_KEYSTORE_PREFIX = "${" + FACADE_CONFIG_PREFIX + "encryption.datasafe.read-keystore";
 
@@ -117,6 +119,11 @@ public class DatasafeConfig {
     }
 
     private EncryptionConfig buildEncryptionConfig() {
+        if (datasafeConfigRepository.count() == 0) {
+            log.info("Datasafe is configured from properties");
+        }
+
+        log.info("Datasafe is configured from database");
         return datasafeConfigRepository.findAll().stream()
                        .findFirst()
                        .map(e -> mapToEncryptionConfig(e.getConfig()))
@@ -125,7 +132,7 @@ public class DatasafeConfig {
 
     @SneakyThrows
     private EncryptionConfig mapToEncryptionConfig(byte[] data) {
-        return mapper.readValue(new String(data), EncryptionConfig.class);
+        return mapper.readValue(data, EncryptionConfig.class);
     }
 
     @PostConstruct
