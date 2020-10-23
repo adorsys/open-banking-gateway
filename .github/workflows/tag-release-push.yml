@@ -1,6 +1,9 @@
 # Builds pushes of release candidate tags
 name: Release candidate promotion to production
 
+default-env: &default-env
+  MAVEN_OPTS: "-Dhttp.keepAlive=false -Dmaven.wagon.http.pool=false -Dmaven.wagon.httpconnectionManager.ttlSeconds=120" # Github-on-Azure tweaks - https://github.com/actions/virtual-environments/issues/1499
+
 on:
   push:
     tags:
@@ -28,6 +31,7 @@ jobs:
       - name: Promote release-candidate JARs to Maven-central
         run: ./scripts/deploy_mvn.sh
         env:
+          <<: *default-env
           SONATYPE_USERNAME: ${{ secrets.SONATYPE_USERNAME }}
           SONATYPE_PASSWORD: ${{ secrets.SONATYPE_PASSWORD }}
           # These are required for READ access to Github Packages maven:
@@ -38,6 +42,7 @@ jobs:
       - name: Release JavaDocs
         run: ./scripts/deploy_javadoc.sh
         env:
+          <<: *default-env
           GITHUB_ACTOR: ${{ github.actor }}
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 

@@ -1,6 +1,9 @@
 # Builds pushes and merges on develop branch
 name: Develop branch build
 
+default-env: &default-env
+  MAVEN_OPTS: "-Dhttp.keepAlive=false -Dmaven.wagon.http.pool=false -Dmaven.wagon.httpconnectionManager.ttlSeconds=120" # Github-on-Azure tweaks - https://github.com/actions/virtual-environments/issues/1499
+
 on:
   push:
     branches:
@@ -23,10 +26,13 @@ jobs:
 
       - name: Build project and run default test suite
         run: ./scripts/build_and_test.sh
+        env:
+          << : *default-env
 
       - name: Check deployment flow and check artifact signing
         run: ./scripts/mvn_deploy_check_develop.sh
         env:
+          << : *default-env
           # Note that these BELOW are DEVELOP secrets, not ones used for real deployment
           # They are used to have very close pipeline to one present on production
           GPG_EXECUTABLE: gpg
@@ -37,6 +43,8 @@ jobs:
 
       - name: Build FireFly improter
         run: ./scripts/build_firefly_exporter_mvn.sh
+        env:
+          <<: *default-env
 
       - name: Deploy develop artifacts to OpenShift
         run: ./scripts/deploy_openshift.sh scripts/service.list
@@ -60,4 +68,5 @@ jobs:
       - name: Validate OpenShift DEV env deployment status
         run: ./scripts/validate_dev_deploy.sh
         env:
+          <<: *default-env
           MOZ_HEADLESS: 1
