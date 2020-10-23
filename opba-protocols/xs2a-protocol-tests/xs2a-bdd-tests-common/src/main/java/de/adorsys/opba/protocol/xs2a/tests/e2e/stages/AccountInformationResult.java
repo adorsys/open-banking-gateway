@@ -473,7 +473,6 @@ public class AccountInformationResult<SELF extends AccountInformationResult<SELF
 
         // TODO: Currently no IBANs as mapping is not yet completed
         assertThat(body).extracting(it -> it.read("$.transactions.booked[*]")).asList().hasSize(1);
-        assertThat(body).extracting(it -> it.read("$.transactions.pending[*]")).asList().isEmpty();
         assertThat(body)
                 .extracting(it -> it.read("$.transactions.booked[*].transactionAmount.amount"))
                 .asList()
