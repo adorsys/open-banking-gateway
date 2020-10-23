@@ -1,9 +1,6 @@
 # Builds daily develop branch using `heavy tests` test suite
 name: Develop branch heavy tests daily build
 
-default-env: &default-env
-  MAVEN_OPTS: "-Dhttp.keepAlive=false -Dmaven.wagon.http.pool=false -Dmaven.wagon.httpconnectionManager.ttlSeconds=120" # Github-on-Azure tweaks - https://github.com/actions/virtual-environments/issues/1499
-
 on:
   schedule:
     - cron: '0 9 */1 * *' # 9 AM UTC each day
@@ -28,7 +25,7 @@ jobs:
       - name: Build project and run default test suite
         run: ./scripts/build_and_test.sh
         env:
-          << : *default-env
+          MAVEN_OPTS: "-Dhttp.keepAlive=false -Dmaven.wagon.http.pool=false -Dmaven.wagon.httpconnectionManager.ttlSeconds=120" # Github-on-Azure tweaks - https://github.com/actions/virtual-environments/issues/1499
           ENABLE_HEAVY_TESTS: true
           MOZ_HEADLESS: 1
 
