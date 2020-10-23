@@ -1,9 +1,6 @@
 # Builds pushes of release candidate tags
 name: Release candidate develop and testing
 
-default-env: &default-env
-  MAVEN_OPTS: "-Dhttp.keepAlive=false -Dmaven.wagon.http.pool=false -Dmaven.wagon.httpconnectionManager.ttlSeconds=120" # Github-on-Azure tweaks - https://github.com/actions/virtual-environments/issues/1499
-
 on:
   push:
     tags:
@@ -21,7 +18,7 @@ jobs:
       - name: Build project and run test suite
         run: ./scripts/build_and_test.sh
         env:
-          <<: *default-env
+          MAVEN_OPTS: "-Dhttp.keepAlive=false -Dmaven.wagon.http.pool=false -Dmaven.wagon.httpconnectionManager.ttlSeconds=120" # Github-on-Azure tweaks - https://github.com/actions/virtual-environments/issues/1499
           MOZ_HEADLESS: 1
 
       - name: Deploy release-candidate artifacts to OpenShift
@@ -34,7 +31,7 @@ jobs:
       - name: Deploy release-candidate JARs to Github packages
         run: ./scripts/deploy_mvn_release_candidate.sh
         env:
-          <<: *default-env
+          MAVEN_OPTS: "-Dhttp.keepAlive=false -Dmaven.wagon.http.pool=false -Dmaven.wagon.httpconnectionManager.ttlSeconds=120" # Github-on-Azure tweaks - https://github.com/actions/virtual-environments/issues/1499
           GPG_EXECUTABLE: gpg
           GPG_PASSPHRASE: ${{ secrets.GPG_PASSPHRASE }}
           GPG_SECRET_KEY: ${{ secrets.GPG_SECRET_KEY }}

@@ -1,9 +1,6 @@
 # Builds Pull-requests to key branches
 name: Pull request CI with maven and npm. Builds backend and frontend
 
-default-env: &default-env
-  MAVEN_OPTS: "-Dhttp.keepAlive=false -Dmaven.wagon.http.pool=false -Dmaven.wagon.httpconnectionManager.ttlSeconds=120" # Github-on-Azure tweaks - https://github.com/actions/virtual-environments/issues/1499
-
 on:
   pull_request:
     branches:
@@ -28,4 +25,4 @@ jobs:
       - name: Build project and run default test suite
         run: ./scripts/build_and_test.sh
         env:
-          <<: *default-env
+          MAVEN_OPTS: "-Dhttp.keepAlive=false -Dmaven.wagon.http.pool=false -Dmaven.wagon.httpconnectionManager.ttlSeconds=120" # Github-on-Azure tweaks - https://github.com/actions/virtual-environments/issues/1499
