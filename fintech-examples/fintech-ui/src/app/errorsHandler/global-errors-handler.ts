@@ -18,7 +18,8 @@ export class GlobalErrorHandler implements ErrorHandler {
       console.log('status was ', error.status);
       switch (error.status) {
         case 401:
-          this.router.navigate(['/session-expired']);
+          error = 'Incorrect Username or Password';
+          message = errorService.getClientMessage(error);
           break;
         case 403:
           this.router.navigate(['/forbidden-oauth2']);
