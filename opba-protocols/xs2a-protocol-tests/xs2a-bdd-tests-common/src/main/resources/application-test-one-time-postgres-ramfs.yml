@@ -116,7 +116,10 @@ facade:
         encryption-algo: AES-128
         pbkdf:
           pbkdf2:
-          scrypt:
+            algo: PRF_SHA512
+            saltLength: 32
+            iterCount: 20480
+          scrypt: null
         mac-algo: HmacSHA3_512
         password-keys-algo: PBEWithHmacSHA256AndAES_256
       # Which keys to create in keystore
