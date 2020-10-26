@@ -38,7 +38,7 @@ import static de.adorsys.opba.protocol.facade.config.ConfigConst.FACADE_CONFIG_P
 @Slf4j
 @Configuration
 @RequiredArgsConstructor
-public class DatasafeConfiger {
+public class DatasafeConfigurer {
 
     private static final String ENCRYPTION_DATASAFE_READ_KEYSTORE_PREFIX = "${" + FACADE_CONFIG_PREFIX + "encryption.datasafe.read-keystore";
 
