@@ -859,8 +859,6 @@ class WiremockConsentE2EXs2aProtocolTest extends SpringScenarioTest<MockServers,
                 .and()
                 .user_max_musterman_provided_initial_parameters_to_list_accounts_all_accounts_consent()
                 .and()
-                .user_max_musterman_provided_password_to_embedded_authorization()
-                .and()
                 .user_max_musterman_selected_sca_challenge_type_appOTP_to_decoupled_authorization();
         then()
                 .open_banking_has_consent_for_max_musterman_account_list()
@@ -886,8 +884,6 @@ class WiremockConsentE2EXs2aProtocolTest extends SpringScenarioTest<MockServers,
                 .user_max_musterman_provided_initial_parameters_to_list_transactions_with_single_account_consent()
                 .and()
                 .user_max_musterman_provided_password_to_embedded_authorization()
-                .and()
-                .user_max_musterman_selected_sca_challenge_type_email1_to_embedded_authorization()
                 .and()
                 .user_max_musterman_selected_sca_challenge_type_appOTP_to_decoupled_authorization();
         then()

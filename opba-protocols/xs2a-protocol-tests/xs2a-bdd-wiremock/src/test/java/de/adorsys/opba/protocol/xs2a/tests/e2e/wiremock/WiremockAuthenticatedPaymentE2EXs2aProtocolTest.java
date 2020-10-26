@@ -415,8 +415,6 @@ public class WiremockAuthenticatedPaymentE2EXs2aProtocolTest extends SpringScena
                 .and()
                 .user_max_musterman_provided_initial_parameters_to_make_payment()
                 .and()
-                .user_max_musterman_provided_password_to_embedded_authorization()
-                .and()
                 .user_max_musterman_selected_sca_challenge_type_appOTP_to_decoupled_authorization();
         then()
                 .open_banking_has_stored_payment()
