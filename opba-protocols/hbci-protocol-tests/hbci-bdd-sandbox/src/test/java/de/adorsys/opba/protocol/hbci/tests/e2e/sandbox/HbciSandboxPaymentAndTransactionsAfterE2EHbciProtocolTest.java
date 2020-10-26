@@ -141,7 +141,7 @@ class HbciSandboxPaymentAndTransactionsAfterE2EHbciProtocolTest extends SpringSc
             .and()
             .user_max_musterman_selected_sca_challenge_type_push_tan_to_embedded_authorization()
             .and()
-            .user_max_musterman_provided_sca_challenge_result_to_embedded_authorization_and_sees_redirect_to_fintech_ok();
+            .user_max_musterman_provided_sca_challenge_result_to_embedded_authorization_and_sees_redirect_to_fintech_ok("/pushTAN");
         then()
             .open_banking_has_stored_payment()
             .fintech_calls_payment_activation_for_current_authorization_id()
@@ -164,7 +164,7 @@ class HbciSandboxPaymentAndTransactionsAfterE2EHbciProtocolTest extends SpringSc
             .and()
             .user_max_musterman_selected_sca_challenge_type_push_tan_to_embedded_authorization()
             .and()
-            .user_max_musterman_provided_sca_challenge_result_to_embedded_authorization_and_sees_redirect_to_fintech_ok();
+            .user_max_musterman_provided_sca_challenge_result_to_embedded_authorization_and_sees_redirect_to_fintech_ok("/pushTAN");
         then()
             .open_banking_has_stored_payment()
             .fintech_calls_payment_activation_for_current_authorization_id()
@@ -186,7 +186,7 @@ class HbciSandboxPaymentAndTransactionsAfterE2EHbciProtocolTest extends SpringSc
             .and()
             .user_max_musterman_selected_sca_challenge_type_push_tan_to_embedded_authorization()
             .and()
-            .user_max_musterman_provided_sca_challenge_result_to_embedded_authorization_and_sees_redirect_to_fintech_ok();
+            .user_max_musterman_provided_sca_challenge_result_to_embedded_authorization_and_sees_redirect_to_fintech_ok("/pushTAN");
         accountInformationResult
             .open_banking_has_consent_for_max_musterman_account_list()
             .fintech_calls_consent_activation_for_current_authorization_id()
