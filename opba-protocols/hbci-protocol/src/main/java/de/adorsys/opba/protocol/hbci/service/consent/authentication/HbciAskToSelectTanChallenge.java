@@ -35,7 +35,7 @@ public class HbciAskToSelectTanChallenge extends ValidatedExecution<HbciContext>
                     execution,
                     (HbciContext ctx) -> {
                         ctx.setUserSelectScaId(ctx.getAvailableSca().get(0).getKey());
-                        ctx.setUserSelectedScaType(ctx.getAvailableSca().get(0).getType());
+                        ctx.setSelectedScaType(ctx.getAvailableSca().get(0).getType());
                     }
             );
 
