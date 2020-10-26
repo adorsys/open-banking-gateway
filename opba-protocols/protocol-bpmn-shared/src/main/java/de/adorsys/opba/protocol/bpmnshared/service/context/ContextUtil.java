@@ -83,7 +83,6 @@ public class ContextUtil {
     @Mapper
     public interface DefaultContextMapper extends ContextMapper {
 
-        @Mapping(source = "userSelectedScaType", target = "selectedScaType")
         @Mapping(source = "authorizationSessionIdIfOpened", target = "authSessionId")
         @Mapping(source = "redirectCodeIfAuthContinued", target = "redirectCode")
         @Mapping(source = "wrongAuthCredentials", target = "isWrongCreds")

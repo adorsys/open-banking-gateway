@@ -96,7 +96,7 @@ public class BaseContext implements RequestScoped, UsesRequestScoped {
     /**
      * Selected consent authorization approach (i.e. EMBEDDED).
      */
-    private String userSelectedScaType;
+    private String selectedScaType;
 
     /**
      * Request-scoped services and data.
