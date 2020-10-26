@@ -41,3 +41,6 @@ security:
   signSubject: fintech@awesome-fintech.com
   algorithm: RSA
   claim-name-key: sign-data
+
+drools:
+  categorizer-ruleset: categorization/rules-de.drl
