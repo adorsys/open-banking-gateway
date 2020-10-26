@@ -528,11 +528,15 @@ public class AccountInformationRequestCommon<SELF extends AccountInformationRequ
         return self();
     }
 
-    public SELF user_max_musterman_provided_sca_challenge_result_to_embedded_authorization_and_sees_redirect_to_fintech_ok() {
-        assertThat(this.redirectUriToGetUserParams).contains("sca-result").contains("/EMAIL").doesNotContain("wrong=true");
+    public SELF user_max_musterman_provided_sca_challenge_result_to_embedded_authorization_and_sees_redirect_to_fintech_ok(String challengeType) {
+        assertThat(this.redirectUriToGetUserParams).contains("sca-result").contains(challengeType).doesNotContain("wrong=true");
         ExtractableResponse<Response> response = max_musterman_provides_sca_challenge_result();
         assertThat(LocationExtractorUtil.getLocation(response)).contains("ais").contains("consent-result");
         return self();
+    }
+
+    public SELF user_max_musterman_provided_sca_challenge_result_to_embedded_authorization_and_sees_redirect_to_fintech_ok() {
+        return user_max_musterman_provided_sca_challenge_result_to_embedded_authorization_and_sees_redirect_to_fintech_ok("/EMAIL");
     }
 
     public SELF user_provided_sca_challenge_result_to_embedded_authorization_and_sees_redirect_to_fintech_ok() {

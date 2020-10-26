@@ -309,7 +309,7 @@ public class WiremockAuthenticatedPaymentE2EXs2aProtocolTest extends SpringScena
                 .and()
                 .ui_can_read_image_data_from_obg(OPBA_LOGIN)
                 .and()
-                .user_max_musterman_provided_sca_challenge_result_to_embedded_authorization_and_sees_redirect_to_fintech_ok();
+                .user_max_musterman_provided_sca_challenge_result_to_embedded_authorization_and_sees_redirect_to_fintech_ok("/PHOTO_OTP");
         then()
                 .open_banking_has_stored_payment()
                 .fintech_calls_payment_activation_for_current_authorization_id()
