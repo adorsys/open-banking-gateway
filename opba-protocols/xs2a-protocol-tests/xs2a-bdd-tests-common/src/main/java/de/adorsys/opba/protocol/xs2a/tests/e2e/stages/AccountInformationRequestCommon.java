@@ -522,21 +522,21 @@ public class AccountInformationRequestCommon<SELF extends AccountInformationRequ
     }
 
     public SELF user_max_musterman_provided_correct_sca_challenge_result_after_wrong_to_embedded_authorization_and_sees_redirect_to_fintech_ok() {
-        assertThat(this.redirectUriToGetUserParams).contains("sca-result").contains("wrong=true");
+        assertThat(this.redirectUriToGetUserParams).contains("sca-result").contains("/EMAIL").contains("wrong=true");
         ExtractableResponse<Response> response = max_musterman_provides_sca_challenge_result();
         assertThat(LocationExtractorUtil.getLocation(response)).contains("ais").contains("consent-result");
         return self();
     }
 
     public SELF user_max_musterman_provided_sca_challenge_result_to_embedded_authorization_and_sees_redirect_to_fintech_ok() {
-        assertThat(this.redirectUriToGetUserParams).contains("sca-result").doesNotContain("wrong=true");
+        assertThat(this.redirectUriToGetUserParams).contains("sca-result").contains("/EMAIL").doesNotContain("wrong=true");
         ExtractableResponse<Response> response = max_musterman_provides_sca_challenge_result();
         assertThat(LocationExtractorUtil.getLocation(response)).contains("ais").contains("consent-result");
         return self();
     }
 
     public SELF user_provided_sca_challenge_result_to_embedded_authorization_and_sees_redirect_to_fintech_ok() {
-        assertThat(this.redirectUriToGetUserParams).contains("sca-result").doesNotContain("wrong=true");
+        assertThat(this.redirectUriToGetUserParams).contains("sca-result").contains("/EMAIL").doesNotContain("wrong=true");
         ExtractableResponse<Response> response = user_provides_sca_challenge_result();
         assertThat(LocationExtractorUtil.getLocation(response)).contains("ais").contains("consent-result");
         return self();
@@ -549,7 +549,7 @@ public class AccountInformationRequestCommon<SELF extends AccountInformationRequ
                 HttpStatus.ACCEPTED
         );
 
-        assertThat(LocationExtractorUtil.getLocation(response)).contains("sca-result").contains("wrong=true");
+        assertThat(LocationExtractorUtil.getLocation(response)).contains("sca-result").contains("/EMAIL").contains("wrong=true");
         return self();
     }
 
