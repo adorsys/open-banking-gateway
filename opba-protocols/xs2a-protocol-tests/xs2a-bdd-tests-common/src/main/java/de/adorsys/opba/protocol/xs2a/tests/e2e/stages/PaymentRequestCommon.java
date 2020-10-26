@@ -218,7 +218,7 @@ public class PaymentRequestCommon<SELF extends PaymentRequestCommon<SELF>> exten
     }
 
     public SELF user_max_musterman_provided_sca_challenge_result_to_embedded_authorization_and_sees_redirect_to_fintech_ok() {
-        assertThat(this.redirectUriToGetUserParams).contains("sca-result").doesNotContain("wrong=true");
+        assertThat(this.redirectUriToGetUserParams).contains("sca-result").contains("/EMAIL").doesNotContain("wrong=true");
         ExtractableResponse<Response> response = max_musterman_provides_sca_challenge_result();
         assertThat(LocationExtractorUtil.getLocation(response)).contains("pis").contains("consent-result");
         return self();
