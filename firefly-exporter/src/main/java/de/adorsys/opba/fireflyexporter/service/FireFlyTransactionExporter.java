@@ -47,6 +47,7 @@ public class FireFlyTransactionExporter {
     private final ExportableAccountService exportableAccounts;
     private final FireflyTransactionsApiClient transactionsApi;
     private final BankConsentRepository consentRepository;
+    private final TransactionCategorizer categorizer;
     private final TransactionExportJobRepository exportJobRepository;
 
     @Async
@@ -176,6 +177,12 @@ public class FireFlyTransactionExporter {
         }
 
         split.setCurrencyCode(transaction.getTransactionAmount().getCurrency());
+        try {
+            split.setCategoryName(categorizer.categorizeTransaction(transaction));
+        } catch (RuntimeException ex) {
+            log.warn("Failed to categorize transaction {}", transaction.getTransactionId(), ex);
+        }
+
         fireflyTransaction.setTransactions(ImmutableList.of(split));
 
         transactionsApi.storeTransaction(fireflyTransaction);

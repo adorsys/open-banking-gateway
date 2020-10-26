@@ -1,0 +1,53 @@
+package de.adorsys.opba.fireflyexporter.service
+
+import de.adorsys.opba.fireflyexporter.dto.AnalyzeableTransaction
+
+dialect  "mvel"
+
+rule "TEST TRANSACTION"
+    no-loop
+    when
+       $t: AnalyzeableTransaction(referenceName matches '.*\\bTEST\\b.*' || purpose matches '.*\\bTEST\\b.*')
+    then
+       $t.category = "TEST";
+       $t.subCategory = "TEST";
+       $t.specification = "TEST";
+
+       update($t)
+end
+
+rule "DEPOSIT"
+    no-loop
+    when
+       $t: AnalyzeableTransaction(referenceName matches '.*\\bDEPOSIT\\b.*' || purpose matches '.*\\bDEPOSIT\\b.*')
+    then
+       $t.category = "INCOME";
+       $t.subCategory = "INCOME";
+       $t.specification = "CASH DEPOSIT";
+
+       update($t)
+end
+
+rule "EINKUENFTE;EINKOMMEN;BEZUEGE BEAMTE	INCOME; INCOME; REMUNERATION OF OFFICIALS	RFN LIKE '%LANDES%KASSE%' AND VWZ LIKE '%BEZ%GE%'"
+    no-loop
+    when
+       $t: AnalyzeableTransaction(referenceName matches '.*LANDES.*KASSE.*',  purpose matches '.*BEZ.*GE.*')
+    then
+       $t.category = "INCOME";
+       $t.subCategory = "INCOME";
+       $t.specification = "REMUNERATION OF OFFICIALS";
+
+       update($t)
+end
+
+rule "EINKUENFTE;EINKOMMEN;GEHALT	INCOME; INCOME; SALARY	RFN LIKE '%GEHALT%' OR VWZ LIKE '%GEHALT%'"
+    no-loop
+    when
+       $t: AnalyzeableTransaction(referenceName matches '.*GEHALT.*' || purpose matches '.*GEHALT.*')
+    then
+       $t.category = "INCOME";
+       $t.subCategory = "INCOME";
+       $t.specification = "SALARY";
+
+       update($t)
+end

@@ -93,6 +93,15 @@
 			<artifactId>hibernate-validator</artifactId>
 		</dependency>
 
+		<!-- Used for transaction categorization -->
+		<dependency>
+			<groupId>org.drools</groupId>
+			<artifactId>drools-engine-classic</artifactId>
+			<version>7.45.0.Final</version>
+		</dependency>
+
+		<!-- End -->
+
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-devtools</artifactId>
