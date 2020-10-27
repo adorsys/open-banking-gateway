@@ -32,23 +32,22 @@ facade:
       # Which keystore to use and how to encrypt keys in it
       key-store:
         type: BCFKS
-        encryption-algo: AES-128
+        encryption-algo: AES128_KWP
         pbkdf:
           pbkdf2:
             algo: PRF_SHA512
-            saltLength: 32
-            iterCount: 20480
-          scrypt: null
+            saltLength: 16
+            iterCount: 10240
         mac-algo: HmacSHA3_512
-        password-keys-algo: PBEWithHmacSHA256AndAES_256
+        password-keys-algo: PBEWithHmacSHA256AndAES_128
       # Which keys to create in keystore
-      key-creation:
+      keys:
         enc-key-number: 1
         sign-key-number: 1
         # Secret key creation
         secret:
           algo: AES
-          size: 256
+          size: 128
         # Encrypting key creation
         encrypting:
           algo: RSA
@@ -60,8 +59,8 @@ facade:
           size: 2048
           sig-algo: SHA256withRSA
       # How to encrypt documents
-      cms-encryption:
-        algo: AES256_GCM
+      cms:
+        algo: AES128_GCM
 
 protocol:
   xs2a:
