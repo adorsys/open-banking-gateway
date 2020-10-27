@@ -4,6 +4,7 @@ import de.adorsys.opba.fireflyexporter.dto.AnalyzeableTransaction
 
 dialect  "mvel"
 
+
 rule "TEST TRANSACTION"
     no-loop
     when
@@ -11,7 +12,7 @@ rule "TEST TRANSACTION"
     then
        $t.category = "TEST";
        $t.subCategory = "TEST";
-       $t.specification = "TEST";
+       $t.specification = "TEST TRANSACTION";
 
        update($t)
 end
@@ -48,6 +49,707 @@ rule "EINKUENFTE;EINKOMMEN;GEHALT	INCOME; INCOME; SALARY	RFN LIKE '%GEHALT%' OR 
        $t.category = "INCOME";
        $t.subCategory = "INCOME";
        $t.specification = "SALARY";
+
+       update($t)
+end
+
+rule "EINKUENFTE;EINKOMMEN;GEHALT	INCOME; INCOME; SALARY	RFN LIKE '%LOHN%GEHALT%' OR VWZ LIKE '%LOHN%GEHALT%'"
+    no-loop
+    when
+       $t: AnalyzeableTransaction(referenceName matches '.*LOHN.*GEHALT.*' || purpose matches '.*LOHN.*GEHALT.*')
+    then
+       $t.category = "INCOME";
+       $t.subCategory = "INCOME";
+       $t.specification = "SALARY";
+
+       update($t)
+end
+
+
+rule "EINKUENFTE;EINKOMMEN;GEHALT	INCOME; INCOME; SALARY	VWZ LIKE '%AUSHILF%LOHN%'"
+    no-loop
+    when
+       $t: AnalyzeableTransaction(purpose matches '.*AUSHILF.*LOHN.*')
+    then
+       $t.category = "INCOME";
+       $t.subCategory = "INCOME";
+       $t.specification = "SALARY";
+
+       update($t)
+end
+
+
+rule "EINKUENFTE;EINKOMMEN;GEHALT	INCOME; INCOME; SALARY	VWZ LIKE '%VERDIENST%ABRECHNUNG%'"
+    no-loop
+    when
+       $t: AnalyzeableTransaction(purpose matches '.*VERDIENST.*ABRECHNUNG.*')
+    then
+       $t.category = "INCOME";
+       $t.subCategory = "INCOME";
+       $t.specification = "SALARY";
+
+       update($t)
+end
+
+
+rule "EINKUENFTE;EINKOMMEN;GEHALT	INCOME; INCOME; SALARY	VWZ LIKE '%BESCHEID%' AND VWZ LIKE '%EINKOMMEN%'"
+    no-loop
+    when
+       $t: AnalyzeableTransaction(purpose matches '.*BESCHEID.*' , purpose matches '.*EINKOMMEN.*')
+    then
+       $t.category = "INCOME";
+       $t.subCategory = "INCOME";
+       $t.specification = "SALARY";
+
+       update($t)
+end
+
+
+rule "EINKUENFTE;EINKOMMEN;GEHALT	INCOME; INCOME; SALARY	RFN LIKE '%LOHN%GEHALT%' OR VWZ LIKE '%LOHN%GEHALT%'"
+    no-loop
+    when
+       $t: AnalyzeableTransaction(referenceName matches '.*LOHN.*GEHALT.*' || purpose matches '.*LOHN.*GEHALT.*')
+    then
+       $t.category = "INCOME";
+       $t.subCategory = "INCOME";
+       $t.specification = "SALARY";
+
+       update($t)
+end
+
+
+rule "EINKUENFTE;EINKOMMEN;LOHN	INCOME; INCOME; WAGE	RFN LIKE '%LOHN%' OR (VWZ LIKE '%LOHN%' AND NOT VWZ LIKE '%LOHN%STEUER%')"
+    no-loop
+    when
+       $t: AnalyzeableTransaction(referenceName matches '.*LOHN.*') or AnalyzeableTransaction(purpose matches '.*LOHN.*', purpose not matches '.*LOHN.*STEUER.*')
+    then
+       $t.category = "INCOME";
+       $t.subCategory = "INCOME";
+       $t.specification = "WAGE";
+
+       update($t)
+end
+
+
+rule "EINKUENFTE;EINKOMMEN;SONSTIGES	INCOME; INCOME; OTHER	RFN LIKE '%HONORAR%' OR VWZ LIKE '%HONORAR%'"
+    no-loop
+    when
+       $t: AnalyzeableTransaction(referenceName matches '.*HONORAR.*' || purpose matches '.*HONORAR.*')
+    then
+       $t.category = "INCOME";
+       $t.subCategory = "INCOME";
+       $t.specification = "OTHER";
+
+       update($t)
+end
+
+
+rule "EINKUENFTE;EINKOMMEN;SONSTIGES	INCOME; INCOME; OTHER	RFN LIKE '%PROVISION%' OR VWZ LIKE '%PROVISION%'"
+    no-loop
+    when
+       $t: AnalyzeableTransaction(referenceName matches '.*PROVISION.*' || purpose matches '.*PROVISION.*')
+    then
+       $t.category = "INCOME";
+       $t.subCategory = "INCOME";
+       $t.specification = "OTHER";
+
+       update($t)
+end
+
+
+rule "EINKUENFTE;EINKOMMEN;SONSTIGES	INCOME; INCOME; OTHER	RFN LIKE '%HEUER%' OR VWZ LIKE '%HEUER%'"
+    no-loop
+    when
+       $t: AnalyzeableTransaction(referenceName matches '.*HEUER.*' || purpose matches '.*HEUER.*')
+    then
+       $t.category = "INCOME";
+       $t.subCategory = "INCOME";
+       $t.specification = "OTHER";
+
+       update($t)
+end
+
+
+rule "EINKUENFTE;EINKOMMEN;SONSTIGES	INCOME; INCOME; OTHER	RFN LIKE '%GAGE%' OR VWZ LIKE '%GAGE%'"
+    no-loop
+    when
+       $t: AnalyzeableTransaction(referenceName matches '.*GAGE.*' || purpose matches '.*GAGE.*')
+    then
+       $t.category = "INCOME";
+       $t.subCategory = "INCOME";
+       $t.specification = "OTHER";
+
+       update($t)
+end
+
+
+rule "EINKUENFTE;EINKOMMEN;SONSTIGES	INCOME; INCOME; OTHER	RFN LIKE '%DIAET%' OR VWZ LIKE '%DIAET%'"
+    no-loop
+    when
+       $t: AnalyzeableTransaction(referenceName matches '.*DIAET.*' || purpose matches '.*DIAET.*')
+    then
+       $t.category = "INCOME";
+       $t.subCategory = "INCOME";
+       $t.specification = "OTHER";
+
+       update($t)
+end
+
+
+rule "EINKUENFTE;EINKOMMEN;SONSTIGES	INCOME; INCOME; OTHER	RFN LIKE '%SOLD%' OR VWZ LIKE '%SOLD%'"
+    no-loop
+    when
+       $t: AnalyzeableTransaction(referenceName matches '.*SOLD.*' || purpose matches '.*SOLD.*')
+    then
+       $t.category = "INCOME";
+       $t.subCategory = "INCOME";
+       $t.specification = "OTHER";
+
+       update($t)
+end
+
+
+rule "EINKUENFTE;EINKOMMEN;SONSTIGES	INCOME; INCOME; OTHER	VWZ LIKE '%BESOLDUNG%'"
+    no-loop
+    when
+       $t: AnalyzeableTransaction(purpose matches '.*BESOLDUNG.*')
+    then
+       $t.category = "INCOME";
+       $t.subCategory = "INCOME";
+       $t.specification = "OTHER";
+
+       update($t)
+end
+
+
+rule "EINKUENFTE;EINKOMMEN;SONSTIGES	INCOME; INCOME; OTHER	VWZ LIKE '%VERGUETUNG%'"
+    no-loop
+    when
+       $t: AnalyzeableTransaction(purpose matches '.*VERGUETUNG.*')
+    then
+       $t.category = "INCOME";
+       $t.subCategory = "INCOME";
+       $t.specification = "OTHER";
+
+       update($t)
+end
+
+
+rule "EINKUENFTE;EINKOMMEN;SONSTIGES	INCOME; INCOME; OTHER	VWZ LIKE '%SALAER%'"
+    no-loop
+    when
+       $t: AnalyzeableTransaction(purpose matches '.*SALAER.*')
+    then
+       $t.category = "INCOME";
+       $t.subCategory = "INCOME";
+       $t.specification = "OTHER";
+
+       update($t)
+end
+
+
+rule "EINKUENFTE;EINKOMMEN;SONSTIGES	INCOME; INCOME; OTHER	VWZ LIKE '%GRATIFIKATION%'"
+    no-loop
+    when
+       $t: AnalyzeableTransaction(purpose matches '.*GRATIFIKATION.*')
+    then
+       $t.category = "INCOME";
+       $t.subCategory = "INCOME";
+       $t.specification = "OTHER";
+
+       update($t)
+end
+
+
+rule "EINKUENFTE;EINKOMMEN;SONSTIGES	INCOME; INCOME; OTHER	VWZ LIKE '%ZULAGE%'"
+    no-loop
+    when
+       $t: AnalyzeableTransaction(purpose matches '.*ZULAGE.*')
+    then
+       $t.category = "INCOME";
+       $t.subCategory = "INCOME";
+       $t.specification = "OTHER";
+
+       update($t)
+end
+
+
+rule "EINKUENFTE;EINKOMMEN;	INCOME; INCOME;	VWZ LIKE '%EINKOMMEN%'"
+    no-loop
+    when
+       $t: AnalyzeableTransaction(purpose matches '.*EINKOMMEN.*')
+    then
+       $t.category = "INCOME";
+       $t.subCategory = "INCOME";
+       $t.specification = "null";
+
+       update($t)
+end
+
+
+rule "EINKUENFTE;KINDERGELD;KINDERGELD	INCOME; CHILD SUPPORT; CHILD SUPPORT	VWZ LIKE '%KINDERGELD%'"
+    no-loop
+    when
+       $t: AnalyzeableTransaction(purpose matches '.*KINDERGELD.*')
+    then
+       $t.category = "INCOME";
+       $t.subCategory = "CHILD SUPPORT";
+       $t.specification = "CHILD SUPPORT";
+
+       update($t)
+end
+
+
+rule "EINKUENFTE;KINDERGELD;KINDERGELD	INCOME; CHILD SUPPORT; CHILD SUPPORT	(RFN LIKE '%FAMILIENKASSE%' AND VWZ LIKE '%KG%') OR VWZ LIKE '%FAMILIEN%KASSE%KG%'"
+    no-loop
+    when
+       $t: AnalyzeableTransaction(referenceName matches '.*FAMILIENKASSE.*' , purpose matches '.*KG.*') or AnalyzeableTransaction( purpose matches '.*FAMILIEN.*KASSE.*KG.*')
+    then
+       $t.category = "INCOME";
+       $t.subCategory = "CHILD SUPPORT";
+       $t.specification = "CHILD SUPPORT";
+
+       update($t)
+end
+
+
+rule "EINKUENFTE;KINDERGELD;	INCOME; CHILD BENEFIT;	VWZ LIKE '%FAMILIENKASSE%'"
+    no-loop
+    when
+       $t: AnalyzeableTransaction(purpose matches '.*FAMILIENKASSE.*')
+    then
+       $t.category = "INCOME";
+       $t.subCategory = "CHILD BENEFIT";
+       $t.specification = "null";
+
+       update($t)
+end
+
+
+rule "EINKUENFTE;PENSION;PENSION	INCOME; PENSION; PENSION	VWZ LIKE '%PENSION%'"
+    no-loop
+    when
+       $t: AnalyzeableTransaction(purpose matches '.*PENSION.*')
+    then
+       $t.category = "INCOME";
+       $t.subCategory = "PENSION";
+       $t.specification = "PENSION";
+
+       update($t)
+end
+
+
+rule "EINKUENFTE;RENTE;RENTE	INCOME; PENSION; PENSION	VWZ LIKE '%VBL_RENTE%'"
+    no-loop
+    when
+       $t: AnalyzeableTransaction(purpose matches '.*VBL_RENTE.*')
+    then
+       $t.category = "INCOME";
+       $t.subCategory = "PENSION";
+       $t.specification = "PENSION";
+
+       update($t)
+end
+
+
+rule "EINKUENFTE;RENTE;RENTE	INCOME; PENSION; PENSION	RFN LIKE '%RENTEN%SERVICE%' OR VWZ LIKE '%RV_RENTE%'"
+    no-loop
+    when
+       $t: AnalyzeableTransaction(referenceName matches '.*RENTEN.*SERVICE.*' || purpose matches '.*RV_RENTE.*')
+    then
+       $t.category = "INCOME";
+       $t.subCategory = "PENSION";
+       $t.specification = "PENSION";
+
+       update($t)
+end
+
+
+rule "EINKUENFTE;RENTE;RENTE	INCOME; PENSION; PENSION	RFN LIKE '%RENTE%' OR VWZ LIKE '%RENTE%'"
+    no-loop
+    when
+       $t: AnalyzeableTransaction(referenceName matches '.*RENTE.*' || purpose matches '.*RENTE.*')
+    then
+       $t.category = "INCOME";
+       $t.subCategory = "PENSION";
+       $t.specification = "PENSION";
+
+       update($t)
+end
+
+
+rule "EINKUENFTE;SONSTIGES;DIVIDENDE	INCOME; OTHER; DIVIDEND	VWZ LIKE '%DIVIDENDE%'"
+    no-loop
+    when
+       $t: AnalyzeableTransaction(purpose matches '.*DIVIDENDE.*')
+    then
+       $t.category = "INCOME";
+       $t.subCategory = "OTHER";
+       $t.specification = "DIVIDEND";
+
+       update($t)
+end
+
+
+rule "EINKUENFTE;SONSTIGES;EINZAHLUNG	INCOME; MISCELLANEOUS; DEPOSIT	VWZ LIKE '%ELTERN%GELD%'"
+    no-loop
+    when
+       $t: AnalyzeableTransaction(purpose matches '.*ELTERN.*GELD.*')
+    then
+       $t.category = "INCOME";
+       $t.subCategory = "MISCELLANEOUS";
+       $t.specification = "DEPOSIT";
+
+       update($t)
+end
+
+
+rule "EINKUENFTE;SONSTIGES;KAUTION	INCOME; OTHER; DEPOSIT	VWZ LIKE '%KAUTION%'"
+    no-loop
+    when
+       $t: AnalyzeableTransaction(purpose matches '.*KAUTION.*')
+    then
+       $t.category = "INCOME";
+       $t.subCategory = "OTHER";
+       $t.specification = "DEPOSIT";
+
+       update($t)
+end
+
+
+rule "EINKUENFTE;SONSTIGES;MIETE	INCOME; OTHER; RENT	VWZ LIKE '%MIETE%'"
+    no-loop
+    when
+       $t: AnalyzeableTransaction(purpose matches '.*MIETE.*')
+    then
+       $t.category = "INCOME";
+       $t.subCategory = "OTHER";
+       $t.specification = "RENT";
+
+       update($t)
+end
+
+
+rule "EINKUENFTE;SONSTIGES;PACHT	INCOME; OTHER; Leases	VWZ LIKE '%ERBPACHT%'"
+    no-loop
+    when
+       $t: AnalyzeableTransaction(purpose matches '.*ERBPACHT.*')
+    then
+       $t.category = "INCOME";
+       $t.subCategory = "OTHER";
+       $t.specification = "LEASES";
+
+       update($t)
+end
+
+
+rule "EINKUENFTE;SONSTIGES;PACHT	INCOME; OTHER; Leases	VWZ LIKE '%PACHT%'"
+    no-loop
+    when
+       $t: AnalyzeableTransaction(purpose matches '.*PACHT.*')
+    then
+       $t.category = "INCOME";
+       $t.subCategory = "OTHER";
+       $t.specification = "LEASES";
+
+       update($t)
+end
+
+
+rule "EINKUENFTE;SONSTIGES;PAYBACK	INCOME; OTHER; PAYBACK	RFN LIKE 'SHOOP%'"
+    no-loop
+    when
+       $t: AnalyzeableTransaction(referenceName matches 'SHOOP.*')
+    then
+       $t.category = "INCOME";
+       $t.subCategory = "OTHER";
+       $t.specification = "PAYBACK";
+
+       update($t)
+end
+
+
+rule "EINKUENFTE;SONSTIGES;PAYBACK	INCOME; OTHER; PAYBACK	VWZ LIKE '%VERIVOXSOFORTBONUS%'"
+    no-loop
+    when
+       $t: AnalyzeableTransaction(purpose matches '.*VERIVOXSOFORTBONUS.*')
+    then
+       $t.category = "INCOME";
+       $t.subCategory = "OTHER";
+       $t.specification = "PAYBACK";
+
+       update($t)
+end
+
+
+rule "EINKUENFTE;SONSTIGES;RUECKERSTATTUNG	INCOME; OTHER; REFUND	VWZ LIKE '%ERSTATT%EINK%'"
+    no-loop
+    when
+       $t: AnalyzeableTransaction(purpose matches '.*ERSTATT.*EINK.*')
+    then
+       $t.category = "INCOME";
+       $t.subCategory = "OTHER";
+       $t.specification = "REFUND";
+
+       update($t)
+end
+
+
+rule "EINKUENFTE;SONSTIGES;RUECKERSTATTUNG	INCOME; OTHER; REFUND	VWZ LIKE '%KOSTENERSTATTUNG%'"
+    no-loop
+    when
+       $t: AnalyzeableTransaction(purpose matches '.*KOSTENERSTATTUNG.*')
+    then
+       $t.category = "INCOME";
+       $t.subCategory = "OTHER";
+       $t.specification = "REFUND";
+
+       update($t)
+end
+
+
+rule "EINKUENFTE;SONSTIGES;RUECKERSTATTUNG	INCOME; OTHER; REFUND	VWZ LIKE '%KOSTEN%ERSTATTUNG%'"
+    no-loop
+    when
+       $t: AnalyzeableTransaction(purpose matches '.*KOSTEN.*ERSTATTUNG.*')
+    then
+       $t.category = "INCOME";
+       $t.subCategory = "OTHER";
+       $t.specification = "REFUND";
+
+       update($t)
+end
+
+
+rule "EINKUENFTE;SONSTIGES;SONSTIGES	INCOME; OTHER; OTHER	VWZ LIKE '%REISE%ERSTATT%' OR VWZ LIKE '%REISE%AUSLAGEN%' OR VWZ LIKE '%REISE%KOSTEN%' OR VWZ LIKE '%REISE%ABRECHNUNG%'"
+    no-loop
+    when
+       $t: AnalyzeableTransaction(purpose matches '.*REISE.*ERSTATT.*' || purpose matches '.*REISE.*AUSLAGEN.*' || purpose matches '.*REISE.*KOSTEN.*' || purpose matches '.*REISE.*ABRECHNUNG.*')
+    then
+       $t.category = "INCOME";
+       $t.subCategory = "OTHER";
+       $t.specification = "OTHER";
+
+       update($t)
+end
+
+
+rule "EINKUENFTE;SONSTIGES;SONSTIGES	INCOME; OTHER; OTHER	RFN LIKE '%EINGANG VORBEHALTEN%' OR VWZ LIKE '%EINGANG VORBEHALTEN%'"
+    no-loop
+    when
+       $t: AnalyzeableTransaction(referenceName matches '.*EINGANG VORBEHALTEN.*' || purpose matches '.*EINGANG VORBEHALTEN.*')
+    then
+       $t.category = "INCOME";
+       $t.subCategory = "OTHER";
+       $t.specification = "OTHER";
+
+       update($t)
+end
+
+
+rule "EINKUENFTE;SONSTIGES;STEUER_RUECKZAHLUNG	INCOME; MISCELLANEOUS; TAX_BACKPAYMENT	VWZ LIKE '%KFZ%STEUER%'"
+    no-loop
+    when
+       $t: AnalyzeableTransaction(purpose matches '.*KFZ.*STEUER.*')
+    then
+       $t.category = "INCOME";
+       $t.subCategory = "MISCELLANEOUS";
+       $t.specification = "TAX_BACKPAYMENT";
+
+       update($t)
+end
+
+
+rule "EINKUENFTE;SONSTIGES;STEUER_RUECKZAHLUNG	INCOME; MISCELLANEOUS; TAX_BACKPAYMENT	VWZ LIKE '%STEUER%'"
+    no-loop
+    when
+       $t: AnalyzeableTransaction(purpose matches '.*STEUER.*')
+    then
+       $t.category = "INCOME";
+       $t.subCategory = "MISCELLANEOUS";
+       $t.specification = "TAX_BACKPAYMENT";
+
+       update($t)
+end
+
+
+rule "EINKUENFTE;SONSTIGES;UEBERTRAG	INCOME; OTHER; TRANSFER	VWZ LIKE '%UEBERTRAG%'"
+    no-loop
+    when
+       $t: AnalyzeableTransaction(purpose matches '.*UEBERTRAG.*')
+    then
+       $t.category = "INCOME";
+       $t.subCategory = "OTHER";
+       $t.specification = "TRANSFER";
+
+       update($t)
+end
+
+
+rule "EINKUENFTE;SONSTIGES;UNTERHALT	Income; miscellaneous; maintenance	VWZ LIKE '%UNTERHALT%' AND VWZ NOT LIKE '%UNTERHALTUNG%'"
+    no-loop
+    when
+       $t: AnalyzeableTransaction(purpose matches '.*UNTERHALT.*', purpose not matches '.*UNTERHALTUNG.*')
+    then
+       $t.category = "INCOME";
+       $t.subCategory = "MISCELLANEOUS";
+       $t.specification = "MAINTENANCE";
+
+       update($t)
+end
+
+
+rule "EINKUENFTE;SONSTIGES;UNTERHALT	Income; miscellaneous; maintenance	VWZ LIKE '%LEBENSUNTERHALT%'"
+    no-loop
+    when
+       $t: AnalyzeableTransaction(purpose matches '.*LEBENSUNTERHALT.*')
+    then
+       $t.category = "INCOME";
+       $t.subCategory = "MISCELLANEOUS";
+       $t.specification = "MAINTENANCE";
+
+       update($t)
+end
+
+
+rule "EINKUENFTE;SONSTIGES;UNTERHALT	Income; miscellaneous; maintenance	VWZ LIKE '%LEBENSERWERB%'"
+    no-loop
+    when
+       $t: AnalyzeableTransaction(purpose matches '.*LEBENSERWERB.*')
+    then
+       $t.category = "INCOME";
+       $t.subCategory = "MISCELLANEOUS";
+       $t.specification = "MAINTENANCE";
+
+       update($t)
+end
+
+
+rule "EINKUENFTE;SONSTIGES;ZINSEN	INCOME; OTHER; INTEREST	VWZ LIKE '%ZINSEN%'"
+    no-loop
+    when
+       $t: AnalyzeableTransaction(purpose matches '.*ZINSEN.*')
+    then
+       $t.category = "INCOME";
+       $t.subCategory = "OTHER";
+       $t.specification = "INTEREST";
+
+       update($t)
+end
+
+
+rule "EINKUENFTE;SONSTIGES;	INCOME; OTHER;	VWZ LIKE '%GUTSCHRIFT%'"
+    no-loop
+    when
+       $t: AnalyzeableTransaction(purpose matches '.*GUTSCHRIFT.*')
+    then
+       $t.category = "INCOME";
+       $t.subCategory = "OTHER";
+       $t.specification = "null";
+
+       update($t)
+end
+
+
+rule "EINKUENFTE;SONSTIGES;	INCOME; OTHER;	RFN LIKE '%ERSTATTUNG%'"
+    no-loop
+    when
+       $t: AnalyzeableTransaction(referenceName matches '.*ERSTATTUNG.*')
+    then
+       $t.category = "INCOME";
+       $t.subCategory = "OTHER";
+       $t.specification = "null";
+
+       update($t)
+end
+
+
+rule "EINKUENFTE;SONSTIGES;	INCOME; OTHER;	VWZ LIKE '%ANWEISUNG%'"
+    no-loop
+    when
+       $t: AnalyzeableTransaction(purpose matches '.*ANWEISUNG.*')
+    then
+       $t.category = "INCOME";
+       $t.subCategory = "OTHER";
+       $t.specification = "null";
+
+       update($t)
+end
+
+
+rule "EINKUENFTE;SONSTIGES;	INCOME; OTHER;	VWZ LIKE '%BEZAHLUNG%'"
+    no-loop
+    when
+       $t: AnalyzeableTransaction(purpose matches '.*BEZAHLUNG.*')
+    then
+       $t.category = "INCOME";
+       $t.subCategory = "OTHER";
+       $t.specification = "null";
+
+       update($t)
+end
+
+
+rule "EINKUENFTE;UNTERSTUETZUNG;BAFOEG	INCOME; ASSISTANCE; BAFOEG	VWZ LIKE '%BAFOEG%'"
+    no-loop
+    when
+       $t: AnalyzeableTransaction(purpose matches '.*BAFOEG.*')
+    then
+       $t.category = "INCOME";
+       $t.subCategory = "ASSISTANCE";
+       $t.specification = "BAFOEG";
+
+       update($t)
+end
+
+
+rule "EINKUENFTE;UNTERSTUETZUNG;BUNDESAGENTUR_FUER_ARBEIT	INCOME; SUPPORT; BUNDESAGENTUR_FUER_ARBEIT	RFN LIKE '%FAMILIENKASSE%'"
+    no-loop
+    when
+       $t: AnalyzeableTransaction(referenceName matches '.*FAMILIENKASSE.*')
+    then
+       $t.category = "INCOME";
+       $t.subCategory = "SUPPORT";
+       $t.specification = "BUNDESAGENTUR_FUER_ARBEIT";
+
+       update($t)
+end
+
+
+rule "EINKUENFTE;UNTERSTUETZUNG;BUNDESAGENTUR_FUER_ARBEIT	INCOME; SUPPORT; BUNDESAGENTUR_FUER_ARBEIT	RFN LIKE '%BUNDES%AGENTUR%ARBEIT%'"
+    no-loop
+    when
+       $t: AnalyzeableTransaction(referenceName matches '.*BUNDES.*AGENTUR.*ARBEIT.*')
+    then
+       $t.category = "INCOME";
+       $t.subCategory = "SUPPORT";
+       $t.specification = "BUNDESAGENTUR_FUER_ARBEIT";
+
+       update($t)
+end
+
+
+rule "EINKUENFTE;UNTERSTUETZUNG;ELTERNGELD	INCOME; SUPPORT; PARENTAL BENEFIT	VWZ LIKE '%ELTERN%GELD%'"
+    no-loop
+    when
+       $t: AnalyzeableTransaction(purpose matches '.*ELTERN.*GELD.*')
+    then
+       $t.category = "INCOME";
+       $t.subCategory = "SUPPORT";
+       $t.specification = "PARENTAL BENEFIT";
+
+       update($t)
+end
+
+
+rule "EINKUENFTE;UNTERSTUETZUNG;KINDERBETREUUNG	INCOME; ASSISTANCE; CHILD CARE	VWZ LIKE '%KINDER%BETREU%GELD%'"
+    no-loop
+    when
+       $t: AnalyzeableTransaction(purpose matches '.*KINDER.*BETREU.*GELD.*')
+    then
+       $t.category = "INCOME";
+       $t.subCategory = "ASSISTANCE";
+       $t.specification = "CHILD CARE";
 
        update($t)
 end
