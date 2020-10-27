@@ -116,11 +116,6 @@ public class DatasafeConfigurer {
         );
     }
 
-    @SneakyThrows
-    private EncryptionConfig mapToEncryptionConfig(byte[] data) {
-        return mapper.readValue(data, EncryptionConfig.class);
-    }
-
     @PostConstruct
     void provideBouncyCastle() {
         if (null != Security.getProvider(BouncyCastleProvider.PROVIDER_NAME)) {
