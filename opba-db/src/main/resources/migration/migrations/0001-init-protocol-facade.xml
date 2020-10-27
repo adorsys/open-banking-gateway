@@ -522,7 +522,7 @@
             <column name="id" type="BIGINT">
                 <constraints primaryKey="true"/>
             </column>
-            <column name="config" type="BLOB"/>
+            <column name="config" type="CLOB"/>
         </createTable>
         <createSequence sequenceName="datasafe_config_sequence" incrementBy="50"/>
     </changeSet>

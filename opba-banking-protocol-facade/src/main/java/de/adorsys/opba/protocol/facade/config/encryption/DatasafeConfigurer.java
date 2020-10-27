@@ -12,6 +12,7 @@ import de.adorsys.datasafe.encrypiton.impl.pathencryption.PathEncryptionImplRunt
 import de.adorsys.datasafe.types.api.context.BaseOverridesRegistry;
 import de.adorsys.datasafe.types.api.context.overrides.OverridesRegistry;
 import de.adorsys.datasafe.types.api.resource.Uri;
+import de.adorsys.opba.db.domain.entity.DatasafeConfig;
 import de.adorsys.opba.db.repository.jpa.DatasafeConfigRepository;
 import de.adorsys.opba.protocol.facade.config.encryption.datasafe.BaseDatasafeDbStorageService;
 import de.adorsys.opba.protocol.facade.config.encryption.impl.fintech.FintechConsentSpecDatasafeStorage;
@@ -26,7 +27,6 @@ import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
 import org.bouncycastle.jce.provider.BouncyCastleProvider;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
@@ -42,18 +42,20 @@ import static de.adorsys.opba.protocol.facade.config.ConfigConst.FACADE_CONFIG_P
 public class DatasafeConfigurer {
 
     private static final String ENCRYPTION_DATASAFE_READ_KEYSTORE_PREFIX = "${" + FACADE_CONFIG_PREFIX + "encryption.datasafe.read-keystore";
+    private static final String INCORRECT_ENCRYPTION_CONFIG_RECORDS_AMOUNT_EXCEPTION = "There should be only one datasafe encryption configuration in database!";
+    private static final Long ENCRYPTION_DATASAFE_CONFIG_DB_ID = 1L;
 
     private final ObjectMapper mapper;
     private final FintechDatasafeStorage fintechStorage;
     private final PsuDatasafeStorage psuStorage;
     private final FintechConsentSpecDatasafeStorage fintechUserStorage;
     private final DatasafeConfigRepository datasafeConfigRepository;
+    private final MutableEncryptionConfig mutableEncryptionConfig;
 
     @Bean
     public FintechSecureStorage fintechDatasafeServices(
             @Value(ENCRYPTION_DATASAFE_READ_KEYSTORE_PREFIX + ".fintech}") String fintechReadStorePass,
-            EncryptionKeySerde serde,
-            MutableEncryptionConfig encryptionConfig
+            EncryptionKeySerde serde
     ) {
         DFSConfig config = new BaseDatasafeDbStorageService.DbTableDFSConfig(fintechReadStorePass);
         OverridesRegistry overridesRegistry = new BaseOverridesRegistry();
@@ -62,7 +64,7 @@ public class DatasafeConfigurer {
         return new FintechSecureStorage(
                 DaggerDefaultDatasafeServices.builder()
                         .config(config)
-                        .encryption(enConfig)
+                        .encryption(readEncryptionConfigFromDb())
                         .storage(fintechStorage)
                         .overridesRegistry(overridesRegistry)
                         .build(),
@@ -75,18 +77,16 @@ public class DatasafeConfigurer {
     public PsuSecureStorage psuDatasafeServices(
             @Value(ENCRYPTION_DATASAFE_READ_KEYSTORE_PREFIX + ".psu}") String psuReadStorePass,
             PsuEncryptionServiceProvider encryptionServiceProvider,
-            EncryptionKeySerde serde,
-            MutableEncryptionConfig encryptionConfig
+            EncryptionKeySerde serde
     ) {
         DFSConfig config = new BaseDatasafeDbStorageService.DbTableDFSConfig(psuReadStorePass);
         OverridesRegistry overridesRegistry = new BaseOverridesRegistry();
         ProfileRetrievalServiceImplRuntimeDelegatable.overrideWith(overridesRegistry, BaseDatasafeDbStorageService.DbTableUserRetrieval::new);
         PathEncryptionImplRuntimeDelegatable.overrideWith(overridesRegistry, NoOpPathEncryptionImplOverridden::new);
-        EncryptionConfig enConfig = encryptionConfig.toEncryptionConfig();
         return new PsuSecureStorage(
                 DaggerDefaultDatasafeServices.builder()
                         .config(config)
-                        .encryption(enConfig)
+                        .encryption(readEncryptionConfigFromDb())
                         .storage(psuStorage)
                         .overridesRegistry(overridesRegistry)
                         .build(),
@@ -98,18 +98,16 @@ public class DatasafeConfigurer {
 
     @Bean
     public FintechConsentSpecSecureStorage fintechUserDatasafeServices(
-            @Value(ENCRYPTION_DATASAFE_READ_KEYSTORE_PREFIX + ".fintech-user}") String psuReadStorePass,
-            MutableEncryptionConfig encryptionConfig
+            @Value(ENCRYPTION_DATASAFE_READ_KEYSTORE_PREFIX + ".fintech-user}") String psuReadStorePass
     ) {
         DFSConfig config = new BaseDatasafeDbStorageService.DbTableDFSConfig(psuReadStorePass);
         OverridesRegistry overridesRegistry = new BaseOverridesRegistry();
         ProfileRetrievalServiceImplRuntimeDelegatable.overrideWith(overridesRegistry, BaseDatasafeDbStorageService.DbTableUserRetrieval::new);
         PathEncryptionImplRuntimeDelegatable.overrideWith(overridesRegistry, NoOpPathEncryptionImplOverridden::new);
-        EncryptionConfig enConfig = encryptionConfig.toEncryptionConfig();
         return new FintechConsentSpecSecureStorage(
                 DaggerDefaultDatasafeServices.builder()
                         .config(config)
-                        .encryption(enConfig)
+                        .encryption(readEncryptionConfigFromDb())
                         .storage(fintechUserStorage)
                         .overridesRegistry(overridesRegistry)
                         .build(),
@@ -117,24 +115,6 @@ public class DatasafeConfigurer {
                 mapper
         );
     }
-
-    @Bean
-    @ConfigurationProperties(prefix = "facade.datasafe")
-    public EncryptionConfig encryptionConfig() {
-        return EncryptionConfig.builder().build();
-    }
-
-    private EncryptionConfig buildEncryptionConfig() {
-        if (datasafeConfigRepository.count() == 0) {
-            log.info("Datasafe is configured from properties");
-        }
-
-        log.info("Datasafe is configured from database");
-        return datasafeConfigRepository.findAll().stream()
-                       .findFirst()
-                       .map(e -> mapToEncryptionConfig(e.getConfig()))
-                       .orElseGet(this::encryptionConfig.b);
-    }*/
 
     @SneakyThrows
     private EncryptionConfig mapToEncryptionConfig(byte[] data) {
@@ -148,6 +128,37 @@ public class DatasafeConfigurer {
         }
 
         Security.addProvider(new BouncyCastleProvider());
+
+        if (encryptionConfigNotExistInDb()) {
+            log.info("Datasafe encryption is configured from properties");
+            storeEncryptionConfigInDb(mutableEncryptionConfig);
+        } else {
+            log.info("Datasafe encryption is configured from database");
+        }
+    }
+
+    @SneakyThrows
+    private void storeEncryptionConfigInDb(MutableEncryptionConfig config) {
+        datasafeConfigRepository.save(new DatasafeConfig(ENCRYPTION_DATASAFE_CONFIG_DB_ID, mapper.writeValueAsString(config)));
+    }
+
+    private boolean encryptionConfigNotExistInDb() {
+        return datasafeConfigRepository.count() == 0;
+    }
+
+    @SneakyThrows
+    private EncryptionConfig readEncryptionConfigFromDb() {
+        if (datasafeConfigRepository.count() != 1) {
+            throw new IllegalStateException(INCORRECT_ENCRYPTION_CONFIG_RECORDS_AMOUNT_EXCEPTION);
+        }
+
+        return mapper.readValue(
+                datasafeConfigRepository.findAll().stream()
+                        .findFirst()
+                        .orElseThrow(() -> new IllegalStateException(INCORRECT_ENCRYPTION_CONFIG_RECORDS_AMOUNT_EXCEPTION))
+                        .getConfig(),
+                MutableEncryptionConfig.class)
+                       .toEncryptionConfig();
     }
 
     // Path encryption that does not encrypt paths - as for use cases of OpenBanking we need to protect data
