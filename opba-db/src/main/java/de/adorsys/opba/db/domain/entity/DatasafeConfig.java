@@ -29,6 +29,5 @@ public class DatasafeConfig {
     private Long id;
 
     @Lob
-    @Basic(fetch = FetchType.LAZY)
     private String config;
 }
