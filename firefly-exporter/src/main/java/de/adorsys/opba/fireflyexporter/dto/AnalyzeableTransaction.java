@@ -27,6 +27,15 @@ public class AnalyzeableTransaction extends TransactionDetails {
     @Setter
     private String specification;
 
+    public String getIsoLanguage() {
+        if (StringUtils.startsWithIgnoreCase(getCreditorAccount().getIban(), "DE")
+                || StringUtils.startsWithIgnoreCase(getDebtorAccount().getIban(), "DE")) {
+            return "DE";
+        }
+
+        return "EN";
+    }
+
     public String getReferenceName() {
         if (BigDecimal.ZERO.compareTo(new BigDecimal(getTransactionAmount().getAmount())) > 0) {
             return normalize(getCreditorName());

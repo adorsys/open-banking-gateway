@@ -5,46 +5,10 @@ import de.adorsys.opba.fireflyexporter.dto.AnalyzeableTransaction
 dialect  "mvel"
 
 
-rule "TEST TRANSACTION"
-    no-loop
-    when
-       $t: AnalyzeableTransaction(referenceName matches '.*\\bTEST\\b.*' || purpose matches '.*\\bTEST\\b.*')
-    then
-       $t.category = "TEST";
-       $t.subCategory = "TEST";
-       $t.specification = "TEST TRANSACTION";
-
-       update($t)
-end
-
-rule "DIRECT FUNDS TRANSFER"
-    no-loop
-    when
-       $t: AnalyzeableTransaction(purpose matches '.*TRANSFER.*(TO|FOR).*')
-    then
-       $t.category = "EXPENSE";
-       $t.subCategory = "EXPENSE";
-       $t.specification = "DIRECT FUNDS TRANSFER";
-
-       update($t)
-end
-
-rule "DEPOSIT"
-    no-loop
-    when
-       $t: AnalyzeableTransaction(referenceName matches '.*\\bDEPOSIT\\b.*' || purpose matches '.*\\bDEPOSIT\\b.*')
-    then
-       $t.category = "INCOME";
-       $t.subCategory = "INCOME";
-       $t.specification = "CASH DEPOSIT";
-
-       update($t)
-end
-
 rule "EINKUENFTE;EINKOMMEN;BEZUEGE BEAMTE	INCOME; INCOME; REMUNERATION OF OFFICIALS	RFN LIKE '%LANDES%KASSE%' AND VWZ LIKE '%BEZ%GE%'"
     no-loop
     when
-       $t: AnalyzeableTransaction(referenceName matches '.*LANDES.*KASSE.*',  purpose matches '.*BEZ.*GE.*')
+       $t: AnalyzeableTransaction(isoLanguage == 'DE', referenceName matches '.*LANDES.*KASSE.*',  purpose matches '.*BEZ.*GE.*')
     then
        $t.category = "INCOME";
        $t.subCategory = "INCOME";
@@ -56,7 +20,7 @@ end
 rule "EINKUENFTE;EINKOMMEN;GEHALT	INCOME; INCOME; SALARY	RFN LIKE '%GEHALT%' OR VWZ LIKE '%GEHALT%'"
     no-loop
     when
-       $t: AnalyzeableTransaction(referenceName matches '.*GEHALT.*' || purpose matches '.*GEHALT.*')
+       $t: AnalyzeableTransaction(isoLanguage == 'DE', referenceName matches '.*GEHALT.*' || purpose matches '.*GEHALT.*')
     then
        $t.category = "INCOME";
        $t.subCategory = "INCOME";
@@ -69,7 +33,7 @@ end
 rule "EINKUENFTE;EINKOMMEN;GEHALT	INCOME; INCOME; SALARY	VWZ LIKE '%AUSHILF%LOHN%'"
     no-loop
     when
-       $t: AnalyzeableTransaction(purpose matches '.*AUSHILF.*LOHN.*')
+       $t: AnalyzeableTransaction(isoLanguage == 'DE', purpose matches '.*AUSHILF.*LOHN.*')
     then
        $t.category = "INCOME";
        $t.subCategory = "INCOME";
@@ -82,7 +46,7 @@ end
 rule "EINKUENFTE;EINKOMMEN;GEHALT	INCOME; INCOME; SALARY	VWZ LIKE '%VERDIENST%ABRECHNUNG%'"
     no-loop
     when
-       $t: AnalyzeableTransaction(purpose matches '.*VERDIENST.*ABRECHNUNG.*')
+       $t: AnalyzeableTransaction(isoLanguage == 'DE', purpose matches '.*VERDIENST.*ABRECHNUNG.*')
     then
        $t.category = "INCOME";
        $t.subCategory = "INCOME";
@@ -95,7 +59,7 @@ end
 rule "EINKUENFTE;EINKOMMEN;GEHALT	INCOME; INCOME; SALARY	VWZ LIKE '%BESCHEID%' AND VWZ LIKE '%EINKOMMEN%'"
     no-loop
     when
-       $t: AnalyzeableTransaction(purpose matches '.*BESCHEID.*' , purpose matches '.*EINKOMMEN.*')
+       $t: AnalyzeableTransaction(isoLanguage == 'DE', purpose matches '.*BESCHEID.*' , purpose matches '.*EINKOMMEN.*')
     then
        $t.category = "INCOME";
        $t.subCategory = "INCOME";
@@ -108,7 +72,7 @@ end
 rule "EINKUENFTE;EINKOMMEN;GEHALT	INCOME; INCOME; SALARY	RFN LIKE '%LOHN%GEHALT%' OR VWZ LIKE '%LOHN%GEHALT%'"
     no-loop
     when
-       $t: AnalyzeableTransaction(referenceName matches '.*LOHN.*GEHALT.*' || purpose matches '.*LOHN.*GEHALT.*')
+       $t: AnalyzeableTransaction(isoLanguage == 'DE', referenceName matches '.*LOHN.*GEHALT.*' || purpose matches '.*LOHN.*GEHALT.*')
     then
        $t.category = "INCOME";
        $t.subCategory = "INCOME";
@@ -121,7 +85,7 @@ end
 rule "EINKUENFTE;EINKOMMEN;LOHN	INCOME; INCOME; WAGE	RFN LIKE '%LOHN%' OR (VWZ LIKE '%LOHN%' AND NOT VWZ LIKE '%LOHN%STEUER%')"
     no-loop
     when
-       $t: AnalyzeableTransaction(referenceName matches '.*LOHN.*') or $t: AnalyzeableTransaction(purpose matches '.*LOHN.*', purpose not matches '.*LOHN.*STEUER.*')
+       $t: AnalyzeableTransaction(isoLanguage == 'DE', referenceName matches '.*LOHN.*') or $t: AnalyzeableTransaction(isoLanguage == 'DE', purpose matches '.*LOHN.*', purpose not matches '.*LOHN.*STEUER.*')
     then
        $t.category = "INCOME";
        $t.subCategory = "INCOME";
@@ -134,7 +98,7 @@ end
 rule "EINKUENFTE;EINKOMMEN;SONSTIGES	INCOME; INCOME; OTHER	RFN LIKE '%HONORAR%' OR VWZ LIKE '%HONORAR%'"
     no-loop
     when
-       $t: AnalyzeableTransaction(referenceName matches '.*HONORAR.*' || purpose matches '.*HONORAR.*')
+       $t: AnalyzeableTransaction(isoLanguage == 'DE', referenceName matches '.*HONORAR.*' || purpose matches '.*HONORAR.*')
     then
        $t.category = "INCOME";
        $t.subCategory = "INCOME";
@@ -147,7 +111,7 @@ end
 rule "EINKUENFTE;EINKOMMEN;SONSTIGES	INCOME; INCOME; OTHER	RFN LIKE '%PROVISION%' OR VWZ LIKE '%PROVISION%'"
     no-loop
     when
-       $t: AnalyzeableTransaction(referenceName matches '.*PROVISION.*' || purpose matches '.*PROVISION.*')
+       $t: AnalyzeableTransaction(isoLanguage == 'DE', referenceName matches '.*PROVISION.*' || purpose matches '.*PROVISION.*')
     then
        $t.category = "INCOME";
        $t.subCategory = "INCOME";
@@ -160,7 +124,7 @@ end
 rule "EINKUENFTE;EINKOMMEN;SONSTIGES	INCOME; INCOME; OTHER	RFN LIKE '%HEUER%' OR VWZ LIKE '%HEUER%'"
     no-loop
     when
-       $t: AnalyzeableTransaction(referenceName matches '.*HEUER.*' || purpose matches '.*HEUER.*')
+       $t: AnalyzeableTransaction(isoLanguage == 'DE', referenceName matches '.*HEUER.*' || purpose matches '.*HEUER.*')
     then
        $t.category = "INCOME";
        $t.subCategory = "INCOME";
@@ -173,7 +137,7 @@ end
 rule "EINKUENFTE;EINKOMMEN;SONSTIGES	INCOME; INCOME; OTHER	RFN LIKE '%GAGE%' OR VWZ LIKE '%GAGE%'"
     no-loop
     when
-       $t: AnalyzeableTransaction(referenceName matches '.*GAGE.*' || purpose matches '.*GAGE.*')
+       $t: AnalyzeableTransaction(isoLanguage == 'DE', referenceName matches '.*GAGE.*' || purpose matches '.*GAGE.*')
     then
        $t.category = "INCOME";
        $t.subCategory = "INCOME";
@@ -186,7 +150,7 @@ end
 rule "EINKUENFTE;EINKOMMEN;SONSTIGES	INCOME; INCOME; OTHER	RFN LIKE '%DIAET%' OR VWZ LIKE '%DIAET%'"
     no-loop
     when
-       $t: AnalyzeableTransaction(referenceName matches '.*DIAET.*' || purpose matches '.*DIAET.*')
+       $t: AnalyzeableTransaction(isoLanguage == 'DE', referenceName matches '.*DIAET.*' || purpose matches '.*DIAET.*')
     then
        $t.category = "INCOME";
        $t.subCategory = "INCOME";
@@ -199,7 +163,7 @@ end
 rule "EINKUENFTE;EINKOMMEN;SONSTIGES	INCOME; INCOME; OTHER	RFN LIKE '%SOLD%' OR VWZ LIKE '%SOLD%'"
     no-loop
     when
-       $t: AnalyzeableTransaction(referenceName matches '.*SOLD.*' || purpose matches '.*SOLD.*')
+       $t: AnalyzeableTransaction(isoLanguage == 'DE', referenceName matches '.*SOLD.*' || purpose matches '.*SOLD.*')
     then
        $t.category = "INCOME";
        $t.subCategory = "INCOME";
@@ -212,7 +176,7 @@ end
 rule "EINKUENFTE;EINKOMMEN;SONSTIGES	INCOME; INCOME; OTHER	VWZ LIKE '%BESOLDUNG%'"
     no-loop
     when
-       $t: AnalyzeableTransaction(purpose matches '.*BESOLDUNG.*')
+       $t: AnalyzeableTransaction(isoLanguage == 'DE', purpose matches '.*BESOLDUNG.*')
     then
        $t.category = "INCOME";
        $t.subCategory = "INCOME";
@@ -225,7 +189,7 @@ end
 rule "EINKUENFTE;EINKOMMEN;SONSTIGES	INCOME; INCOME; OTHER	VWZ LIKE '%VERGUETUNG%'"
     no-loop
     when
-       $t: AnalyzeableTransaction(purpose matches '.*VERGUETUNG.*')
+       $t: AnalyzeableTransaction(isoLanguage == 'DE', purpose matches '.*VERGUETUNG.*')
     then
        $t.category = "INCOME";
        $t.subCategory = "INCOME";
@@ -238,7 +202,7 @@ end
 rule "EINKUENFTE;EINKOMMEN;SONSTIGES	INCOME; INCOME; OTHER	VWZ LIKE '%SALAER%'"
     no-loop
     when
-       $t: AnalyzeableTransaction(purpose matches '.*SALAER.*')
+       $t: AnalyzeableTransaction(isoLanguage == 'DE', purpose matches '.*SALAER.*')
     then
        $t.category = "INCOME";
        $t.subCategory = "INCOME";
@@ -251,7 +215,7 @@ end
 rule "EINKUENFTE;EINKOMMEN;SONSTIGES	INCOME; INCOME; OTHER	VWZ LIKE '%GRATIFIKATION%'"
     no-loop
     when
-       $t: AnalyzeableTransaction(purpose matches '.*GRATIFIKATION.*')
+       $t: AnalyzeableTransaction(isoLanguage == 'DE', purpose matches '.*GRATIFIKATION.*')
     then
        $t.category = "INCOME";
        $t.subCategory = "INCOME";
@@ -264,7 +228,7 @@ end
 rule "EINKUENFTE;EINKOMMEN;SONSTIGES	INCOME; INCOME; OTHER	VWZ LIKE '%ZULAGE%'"
     no-loop
     when
-       $t: AnalyzeableTransaction(purpose matches '.*ZULAGE.*')
+       $t: AnalyzeableTransaction(isoLanguage == 'DE', purpose matches '.*ZULAGE.*')
     then
        $t.category = "INCOME";
        $t.subCategory = "INCOME";
@@ -277,7 +241,7 @@ end
 rule "EINKUENFTE;EINKOMMEN;	INCOME; INCOME;	VWZ LIKE '%EINKOMMEN%'"
     no-loop
     when
-       $t: AnalyzeableTransaction(purpose matches '.*EINKOMMEN.*')
+       $t: AnalyzeableTransaction(isoLanguage == 'DE', purpose matches '.*EINKOMMEN.*')
     then
        $t.category = "INCOME";
        $t.subCategory = "INCOME";
@@ -290,7 +254,7 @@ end
 rule "EINKUENFTE;KINDERGELD;KINDERGELD	INCOME; CHILD SUPPORT; CHILD SUPPORT	VWZ LIKE '%KINDERGELD%'"
     no-loop
     when
-       $t: AnalyzeableTransaction(purpose matches '.*KINDERGELD.*')
+       $t: AnalyzeableTransaction(isoLanguage == 'DE', purpose matches '.*KINDERGELD.*')
     then
        $t.category = "INCOME";
        $t.subCategory = "CHILD SUPPORT";
@@ -303,7 +267,7 @@ end
 rule "EINKUENFTE;KINDERGELD;KINDERGELD	INCOME; CHILD SUPPORT; CHILD SUPPORT	(RFN LIKE '%FAMILIENKASSE%' AND VWZ LIKE '%KG%') OR VWZ LIKE '%FAMILIEN%KASSE%KG%'"
     no-loop
     when
-       $t: AnalyzeableTransaction(referenceName matches '.*FAMILIENKASSE.*' , purpose matches '.*KG.*') or $t: AnalyzeableTransaction( purpose matches '.*FAMILIEN.*KASSE.*KG.*')
+       $t: AnalyzeableTransaction(isoLanguage == 'DE', referenceName matches '.*FAMILIENKASSE.*' , purpose matches '.*KG.*') or $t: AnalyzeableTransaction(isoLanguage == 'DE',  purpose matches '.*FAMILIEN.*KASSE.*KG.*')
     then
        $t.category = "INCOME";
        $t.subCategory = "CHILD SUPPORT";
@@ -316,7 +280,7 @@ end
 rule "EINKUENFTE;KINDERGELD;	INCOME; CHILD BENEFIT;	VWZ LIKE '%FAMILIENKASSE%'"
     no-loop
     when
-       $t: AnalyzeableTransaction(purpose matches '.*FAMILIENKASSE.*')
+       $t: AnalyzeableTransaction(isoLanguage == 'DE', purpose matches '.*FAMILIENKASSE.*')
     then
        $t.category = "INCOME";
        $t.subCategory = "CHILD BENEFIT";
@@ -329,7 +293,7 @@ end
 rule "EINKUENFTE;PENSION;PENSION	INCOME; PENSION; PENSION	VWZ LIKE '%PENSION%'"
     no-loop
     when
-       $t: AnalyzeableTransaction(purpose matches '.*PENSION.*')
+       $t: AnalyzeableTransaction(isoLanguage == 'DE', purpose matches '.*PENSION.*')
     then
        $t.category = "INCOME";
        $t.subCategory = "PENSION";
@@ -342,7 +306,7 @@ end
 rule "EINKUENFTE;RENTE;RENTE	INCOME; PENSION; PENSION	VWZ LIKE '%VBL_RENTE%'"
     no-loop
     when
-       $t: AnalyzeableTransaction(purpose matches '.*VBL_RENTE.*')
+       $t: AnalyzeableTransaction(isoLanguage == 'DE', purpose matches '.*VBL_RENTE.*')
     then
        $t.category = "INCOME";
        $t.subCategory = "PENSION";
@@ -355,7 +319,7 @@ end
 rule "EINKUENFTE;RENTE;RENTE	INCOME; PENSION; PENSION	RFN LIKE '%RENTEN%SERVICE%' OR VWZ LIKE '%RV_RENTE%'"
     no-loop
     when
-       $t: AnalyzeableTransaction(referenceName matches '.*RENTEN.*SERVICE.*' || purpose matches '.*RV_RENTE.*')
+       $t: AnalyzeableTransaction(isoLanguage == 'DE', referenceName matches '.*RENTEN.*SERVICE.*' || purpose matches '.*RV_RENTE.*')
     then
        $t.category = "INCOME";
        $t.subCategory = "PENSION";
@@ -368,7 +332,7 @@ end
 rule "EINKUENFTE;RENTE;RENTE	INCOME; PENSION; PENSION	RFN LIKE '%RENTE%' OR VWZ LIKE '%RENTE%'"
     no-loop
     when
-       $t: AnalyzeableTransaction(referenceName matches '.*RENTE.*' || purpose matches '.*RENTE.*')
+       $t: AnalyzeableTransaction(isoLanguage == 'DE', referenceName matches '.*RENTE.*' || purpose matches '.*RENTE.*')
     then
        $t.category = "INCOME";
        $t.subCategory = "PENSION";
@@ -381,7 +345,7 @@ end
 rule "EINKUENFTE;SONSTIGES;DIVIDENDE	INCOME; OTHER; DIVIDEND	VWZ LIKE '%DIVIDENDE%'"
     no-loop
     when
-       $t: AnalyzeableTransaction(purpose matches '.*DIVIDENDE.*')
+       $t: AnalyzeableTransaction(isoLanguage == 'DE', purpose matches '.*DIVIDENDE.*')
     then
        $t.category = "INCOME";
        $t.subCategory = "OTHER";
@@ -394,7 +358,7 @@ end
 rule "EINKUENFTE;SONSTIGES;EINZAHLUNG	INCOME; MISCELLANEOUS; DEPOSIT	VWZ LIKE '%ELTERN%GELD%'"
     no-loop
     when
-       $t: AnalyzeableTransaction(purpose matches '.*ELTERN.*GELD.*')
+       $t: AnalyzeableTransaction(isoLanguage == 'DE', purpose matches '.*ELTERN.*GELD.*')
     then
        $t.category = "INCOME";
        $t.subCategory = "MISCELLANEOUS";
@@ -407,7 +371,7 @@ end
 rule "EINKUENFTE;SONSTIGES;KAUTION	INCOME; OTHER; DEPOSIT	VWZ LIKE '%KAUTION%'"
     no-loop
     when
-       $t: AnalyzeableTransaction(purpose matches '.*KAUTION.*')
+       $t: AnalyzeableTransaction(isoLanguage == 'DE', purpose matches '.*KAUTION.*')
     then
        $t.category = "INCOME";
        $t.subCategory = "OTHER";
@@ -420,7 +384,7 @@ end
 rule "EINKUENFTE;SONSTIGES;MIETE	INCOME; OTHER; RENT	VWZ LIKE '%MIETE%'"
     no-loop
     when
-       $t: AnalyzeableTransaction(purpose matches '.*MIETE.*')
+       $t: AnalyzeableTransaction(isoLanguage == 'DE', purpose matches '.*MIETE.*')
     then
        $t.category = "INCOME";
        $t.subCategory = "OTHER";
@@ -433,7 +397,7 @@ end
 rule "EINKUENFTE;SONSTIGES;PACHT	INCOME; OTHER; Leases	VWZ LIKE '%ERBPACHT%'"
     no-loop
     when
-       $t: AnalyzeableTransaction(purpose matches '.*ERBPACHT.*')
+       $t: AnalyzeableTransaction(isoLanguage == 'DE', purpose matches '.*ERBPACHT.*')
     then
        $t.category = "INCOME";
        $t.subCategory = "OTHER";
@@ -446,7 +410,7 @@ end
 rule "EINKUENFTE;SONSTIGES;PACHT	INCOME; OTHER; Leases	VWZ LIKE '%PACHT%'"
     no-loop
     when
-       $t: AnalyzeableTransaction(purpose matches '.*PACHT.*')
+       $t: AnalyzeableTransaction(isoLanguage == 'DE', purpose matches '.*PACHT.*')
     then
        $t.category = "INCOME";
        $t.subCategory = "OTHER";
@@ -459,7 +423,7 @@ end
 rule "EINKUENFTE;SONSTIGES;PAYBACK	INCOME; OTHER; PAYBACK	RFN LIKE 'SHOOP%'"
     no-loop
     when
-       $t: AnalyzeableTransaction(referenceName matches 'SHOOP.*')
+       $t: AnalyzeableTransaction(isoLanguage == 'DE', referenceName matches 'SHOOP.*')
     then
        $t.category = "INCOME";
        $t.subCategory = "OTHER";
@@ -472,7 +436,7 @@ end
 rule "EINKUENFTE;SONSTIGES;PAYBACK	INCOME; OTHER; PAYBACK	VWZ LIKE '%VERIVOXSOFORTBONUS%'"
     no-loop
     when
-       $t: AnalyzeableTransaction(purpose matches '.*VERIVOXSOFORTBONUS.*')
+       $t: AnalyzeableTransaction(isoLanguage == 'DE', purpose matches '.*VERIVOXSOFORTBONUS.*')
     then
        $t.category = "INCOME";
        $t.subCategory = "OTHER";
@@ -485,7 +449,7 @@ end
 rule "EINKUENFTE;SONSTIGES;RUECKERSTATTUNG	INCOME; OTHER; REFUND	VWZ LIKE '%ERSTATT%EINK%'"
     no-loop
     when
-       $t: AnalyzeableTransaction(purpose matches '.*ERSTATT.*EINK.*')
+       $t: AnalyzeableTransaction(isoLanguage == 'DE', purpose matches '.*ERSTATT.*EINK.*')
     then
        $t.category = "INCOME";
        $t.subCategory = "OTHER";
@@ -498,7 +462,7 @@ end
 rule "EINKUENFTE;SONSTIGES;RUECKERSTATTUNG	INCOME; OTHER; REFUND	VWZ LIKE '%KOSTENERSTATTUNG%'"
     no-loop
     when
-       $t: AnalyzeableTransaction(purpose matches '.*KOSTENERSTATTUNG.*')
+       $t: AnalyzeableTransaction(isoLanguage == 'DE', purpose matches '.*KOSTENERSTATTUNG.*')
     then
        $t.category = "INCOME";
        $t.subCategory = "OTHER";
@@ -511,7 +475,7 @@ end
 rule "EINKUENFTE;SONSTIGES;RUECKERSTATTUNG	INCOME; OTHER; REFUND	VWZ LIKE '%KOSTEN%ERSTATTUNG%'"
     no-loop
     when
-       $t: AnalyzeableTransaction(purpose matches '.*KOSTEN.*ERSTATTUNG.*')
+       $t: AnalyzeableTransaction(isoLanguage == 'DE', purpose matches '.*KOSTEN.*ERSTATTUNG.*')
     then
        $t.category = "INCOME";
        $t.subCategory = "OTHER";
@@ -524,7 +488,7 @@ end
 rule "EINKUENFTE;SONSTIGES;SONSTIGES	INCOME; OTHER; OTHER	VWZ LIKE '%REISE%ERSTATT%' OR VWZ LIKE '%REISE%AUSLAGEN%' OR VWZ LIKE '%REISE%KOSTEN%' OR VWZ LIKE '%REISE%ABRECHNUNG%'"
     no-loop
     when
-       $t: AnalyzeableTransaction(purpose matches '.*REISE.*ERSTATT.*' || purpose matches '.*REISE.*AUSLAGEN.*' || purpose matches '.*REISE.*KOSTEN.*' || purpose matches '.*REISE.*ABRECHNUNG.*')
+       $t: AnalyzeableTransaction(isoLanguage == 'DE', purpose matches '.*REISE.*ERSTATT.*' || purpose matches '.*REISE.*AUSLAGEN.*' || purpose matches '.*REISE.*KOSTEN.*' || purpose matches '.*REISE.*ABRECHNUNG.*')
     then
        $t.category = "INCOME";
        $t.subCategory = "OTHER";
@@ -537,7 +501,7 @@ end
 rule "EINKUENFTE;SONSTIGES;SONSTIGES	INCOME; OTHER; OTHER	RFN LIKE '%EINGANG VORBEHALTEN%' OR VWZ LIKE '%EINGANG VORBEHALTEN%'"
     no-loop
     when
-       $t: AnalyzeableTransaction(referenceName matches '.*EINGANG VORBEHALTEN.*' || purpose matches '.*EINGANG VORBEHALTEN.*')
+       $t: AnalyzeableTransaction(isoLanguage == 'DE', referenceName matches '.*EINGANG VORBEHALTEN.*' || purpose matches '.*EINGANG VORBEHALTEN.*')
     then
        $t.category = "INCOME";
        $t.subCategory = "OTHER";
@@ -550,7 +514,7 @@ end
 rule "EINKUENFTE;SONSTIGES;STEUER_RUECKZAHLUNG	INCOME; MISCELLANEOUS; TAX_BACKPAYMENT	VWZ LIKE '%KFZ%STEUER%'"
     no-loop
     when
-       $t: AnalyzeableTransaction(purpose matches '.*KFZ.*STEUER.*')
+       $t: AnalyzeableTransaction(isoLanguage == 'DE', purpose matches '.*KFZ.*STEUER.*')
     then
        $t.category = "INCOME";
        $t.subCategory = "MISCELLANEOUS";
@@ -563,7 +527,7 @@ end
 rule "EINKUENFTE;SONSTIGES;STEUER_RUECKZAHLUNG	INCOME; MISCELLANEOUS; TAX_BACKPAYMENT	VWZ LIKE '%STEUER%'"
     no-loop
     when
-       $t: AnalyzeableTransaction(purpose matches '.*STEUER.*')
+       $t: AnalyzeableTransaction(isoLanguage == 'DE', purpose matches '.*STEUER.*')
     then
        $t.category = "INCOME";
        $t.subCategory = "MISCELLANEOUS";
@@ -576,7 +540,7 @@ end
 rule "EINKUENFTE;SONSTIGES;UEBERTRAG	INCOME; OTHER; TRANSFER	VWZ LIKE '%UEBERTRAG%'"
     no-loop
     when
-       $t: AnalyzeableTransaction(purpose matches '.*UEBERTRAG.*')
+       $t: AnalyzeableTransaction(isoLanguage == 'DE', purpose matches '.*UEBERTRAG.*')
     then
        $t.category = "INCOME";
        $t.subCategory = "OTHER";
@@ -589,7 +553,7 @@ end
 rule "EINKUENFTE;SONSTIGES;UNTERHALT	Income; miscellaneous; maintenance	VWZ LIKE '%UNTERHALT%' AND VWZ NOT LIKE '%UNTERHALTUNG%'"
     no-loop
     when
-       $t: AnalyzeableTransaction(purpose matches '.*UNTERHALT.*', purpose not matches '.*UNTERHALTUNG.*')
+       $t: AnalyzeableTransaction(isoLanguage == 'DE', purpose matches '.*UNTERHALT.*', purpose not matches '.*UNTERHALTUNG.*')
     then
        $t.category = "INCOME";
        $t.subCategory = "MISCELLANEOUS";
@@ -602,7 +566,7 @@ end
 rule "EINKUENFTE;SONSTIGES;UNTERHALT	Income; miscellaneous; maintenance	VWZ LIKE '%LEBENSUNTERHALT%'"
     no-loop
     when
-       $t: AnalyzeableTransaction(purpose matches '.*LEBENSUNTERHALT.*')
+       $t: AnalyzeableTransaction(isoLanguage == 'DE', purpose matches '.*LEBENSUNTERHALT.*')
     then
        $t.category = "INCOME";
        $t.subCategory = "MISCELLANEOUS";
@@ -615,7 +579,7 @@ end
 rule "EINKUENFTE;SONSTIGES;UNTERHALT	Income; miscellaneous; maintenance	VWZ LIKE '%LEBENSERWERB%'"
     no-loop
     when
-       $t: AnalyzeableTransaction(purpose matches '.*LEBENSERWERB.*')
+       $t: AnalyzeableTransaction(isoLanguage == 'DE', purpose matches '.*LEBENSERWERB.*')
     then
        $t.category = "INCOME";
        $t.subCategory = "MISCELLANEOUS";
@@ -628,7 +592,7 @@ end
 rule "EINKUENFTE;SONSTIGES;ZINSEN	INCOME; OTHER; INTEREST	VWZ LIKE '%ZINSEN%'"
     no-loop
     when
-       $t: AnalyzeableTransaction(purpose matches '.*ZINSEN.*')
+       $t: AnalyzeableTransaction(isoLanguage == 'DE', purpose matches '.*ZINSEN.*')
     then
        $t.category = "INCOME";
        $t.subCategory = "OTHER";
@@ -641,7 +605,7 @@ end
 rule "EINKUENFTE;SONSTIGES;	INCOME; OTHER;	VWZ LIKE '%GUTSCHRIFT%'"
     no-loop
     when
-       $t: AnalyzeableTransaction(purpose matches '.*GUTSCHRIFT.*')
+       $t: AnalyzeableTransaction(isoLanguage == 'DE', purpose matches '.*GUTSCHRIFT.*')
     then
        $t.category = "INCOME";
        $t.subCategory = "OTHER";
@@ -654,7 +618,7 @@ end
 rule "EINKUENFTE;SONSTIGES;	INCOME; OTHER;	RFN LIKE '%ERSTATTUNG%'"
     no-loop
     when
-       $t: AnalyzeableTransaction(referenceName matches '.*ERSTATTUNG.*')
+       $t: AnalyzeableTransaction(isoLanguage == 'DE', referenceName matches '.*ERSTATTUNG.*')
     then
        $t.category = "INCOME";
        $t.subCategory = "OTHER";
@@ -667,7 +631,7 @@ end
 rule "EINKUENFTE;SONSTIGES;	INCOME; OTHER;	VWZ LIKE '%ANWEISUNG%'"
     no-loop
     when
-       $t: AnalyzeableTransaction(purpose matches '.*ANWEISUNG.*')
+       $t: AnalyzeableTransaction(isoLanguage == 'DE', purpose matches '.*ANWEISUNG.*')
     then
        $t.category = "INCOME";
        $t.subCategory = "OTHER";
@@ -680,7 +644,7 @@ end
 rule "EINKUENFTE;SONSTIGES;	INCOME; OTHER;	VWZ LIKE '%BEZAHLUNG%'"
     no-loop
     when
-       $t: AnalyzeableTransaction(purpose matches '.*BEZAHLUNG.*')
+       $t: AnalyzeableTransaction(isoLanguage == 'DE', purpose matches '.*BEZAHLUNG.*')
     then
        $t.category = "INCOME";
        $t.subCategory = "OTHER";
@@ -693,7 +657,7 @@ end
 rule "EINKUENFTE;UNTERSTUETZUNG;BAFOEG	INCOME; ASSISTANCE; BAFOEG	VWZ LIKE '%BAFOEG%'"
     no-loop
     when
-       $t: AnalyzeableTransaction(purpose matches '.*BAFOEG.*')
+       $t: AnalyzeableTransaction(isoLanguage == 'DE', purpose matches '.*BAFOEG.*')
     then
        $t.category = "INCOME";
        $t.subCategory = "ASSISTANCE";
@@ -703,27 +667,27 @@ rule "EINKUENFTE;UNTERSTUETZUNG;BAFOEG	INCOME; ASSISTANCE; BAFOEG	VWZ LIKE '%BAF
 end
 
 
-rule "EINKUENFTE;UNTERSTUETZUNG;BUNDESAGENTUR_FUER_ARBEIT	INCOME; SUPPORT; BUNDESAGENTUR_FUER_ARBEIT	RFN LIKE '%FAMILIENKASSE%'"
+rule "EINKUENFTE;UNTERSTUETZUNG;FEDERAL AGENCY FOR WORK	INCOME; SUPPORT; FEDERAL AGENCY FOR WORK	RFN LIKE '%FAMILIENKASSE%'"
     no-loop
     when
-       $t: AnalyzeableTransaction(referenceName matches '.*FAMILIENKASSE.*')
+       $t: AnalyzeableTransaction(isoLanguage == 'DE', referenceName matches '.*FAMILIENKASSE.*')
     then
        $t.category = "INCOME";
        $t.subCategory = "SUPPORT";
-       $t.specification = "BUNDESAGENTUR_FUER_ARBEIT";
+       $t.specification = "FEDERAL AGENCY FOR WORK";
 
        update($t)
 end
 
 
-rule "EINKUENFTE;UNTERSTUETZUNG;BUNDESAGENTUR_FUER_ARBEIT	INCOME; SUPPORT; BUNDESAGENTUR_FUER_ARBEIT	RFN LIKE '%BUNDES%AGENTUR%ARBEIT%'"
+rule "EINKUENFTE;UNTERSTUETZUNG;FEDERAL AGENCY FOR WORK	INCOME; SUPPORT; FEDERAL AGENCY FOR WORK	RFN LIKE '%BUNDES%AGENTUR%ARBEIT%'"
     no-loop
     when
-       $t: AnalyzeableTransaction(referenceName matches '.*BUNDES.*AGENTUR.*ARBEIT.*')
+       $t: AnalyzeableTransaction(isoLanguage == 'DE', referenceName matches '.*BUNDES.*AGENTUR.*ARBEIT.*')
     then
        $t.category = "INCOME";
        $t.subCategory = "SUPPORT";
-       $t.specification = "BUNDESAGENTUR_FUER_ARBEIT";
+       $t.specification = "FEDERAL AGENCY FOR WORK";
 
        update($t)
 end
@@ -732,7 +696,7 @@ end
 rule "EINKUENFTE;UNTERSTUETZUNG;ELTERNGELD	INCOME; SUPPORT; PARENTAL BENEFIT	VWZ LIKE '%ELTERN%GELD%'"
     no-loop
     when
-       $t: AnalyzeableTransaction(purpose matches '.*ELTERN.*GELD.*')
+       $t: AnalyzeableTransaction(isoLanguage == 'DE', purpose matches '.*ELTERN.*GELD.*')
     then
        $t.category = "INCOME";
        $t.subCategory = "SUPPORT";
@@ -745,7 +709,7 @@ end
 rule "EINKUENFTE;UNTERSTUETZUNG;KINDERBETREUUNG	INCOME; ASSISTANCE; CHILD CARE	VWZ LIKE '%KINDER%BETREU%GELD%'"
     no-loop
     when
-       $t: AnalyzeableTransaction(purpose matches '.*KINDER.*BETREU.*GELD.*')
+       $t: AnalyzeableTransaction(isoLanguage == 'DE', purpose matches '.*KINDER.*BETREU.*GELD.*')
     then
        $t.category = "INCOME";
        $t.subCategory = "ASSISTANCE";
