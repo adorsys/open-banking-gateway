@@ -10,7 +10,7 @@
         }}</span>
       </div>
       <div class="right">
-        <span class="ltx-amount-number">{{ transaction?.transactionAmount?.amount }}</span>
+        <span class="ltx-amount-number{{transaction?.transactionAmount?.amount<0?'-red':''}}">{{ transaction?.transactionAmount?.amount }}</span>
         <span>{{ transaction?.transactionAmount?.currency }}</span>
       </div>
     </div>
