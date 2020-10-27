@@ -39,6 +39,11 @@ public class TransactionCategorizer {
         if (null == toAnalyze.getCategory()) {
             return null;
         }
-        return String.format("%s.%s.%s", toAnalyze.getCategory(), toAnalyze.getSubCategory(), toAnalyze.getSpecification());
+
+        if (null == toAnalyze.getSpecification()) {
+            return String.format("%s %s", toAnalyze.getCategory(), toAnalyze.getSubCategory());
+        }
+
+        return toAnalyze.getSpecification();
     }
 }
