@@ -17,6 +17,18 @@ rule "TEST TRANSACTION"
        update($t)
 end
 
+rule "DIRECT FUNDS TRANSFER"
+    no-loop
+    when
+       $t: AnalyzeableTransaction(purpose matches '.*TRANSFER.*(TO|FOR).*')
+    then
+       $t.category = "EXPENSE";
+       $t.subCategory = "EXPENSE";
+       $t.specification = "DIRECT FUNDS TRANSFER";
+
+       update($t)
+end
+
 rule "DEPOSIT"
     no-loop
     when
@@ -45,18 +57,6 @@ rule "EINKUENFTE;EINKOMMEN;GEHALT	INCOME; INCOME; SALARY	RFN LIKE '%GEHALT%' OR 
     no-loop
     when
        $t: AnalyzeableTransaction(referenceName matches '.*GEHALT.*' || purpose matches '.*GEHALT.*')
-    then
-       $t.category = "INCOME";
-       $t.subCategory = "INCOME";
-       $t.specification = "SALARY";
-
-       update($t)
-end
-
-rule "EINKUENFTE;EINKOMMEN;GEHALT	INCOME; INCOME; SALARY	RFN LIKE '%LOHN%GEHALT%' OR VWZ LIKE '%LOHN%GEHALT%'"
-    no-loop
-    when
-       $t: AnalyzeableTransaction(referenceName matches '.*LOHN.*GEHALT.*' || purpose matches '.*LOHN.*GEHALT.*')
     then
        $t.category = "INCOME";
        $t.subCategory = "INCOME";
@@ -121,7 +121,7 @@ end
 rule "EINKUENFTE;EINKOMMEN;LOHN	INCOME; INCOME; WAGE	RFN LIKE '%LOHN%' OR (VWZ LIKE '%LOHN%' AND NOT VWZ LIKE '%LOHN%STEUER%')"
     no-loop
     when
-       $t: AnalyzeableTransaction(referenceName matches '.*LOHN.*') or AnalyzeableTransaction(purpose matches '.*LOHN.*', purpose not matches '.*LOHN.*STEUER.*')
+       $t: AnalyzeableTransaction(referenceName matches '.*LOHN.*') or $t: AnalyzeableTransaction(purpose matches '.*LOHN.*', purpose not matches '.*LOHN.*STEUER.*')
     then
        $t.category = "INCOME";
        $t.subCategory = "INCOME";
@@ -303,7 +303,7 @@ end
 rule "EINKUENFTE;KINDERGELD;KINDERGELD	INCOME; CHILD SUPPORT; CHILD SUPPORT	(RFN LIKE '%FAMILIENKASSE%' AND VWZ LIKE '%KG%') OR VWZ LIKE '%FAMILIEN%KASSE%KG%'"
     no-loop
     when
-       $t: AnalyzeableTransaction(referenceName matches '.*FAMILIENKASSE.*' , purpose matches '.*KG.*') or AnalyzeableTransaction( purpose matches '.*FAMILIEN.*KASSE.*KG.*')
+       $t: AnalyzeableTransaction(referenceName matches '.*FAMILIENKASSE.*' , purpose matches '.*KG.*') or $t: AnalyzeableTransaction( purpose matches '.*FAMILIEN.*KASSE.*KG.*')
     then
        $t.category = "INCOME";
        $t.subCategory = "CHILD SUPPORT";
