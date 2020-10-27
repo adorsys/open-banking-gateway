@@ -30,5 +30,5 @@ public class DatasafeConfig {
 
     @Lob
     @Basic(fetch = FetchType.LAZY)
-    private byte[] config;
+    private String config;
 }
