@@ -29,6 +29,7 @@ import org.bouncycastle.jce.provider.BouncyCastleProvider;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.transaction.support.TransactionTemplate;
 
 import javax.annotation.PostConstruct;
 import java.security.Security;
@@ -51,6 +52,7 @@ public class DatasafeConfigurer {
     private final FintechConsentSpecDatasafeStorage fintechUserStorage;
     private final DatasafeConfigRepository datasafeConfigRepository;
     private final MutableEncryptionConfig mutableEncryptionConfig;
+    private final TransactionTemplate transactionTemplate;
 
     @Bean
     public FintechSecureStorage fintechDatasafeServices(
@@ -124,12 +126,15 @@ public class DatasafeConfigurer {
 
         Security.addProvider(new BouncyCastleProvider());
 
-        if (encryptionConfigNotExistInDb()) {
-            log.info("Datasafe encryption is configured from properties");
-            storeEncryptionConfigInDb(mutableEncryptionConfig);
-        } else {
-            log.info("Datasafe encryption is configured from database");
-        }
+        transactionTemplate.execute(status -> {
+            if (encryptionConfigNotExistInDb()) {
+                log.info("Datasafe encryption is configured from properties");
+                storeEncryptionConfigInDb(mutableEncryptionConfig);
+            } else {
+                log.info("Datasafe encryption is configured from database");
+            }
+            return null;
+        });
     }
 
     @SneakyThrows
