@@ -8,7 +8,7 @@ dialect  "mvel"
 rule "EN EINKUENFTE;EINKOMMEN;BEZUEGE BEAMTE	INCOME; INCOME; REMUNERATION OF OFFICIALS	RFN LIKE '%LANDES%KASSE%' AND VWZ LIKE '%BEZ%GE%'"
     no-loop
     when
-       $t: AnalyzeableTransaction(isoLanguage == 'EN', referenceName matches '.*LANDES.*KASSE.*',  purpose matches '.*BEZ.*GE.*')
+       $t: AnalyzeableTransaction(isoLanguage == 'EN', referenceName matches '.*COUNTRY.*REGISTER.*',  purpose matches '.*INCOME.*')
     then
        $t.category = "INCOME";
        $t.subCategory = "INCOME";
@@ -20,7 +20,7 @@ end
 rule "EN EINKUENFTE;EINKOMMEN;GEHALT	INCOME; INCOME; SALARY	RFN LIKE '%GEHALT%' OR VWZ LIKE '%GEHALT%'"
     no-loop
     when
-       $t: AnalyzeableTransaction(isoLanguage == 'EN', referenceName matches '.*GEHALT.*' || purpose matches '.*GEHALT.*')
+       $t: AnalyzeableTransaction(isoLanguage == 'EN', referenceName matches '.*SALARY.*' || purpose matches '.*SALARY.*')
     then
        $t.category = "INCOME";
        $t.subCategory = "INCOME";
@@ -33,7 +33,7 @@ end
 rule "EN EINKUENFTE;EINKOMMEN;GEHALT	INCOME; INCOME; SALARY	VWZ LIKE '%AUSHILF%LOHN%'"
     no-loop
     when
-       $t: AnalyzeableTransaction(isoLanguage == 'EN', purpose matches '.*AUSHILF.*LOHN.*')
+       $t: AnalyzeableTransaction(isoLanguage == 'EN', purpose matches '.*HELP.*WAGE.*')
     then
        $t.category = "INCOME";
        $t.subCategory = "INCOME";
@@ -46,7 +46,7 @@ end
 rule "EN EINKUENFTE;EINKOMMEN;GEHALT	INCOME; INCOME; SALARY	VWZ LIKE '%VERDIENST%ABRECHNUNG%'"
     no-loop
     when
-       $t: AnalyzeableTransaction(isoLanguage == 'EN', purpose matches '.*VERDIENST.*ABRECHNUNG.*')
+       $t: AnalyzeableTransaction(isoLanguage == 'EN', purpose matches '.*MERIT.*BILLING.*')
     then
        $t.category = "INCOME";
        $t.subCategory = "INCOME";
@@ -59,7 +59,7 @@ end
 rule "EN EINKUENFTE;EINKOMMEN;GEHALT	INCOME; INCOME; SALARY	VWZ LIKE '%BESCHEID%' AND VWZ LIKE '%EINKOMMEN%'"
     no-loop
     when
-       $t: AnalyzeableTransaction(isoLanguage == 'EN', purpose matches '.*BESCHEID.*' , purpose matches '.*EINKOMMEN.*')
+       $t: AnalyzeableTransaction(isoLanguage == 'EN', purpose matches '.*NOTIFIC.*' , purpose matches '.*INCOME.*')
     then
        $t.category = "INCOME";
        $t.subCategory = "INCOME";
@@ -72,7 +72,7 @@ end
 rule "EN EINKUENFTE;EINKOMMEN;GEHALT	INCOME; INCOME; SALARY	RFN LIKE '%LOHN%GEHALT%' OR VWZ LIKE '%LOHN%GEHALT%'"
     no-loop
     when
-       $t: AnalyzeableTransaction(isoLanguage == 'EN', referenceName matches '.*LOHN.*GEHALT.*' || purpose matches '.*LOHN.*GEHALT.*')
+       $t: AnalyzeableTransaction(isoLanguage == 'EN', referenceName matches '.*WAGE.*SALARY.*' || purpose matches '.*WAGE.*SALARY.*')
     then
        $t.category = "INCOME";
        $t.subCategory = "INCOME";
@@ -85,7 +85,7 @@ end
 rule "EN EINKUENFTE;EINKOMMEN;LOHN	INCOME; INCOME; WAGE	RFN LIKE '%LOHN%' OR (VWZ LIKE '%LOHN%' AND NOT VWZ LIKE '%LOHN%STEUER%')"
     no-loop
     when
-       $t: AnalyzeableTransaction(isoLanguage == 'EN', referenceName matches '.*LOHN.*') or $t: AnalyzeableTransaction(isoLanguage == 'EN', purpose matches '.*LOHN.*', purpose not matches '.*LOHN.*STEUER.*')
+       $t: AnalyzeableTransaction(isoLanguage == 'EN', referenceName matches '.*WAGE.*') or $t: AnalyzeableTransaction(isoLanguage == 'EN', purpose matches '.*WAGE.*', purpose not matches '.*WAGE.*TAX.*')
     then
        $t.category = "INCOME";
        $t.subCategory = "INCOME";
@@ -98,7 +98,7 @@ end
 rule "EN EINKUENFTE;EINKOMMEN;SONSTIGES	INCOME; INCOME; OTHER	RFN LIKE '%HONORAR%' OR VWZ LIKE '%HONORAR%'"
     no-loop
     when
-       $t: AnalyzeableTransaction(isoLanguage == 'EN', referenceName matches '.*HONORAR.*' || purpose matches '.*HONORAR.*')
+       $t: AnalyzeableTransaction(isoLanguage == 'EN', referenceName matches '.*FEE.*' || purpose matches '.*FEE.*')
     then
        $t.category = "INCOME";
        $t.subCategory = "INCOME";
@@ -124,7 +124,7 @@ end
 rule "EN EINKUENFTE;EINKOMMEN;SONSTIGES	INCOME; INCOME; OTHER	RFN LIKE '%HEUER%' OR VWZ LIKE '%HEUER%'"
     no-loop
     when
-       $t: AnalyzeableTransaction(isoLanguage == 'EN', referenceName matches '.*HEUER.*' || purpose matches '.*HEUER.*')
+       $t: AnalyzeableTransaction(isoLanguage == 'EN', referenceName matches '.*YEARLY.*' || purpose matches '.*YEARLY.*')
     then
        $t.category = "INCOME";
        $t.subCategory = "INCOME";
@@ -137,33 +137,7 @@ end
 rule "EN EINKUENFTE;EINKOMMEN;SONSTIGES	INCOME; INCOME; OTHER	RFN LIKE '%GAGE%' OR VWZ LIKE '%GAGE%'"
     no-loop
     when
-       $t: AnalyzeableTransaction(isoLanguage == 'EN', referenceName matches '.*GAGE.*' || purpose matches '.*GAGE.*')
-    then
-       $t.category = "INCOME";
-       $t.subCategory = "INCOME";
-       $t.specification = "OTHER";
-
-       update($t)
-end
-
-
-rule "EN EINKUENFTE;EINKOMMEN;SONSTIGES	INCOME; INCOME; OTHER	RFN LIKE '%DIAET%' OR VWZ LIKE '%DIAET%'"
-    no-loop
-    when
-       $t: AnalyzeableTransaction(isoLanguage == 'EN', referenceName matches '.*DIAET.*' || purpose matches '.*DIAET.*')
-    then
-       $t.category = "INCOME";
-       $t.subCategory = "INCOME";
-       $t.specification = "OTHER";
-
-       update($t)
-end
-
-
-rule "EN EINKUENFTE;EINKOMMEN;SONSTIGES	INCOME; INCOME; OTHER	RFN LIKE '%SOLD%' OR VWZ LIKE '%SOLD%'"
-    no-loop
-    when
-       $t: AnalyzeableTransaction(isoLanguage == 'EN', referenceName matches '.*SOLD.*' || purpose matches '.*SOLD.*')
+       $t: AnalyzeableTransaction(isoLanguage == 'EN', referenceName matches '.*SALAR.*' || purpose matches '.*SALAR.*')
     then
        $t.category = "INCOME";
        $t.subCategory = "INCOME";
@@ -176,7 +150,7 @@ end
 rule "EN EINKUENFTE;EINKOMMEN;SONSTIGES	INCOME; INCOME; OTHER	VWZ LIKE '%BESOLDUNG%'"
     no-loop
     when
-       $t: AnalyzeableTransaction(isoLanguage == 'EN', purpose matches '.*BESOLDUNG.*')
+       $t: AnalyzeableTransaction(isoLanguage == 'EN', purpose matches '.*SALAR.*')
     then
        $t.category = "INCOME";
        $t.subCategory = "INCOME";
@@ -189,20 +163,7 @@ end
 rule "EN EINKUENFTE;EINKOMMEN;SONSTIGES	INCOME; INCOME; OTHER	VWZ LIKE '%VERGUETUNG%'"
     no-loop
     when
-       $t: AnalyzeableTransaction(isoLanguage == 'EN', purpose matches '.*VERGUETUNG.*')
-    then
-       $t.category = "INCOME";
-       $t.subCategory = "INCOME";
-       $t.specification = "OTHER";
-
-       update($t)
-end
-
-
-rule "EN EINKUENFTE;EINKOMMEN;SONSTIGES	INCOME; INCOME; OTHER	VWZ LIKE '%SALAER%'"
-    no-loop
-    when
-       $t: AnalyzeableTransaction(isoLanguage == 'EN', purpose matches '.*SALAER.*')
+       $t: AnalyzeableTransaction(isoLanguage == 'EN', purpose matches '.*COMPENSAT.*')
     then
        $t.category = "INCOME";
        $t.subCategory = "INCOME";
@@ -215,7 +176,7 @@ end
 rule "EN EINKUENFTE;EINKOMMEN;SONSTIGES	INCOME; INCOME; OTHER	VWZ LIKE '%GRATIFIKATION%'"
     no-loop
     when
-       $t: AnalyzeableTransaction(isoLanguage == 'EN', purpose matches '.*GRATIFIKATION.*')
+       $t: AnalyzeableTransaction(isoLanguage == 'EN', purpose matches '.*GRATIFIC.*')
     then
        $t.category = "INCOME";
        $t.subCategory = "INCOME";
@@ -228,7 +189,7 @@ end
 rule "EN EINKUENFTE;EINKOMMEN;SONSTIGES	INCOME; INCOME; OTHER	VWZ LIKE '%ZULAGE%'"
     no-loop
     when
-       $t: AnalyzeableTransaction(isoLanguage == 'EN', purpose matches '.*ZULAGE.*')
+       $t: AnalyzeableTransaction(isoLanguage == 'EN', purpose matches '.*ALLOWANCE.*')
     then
        $t.category = "INCOME";
        $t.subCategory = "INCOME";
@@ -241,7 +202,7 @@ end
 rule "EN EINKUENFTE;EINKOMMEN;	INCOME; INCOME;	VWZ LIKE '%EINKOMMEN%'"
     no-loop
     when
-       $t: AnalyzeableTransaction(isoLanguage == 'EN', purpose matches '.*EINKOMMEN.*')
+       $t: AnalyzeableTransaction(isoLanguage == 'EN', purpose matches '.*INCOME.*')
     then
        $t.category = "INCOME";
        $t.subCategory = "INCOME";
@@ -254,7 +215,7 @@ end
 rule "EN EINKUENFTE;KINDERGELD;KINDERGELD	INCOME; CHILD SUPPORT; CHILD SUPPORT	VWZ LIKE '%KINDERGELD%'"
     no-loop
     when
-       $t: AnalyzeableTransaction(isoLanguage == 'EN', purpose matches '.*KINDERGELD.*')
+       $t: AnalyzeableTransaction(isoLanguage == 'EN', purpose matches '.*CHILD.*SUPPORT.*')
     then
        $t.category = "INCOME";
        $t.subCategory = "CHILD SUPPORT";
@@ -267,7 +228,7 @@ end
 rule "EN EINKUENFTE;KINDERGELD;KINDERGELD	INCOME; CHILD SUPPORT; CHILD SUPPORT	(RFN LIKE '%FAMILIENKASSE%' AND VWZ LIKE '%KG%') OR VWZ LIKE '%FAMILIEN%KASSE%KG%'"
     no-loop
     when
-       $t: AnalyzeableTransaction(isoLanguage == 'EN', referenceName matches '.*FAMILIENKASSE.*' , purpose matches '.*KG.*') or $t: AnalyzeableTransaction(isoLanguage == 'EN',  purpose matches '.*FAMILIEN.*KASSE.*KG.*')
+       $t: AnalyzeableTransaction(isoLanguage == 'EN', referenceName matches '.*FAMILY.*BENEFIT.*')
     then
        $t.category = "INCOME";
        $t.subCategory = "CHILD SUPPORT";
@@ -275,20 +236,6 @@ rule "EN EINKUENFTE;KINDERGELD;KINDERGELD	INCOME; CHILD SUPPORT; CHILD SUPPORT	(
 
        update($t)
 end
-
-
-rule "EN EINKUENFTE;KINDERGELD;	INCOME; CHILD BENEFIT;	VWZ LIKE '%FAMILIENKASSE%'"
-    no-loop
-    when
-       $t: AnalyzeableTransaction(isoLanguage == 'EN', purpose matches '.*FAMILIENKASSE.*')
-    then
-       $t.category = "INCOME";
-       $t.subCategory = "CHILD BENEFIT";
-       $t.specification = null;
-
-       update($t)
-end
-
 
 rule "EN EINKUENFTE;PENSION;PENSION	INCOME; PENSION; PENSION	VWZ LIKE '%PENSION%'"
     no-loop
@@ -303,36 +250,10 @@ rule "EN EINKUENFTE;PENSION;PENSION	INCOME; PENSION; PENSION	VWZ LIKE '%PENSION%
 end
 
 
-rule "EN EINKUENFTE;RENTE;RENTE	INCOME; PENSION; PENSION	VWZ LIKE '%VBL_RENTE%'"
-    no-loop
-    when
-       $t: AnalyzeableTransaction(isoLanguage == 'EN', purpose matches '.*VBL_RENTE.*')
-    then
-       $t.category = "INCOME";
-       $t.subCategory = "PENSION";
-       $t.specification = "PENSION";
-
-       update($t)
-end
-
-
-rule "EN EINKUENFTE;RENTE;RENTE	INCOME; PENSION; PENSION	RFN LIKE '%RENTEN%SERVICE%' OR VWZ LIKE '%RV_RENTE%'"
-    no-loop
-    when
-       $t: AnalyzeableTransaction(isoLanguage == 'EN', referenceName matches '.*RENTEN.*SERVICE.*' || purpose matches '.*RV_RENTE.*')
-    then
-       $t.category = "INCOME";
-       $t.subCategory = "PENSION";
-       $t.specification = "PENSION";
-
-       update($t)
-end
-
-
 rule "EN EINKUENFTE;RENTE;RENTE	INCOME; PENSION; PENSION	RFN LIKE '%RENTE%' OR VWZ LIKE '%RENTE%'"
     no-loop
     when
-       $t: AnalyzeableTransaction(isoLanguage == 'EN', referenceName matches '.*RENTE.*' || purpose matches '.*RENTE.*')
+       $t: AnalyzeableTransaction(isoLanguage == 'EN', referenceName matches '.*RENT.*' || purpose matches '.*RENT.*')
     then
        $t.category = "INCOME";
        $t.subCategory = "PENSION";
@@ -345,7 +266,7 @@ end
 rule "EN EINKUENFTE;SONSTIGES;DIVIDENDE	INCOME; OTHER; DIVIDEND	VWZ LIKE '%DIVIDENDE%'"
     no-loop
     when
-       $t: AnalyzeableTransaction(isoLanguage == 'EN', purpose matches '.*DIVIDENDE.*')
+       $t: AnalyzeableTransaction(isoLanguage == 'EN', purpose matches '.*DIVIDEN.*')
     then
        $t.category = "INCOME";
        $t.subCategory = "OTHER";
@@ -358,7 +279,7 @@ end
 rule "EN EINKUENFTE;SONSTIGES;EINZAHLUNG	INCOME; MISCELLANEOUS; DEPOSIT	VWZ LIKE '%ELTERN%GELD%'"
     no-loop
     when
-       $t: AnalyzeableTransaction(isoLanguage == 'EN', purpose matches '.*ELTERN.*GELD.*')
+       $t: AnalyzeableTransaction(isoLanguage == 'EN', purpose matches '.*PARENT.*MONEY.*')
     then
        $t.category = "INCOME";
        $t.subCategory = "MISCELLANEOUS";
@@ -371,7 +292,7 @@ end
 rule "EN EINKUENFTE;SONSTIGES;KAUTION	INCOME; OTHER; DEPOSIT	VWZ LIKE '%KAUTION%'"
     no-loop
     when
-       $t: AnalyzeableTransaction(isoLanguage == 'EN', purpose matches '.*KAUTION.*')
+       $t: AnalyzeableTransaction(isoLanguage == 'EN', purpose matches '.*DEPOSIT.*')
     then
        $t.category = "INCOME";
        $t.subCategory = "OTHER";
@@ -381,23 +302,10 @@ rule "EN EINKUENFTE;SONSTIGES;KAUTION	INCOME; OTHER; DEPOSIT	VWZ LIKE '%KAUTION%
 end
 
 
-rule "EN EINKUENFTE;SONSTIGES;MIETE	INCOME; OTHER; RENT	VWZ LIKE '%MIETE%'"
-    no-loop
-    when
-       $t: AnalyzeableTransaction(isoLanguage == 'EN', purpose matches '.*MIETE.*')
-    then
-       $t.category = "INCOME";
-       $t.subCategory = "OTHER";
-       $t.specification = "RENT";
-
-       update($t)
-end
-
-
 rule "EN EINKUENFTE;SONSTIGES;PACHT	INCOME; OTHER; Leases	VWZ LIKE '%ERBPACHT%'"
     no-loop
     when
-       $t: AnalyzeableTransaction(isoLanguage == 'EN', purpose matches '.*ERBPACHT.*')
+       $t: AnalyzeableTransaction(isoLanguage == 'EN', purpose matches '.*LEASE.*')
     then
        $t.category = "INCOME";
        $t.subCategory = "OTHER";
@@ -405,25 +313,11 @@ rule "EN EINKUENFTE;SONSTIGES;PACHT	INCOME; OTHER; Leases	VWZ LIKE '%ERBPACHT%'"
 
        update($t)
 end
-
-
-rule "EN EINKUENFTE;SONSTIGES;PACHT	INCOME; OTHER; Leases	VWZ LIKE '%PACHT%'"
-    no-loop
-    when
-       $t: AnalyzeableTransaction(isoLanguage == 'EN', purpose matches '.*PACHT.*')
-    then
-       $t.category = "INCOME";
-       $t.subCategory = "OTHER";
-       $t.specification = "LEASES";
-
-       update($t)
-end
-
 
 rule "EN EINKUENFTE;SONSTIGES;PAYBACK	INCOME; OTHER; PAYBACK	RFN LIKE 'SHOOP%'"
     no-loop
     when
-       $t: AnalyzeableTransaction(isoLanguage == 'EN', referenceName matches 'SHOOP.*')
+       $t: AnalyzeableTransaction(isoLanguage == 'EN', referenceName matches '.*PAYBACK.*')
     then
        $t.category = "INCOME";
        $t.subCategory = "OTHER";
@@ -436,7 +330,7 @@ end
 rule "EN EINKUENFTE;SONSTIGES;PAYBACK	INCOME; OTHER; PAYBACK	VWZ LIKE '%VERIVOXSOFORTBONUS%'"
     no-loop
     when
-       $t: AnalyzeableTransaction(isoLanguage == 'EN', purpose matches '.*VERIVOXSOFORTBONUS.*')
+       $t: AnalyzeableTransaction(isoLanguage == 'EN', purpose matches '.*BONUS.*')
     then
        $t.category = "INCOME";
        $t.subCategory = "OTHER";
@@ -446,66 +340,14 @@ rule "EN EINKUENFTE;SONSTIGES;PAYBACK	INCOME; OTHER; PAYBACK	VWZ LIKE '%VERIVOXS
 end
 
 
-rule "EN EINKUENFTE;SONSTIGES;RUECKERSTATTUNG	INCOME; OTHER; REFUND	VWZ LIKE '%ERSTATT%EINK%'"
-    no-loop
-    when
-       $t: AnalyzeableTransaction(isoLanguage == 'EN', purpose matches '.*ERSTATT.*EINK.*')
-    then
-       $t.category = "INCOME";
-       $t.subCategory = "OTHER";
-       $t.specification = "REFUND";
-
-       update($t)
-end
-
-
 rule "EN EINKUENFTE;SONSTIGES;RUECKERSTATTUNG	INCOME; OTHER; REFUND	VWZ LIKE '%KOSTENERSTATTUNG%'"
     no-loop
     when
-       $t: AnalyzeableTransaction(isoLanguage == 'EN', purpose matches '.*KOSTENERSTATTUNG.*')
+       $t: AnalyzeableTransaction(isoLanguage == 'EN', purpose matches '.*REIMBUIRS.*')
     then
        $t.category = "INCOME";
        $t.subCategory = "OTHER";
        $t.specification = "REFUND";
-
-       update($t)
-end
-
-
-rule "EN EINKUENFTE;SONSTIGES;RUECKERSTATTUNG	INCOME; OTHER; REFUND	VWZ LIKE '%KOSTEN%ERSTATTUNG%'"
-    no-loop
-    when
-       $t: AnalyzeableTransaction(isoLanguage == 'EN', purpose matches '.*KOSTEN.*ERSTATTUNG.*')
-    then
-       $t.category = "INCOME";
-       $t.subCategory = "OTHER";
-       $t.specification = "REFUND";
-
-       update($t)
-end
-
-
-rule "EN EINKUENFTE;SONSTIGES;SONSTIGES	INCOME; OTHER; OTHER	VWZ LIKE '%REISE%ERSTATT%' OR VWZ LIKE '%REISE%AUSLAGEN%' OR VWZ LIKE '%REISE%KOSTEN%' OR VWZ LIKE '%REISE%ABRECHNUNG%'"
-    no-loop
-    when
-       $t: AnalyzeableTransaction(isoLanguage == 'EN', purpose matches '.*REISE.*ERSTATT.*' || purpose matches '.*REISE.*AUSLAGEN.*' || purpose matches '.*REISE.*KOSTEN.*' || purpose matches '.*REISE.*ABRECHNUNG.*')
-    then
-       $t.category = "INCOME";
-       $t.subCategory = "OTHER";
-       $t.specification = "OTHER";
-
-       update($t)
-end
-
-
-rule "EN EINKUENFTE;SONSTIGES;SONSTIGES	INCOME; OTHER; OTHER	RFN LIKE '%EINGANG VORBEHALTEN%' OR VWZ LIKE '%EINGANG VORBEHALTEN%'"
-    no-loop
-    when
-       $t: AnalyzeableTransaction(isoLanguage == 'EN', referenceName matches '.*EINGANG VORBEHALTEN.*' || purpose matches '.*EINGANG VORBEHALTEN.*')
-    then
-       $t.category = "INCOME";
-       $t.subCategory = "OTHER";
-       $t.specification = "OTHER";
 
        update($t)
 end
@@ -514,89 +356,11 @@ end
 rule "EN EINKUENFTE;SONSTIGES;STEUER_RUECKZAHLUNG	INCOME; MISCELLANEOUS; TAX_BACKPAYMENT	VWZ LIKE '%KFZ%STEUER%'"
     no-loop
     when
-       $t: AnalyzeableTransaction(isoLanguage == 'EN', purpose matches '.*KFZ.*STEUER.*')
+       $t: AnalyzeableTransaction(isoLanguage == 'EN', purpose matches '.*BACK.*TAX.*')
     then
        $t.category = "INCOME";
        $t.subCategory = "MISCELLANEOUS";
        $t.specification = "TAX_BACKPAYMENT";
-
-       update($t)
-end
-
-
-rule "EN EINKUENFTE;SONSTIGES;STEUER_RUECKZAHLUNG	INCOME; MISCELLANEOUS; TAX_BACKPAYMENT	VWZ LIKE '%STEUER%'"
-    no-loop
-    when
-       $t: AnalyzeableTransaction(isoLanguage == 'EN', purpose matches '.*STEUER.*')
-    then
-       $t.category = "INCOME";
-       $t.subCategory = "MISCELLANEOUS";
-       $t.specification = "TAX_BACKPAYMENT";
-
-       update($t)
-end
-
-
-rule "EN EINKUENFTE;SONSTIGES;UEBERTRAG	INCOME; OTHER; TRANSFER	VWZ LIKE '%UEBERTRAG%'"
-    no-loop
-    when
-       $t: AnalyzeableTransaction(isoLanguage == 'EN', purpose matches '.*UEBERTRAG.*')
-    then
-       $t.category = "INCOME";
-       $t.subCategory = "OTHER";
-       $t.specification = "TRANSFER";
-
-       update($t)
-end
-
-
-rule "EN EINKUENFTE;SONSTIGES;UNTERHALT	Income; miscellaneous; maintenance	VWZ LIKE '%UNTERHALT%' AND VWZ NOT LIKE '%UNTERHALTUNG%'"
-    no-loop
-    when
-       $t: AnalyzeableTransaction(isoLanguage == 'EN', purpose matches '.*UNTERHALT.*', purpose not matches '.*UNTERHALTUNG.*')
-    then
-       $t.category = "INCOME";
-       $t.subCategory = "MISCELLANEOUS";
-       $t.specification = "MAINTENANCE";
-
-       update($t)
-end
-
-
-rule "EN EINKUENFTE;SONSTIGES;UNTERHALT	Income; miscellaneous; maintenance	VWZ LIKE '%LEBENSUNTERHALT%'"
-    no-loop
-    when
-       $t: AnalyzeableTransaction(isoLanguage == 'EN', purpose matches '.*LEBENSUNTERHALT.*')
-    then
-       $t.category = "INCOME";
-       $t.subCategory = "MISCELLANEOUS";
-       $t.specification = "MAINTENANCE";
-
-       update($t)
-end
-
-
-rule "EN EINKUENFTE;SONSTIGES;UNTERHALT	Income; miscellaneous; maintenance	VWZ LIKE '%LEBENSERWERB%'"
-    no-loop
-    when
-       $t: AnalyzeableTransaction(isoLanguage == 'EN', purpose matches '.*LEBENSERWERB.*')
-    then
-       $t.category = "INCOME";
-       $t.subCategory = "MISCELLANEOUS";
-       $t.specification = "MAINTENANCE";
-
-       update($t)
-end
-
-
-rule "EN EINKUENFTE;SONSTIGES;ZINSEN	INCOME; OTHER; INTEREST	VWZ LIKE '%ZINSEN%'"
-    no-loop
-    when
-       $t: AnalyzeableTransaction(isoLanguage == 'EN', purpose matches '.*ZINSEN.*')
-    then
-       $t.category = "INCOME";
-       $t.subCategory = "OTHER";
-       $t.specification = "INTEREST";
 
        update($t)
 end
@@ -605,7 +369,7 @@ end
 rule "EN EINKUENFTE;SONSTIGES;	INCOME; OTHER;	VWZ LIKE '%GUTSCHRIFT%'"
     no-loop
     when
-       $t: AnalyzeableTransaction(isoLanguage == 'EN', purpose matches '.*GUTSCHRIFT.*')
+       $t: AnalyzeableTransaction(isoLanguage == 'EN', purpose matches '.*CREDIT.*')
     then
        $t.category = "INCOME";
        $t.subCategory = "OTHER";
@@ -618,50 +382,11 @@ end
 rule "EN EINKUENFTE;SONSTIGES;	INCOME; OTHER;	RFN LIKE '%ERSTATTUNG%'"
     no-loop
     when
-       $t: AnalyzeableTransaction(isoLanguage == 'EN', referenceName matches '.*ERSTATTUNG.*')
+       $t: AnalyzeableTransaction(isoLanguage == 'EN', referenceName matches '.*REFUND.*')
     then
        $t.category = "INCOME";
        $t.subCategory = "OTHER";
        $t.specification = null;
-
-       update($t)
-end
-
-
-rule "EN EINKUENFTE;SONSTIGES;	INCOME; OTHER;	VWZ LIKE '%ANWEISUNG%'"
-    no-loop
-    when
-       $t: AnalyzeableTransaction(isoLanguage == 'EN', purpose matches '.*ANWEISUNG.*')
-    then
-       $t.category = "INCOME";
-       $t.subCategory = "OTHER";
-       $t.specification = null;
-
-       update($t)
-end
-
-
-rule "EN EINKUENFTE;SONSTIGES;	INCOME; OTHER;	VWZ LIKE '%BEZAHLUNG%'"
-    no-loop
-    when
-       $t: AnalyzeableTransaction(isoLanguage == 'EN', purpose matches '.*BEZAHLUNG.*')
-    then
-       $t.category = "INCOME";
-       $t.subCategory = "OTHER";
-       $t.specification = null;
-
-       update($t)
-end
-
-
-rule "EN EINKUENFTE;UNTERSTUETZUNG;BAFOEG	INCOME; ASSISTANCE; BAFOEG	VWZ LIKE '%BAFOEG%'"
-    no-loop
-    when
-       $t: AnalyzeableTransaction(isoLanguage == 'EN', purpose matches '.*BAFOEG.*')
-    then
-       $t.category = "INCOME";
-       $t.subCategory = "ASSISTANCE";
-       $t.specification = "BAFOEG";
 
        update($t)
 end
@@ -670,50 +395,11 @@ end
 rule "EN EINKUENFTE;UNTERSTUETZUNG;FEDERAL AGENCY FOR WORK	INCOME; SUPPORT; FEDERAL AGENCY FOR WORK	RFN LIKE '%FAMILIENKASSE%'"
     no-loop
     when
-       $t: AnalyzeableTransaction(isoLanguage == 'EN', referenceName matches '.*FAMILIENKASSE.*')
+       $t: AnalyzeableTransaction(isoLanguage == 'EN', referenceName matches '.*AGENCY.*FOR.*WORK.*')
     then
        $t.category = "INCOME";
        $t.subCategory = "SUPPORT";
        $t.specification = "FEDERAL AGENCY FOR WORK";
-
-       update($t)
-end
-
-
-rule "EN EINKUENFTE;UNTERSTUETZUNG;FEDERAL AGENCY FOR WORK	INCOME; SUPPORT; FEDERAL AGENCY FOR WORK	RFN LIKE '%BUNDES%AGENTUR%ARBEIT%'"
-    no-loop
-    when
-       $t: AnalyzeableTransaction(isoLanguage == 'EN', referenceName matches '.*BUNDES.*AGENTUR.*ARBEIT.*')
-    then
-       $t.category = "INCOME";
-       $t.subCategory = "SUPPORT";
-       $t.specification = "FEDERAL AGENCY FOR WORK";
-
-       update($t)
-end
-
-
-rule "EN EINKUENFTE;UNTERSTUETZUNG;ELTERNGELD	INCOME; SUPPORT; PARENTAL BENEFIT	VWZ LIKE '%ELTERN%GELD%'"
-    no-loop
-    when
-       $t: AnalyzeableTransaction(isoLanguage == 'EN', purpose matches '.*ELTERN.*GELD.*')
-    then
-       $t.category = "INCOME";
-       $t.subCategory = "SUPPORT";
-       $t.specification = "PARENTAL BENEFIT";
-
-       update($t)
-end
-
-
-rule "EN EINKUENFTE;UNTERSTUETZUNG;KINDERBETREUUNG	INCOME; ASSISTANCE; CHILD CARE	VWZ LIKE '%KINDER%BETREU%GELD%'"
-    no-loop
-    when
-       $t: AnalyzeableTransaction(isoLanguage == 'EN', purpose matches '.*KINDER.*BETREU.*GELD.*')
-    then
-       $t.category = "INCOME";
-       $t.subCategory = "ASSISTANCE";
-       $t.specification = "CHILD CARE";
 
        update($t)
 end
@@ -721,7 +407,7 @@ end
 rule "EN FREIZEIT;HOBBY_SPORT;	LEISURE;HOBBY SPORT;	RFN LIKE 'DEUTSCHE REITERLICHE VERE%'"
     no-loop
     when
-       $t: AnalyzeableTransaction(referenceName matches 'DEUTSCHE REITERLICHE VERE.*')
+       $t: AnalyzeableTransaction(isoLanguage == 'EN', referenceName matches 'EQUIST.* CLUB.*')
     then
        $t.category = "LEISURE";
        $t.subCategory = "HOBBY SPORT";
@@ -734,7 +420,7 @@ end
 rule "EN FREIZEIT;KOERPERPFLEGE;	LEISURE;PERSONAL HYGIENE;	RFN LIKE '%FRISEUR%' OR RFN LIKE '%HAIR%' OR RFN LIKE '%HAAR%STUDIO%'"
     no-loop
     when
-       $t: AnalyzeableTransaction(referenceName matches '.*FRISEUR.*' || referenceName matches '.*HAIR.*' || referenceName matches '.*HAAR.*STUDIO.*')
+       $t: AnalyzeableTransaction(isoLanguage == 'EN', referenceName matches '.*STYLI.*' || referenceName matches '.*HAIR.*' || referenceName matches '.*HAIR.*STUDIO.*')
     then
        $t.category = "LEISURE";
        $t.subCategory = "PERSONAL HYGIENE";
@@ -744,23 +430,10 @@ rule "EN FREIZEIT;KOERPERPFLEGE;	LEISURE;PERSONAL HYGIENE;	RFN LIKE '%FRISEUR%' 
 end
 
 
-rule "EN LEBENSHALTUNG;ABO;PAY_TV	LIVING;ABO;PAY TV	RFN LIKE '%DEUTSCH%' AND RFN LIKE '%SKY%'"
-    no-loop
-    when
-       $t: AnalyzeableTransaction(referenceName matches '.*DEUTSCH.*', referenceName matches '.*SKY.*')
-    then
-       $t.category = "LIVING";
-       $t.subCategory = "ABO";
-       $t.specification = "PAY TV";
-
-       update($t)
-end
-
-
 rule "EN LEBENSHALTUNG;ABO;PAY_TV	LIVING;ABO;PAY TV	RFN LIKE 'HD PLUS%'"
     no-loop
     when
-       $t: AnalyzeableTransaction(referenceName matches 'HD PLUS.*')
+       $t: AnalyzeableTransaction(isoLanguage == 'EN', referenceName matches 'HD PLUS.*')
     then
        $t.category = "LIVING";
        $t.subCategory = "ABO";
@@ -773,7 +446,7 @@ end
 rule "EN LEBENSHALTUNG;ABO;PAY_TV	LIVING;ABO;PAY TV	RFN LIKE 'NETFLIX %'"
     no-loop
     when
-       $t: AnalyzeableTransaction(referenceName matches 'NETFLIX .*')
+       $t: AnalyzeableTransaction(isoLanguage == 'EN', referenceName matches 'NETFLIX .*')
     then
        $t.category = "LIVING";
        $t.subCategory = "ABO";
@@ -786,7 +459,7 @@ end
 rule "EN LEBENSHALTUNG;ABO;PAY_TV	LIVING;ABO;PAY TV	RFN LIKE 'LOVEFILM%'"
     no-loop
     when
-       $t: AnalyzeableTransaction(referenceName matches 'LOVEFILM.*')
+       $t: AnalyzeableTransaction(isoLanguage == 'EN', referenceName matches 'LOVEFILM.*')
     then
        $t.category = "LIVING";
        $t.subCategory = "ABO";
@@ -799,7 +472,7 @@ end
 rule "EN LEBENSHALTUNG;ABO;PAY_TV	LIVING;ABO;PAY TV	RFN LIKE '%MAXDOME%'"
     no-loop
     when
-       $t: AnalyzeableTransaction(referenceName matches '.*MAXDOME.*')
+       $t: AnalyzeableTransaction(isoLanguage == 'EN', referenceName matches '.*MAXDOME.*')
     then
        $t.category = "LIVING";
        $t.subCategory = "ABO";
@@ -808,24 +481,10 @@ rule "EN LEBENSHALTUNG;ABO;PAY_TV	LIVING;ABO;PAY TV	RFN LIKE '%MAXDOME%'"
        update($t)
 end
 
-
-rule "EN LEBENSHALTUNG;ABO;	LIVING;ABO;	RFN LIKE '%DEUTSCHER%PRESSEVERTRIEB%'"
-    no-loop
-    when
-       $t: AnalyzeableTransaction(referenceName matches '.*DEUTSCHER.*PRESSEVERTRIEB.*')
-    then
-       $t.category = "LIVING";
-       $t.subCategory = "ABO";
-       $t.specification = null;
-
-       update($t)
-end
-
-
 rule "EN LEBENSHALTUNG;ABO;MUSIK	LIVING;ABO;MUSIC	RFN LIKE '%SPOTIFY%'"
     no-loop
     when
-       $t: AnalyzeableTransaction(referenceName matches '.*SPOTIFY.*')
+       $t: AnalyzeableTransaction(isoLanguage == 'EN', referenceName matches '.*SPOTIFY.*')
     then
        $t.category = "LIVING";
        $t.subCategory = "ABO";
@@ -838,7 +497,7 @@ end
 rule "EN LEBENSHALTUNG;SHOPPING;BEKLEIDUNG	LIVING;SHOPPING;CLOTHING	RFN LIKE '%C+A%SMALL%FAMIL%'"
     no-loop
     when
-       $t: AnalyzeableTransaction(referenceName matches '.*C+A.*SMALL.*FAMIL.*')
+       $t: AnalyzeableTransaction(isoLanguage == 'EN', referenceName matches '.*C+A.*SMALL.*FAMIL.*')
     then
        $t.category = "LIVING";
        $t.subCategory = "SHOPPING";
@@ -851,7 +510,7 @@ end
 rule "EN LEBENSHALTUNG;SHOPPING;BEKLEIDUNG	LIVING;SHOPPING;CLOTHING	RFN LIKE '%ESPRIT%RETAIL%'"
     no-loop
     when
-       $t: AnalyzeableTransaction(referenceName matches '.*ESPRIT.*RETAIL.*')
+       $t: AnalyzeableTransaction(isoLanguage == 'EN', referenceName matches '.*ESPRIT.*RETAIL.*')
     then
        $t.category = "LIVING";
        $t.subCategory = "SHOPPING";
@@ -864,7 +523,7 @@ end
 rule "EN LEBENSHALTUNG;SHOPPING;BEKLEIDUNG	LIVING;SHOPPING;CLOTHING	RFN LIKE 'H&M%' OR RFN LIKE 'H+M%DANK%' OR VWZ LIKE '%KARTENZAHL%HM%EC%' OR RFN LIKE '%HM %SAGT%VIELEN%DANK%' OR RFN LIKE 'H+M%'"
     no-loop
     when
-       $t: AnalyzeableTransaction(referenceName matches 'H&M.*' || referenceName matches 'H+M.*DANK.*' || purpose matches '.*KARTENZAHL.*HM.*EC.*' || referenceName matches '.*HM .*SAGT.*VIELEN.*DANK.*' || referenceName matches 'H+M.*')
+       $t: AnalyzeableTransaction(isoLanguage == 'EN', referenceName matches 'H&M.*' || referenceName matches 'H+M.*THAN.*' || referenceName matches 'H+M.*')
     then
        $t.category = "LIVING";
        $t.subCategory = "SHOPPING";
@@ -872,51 +531,11 @@ rule "EN LEBENSHALTUNG;SHOPPING;BEKLEIDUNG	LIVING;SHOPPING;CLOTHING	RFN LIKE 'H&
 
        update($t)
 end
-
 
 rule "EN LEBENSHALTUNG;SHOPPING;BEKLEIDUNG	LIVING;SHOPPING;CLOTHING	RFN LIKE '%IMPRESSIONEN%VERSAND%'"
     no-loop
     when
-       $t: AnalyzeableTransaction(referenceName matches '.*IMPRESSIONEN.*VERSAND.*')
-    then
-       $t.category = "LIVING";
-       $t.subCategory = "SHOPPING";
-       $t.specification = "CLOTHING";
-
-       update($t)
-end
-
-
-rule "EN LEBENSHALTUNG;SHOPPING;BEKLEIDUNG	LIVING;SHOPPING;CLOTHING	RFN LIKE '%KAUF%DICH%GLUECKLICH%'"
-    no-loop
-    when
-       $t: AnalyzeableTransaction(referenceName matches '.*KAUF.*DICH.*GLUECKLICH.*')
-    then
-       $t.category = "LIVING";
-       $t.subCategory = "SHOPPING";
-       $t.specification = "CLOTHING";
-
-       update($t)
-end
-
-
-rule "EN LEBENSHALTUNG;SHOPPING;BEKLEIDUNG	LIVING;SHOPPING;CLOTHING	RFN LIKE '%KIK%TEXTILIEN%NON%FOOD%GMBH%'"
-    no-loop
-    when
-       $t: AnalyzeableTransaction(referenceName matches '.*KIK.*TEXTILIEN.*NON.*FOOD.*GMBH.*')
-    then
-       $t.category = "LIVING";
-       $t.subCategory = "SHOPPING";
-       $t.specification = "CLOTHING";
-
-       update($t)
-end
-
-
-rule "EN LEBENSHALTUNG;SHOPPING;BEKLEIDUNG	LIVING;SHOPPING;CLOTHING	RFN LIKE '%PIMKIE%'"
-    no-loop
-    when
-       $t: AnalyzeableTransaction(referenceName matches '.*PIMKIE.*')
+       $t: AnalyzeableTransaction(isoLanguage == 'EN', referenceName matches '.*IMPRESSION.*SHIP.*')
     then
        $t.category = "LIVING";
        $t.subCategory = "SHOPPING";
@@ -929,7 +548,7 @@ end
 rule "EN LEBENSHALTUNG;SHOPPING;BEKLEIDUNG	LIVING;SHOPPING;CLOTHING	RFN LIKE '%SCHUHHAUS%' OR RFN LIKE 'SCHUH %'"
     no-loop
     when
-       $t: AnalyzeableTransaction(referenceName matches '.*SCHUHHAUS.*' || referenceName matches 'SCHUH .*')
+       $t: AnalyzeableTransaction(isoLanguage == 'EN', referenceName matches '.*SHOES.*' || referenceName matches 'SHOES .*')
     then
        $t.category = "LIVING";
        $t.subCategory = "SHOPPING";
@@ -937,25 +556,11 @@ rule "EN LEBENSHALTUNG;SHOPPING;BEKLEIDUNG	LIVING;SHOPPING;CLOTHING	RFN LIKE '%S
 
        update($t)
 end
-
-
-rule "EN LEBENSHALTUNG;SHOPPING;BEKLEIDUNG	LIVING;SHOPPING;CLOTHING	RFN LIKE '%SPOTSCHECK%GMBH%'"
-    no-loop
-    when
-       $t: AnalyzeableTransaction(referenceName matches '.*SPOTSCHECK.*GMBH.*')
-    then
-       $t.category = "LIVING";
-       $t.subCategory = "SHOPPING";
-       $t.specification = "CLOTHING";
-
-       update($t)
-end
-
 
 rule "EN LEBENSHALTUNG;SHOPPING;BEKLEIDUNG	LIVING;SHOPPING;CLOTHING	RFN LIKE '%ESPRIT%'"
     no-loop
     when
-       $t: AnalyzeableTransaction(referenceName matches '.*ESPRIT.*')
+       $t: AnalyzeableTransaction(isoLanguage == 'EN', referenceName matches '.*ESPRIT.*')
     then
        $t.category = "LIVING";
        $t.subCategory = "SHOPPING";
@@ -963,38 +568,11 @@ rule "EN LEBENSHALTUNG;SHOPPING;BEKLEIDUNG	LIVING;SHOPPING;CLOTHING	RFN LIKE '%E
 
        update($t)
 end
-
-
-rule "EN LEBENSHALTUNG;SHOPPING;BEKLEIDUNG	LIVING;SHOPPING;CLOTHING	RFN='KIK' OR RFN LIKE 'KIK FIL%'"
-    no-loop
-    when
-       $t: AnalyzeableTransaction(referenceName == 'KIK' || referenceName matches 'KIK FIL.*')
-    then
-       $t.category = "LIVING";
-       $t.subCategory = "SHOPPING";
-       $t.specification = "CLOTHING";
-
-       update($t)
-end
-
-
-rule "EN LEBENSHALTUNG;SHOPPING;BEKLEIDUNG	LIVING;SHOPPING;CLOTHING	RFN LIKE '%TAKKO SAGT DANKE%'"
-    no-loop
-    when
-       $t: AnalyzeableTransaction(referenceName matches '.*TAKKO SAGT DANKE.*')
-    then
-       $t.category = "LIVING";
-       $t.subCategory = "SHOPPING";
-       $t.specification = "CLOTHING";
-
-       update($t)
-end
-
 
 rule "EN LEBENSHALTUNG;SHOPPING;BEKLEIDUNG	LIVING;SHOPPING;CLOTHING	RFN LIKE '%BON%PRIX%HANDELS%'"
     no-loop
     when
-       $t: AnalyzeableTransaction(referenceName matches '.*BON.*PRIX.*HANDELS.*')
+       $t: AnalyzeableTransaction(isoLanguage == 'EN', referenceName matches '.*BON.*PRIX.*')
     then
        $t.category = "LIVING";
        $t.subCategory = "SHOPPING";
@@ -1002,38 +580,11 @@ rule "EN LEBENSHALTUNG;SHOPPING;BEKLEIDUNG	LIVING;SHOPPING;CLOTHING	RFN LIKE '%B
 
        update($t)
 end
-
-
-rule "EN LEBENSHALTUNG;SHOPPING;BEKLEIDUNG	LIVING;SHOPPING;CLOTHING	VWZ LIKE '%PRIMARK%DE%'"
-    no-loop
-    when
-       $t: AnalyzeableTransaction(purpose matches '.*PRIMARK.*DE.*')
-    then
-       $t.category = "LIVING";
-       $t.subCategory = "SHOPPING";
-       $t.specification = "CLOTHING";
-
-       update($t)
-end
-
-
-rule "EN LEBENSHALTUNG;SHOPPING;BEKLEIDUNG	LIVING;SHOPPING;CLOTHING	RFN LIKE 'PIMKIE%'"
-    no-loop
-    when
-       $t: AnalyzeableTransaction(referenceName matches 'PIMKIE.*')
-    then
-       $t.category = "LIVING";
-       $t.subCategory = "SHOPPING";
-       $t.specification = "CLOTHING";
-
-       update($t)
-end
-
 
 rule "EN LEBENSHALTUNG;SHOPPING;BEKLEIDUNG	LIVING;SHOPPING;CLOTHING	RFN LIKE '%CHRIST JUWELIERE%'"
     no-loop
     when
-       $t: AnalyzeableTransaction(referenceName matches '.*CHRIST JUWELIERE.*')
+       $t: AnalyzeableTransaction(isoLanguage == 'EN', referenceName matches '.*JEWELER.*')
     then
        $t.category = "LIVING";
        $t.subCategory = "SHOPPING";
@@ -1041,25 +592,11 @@ rule "EN LEBENSHALTUNG;SHOPPING;BEKLEIDUNG	LIVING;SHOPPING;CLOTHING	RFN LIKE '%C
 
        update($t)
 end
-
-
-rule "EN LEBENSHALTUNG;SHOPPING;BEKLEIDUNG	LIVING;SHOPPING;CLOTHING	RFN LIKE '__ ONLY %' OR RFN LIKE '___ ONLY %'"
-    no-loop
-    when
-       $t: AnalyzeableTransaction(referenceName matches '__ ONLY .*' || referenceName matches '___ ONLY .*')
-    then
-       $t.category = "LIVING";
-       $t.subCategory = "SHOPPING";
-       $t.specification = "CLOTHING";
-
-       update($t)
-end
-
 
 rule "EN LEBENSHALTUNG;SHOPPING;BEKLEIDUNG	LIVING;SHOPPING;CLOTHING	RFN LIKE '%BON%PRIX%'"
     no-loop
     when
-       $t: AnalyzeableTransaction(referenceName matches '.*BON.*PRIX.*')
+       $t: AnalyzeableTransaction(isoLanguage == 'EN', referenceName matches '.*BON.*PRIX.*')
     then
        $t.category = "LIVING";
        $t.subCategory = "SHOPPING";
@@ -1072,7 +609,7 @@ end
 rule "EN LEBENSHALTUNG;SHOPPING;BEKLEIDUNG	LIVING;SHOPPING;CLOTHING	RFN LIKE '%SPORTSCHECK%' OR RFN LIKE '%SPORT SCHECK%'"
     no-loop
     when
-       $t: AnalyzeableTransaction(referenceName matches '.*SPORTSCHECK.*' || referenceName matches '.*SPORT SCHECK.*')
+       $t: AnalyzeableTransaction(isoLanguage == 'EN', referenceName matches '.*SPORTSCHECK.*' || referenceName matches '.*SPORT SCHECK.*')
     then
        $t.category = "LIVING";
        $t.subCategory = "SHOPPING";
@@ -1085,46 +622,7 @@ end
 rule "EN LEBENSHALTUNG;SHOPPING;BEKLEIDUNG	LIVING;SHOPPING;CLOTHING	RFN LIKE '%SPORT%ARENA%' OR VWZ LIKE '%SPORT%ARENA%'"
     no-loop
     when
-       $t: AnalyzeableTransaction(referenceName matches '.*SPORT.*ARENA.*' || purpose matches '.*SPORT.*ARENA.*')
-    then
-       $t.category = "LIVING";
-       $t.subCategory = "SHOPPING";
-       $t.specification = "CLOTHING";
-
-       update($t)
-end
-
-
-rule "EN LEBENSHALTUNG;SHOPPING;BEKLEIDUNG	LIVING;SHOPPING;CLOTHING	RFN LIKE '%KAEMPGEN%DANK%' OR VWZ LIKE '%KAEMPGEN%DANK%'"
-    no-loop
-    when
-       $t: AnalyzeableTransaction(referenceName matches '.*KAEMPGEN.*DANK.*' || purpose matches '.*KAEMPGEN.*DANK.*')
-    then
-       $t.category = "LIVING";
-       $t.subCategory = "SHOPPING";
-       $t.specification = "CLOTHING";
-
-       update($t)
-end
-
-
-rule "EN LEBENSHALTUNG;SHOPPING;BEKLEIDUNG	LIVING;SHOPPING;CLOTHING	RFN LIKE '%BREUNINGER GMBH%'"
-    no-loop
-    when
-       $t: AnalyzeableTransaction(referenceName matches '.*BREUNINGER GMBH.*')
-    then
-       $t.category = "LIVING";
-       $t.subCategory = "SHOPPING";
-       $t.specification = "CLOTHING";
-
-       update($t)
-end
-
-
-rule "EN LEBENSHALTUNG;SHOPPING;BEKLEIDUNG	LIVING;SHOPPING;CLOTHING	RFN LIKE 'ANSONS %'"
-    no-loop
-    when
-       $t: AnalyzeableTransaction(referenceName matches 'ANSONS .*')
+       $t: AnalyzeableTransaction(isoLanguage == 'EN', referenceName matches '.*SPORT.*ARENA.*' || purpose matches '.*SPORT.*ARENA.*')
     then
        $t.category = "LIVING";
        $t.subCategory = "SHOPPING";
@@ -1137,7 +635,7 @@ end
 rule "EN LEBENSHALTUNG;SHOPPING;BEKLEIDUNG	LIVING;SHOPPING;CLOTHING	RFN LIKE 'ZARA %' AND (VWZ LIKE 'EC %' OR VWZ LIKE '% TERMINAL %' OR VWZ LIKE '%ELV%' OR VWZ LIKE '%FOLGENR%')"
     no-loop
     when
-       $t: AnalyzeableTransaction(referenceName matches 'ZARA .*' && (purpose matches 'EC .*' || purpose matches '.* TERMINAL .*' || purpose matches '.*ELV.*' || purpose matches '.*FOLGENR.*'))
+       $t: AnalyzeableTransaction(isoLanguage == 'EN', referenceName matches 'ZARA .*' && (purpose matches 'EC .*' || purpose matches '.* TERMINAL .*' || purpose matches '.*ELV.*'))
     then
        $t.category = "LIVING";
        $t.subCategory = "SHOPPING";
@@ -1145,25 +643,11 @@ rule "EN LEBENSHALTUNG;SHOPPING;BEKLEIDUNG	LIVING;SHOPPING;CLOTHING	RFN LIKE 'ZA
 
        update($t)
 end
-
-
-rule "EN LEBENSHALTUNG;SHOPPING;BEKLEIDUNG	LIVING;SHOPPING;CLOTHING	RFN LIKE '%SCHUHHOF%'"
-    no-loop
-    when
-       $t: AnalyzeableTransaction(referenceName matches '.*SCHUHHOF.*')
-    then
-       $t.category = "LIVING";
-       $t.subCategory = "SHOPPING";
-       $t.specification = "CLOTHING";
-
-       update($t)
-end
-
 
 rule "EN LEBENSHALTUNG;SHOPPING;BEKLEIDUNG	LIVING;SHOPPING;CLOTHING	RFN LIKE 'NEW YORKER%'"
     no-loop
     when
-       $t: AnalyzeableTransaction(referenceName matches 'NEW YORKER.*')
+       $t: AnalyzeableTransaction(isoLanguage == 'EN', referenceName matches 'NEW YORKER.*')
     then
        $t.category = "LIVING";
        $t.subCategory = "SHOPPING";
@@ -1171,25 +655,11 @@ rule "EN LEBENSHALTUNG;SHOPPING;BEKLEIDUNG	LIVING;SHOPPING;CLOTHING	RFN LIKE 'NE
 
        update($t)
 end
-
-
-rule "EN LEBENSHALTUNG;SHOPPING;BEKLEIDUNG	LIVING;SHOPPING;CLOTHING	RFN LIKE 'DEICHMANN%SCHUHE%' OR RFN LIKE 'DEICHMANN SE%'"
-    no-loop
-    when
-       $t: AnalyzeableTransaction(referenceName matches 'DEICHMANN.*SCHUHE.*' || referenceName matches 'DEICHMANN SE.*')
-    then
-       $t.category = "LIVING";
-       $t.subCategory = "SHOPPING";
-       $t.specification = "CLOTHING";
-
-       update($t)
-end
-
 
 rule "EN LEBENSHALTUNG;SHOPPING;BEKLEIDUNG	LIVING;SHOPPING;CLOTHING	RFN LIKE 'SALAMANDER%'"
     no-loop
     when
-       $t: AnalyzeableTransaction(referenceName matches 'SALAMANDER.*')
+       $t: AnalyzeableTransaction(isoLanguage == 'EN', referenceName matches 'SALAMANDER.*')
     then
        $t.category = "LIVING";
        $t.subCategory = "SHOPPING";
@@ -1198,11 +668,10 @@ rule "EN LEBENSHALTUNG;SHOPPING;BEKLEIDUNG	LIVING;SHOPPING;CLOTHING	RFN LIKE 'SA
        update($t)
 end
 
-
 rule "EN LEBENSHALTUNG;SHOPPING;BEKLEIDUNG	LIVING;SHOPPING;CLOTHING	RFN LIKE '%VERO MODA%' OR RFN LIKE '%JACK%JONES%'"
     no-loop
     when
-       $t: AnalyzeableTransaction(referenceName matches '.*VERO MODA.*' || referenceName matches '.*JACK.*JONES.*')
+       $t: AnalyzeableTransaction(isoLanguage == 'EN', referenceName matches '.*VERO MODA.*' || referenceName matches '.*JACK.*JONES.*')
     then
        $t.category = "LIVING";
        $t.subCategory = "SHOPPING";
@@ -1215,46 +684,7 @@ end
 rule "EN LEBENSHALTUNG;SHOPPING;BEKLEIDUNG	LIVING;SHOPPING;CLOTHING	RFN LIKE '%MISTER*LADY%'"
     no-loop
     when
-       $t: AnalyzeableTransaction(referenceName matches '.*MISTER*LADY.*')
-    then
-       $t.category = "LIVING";
-       $t.subCategory = "SHOPPING";
-       $t.specification = "CLOTHING";
-
-       update($t)
-end
-
-
-rule "EN LEBENSHALTUNG;SHOPPING;BEKLEIDUNG	LIVING;SHOPPING;CLOTHING	RFN LIKE 'WOEHRL%'"
-    no-loop
-    when
-       $t: AnalyzeableTransaction(referenceName matches 'WOEHRL.*')
-    then
-       $t.category = "LIVING";
-       $t.subCategory = "SHOPPING";
-       $t.specification = "CLOTHING";
-
-       update($t)
-end
-
-
-rule "EN LEBENSHALTUNG;SHOPPING;BEKLEIDUNG	LIVING;SHOPPING;CLOTHING	RFN LIKE 'ERNSTINGS%'"
-    no-loop
-    when
-       $t: AnalyzeableTransaction(referenceName matches 'ERNSTINGS.*')
-    then
-       $t.category = "LIVING";
-       $t.subCategory = "SHOPPING";
-       $t.specification = "CLOTHING";
-
-       update($t)
-end
-
-
-rule "EN LEBENSHALTUNG;SHOPPING;BEKLEIDUNG	LIVING;SHOPPING;CLOTHING	RFN LIKE '%MANUFACTUM%'"
-    no-loop
-    when
-       $t: AnalyzeableTransaction(referenceName matches '.*MANUFACTUM.*')
+       $t: AnalyzeableTransaction(isoLanguage == 'EN', referenceName matches '.*MISTER*LADY.*')
     then
        $t.category = "LIVING";
        $t.subCategory = "SHOPPING";
@@ -1267,7 +697,7 @@ end
 rule "EN LEBENSHALTUNG;SHOPPING;BEKLEIDUNG	LIVING;SHOPPING;CLOTHING	RFN LIKE 'AWG%' AND (VWZ LIKE 'EC %' OR VWZ LIKE '% TERMINAL %' OR VWZ LIKE '%ELV%' OR VWZ LIKE '%FOLGENR%')"
     no-loop
     when
-       $t: AnalyzeableTransaction(referenceName matches 'AWG.*', (purpose matches 'EC .*' || purpose matches '.* TERMINAL .*' || purpose matches '.*ELV.*' || purpose matches '.*FOLGENR.*'))
+       $t: AnalyzeableTransaction(isoLanguage == 'EN', referenceName matches 'AWG.*', (purpose matches 'EC .*' || purpose matches '.* TERMINAL .*' || purpose matches '.*ELV.*'))
     then
        $t.category = "LIVING";
        $t.subCategory = "SHOPPING";
@@ -1275,64 +705,11 @@ rule "EN LEBENSHALTUNG;SHOPPING;BEKLEIDUNG	LIVING;SHOPPING;CLOTHING	RFN LIKE 'AW
 
        update($t)
 end
-
-
-rule "EN LEBENSHALTUNG;SHOPPING;BEKLEIDUNG	LIVING;SHOPPING;CLOTHING	RFN LIKE '%ADLER%MODE%'"
-    no-loop
-    when
-       $t: AnalyzeableTransaction(referenceName matches '.*ADLER.*MODE.*')
-    then
-       $t.category = "LIVING";
-       $t.subCategory = "SHOPPING";
-       $t.specification = "CLOTHING";
-
-       update($t)
-end
-
 
 rule "EN LEBENSHALTUNG;SHOPPING;BEKLEIDUNG	LIVING;SHOPPING;CLOTHING	RFN LIKE 'ORSAY %'"
     no-loop
     when
-       $t: AnalyzeableTransaction(referenceName matches 'ORSAY .*')
-    then
-       $t.category = "LIVING";
-       $t.subCategory = "SHOPPING";
-       $t.specification = "CLOTHING";
-
-       update($t)
-end
-
-
-rule "EN LEBENSHALTUNG;SHOPPING;BEKLEIDUNG	LIVING;SHOPPING;CLOTHING	RFN LIKE '%JAKO-O%'"
-    no-loop
-    when
-       $t: AnalyzeableTransaction(referenceName matches '.*JAKO-O.*')
-    then
-       $t.category = "LIVING";
-       $t.subCategory = "SHOPPING";
-       $t.specification = "CLOTHING";
-
-       update($t)
-end
-
-
-rule "EN LEBENSHALTUNG;SHOPPING;BEKLEIDUNG	LIVING;SHOPPING;CLOTHING	RFN LIKE '%ZEEMAN%'"
-    no-loop
-    when
-       $t: AnalyzeableTransaction(referenceName matches '.*ZEEMAN.*')
-    then
-       $t.category = "LIVING";
-       $t.subCategory = "SHOPPING";
-       $t.specification = "CLOTHING";
-
-       update($t)
-end
-
-
-rule "EN LEBENSHALTUNG;SHOPPING;BEKLEIDUNG	LIVING;SHOPPING;CLOTHING	RFN LIKE 'BADER%PFORZHEIM%' OR RFN LIKE '%BRUNO%BADER%'"
-    no-loop
-    when
-       $t: AnalyzeableTransaction(referenceName matches 'BADER.*PFORZHEIM.*' || referenceName matches '.*BRUNO.*BADER.*')
+       $t: AnalyzeableTransaction(isoLanguage == 'EN', referenceName matches 'ORSAY .*')
     then
        $t.category = "LIVING";
        $t.subCategory = "SHOPPING";
@@ -1345,7 +722,7 @@ end
 rule "EN LEBENSHALTUNG;SHOPPING;BEKLEIDUNG	LIVING;SHOPPING;CLOTHING	RFN LIKE 'CHARLES VOEGELE%'"
     no-loop
     when
-       $t: AnalyzeableTransaction(referenceName matches 'CHARLES VOEGELE.*')
+       $t: AnalyzeableTransaction(isoLanguage == 'EN', referenceName matches 'CHARLES VOEGELE.*')
     then
        $t.category = "LIVING";
        $t.subCategory = "SHOPPING";
@@ -1358,7 +735,7 @@ end
 rule "EN LEBENSHALTUNG;SHOPPING;BEKLEIDUNG	LIVING;SHOPPING;CLOTHING	RFN LIKE '%TOM%TAILOR%'"
     no-loop
     when
-       $t: AnalyzeableTransaction(referenceName matches '.*TOM.*TAILOR.*')
+       $t: AnalyzeableTransaction(isoLanguage == 'EN', referenceName matches '.*TOM.*TAILOR.*')
     then
        $t.category = "LIVING";
        $t.subCategory = "SHOPPING";
@@ -1366,25 +743,11 @@ rule "EN LEBENSHALTUNG;SHOPPING;BEKLEIDUNG	LIVING;SHOPPING;CLOTHING	RFN LIKE '%T
 
        update($t)
 end
-
-
-rule "EN LEBENSHALTUNG;SHOPPING;BEKLEIDUNG	LIVING;SHOPPING;CLOTHING	RFN LIKE '%GLOBETROTTER%' AND NOT RFN LIKE '%REISE%'"
-    no-loop
-    when
-       $t: AnalyzeableTransaction(referenceName matches '.*GLOBETROTTER.*', referenceName not matches '.*REISE.*')
-    then
-       $t.category = "LIVING";
-       $t.subCategory = "SHOPPING";
-       $t.specification = "CLOTHING";
-
-       update($t)
-end
-
 
 rule "EN LEBENSHALTUNG;SHOPPING;BEKLEIDUNG	LIVING;SHOPPING;CLOTHING	VWZ LIKE '%GERRY%WEBER%' OR RFN LIKE '%GERRY%WEBER%'"
     no-loop
     when
-       $t: AnalyzeableTransaction(purpose matches '.*GERRY.*WEBER.*' || referenceName matches '.*GERRY.*WEBER.*')
+       $t: AnalyzeableTransaction(isoLanguage == 'EN', purpose matches '.*GERRY.*WEBER.*' || referenceName matches '.*GERRY.*WEBER.*')
     then
        $t.category = "LIVING";
        $t.subCategory = "SHOPPING";
@@ -1392,25 +755,11 @@ rule "EN LEBENSHALTUNG;SHOPPING;BEKLEIDUNG	LIVING;SHOPPING;CLOTHING	VWZ LIKE '%G
 
        update($t)
 end
-
-
-rule "EN LEBENSHALTUNG;SHOPPING;BEKLEIDUNG	LIVING;SHOPPING;CLOTHING	RFN LIKE 'GOERTZ RETAIL%'"
-    no-loop
-    when
-       $t: AnalyzeableTransaction(referenceName matches 'GOERTZ RETAIL.*')
-    then
-       $t.category = "LIVING";
-       $t.subCategory = "SHOPPING";
-       $t.specification = "CLOTHING";
-
-       update($t)
-end
-
 
 rule "EN LEBENSHALTUNG;SHOPPING;BEKLEIDUNG	LIVING;SHOPPING;CLOTHING	RFN LIKE '%SINN%LEFFERS%'"
     no-loop
     when
-       $t: AnalyzeableTransaction(referenceName matches '.*SINN.*LEFFERS.*')
+       $t: AnalyzeableTransaction(isoLanguage == 'EN', referenceName matches '.*SINN.*LEFFERS.*')
     then
        $t.category = "LIVING";
        $t.subCategory = "SHOPPING";
@@ -1423,7 +772,7 @@ end
 rule "EN LEBENSHALTUNG;SHOPPING;BEKLEIDUNG	LIVING;SHOPPING;CLOTHING	RFN LIKE '%BEST%SECRET%'"
     no-loop
     when
-       $t: AnalyzeableTransaction(referenceName matches '.*BEST.*SECRET.*')
+       $t: AnalyzeableTransaction(isoLanguage == 'EN', referenceName matches '.*BEST.*SECRET.*')
     then
        $t.category = "LIVING";
        $t.subCategory = "SHOPPING";
@@ -1436,7 +785,7 @@ end
 rule "EN LEBENSHALTUNG;SHOPPING;BEKLEIDUNG	LIVING;SHOPPING;CLOTHING	RFN LIKE 'SNIPES %'"
     no-loop
     when
-       $t: AnalyzeableTransaction(referenceName matches 'SNIPES .*')
+       $t: AnalyzeableTransaction(isoLanguage == 'EN', referenceName matches 'SNIPES .*')
     then
        $t.category = "LIVING";
        $t.subCategory = "SHOPPING";
@@ -1449,7 +798,7 @@ end
 rule "EN LEBENSHALTUNG;SHOPPING;BEKLEIDUNG	LIVING;SHOPPING;CLOTHING	RFN LIKE 'COLOSSEUM %'"
     no-loop
     when
-       $t: AnalyzeableTransaction(referenceName matches 'COLOSSEUM .*')
+       $t: AnalyzeableTransaction(isoLanguage == 'EN', referenceName matches 'COLOSSEUM .*')
     then
        $t.category = "LIVING";
        $t.subCategory = "SHOPPING";
@@ -1462,7 +811,7 @@ end
 rule "EN LEBENSHALTUNG;SHOPPING;BEKLEIDUNG	LIVING;SHOPPING;CLOTHING	RFN LIKE 'TALLY WEIJL%'"
     no-loop
     when
-       $t: AnalyzeableTransaction(referenceName matches 'TALLY WEIJL.*')
+       $t: AnalyzeableTransaction(isoLanguage == 'EN', referenceName matches 'TALLY WEIJL.*')
     then
        $t.category = "LIVING";
        $t.subCategory = "SHOPPING";
@@ -1470,64 +819,11 @@ rule "EN LEBENSHALTUNG;SHOPPING;BEKLEIDUNG	LIVING;SHOPPING;CLOTHING	RFN LIKE 'TA
 
        update($t)
 end
-
-
-rule "EN LEBENSHALTUNG;SHOPPING;BEKLEIDUNG	LIVING;SHOPPING;CLOTHING	RFN LIKE 'P_C DANKT %' OR RFN LIKE 'P&C %'"
-    no-loop
-    when
-       $t: AnalyzeableTransaction(referenceName matches 'P_C DANKT .*' || referenceName matches 'P&C .*')
-    then
-       $t.category = "LIVING";
-       $t.subCategory = "SHOPPING";
-       $t.specification = "CLOTHING";
-
-       update($t)
-end
-
-
-rule "EN LEBENSHALTUNG;SHOPPING;BEKLEIDUNG	LIVING;SHOPPING;CLOTHING	RFN LIKE 'WALBUSCH %' AND RFN LIKE '%GMBH%'"
-    no-loop
-    when
-       $t: AnalyzeableTransaction(referenceName matches 'WALBUSCH .*', referenceName matches '.*GMBH.*')
-    then
-       $t.category = "LIVING";
-       $t.subCategory = "SHOPPING";
-       $t.specification = "CLOTHING";
-
-       update($t)
-end
-
-
-rule "EN LEBENSHALTUNG;SHOPPING;BEKLEIDUNG	LIVING;SHOPPING;CLOTHING	RFN LIKE '%HUNKEMOELLER%'"
-    no-loop
-    when
-       $t: AnalyzeableTransaction(referenceName matches '.*HUNKEMOELLER.*')
-    then
-       $t.category = "LIVING";
-       $t.subCategory = "SHOPPING";
-       $t.specification = "CLOTHING";
-
-       update($t)
-end
-
-
-rule "EN LEBENSHALTUNG;SHOPPING;BEKLEIDUNG	LIVING;SHOPPING;CLOTHING	RFN LIKE '%FOOT%LOCK%'"
-    no-loop
-    when
-       $t: AnalyzeableTransaction(referenceName matches '.*FOOT.*LOCK.*')
-    then
-       $t.category = "LIVING";
-       $t.subCategory = "SHOPPING";
-       $t.specification = "CLOTHING";
-
-       update($t)
-end
-
 
 rule "EN LEBENSHALTUNG;SHOPPING;BEKLEIDUNG	LIVING;SHOPPING;CLOTHING	RFN LIKE '%RUNNERS%POINT%'"
     no-loop
     when
-       $t: AnalyzeableTransaction(referenceName matches '.*RUNNERS.*POINT.*')
+       $t: AnalyzeableTransaction(isoLanguage == 'EN', referenceName matches '.*RUNNERS.*POINT.*')
     then
        $t.category = "LIVING";
        $t.subCategory = "SHOPPING";
@@ -1535,12 +831,11 @@ rule "EN LEBENSHALTUNG;SHOPPING;BEKLEIDUNG	LIVING;SHOPPING;CLOTHING	RFN LIKE '%R
 
        update($t)
 end
-
 
 rule "EN LEBENSHALTUNG;SHOPPING;BEKLEIDUNG	LIVING;SHOPPING;CLOTHING	RFN LIKE 'ZALANDO%'"
     no-loop
     when
-       $t: AnalyzeableTransaction(referenceName matches 'ZALANDO.*')
+       $t: AnalyzeableTransaction(isoLanguage == 'EN', referenceName matches 'ZALANDO.*')
     then
        $t.category = "LIVING";
        $t.subCategory = "SHOPPING";
@@ -1549,11 +844,10 @@ rule "EN LEBENSHALTUNG;SHOPPING;BEKLEIDUNG	LIVING;SHOPPING;CLOTHING	RFN LIKE 'ZA
        update($t)
 end
 
-
 rule "EN LEBENSHALTUNG;SHOPPING;DUTY_FREE	LIVING;SHOPPING;DUTY FREE	RFN LIKE '%HEINEMANN%DUTY%FREE%'"
     no-loop
     when
-       $t: AnalyzeableTransaction(referenceName matches '.*HEINEMANN.*DUTY.*FREE.*')
+       $t: AnalyzeableTransaction(isoLanguage == 'EN', referenceName matches '.*HEINEMANN.*DUTY.*FREE.*')
     then
        $t.category = "LIVING";
        $t.subCategory = "SHOPPING";
@@ -1566,7 +860,7 @@ end
 rule "EN LEBENSHALTUNG;SHOPPING;HAUSHALT_MULTIMEDIA	LIVING;SHOPPING;BUDGET MULTIMEDIA	RFN LIKE '%AMAZON%' AND RFN LIKE '%DOWNLOAD%' OR RFN LIKE 'AMAZON MUSIC%'"
     no-loop
     when
-       $t: AnalyzeableTransaction(referenceName matches '.*AMAZON.*' && referenceName matches '.*DOWNLOAD.*' || referenceName matches 'AMAZON MUSIC.*')
+       $t: AnalyzeableTransaction(isoLanguage == 'EN', referenceName matches '.*AMAZON.*' && referenceName matches '.*DOWNLOAD.*' || referenceName matches 'AMAZON MUSIC.*')
     then
        $t.category = "LIVING";
        $t.subCategory = "SHOPPING";
@@ -1579,7 +873,7 @@ end
 rule "EN LEBENSHALTUNG;SHOPPING;HAUSHALT_MULTIMEDIA	LIVING;SHOPPING;BUDGET MULTIMEDIA	RFN LIKE '%AMAZON%' AND RFN LIKE '%PRIME%VIDEO%'"
     no-loop
     when
-       $t: AnalyzeableTransaction(referenceName matches '.*AMAZON.*' && referenceName matches '.*PRIME.*VIDEO.*')
+       $t: AnalyzeableTransaction(isoLanguage == 'EN', referenceName matches '.*AMAZON.*' && referenceName matches '.*PRIME.*VIDEO.*')
     then
        $t.category = "LIVING";
        $t.subCategory = "SHOPPING";
@@ -1592,7 +886,7 @@ end
 rule "EN LEBENSHALTUNG;SHOPPING;HAUSHALT_MULTIMEDIA	LIVING;SHOPPING;BUDGET MULTIMEDIA	RFN LIKE '%ITUNES%'"
     no-loop
     when
-       $t: AnalyzeableTransaction(referenceName matches '.*ITUNES.*')
+       $t: AnalyzeableTransaction(isoLanguage == 'EN', referenceName matches '.*ITUNES.*')
     then
        $t.category = "LIVING";
        $t.subCategory = "SHOPPING";
@@ -1605,7 +899,7 @@ end
 rule "EN LEBENSHALTUNG;SHOPPING;HAUSHALT_MULTIMEDIA	LIVING;SHOPPING;BUDGET MULTIMEDIA	VWZ LIKE '%APPLE%ITUNES%' OR VWZ LIKE '%ITUNES%COM%'"
     no-loop
     when
-       $t: AnalyzeableTransaction(purpose matches '.*APPLE.*ITUNES.*' || purpose matches '.*ITUNES.*COM.*')
+       $t: AnalyzeableTransaction(isoLanguage == 'EN', purpose matches '.*APPLE.*ITUNES.*' || purpose matches '.*ITUNES.*COM.*')
     then
        $t.category = "LIVING";
        $t.subCategory = "SHOPPING";
@@ -1618,7 +912,7 @@ end
 rule "EN LEBENSHALTUNG;SHOPPING;HAUSHALT_MULTIMEDIA	LIVING;SHOPPING;BUDGET MULTIMEDIA	RFN LIKE '% COMPUTER%'"
     no-loop
     when
-       $t: AnalyzeableTransaction(referenceName matches '.* COMPUTER.*')
+       $t: AnalyzeableTransaction(isoLanguage == 'EN', referenceName matches '.* COMPUTER.*')
     then
        $t.category = "LIVING";
        $t.subCategory = "SHOPPING";
@@ -1631,7 +925,7 @@ end
 rule "EN LEBENSHALTUNG;SHOPPING;HAUSHALT_MULTIMEDIA	LIVING;SHOPPING;BUDGET MULTIMEDIA	RFN LIKE '%DOWNLOAD%' OR VWZ LIKE '%DOWNLOAD%'"
     no-loop
     when
-       $t: AnalyzeableTransaction(referenceName matches '.*DOWNLOAD.*' || purpose matches '.*DOWNLOAD.*')
+       $t: AnalyzeableTransaction(isoLanguage == 'EN', referenceName matches '.*DOWNLOAD.*' || purpose matches '.*DOWNLOAD.*')
     then
        $t.category = "LIVING";
        $t.subCategory = "SHOPPING";
@@ -1639,38 +933,11 @@ rule "EN LEBENSHALTUNG;SHOPPING;HAUSHALT_MULTIMEDIA	LIVING;SHOPPING;BUDGET MULTI
 
        update($t)
 end
-
-
-rule "EN LEBENSHALTUNG;SHOPPING;HAUSHALT_MULTIMEDIA	LIVING;SHOPPING;BUDGET MULTIMEDIA	RFN LIKE '%MEDIA%MARKT%'"
-    no-loop
-    when
-       $t: AnalyzeableTransaction(referenceName matches '.*MEDIA.*MARKT.*')
-    then
-       $t.category = "LIVING";
-       $t.subCategory = "SHOPPING";
-       $t.specification = "BUDGET MULTIMEDIA";
-
-       update($t)
-end
-
-
-rule "EN LEBENSHALTUNG;SHOPPING;HAUSHALT_MULTIMEDIA	LIVING;SHOPPING;BUDGET MULTIMEDIA	RFN LIKE '%SONOSEUROPE%'"
-    no-loop
-    when
-       $t: AnalyzeableTransaction(referenceName matches '.*SONOSEUROPE.*')
-    then
-       $t.category = "LIVING";
-       $t.subCategory = "SHOPPING";
-       $t.specification = "BUDGET MULTIMEDIA";
-
-       update($t)
-end
-
 
 rule "EN LEBENSHALTUNG;SHOPPING;HAUSHALT_MULTIMEDIA	LIVING;SHOPPING;BUDGET MULTIMEDIA	RFN LIKE 'EXPERT %'"
     no-loop
     when
-       $t: AnalyzeableTransaction(referenceName matches 'EXPERT .*')
+       $t: AnalyzeableTransaction(isoLanguage == 'EN', referenceName matches 'EXPERT .*')
     then
        $t.category = "LIVING";
        $t.subCategory = "SHOPPING";
@@ -1683,7 +950,7 @@ end
 rule "EN LEBENSHALTUNG;SHOPPING;HAUSHALT_MULTIMEDIA	LIVING;SHOPPING;BUDGET MULTIMEDIA	RFN LIKE 'MEDIMAX %' OR RFN LIKE '% MEDIMAX %'"
     no-loop
     when
-       $t: AnalyzeableTransaction(referenceName matches 'MEDIMAX .*' || referenceName matches '.* MEDIMAX .*')
+       $t: AnalyzeableTransaction(isoLanguage == 'EN', referenceName matches 'MEDIMAX .*' || referenceName matches '.* MEDIMAX .*')
     then
        $t.category = "LIVING";
        $t.subCategory = "SHOPPING";
@@ -1691,25 +958,11 @@ rule "EN LEBENSHALTUNG;SHOPPING;HAUSHALT_MULTIMEDIA	LIVING;SHOPPING;BUDGET MULTI
 
        update($t)
 end
-
-
-rule "EN LEBENSHALTUNG;SHOPPING;HAUSHALT_MULTIMEDIA	LIVING;SHOPPING;BUDGET MULTIMEDIA	RFN LIKE 'GRAVIS %'"
-    no-loop
-    when
-       $t: AnalyzeableTransaction(referenceName matches 'GRAVIS .*')
-    then
-       $t.category = "LIVING";
-       $t.subCategory = "SHOPPING";
-       $t.specification = "BUDGET MULTIMEDIA";
-
-       update($t)
-end
-
 
 rule "EN LEBENSHALTUNG;SHOPPING;HAUSHALT_MULTIMEDIA	LIVING;SHOPPING;BUDGET MULTIMEDIA	RFN LIKE 'MEDIA%MARKT%'"
     no-loop
     when
-       $t: AnalyzeableTransaction(referenceName matches 'MEDIA.*MARKT.*')
+       $t: AnalyzeableTransaction(isoLanguage == 'EN', referenceName matches 'MEDIA.*MARKT.*')
     then
        $t.category = "LIVING";
        $t.subCategory = "SHOPPING";
@@ -1717,38 +970,11 @@ rule "EN LEBENSHALTUNG;SHOPPING;HAUSHALT_MULTIMEDIA	LIVING;SHOPPING;BUDGET MULTI
 
        update($t)
 end
-
-
-rule "EN LEBENSHALTUNG;SHOPPING;HAUSHALT_MULTIMEDIA	LIVING;SHOPPING;BUDGET MULTIMEDIA	RFN LIKE 'SATURN %' OR RFN LIKE 'MEDIASATURN DEUTSCH%'"
-    no-loop
-    when
-       $t: AnalyzeableTransaction(referenceName matches 'SATURN .*' || referenceName matches 'MEDIASATURN DEUTSCH.*')
-    then
-       $t.category = "LIVING";
-       $t.subCategory = "SHOPPING";
-       $t.specification = "BUDGET MULTIMEDIA";
-
-       update($t)
-end
-
-
-rule "EN LEBENSHALTUNG;SHOPPING;HAUSHALT_MULTIMEDIA	LIVING;SHOPPING;BUDGET MULTIMEDIA	RFN LIKE '%EURONICS%'"
-    no-loop
-    when
-       $t: AnalyzeableTransaction(referenceName matches '.*EURONICS.*')
-    then
-       $t.category = "LIVING";
-       $t.subCategory = "SHOPPING";
-       $t.specification = "BUDGET MULTIMEDIA";
-
-       update($t)
-end
-
 
 rule "EN LEBENSHALTUNG;SHOPPING;HAUSHALT_MULTIMEDIA	LIVING;SHOPPING;BUDGET MULTIMEDIA	RFN LIKE 'CONRAD ELEC%' OR (RFN LIKE 'CONRAD %' AND (VWZ LIKE 'EC %' OR VWZ LIKE '% TERMINAL %' OR VWZ LIKE '%ELV%' OR VWZ LIKE '%FOLGENR%'))"
     no-loop
     when
-       $t: AnalyzeableTransaction(referenceName matches 'CONRAD ELEC.*' || (referenceName matches 'CONRAD .*' && (purpose matches 'EC .*' || purpose matches '.* TERMINAL .*' || purpose matches '.*ELV.*' || purpose matches '.*FOLGENR.*')))
+       $t: AnalyzeableTransaction(isoLanguage == 'EN', referenceName matches 'CONRAD ELEC.*' || (referenceName matches 'CONRAD .*' && (purpose matches 'EC .*' || purpose matches '.* TERMINAL .*' || purpose matches '.*ELV.*')))
     then
        $t.category = "LIVING";
        $t.subCategory = "SHOPPING";
@@ -1761,46 +987,7 @@ end
 rule "EN LEBENSHALTUNG;SHOPPING;HAUSHALT_MULTIMEDIA	LIVING;SHOPPING;BUDGET MULTIMEDIA	RFN LIKE 'GROUPON%' OR VWZ LIKE '%GROUPON%'"
     no-loop
     when
-       $t: AnalyzeableTransaction(referenceName matches 'GROUPON.*' || purpose matches '.*GROUPON.*')
-    then
-       $t.category = "LIVING";
-       $t.subCategory = "SHOPPING";
-       $t.specification = "BUDGET MULTIMEDIA";
-
-       update($t)
-end
-
-
-rule "EN LEBENSHALTUNG;SHOPPING;HAUSHALT_MULTIMEDIA	LIVING;SHOPPING;BUDGET MULTIMEDIA	RFN LIKE '%KARSTADT%WARENHAUS%'"
-    no-loop
-    when
-       $t: AnalyzeableTransaction(referenceName matches '.*KARSTADT.*WARENHAUS.*')
-    then
-       $t.category = "LIVING";
-       $t.subCategory = "SHOPPING";
-       $t.specification = "BUDGET MULTIMEDIA";
-
-       update($t)
-end
-
-
-rule "EN LEBENSHALTUNG;SHOPPING;HAUSHALT_MULTIMEDIA	LIVING;SHOPPING;BUDGET MULTIMEDIA	RFN LIKE '%KARSTADT%' AND NOT RFN LIKE '%VERSICHERUNG%'"
-    no-loop
-    when
-       $t: AnalyzeableTransaction(referenceName matches '.*KARSTADT.*', referenceName not matches '.*VERSICHERUNG.*')
-    then
-       $t.category = "LIVING";
-       $t.subCategory = "SHOPPING";
-       $t.specification = "BUDGET MULTIMEDIA";
-
-       update($t)
-end
-
-
-rule "EN LEBENSHALTUNG;SHOPPING;HAUSHALT_MULTIMEDIA	LIVING;SHOPPING;BUDGET MULTIMEDIA	RFN LIKE '%GALERIA%KAUFHOF%' OR VWZ LIKE '%GALERIA%KAUFHOF%'"
-    no-loop
-    when
-       $t: AnalyzeableTransaction(referenceName matches '.*GALERIA.*KAUFHOF.*' || purpose matches '.*GALERIA.*KAUFHOF.*')
+       $t: AnalyzeableTransaction(isoLanguage == 'EN', referenceName matches 'GROUPON.*' || purpose matches '.*GROUPON.*')
     then
        $t.category = "LIVING";
        $t.subCategory = "SHOPPING";
@@ -1813,7 +1000,7 @@ end
 rule "EN LEBENSHALTUNG;SHOPPING;HAUSHALT_MULTIMEDIA	LIVING;SHOPPING;BUDGET MULTIMEDIA	RFN LIKE 'TK MAXX%'"
     no-loop
     when
-       $t: AnalyzeableTransaction(referenceName matches 'TK MAXX.*')
+       $t: AnalyzeableTransaction(isoLanguage == 'EN', referenceName matches 'TK MAXX.*')
     then
        $t.category = "LIVING";
        $t.subCategory = "SHOPPING";
@@ -1821,25 +1008,11 @@ rule "EN LEBENSHALTUNG;SHOPPING;HAUSHALT_MULTIMEDIA	LIVING;SHOPPING;BUDGET MULTI
 
        update($t)
 end
-
-
-rule "EN LEBENSHALTUNG;SHOPPING;HAUSHALT_MULTIMEDIA	LIVING;SHOPPING;BUDGET MULTIMEDIA	RFN LIKE '%NANU NANA%'"
-    no-loop
-    when
-       $t: AnalyzeableTransaction(referenceName matches '.*NANU NANA.*')
-    then
-       $t.category = "LIVING";
-       $t.subCategory = "SHOPPING";
-       $t.specification = "BUDGET MULTIMEDIA";
-
-       update($t)
-end
-
 
 rule "EN LEBENSHALTUNG;SHOPPING;HAUSHALT_MULTIMEDIA	LIVING;SHOPPING;BUDGET MULTIMEDIA	RFN LIKE '% OTTO%MEDIA%' OR RFN LIKE 'OTTO%MEDIA%'"
     no-loop
     when
-       $t: AnalyzeableTransaction(referenceName matches '.* OTTO.*MEDIA.*' || referenceName matches 'OTTO.*MEDIA.*')
+       $t: AnalyzeableTransaction(isoLanguage == 'EN', referenceName matches '.* OTTO.*MEDIA.*' || referenceName matches 'OTTO.*MEDIA.*')
     then
        $t.category = "LIVING";
        $t.subCategory = "SHOPPING";
@@ -1847,51 +1020,11 @@ rule "EN LEBENSHALTUNG;SHOPPING;HAUSHALT_MULTIMEDIA	LIVING;SHOPPING;BUDGET MULTI
 
        update($t)
 end
-
-
-rule "EN LEBENSHALTUNG;SHOPPING;HAUSHALT_MULTIMEDIA	LIVING;SHOPPING;BUDGET MULTIMEDIA	RFN LIKE 'THALIA_DE'"
-    no-loop
-    when
-       $t: AnalyzeableTransaction(referenceName matches 'THALIA_DE')
-    then
-       $t.category = "LIVING";
-       $t.subCategory = "SHOPPING";
-       $t.specification = "BUDGET MULTIMEDIA";
-
-       update($t)
-end
-
-
-rule "EN LEBENSHALTUNG;SHOPPING;HAUSHALT_MULTIMEDIA	LIVING;SHOPPING;BUDGET MULTIMEDIA	RFN LIKE 'BUCH.DE%'"
-    no-loop
-    when
-       $t: AnalyzeableTransaction(referenceName matches 'BUCH.DE.*')
-    then
-       $t.category = "LIVING";
-       $t.subCategory = "SHOPPING";
-       $t.specification = "BUDGET MULTIMEDIA";
-
-       update($t)
-end
-
-
-rule "EN LEBENSHALTUNG;SHOPPING;HAUSHALT_MULTIMEDIA	LIVING;SHOPPING;BUDGET MULTIMEDIA	RFN LIKE 'HUGENDUBEL%' OR RFN LIKE 'H%HUGENDUBEL%'"
-    no-loop
-    when
-       $t: AnalyzeableTransaction(referenceName matches 'HUGENDUBEL.*' || referenceName matches 'H.*HUGENDUBEL.*')
-    then
-       $t.category = "LIVING";
-       $t.subCategory = "SHOPPING";
-       $t.specification = "BUDGET MULTIMEDIA";
-
-       update($t)
-end
-
 
 rule "EN LEBENSHALTUNG;SHOPPING;HAUSHALT_MULTIMEDIA	LIVING;SHOPPING;BUDGET MULTIMEDIA	RFN LIKE 'NAPSTER%' OR VWZ LIKE '%NAPSTER GERMANY%'"
     no-loop
     when
-       $t: AnalyzeableTransaction(referenceName matches 'NAPSTER.*' || purpose matches '.*NAPSTER GERMANY.*')
+       $t: AnalyzeableTransaction(isoLanguage == 'EN', referenceName matches 'NAPSTER.*' || purpose matches '.*NAPSTER.*')
     then
        $t.category = "LIVING";
        $t.subCategory = "SHOPPING";
@@ -1904,7 +1037,7 @@ end
 rule "EN LEBENSHALTUNG;SHOPPING;KOERPERPFLEGE	LIVING;SHOPPING;PERSONAL HYGIENE	RFN LIKE '%PARF%DOUGLAS%' OR RFN LIKE '%DOUGLAS%PARF%'"
     no-loop
     when
-       $t: AnalyzeableTransaction(referenceName matches '.*PARF.*DOUGLAS.*' || referenceName matches '.*DOUGLAS.*PARF.*')
+       $t: AnalyzeableTransaction(isoLanguage == 'EN', referenceName matches '.*PARF.*DOUGLAS.*' || referenceName matches '.*DOUGLAS.*PARF.*')
     then
        $t.category = "LIVING";
        $t.subCategory = "SHOPPING";
@@ -1912,25 +1045,11 @@ rule "EN LEBENSHALTUNG;SHOPPING;KOERPERPFLEGE	LIVING;SHOPPING;PERSONAL HYGIENE	R
 
        update($t)
 end
-
-
-rule "EN LEBENSHALTUNG;SHOPPING;KOERPERPFLEGE	LIVING;SHOPPING;PERSONAL HYGIENE	RFN LIKE '%DOUGLAS%DE'"
-    no-loop
-    when
-       $t: AnalyzeableTransaction(referenceName matches '.*DOUGLAS.*DE')
-    then
-       $t.category = "LIVING";
-       $t.subCategory = "SHOPPING";
-       $t.specification = "PERSONAL HYGIENE";
-
-       update($t)
-end
-
 
 rule "EN LEBENSHALTUNG;SHOPPING;KOERPERPFLEGE	LIVING;SHOPPING;PERSONAL HYGIENE	RFN='DOUGLAS'"
     no-loop
     when
-       $t: AnalyzeableTransaction(referenceName =='DOUGLAS')
+       $t: AnalyzeableTransaction(isoLanguage == 'EN', referenceName =='DOUGLAS')
     then
        $t.category = "LIVING";
        $t.subCategory = "SHOPPING";
@@ -1943,7 +1062,7 @@ end
 rule "EN LEBENSHALTUNG;SHOPPING;KOERPERPFLEGE	LIVING;SHOPPING;PERSONAL HYGIENE	RFN LIKE '%YVES ROCH%'"
     no-loop
     when
-       $t: AnalyzeableTransaction(referenceName matches '.*YVES ROCH.*')
+       $t: AnalyzeableTransaction(isoLanguage == 'EN', referenceName matches '.*YVES ROCH.*')
     then
        $t.category = "LIVING";
        $t.subCategory = "SHOPPING";
@@ -1956,20 +1075,7 @@ end
 rule "EN LEBENSHALTUNG;SHOPPING;KOERPERPFLEGE	LIVING;SHOPPING;PERSONAL HYGIENE	RFN='LUDWIG BECK AG'"
     no-loop
     when
-       $t: AnalyzeableTransaction(referenceName == 'LUDWIG BECK AG')
-    then
-       $t.category = "LIVING";
-       $t.subCategory = "SHOPPING";
-       $t.specification = "PERSONAL HYGIENE";
-
-       update($t)
-end
-
-
-rule "EN LEBENSHALTUNG;SHOPPING;KOERPERPFLEGE	LIVING;SHOPPING;PERSONAL HYGIENE	RFN LIKE '%BODY%SHOP%'"
-    no-loop
-    when
-       $t: AnalyzeableTransaction(referenceName matches '.*BODY.*SHOP.*')
+       $t: AnalyzeableTransaction(isoLanguage == 'EN', referenceName == 'LUDWIG BECK AG')
     then
        $t.category = "LIVING";
        $t.subCategory = "SHOPPING";
@@ -1982,7 +1088,7 @@ end
 rule "EN LEBENSHALTUNG;SHOPPING;KOERPERPFLEGE	LIVING;SHOPPING;PERSONAL HYGIENE	RFN LIKE 'DOUGLAS%' OR RFN LIKE 'PARF%DOUGLAS%'"
     no-loop
     when
-       $t: AnalyzeableTransaction(referenceName matches 'DOUGLAS.*' || referenceName matches 'PARF.*DOUGLAS.*')
+       $t: AnalyzeableTransaction(isoLanguage == 'EN', referenceName matches 'DOUGLAS.*' || referenceName matches 'PARF.*DOUGLAS.*')
     then
        $t.category = "LIVING";
        $t.subCategory = "SHOPPING";
@@ -1992,23 +1098,10 @@ rule "EN LEBENSHALTUNG;SHOPPING;KOERPERPFLEGE	LIVING;SHOPPING;PERSONAL HYGIENE	R
 end
 
 
-rule "EN LEBENSHALTUNG;SHOPPING;SONSTIGES	LIVING;SHOPPING;OTHER	RFN LIKE '%BABYMARKT%GMBH%'"
-    no-loop
-    when
-       $t: AnalyzeableTransaction(referenceName matches '.*BABYMARKT.*GMBH.*')
-    then
-       $t.category = "LIVING";
-       $t.subCategory = "SHOPPING";
-       $t.specification = "OTHER";
-
-       update($t)
-end
-
-
 rule "EN LEBENSHALTUNG;SHOPPING;SONSTIGES	LIVING;SHOPPING;OTHER	RFN LIKE '%IKEA%'"
     no-loop
     when
-       $t: AnalyzeableTransaction(referenceName matches '.*IKEA.*')
+       $t: AnalyzeableTransaction(isoLanguage == 'EN', referenceName matches '.*IKEA.*')
     then
        $t.category = "LIVING";
        $t.subCategory = "SHOPPING";
@@ -2021,7 +1114,7 @@ end
 rule "EN LEBENSHALTUNG;SHOPPING;SONSTIGES	LIVING;SHOPPING;OTHER	VWZ LIKE '%TOOM%BM%SAGT%DANKE%%'"
     no-loop
     when
-       $t: AnalyzeableTransaction(purpose matches '.*TOOM.*BM.*SAGT.*DANKE.*.*')
+       $t: AnalyzeableTransaction(isoLanguage == 'EN', purpose matches '.*TOOM.*BM.*SAGT.*')
     then
        $t.category = "LIVING";
        $t.subCategory = "SHOPPING";
@@ -2030,24 +1123,10 @@ rule "EN LEBENSHALTUNG;SHOPPING;SONSTIGES	LIVING;SHOPPING;OTHER	VWZ LIKE '%TOOM%
        update($t)
 end
 
-
-rule "EN LEBENSHALTUNG;SHOPPING;VERSANDHANDEL	LIVING;SHOPPING;MAIL ORDER	RFN LIKE 'AMAZON %' OR RFN='AMAZON' OR RFN LIKE '%AMAZON.DE%'"
-    no-loop
-    when
-       $t: AnalyzeableTransaction(referenceName matches 'AMAZON .*' || referenceName == 'AMAZON' || referenceName matches '.*AMAZON.DE.*')
-    then
-       $t.category = "LIVING";
-       $t.subCategory = "SHOPPING";
-       $t.specification = "MAIL ORDER";
-
-       update($t)
-end
-
-
 rule "EN LEBENSHALTUNG;SHOPPING;VERSANDHANDEL	LIVING;SHOPPING;MAIL ORDER	RFN LIKE '%AMAZON%PAYMENT%'"
     no-loop
     when
-       $t: AnalyzeableTransaction(referenceName matches '.*AMAZON.*PAYMENT.*')
+       $t: AnalyzeableTransaction(isoLanguage == 'EN', referenceName matches '.*AMAZON.*PAYMENT.*')
     then
        $t.category = "LIVING";
        $t.subCategory = "SHOPPING";
@@ -2060,7 +1139,7 @@ end
 rule "EN LEBENSHALTUNG;SHOPPING;VERSANDHANDEL	LIVING;SHOPPING;MAIL ORDER	RFN LIKE '%AMAZON%' AND RFN LIKE '%SERVICE%'"
     no-loop
     when
-       $t: AnalyzeableTransaction(referenceName matches '.*AMAZON.*', referenceName matches '.*SERVICE.*')
+       $t: AnalyzeableTransaction(isoLanguage == 'EN', referenceName matches '.*AMAZON.*', referenceName matches '.*SERVICE.*')
     then
        $t.category = "LIVING";
        $t.subCategory = "SHOPPING";
@@ -2073,7 +1152,7 @@ end
 rule "EN LEBENSHALTUNG;SHOPPING;VERSANDHANDEL	LIVING;SHOPPING;MAIL ORDER	RFN LIKE '%OTTO%GM%'"
     no-loop
     when
-       $t: AnalyzeableTransaction(referenceName matches '.*OTTO.*GM.*')
+       $t: AnalyzeableTransaction(isoLanguage == 'EN', referenceName matches '.*OTTO.*GM.*')
     then
        $t.category = "LIVING";
        $t.subCategory = "SHOPPING";
@@ -2086,7 +1165,7 @@ end
 rule "EN LEBENSHALTUNG;SHOPPING;VERSANDHANDEL	LIVING;SHOPPING;MAIL ORDER	RFN LIKE '%ZALANDO%'"
     no-loop
     when
-       $t: AnalyzeableTransaction(referenceName matches '.*ZALANDO.*')
+       $t: AnalyzeableTransaction(isoLanguage == 'EN', referenceName matches '.*ZALANDO.*')
     then
        $t.category = "LIVING";
        $t.subCategory = "SHOPPING";
