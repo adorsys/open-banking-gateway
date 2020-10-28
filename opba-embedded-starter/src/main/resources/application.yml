@@ -149,7 +149,7 @@ facade:
     # Which keystore to use and how to encrypt keys in it
     key-store:
       type: BCFKS
-      encryption-algo: AES128_KWP
+      encryption-algo: AES256_KWP
       pbkdf:
         pbkdf2:
           algo: PRF_SHA512
