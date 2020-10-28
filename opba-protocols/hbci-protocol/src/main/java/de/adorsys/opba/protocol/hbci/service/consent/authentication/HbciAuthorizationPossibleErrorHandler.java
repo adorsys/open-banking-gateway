@@ -40,6 +40,14 @@ public class HbciAuthorizationPossibleErrorHandler {
             log.warn("wrong pin was entered");
             return;
         }
+        if (ex.getMultibankingError().equals(MultibankingError.INVALID_TAN)) {
+            log.warn("wrong tan was entered");
+            return;
+        }
+        if (ex.getMultibankingError().equals(MultibankingError.HBCI_ERROR)) {
+            log.warn("hbci error");
+            return;
+        }
         throw ex;
     }
 }

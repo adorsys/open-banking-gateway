@@ -62,17 +62,16 @@ public class HbciInitiateSendPinAndPsuId extends ValidatedExecution<HbciContext>
                             (HbciContext ctx) -> ctx.setHbciDialogConsent((HbciConsent) response.getBankApiConsentData())
                     );
                 },
-                ex -> aisOnWrongPassword(execution)
+                ex -> aisOnWrongCredentials(execution)
         );
 
     }
 
-    private void aisOnWrongPassword(DelegateExecution execution) {
+    private void aisOnWrongCredentials(DelegateExecution execution) {
         ContextUtil.getAndUpdateContext(
                 execution,
                 (HbciContext ctx) -> {
-                    log.warn("Request {} of {} has provided incorrect password", ctx.getRequestId(), ctx.getSagaId());
-                    log.warn("Hi Maksym, though wrong pin is set here, ui looks bad....");
+                    log.warn("Request {} of {} has provided incorrect credentials", ctx.getRequestId(), ctx.getSagaId());
                     ctx.setWrongAuthCredentials(true);
                 }
         );
