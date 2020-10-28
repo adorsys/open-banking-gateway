@@ -6,14 +6,11 @@ import de.adorsys.datasafe.directory.api.config.DFSConfig;
 import de.adorsys.datasafe.directory.impl.profile.operations.actions.ProfileRetrievalServiceImplRuntimeDelegatable;
 import de.adorsys.datasafe.encrypiton.api.types.UserIDAuth;
 import de.adorsys.datasafe.encrypiton.api.types.encryption.EncryptionConfig;
-import de.adorsys.datasafe.encrypiton.api.types.encryption.MutableEncryptionConfig;
 import de.adorsys.datasafe.encrypiton.impl.pathencryption.PathEncryptionImpl;
 import de.adorsys.datasafe.encrypiton.impl.pathencryption.PathEncryptionImplRuntimeDelegatable;
 import de.adorsys.datasafe.types.api.context.BaseOverridesRegistry;
 import de.adorsys.datasafe.types.api.context.overrides.OverridesRegistry;
 import de.adorsys.datasafe.types.api.resource.Uri;
-import de.adorsys.opba.db.domain.entity.DatasafeConfig;
-import de.adorsys.opba.db.repository.jpa.DatasafeConfigRepository;
 import de.adorsys.opba.protocol.facade.config.encryption.datasafe.BaseDatasafeDbStorageService;
 import de.adorsys.opba.protocol.facade.config.encryption.impl.fintech.FintechConsentSpecDatasafeStorage;
 import de.adorsys.opba.protocol.facade.config.encryption.impl.fintech.FintechConsentSpecSecureStorage;
@@ -23,16 +20,11 @@ import de.adorsys.opba.protocol.facade.config.encryption.impl.psu.PsuDatasafeSto
 import de.adorsys.opba.protocol.facade.config.encryption.impl.psu.PsuSecureStorage;
 import de.adorsys.opba.protocol.facade.services.EncryptionKeySerde;
 import lombok.RequiredArgsConstructor;
-import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
 import org.bouncycastle.jce.provider.BouncyCastleProvider;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.context.annotation.DependsOn;
-import org.springframework.transaction.TransactionStatus;
-import org.springframework.transaction.support.TransactionCallbackWithoutResult;
-import org.springframework.transaction.support.TransactionTemplate;
 
 import javax.annotation.PostConstruct;
 import java.security.Security;
@@ -46,16 +38,12 @@ import static de.adorsys.opba.protocol.facade.config.ConfigConst.FACADE_CONFIG_P
 public class DatasafeConfigurer {
 
     private static final String ENCRYPTION_DATASAFE_READ_KEYSTORE_PREFIX = "${" + FACADE_CONFIG_PREFIX + "encryption.datasafe.read-keystore";
-    private static final String INCORRECT_ENCRYPTION_CONFIG_RECORDS_AMOUNT_EXCEPTION = "There should be only one datasafe encryption configuration in database!";
-    private static final Long ENCRYPTION_DATASAFE_CONFIG_DB_ID = 1L;
 
     private final ObjectMapper mapper;
-    private final TransactionTemplate transactionTemplate;
+    private final EncryptionConfig encryptionConfig;
     private final FintechDatasafeStorage fintechStorage;
     private final PsuDatasafeStorage psuStorage;
     private final FintechConsentSpecDatasafeStorage fintechUserStorage;
-    private final MutableEncryptionConfig mutableEncryptionConfig;
-    private final DatasafeConfigRepository datasafeConfigRepository;
 
     @Bean
     public FintechSecureStorage fintechDatasafeServices(
@@ -69,7 +57,7 @@ public class DatasafeConfigurer {
         return new FintechSecureStorage(
                 DaggerDefaultDatasafeServices.builder()
                         .config(config)
-                        .encryption(readEncryptionConfigFromDb())
+                        .encryption(encryptionConfig)
                         .storage(fintechStorage)
                         .overridesRegistry(overridesRegistry)
                         .build(),
@@ -91,7 +79,7 @@ public class DatasafeConfigurer {
         return new PsuSecureStorage(
                 DaggerDefaultDatasafeServices.builder()
                         .config(config)
-                        .encryption(readEncryptionConfigFromDb())
+                        .encryption(encryptionConfig)
                         .storage(psuStorage)
                         .overridesRegistry(overridesRegistry)
                         .build(),
@@ -112,7 +100,7 @@ public class DatasafeConfigurer {
         return new FintechConsentSpecSecureStorage(
                 DaggerDefaultDatasafeServices.builder()
                         .config(config)
-                        .encryption(readEncryptionConfigFromDb())
+                        .encryption(encryptionConfig)
                         .storage(fintechUserStorage)
                         .overridesRegistry(overridesRegistry)
                         .build(),
@@ -128,44 +116,6 @@ public class DatasafeConfigurer {
         }
 
         Security.addProvider(new BouncyCastleProvider());
-
-        transactionTemplate.execute(new TransactionCallbackWithoutResult() {
-            @Override
-            public void doInTransactionWithoutResult(TransactionStatus status) {
-                if (encryptionConfigNotExistInDb()) {
-                    log.info("Datasafe encryption is configured from properties");
-                    storeEncryptionConfigInDb(mutableEncryptionConfig);
-                } else {
-                    log.info("Datasafe encryption is configured from database");
-                }
-            }
-        });
-    }
-
-    @SneakyThrows
-    private void storeEncryptionConfigInDb(MutableEncryptionConfig config) {
-        datasafeConfigRepository.save(new DatasafeConfig(ENCRYPTION_DATASAFE_CONFIG_DB_ID, mapper.writeValueAsString(config)));
-    }
-
-    private boolean encryptionConfigNotExistInDb() {
-        return datasafeConfigRepository.count() == 0;
-    }
-
-    @Bean
-    @SneakyThrows
-    @DependsOn({"mutableEncryptionConfig"})
-    public EncryptionConfig readEncryptionConfigFromDb() {
-        if (datasafeConfigRepository.count() != 1) {
-            throw new IllegalStateException(INCORRECT_ENCRYPTION_CONFIG_RECORDS_AMOUNT_EXCEPTION);
-        }
-
-        return mapper.readValue(
-                datasafeConfigRepository.findAll().stream()
-                        .findFirst()
-                        .orElseThrow(() -> new IllegalStateException(INCORRECT_ENCRYPTION_CONFIG_RECORDS_AMOUNT_EXCEPTION))
-                        .getConfig(),
-                MutableEncryptionConfig.class)
-                       .toEncryptionConfig();
     }
 
     // Path encryption that does not encrypt paths - as for use cases of OpenBanking we need to protect data
