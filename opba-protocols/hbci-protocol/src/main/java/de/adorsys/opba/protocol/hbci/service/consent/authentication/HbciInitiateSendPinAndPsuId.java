@@ -2,6 +2,7 @@ package de.adorsys.opba.protocol.hbci.service.consent.authentication;
 
 import de.adorsys.multibanking.domain.Credentials;
 import de.adorsys.multibanking.domain.ScaStatus;
+import de.adorsys.multibanking.domain.exception.MultibankingException;
 import de.adorsys.multibanking.domain.request.UpdatePsuAuthenticationRequest;
 import de.adorsys.multibanking.domain.response.UpdateAuthResponse;
 import de.adorsys.multibanking.domain.spi.OnlineBankingService;
@@ -11,6 +12,7 @@ import de.adorsys.opba.protocol.bpmnshared.service.context.ContextUtil;
 import de.adorsys.opba.protocol.bpmnshared.service.exec.ValidatedExecution;
 import de.adorsys.opba.protocol.hbci.context.HbciContext;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.flowable.engine.delegate.DelegateExecution;
 import org.kapott.hbci.manager.HBCIProduct;
 import org.springframework.stereotype.Service;
@@ -20,6 +22,7 @@ import java.util.stream.Collectors;
 
 @Service("hbciInitiateSendPinAndPsuId")
 @RequiredArgsConstructor
+@Slf4j
 public class HbciInitiateSendPinAndPsuId extends ValidatedExecution<HbciContext> {
 
     private final Optional<HBCIProduct> product;
@@ -43,17 +46,29 @@ public class HbciInitiateSendPinAndPsuId extends ValidatedExecution<HbciContext>
         request.setBankApiConsentData(consent);
         request.setBank(context.getBank());
 
-        UpdateAuthResponse response =
-                onlineBankingService.getStrongCustomerAuthorisation().updatePsuAuthentication(request);
+        try {
+            UpdateAuthResponse response = onlineBankingService.getStrongCustomerAuthorisation().updatePsuAuthentication(request);
 
-        if (handleScaChallengeRequired(execution, response)) {
-            return;
+            if (handleScaChallengeRequired(execution, response)) {
+                return;
+            }
+
+            ContextUtil.getAndUpdateContext(
+                    execution,
+                    (HbciContext ctx) -> {
+                        ctx.setWrongAuthCredentials(false);
+                        ctx.setHbciDialogConsent((HbciConsent) response.getBankApiConsentData());
+                    }
+            );
+        } catch (MultibankingException e) {
+            ContextUtil.getAndUpdateContext(
+                    execution,
+                    (HbciContext ctx) -> {
+                        log.warn("Request {} of {} has provided incorrect password", ctx.getRequestId(), ctx.getSagaId());
+                        ctx.setWrongAuthCredentials(true);
+                    }
+            );
         }
-
-        ContextUtil.getAndUpdateContext(
-                execution,
-                (HbciContext ctx) -> ctx.setHbciDialogConsent((HbciConsent) response.getBankApiConsentData())
-        );
     }
 
     private boolean handleScaChallengeRequired(DelegateExecution execution, UpdateAuthResponse response) {
@@ -62,6 +77,7 @@ public class HbciInitiateSendPinAndPsuId extends ValidatedExecution<HbciContext>
             ContextUtil.getAndUpdateContext(
                     execution,
                     (HbciContext ctx) -> {
+                        ctx.setWrongAuthCredentials(false);
                         ctx.setTanChallengeRequired(true);
                         ctx.setAvailableSca(
                                 response.getScaMethods().stream()

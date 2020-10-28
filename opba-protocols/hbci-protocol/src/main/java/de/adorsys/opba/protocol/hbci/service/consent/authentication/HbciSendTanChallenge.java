@@ -11,6 +11,7 @@ import de.adorsys.opba.protocol.bpmnshared.service.context.ContextUtil;
 import de.adorsys.opba.protocol.bpmnshared.service.exec.ValidatedExecution;
 import de.adorsys.opba.protocol.hbci.context.HbciContext;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.flowable.engine.delegate.DelegateExecution;
 import org.springframework.stereotype.Service;
 
@@ -20,6 +21,7 @@ import org.springframework.stereotype.Service;
  */
 @Service("hbciSendTanChallenge")
 @RequiredArgsConstructor
+@Slf4j
 public class HbciSendTanChallenge extends ValidatedExecution<HbciContext> {
 
     private final OnlineBankingService onlineBankingService;
@@ -31,11 +33,24 @@ public class HbciSendTanChallenge extends ValidatedExecution<HbciContext> {
         TransactionAuthorisationRequest request = create(new BankApiUser(), new BankAccess(), context.getBank(), consent);
         request.setScaAuthenticationData(context.getPsuTan());
 
-        UpdateAuthResponse response = onlineBankingService.getStrongCustomerAuthorisation().authorizeConsent(request);
-        ContextUtil.getAndUpdateContext(
-                execution,
-                (HbciContext ctx) -> ctx.setHbciDialogConsent((HbciConsent) response.getBankApiConsentData())
-        );
+        try {
+            UpdateAuthResponse response = onlineBankingService.getStrongCustomerAuthorisation().authorizeConsent(request);
+            ContextUtil.getAndUpdateContext(
+                    execution,
+                    (HbciContext ctx) -> {
+                        ctx.setWrongAuthCredentials(false);
+                        ctx.setHbciDialogConsent((HbciConsent) response.getBankApiConsentData());
+                    }
+            );
+        } catch (Exception e) {
+            ContextUtil.getAndUpdateContext(
+                    execution,
+                    (HbciContext ctx) -> {
+                        log.warn("Request {} of {} has provided incorrect password", ctx.getRequestId(), ctx.getSagaId());
+                        ctx.setWrongAuthCredentials(true);
+                    }
+            );
+        }
     }
 
     public static TransactionAuthorisationRequest create(
