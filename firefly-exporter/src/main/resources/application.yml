@@ -43,4 +43,8 @@ security:
   claim-name-key: sign-data
 
 drools:
-  categorizer-ruleset: categorization/rules-de.drl
+  categorizer:
+    ruleset:
+      - categorization/rules-sandbox.drl
+      - categorization/rules-de.drl
+      - categorization/rules-en.drl
