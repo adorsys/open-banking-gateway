@@ -10,6 +10,12 @@ import { RedirectStruct, RedirectType } from '../../redirect-page/redirect-struc
 import { StorageService } from '../../../services/storage.service';
 import { ConfirmData } from '../payment-confirm/confirm.data';
 
+class TestPayment {
+  constructor(public referenceName: string, public purpose: string) {
+  }
+}
+
+
 @Component({
   selector: 'app-initiate',
   templateUrl: './initiate.component.html',
@@ -17,6 +23,15 @@ import { ConfirmData } from '../payment-confirm/confirm.data';
 })
 export class InitiateComponent implements OnInit {
   public static ROUTE = 'initiate';
+
+  static TEST_PAYMENTS: TestPayment[] = [
+    new TestPayment("test user", "test transfer"),
+    new TestPayment("Anton", "Transfer to Anton (demo)"),
+    new TestPayment("Amazon payment", "Payment for order #12345 (demo)"),
+    new TestPayment("Apple", "Apple ITunes payment (demo)"),
+    new TestPayment("Netflix TV", "Netflix payment (demo)")
+  ];
+
   bankId = '';
   accountId = '';
   debtorIban: string;
@@ -37,11 +52,12 @@ export class InitiateComponent implements OnInit {
 
   ngOnInit() {
     this.debtorIban = this.debtorIban ? this.debtorIban : this.getDebitorIban(this.accountId);
+    const testPayment = InitiateComponent.TEST_PAYMENTS[Math.floor(Math.random() * InitiateComponent.TEST_PAYMENTS.length)]
     this.paymentForm = this.formBuilder.group({
-      name: ['test user', Validators.required],
+      name: [testPayment.referenceName, Validators.required],
       creditorIban: ['AL90208110080000001039531801', [ValidatorService.validateIban, Validators.required]],
       amount: ['12.34', [Validators.pattern('^[1-9]\\d*(\\.\\d{1,2})?$'), Validators.required]],
-      purpose: ['test transfer'],
+      purpose: [testPayment.purpose],
       instantPayment: false
     });
   }
