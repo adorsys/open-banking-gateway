@@ -155,7 +155,7 @@ facade:
     # PSU consent encryption
     psu:
       key-pair:
-        cipher-algo: AES256_CBC
+        cipher-algo: AES128_CBC
         key-algo: RSA
         len: 2048
     # Consent requirements encryption
