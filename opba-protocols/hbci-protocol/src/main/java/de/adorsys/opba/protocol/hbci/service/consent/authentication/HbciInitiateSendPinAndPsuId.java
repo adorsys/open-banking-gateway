@@ -2,7 +2,6 @@ package de.adorsys.opba.protocol.hbci.service.consent.authentication;
 
 import de.adorsys.multibanking.domain.Credentials;
 import de.adorsys.multibanking.domain.ScaStatus;
-import de.adorsys.multibanking.domain.exception.MultibankingException;
 import de.adorsys.multibanking.domain.request.UpdatePsuAuthenticationRequest;
 import de.adorsys.multibanking.domain.response.UpdateAuthResponse;
 import de.adorsys.multibanking.domain.spi.OnlineBankingService;
@@ -27,48 +26,56 @@ public class HbciInitiateSendPinAndPsuId extends ValidatedExecution<HbciContext>
 
     private final Optional<HBCIProduct> product;
     private final OnlineBankingService onlineBankingService;
+    private final HbciAuthorizationPossibleErrorHandler errorSink;
+
 
     @Override
     protected void doRealExecution(DelegateExecution execution, HbciContext context) {
-        HbciConsent consent = context.getHbciDialogConsent();
-        if (null == consent) {
-            consent = new HbciConsent();
-            consent.setHbciProduct(product.orElse(null));
-            consent.setCredentials(Credentials.builder()
-                    .userId(context.getPsuId())
-                    .pin(context.getPsuPin())
-                    .build()
-            );
-        }
 
-        UpdatePsuAuthenticationRequest request = new UpdatePsuAuthenticationRequest();
-        request.setCredentials(consent.getCredentials());
-        request.setBankApiConsentData(consent);
-        request.setBank(context.getBank());
-
-        try {
-            UpdateAuthResponse response = onlineBankingService.getStrongCustomerAuthorisation().updatePsuAuthentication(request);
-
-            if (handleScaChallengeRequired(execution, response)) {
-                return;
-            }
-
-            ContextUtil.getAndUpdateContext(
-                    execution,
-                    (HbciContext ctx) -> {
-                        ctx.setWrongAuthCredentials(false);
-                        ctx.setHbciDialogConsent((HbciConsent) response.getBankApiConsentData());
+        errorSink.handlePossibleAuthorizationError(
+                () -> {
+                    context.setWrongAuthCredentials(false);
+                    HbciConsent consent = context.getHbciDialogConsent();
+                    if (null == consent) {
+                        consent = new HbciConsent();
+                        consent.setHbciProduct(product.orElse(null));
+                        consent.setCredentials(Credentials.builder()
+                                .userId(context.getPsuId())
+                                .pin(context.getPsuPin())
+                                .build()
+                        );
                     }
-            );
-        } catch (MultibankingException e) {
-            ContextUtil.getAndUpdateContext(
-                    execution,
-                    (HbciContext ctx) -> {
-                        log.warn("Request {} of {} has provided incorrect password", ctx.getRequestId(), ctx.getSagaId());
-                        ctx.setWrongAuthCredentials(true);
+
+                    UpdatePsuAuthenticationRequest request = new UpdatePsuAuthenticationRequest();
+                    request.setCredentials(consent.getCredentials());
+                    request.setBankApiConsentData(consent);
+                    request.setBank(context.getBank());
+
+                    UpdateAuthResponse response = onlineBankingService.getStrongCustomerAuthorisation().updatePsuAuthentication(request);
+
+                    if (handleScaChallengeRequired(execution, response)) {
+                        return;
                     }
-            );
-        }
+
+                    ContextUtil.getAndUpdateContext(
+                            execution,
+                            (HbciContext ctx) -> ctx.setHbciDialogConsent((HbciConsent) response.getBankApiConsentData())
+                    );
+                },
+                ex -> aisOnWrongPassword(execution)
+        );
+
+    }
+
+    private void aisOnWrongPassword(DelegateExecution execution) {
+        ContextUtil.getAndUpdateContext(
+                execution,
+                (HbciContext ctx) -> {
+                    log.warn("Request {} of {} has provided incorrect password", ctx.getRequestId(), ctx.getSagaId());
+                    log.warn("Hi Maksym, though wrong pin is set here, ui looks bad....");
+                    ctx.setWrongAuthCredentials(true);
+                }
+        );
     }
 
     private boolean handleScaChallengeRequired(DelegateExecution execution, UpdateAuthResponse response) {
@@ -77,7 +84,6 @@ public class HbciInitiateSendPinAndPsuId extends ValidatedExecution<HbciContext>
             ContextUtil.getAndUpdateContext(
                     execution,
                     (HbciContext ctx) -> {
-                        ctx.setWrongAuthCredentials(false);
                         ctx.setTanChallengeRequired(true);
                         ctx.setAvailableSca(
                                 response.getScaMethods().stream()
