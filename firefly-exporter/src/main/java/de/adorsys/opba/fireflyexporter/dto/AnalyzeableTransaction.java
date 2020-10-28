@@ -29,7 +29,7 @@ public class AnalyzeableTransaction extends TransactionDetails {
 
     public String getIsoLanguage() {
         if (StringUtils.startsWithIgnoreCase(getCreditorAccount().getIban(), "DE")
-                || StringUtils.startsWithIgnoreCase(getDebtorAccount().getIban(), "DE")) {
+                && StringUtils.startsWithIgnoreCase(getDebtorAccount().getIban(), "DE")) {
             return "DE";
         }
 
