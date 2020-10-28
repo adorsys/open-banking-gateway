@@ -17,17 +17,11 @@
   .ltx-description {
     padding-right: 1.5rem;
   }
-
 }
 
 .ltx-amount-number {
   font-family: SFMono-Regular, Menlo, Monaco, Consolas, 'Liberation Mono', 'Courier New', monospace;
   padding-right: 5px;
-}
-
-.ltx-amount-number-red {
-  @extend .ltx-amount-number;
-  color: red;
 }
 
 @media (max-width: $breakpoint-sm) {
