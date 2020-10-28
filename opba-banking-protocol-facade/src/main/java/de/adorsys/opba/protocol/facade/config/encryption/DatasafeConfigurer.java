@@ -29,6 +29,7 @@ import org.bouncycastle.jce.provider.BouncyCastleProvider;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.DependsOn;
 import org.springframework.transaction.TransactionStatus;
 import org.springframework.transaction.support.TransactionCallbackWithoutResult;
 import org.springframework.transaction.support.TransactionTemplate;
@@ -49,12 +50,12 @@ public class DatasafeConfigurer {
     private static final Long ENCRYPTION_DATASAFE_CONFIG_DB_ID = 1L;
 
     private final ObjectMapper mapper;
+    private final TransactionTemplate transactionTemplate;
     private final FintechDatasafeStorage fintechStorage;
     private final PsuDatasafeStorage psuStorage;
     private final FintechConsentSpecDatasafeStorage fintechUserStorage;
-    private final DatasafeConfigRepository datasafeConfigRepository;
     private final MutableEncryptionConfig mutableEncryptionConfig;
-    private final TransactionTemplate transactionTemplate;
+    private final DatasafeConfigRepository datasafeConfigRepository;
 
     @Bean
     public FintechSecureStorage fintechDatasafeServices(
@@ -150,8 +151,10 @@ public class DatasafeConfigurer {
         return datasafeConfigRepository.count() == 0;
     }
 
+    @Bean
     @SneakyThrows
-    private EncryptionConfig readEncryptionConfigFromDb() {
+    @DependsOn({"mutableEncryptionConfig"})
+    public EncryptionConfig readEncryptionConfigFromDb() {
         if (datasafeConfigRepository.count() != 1) {
             throw new IllegalStateException(INCORRECT_ENCRYPTION_CONFIG_RECORDS_AMOUNT_EXCEPTION);
         }

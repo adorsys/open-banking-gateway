@@ -10,7 +10,7 @@ public class EncryptionConfigurationConfig {
 
     @Bean
     @ConfigurationProperties(prefix = "facade.datasafe")
-    public MutableEncryptionConfig encryptionConfig() {
+    public MutableEncryptionConfig mutableEncryptionConfig() {
         return new MutableEncryptionConfig();
     }
 }
