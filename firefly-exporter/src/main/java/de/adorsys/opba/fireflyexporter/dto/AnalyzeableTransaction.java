@@ -12,6 +12,9 @@ import java.math.BigDecimal;
 @RequiredArgsConstructor
 public class AnalyzeableTransaction extends TransactionDetails {
 
+    private static final String LANG_EN = "EN";
+    private static final String LANG_DE = "DE";
+
     @Delegate
     private final TransactionDetails details;
 
@@ -28,12 +31,16 @@ public class AnalyzeableTransaction extends TransactionDetails {
     private String specification;
 
     public String getIsoLanguage() {
-        if (StringUtils.startsWithIgnoreCase(getCreditorAccount().getIban(), "DE")
-                && StringUtils.startsWithIgnoreCase(getDebtorAccount().getIban(), "DE")) {
-            return "DE";
+        if (null == getCreditorAccount() || null == getDebtorAccount()) {
+            return LANG_EN;
         }
 
-        return "EN";
+        if (StringUtils.startsWithIgnoreCase(getCreditorAccount().getIban(), LANG_DE)
+                && StringUtils.startsWithIgnoreCase(getDebtorAccount().getIban(), LANG_DE)) {
+            return LANG_DE;
+        }
+
+        return LANG_EN;
     }
 
     public String getReferenceName() {
