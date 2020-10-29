@@ -71,7 +71,7 @@ public class HbciInitiateSendPinAndPsuId extends ValidatedExecution<HbciContext>
         ContextUtil.getAndUpdateContext(
                 execution,
                 (HbciContext ctx) -> {
-                    log.warn("Request {} of {} has provided incorrect credentials", ctx.getRequestId(), ctx.getSagaId());
+                    log.warn("Request {} of {} has provided incorrect credentials in HbciInitiateSendPinAndPsuID", ctx.getRequestId(), ctx.getSagaId());
                     ctx.setWrongAuthCredentials(true);
                 }
         );
