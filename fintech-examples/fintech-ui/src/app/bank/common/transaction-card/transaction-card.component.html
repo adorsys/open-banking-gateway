@@ -9,9 +9,8 @@
           transaction?.remittanceInformationUnstructured
         }}</span>
       </div>
-      <div class="right">
-        <span [ngClass]="{'text-danger': transaction?.transactionAmount?.amount < 0}"
-              class="ltx-amount-number">{{ transaction?.transactionAmount?.amount }}</span>
+      <div class="right" [ngClass]="{'text-danger': transaction?.transactionAmount?.amount < 0}">
+        <span class="ltx-amount-number">{{ transaction?.transactionAmount?.amount }}</span>
         <span>{{ transaction?.transactionAmount?.currency }}</span>
       </div>
     </div>
