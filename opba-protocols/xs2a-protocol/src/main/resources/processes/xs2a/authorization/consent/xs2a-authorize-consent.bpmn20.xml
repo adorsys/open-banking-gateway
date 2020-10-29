@@ -95,7 +95,7 @@
     <subProcess id="decoupledScaStatusChecking" flowable:exclusive="true" name="Decoupled Sca status checking subprocess">
       <startEvent id="decoupledSubProcessStart" name="Start of decoupled Sca subprocess"/>
       <serviceTask id="checkIfDecoupledScaFinalized" flowable:exclusive="true" name="Checks authorization status to be finalized" flowable:delegateExpression="${xs2aAisCheckDecoupledAuthorizationStatus}"/>
-      <exclusiveGateway id="authorizationSucceded" name="Authirization finalised?"/>
+      <exclusiveGateway id="authorizationSucceded" name="Authirization finalised?" default="finishSubprocess"/>
       <sequenceFlow id="startAuthorizationChecking" sourceRef="decoupledSubProcessStart" targetRef="checkIfDecoupledScaFinalized" name="Start authorization checking"/>
       <sequenceFlow id="sid-f525dcb0-40f2-4159-a992-729ee3e02130" sourceRef="checkIfDecoupledScaFinalized" targetRef="authorizationSucceded"/>
       <intermediateCatchEvent id="waitAuthorizationConfirmation" name="Waits until authorization is finished by PSU">
@@ -107,21 +107,21 @@
         <conditionExpression xsi:type="tFormalExpression">#{!xs2aConsentInfo.isDecoupledScaFinalizedByPSU(CONTEXT)}</conditionExpression>
       </sequenceFlow>
       <sequenceFlow id="restartAuthorizationCheck" sourceRef="waitAuthorizationConfirmation" targetRef="checkIfDecoupledScaFinalized" name="Starts authorization check after some delay"/>
-      <intermediateCatchEvent id="subprocessTimeLimit" name="Decoupled authorization timelimit (timeout)">
-        <timerEventDefinition>
-          <timeDuration>${flowable.timer.maxDuration}</timeDuration>
-        </timerEventDefinition>
-      </intermediateCatchEvent>
       <endEvent id="subprocessEnd" name="End of decoupled Sca status checking subprocess"/>
       <sequenceFlow id="finishSubprocess" sourceRef="authorizationSucceded" targetRef="subprocessEnd" name="Successful proceeding to the subprocess end">
         <conditionExpression xsi:type="tFormalExpression"/>
       </sequenceFlow>
-      <sequenceFlow id="decoupledSubprocessFailure" sourceRef="subprocessTimeLimit" targetRef="sid-xs2aReportToFintechConsentDenied" name="Decoupled authorithation failed by timeout"/>
     </subProcess>
+    <boundaryEvent id="subprocessTimeLimit" attachedToRef="decoupledScaStatusChecking" name="Decoupled authorization timelimit (timeout)">
+      <timerEventDefinition>
+        <timeDuration>${flowable.timer.maxDuration}</timeDuration>
+      </timerEventDefinition>
+    </boundaryEvent>
     <sequenceFlow id="decoupledScaSelected" sourceRef="isDecoupledScaSelected" targetRef="decoupledScaStatusChecking">
       <conditionExpression xsi:type="tFormalExpression">#{xs2aConsentInfo.isDecoupledScaSelected(CONTEXT)}</conditionExpression>
     </sequenceFlow>
     <sequenceFlow id="decoupledSubprocessSuccess" sourceRef="decoupledScaStatusChecking" targetRef="isScaFinalized" name="Decoupled authorithation was successful"/>
+    <sequenceFlow id="decoupledSubprocessFailure" sourceRef="subprocessTimeLimit" targetRef="end" name="Decoupled authorithation failed by timeout"/>
   </process>
   <bpmndi:BPMNDiagram id="BPMNDiagram_xs2a-authorize-consent">
     <bpmndi:BPMNPlane bpmnElement="xs2a-authorize-consent" id="BPMNPlane_xs2a-authorize-consent">
@@ -378,20 +378,19 @@
         <omgdi:waypoint x="1603.8002" y="-156.69722"/>
         <omgdi:waypoint x="1603.8" y="-62.299995"/>
       </bpmdi:BPMNEdge>
-      <bpmdi:BPMNShape xmlns:bpmdi="http://www.omg.org/spec/BPMN/20100524/DI" id="shape-0129697a-7d67-4e50-ae39-f361b509b6af" bpmnElement="subprocessTimeLimit">
-        <omgdc:Bounds x="1760.0" y="35.0" width="30.0" height="30.0"/>
-      </bpmdi:BPMNShape>
       <bpmdi:BPMNEdge xmlns:bpmdi="http://www.omg.org/spec/BPMN/20100524/DI" id="edge-3cdad096-727a-4c3c-908c-64414d2a72cf" bpmnElement="decoupledSubprocessSuccess">
         <omgdi:waypoint x="1633.0" y="46.90001"/>
         <omgdi:waypoint x="1633.0" y="135.9444"/>
         <omgdi:waypoint x="1383.0" y="135.9444"/>
         <omgdi:waypoint x="1383.0" y="215.0"/>
       </bpmdi:BPMNEdge>
-      <bpmdi:BPMNEdge xmlns:bpmdi="http://www.omg.org/spec/BPMN/20100524/DI" id="edge-f3068036-811c-4d64-9e61-b427a71710dc" bpmnElement="decoupledSubprocessFailure">
-        <omgdi:waypoint x="1775.0" y="65.0"/>
-        <omgdi:waypoint x="1775.0001" y="538.57605"/>
-        <omgdi:waypoint x="1533.6001" y="538.576"/>
-        <omgdi:waypoint x="1533.6001" y="515.0"/>
+      <bpmdi:BPMNShape xmlns:bpmdi="http://www.omg.org/spec/BPMN/20100524/DI" id="shape-2cb62a9a-c538-444b-80a6-6d80a04ca29e" bpmnElement="subprocessTimeLimit">
+        <omgdc:Bounds x="1822.3601" y="25.359959" width="30.0" height="30.0"/>
+      </bpmdi:BPMNShape>
+      <bpmdi:BPMNEdge xmlns:bpmdi="http://www.omg.org/spec/BPMN/20100524/DI" id="edge-38bc70aa-14c6-4666-9e65-623e33c4eb6e" bpmnElement="decoupledSubprocessFailure">
+        <omgdi:waypoint x="1837.3601" y="55.35996"/>
+        <omgdi:waypoint x="1837.36" y="429.0"/>
+        <omgdi:waypoint x="1654.0" y="429.0"/>
       </bpmdi:BPMNEdge>
     </bpmndi:BPMNPlane>
   </bpmndi:BPMNDiagram>
