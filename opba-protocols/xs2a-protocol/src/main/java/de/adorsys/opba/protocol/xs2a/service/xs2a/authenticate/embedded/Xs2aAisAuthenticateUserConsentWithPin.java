@@ -33,7 +33,7 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 public class Xs2aAisAuthenticateUserConsentWithPin extends ValidatedExecution<Xs2aContext> {
 
-    private static final String DECOUPLED_AUTHENTICATION_ID = "APP_OTP";
+    private static final String DECOUPLED_AUTHENTICATION_TYPE = "APP_OTP";
 
     private final Extractor extractor;
     private final Xs2aValidator validator;
@@ -113,7 +113,8 @@ public class Xs2aAisAuthenticateUserConsentWithPin extends ValidatedExecution<Xs
             return;
         }
 
-        ctx.setSelectedScaDecoupled(DECOUPLED_AUTHENTICATION_ID.equals(authResponse.getBody().getChosenScaMethod().getAuthenticationMethodId()));
+        ctx.setSelectedScaDecoupled(DECOUPLED_AUTHENTICATION_TYPE
+                                            .equals(authResponse.getBody().getChosenScaMethod().getAuthenticationType()));
     }
 
     @Service

@@ -387,10 +387,10 @@
         <omgdi:waypoint x="1383.0" y="135.9444"/>
         <omgdi:waypoint x="1383.0" y="215.0"/>
       </bpmdi:BPMNEdge>
-      <bpmdi:BPMNEdge xmlns:bpmdi="http://www.omg.org/spec/BPMN/20100524/DI" id="edge-21a71140-566b-4605-b9c9-f2b24337cee8" bpmnElement="decoupledSubprocessFailure">
+      <bpmdi:BPMNEdge xmlns:bpmdi="http://www.omg.org/spec/BPMN/20100524/DI" id="edge-f3068036-811c-4d64-9e61-b427a71710dc" bpmnElement="decoupledSubprocessFailure">
         <omgdi:waypoint x="1775.0" y="65.0"/>
-        <omgdi:waypoint x="1775.0" y="559.0"/>
-        <omgdi:waypoint x="1533.6001" y="559.0"/>
+        <omgdi:waypoint x="1775.0001" y="538.57605"/>
+        <omgdi:waypoint x="1533.6001" y="538.576"/>
         <omgdi:waypoint x="1533.6001" y="515.0"/>
       </bpmdi:BPMNEdge>
     </bpmndi:BPMNPlane>

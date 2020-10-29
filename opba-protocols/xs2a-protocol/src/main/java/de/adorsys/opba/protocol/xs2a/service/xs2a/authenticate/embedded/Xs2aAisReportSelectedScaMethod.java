@@ -26,7 +26,7 @@ import org.springframework.stereotype.Service;
 @RequiredArgsConstructor
 public class Xs2aAisReportSelectedScaMethod extends ValidatedExecution<Xs2aContext> {
 
-    private static final String DECOUPLED_AUTHENTICATION_ID = "APP_OTP";
+    private static final String DECOUPLED_AUTHENTICATION_ID = "nD9-fiCERWQqQZng2Pp8VA";
 
     private final Extractor extractor;
     private final Xs2aValidator validator;
