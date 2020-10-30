@@ -5,10 +5,10 @@ localapp:
 
 spring:
   datasource:
-    url: ${common.db.url}
-    username: testonlinebanking
-    password: testonlinebanking
-    driver-class-name: ${common.db.driver}
+    hikari:
+      jdbc-url: ${common.db.url}
+      username: testonlinebanking
+      password: testonlinebanking
   liquibase:
     enabled: true
 server:

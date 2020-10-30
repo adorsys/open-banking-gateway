@@ -45,7 +45,7 @@ services:
       - opba-net
 
   x2sa-sandbox-onlinebankingui:
-    image: adorsys/xs2a-online-banking-ui:3.7.1
+    image: adorsys/xs2a-online-banking-ui:4.5
     environment:
       ONLINE_BANKING_SERVER_URL: http://x2sa-sandbox-onlinebanking:8090
     ports:
@@ -56,7 +56,7 @@ services:
       - opba-net
 
   x2sa-sandbox-tpprest:
-    image: adorsys/xs2a-tpp-rest-server:3.7.1
+    image: adorsys/xs2a-tpp-rest-server:4.5
     environment:
       <<: *sandbox-hosts
       SPRING_PROFILES_INCLUDE: test-db-local-postgres,test-common,test-tpp-rest
@@ -73,7 +73,7 @@ services:
       - opba-net
 
   x2sa-sandbox-tpp-ui:
-    image: adorsys/xs2a-bank-tpp-ui:3.7.1
+    image: adorsys/xs2a-bank-tpp-ui:4.5
     environment:
       <<: *sandbox-hosts
       TPP_REST_SERVER_URL: http://x2sa-sandbox-tpprest:8093
@@ -88,7 +88,7 @@ services:
       - x2sa-sandbox-tpprest
 
   x2sa-sandbox-onlinebanking:
-    image: adorsys/xs2a-online-banking:3.7.1
+    image: adorsys/xs2a-online-banking:4.5
     environment:
       <<: *sandbox-hosts
       SPRING_PROFILES_INCLUDE: test-db-local-postgres,test-common,test-online-banking
@@ -106,7 +106,7 @@ services:
       - opba-net
 
   x2sa-sandbox-ledgersgateway:
-    image: adorsys/xs2a-connector-examples:7.4.1
+    image: adorsys/xs2a-connector-examples:8.0
     environment:
       <<: *sandbox-hosts
       SPRING_PROFILES_INCLUDE: test-db-local-postgres,test-common,test-ledgeres-gateway,postgres,mock-qwac,remote
@@ -124,7 +124,7 @@ services:
       - opba-net
 
   x2sa-sandbox-ledgersapp:
-    image: adorsys/ledgers:3.4
+    image: adorsys/ledgers:3.11
     environment:
       <<: *sandbox-hosts
       SPRING_PROFILES_INCLUDE: test-db-local-postgres,test-common,test-ledgeres-app,develop,sandbox
@@ -140,7 +140,7 @@ services:
       - opba-net
 
   x2sa-sandbox-consentmgmt:
-    image: adorsys/xs2a-consent-management:7.4
+    image: adorsys/xs2a-consent-management:8.0
     environment:
       <<: *sandbox-hosts
       SPRING_PROFILES_INCLUDE: test-db-local-postgres,test-common,test-consent-mgmt
@@ -156,7 +156,7 @@ services:
       - opba-net
 
   x2sa-sandbox-certgenerator:
-    image: adorsys/xs2a-certificate-generator:3.7.1
+    image: adorsys/xs2a-certificate-generator:8.0.1
     environment:
       <<: *sandbox-hosts
       SPRING_PROFILES_INCLUDE: test-db-local-postgres,test-common,test-cert-generator
@@ -172,7 +172,7 @@ services:
       - opba-net
 
   x2sa-sandbox-aspspprofile:
-    image: adorsys/xs2a-aspsp-profile:7.4
+    image: adorsys/xs2a-aspsp-profile:8.0
     environment:
       <<: *sandbox-hosts
       PRIMARY_PROFILE: /configs/application-test-aspsp-profile.yml
