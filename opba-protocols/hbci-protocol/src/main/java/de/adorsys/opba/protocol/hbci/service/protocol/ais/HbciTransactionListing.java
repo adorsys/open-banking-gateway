@@ -2,7 +2,6 @@ package de.adorsys.opba.protocol.hbci.service.protocol.ais;
 
 import de.adorsys.multibanking.domain.Bank;
 import de.adorsys.multibanking.domain.BankAccess;
-import de.adorsys.multibanking.domain.BankAccount;
 import de.adorsys.multibanking.domain.BankApiUser;
 import de.adorsys.multibanking.domain.request.TransactionRequest;
 import de.adorsys.multibanking.domain.response.TransactionsResponse;
@@ -16,6 +15,7 @@ import de.adorsys.opba.protocol.hbci.context.HbciContext;
 import de.adorsys.opba.protocol.hbci.context.TransactionListHbciContext;
 import de.adorsys.opba.protocol.hbci.service.consent.HbciScaRequiredUtil;
 import de.adorsys.opba.protocol.hbci.service.consent.authentication.HbciAuthorizationPossibleErrorHandler;
+import de.adorsys.opba.protocol.hbci.service.protocol.HbciUtil;
 import de.adorsys.opba.protocol.hbci.service.protocol.ais.dto.AisListTransactionsResult;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -35,49 +35,46 @@ public class HbciTransactionListing extends ValidatedExecution<TransactionListHb
     @Override
     protected void doRealExecution(DelegateExecution execution, TransactionListHbciContext context) {
         errorSink.handlePossibleAuthorizationError(
-                () -> {
-
-                    HbciConsent consent = context.getHbciDialogConsent();
-                    TransactionRequest<LoadTransactions> request = create(new LoadTransactions(), new BankApiUser(), new BankAccess(), context.getBank(), consent);
-                    BankAccount account = new BankAccount();
-                    account.setIban(context.getAccountIban());
-                    request.getTransaction().setPsuAccount(account);
-                    TransactionsResponse response = onlineBankingService.loadTransactions(request);
-                    boolean postScaRequired = HbciScaRequiredUtil.extraCheckIfScaRequired(response);
-
-                    if (null == response.getAuthorisationCodeResponse() && !postScaRequired) {
-                        ContextUtil.getAndUpdateContext(
-                                execution,
-                                (TransactionListHbciContext ctx) -> {
-                                    ctx.setHbciDialogConsent((HbciConsent) response.getBankApiConsentData());
-                                    ctx.setResponse(
-                                            new AisListTransactionsResult(
-                                                    response.getBookings(),
-                                                    response.getBalancesReport(),
-                                                    Instant.now()
-                                            )
-                                    );
-                                    ctx.setTanChallengeRequired(false);
-                                }
-                        );
-
-                        return;
-                    }
-
-                    if (null != response.getAuthorisationCodeResponse()) {
-                        onlineBankingService.getStrongCustomerAuthorisation().afterExecute(consent, response.getAuthorisationCodeResponse());
-                    }
-                    ContextUtil.getAndUpdateContext(
-                            execution,
-                            (HbciContext ctx) -> {
-                                ctx.setHbciDialogConsent((HbciConsent) response.getBankApiConsentData());
-                                ctx.setTanChallengeRequired(true);
-                            }
-                    );
-                },
+                () -> aisLoadTransactions(execution, context),
                 ex -> aisOnWrongCredentials(execution)
         );
+    }
 
+    private void aisLoadTransactions(DelegateExecution execution, TransactionListHbciContext context) {
+        HbciConsent consent = context.getHbciDialogConsent();
+        TransactionRequest<LoadTransactions> request = create(new LoadTransactions(), new BankApiUser(), new BankAccess(), context.getBank(), consent);
+        request.getTransaction().setPsuAccount(HbciUtil.buildBankAccount(context.getAccountIban()));
+        TransactionsResponse response = onlineBankingService.loadTransactions(request);
+        boolean postScaRequired = HbciScaRequiredUtil.extraCheckIfScaRequired(response);
+
+        if (null == response.getAuthorisationCodeResponse() && !postScaRequired) {
+            ContextUtil.getAndUpdateContext(
+                    execution,
+                    (TransactionListHbciContext ctx) -> {
+                        ctx.setHbciDialogConsent((HbciConsent) response.getBankApiConsentData());
+                        ctx.setResponse(
+                                new AisListTransactionsResult(
+                                        response.getBookings(),
+                                        response.getBalancesReport(),
+                                        Instant.now()
+                                )
+                        );
+                        ctx.setTanChallengeRequired(false);
+                    }
+            );
+            return;
+        }
+
+        if (null != response.getAuthorisationCodeResponse()) {
+            onlineBankingService.getStrongCustomerAuthorisation().afterExecute(consent, response.getAuthorisationCodeResponse());
+        }
+        ContextUtil.getAndUpdateContext(
+                execution,
+                (HbciContext ctx) -> {
+                    ctx.setHbciDialogConsent((HbciConsent) response.getBankApiConsentData());
+                    ctx.setTanChallengeRequired(true);
+                }
+        );
     }
 
     private void aisOnWrongCredentials(DelegateExecution execution) {
