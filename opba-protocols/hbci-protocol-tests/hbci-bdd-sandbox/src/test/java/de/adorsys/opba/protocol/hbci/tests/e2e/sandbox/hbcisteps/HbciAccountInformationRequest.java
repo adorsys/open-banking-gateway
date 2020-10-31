@@ -77,6 +77,12 @@ public class HbciAccountInformationRequest<SELF extends HbciAccountInformationRe
         return self();
     }
 
+    public SELF user_anton_brueckner_provided_incorrect_pin_to_embedded_authorization_and_returns_to_ask_pin() {
+        ExtractableResponse<Response> response = anton_brueckner_provides_wrong_password();
+        assertThat(LocationExtractorUtil.getLocation(response)).contains("ais").contains("authenticate?wrong=true");
+        return self();
+    }
+
     public SELF user_max_musterman_provided_correct_pin_to_embedded_authorization_and_sees_redirect_to_fintech_ok() {
         ExtractableResponse<Response> response = max_musterman_provides_password();
         assertThat(LocationExtractorUtil.getLocation(response)).contains("ais").contains("consent-result");
@@ -96,6 +102,13 @@ public class HbciAccountInformationRequest<SELF extends HbciAccountInformationRe
         return startInitialInternalConsentAuthorization(
                 AUTHORIZE_CONSENT_ENDPOINT,
                 readResource("restrecord/tpp-ui-input/params/anton-brueckner-password.json")
+        );
+    }
+
+    protected ExtractableResponse<Response> anton_brueckner_provides_wrong_password() {
+        return startInitialInternalConsentAuthorization(
+                AUTHORIZE_CONSENT_ENDPOINT,
+                readResource("restrecord/tpp-ui-input/params/anton-brueckner-wrong-password.json")
         );
     }
 }

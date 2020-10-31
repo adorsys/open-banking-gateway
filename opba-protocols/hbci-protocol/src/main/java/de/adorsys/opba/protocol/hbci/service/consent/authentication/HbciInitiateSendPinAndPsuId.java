@@ -12,6 +12,7 @@ import de.adorsys.opba.protocol.bpmnshared.service.exec.ValidatedExecution;
 import de.adorsys.opba.protocol.hbci.context.HbciContext;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.logging.log4j.util.Strings;
 import org.flowable.engine.delegate.DelegateExecution;
 import org.kapott.hbci.manager.HBCIProduct;
 import org.springframework.stereotype.Service;
@@ -44,6 +45,9 @@ public class HbciInitiateSendPinAndPsuId extends ValidatedExecution<HbciContext>
                                 .pin(context.getPsuPin())
                                 .build()
                         );
+                    } else if (Strings.isNotBlank(context.getPsuPin())) {
+                        // force to use new entered pin
+                        consent.getCredentials().setPin(context.getPsuPin());
                     }
 
                     UpdatePsuAuthenticationRequest request = new UpdatePsuAuthenticationRequest();

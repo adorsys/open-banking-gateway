@@ -160,18 +160,7 @@ public class AccountInformationRequestCommon<SELF extends AccountInformationRequ
     }
 
     public SELF fintech_calls_list_transactions_for_anton_brueckner(String resourceId) {
-        ExtractableResponse<Response> response = withTransactionsHeaders(ANTON_BRUECKNER)
-                .header(SERVICE_SESSION_ID, UUID.randomUUID().toString())
-            .when()
-                .get(AIS_TRANSACTIONS_ENDPOINT, resourceId)
-            .then()
-                .statusCode(HttpStatus.ACCEPTED.value())
-                .extract();
-
-        updateServiceSessionId(response);
-        updateRedirectCode(response);
-        updateNextConsentAuthorizationUrl(response);
-        return self();
+        return fintech_calls_list_transactions_for_user(ANTON_BRUECKNER, resourceId);
     }
 
     public SELF fintech_calls_list_transactions_for_user(String user, String resourceId) {
@@ -265,7 +254,7 @@ public class AccountInformationRequestCommon<SELF extends AccountInformationRequ
         return self();
     }
 
-    public SELF user_denied_consent() {
+    public void user_denied_consent() {
         ExtractableResponse<Response> response = RestAssured
             .given()
                 .header(X_REQUEST_ID, UUID.randomUUID().toString())
@@ -281,23 +270,10 @@ public class AccountInformationRequestCommon<SELF extends AccountInformationRequ
             .extract();
 
         assertThat(LocationExtractorUtil.getLocation(response)).isEqualTo(FINTECH_REDIR_NOK);
-        return self();
     }
 
     public SELF user_anton_brueckner_sees_that_he_needs_to_be_redirected_to_aspsp_and_redirects_to_aspsp() {
-        ExtractableResponse<Response> response = withDefaultHeaders(ANTON_BRUECKNER)
-                .cookie(AUTHORIZATION_SESSION_KEY, authSessionCookie)
-                .queryParam(REDIRECT_CODE_QUERY, redirectCode)
-            .when()
-                .get(GET_CONSENT_AUTH_STATE, serviceSessionId)
-            .then()
-                .statusCode(HttpStatus.OK.value())
-                .extract();
-
-        this.redirectUriToGetUserParams = LocationExtractorUtil.getLocation(response);
-        updateServiceSessionId(response);
-        updateRedirectCode(response);
-        return self();
+        return user_sees_that_he_needs_to_be_redirected_to_aspsp_and_redirects_to_aspsp(ANTON_BRUECKNER);
     }
 
     public SELF user_sees_that_he_needs_to_be_redirected_to_aspsp_and_redirects_to_aspsp(String user) {
@@ -521,11 +497,14 @@ public class AccountInformationRequestCommon<SELF extends AccountInformationRequ
         return self();
     }
 
-    public SELF user_max_musterman_provided_correct_sca_challenge_result_after_wrong_to_embedded_authorization_and_sees_redirect_to_fintech_ok() {
-        assertThat(this.redirectUriToGetUserParams).contains("sca-result").contains("/EMAIL").contains("wrong=true");
+    public void user_max_musterman_provided_correct_sca_challenge_result_after_wrong_to_embedded_authorization_and_sees_redirect_to_fintech_ok() {
+        user_max_musterman_provided_correct_sca_challenge_result_after_wrong_to_embedded_authorization_and_sees_redirect_to_fintech_ok("/EMAIL");
+    }
+
+    public void user_max_musterman_provided_correct_sca_challenge_result_after_wrong_to_embedded_authorization_and_sees_redirect_to_fintech_ok(String challengeType) {
+        assertThat(this.redirectUriToGetUserParams).contains("sca-result").contains(challengeType).contains("wrong=true");
         ExtractableResponse<Response> response = max_musterman_provides_sca_challenge_result();
         assertThat(LocationExtractorUtil.getLocation(response)).contains("ais").contains("consent-result");
-        return self();
     }
 
     public SELF user_max_musterman_provided_sca_challenge_result_to_embedded_authorization_and_sees_redirect_to_fintech_ok(String challengeType) {
@@ -539,11 +518,10 @@ public class AccountInformationRequestCommon<SELF extends AccountInformationRequ
         return user_max_musterman_provided_sca_challenge_result_to_embedded_authorization_and_sees_redirect_to_fintech_ok("/EMAIL");
     }
 
-    public SELF user_provided_sca_challenge_result_to_embedded_authorization_and_sees_redirect_to_fintech_ok() {
+    public void user_provided_sca_challenge_result_to_embedded_authorization_and_sees_redirect_to_fintech_ok() {
         assertThat(this.redirectUriToGetUserParams).contains("sca-result").contains("/EMAIL").doesNotContain("wrong=true");
         ExtractableResponse<Response> response = user_provides_sca_challenge_result();
         assertThat(LocationExtractorUtil.getLocation(response)).contains("ais").contains("consent-result");
-        return self();
     }
 
     public SELF user_max_musterman_provided_wrong_sca_challenge_result_to_embedded_authorization_and_stays_on_sca_page() {
@@ -554,6 +532,17 @@ public class AccountInformationRequestCommon<SELF extends AccountInformationRequ
         );
 
         assertThat(LocationExtractorUtil.getLocation(response)).contains("sca-result").contains("/EMAIL").contains("wrong=true");
+        return self();
+    }
+
+    public SELF user_max_musterman_provided_wrong_sca_challenge_result_to_embedded_authorization_and_redirected_to_select_sca() {
+        ExtractableResponse<Response> response = provideParametersToBankingProtocolWithBody(
+                AUTHORIZE_CONSENT_ENDPOINT,
+                readResource("restrecord/tpp-ui-input/params/max-musterman-wrong-sca-challenge-result.json"),
+                HttpStatus.ACCEPTED
+        );
+
+        assertThat(LocationExtractorUtil.getLocation(response)).contains("select-sca-method");
         return self();
     }
 

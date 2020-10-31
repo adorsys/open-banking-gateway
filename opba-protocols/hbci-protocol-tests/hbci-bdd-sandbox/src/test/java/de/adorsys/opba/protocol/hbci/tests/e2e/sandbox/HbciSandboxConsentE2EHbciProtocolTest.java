@@ -256,6 +256,57 @@ class HbciSandboxConsentE2EHbciProtocolTest extends SpringScenarioTest<
         testDirectTransactionListWithSca();
     }
 
+    @Test
+    void testAccountListWrongPinThenOk() {
+        given()
+                .rest_assured_points_to_opba_server_with_fintech_signer_on_banking_api()
+                .user_registered_in_opba_with_credentials(OPBA_LOGIN, OPBA_PASSWORD);
+        when()
+                .fintech_calls_list_accounts_for_anton_brueckner_for_blz_30000003(true)
+                .and()
+                .user_logged_in_into_opba_as_opba_user_with_credentials_using_fintech_supplied_url(OPBA_LOGIN, OPBA_PASSWORD)
+                .and()
+                .user_anton_brueckner_provided_initial_parameters_to_list_accounts_with_all_accounts_consent()
+                .and()
+                .user_anton_brueckner_provided_incorrect_pin_to_embedded_authorization_and_returns_to_ask_pin()
+                .and()
+                .user_anton_brueckner_provided_correct_pin_to_embedded_authorization_and_sees_redirect_to_fintech_ok();
+        then()
+                .open_banking_has_consent_for_anton_brueckner_account_list()
+                .fintech_calls_consent_activation_for_current_authorization_id()
+                .open_banking_can_read_anton_brueckner_hbci_account_data_using_consent_bound_to_service_session_bank_blz_30000003();
+    }
+
+    @Test
+    void testTransactionListWithWrongPinThenOkWrongTanThenOk() {
+        testAccountsListWithConsentNoScaButUserHasMultiSca();
+
+        when()
+                .fintech_calls_list_transactions_for_max_musterman_using_already_granted_service_session(MAX_MUSTERMAN_BANK_BLZ_30000003_ACCOUNT_ID, BANK_BLZ_30000003_ID)
+                .and()
+                .user_logged_in_into_opba_as_opba_user_with_credentials_using_fintech_supplied_url(OPBA_LOGIN, OPBA_PASSWORD)
+                .and()
+                .user_max_musterman_provided_initial_parameters_to_list_transactions_with_all_accounts_psd2_consent()
+                .and()
+                .user_max_musterman_provided_wrong_password_to_embedded_authorization_and_stays_on_password_page()
+                .and()
+                .user_max_musterman_provided_correct_password_after_wrong_to_embedded_authorization()
+                .and()
+                .user_max_musterman_selected_sca_challenge_type_push_tan_to_embedded_authorization()
+                .and()
+                .user_max_musterman_provided_wrong_sca_challenge_result_to_embedded_authorization_and_redirected_to_select_sca()
+                .and()
+                .user_max_musterman_selected_sca_challenge_type_push_tan_to_embedded_authorization()
+                .and()
+                .user_max_musterman_provided_correct_sca_challenge_result_after_wrong_to_embedded_authorization_and_sees_redirect_to_fintech_ok("/pushTAN");
+        then()
+                .open_banking_has_consent_for_max_musterman_transaction_list()
+                .fintech_calls_consent_activation_for_current_authorization_id()
+                .open_banking_can_read_max_musterman_hbci_transaction_data_using_consent_bound_to_service_session_bank_blz_30000003(
+                        MAX_MUSTERMAN_BANK_BLZ_30000003_ACCOUNT_ID, DATE_FROM, DATE_TO, BOTH_BOOKING
+                );
+    }
+
     private void makeHbciAdapterToPointToHbciMockEndpoints() {
         adapterProperties.getAdorsysMockBanksBlz().stream()
                 .flatMap(it -> bankProfileJpaRepository.findByBankBankCode(String.valueOf(it)).stream())
