@@ -33,6 +33,8 @@ export class PaymentAccountComponent implements OnInit {
     for (const a of list) {
       if (a.resourceId === accountId) {
         return a;
+      } else if (a.iban === accountId) {
+        return a;
       }
     }
     throw new Error('did not find account for id:' + accountId);
