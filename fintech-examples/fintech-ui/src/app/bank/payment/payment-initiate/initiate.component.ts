@@ -1,14 +1,14 @@
-import { Component, OnInit } from '@angular/core';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { HttpResponse } from '@angular/common/http';
+import {Component, OnInit} from '@angular/core';
+import {FormBuilder, FormGroup, Validators} from '@angular/forms';
+import {HttpResponse} from '@angular/common/http';
 import {Location} from "@angular/common";
-import { ActivatedRoute, Router } from '@angular/router';
-import { ValidatorService } from 'angular-iban';
-import { FintechSinglePaymentInitiationService, SinglePaymentInitiationRequest } from '../../../api';
-import { Consts, HeaderConfig } from '../../../models/consts';
-import { RedirectStruct, RedirectType } from '../../redirect-page/redirect-struct';
-import { StorageService } from '../../../services/storage.service';
-import { ConfirmData } from '../payment-confirm/confirm.data';
+import {ActivatedRoute, Router} from '@angular/router';
+import {ValidatorService} from 'angular-iban';
+import {FintechSinglePaymentInitiationService, SinglePaymentInitiationRequest} from '../../../api';
+import {Consts, HeaderConfig} from '../../../models/consts';
+import {RedirectStruct, RedirectType} from '../../redirect-page/redirect-struct';
+import {StorageService} from '../../../services/storage.service';
+import {ConfirmData} from '../payment-confirm/confirm.data';
 
 class TestPayment {
   constructor(public referenceName: string, public purpose: string) {
@@ -71,10 +71,11 @@ export class InitiateComponent implements OnInit {
 
     let accountId = this.accountId;
     if (!this.accountId) {
-      const index = this.router.url.indexOf('account');
-      okurl = index > 0 ? okurl.substring(0, index) + 'accounts' : okurl;
-      notOkUrl = okurl;
       accountId = this.debtorIban;
+      const index = this.router.url.indexOf('account');
+      okurl = index > 0 ? okurl.substring(0, index) + 'account' : okurl;
+      okurl = accountId ? `${okurl}/${accountId}/payments` : okurl;
+      notOkUrl = okurl;
     }
 
     const paymentRequest: SinglePaymentInitiationRequest = { ...this.paymentForm.getRawValue() };
