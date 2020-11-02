@@ -69,10 +69,12 @@ export class InitiateComponent implements OnInit {
     okurl = okurl.replace('/initiate', '/payments');
     console.log('set urls to ', okurl, '', notOkUrl);
 
+    let accountId = this.accountId;
     if (!this.accountId) {
       const index = this.router.url.indexOf('account');
       okurl = index > 0 ? okurl.substring(0, index) + 'accounts' : okurl;
       notOkUrl = okurl;
+      accountId = this.debtorIban;
     }
 
     const paymentRequest: SinglePaymentInitiationRequest = { ...this.paymentForm.getRawValue() };
@@ -82,7 +84,7 @@ export class InitiateComponent implements OnInit {
     this.fintechSinglePaymentInitiationService
       .initiateSinglePayment(
         this.bankId,
-        this.accountId,
+        accountId,
         '',
         '',
         okurl,
