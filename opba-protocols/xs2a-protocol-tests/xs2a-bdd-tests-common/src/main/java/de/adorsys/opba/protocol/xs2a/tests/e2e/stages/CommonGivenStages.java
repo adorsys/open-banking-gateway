@@ -106,19 +106,6 @@ public class CommonGivenStages<SELF extends CommonGivenStages<SELF>> extends Sta
         return self();
     }
 
-    @Transactional
-    public SELF set_decoupled_preferred_approach() {
-        profiles.findByBankUuid(BANK_UUID_ID)
-                .map(it -> {
-                    it.setPreferredApproach(Approach.DECOUPLED);
-                    it.setTryToUsePreferredApproach(false);
-                    return it;
-                })
-                .ifPresent(profiles::save);
-
-        return self();
-    }
-
     public SELF rest_assured_points_to_opba_server_with_fintech_signer_on_banking_api() {
         return rest_assured_points_to_opba_server_with_fintech_signer_on_banking_api("http://localhost:" + serverPort);
     }

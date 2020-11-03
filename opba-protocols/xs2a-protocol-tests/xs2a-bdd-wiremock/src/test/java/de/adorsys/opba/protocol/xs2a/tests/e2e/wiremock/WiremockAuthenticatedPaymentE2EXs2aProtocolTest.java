@@ -397,29 +397,5 @@ public class WiremockAuthenticatedPaymentE2EXs2aProtocolTest extends SpringScena
                 .fintech_calls_payment_activation_for_current_authorization_id()
                 .fintech_calls_payment_status();
     }
-
-    @ParameterizedTest
-    @EnumSource(Approach.class)
-    void testPaymentInitializationUsingDecoupled(Approach expectedApproach) {
-        given()
-                .embedded_mock_of_sandbox_for_max_musterman_payments_running()
-                .set_decoupled_preferred_approach()
-                .preferred_sca_approach_selected_for_all_banks_in_opba(expectedApproach)
-                .rest_assured_points_to_opba_server_with_fintech_signer_on_banking_api()
-                .user_registered_in_opba_with_credentials(OPBA_LOGIN, OPBA_PASSWORD);
-
-        when()
-                .fintech_calls_initiate_payment_for_max_musterman()
-                .and()
-                .user_logged_in_into_opba_as_opba_user_with_credentials_using_fintech_supplied_url(OPBA_LOGIN, OPBA_PASSWORD)
-                .and()
-                .user_max_musterman_provided_initial_parameters_to_make_payment()
-                .and()
-                .user_max_musterman_selected_sca_challenge_type_appOTP_to_decoupled_authorization();
-        then()
-                .open_banking_has_stored_payment()
-                .fintech_calls_payment_activation_for_current_authorization_id()
-                .fintech_calls_payment_status();
-    }
 }
 
