@@ -1,0 +1,59 @@
+openapi: 3.0.1
+info:
+  version: "1.0.0"
+  title: Open Banking Gateway Admin API (might be disabled)
+  description: >-
+    This API provides capability to manage bank configuration and protocol setup. It is enableable
+    using 'admin.api.enabled' property.
+externalDocs:
+  url: "https://adorsys.github.com/open-banking-gateway"
+
+
+paths:
+  /v1/admin/banks:
+    get:
+      tags:
+        - BankAdmin
+      operationId: bankAdminGET
+      summary: Listing of banks and their profiles and actions
+      description: Cursor-paginated listing of banks and their profiles and actions
+      responses:
+        '200':
+          $ref: "#/components/responses/200_BankSearchResult"
+        '401':
+          $ref: './tpp_banking_api_commons.yml#/components/responses/401_UNAUTHORIZED'
+
+  /v1/admin/banks/{uuid}:
+    get:
+      tags:
+        - BankAdmin
+      operationId: bankAdminDetailsGET
+      summary: Get bank actions and inofrmation using bank UUID
+      description: Read bank profile configuration and related information
+      responses:
+        '200':
+          $ref: "#/components/responses/200_BankSearchResult"
+        '401':
+          $ref: './tpp_banking_api_commons.yml#/components/responses/401_UNAUTHORIZED'
+    put:
+      tags:
+        - BankAdmin
+      operationId: bankAdminDetailsPUT
+      summary: Create new bank configuration
+      description: Create new bank configuration using assigned ID (UUID)
+      responses:
+        '200':
+          $ref: "#/components/responses/200_BankSearchResult"
+        '401':
+          $ref: './tpp_banking_api_commons.yml#/components/responses/401_UNAUTHORIZED'
+    patch:
+      tags:
+        - BankAdmin
+      operationId: bankAdminDetailsPATCH
+      summary: Update part of bank configuration
+      description: Update part of bank configuration (i.e. add new action like payment, or change API url)
+      responses:
+        '200':
+          $ref: "#/components/responses/200_BankSearchResult"
+        '401':
+          $ref: './tpp_banking_api_commons.yml#/components/responses/401_UNAUTHORIZED'
