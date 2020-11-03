@@ -31,33 +31,8 @@ public class HbciSendTanChallenge extends ValidatedExecution<HbciContext> {
     protected void doRealExecution(DelegateExecution execution, HbciContext context) {
 
         errorSink.handlePossibleAuthorizationError(
-                () -> {
-                    context.setWrongAuthCredentials(false);
-                    HbciConsent consent = context.getHbciDialogConsent();
-
-                    TransactionAuthorisationRequest request = create(new BankApiUser(), new BankAccess(), context.getBank(), consent);
-                    request.setScaAuthenticationData(context.getPsuTan());
-
-                    UpdateAuthResponse response = onlineBankingService.getStrongCustomerAuthorisation().authorizeConsent(request);
-                    ContextUtil.getAndUpdateContext(
-                            execution,
-                            (HbciContext ctx) -> {
-                                ctx.setWrongAuthCredentials(false);
-                                ctx.setHbciDialogConsent((HbciConsent) response.getBankApiConsentData());
-                            }
-                    );
-                },
+                () -> askForCredentials(execution, context),
                 ex -> aisOnWrongCredentials(execution)
-        );
-    }
-
-    private void aisOnWrongCredentials(DelegateExecution execution) {
-        ContextUtil.getAndUpdateContext(
-                execution,
-                (HbciContext ctx) -> {
-                    log.warn("Request {} of {} has provided incorrect credentials", ctx.getRequestId(), ctx.getSagaId());
-                    ctx.setWrongAuthCredentials(true);
-                }
         );
     }
 
@@ -73,5 +48,32 @@ public class HbciSendTanChallenge extends ValidatedExecution<HbciContext> {
         transactionAuthorisationRequest.setBank(bank);
 
         return transactionAuthorisationRequest;
+    }
+
+    private void askForCredentials(DelegateExecution execution, HbciContext context) {
+        context.setWrongAuthCredentials(false);
+        HbciConsent consent = context.getHbciDialogConsent();
+
+        TransactionAuthorisationRequest request = create(new BankApiUser(), new BankAccess(), context.getBank(), consent);
+        request.setScaAuthenticationData(context.getPsuTan());
+
+        UpdateAuthResponse response = onlineBankingService.getStrongCustomerAuthorisation().authorizeConsent(request);
+        ContextUtil.getAndUpdateContext(
+                execution,
+                (HbciContext ctx) -> {
+                    ctx.setWrongAuthCredentials(false);
+                    ctx.setHbciDialogConsent((HbciConsent) response.getBankApiConsentData());
+                }
+        );
+    }
+
+    private void aisOnWrongCredentials(DelegateExecution execution) {
+        ContextUtil.getAndUpdateContext(
+                execution,
+                (HbciContext ctx) -> {
+                    log.warn("Request {} of {} has provided incorrect credentials", ctx.getRequestId(), ctx.getSagaId());
+                    ctx.setWrongAuthCredentials(true);
+                }
+        );
     }
 }

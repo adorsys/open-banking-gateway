@@ -34,41 +34,42 @@ public class HbciInitiateSendPinAndPsuId extends ValidatedExecution<HbciContext>
     protected void doRealExecution(DelegateExecution execution, HbciContext context) {
 
         errorSink.handlePossibleAuthorizationError(
-                () -> {
-                    context.setWrongAuthCredentials(false);
-                    HbciConsent consent = context.getHbciDialogConsent();
-                    if (null == consent) {
-                        consent = new HbciConsent();
-                        consent.setHbciProduct(product.orElse(null));
-                        consent.setCredentials(Credentials.builder()
-                                .userId(context.getPsuId())
-                                .pin(context.getPsuPin())
-                                .build()
-                        );
-                    } else if (Strings.isNotBlank(context.getPsuPin())) {
-                        // force to use new entered pin
-                        consent.getCredentials().setPin(context.getPsuPin());
-                    }
-
-                    UpdatePsuAuthenticationRequest request = new UpdatePsuAuthenticationRequest();
-                    request.setCredentials(consent.getCredentials());
-                    request.setBankApiConsentData(consent);
-                    request.setBank(context.getBank());
-
-                    UpdateAuthResponse response = onlineBankingService.getStrongCustomerAuthorisation().updatePsuAuthentication(request);
-
-                    if (handleScaChallengeRequired(execution, response)) {
-                        return;
-                    }
-
-                    ContextUtil.getAndUpdateContext(
-                            execution,
-                            (HbciContext ctx) -> ctx.setHbciDialogConsent((HbciConsent) response.getBankApiConsentData())
-                    );
-                },
+                () -> askForCredentials(execution, context),
                 ex -> aisOnWrongCredentials(execution)
         );
+    }
 
+    private void askForCredentials(DelegateExecution execution, HbciContext context) {
+        context.setWrongAuthCredentials(false);
+        HbciConsent consent = context.getHbciDialogConsent();
+        if (null == consent) {
+            consent = new HbciConsent();
+            consent.setHbciProduct(product.orElse(null));
+            consent.setCredentials(Credentials.builder()
+                    .userId(context.getPsuId())
+                    .pin(context.getPsuPin())
+                    .build()
+            );
+        } else if (Strings.isNotBlank(context.getPsuPin())) {
+            // force to use new entered pin
+            consent.getCredentials().setPin(context.getPsuPin());
+        }
+
+        UpdatePsuAuthenticationRequest request = new UpdatePsuAuthenticationRequest();
+        request.setCredentials(consent.getCredentials());
+        request.setBankApiConsentData(consent);
+        request.setBank(context.getBank());
+
+        UpdateAuthResponse response = onlineBankingService.getStrongCustomerAuthorisation().updatePsuAuthentication(request);
+
+        if (handleScaChallengeRequired(execution, response)) {
+            return;
+        }
+
+        ContextUtil.getAndUpdateContext(
+                execution,
+                (HbciContext ctx) -> ctx.setHbciDialogConsent((HbciConsent) response.getBankApiConsentData())
+        );
     }
 
     private void aisOnWrongCredentials(DelegateExecution execution) {

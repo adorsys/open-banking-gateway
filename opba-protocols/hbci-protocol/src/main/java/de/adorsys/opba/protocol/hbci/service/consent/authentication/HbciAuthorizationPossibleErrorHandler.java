@@ -48,7 +48,7 @@ public class HbciAuthorizationPossibleErrorHandler {
             log.warn("hbci error");
             return;
         }
-        log.error("dont know this error: {}", ex.getMultibankingError().name());
+        log.error("Unknown error. Can't handle: {}", ex.getMultibankingError().name());
         throw ex;
     }
 }

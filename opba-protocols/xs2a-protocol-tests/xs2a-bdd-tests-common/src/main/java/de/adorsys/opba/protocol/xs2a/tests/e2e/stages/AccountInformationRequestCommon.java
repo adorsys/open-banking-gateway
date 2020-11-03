@@ -254,7 +254,7 @@ public class AccountInformationRequestCommon<SELF extends AccountInformationRequ
         return self();
     }
 
-    public void user_denied_consent() {
+    public SELF user_denied_consent() {
         ExtractableResponse<Response> response = RestAssured
             .given()
                 .header(X_REQUEST_ID, UUID.randomUUID().toString())
@@ -270,6 +270,7 @@ public class AccountInformationRequestCommon<SELF extends AccountInformationRequ
             .extract();
 
         assertThat(LocationExtractorUtil.getLocation(response)).isEqualTo(FINTECH_REDIR_NOK);
+        return self();
     }
 
     public SELF user_anton_brueckner_sees_that_he_needs_to_be_redirected_to_aspsp_and_redirects_to_aspsp() {
@@ -497,14 +498,15 @@ public class AccountInformationRequestCommon<SELF extends AccountInformationRequ
         return self();
     }
 
-    public void user_max_musterman_provided_correct_sca_challenge_result_after_wrong_to_embedded_authorization_and_sees_redirect_to_fintech_ok() {
-        user_max_musterman_provided_correct_sca_challenge_result_after_wrong_to_embedded_authorization_and_sees_redirect_to_fintech_ok("/EMAIL");
+    public SELF user_max_musterman_provided_correct_sca_challenge_result_after_wrong_to_embedded_authorization_and_sees_redirect_to_fintech_ok() {
+        return user_max_musterman_provided_correct_sca_challenge_result_after_wrong_to_embedded_authorization_and_sees_redirect_to_fintech_ok("/EMAIL");
     }
 
-    public void user_max_musterman_provided_correct_sca_challenge_result_after_wrong_to_embedded_authorization_and_sees_redirect_to_fintech_ok(String challengeType) {
+    public SELF user_max_musterman_provided_correct_sca_challenge_result_after_wrong_to_embedded_authorization_and_sees_redirect_to_fintech_ok(String challengeType) {
         assertThat(this.redirectUriToGetUserParams).contains("sca-result").contains(challengeType).contains("wrong=true");
         ExtractableResponse<Response> response = max_musterman_provides_sca_challenge_result();
         assertThat(LocationExtractorUtil.getLocation(response)).contains("ais").contains("consent-result");
+        return self();
     }
 
     public SELF user_max_musterman_provided_sca_challenge_result_to_embedded_authorization_and_sees_redirect_to_fintech_ok(String challengeType) {
