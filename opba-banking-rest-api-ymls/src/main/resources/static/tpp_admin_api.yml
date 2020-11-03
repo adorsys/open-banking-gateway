@@ -19,7 +19,7 @@ paths:
       description: Cursor-paginated listing of banks and their profiles and actions
       responses:
         '200':
-          $ref: "#/components/responses/200_BankSearchResult"
+          $ref: "#/components/responses/200_BankProfileResult"
         '401':
           $ref: './tpp_banking_api_commons.yml#/components/responses/401_UNAUTHORIZED'
 
@@ -28,11 +28,11 @@ paths:
       tags:
         - BankAdmin
       operationId: bankAdminDetailsGET
-      summary: Get bank actions and inofrmation using bank UUID
+      summary: Get bank actions and information using bank UUID
       description: Read bank profile configuration and related information
       responses:
         '200':
-          $ref: "#/components/responses/200_BankSearchResult"
+          $ref: "#/components/responses/200_BankProfileResult"
         '401':
           $ref: './tpp_banking_api_commons.yml#/components/responses/401_UNAUTHORIZED'
     put:
@@ -43,7 +43,7 @@ paths:
       description: Create new bank configuration using assigned ID (UUID)
       responses:
         '200':
-          $ref: "#/components/responses/200_BankSearchResult"
+          $ref: "#/components/responses/200_BankProfileResult"
         '401':
           $ref: './tpp_banking_api_commons.yml#/components/responses/401_UNAUTHORIZED'
     patch:
@@ -54,7 +54,7 @@ paths:
       description: Update part of bank configuration (i.e. add new action like payment, or change API url)
       responses:
         '200':
-          $ref: "#/components/responses/200_BankSearchResult"
+          $ref: "#/components/responses/200_BankProfileResult"
         '401':
           $ref: './tpp_banking_api_commons.yml#/components/responses/401_UNAUTHORIZED'
     delete:
@@ -65,6 +65,45 @@ paths:
       description: Delete banks and its configuration
       responses:
         '200':
-          $ref: "#/components/responses/200_BankSearchResult"
+          $ref: "#/components/responses/200_BankProfileResult"
         '401':
           $ref: './tpp_banking_api_commons.yml#/components/responses/401_UNAUTHORIZED'
+
+components:
+  headers: {}
+
+  parameters: {}
+
+  responses:
+
+    200_BankProfileResult:
+      description: Full bank profile
+      headers:
+        X-Request-ID:
+          $ref: "./tpp_banking_api_commons.yml#/components/headers/X-Request-ID"
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/bankProfileResponse"
+
+  schemas:
+    # response DTOs
+    bankProfileResponse:
+      title: Bank Profile data Response
+      type: object
+      properties:
+        bankDescriptor:
+          type: array
+          items:
+            $ref: '#/components/schemas/bankDescriptor'
+        keyword:
+          type: String
+          description: The bank search input string
+
+    bankDescriptor:
+      title: Bank Profile details
+      type: object
+      properties:
+        keyword:
+          type: String
+          description: The bank search input string
