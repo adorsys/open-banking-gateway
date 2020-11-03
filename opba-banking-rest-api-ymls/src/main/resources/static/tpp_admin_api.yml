@@ -17,19 +17,27 @@ paths:
       operationId: bankAdminGET
       summary: Listing of banks and their profiles and actions
       description: Cursor-paginated listing of banks and their profiles and actions
+      parameters:
+        #headers
+        - $ref: "./tpp_banking_api_commons.yml#/components/parameters/X-Request-ID"
       responses:
         '200':
           $ref: "#/components/responses/200_BankProfileResult"
         '401':
           $ref: './tpp_banking_api_commons.yml#/components/responses/401_UNAUTHORIZED'
 
-  /v1/admin/banks/{uuid}:
+  /v1/admin/banks/{bank-id}:
     get:
       tags:
         - BankAdmin
       operationId: bankAdminDetailsGET
       summary: Get bank actions and information using bank UUID
       description: Read bank profile configuration and related information
+      parameters:
+        #headers
+        - $ref: "./tpp_banking_api_commons.yml#/components/parameters/X-Request-ID"
+        #path
+        - $ref: "#/components/parameters/Bank-ID"
       responses:
         '200':
           $ref: "#/components/responses/200_BankProfileResult"
@@ -41,6 +49,11 @@ paths:
       operationId: bankAdminDetailsPUT
       summary: Create new bank configuration (or replace entire existing)
       description: Create new bank configuration using assigned ID (UUID)
+      parameters:
+        #headers
+        - $ref: "./tpp_banking_api_commons.yml#/components/parameters/X-Request-ID"
+        #path
+        - $ref: "#/components/parameters/Bank-ID"
       responses:
         '200':
           $ref: "#/components/responses/200_BankProfileResult"
@@ -52,6 +65,11 @@ paths:
       operationId: bankAdminDetailsPATCH
       summary: Update part of bank configuration
       description: Update part of bank configuration (i.e. add new action like payment, or change API url)
+      parameters:
+        #headers
+        - $ref: "./tpp_banking_api_commons.yml#/components/parameters/X-Request-ID"
+        #path
+        - $ref: "#/components/parameters/Bank-ID"
       responses:
         '200':
           $ref: "#/components/responses/200_BankProfileResult"
@@ -63,6 +81,11 @@ paths:
       operationId: bankAdminDetailsDELETE
       summary: Delete bank and its configuration
       description: Delete banks and its configuration
+      parameters:
+        #headers
+        - $ref: "./tpp_banking_api_commons.yml#/components/parameters/X-Request-ID"
+        #path
+        - $ref: "#/components/parameters/Bank-ID"
       responses:
         '200':
           $ref: "#/components/responses/200_BankProfileResult"
@@ -72,7 +95,17 @@ paths:
 components:
   headers: {}
 
-  parameters: {}
+  parameters:
+    Bank-ID:
+      name: bank-id
+      in: path
+      required: true
+      description: |
+        A bank identifier
+      example: "99391c7e-ad88-49ec-a2ad-99ddcb1f7721"
+      schema:
+        type: string
+        format: uuid
 
   responses:
 
@@ -105,5 +138,5 @@ components:
       type: object
       properties:
         keyword:
-          type: String
+          type: string
           description: The bank search input string
