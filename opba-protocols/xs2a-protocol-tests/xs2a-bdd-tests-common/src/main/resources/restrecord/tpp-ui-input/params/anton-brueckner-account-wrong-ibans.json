@@ -7,7 +7,12 @@
       "recurringIndicator": true,
       "combinedServiceIndicator": false,
       "access": {
-        "accounts": ["1180760700240271232400"]
+        "accounts": [
+          {
+            "iban": "1180760700240271232400",
+            "currency": "EUR"
+          }
+        ]
       },
       "frequencyPerDay": 12,
       "validUntil": "2030-01-31"

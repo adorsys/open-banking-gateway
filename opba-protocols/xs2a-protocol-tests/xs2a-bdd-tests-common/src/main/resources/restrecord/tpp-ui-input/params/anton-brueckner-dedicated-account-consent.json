@@ -7,9 +7,24 @@
       "recurringIndicator": true,
       "combinedServiceIndicator": false,
       "access": {
-        "accounts": ["DE80760700240271232400"],
-        "balances": ["DE80760700240271232400"],
-        "transactions": ["DE80760700240271232400"]
+        "accounts": [
+          {
+            "iban": "DE80760700240271232400",
+            "currency": "EUR"
+          }
+        ],
+        "balances": [
+          {
+            "iban": "DE80760700240271232400",
+            "currency": "EUR"
+          }
+        ],
+        "transactions": [
+          {
+            "iban": "DE80760700240271232400",
+            "currency": "EUR"
+          }
+        ]
       },
       "frequencyPerDay": 12,
       "validUntil": "2030-01-31"
