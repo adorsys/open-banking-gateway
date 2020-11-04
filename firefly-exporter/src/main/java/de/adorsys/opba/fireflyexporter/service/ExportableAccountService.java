@@ -48,7 +48,7 @@ public class ExportableAccountService {
                 null,
                 null,
                 bankId,
-                consentRepository.findFirstByBankIdOrderByModifiedAt(bankId).map(BankConsent::getConsentId).orElse(null),
+                consentRepository.findFirstByBankIdOrderByModifiedAtDesc(bankId).map(BankConsent::getConsentId).orElse(null),
                 true,
                 null
         );

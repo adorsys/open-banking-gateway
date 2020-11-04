@@ -516,4 +516,14 @@
                                  referencedColumnNames="id"/>
         <createSequence sequenceName="validation_rule_sequence" incrementBy="50"/>
     </changeSet>
+    <changeSet author="iiuex@adorsys.com.ua" id="2020-10-21">
+    <comment>Create datasafe configuration table</comment>
+        <createTable tableName="${table-prefix}datasafe_config">
+            <column name="id" type="BIGINT">
+                <constraints primaryKey="true"/>
+            </column>
+            <column name="config" type="CLOB"/>
+        </createTable>
+        <createSequence sequenceName="datasafe_config_sequence" incrementBy="50"/>
+    </changeSet>
 </databaseChangeLog>
