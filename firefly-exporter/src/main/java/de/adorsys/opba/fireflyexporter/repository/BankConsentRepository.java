@@ -10,4 +10,6 @@ import java.util.Optional;
 public interface BankConsentRepository extends CrudRepository<BankConsent, Long> {
 
     Optional<BankConsent> findFirstByBankIdOrderByModifiedAtDesc(String bankId);
+
+    long deleteAllByBankId(String bankId);
 }

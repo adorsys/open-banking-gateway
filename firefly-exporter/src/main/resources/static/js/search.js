@@ -1,7 +1,7 @@
 let abortController;
 let lastValue;
 
-function callSearch(bankNameInputId, bankListId, bankIdInput, apiUrl) {
+function callSearch(bankNameInputId, bankListId, bankIdInput, bankConsentRenewalInput, apiUrl) {
     const bankName = document.getElementById(bankNameInputId);
 
     if (lastValue === bankName.value) {
@@ -16,11 +16,11 @@ function callSearch(bankNameInputId, bankListId, bankIdInput, apiUrl) {
 
     fetch(`${apiUrl}/search?q=${bankName.value}`, {signal: abortController.signal})
         .then((response) => response.json())
-        .then((response) => { updateBankList(bankNameInputId, bankListId, bankIdInput, response) })
+        .then((response) => { updateBankList(bankNameInputId, bankListId, bankIdInput, bankConsentRenewalInput, response) })
         .catch((err) => {console.error(`Failed fetching: ${err}`)});
 }
 
-function updateBankList(bankNameInputId, bankListId, bankIdInput, response) {
+function updateBankList(bankNameInputId, bankListId, bankIdInput, bankConsentRenewalInput, response) {
     const bankList = document.getElementById(bankListId);
     bankList.innerHTML = '';
 
@@ -36,13 +36,17 @@ function updateBankList(bankNameInputId, bankListId, bankIdInput, response) {
             "click",
                 _ => {
                 bankList.innerText = '';
-                selectBank(descriptor.bankName, descriptor.uuid, bankNameInputId, bankIdInput);
+                selectBank(descriptor.bankName, descriptor.uuid, bankNameInputId, bankConsentRenewalInput, bankIdInput);
             }
         );
     });
 }
 
-function selectBank(bankName, bankId, bankNameInputId, bankIdInput) {
+function selectBank(bankName, bankId, bankNameInputId, bankConsentRenewalInput, bankIdInput) {
     document.getElementById(bankIdInput).value = bankId;
     document.getElementById(bankNameInputId).value = bankName;
+
+    if (document.getElementById(bankConsentRenewalInput).classList.contains("hidden")) {
+        document.getElementById(bankConsentRenewalInput).classList.remove("hidden");
+    }
 }
