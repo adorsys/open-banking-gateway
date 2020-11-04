@@ -101,7 +101,7 @@ Payment API:
 1. Since request can't automatically proceed, TPP reads required GEO_LOCATION from PSU
 1. Now TPP can proceed with payment `PUT /api/v1/payments/{bankId}/{psuId}/{ibanFrom}/{ibanTo} body: {"amount": 100.0, "currency": "EUR", "GEO_LOCATION": {"lat": 12, "lng": 10.0}}` 
 (Note: This can have i.e. SCA method to use that overrides profile defaults)
-1. OpenBanking handles request sequence using computed process
+1. Open Banking Gateway handles request sequence using computed process
 
 ### Sequence diagram
 
