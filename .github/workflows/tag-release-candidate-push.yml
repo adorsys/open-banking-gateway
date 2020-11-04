@@ -40,6 +40,11 @@ jobs:
           STAGE_ARTIFACTORY_PASSWORD: ${{ secrets.GITHUB_TOKEN }}
           GIT_BRANCH: release # Force branch to resolve to release (stage repo) if git resolution fails - otherwise gitflow-helper uses UNDEFINED branch
 
+      - name: Build FireFly improter
+        run: ./scripts/build_firefly_exporter_mvn.sh
+        env:
+          MAVEN_OPTS: "-Dhttp.keepAlive=false -Dmaven.wagon.http.pool=false -Dmaven.wagon.httpconnectionManager.ttlSeconds=120" # Github-on-Azure tweaks - https://github.com/actions/virtual-environments/issues/1499
+
       - name: Deploy FireFly Importer release-candidate artifacts to OpenShift
         run: ./scripts/deploy_openshift_release_candidate.sh scripts/firefly-service.list
         env:
