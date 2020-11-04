@@ -103,7 +103,7 @@
       </sequenceFlow>
       <intermediateCatchEvent id="waitAuthorizationConfirmation" name="Waits until authorization is finished by PSU">
         <timerEventDefinition>
-          <timeDuration>${flowable.decoupled.pollInterval}</timeDuration>
+          <timeDuration>PT1M</timeDuration>
         </timerEventDefinition>
       </intermediateCatchEvent>
       <sequenceFlow id="startTimer" sourceRef="isAuthorizationSucceded" targetRef="waitAuthorizationConfirmation" name="Waits for user to authorize in 3rd party using decoupled approach">
@@ -114,7 +114,7 @@
     </subProcess>
     <boundaryEvent id="subprocessTimeLimit" attachedToRef="decoupledScaStatusChecking" name="Decoupled authorization time limit (timeout)">
       <timerEventDefinition>
-        <timeDuration>${flowable.decoupled.timeout}</timeDuration>
+        <timeDuration>PT5M</timeDuration>
       </timerEventDefinition>
     </boundaryEvent>
     <sequenceFlow id="decoupledSubprocessFailure" sourceRef="subprocessTimeLimit" targetRef="sid-xs2aReportToFintechPaymentDenied" name="Decoupled authorithation failed by timeout"/>
