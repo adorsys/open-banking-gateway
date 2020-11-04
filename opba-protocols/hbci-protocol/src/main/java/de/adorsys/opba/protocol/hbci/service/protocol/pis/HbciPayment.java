@@ -2,7 +2,6 @@ package de.adorsys.opba.protocol.hbci.service.protocol.pis;
 
 import de.adorsys.multibanking.domain.Bank;
 import de.adorsys.multibanking.domain.BankAccess;
-import de.adorsys.multibanking.domain.BankAccount;
 import de.adorsys.multibanking.domain.BankApiUser;
 import de.adorsys.multibanking.domain.request.TransactionRequest;
 import de.adorsys.multibanking.domain.response.PaymentResponse;
@@ -15,6 +14,7 @@ import de.adorsys.opba.protocol.bpmnshared.service.exec.ValidatedExecution;
 import de.adorsys.opba.protocol.hbci.context.HbciContext;
 import de.adorsys.opba.protocol.hbci.context.PaymentHbciContext;
 import de.adorsys.opba.protocol.hbci.service.consent.HbciScaRequiredUtil;
+import de.adorsys.opba.protocol.hbci.service.protocol.HbciUtil;
 import de.adorsys.opba.protocol.hbci.service.protocol.pis.dto.PaymentInitiateBody;
 import de.adorsys.opba.protocol.hbci.service.protocol.pis.dto.PisSinglePaymentResult;
 import lombok.RequiredArgsConstructor;
@@ -36,9 +36,7 @@ public class HbciPayment extends ValidatedExecution<PaymentHbciContext> {
     protected void doRealExecution(DelegateExecution execution, PaymentHbciContext context) {
         HbciConsent consent = context.getHbciDialogConsent();
         SinglePayment singlePayment = paymentMapper.map(context.getPayment());
-        BankAccount account = new BankAccount();
-        account.setIban(context.getAccountIban());
-        singlePayment.setPsuAccount(account);
+        singlePayment.setPsuAccount(HbciUtil.buildBankAccount(context.getAccountIban()));
 
         TransactionRequest<SinglePayment> request = create(singlePayment, new BankApiUser(), new BankAccess(),
                 context.getBank(), consent);
