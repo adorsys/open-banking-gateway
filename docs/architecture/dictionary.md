@@ -126,7 +126,7 @@ Data center environment of the TPP
 Tpp backend providing access to ASPSP banking functionality. This interface is not directly accessed by the PSU but by the FinTechApi. FinTechApi will use a FinTechContext to authenticate with the TppBankingApi.
 
 ### <a name="TppBankSearchApi"></a> TppBankSearchApi
-Repository of banks maintained in the TPP's banking gateway. The banking search API will later presen an interface to configure profiles attached to listed banks.
+Repository of banks maintained in the TPP's open banking gateway. The banking search API will later present an interface to configure profiles attached to listed banks.
 
 ### <a name="BankDescriptor"></a> BankDescriptor
 Descriptive information assocaited with a bank like:
