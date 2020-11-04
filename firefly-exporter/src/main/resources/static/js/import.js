@@ -40,6 +40,20 @@ function callAccountExport(fireflyTokenInputId, bankIdInputId, redirectElementId
         });
 }
 
+function callRequestNewConsent(requestNewConsentButtonId, bankIdInputId, apiUrl) {
+    const requestNewConsentButton = document.getElementById(requestNewConsentButtonId);
+    const bankId = document.getElementById(bankIdInputId).value;
+    fetch(`${apiUrl}/consents/${bankId}`, {method: 'DELETE'})
+        .then((response) => {
+            if (response.status === 200) {
+                requestNewConsentButton.classList.add('hidden');
+            }
+        })
+        .catch((err) => {
+            console.error(`Failed fetching: ${err}`)
+        });
+}
+
 function callExportableAccounts(fireflyTokenInputId, bankIdInputId, redirectElementId, statusElementId, accountExportBlockId, accountListElementId, apiUrl) {
     const fireFlyToken = document.getElementById(fireflyTokenInputId).value;
     const bankId = document.getElementById(bankIdInputId).value;
