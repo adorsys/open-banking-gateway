@@ -5,7 +5,7 @@
     <parent>
         <groupId>de.adorsys.opba</groupId>
         <artifactId>open-banking-gateway</artifactId>
-        <version>0.21.0-rc1</version>
+        <version>0.21.0-rc2</version>
     </parent>
 
     <artifactId>opba-embedded-starter</artifactId>
