@@ -9,6 +9,8 @@
     <logger name="de.adorsys.opba.tppauthapi.controller.PsuAuthController" level="debug"/>
     <logger name="de.adorsys.opba.api.security.internal.config.AuthorizationSessionKeyConfig" level="debug"/>
     <logger name="de.adorsys.opba.api.security.internal.filter" level="debug"/>
+    <logger name="org.kapott.hbci.comm.CommPinTan" level="TRACE"/>
+    <logger name="org.kapott.hbci.manager.HBCIKernel" level="TRACE"/>
     -->
 
     <root level="info">
