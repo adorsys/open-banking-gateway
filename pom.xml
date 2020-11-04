@@ -100,6 +100,7 @@
         <maven-javadoc-plugin>3.2.0</maven-javadoc-plugin>
 
         <master-branch-pattern>.*</master-branch-pattern>
+        <release-branch-pattern>.*</release-branch-pattern>
 
         <!-- Framework libs -->
         <spring-boot.version>2.2.4.RELEASE</spring-boot.version>
@@ -508,7 +509,7 @@
                             <snapshotDeploymentRepository>stage</snapshotDeploymentRepository>
 
                             <!-- Allow to promote on ANY branch because Github Actions checkouts tag, not branch (and forcing both seem impossible) -->
-                            <masterBranchPattern>${master-branch-pattern}</masterBranchPattern>
+                            <releaseBranchPattern>${release-branch-pattern}</releaseBranchPattern>
                         </configuration>
                         <executions>
                             <execution>
