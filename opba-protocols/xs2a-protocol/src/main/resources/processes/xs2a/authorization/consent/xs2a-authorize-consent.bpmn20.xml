@@ -100,7 +100,7 @@
       <sequenceFlow id="sid-f525dcb0-40f2-4159-a992-729ee3e02130" sourceRef="checkIfDecoupledScaFinalized" targetRef="authorizationSucceded"/>
       <intermediateCatchEvent id="waitAuthorizationConfirmation" name="Waits until authorization is finished by PSU">
         <timerEventDefinition>
-          <timeDuration>${flowable.timer.delayDuration}</timeDuration>
+          <timeDuration>${flowable.decoupled.pollInterval}</timeDuration>
         </timerEventDefinition>
       </intermediateCatchEvent>
       <sequenceFlow id="startTimer" sourceRef="authorizationSucceded" targetRef="waitAuthorizationConfirmation" name="Waits for user to authorize in 3rd party using decoupled approach">
@@ -112,9 +112,9 @@
         <conditionExpression xsi:type="tFormalExpression"/>
       </sequenceFlow>
     </subProcess>
-    <boundaryEvent id="subprocessTimeLimit" attachedToRef="decoupledScaStatusChecking" name="Decoupled authorization timelimit (timeout)">
+    <boundaryEvent id="subprocessTimeLimit" attachedToRef="decoupledScaStatusChecking" name="Decoupled authorization time limit (timeout)">
       <timerEventDefinition>
-        <timeDuration>${flowable.timer.maxDuration}</timeDuration>
+        <timeDuration>${flowable.decoupled.timeout}</timeDuration>
       </timerEventDefinition>
     </boundaryEvent>
     <sequenceFlow id="decoupledScaSelected" sourceRef="isDecoupledScaSelected" targetRef="decoupledScaStatusChecking">

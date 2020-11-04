@@ -35,7 +35,7 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 public class Xs2aPisAuthenticateUserConsentWithPin extends ValidatedExecution<Xs2aPisContext> {
 
-    private static final String DECOUPLED_AUTHENTICATION_TYPE = "APP_OTP";
+    private static final String DECOUPLED_AUTHENTICATION_PSU_MESSAGE = "Please check your app to continue";
 
     private final Extractor extractor;
     private final Xs2aValidator validator;
@@ -118,7 +118,7 @@ public class Xs2aPisAuthenticateUserConsentWithPin extends ValidatedExecution<Xs
             return;
         }
 
-        ctx.setSelectedScaDecoupled(DECOUPLED_AUTHENTICATION_TYPE.equals(authResponse.getBody().getChosenScaMethod().getAuthenticationType()));
+        ctx.setSelectedScaDecoupled(authResponse.getBody().getPsuMessage().startsWith(DECOUPLED_AUTHENTICATION_PSU_MESSAGE));
     }
 
     @Service
