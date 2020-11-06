@@ -121,7 +121,7 @@
       <conditionExpression xsi:type="tFormalExpression">#{xs2aConsentInfo.isDecoupledScaSelected(CONTEXT)}</conditionExpression>
     </sequenceFlow>
     <sequenceFlow id="decoupledSubprocessSuccess" sourceRef="decoupledScaStatusChecking" targetRef="isScaFinalized" name="Decoupled authorithation was successful"/>
-    <sequenceFlow id="decoupledSubprocessFailure" sourceRef="subprocessTimeLimit" targetRef="end" name="Decoupled authorithation failed by timeout"/>
+    <sequenceFlow id="decoupledSubprocessFailure" sourceRef="subprocessTimeLimit" targetRef="sid-xs2aReportToFintechConsentDenied" name="Decoupled authorithation failed by timeout"/>
   </process>
   <bpmndi:BPMNDiagram id="BPMNDiagram_xs2a-authorize-consent">
     <bpmndi:BPMNPlane bpmnElement="xs2a-authorize-consent" id="BPMNPlane_xs2a-authorize-consent">
@@ -389,8 +389,9 @@
       </bpmdi:BPMNShape>
       <bpmdi:BPMNEdge xmlns:bpmdi="http://www.omg.org/spec/BPMN/20100524/DI" id="edge-38bc70aa-14c6-4666-9e65-623e33c4eb6e" bpmnElement="decoupledSubprocessFailure">
         <omgdi:waypoint x="1837.3601" y="55.35996"/>
-        <omgdi:waypoint x="1837.36" y="429.0"/>
-        <omgdi:waypoint x="1654.0" y="429.0"/>
+        <omgdi:waypoint x="1837.3602" y="559.0"/>
+        <omgdi:waypoint x="1533.6001" y="559.0"/>
+        <omgdi:waypoint x="1533.6001" y="515.0"/>
       </bpmdi:BPMNEdge>
     </bpmndi:BPMNPlane>
   </bpmndi:BPMNDiagram>
