@@ -33,6 +33,9 @@ public class FlowableProperties {
     @NotNull
     private Expirable expirable;
 
+    @NotNull
+    private JobTimeout jobTimeout;
+
     @Data
     @Configuration
     public static class Serialization {
@@ -60,5 +63,16 @@ public class FlowableProperties {
          */
         @NotNull
         private Duration expireAfterWrite;
+    }
+
+    @Data
+    @Configuration
+    public static class JobTimeout {
+
+        @NotNull
+        private Duration timeout;
+
+        @NotNull
+        private Duration pollInterval;
     }
 }
