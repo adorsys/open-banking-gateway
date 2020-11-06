@@ -45,6 +45,6 @@ public class AdminApiController implements AdminApiControllerApi {
 
     @Override
     public ResponseEntity<BankData> updateBankDataEntry(UUID bankId, @Valid BankData body) {
-        return null;
+        return ResponseEntity.ok(adminApiService.updateBank(bankId, body));
     }
 }
