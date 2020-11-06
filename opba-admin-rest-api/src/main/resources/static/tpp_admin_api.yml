@@ -10,133 +10,252 @@ externalDocs:
 
 
 paths:
-  /v1/admin/banks:
+  /admin/banks:
     get:
       tags:
-        - BankAdmin
-      operationId: bankAdminGET
-      summary: Listing of banks and their profiles and actions
-      description: Cursor-paginated listing of banks and their profiles and actions
+        - admin-api-controller
+      operationId: getBanksData
       parameters:
-        #headers
-        - $ref: "./tpp_banking_api_commons.yml#/components/parameters/X-Request-ID"
+        - name: page
+          in: query
+          required: true
+          schema:
+            $ref: '#/components/schemas/Pageable'
       responses:
-        '200':
-          $ref: "#/components/responses/200_BankProfileResult"
-        '401':
-          $ref: './tpp_banking_api_commons.yml#/components/responses/401_UNAUTHORIZED'
-
-  /v1/admin/banks/{bank-id}:
+        "200":
+          description: default response
+          content:
+            '*/*':
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/BankData'
+  /admin/banks/{id}:
     get:
       tags:
-        - BankAdmin
-      operationId: bankAdminDetailsGET
-      summary: Get bank actions and information using bank UUID
-      description: Read bank profile configuration and related information
+        - admin-api-controller
+      operationId: getBankDataById
       parameters:
-        #headers
-        - $ref: "./tpp_banking_api_commons.yml#/components/parameters/X-Request-ID"
-        #path
-        - $ref: "#/components/parameters/Bank-ID"
+        - name: bankId
+          in: query
+          required: true
+          schema:
+            type: string
+            format: uuid
       responses:
-        '200':
-          $ref: "#/components/responses/200_BankProfileResult"
-        '401':
-          $ref: './tpp_banking_api_commons.yml#/components/responses/401_UNAUTHORIZED'
+        "200":
+          description: default response
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/BankData'
     put:
       tags:
-        - BankAdmin
-      operationId: bankAdminDetailsPUT
-      summary: Create new bank configuration (or replace entire existing)
-      description: Create new bank configuration using assigned ID (UUID)
+        - admin-api-controller
+      operationId: createNewBankDataEntry
       parameters:
-        #headers
-        - $ref: "./tpp_banking_api_commons.yml#/components/parameters/X-Request-ID"
-        #path
-        - $ref: "#/components/parameters/Bank-ID"
+        - name: bankId
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/BankData'
       responses:
-        '200':
-          $ref: "#/components/responses/200_BankProfileResult"
-        '401':
-          $ref: './tpp_banking_api_commons.yml#/components/responses/401_UNAUTHORIZED'
-    patch:
-      tags:
-        - BankAdmin
-      operationId: bankAdminDetailsPATCH
-      summary: Update part of bank configuration
-      description: Update part of bank configuration (i.e. add new action like payment, or change API url)
-      parameters:
-        #headers
-        - $ref: "./tpp_banking_api_commons.yml#/components/parameters/X-Request-ID"
-        #path
-        - $ref: "#/components/parameters/Bank-ID"
-      responses:
-        '200':
-          $ref: "#/components/responses/200_BankProfileResult"
-        '401':
-          $ref: './tpp_banking_api_commons.yml#/components/responses/401_UNAUTHORIZED'
+        "200":
+          description: default response
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/BankData'
     delete:
       tags:
-        - BankAdmin
-      operationId: bankAdminDetailsDELETE
-      summary: Delete bank and its configuration
-      description: Delete banks and its configuration
+        - admin-api-controller
+      operationId: deleteBankDataEntry
       parameters:
-        #headers
-        - $ref: "./tpp_banking_api_commons.yml#/components/parameters/X-Request-ID"
-        #path
-        - $ref: "#/components/parameters/Bank-ID"
-      responses:
-        '200':
-          $ref: "#/components/responses/200_BankProfileResult"
-        '401':
-          $ref: './tpp_banking_api_commons.yml#/components/responses/401_UNAUTHORIZED'
-
-components:
-  headers: {}
-
-  parameters:
-    Bank-ID:
-      name: bank-id
-      in: path
-      required: true
-      description: |
-        A bank identifier
-      example: "99391c7e-ad88-49ec-a2ad-99ddcb1f7721"
-      schema:
-        type: string
-        format: uuid
-
-  responses:
-
-    200_BankProfileResult:
-      description: Full bank profile
-      headers:
-        X-Request-ID:
-          $ref: "./tpp_banking_api_commons.yml#/components/headers/X-Request-ID"
-      content:
-        application/json:
+        - name: bankId
+          in: path
+          required: true
           schema:
-            $ref: "#/components/schemas/bankProfileResponse"
-
+            type: string
+            format: uuid
+      responses:
+        "200":
+          description: default response
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/BankData'
+    patch:
+      tags:
+        - admin-api-controller
+      operationId: updateBankDataEntry
+      parameters:
+        - name: bankId
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/BankData'
+      responses:
+        "200":
+          description: default response
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/BankData'
+components:
   schemas:
-    # response DTOs
-    bankProfileResponse:
-      title: Bank Profile data Response
+    Pageable:
       type: object
       properties:
-        bankDescriptor:
+        pageNumber:
+          type: integer
+          format: int32
+        pageSize:
+          type: integer
+          format: int32
+        unpaged:
+          type: boolean
+        paged:
+          type: boolean
+        sort:
+          $ref: '#/components/schemas/Sort'
+        offset:
+          type: integer
+          format: int64
+    Sort:
+      type: object
+      properties:
+        sorted:
+          type: boolean
+        unsorted:
+          type: boolean
+        empty:
+          type: boolean
+    Bank:
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int64
+        uuid:
+          type: string
+        name:
+          type: string
+        bic:
+          type: string
+        bankCode:
+          type: string
+    BankAction:
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int64
+        bankProfile:
+          $ref: '#/components/schemas/BankProfile'
+        protocolAction:
+          type: string
+          enum:
+            - list-accounts
+            - list-transactions
+            - authorization
+            - get-authorization-state
+            - update-authorization
+            - deny-authorization
+            - from-aspsp
+            - single-payment
+            - get-payment-status
+            - get-payment-information
+        protocolBeanName:
+          type: string
+        consentSupported:
+          type: boolean
+        subProtocols:
           type: array
           items:
-            $ref: '#/components/schemas/bankDescriptor'
-        keyword:
-          type: String
-          description: The bank search input string
-
-    bankDescriptor:
-      title: Bank Profile details
+            $ref: '#/components/schemas/BankSubAction'
+    BankData:
       type: object
       properties:
-        keyword:
+        bank:
+          $ref: '#/components/schemas/Bank'
+        profile:
+          $ref: '#/components/schemas/BankProfile'
+        availableActions:
+          type: array
+          items:
+            $ref: '#/components/schemas/BankAction'
+    BankProfile:
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int64
+        bank:
+          $ref: '#/components/schemas/Bank'
+        url:
           type: string
-          description: The bank search input string
+        adapterId:
+          type: string
+        idpUrl:
+          type: string
+        scaApproaches:
+          type: array
+          items:
+            type: string
+            enum:
+              - REDIRECT
+              - EMBEDDED
+        preferredApproach:
+          type: string
+          enum:
+            - REDIRECT
+            - EMBEDDED
+        tryToUsePreferredApproach:
+          type: boolean
+        uniquePaymentPurpose:
+          type: boolean
+        actions:
+          type: object
+          additionalProperties:
+            $ref: '#/components/schemas/BankAction'
+        bankCode:
+          type: string
+        bic:
+          type: string
+        name:
+          type: string
+    BankSubAction:
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int64
+        action:
+          $ref: '#/components/schemas/BankAction'
+        protocolAction:
+          type: string
+          enum:
+            - list-accounts
+            - list-transactions
+            - authorization
+            - get-authorization-state
+            - update-authorization
+            - deny-authorization
+            - from-aspsp
+            - single-payment
+            - get-payment-status
+            - get-payment-information
+        subProtocolBeanName:
+          type: string
