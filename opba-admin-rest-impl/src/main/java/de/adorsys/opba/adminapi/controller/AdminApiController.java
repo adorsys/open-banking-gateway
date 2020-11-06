@@ -1,39 +1,50 @@
 package de.adorsys.opba.adminapi.controller;
 
 import de.adorsys.opba.adminapi.model.generated.BankData;
-import de.adorsys.opba.adminapi.model.generated.Pageable;
+import de.adorsys.opba.adminapi.model.generated.PageBankData;
 import de.adorsys.opba.adminapi.resource.generated.AdminApiControllerApi;
+import de.adorsys.opba.adminapi.service.AdminApiService;
+import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.RestController;
 
-import java.util.List;
+import javax.validation.Valid;
+import javax.validation.constraints.NotNull;
 import java.util.UUID;
-import java.util.concurrent.CompletableFuture;
 
-
+@RestController
+@RequiredArgsConstructor
 public class AdminApiController implements AdminApiControllerApi {
 
+    private final AdminApiService adminApiService;
+
     @Override
-    public CompletableFuture<ResponseEntity<BankData>> createNewBankDataEntry(UUID bankId, BankData body) {
+    public ResponseEntity<BankData> createNewBankDataEntry(UUID bankId, @Valid BankData body) {
         return null;
     }
 
     @Override
-    public CompletableFuture<ResponseEntity<BankData>> deleteBankDataEntry(UUID bankId) {
+    public ResponseEntity<BankData> deleteBankDataEntry(UUID bankId) {
         return null;
     }
 
     @Override
-    public CompletableFuture<ResponseEntity<BankData>> getBankDataById(UUID bankId) {
-        return null;
+    public ResponseEntity<BankData> getBankDataById(@NotNull @Valid UUID bankId) {
+        BankData data = adminApiService.getBankDataByBankId(bankId);
+        if (null == data) {
+            return ResponseEntity.notFound().build();
+        }
+
+        return ResponseEntity.ok(data);
     }
 
     @Override
-    public CompletableFuture<ResponseEntity<List<BankData>>> getBanksData(Pageable page) {
-        return null;
+    public ResponseEntity<PageBankData> getBanksData(Integer page, Integer size) {
+        return ResponseEntity.ok(adminApiService.getBankDatas(page, size));
     }
 
     @Override
-    public CompletableFuture<ResponseEntity<BankData>> updateBankDataEntry(UUID bankId, BankData body) {
+    public ResponseEntity<BankData> updateBankDataEntry(UUID bankId, @Valid BankData body) {
         return null;
     }
 }
