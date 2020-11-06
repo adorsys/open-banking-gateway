@@ -35,14 +35,14 @@ paths:
             'application/json':
               schema:
                 $ref: '#/components/schemas/PageBankData'
-  /admin/banks/{id}:
+  /admin/banks/{bankId}:
     get:
       tags:
         - admin-api-controller
       operationId: getBankDataById
       parameters:
         - name: bankId
-          in: query
+          in: path
           required: true
           schema:
             type: string
@@ -164,9 +164,6 @@ components:
     BankAction:
       type: object
       properties:
-        id:
-          type: integer
-          format: int64
         protocolAction:
           type: string
           enum:
@@ -236,9 +233,6 @@ components:
     BankSubAction:
       type: object
       properties:
-        id:
-          type: integer
-          format: int64
         protocolAction:
           type: string
           enum:

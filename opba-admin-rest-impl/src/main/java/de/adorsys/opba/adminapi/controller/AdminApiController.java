@@ -20,7 +20,7 @@ public class AdminApiController implements AdminApiControllerApi {
 
     @Override
     public ResponseEntity<BankData> createNewBankDataEntry(UUID bankId, @Valid BankData body) {
-        return null;
+        return ResponseEntity.ok(adminApiService.createOrReplaceBank(bankId, body));
     }
 
     @Override
