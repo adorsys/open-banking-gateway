@@ -118,10 +118,12 @@
       </timerEventDefinition>
     </boundaryEvent>
     <sequenceFlow id="decoupledSubprocessFailure" sourceRef="subprocessTimeLimit" targetRef="sid-xs2aReportToFintechPaymentDenied" name="Decoupled authorithation failed by timeout"/>
-    <sequenceFlow id="decoupledScaSelected" sourceRef="isDecoupledScaSelected" targetRef="decoupledScaStatusChecking">
+    <sequenceFlow id="decoupledScaSelected" sourceRef="isDecoupledScaSelected" targetRef="decoupledWaitFinalization">
       <conditionExpression xsi:type="tFormalExpression">#{xs2aConsentInfo.isDecoupledScaSelected(CONTEXT)}</conditionExpression>
     </sequenceFlow>
     <sequenceFlow id="decoupledSubprocessSuccess" sourceRef="decoupledScaStatusChecking" targetRef="isScaFinalized" name="Decoupled authorithation was successful"/>
+    <serviceTask id="decoupledWaitFinalization" flowable:exclusive="true" name="Wait for user to finish SCA. Suspends to wait for reply" flowable:async="true" flowable:delegateExpression="${xs2aAskForDecoupledFinalization}" flowable:triggerable="true"/>
+    <sequenceFlow id="sid-f39d01cf-92f2-4ba4-b1c2-177741f9d4e9" sourceRef="decoupledWaitFinalization" targetRef="decoupledScaStatusChecking"/>
   </process>
   <bpmndi:BPMNDiagram id="BPMNDiagram_xs2a-authorize-singlePaymentBody">
     <bpmndi:BPMNPlane bpmnElement="xs2a-authorize-payment" id="BPMNPlane_xs2a-authorize-singlePaymentBody">
@@ -213,7 +215,6 @@
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNEdge bpmnElement="sid-F821ADB7-7314-4ADE-B811-D8A7F49E2DAE" id="BPMNEdge_sid-F821ADB7-7314-4ADE-B811-D8A7F49E2DAE">
         <omgdi:waypoint x="879.95" y="475.0"/>
-        <omgdi:waypoint x="921.975" y="475.0"/>
         <omgdi:waypoint x="975.0" y="475.0"/>
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNEdge bpmnElement="noUserPasswordPresent" id="BPMNEdge_noUserPasswordPresent">
@@ -341,8 +342,8 @@
       </bpmdi:BPMNShape>
       <bpmdi:BPMNEdge xmlns:bpmdi="http://www.omg.org/spec/BPMN/20100524/DI" id="edge-a721be12-5770-445d-b2b7-0bafce9c8b20" bpmnElement="decoupledScaSelected">
         <omgdi:waypoint x="1067.313" y="214.99998"/>
-        <omgdi:waypoint x="1067.3131" y="-163.80775"/>
-        <omgdi:waypoint x="1465.0" y="-163.80775"/>
+        <omgdi:waypoint x="1067.313" y="-123.407745"/>
+        <omgdi:waypoint x="1140.2" y="-123.407745"/>
       </bpmdi:BPMNEdge>
       <bpmdi:BPMNShape xmlns:bpmdi="http://www.omg.org/spec/BPMN/20100524/DI" id="shape-52db005e-db45-49e4-84dd-31dbcc5156c0" bpmnElement="decoupledSubProcessStart">
         <omgdc:Bounds x="1470.0" y="-98.22605" width="30.0" height="30.0"/>
@@ -397,6 +398,13 @@
       <bpmdi:BPMNShape xmlns:bpmdi="http://www.omg.org/spec/BPMN/20100524/DI" id="shape-e88bf435-fc69-4a88-8d71-e1a0eda846f5" bpmnElement="subprocessTimeLimit">
         <omgdc:Bounds x="1803.5796" y="-20.953613" width="30.0" height="30.0"/>
       </bpmdi:BPMNShape>
+      <bpmdi:BPMNShape xmlns:bpmdi="http://www.omg.org/spec/BPMN/20100524/DI" id="shape-8bfd1598-fe26-44d1-8681-f92783f12c58" bpmnElement="decoupledWaitFinalization">
+        <omgdc:Bounds x="1140.2" y="-163.40775" width="100.0" height="80.0"/>
+      </bpmdi:BPMNShape>
+      <bpmdi:BPMNEdge xmlns:bpmdi="http://www.omg.org/spec/BPMN/20100524/DI" id="edge-c46461fe-d726-47bf-ac43-c162f1667fac" bpmnElement="sid-f39d01cf-92f2-4ba4-b1c2-177741f9d4e9">
+        <omgdi:waypoint x="1240.2" y="-123.407745"/>
+        <omgdi:waypoint x="1465.0" y="-123.407745"/>
+      </bpmdi:BPMNEdge>
     </bpmndi:BPMNPlane>
   </bpmndi:BPMNDiagram>
 </definitions>
