@@ -109,7 +109,7 @@ public class Xs2aAisAuthenticateUserConsentWithPin extends ValidatedExecution<Xs
     private void setSelectedScaDecoupledIfCanBeChosen(
             Response<UpdatePsuAuthenticationResponse> authResponse, Xs2aContext ctx
     ) {
-        if (null == authResponse.getBody().getChosenScaMethod()) {
+        if (null == authResponse.getBody().getChosenScaMethod() || null == authResponse.getBody().getPsuMessage()) {
             return;
         }
 

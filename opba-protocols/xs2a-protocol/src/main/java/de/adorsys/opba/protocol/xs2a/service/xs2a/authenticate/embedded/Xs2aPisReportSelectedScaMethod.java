@@ -58,9 +58,14 @@ public class Xs2aPisReportSelectedScaMethod extends ValidatedExecution<Xs2aPisCo
                 (Xs2aContext ctx) -> {
                     ctx.setScaSelected(authResponse.getBody().getChosenScaMethod());
                     ctx.setChallengeData(authResponse.getBody().getChallengeData());
-                    ctx.setSelectedScaDecoupled(authResponse.getBody().getPsuMessage().startsWith(DECOUPLED_AUTHENTICATION_PSU_MESSAGE));
+                    ctx.setSelectedScaDecoupled(checkDecoupledSca(authResponse.getBody().getPsuMessage()));
                 }
         );
+    }
+
+    private boolean checkDecoupledSca(String psuMessage) {
+        return psuMessage != null
+                       && psuMessage.startsWith(DECOUPLED_AUTHENTICATION_PSU_MESSAGE);
     }
 
     @Service
