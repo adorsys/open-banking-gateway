@@ -20,16 +20,21 @@ paths:
           in: query
           required: true
           schema:
-            $ref: '#/components/schemas/Pageable'
+            type: integer
+            default: 0
+        - name: size
+          in: query
+          required: false
+          schema:
+            type: integer
+            default: 20
       responses:
         "200":
           description: default response
           content:
-            '*/*':
+            'application/json':
               schema:
-                type: array
-                items:
-                  $ref: '#/components/schemas/BankData'
+                $ref: '#/components/schemas/PageBankData'
   /admin/banks/{id}:
     get:
       tags:
@@ -46,7 +51,7 @@ paths:
         "200":
           description: default response
           content:
-            '*/*':
+            'application/json':
               schema:
                 $ref: '#/components/schemas/BankData'
     put:
@@ -69,7 +74,7 @@ paths:
         "200":
           description: default response
           content:
-            '*/*':
+            'application/json':
               schema:
                 $ref: '#/components/schemas/BankData'
     delete:
@@ -87,7 +92,7 @@ paths:
         "200":
           description: default response
           content:
-            '*/*':
+            'application/json':
               schema:
                 $ref: '#/components/schemas/BankData'
     patch:
@@ -110,7 +115,7 @@ paths:
         "200":
           description: default response
           content:
-            '*/*':
+            'application/json':
               schema:
                 $ref: '#/components/schemas/BankData'
 components:
@@ -128,11 +133,11 @@ components:
           type: boolean
         paged:
           type: boolean
-        sort:
-          $ref: '#/components/schemas/Sort'
         offset:
           type: integer
           format: int64
+        sort:
+          $ref: '#/components/schemas/Sort'
     Sort:
       type: object
       properties:
@@ -162,8 +167,6 @@ components:
         id:
           type: integer
           format: int64
-        bankProfile:
-          $ref: '#/components/schemas/BankProfile'
         protocolAction:
           type: string
           enum:
@@ -192,18 +195,12 @@ components:
           $ref: '#/components/schemas/Bank'
         profile:
           $ref: '#/components/schemas/BankProfile'
-        availableActions:
-          type: array
-          items:
-            $ref: '#/components/schemas/BankAction'
     BankProfile:
       type: object
       properties:
         id:
           type: integer
           format: int64
-        bank:
-          $ref: '#/components/schemas/Bank'
         url:
           type: string
         adapterId:
@@ -242,8 +239,6 @@ components:
         id:
           type: integer
           format: int64
-        action:
-          $ref: '#/components/schemas/BankAction'
         protocolAction:
           type: string
           enum:
@@ -259,3 +254,33 @@ components:
             - get-payment-information
         subProtocolBeanName:
           type: string
+    PageBankData:
+      type: object
+      properties:
+        totalElements:
+          type: integer
+          format: int64
+        totalPages:
+          type: integer
+          format: int32
+        first:
+          type: boolean
+        pageable:
+          $ref: '#/components/schemas/Pageable'
+        last:
+          type: boolean
+        size:
+          type: integer
+          format: int32
+        content:
+          type: array
+          items:
+            $ref: '#/components/schemas/Bank'
+        number:
+          type: integer
+          format: int32
+        sort:
+          $ref: '#/components/schemas/Sort'
+        numberOfElements:
+          type: integer
+          format: int32
