@@ -76,10 +76,10 @@
                             <generateModelTests>false</generateModelTests>
                             <configOptions>
                                 <sourceFolder>src/main/java</sourceFolder>
-                                <basePackage>de.adorsys.opba.consentapi.generated</basePackage>
-                                <configPackage>de.adorsys.opba.consentapi.config.generated</configPackage>
-                                <modelPackage>de.adorsys.opba.consentapi.model.generated</modelPackage>
-                                <apiPackage>de.adorsys.opba.consentapi.resource.generated</apiPackage>
+                                <basePackage>de.adorsys.opba.adminapi.generated</basePackage>
+                                <configPackage>de.adorsys.opba.adminapi.config.generated</configPackage>
+                                <modelPackage>de.adorsys.opba.adminapi.model.generated</modelPackage>
+                                <apiPackage>de.adorsys.opba.adminapi.resource.generated</apiPackage>
                                 <interfaceOnly>true</interfaceOnly>
                                 <skipOverwrite>true</skipOverwrite>
                                 <dateLibrary>java8</dateLibrary>
