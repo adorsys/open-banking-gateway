@@ -78,7 +78,8 @@
                 <constraints nullable="false"/>
             </column>
         </createTable>
-        <createSequence sequenceName="bank_action_id_sequence" incrementBy="50"/>
+        <!-- startValue is high enough to skip auto-filled banks via migrations sql/csv load -->
+        <createSequence sequenceName="bank_action_id_sequence" startValue="1000000000" incrementBy="50"/>
         <addUniqueConstraint tableName="${table-prefix}bank_action" columnNames="bank_uuid,protocol_action"/>
 
         <createTable tableName="${table-prefix}bank_sub_action">
@@ -95,7 +96,8 @@
                 <constraints nullable="false"/>
             </column>
         </createTable>
-        <createSequence sequenceName="bank_sub_action_id_sequence" incrementBy="50"/>
+        <!-- startValue is high enough to skip auto-filled banks via migrations sql/csv load -->
+        <createSequence sequenceName="bank_sub_action_id_sequence" startValue="1000000000" incrementBy="50"/>
         <addUniqueConstraint tableName="${table-prefix}bank_sub_action" columnNames="action_id,protocol_action"/>
         <addForeignKeyConstraint constraintName="${table-prefix}fk_bank_sub_action_bank_action"
                                  baseTableName="${table-prefix}bank_sub_action"

@@ -11,6 +11,7 @@ import lombok.Data;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.Delegate;
 import org.jetbrains.annotations.NotNull;
+import org.mapstruct.InheritInverseConfiguration;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.ValueMapping;
@@ -52,13 +53,51 @@ public class AdminApiService {
     }
 
     @Transactional
-    public void createNewBank(BankData bankData) {
+    public BankData createOrReplaceBank(UUID bankId, BankData bankData) {
+        BankDataToMap mapped = bankMapper.map(bankData);
+        if (null == bankData.getBank()) {
+            throw new IllegalStateException("Bank should not be null");
+        }
+
+        BankDataToMap result = new BankDataToMap();
+        mapped.getBank().setUuid(bankId.toString());
+        Bank bank = bankRepository.save(mapped.getBank());
+        result.setBank(bank);
+
+        if (null != mapped.getProfile()) {
+            BankProfile profile = saveBankProfileAndActions(mapped, bank);
+            result.setProfile(profile);
+        }
+
+        return bankMapper.map(result);
+    }
+
+    @NotNull
+    private BankProfile saveBankProfileAndActions(BankDataToMap mapped, Bank bank) {
+        mapped.getProfile().setBank(bank);
+        mapped.getProfile().getActions().forEach((key, action) -> {
+            action.setBankProfile(mapped.getProfile());
+            if (null == action.getProtocolBeanName()) {
+                action.setProtocolBeanName("");
+            }
+
+            if (null != action.getSubProtocols()) {
+                action.getSubProtocols().forEach(it -> it.setAction(action));
+            }
+        });
+
+        return bankProfileJpaRepository.save(mapped.getProfile());
     }
 
     @Mapper(componentModel = SPRING_KEYWORD, implementationPackage = ADMIN_MAPPERS_PACKAGE, uses = { ActionEnumMapping.class })
     public interface BankMapper {
 
         BankData map(BankDataToMap bank);
+
+        @Mapping(target = "bank.id", ignore = true)
+        @Mapping(target = "bank.uuid", ignore = true)
+        @Mapping(target = "profile.id", ignore = true)
+        BankDataToMap map(BankData bank);
     }
 
     @Mapper(componentModel = SPRING_KEYWORD, implementationPackage = ADMIN_MAPPERS_PACKAGE)
@@ -69,6 +108,12 @@ public class AdminApiService {
 
         @ValueMapping(source = "FROM_ASPSP_REDIRECT", target = "FROM_ASPSP")
         de.adorsys.opba.adminapi.model.generated.BankSubAction.ProtocolActionEnum mapSubAction(ProtocolAction action);
+
+        @InheritInverseConfiguration
+        ProtocolAction mapAction(de.adorsys.opba.adminapi.model.generated.BankAction.ProtocolActionEnum action);
+
+        @InheritInverseConfiguration
+        ProtocolAction mapSubAction(de.adorsys.opba.adminapi.model.generated.BankSubAction.ProtocolActionEnum action);
     }
 
     @Mapper(componentModel = SPRING_KEYWORD, implementationPackage = ADMIN_MAPPERS_PACKAGE)
