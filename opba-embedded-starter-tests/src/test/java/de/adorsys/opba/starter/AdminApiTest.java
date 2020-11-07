@@ -20,9 +20,10 @@ import java.nio.charset.StandardCharsets;
 
 import static io.restassured.RestAssured.config;
 import static io.restassured.config.RedirectConfig.redirectConfig;
-import static org.hamcrest.Matchers.contains;
 import static org.hamcrest.Matchers.equalTo;
 import static org.hamcrest.Matchers.greaterThan;
+import static org.hamcrest.Matchers.hasItem;
+import static org.hamcrest.Matchers.hasToString;
 import static org.springframework.boot.test.context.SpringBootTest.WebEnvironment.RANDOM_PORT;
 import static org.springframework.http.HttpHeaders.AUTHORIZATION;
 
@@ -59,7 +60,7 @@ class AdminApiTest {
                     .body("size", equalTo(20))
                     .body("number", equalTo(0))
                     .body("totalElements", greaterThan(0))
-                    .body("content.uuid", contains("918d80fa-f7fd-4c9f-a6bd-7a9e12aeee76"));
+                    .body("content.uuid", hasItem(hasToString("918d80fa-f7fd-4c9f-a6bd-7a9e12aeee76")));
     }
 
     @Test
