@@ -18,6 +18,7 @@ import org.mapstruct.Mapping;
 import org.mapstruct.MappingTarget;
 import org.mapstruct.NullValuePropertyMappingStrategy;
 import org.mapstruct.ValueMapping;
+import org.springframework.context.annotation.Profile;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
@@ -31,8 +32,10 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.UUID;
 
+import static de.adorsys.opba.adminapi.config.Const.DISABLED_ON_NO_ADMIN_API;
 import static de.adorsys.opba.restapi.shared.GlobalConst.SPRING_KEYWORD;
 
+@Profile(DISABLED_ON_NO_ADMIN_API)
 @Service
 @RequiredArgsConstructor
 public class AdminApiService {

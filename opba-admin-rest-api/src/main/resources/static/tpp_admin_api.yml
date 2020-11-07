@@ -8,10 +8,14 @@ info:
 externalDocs:
   url: "https://adorsys.github.com/open-banking-gateway"
 
+security:
+  - basicAuth: []
 
 paths:
   /admin/banks:
     get:
+      security:
+        - basicAuth: []
       tags:
         - admin-api-controller
       operationId: getBanksData
@@ -37,6 +41,8 @@ paths:
                 $ref: '#/components/schemas/PageBankData'
   /admin/banks/{bankId}:
     get:
+      security:
+        - basicAuth: []
       tags:
         - admin-api-controller
       operationId: getBankDataById
@@ -55,6 +61,8 @@ paths:
               schema:
                 $ref: '#/components/schemas/BankData'
     put:
+      security:
+        - basicAuth: []
       tags:
         - admin-api-controller
       operationId: createNewBankDataEntry
@@ -78,6 +86,8 @@ paths:
               schema:
                 $ref: '#/components/schemas/BankData'
     delete:
+      security:
+        - basicAuth: []
       tags:
         - admin-api-controller
       operationId: deleteBankDataEntry
@@ -96,6 +106,8 @@ paths:
               schema:
                 $ref: '#/components/schemas/BankData'
     patch:
+      security:
+        - basicAuth: []
       tags:
         - admin-api-controller
       operationId: updateBankDataEntry
@@ -278,3 +290,8 @@ components:
         numberOfElements:
           type: integer
           format: int32
+
+  securitySchemes:
+    basicAuth:
+      type: http
+      scheme: basic
