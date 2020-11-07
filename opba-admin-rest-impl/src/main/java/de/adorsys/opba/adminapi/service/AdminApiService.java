@@ -9,6 +9,7 @@ import de.adorsys.opba.db.repository.jpa.BankProfileJpaRepository;
 import de.adorsys.opba.db.repository.jpa.BankRepository;
 import de.adorsys.opba.protocol.api.common.ProtocolAction;
 import lombok.Data;
+import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.Delegate;
 import org.jetbrains.annotations.NotNull;
@@ -31,6 +32,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.UUID;
+import java.util.stream.Collectors;
 
 import static de.adorsys.opba.adminapi.config.Const.DISABLED_ON_NO_ADMIN_API;
 import static de.adorsys.opba.restapi.shared.GlobalConst.SPRING_KEYWORD;
@@ -51,7 +53,13 @@ public class AdminApiService {
     @Transactional(readOnly = true)
     public PageBankData getBankDatas(Integer page, Integer size) {
         Page<Bank> bankPage = bankRepository.findAll(PageRequest.of(page, size, Sort.by("id")));
-        return pageMapper.map(bankPage);
+        PageBankData result = new PageBankData();
+        result.setContent(pageMapper.map(bankPage).getData().stream().map(BankData::getBank).collect(Collectors.toList()));
+        result.setNumber(page);
+        result.setSize(size);
+        result.setTotalPages(bankPage.getTotalPages());
+        result.setTotalElements(bankPage.getTotalElements());
+        return result;
     }
 
     @Transactional(readOnly = true)
@@ -103,6 +111,13 @@ public class AdminApiService {
         bankProfileJpaRepository.save(profile);
 
         return mapBankAndAddProfile(bank);
+    }
+
+    @Transactional
+    public void deleteBank(UUID bankId) {
+        Bank bank = bankRepository.findByUuid(bankId.toString()).orElseThrow(() -> new EntityNotFoundException("No bank: " + bankId));
+        bankProfileJpaRepository.findByBankUuid(bank.getUuid()).ifPresent(bankProfileJpaRepository::delete);
+        bankRepository.delete(bank);
     }
 
     @NotNull
@@ -186,10 +201,11 @@ public class AdminApiService {
         return bankMapper.map(result);
     }
 
+    @Getter
     public static class PageBankDataMappable extends PageBankData implements List<BankData> {
 
         @Delegate
-        private List<BankData> content = new ArrayList<>();
+        private List<BankData> data = new ArrayList<>();
     }
 
     @Data

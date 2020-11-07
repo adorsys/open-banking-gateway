@@ -29,7 +29,8 @@ public class AdminApiController implements AdminApiControllerApi {
 
     @Override
     public ResponseEntity<BankData> deleteBankDataEntry(UUID bankId) {
-        return null;
+        adminApiService.deleteBank(bankId);
+        return ResponseEntity.ok().build();
     }
 
     @Override
