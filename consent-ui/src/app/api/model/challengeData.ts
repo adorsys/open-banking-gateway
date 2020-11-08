@@ -11,21 +11,23 @@
  */
 
 
-export type PaymentStatus = 'ACCC' | 'ACCP' | 'ACSC' | 'ACSP' | 'ACTC' | 'ACWC' | 'ACWP' | 'RCVD' | 'PDNG' | 'RJCT' | 'CANC' | 'ACFC' | 'PATC';
+/**
+ * Challege data for SCA like OpticTAN image
+ */
+export interface ChallengeData { 
+    image?: string;
+    data?: Array<string>;
+    imageLink?: string;
+    otpMaxLength?: number;
+    otpFormat?: ChallengeData.OtpFormatEnum;
+    additionalInformation?: string;
+}
+export namespace ChallengeData {
+    export type OtpFormatEnum = 'CHARACTERS' | 'INTEGER';
+    export const OtpFormatEnum = {
+        CHARACTERS: 'CHARACTERS' as OtpFormatEnum,
+        INTEGER: 'INTEGER' as OtpFormatEnum
+    };
+}
 
-export const PaymentStatus = {
-    ACCC: 'ACCC' as PaymentStatus,
-    ACCP: 'ACCP' as PaymentStatus,
-    ACSC: 'ACSC' as PaymentStatus,
-    ACSP: 'ACSP' as PaymentStatus,
-    ACTC: 'ACTC' as PaymentStatus,
-    ACWC: 'ACWC' as PaymentStatus,
-    ACWP: 'ACWP' as PaymentStatus,
-    RCVD: 'RCVD' as PaymentStatus,
-    PDNG: 'PDNG' as PaymentStatus,
-    RJCT: 'RJCT' as PaymentStatus,
-    CANC: 'CANC' as PaymentStatus,
-    ACFC: 'ACFC' as PaymentStatus,
-    PATC: 'PATC' as PaymentStatus
-};
 
