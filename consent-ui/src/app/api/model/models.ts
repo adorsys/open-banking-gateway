@@ -11,6 +11,7 @@ export * from './authViolation';
 export * from './authorizeRequest';
 export * from './balanceType';
 export * from './bulkPayment';
+export * from './challengeData';
 export * from './consentAuth';
 export * from './consentAuthRequiredField';
 export * from './consentAuthRequirement';
