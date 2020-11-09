@@ -93,7 +93,7 @@
       <conditionExpression xsi:type="tFormalExpression"/>
     </sequenceFlow>
     <subProcess id="decoupledScaStatusChecking" flowable:exclusive="true" name="Decoupled Sca status checking subprocess">
-      <serviceTask id="checkIfDecoupledScaFinalized" flowable:exclusive="true" flowable:delegateExpression="${xs2aPisCheckDecoupledAuthorizationStatus}" name="Checks authorization status to be finalized"/>
+      <serviceTask id="checkIfDecoupledScaFinalized" flowable:exclusive="true" flowable:delegateExpression="${xs2aPisCheckDecoupledAuthorizationStatus}" name="Checks authorization status to be finalized" flowable:async="true"/>
       <startEvent id="decoupledSubProcessStart" name="Start of decoupled Sca subprocess"/>
       <sequenceFlow id="startAuthorizationChecking" sourceRef="decoupledSubProcessStart" targetRef="checkIfDecoupledScaFinalized" name="Start authorization checking"/>
       <sequenceFlow id="sid-ed27275e-353c-4cf7-92d6-0d017cd2d8f0" sourceRef="checkIfDecoupledScaFinalized" targetRef="isAuthorizationSucceded"/>
@@ -122,7 +122,7 @@
       <conditionExpression xsi:type="tFormalExpression">#{xs2aConsentInfo.isDecoupledScaSelected(CONTEXT)}</conditionExpression>
     </sequenceFlow>
     <sequenceFlow id="decoupledSubprocessSuccess" sourceRef="decoupledScaStatusChecking" targetRef="isScaFinalized" name="Decoupled authorithation was successful"/>
-    <serviceTask id="decoupledWaitFinalization" flowable:exclusive="true" name="Wait for user to finish SCA. Suspends to wait for reply" flowable:async="true" flowable:delegateExpression="${xs2aAskForDecoupledFinalization}" flowable:triggerable="true"/>
+    <serviceTask id="decoupledWaitFinalization" flowable:exclusive="true" name="Wait for user to finish SCA. Suspends to wait for reply" flowable:async="true" flowable:delegateExpression="${xs2aAskForDecoupledFinalization}" flowable:triggerable="false"/>
     <sequenceFlow id="sid-f39d01cf-92f2-4ba4-b1c2-177741f9d4e9" sourceRef="decoupledWaitFinalization" targetRef="decoupledScaStatusChecking"/>
   </process>
   <bpmndi:BPMNDiagram id="BPMNDiagram_xs2a-authorize-singlePaymentBody">

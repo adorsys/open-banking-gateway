@@ -17,13 +17,20 @@ import org.springframework.stereotype.Service;
 public class Xs2aAskForDecoupledFinalization extends ValidatedExecution<Xs2aContext> {
 
     private final Xs2aRedirectExecutor redirectExecutor;
+    private final ProtocolUrlsConfiguration urls;
 
     @Override
     protected void doRealExecution(DelegateExecution execution, Xs2aContext context) {
-        redirectExecutor.redirect(execution, context, urls -> {
-            ProtocolUrlsConfiguration.UrlSet urlSet = ProtocolAction.SINGLE_PAYMENT.equals(context.getAction())
-                                                              ? urls.getPis() : urls.getAis();
-            return urlSet.getParameters().getWaitDecoupledSca();
-        });
+        ProtocolUrlsConfiguration.UrlSet urlSet = ProtocolAction.SINGLE_PAYMENT.equals(context.getAction())
+                                                          ? urls.getPis() : urls.getAis();
+        String redirectUrl = urlSet.getParameters().getWaitDecoupledSca();
+
+        redirectExecutor.redirect(
+                execution,
+                context,
+                redirectUrl,
+                redirectUrl,
+                redirect -> redirect.doNotRemoveKey(true).build()
+        );
     }
 }

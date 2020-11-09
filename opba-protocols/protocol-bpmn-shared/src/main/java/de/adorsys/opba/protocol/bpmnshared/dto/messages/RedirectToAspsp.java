@@ -11,6 +11,6 @@ import lombok.Getter;
 public class RedirectToAspsp extends Redirect {
 
     public RedirectToAspsp(Redirect redirect) {
-        super(redirect.getProcessId(), redirect.getExecutionId(), redirect.getResult(), redirect.getRedirectUri());
+        super(redirect.getProcessId(), redirect.getExecutionId(), redirect.getResult(), redirect.getRedirectUri(), false);
     }
 }
