@@ -1,4 +1,4 @@
-package de.adorsys.opba.protocol.xs2a.service.xs2a.authenticate.embedded;
+package de.adorsys.opba.protocol.xs2a.service.xs2a.authenticate.decoupled;
 
 import de.adorsys.opba.protocol.api.common.ProtocolAction;
 import de.adorsys.opba.protocol.bpmnshared.service.exec.ValidatedExecution;
