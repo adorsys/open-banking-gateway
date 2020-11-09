@@ -1,5 +1,5 @@
 # This Dockerfile is for deployment
-FROM openjdk:8-jre-alpine
+FROM openjdk:11.0.8-jre-slim-buster
 
 ENV APP_HOME /usr/app
 WORKDIR $APP_HOME

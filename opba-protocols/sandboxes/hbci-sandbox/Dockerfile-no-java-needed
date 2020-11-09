@@ -1,5 +1,5 @@
 # This Dockerfile will build HBCI Sandbox and contain it inside, so that no Java is needed on build host
-FROM openjdk:8
+FROM openjdk:11.0.8-jre-slim-buster
 
 ENV APP_HOME /usr/app/
 WORKDIR $APP_HOME
