@@ -12,7 +12,7 @@
     <p class="text-secondary">Transactions, balances:</p>
     <ul class="pl-4 mb-4">
       <li class="text-secondary" *ngFor="let account of aisConsent.consent.access.accounts">
-        {{ account }}
+        {{ account.iban }} {{ account.currency }}
       </li>
     </ul>
   </ng-container>
