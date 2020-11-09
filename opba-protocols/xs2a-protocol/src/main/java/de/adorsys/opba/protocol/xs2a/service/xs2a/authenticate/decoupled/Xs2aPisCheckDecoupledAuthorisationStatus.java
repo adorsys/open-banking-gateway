@@ -40,6 +40,7 @@ public class Xs2aPisCheckDecoupledAuthorisationStatus extends ValidatedExecution
                 execution,
                 (Xs2aContext ctx) -> {
                     ctx.setDecoupledScaFinished(paymentInitiationScaStatus.getBody().getScaStatus().isFinalisedStatus());
+                    ctx.setScaStatus(paymentInitiationScaStatus.getBody().getScaStatus().getValue());
                 }
         );
     }

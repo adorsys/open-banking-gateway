@@ -38,6 +38,7 @@ public class Xs2aAisCheckDecoupledAuthorisationStatus extends ValidatedExecution
                 execution,
                 (Xs2aContext ctx) -> {
                     ctx.setDecoupledScaFinished(consentScaStatus.getBody().getScaStatus().isFinalisedStatus());
+                    ctx.setScaStatus(consentScaStatus.getBody().getScaStatus().getValue());
                 }
         );
     }
