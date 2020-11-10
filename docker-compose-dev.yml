@@ -22,15 +22,15 @@ services:
 
   open-banking-gateway:
     environment:
-      - SPRING_LIQUIBASE_PARAMETERS_ADORSYS-SANDBOX-URL=https://obg-bank-dev-xs2a.cloud.adorsys.de
-      - SPRING_LIQUIBASE_PARAMETERS_ADORSYS-HBCI-SANDBOX-URL=http://hbci-sandbox:8090/hbci-mock/
+      - SPRING_LIQUIBASE_PARAMETERS_ADORSYSSANDBOXURL=https://obg-bank-dev-xs2a.cloud.adorsys.de
+      - SPRING_LIQUIBASE_PARAMETERS_ADORSYSHBCISANDBOXURL=http://hbci-sandbox:8090/hbci-mock/
       - SPRING_DATASOURCE_URL=jdbc:postgresql://postgres:5432/open_banking?currentSchema=banking_protocol
       - SPRING_DATASOURCE_USERNAME=postgres
       - SPRING_DATASOURCE_PASSWORD=docker
       - PROTOCOL_XS2A_PKCS12_KEYSTORE=/pkcs12/sample-qwac.keystore
       - FACADE_ENCRYPTION_KEYSETPATH=/keysetpath/example-keyset.json
-      - FACADE_URLS_EMBEDDED-UI-BASE-URL=http://localhost:14200
-      - PROTOCOL_GATEWAY-BASE-URL=http://localhost:18085
+      - FACADE_URLS_EMBEDDEDUIBASEURL=http://localhost:14200
+      - PROTOCOL_GATEWAYBASEURL=http://localhost:18085
     build: opba-embedded-starter
     ports:
       - "18085:8085"

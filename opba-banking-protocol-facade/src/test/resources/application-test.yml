@@ -11,7 +11,7 @@ spring:
     change-log: classpath:migration/master.xml
     parameters:
       table-prefix: opb_
-      adorsys-sandbox-url: http://localhost:20014
+      adorsyssandboxurl: http://localhost:20014
       fill-with-mock-data: true
 
 # Application configuration
@@ -55,7 +55,7 @@ api:
 
 facade:
   urls:
-    embedded-ui-base-url: http://localhost:4200
+    embeddeduibaseurl: http://localhost:4200
     redirect:
       # Redirection URL for consent association
       consent-login:

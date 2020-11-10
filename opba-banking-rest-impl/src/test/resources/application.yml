@@ -11,7 +11,7 @@ spring:
     change-log: classpath:migration/master.xml
     parameters:
       table-prefix: opb_
-      adorsys-sandbox-url: http://localhost:20014
+      adorsyssandboxurl: http://localhost:20014
       fill-with-mock-data: true
 
 # Application configuration
@@ -84,15 +84,15 @@ api:
 
 facade:
   urls:
-    embedded-ui-base-url: http://localhost:4200
+    embeddeduibaseurl: http://localhost:4200
     redirect:
       # Redirection URL for consent association
       consent-login:
         page:
-          for-ais: ${facade.urls.embedded-ui-base-url}/ais/{authorizationSessionId}/login?redirectCode={fintechUserTempPassword}
-          for-pis: ${facade.urls.embedded-ui-base-url}/pis/{authorizationSessionId}/login?redirectCode={fintechUserTempPassword}
+          for-ais: ${facade.urls.embeddeduibaseurl}/ais/{authorizationSessionId}/login?redirectCode={fintechUserTempPassword}
+          for-pis: ${facade.urls.embeddeduibaseurl}/pis/{authorizationSessionId}/login?redirectCode={fintechUserTempPassword}
           # PIS allows anonymous users in OPBA
-          for-pis-anonymous: ${facade.urls.embedded-ui-base-url}/pis/{authorizationSessionId}/anonymous?redirectCode={fintechUserTempPassword}
+          for-pis-anonymous: ${facade.urls.embeddeduibaseurl}/pis/{authorizationSessionId}/anonymous?redirectCode={fintechUserTempPassword}
         password:
           byte-size: 8
     # Consent authorization cookie key path

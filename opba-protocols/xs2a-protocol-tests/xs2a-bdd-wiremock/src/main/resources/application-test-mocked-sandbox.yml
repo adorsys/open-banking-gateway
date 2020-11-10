@@ -12,14 +12,14 @@ security:
 
 # As there is no consent UI running - we need to call server directly
 protocol:
-  gateway-base-url: http://localhost:8085
+  gatewaybaseurl: http://localhost:8085
   xs2a:
     urls:
       ais:
         web-hooks:
-          ok: ${protocol.gateway-base-url}/v1/consent/{authSessionId}/fromAspsp/STUB_STATE/ok?redirectCode={aspspRedirectCode}
-          nok: ${protocol.gateway-base-url}/v1/consent/{authSessionId}/fromAspsp/STUB_STATE/nok?redirectCode={aspspRedirectCode}
+          ok: ${protocol.gatewaybaseurl}/v1/consent/{authSessionId}/fromAspsp/STUB_STATE/ok?redirectCode={aspspRedirectCode}
+          nok: ${protocol.gatewaybaseurl}/v1/consent/{authSessionId}/fromAspsp/STUB_STATE/nok?redirectCode={aspspRedirectCode}
       pis:
         web-hooks:
-          ok: ${protocol.gateway-base-url}/v1/consent/{authSessionId}/fromAspsp/STUB_STATE/ok?redirectCode={aspspRedirectCode}
-          nok: ${protocol.gateway-base-url}/v1/consent/{authSessionId}/fromAspsp/STUB_STATE/nok?redirectCode={aspspRedirectCode}
+          ok: ${protocol.gatewaybaseurl}/v1/consent/{authSessionId}/fromAspsp/STUB_STATE/ok?redirectCode={aspspRedirectCode}
+          nok: ${protocol.gatewaybaseurl}/v1/consent/{authSessionId}/fromAspsp/STUB_STATE/nok?redirectCode={aspspRedirectCode}

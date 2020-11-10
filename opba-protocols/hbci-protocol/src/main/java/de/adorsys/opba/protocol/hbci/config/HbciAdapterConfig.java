@@ -25,7 +25,7 @@ public class HbciAdapterConfig {
     private final String adorsysMockBankUrl;
 
     public HbciAdapterConfig(HbciAdapterProperties properties,
-                             @Value("${spring.liquibase.parameters.adorsys-hbci-sandbox-url}") String adorsysMockBankUrl) {
+                             @Value("${spring.liquibase.parameters.adorsyshbcisandboxurl}") String adorsysMockBankUrl) {
         this.properties = properties;
         this.adorsysMockBankUrl = adorsysMockBankUrl;
     }
