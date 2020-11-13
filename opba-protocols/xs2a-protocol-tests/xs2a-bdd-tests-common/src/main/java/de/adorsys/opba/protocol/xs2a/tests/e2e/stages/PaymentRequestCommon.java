@@ -39,6 +39,7 @@ import static de.adorsys.opba.protocol.xs2a.tests.e2e.stages.StagesCommonUtil.wi
 import static de.adorsys.opba.restapi.shared.HttpHeaders.REDIRECT_CODE;
 import static de.adorsys.opba.restapi.shared.HttpHeaders.SERVICE_SESSION_ID;
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.springframework.http.HttpHeaders.LOCATION;
 import static org.springframework.http.HttpStatus.ACCEPTED;
 import static org.springframework.http.HttpStatus.UNAUTHORIZED;
 import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
@@ -154,7 +155,7 @@ public class PaymentRequestCommon<SELF extends PaymentRequestCommon<SELF>> exten
         return self();
     }
 
-    public SELF user_logged_in_into_opba_as_opba_user_with_credentials_using_fintech_supplied_url(String username, String password) {
+    public SELF user_logged_in_into_opba_pis_as_opba_user_with_credentials_using_fintech_supplied_url(String username, String password) {
         String fintechUserTempPassword = UriComponentsBuilder
                                                  .fromHttpUrl(redirectUriToGetUserParams).build()
                                                  .getQueryParams()
@@ -172,6 +173,7 @@ public class PaymentRequestCommon<SELF extends PaymentRequestCommon<SELF>> exten
                  .statusCode(ACCEPTED.value())
                  .extract();
 
+        assertThat(response.header(LOCATION)).contains("/pis");
         this.authSessionCookie = response.cookie(AUTHORIZATION_SESSION_KEY);
         return self();
     }
@@ -229,10 +231,12 @@ public class PaymentRequestCommon<SELF extends PaymentRequestCommon<SELF>> exten
     }
 
     public SELF user_max_musterman_provided_initial_parameters_to_make_payment() {
-        startInitialInternalConsentAuthorization(
+        ExtractableResponse<Response> response = startInitialInternalConsentAuthorization(
                 AUTHORIZE_CONSENT_ENDPOINT,
                 readResource("restrecord/tpp-ui-input/params/max-musterman-account-all-accounts-consent.json")
         );
+
+        assertThat(response.header(LOCATION)).contains("/pis/");
         return self();
     }
 
