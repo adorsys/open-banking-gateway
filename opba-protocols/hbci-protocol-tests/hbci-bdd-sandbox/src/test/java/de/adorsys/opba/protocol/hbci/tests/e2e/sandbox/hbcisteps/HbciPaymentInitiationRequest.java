@@ -13,6 +13,7 @@ import static de.adorsys.opba.protocol.xs2a.tests.e2e.stages.PaymentStagesCommon
 import static de.adorsys.opba.protocol.xs2a.tests.e2e.stages.StagesCommonUtil.AUTHORIZE_CONSENT_ENDPOINT;
 import static de.adorsys.opba.protocol.xs2a.tests.e2e.stages.StagesCommonUtil.MAX_MUSTERMAN;
 import static de.adorsys.opba.protocol.xs2a.tests.e2e.stages.StagesCommonUtil.PIS_SINGLE_PAYMENT_ENDPOINT;
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.springframework.http.HttpStatus.ACCEPTED;
 import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
 
@@ -76,6 +77,7 @@ public class HbciPaymentInitiationRequest<SELF extends HbciPaymentInitiationRequ
         updateServiceSessionId(response);
         updateRedirectCode(response);
         updateNextPaymentAuthorizationUrl(response);
+        assertThat(this.redirectUriToGetUserParams).contains("/pis");
         return self();
     }
 
