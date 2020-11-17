@@ -5,7 +5,7 @@
     <parent>
         <groupId>de.adorsys.opba</groupId>
         <artifactId>opba-protocols</artifactId>
-        <version>0.20.0.2-RC0</version>
+        <version>0.30.0.0</version>
     </parent>
 
     <artifactId>protocol-bpmn-shared</artifactId>
@@ -33,6 +33,13 @@
         <dependency>
             <groupId>org.springframework.retry</groupId>
             <artifactId>spring-retry</artifactId>
+        </dependency>
+
+        <!-- Mappers/Validators -->
+        <dependency>
+            <groupId>org.mapstruct</groupId>
+            <artifactId>mapstruct</artifactId>
+            <version>${mapstruct.version}</version>
         </dependency>
 
         <!-- Flowable BPMN -->
@@ -87,6 +94,10 @@
             <artifactId>assertj-core</artifactId>
             <scope>test</scope>
             <version>${assertj.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework</groupId>
+            <artifactId>spring-web</artifactId>
         </dependency>
     </dependencies>
 </project>

@@ -2,18 +2,21 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 		 xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
 	<modelVersion>4.0.0</modelVersion>
+	<!-- Aiming to have this project decoupled from OPBA -->
 	<parent>
-		<groupId>de.adorsys.opba</groupId>
-		<artifactId>open-banking-gateway</artifactId>
-		<version>0.20.0.2</version>
+		<groupId>org.springframework.boot</groupId>
+		<artifactId>spring-boot-starter-parent</artifactId>
+		<version>2.3.4.RELEASE</version>
+		<relativePath/> <!-- lookup parent from repository -->
 	</parent>
 
 	<artifactId>fireflyexporter</artifactId>
 	<name>fireflyexporter</name>
 	<description>OpenBanking to FireFly III exporter</description>
+	<version>0.30.0.0</version>
 
 	<properties>
-		<java.version>11</java.version>
+		<java.version>8</java.version>
 		<spring-cloud.version>Hoxton.SR8</spring-cloud.version>
 
 		<swagger-codegen-generators.version>1.0.19</swagger-codegen-generators.version>
@@ -22,13 +25,17 @@
 
 		<main.basedir>..</main.basedir>
 		<tpp-bank-search-location>
-			${main.basedir}/opba-banking-rest-api/src/main/resources/static/tpp_banking_api_bank_search.yml
+			${main.basedir}/opba-banking-rest-api-ymls/src/main/resources/static/tpp_banking_api_bank_search.yml
 		</tpp-bank-search-location>
 		<tpp-bank-search-prefix>de.adorsys.opba.tpp.banksearch</tpp-bank-search-prefix>
 		<tpp-ais-location>
-			${main.basedir}/opba-banking-rest-api/src/main/resources/static/tpp_banking_api_ais.yml
+			${main.basedir}/opba-banking-rest-api-ymls/src/main/resources/static/tpp_banking_api_ais.yml
 		</tpp-ais-location>
+		<tpp-token-location>
+			${main.basedir}/opba-banking-rest-api-ymls/src/main/resources/static/tpp_banking_api_token.yml
+		</tpp-token-location>
 		<tpp-ais-prefix>de.adorsys.opba.tpp.ais</tpp-ais-prefix>
+		<tpp-token-prefix>de.adorsys.opba.tpp.token</tpp-token-prefix>
 
 		<firefly-api-location>src/main/resources/firefly/firefly-api.yml</firefly-api-location>
 		<firefly-api-prefix>de.adorsys.opba.firefly</firefly-api-prefix>
@@ -38,7 +45,14 @@
 		<dependency>
 			<groupId>de.adorsys.opba</groupId>
 			<artifactId>opba-api-security</artifactId>
-			<version>${project.version}</version>
+			<version>0.20.0.2</version>
+		</dependency>
+
+		<dependency>
+			<groupId>org.postgresql</groupId>
+			<artifactId>postgresql</artifactId>
+			<scope>runtime</scope>
+			<optional>true</optional>
 		</dependency>
 
 		<dependency>
@@ -65,6 +79,10 @@
 			<groupId>com.fasterxml.jackson.core</groupId>
 			<artifactId>jackson-databind</artifactId>
 		</dependency>
+		<dependency>
+			<groupId>com.fasterxml.jackson.module</groupId>
+			<artifactId>jackson-module-jaxb-annotations</artifactId>
+		</dependency>
 
 		<dependency>
 			<groupId>io.swagger</groupId>
@@ -75,6 +93,15 @@
 			<groupId>org.hibernate.validator</groupId>
 			<artifactId>hibernate-validator</artifactId>
 		</dependency>
+
+		<!-- Used for transaction categorization -->
+		<dependency>
+			<groupId>org.drools</groupId>
+			<artifactId>drools-engine-classic</artifactId>
+			<version>7.45.0.Final</version>
+		</dependency>
+
+		<!-- End -->
 
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
@@ -187,6 +214,37 @@
 						</configuration>
 					</execution>
 					<execution>
+						<id>token</id>
+						<goals>
+							<goal>generate</goal>
+						</goals>
+						<configuration>
+							<inputSpec>${tpp-token-location}</inputSpec>
+							<language>spring</language>
+							<output>${project.build.directory}/generated-sources/open-api/</output>
+							<generateApiTests>false</generateApiTests>
+							<generateModelTests>false</generateModelTests>
+							<configOptions>
+								<sourceFolder>src/main/java</sourceFolder>
+								<basePackage>${tpp-token-prefix}.api.generated</basePackage>
+								<configPackage>${tpp-token-prefix}.api.config.generated</configPackage>
+								<modelPackage>${tpp-token-prefix}.api.model.generated</modelPackage>
+								<apiPackage>${tpp-token-prefix}.api.resource.generated</apiPackage>
+								<invokerPackage>${tpp-token-prefix}.client.generated</invokerPackage>
+								<interfaceOnly>true</interfaceOnly>
+								<skipOverwrite>true</skipOverwrite>
+								<dateLibrary>java8</dateLibrary>
+								<java8>false</java8>
+								<useTags>true</useTags>
+								<defaultInterfaces>false</defaultInterfaces>
+								<implicitHeaders>false</implicitHeaders>
+								<generateForOpenFeign>true</generateForOpenFeign>
+								<library>spring-cloud</library>
+								<swaggerDocketConfig>false</swaggerDocketConfig>
+							</configOptions>
+						</configuration>
+					</execution>
+					<execution>
 						<id>firefly-iii</id>
 						<goals>
 							<goal>generate</goal>
@@ -215,6 +273,15 @@
 								<library>spring-cloud</library>
 								<swaggerDocketConfig>false</swaggerDocketConfig>
 							</configOptions>
+							<!-- FireFly uses returns OffsetDateTime instead of Date, so forcing OffsetDateTime instead -->
+							<typeMappings>
+								<typeMapping>LocalDate=String</typeMapping>
+								<typeMapping>LocalDateTime=String</typeMapping>
+							</typeMappings>
+							<importMappings>
+								<importMapping>java.time.LocalDate=java.lang.String</importMapping>
+								<importMapping>java.time.LocalDateTime=java.lang.String</importMapping>
+							</importMappings>
 						</configuration>
 					</execution>
 				</executions>

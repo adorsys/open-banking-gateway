@@ -1,10 +1,10 @@
 package de.adorsys.opba.protocol.hbci.tests.e2e.sandbox.hbcisteps;
 
 import com.tngtech.jgiven.integration.spring.JGivenStage;
+import de.adorsys.opba.protocol.xs2a.tests.e2e.LocationExtractorUtil;
 import de.adorsys.opba.protocol.xs2a.tests.e2e.stages.AccountInformationRequestCommon;
 import io.restassured.response.ExtractableResponse;
 import io.restassured.response.Response;
-import org.springframework.http.HttpStatus;
 
 import static de.adorsys.opba.protocol.hbci.tests.e2e.sandbox.hbcisteps.FixtureConst.BANK_BLZ_20000002_ID;
 import static de.adorsys.opba.protocol.hbci.tests.e2e.sandbox.hbcisteps.FixtureConst.BANK_BLZ_30000003_ID;
@@ -17,7 +17,6 @@ import static de.adorsys.opba.protocol.xs2a.tests.e2e.stages.StagesCommonUtil.MA
 import static de.adorsys.opba.protocol.xs2a.tests.e2e.stages.StagesCommonUtil.withTransactionsHeaders;
 import static de.adorsys.opba.restapi.shared.HttpHeaders.SERVICE_SESSION_ID;
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.springframework.http.HttpHeaders.LOCATION;
 import static org.springframework.http.HttpStatus.ACCEPTED;
 
 @JGivenStage
@@ -27,8 +26,8 @@ public class HbciAccountInformationRequest<SELF extends HbciAccountInformationRe
         return fintech_calls_list_accounts_for_max_musterman(BANK_BLZ_30000003_ID);
     }
 
-    public SELF fintech_calls_list_accounts_for_anton_brueckner_for_blz_30000003() {
-        return fintech_calls_list_accounts_for_anton_brueckner(BANK_BLZ_30000003_ID);
+    public SELF fintech_calls_list_accounts_for_anton_brueckner_for_blz_30000003(boolean online) {
+        return fintech_calls_list_accounts_for_anton_brueckner(BANK_BLZ_30000003_ID, online);
     }
 
     public SELF fintech_calls_list_accounts_max_musterman_for_blz_20000002() {
@@ -37,6 +36,10 @@ public class HbciAccountInformationRequest<SELF extends HbciAccountInformationRe
 
     public SELF fintech_calls_list_transactions_for_max_musterman_for_blz_30000003() {
         return fintech_calls_list_transactions_for_max_musterman(MAX_MUSTERMAN_BANK_BLZ_30000003_ACCOUNT_ID, BANK_BLZ_30000003_ID);
+    }
+
+    public SELF fintech_calls_list_transactions_for_max_musterman_for_blz_30000003(boolean online) {
+        return fintech_calls_list_transactions_for_max_musterman(MAX_MUSTERMAN_BANK_BLZ_30000003_ACCOUNT_ID, BANK_BLZ_30000003_ID, online);
     }
 
     public SELF fintech_calls_list_transactions_for_max_musterman_for_blz_20000002() {
@@ -49,7 +52,7 @@ public class HbciAccountInformationRequest<SELF extends HbciAccountInformationRe
                 .when()
                     .get(AIS_TRANSACTIONS_ENDPOINT, resourceId)
                 .then()
-                    .statusCode(HttpStatus.ACCEPTED.value())
+                    .statusCode(ACCEPTED.value())
                 .extract();
 
         updateServiceSessionId(response);
@@ -70,13 +73,19 @@ public class HbciAccountInformationRequest<SELF extends HbciAccountInformationRe
 
     public SELF user_anton_brueckner_provided_correct_pin_to_embedded_authorization_and_sees_redirect_to_fintech_ok() {
         ExtractableResponse<Response> response = anton_brueckner_provides_password();
-        assertThat(response.header(LOCATION)).contains("ais").contains("consent-result");
+        assertThat(LocationExtractorUtil.getLocation(response)).contains("ais").contains("consent-result");
+        return self();
+    }
+
+    public SELF user_anton_brueckner_provided_incorrect_pin_to_embedded_authorization_and_returns_to_ask_pin() {
+        ExtractableResponse<Response> response = anton_brueckner_provides_wrong_password();
+        assertThat(LocationExtractorUtil.getLocation(response)).contains("ais").contains("authenticate?wrong=true");
         return self();
     }
 
     public SELF user_max_musterman_provided_correct_pin_to_embedded_authorization_and_sees_redirect_to_fintech_ok() {
         ExtractableResponse<Response> response = max_musterman_provides_password();
-        assertThat(response.header(LOCATION)).contains("ais").contains("consent-result");
+        assertThat(LocationExtractorUtil.getLocation(response)).contains("ais").contains("consent-result");
         return self();
     }
 
@@ -93,6 +102,13 @@ public class HbciAccountInformationRequest<SELF extends HbciAccountInformationRe
         return startInitialInternalConsentAuthorization(
                 AUTHORIZE_CONSENT_ENDPOINT,
                 readResource("restrecord/tpp-ui-input/params/anton-brueckner-password.json")
+        );
+    }
+
+    protected ExtractableResponse<Response> anton_brueckner_provides_wrong_password() {
+        return startInitialInternalConsentAuthorization(
+                AUTHORIZE_CONSENT_ENDPOINT,
+                readResource("restrecord/tpp-ui-input/params/anton-brueckner-wrong-password.json")
         );
     }
 }

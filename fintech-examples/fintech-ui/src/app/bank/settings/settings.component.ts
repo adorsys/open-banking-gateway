@@ -34,6 +34,8 @@ export class SettingsComponent implements OnInit {
       loa: [settingsData.loa, Validators.required],
       lot: [settingsData.lot, Validators.required],
       withBalance: settingsData.withBalance,
+      cacheLoa: settingsData.cacheLoa,
+      cacheLot: settingsData.cacheLot,
       paymentRequiresAuthentication: settingsData.paymentRequiresAuthentication
     });
   }
@@ -52,5 +54,7 @@ export class SettingsData {
   loa: LoARetrievalInformation;
   lot: LoTRetrievalInformation;
   withBalance: boolean;
+  cacheLoa: boolean;
+  cacheLot: boolean;
   paymentRequiresAuthentication: boolean;
 }

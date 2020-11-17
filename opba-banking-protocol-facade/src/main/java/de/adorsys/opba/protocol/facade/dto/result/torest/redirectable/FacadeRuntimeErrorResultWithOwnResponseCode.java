@@ -18,6 +18,7 @@ public class FacadeRuntimeErrorResultWithOwnResponseCode<T> extends FacadeRuntim
     private static final int DEFAULT_RESPONSE_CODE = 500;
 
     private static final int CONSENT_UNKNOWN_RESPONSE_CODE = 410;
+    private static final int CONSENT_EXPIRED_RESPONSE_CODE = 410;
     private static final int CONSENT_USAGE_LIMIT_EXCEEDED_HTTP_RESPONSE_CODE = 429;
 
     private int responseCode = DEFAULT_RESPONSE_CODE;
@@ -39,6 +40,9 @@ public class FacadeRuntimeErrorResultWithOwnResponseCode<T> extends FacadeRuntim
                     break;
                 case ProcessErrorStrings.CONSENT_UNKNOWN:
                     mapped.setResponseCode(CONSENT_UNKNOWN_RESPONSE_CODE);
+                    break;
+                case ProcessErrorStrings.CONSENT_EXPIRED:
+                    mapped.setResponseCode(CONSENT_EXPIRED_RESPONSE_CODE);
                     break;
                 default:
                     mapped.setResponseCode(DEFAULT_RESPONSE_CODE);

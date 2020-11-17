@@ -84,7 +84,7 @@ public class Xs2aUpdateAuthorization implements UpdateAuthorization {
 
         if (null != scaChallenges.get(SCA_CHALLENGE_ID)) {
             context.setUserSelectScaId(scaChallenges.get(SCA_CHALLENGE_ID));
-            context.setUserSelectScaType(context.getAvailableSca().stream()
+            context.setSelectedScaType(context.getAvailableSca().stream()
                     .filter(it -> context.getUserSelectScaId().equals(it.getKey()))
                     .map(ScaMethod::getType)
                     .findFirst().orElse(null));

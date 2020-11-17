@@ -37,6 +37,11 @@ public class Xs2aConsentErrorHandler {
                 ProcessErrorStrings.CONSENT_UNKNOWN));
             return;
         }
+        if (isTppMessage(ex, "CONSENT_EXPIRED")) {
+            eventPublisher.publishEvent(new InternalReturnableProcessError(execution.getRootProcessInstanceId(), execution.getId(),
+                ProcessErrorStrings.CONSENT_EXPIRED));
+            return;
+        }
         throw ex;
     }
 

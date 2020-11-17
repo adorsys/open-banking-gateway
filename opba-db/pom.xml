@@ -5,7 +5,7 @@
     <parent>
         <artifactId>open-banking-gateway</artifactId>
         <groupId>de.adorsys.opba</groupId>
-        <version>0.20.0.2-RC0</version>
+        <version>0.30.0.0</version>
     </parent>
     <modelVersion>4.0.0</modelVersion>
 
@@ -99,6 +99,7 @@
         <finalName>${project.artifactId}-${project.version}</finalName>
         <plugins>
             <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-dependency-plugin</artifactId>
                 <version>${maven.dependency.plugin.version}</version>
                 <executions>

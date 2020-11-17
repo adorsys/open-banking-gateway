@@ -86,6 +86,7 @@ public class HbciListTransactionsEntrypoint implements ListTransactions {
         @Mapping(source = "facadeServiceable.requestId", target = "requestId")
         @Mapping(source = "facadeServiceable.fintechRedirectUrlOk", target = "fintechRedirectUriOk")
         @Mapping(source = "facadeServiceable.fintechRedirectUrlNok", target = "fintechRedirectUriNok")
+        @Mapping(source = "facadeServiceable.online", target = "online")
         TransactionListHbciContext map(ListTransactionsRequest ctx);
     }
 }

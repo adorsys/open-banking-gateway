@@ -16,12 +16,21 @@ export interface AisConsent {
 
 export class AccountAccess {
 
-  accounts: string[];
-  balances: string[];
-  transactions: string[];
+  accounts: AccountReference[];
+  balances: AccountReference[];
+  transactions: AccountReference[];
 
   availableAccounts: AccountAccessLevel;
   allPsd2: string;
+}
+
+export interface AccountReference {
+  bban?: string;
+  currency?: string;
+  iban?: string;
+  maskedPan?: string;
+  msisdn?: string;
+  pan?: string;
 }
 
 export enum AccountAccessLevel {

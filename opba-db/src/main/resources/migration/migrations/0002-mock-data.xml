@@ -42,7 +42,7 @@
         </update>
     </changeSet>
 
-    <changeSet id="load_csv_banks_random" author="mhr">
+    <changeSet id="load_csv_banks_random" author="mhr" context="search-performance-test">
         <comment>Loads randomized bank set to understand full-text search performance</comment>
         <loadData
                 encoding="utf8"

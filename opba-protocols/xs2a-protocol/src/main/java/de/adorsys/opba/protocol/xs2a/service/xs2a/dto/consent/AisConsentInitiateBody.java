@@ -132,8 +132,7 @@ public class AisConsentInitiateBody {
         /**
          * Dedicated consent - account currency.
          */
-        // FIXME: https://github.com/adorsys/open-banking-gateway/issues/316
-        private String currency = "EUR";
+        private String currency;
     }
 
     @Mapper(componentModel = SPRING_KEYWORD, implementationPackage = XS2A_MAPPERS_PACKAGE)

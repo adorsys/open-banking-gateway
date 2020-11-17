@@ -12,7 +12,7 @@ export class AisService {
     return toConvert.toISOString().split('T')[0];
   }
 
-  getAccounts(bankId: string, loARetrievalInformation: LoARetrievalInformation, withBalance?: boolean) {
+  getAccounts(bankId: string, loARetrievalInformation: LoARetrievalInformation, withBalance: boolean, online: boolean) {
     const okurl = window.location.pathname;
     const notOkUrl = okurl.replace(/account.*/, '');
 
@@ -24,11 +24,17 @@ export class AisService {
       notOkUrl,
       loARetrievalInformation,
       withBalance,
+      online,
       'response'
     );
   }
 
-  getTransactions(bankId: string, accountId: string, loTRetrievalInformation: LoTRetrievalInformation) {
+  getTransactions(
+    bankId: string,
+    accountId: string,
+    loTRetrievalInformation: LoTRetrievalInformation,
+    online: boolean
+  ) {
     const okurl = window.location.pathname;
     const notOkUrl = okurl.replace(/account.*/, 'accounts');
 
@@ -45,6 +51,7 @@ export class AisService {
       null,
       'both',
       null,
+      online,
       'response'
     );
   }

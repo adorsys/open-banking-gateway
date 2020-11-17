@@ -5,7 +5,7 @@
     <parent>
         <artifactId>fintech-examples</artifactId>
         <groupId>de.adorsys.opba</groupId>
-        <version>0.20.0.2-RC0</version>
+        <version>0.30.0.0</version>
     </parent>
     <modelVersion>4.0.0</modelVersion>
 
@@ -61,6 +61,12 @@
         <dependency>
             <groupId>de.adorsys.opba</groupId>
             <artifactId>xs2a-bdd-sandbox</artifactId>
+            <version>${project.version}</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>de.adorsys.opba</groupId>
+            <artifactId>opba-embedded-starter-tests</artifactId>
             <version>${project.version}</version>
             <scope>test</scope>
         </dependency>

@@ -72,10 +72,9 @@ public class WebDriverBasedAccountInformation<SELF extends WebDriverBasedAccount
         return self();
     }
 
-    public SELF user_anton_brueckner_provided_to_consent_ui_initial_parameters_to_list_accounts_with_all_accounts_transactions_consent(WebDriver driver) {
-        waitForPageLoadAndUrlEndsWithPath(driver, "entry-consent-transactions");
-        sendText(driver, By.id("PSU_ID"), ANTON_BRUECKNER);
-        clickOnButton(driver, By.id("ALL_PSD2"));
+    public SELF user_provided_to_consent_ui_initial_parameters_to_list_accounts_with_hbci_consent(WebDriver driver, String user) {
+        waitForPageLoadAndUrlEndsWithPath(driver, "entry-consent-accounts");
+        sendText(driver, By.id("PSU_ID"), user);
         clickOnButton(driver, By.id(SUBMIT_ID));
         return self();
     }
@@ -84,6 +83,13 @@ public class WebDriverBasedAccountInformation<SELF extends WebDriverBasedAccount
         waitForPageLoadAndUrlEndsWithPath(driver, "entry-consent-transactions");
         sendText(driver, By.id("PSU_ID"), user);
         clickOnButton(driver, By.id("FINE_GRAINED"));
+        clickOnButton(driver, By.id(SUBMIT_ID));
+        return self();
+    }
+
+    public SELF user_provided_to_consent_ui_initial_parameters_to_list_transactions_with_hbci_consent(WebDriver driver, String user) {
+        waitForPageLoadAndUrlEndsWithPath(driver, "entry-consent-transactions");
+        sendText(driver, By.id("PSU_ID"), user);
         clickOnButton(driver, By.id(SUBMIT_ID));
         return self();
     }
@@ -183,19 +189,15 @@ public class WebDriverBasedAccountInformation<SELF extends WebDriverBasedAccount
         return self();
     }
 
-    public SELF user_in_consent_ui_provides_sca_result_to_embedded_authorization(WebDriver driver) {
-        waitForPageLoadAndUrlEndsWithPath(driver, "sca-result/EMAIL");
+    public SELF user_in_consent_ui_provides_sca_result_to_embedded_authorization(WebDriver driver, String type) {
+        waitForPageLoadAndUrlEndsWithPath(driver, type);
         sendText(driver, By.id("tan"), TAN_VALUE);
         clickOnButton(driver, By.id(SUBMIT_ID));
         return self();
     }
 
-    public SELF user_max_musterman_provided_to_consent_ui_initial_parameters_to_list_transactions_with_all_accounts_consent(WebDriver driver) {
-        waitForPageLoadAndUrlEndsWithPath(driver, "entry-consent-transactions");
-        sendText(driver, By.id("PSU_ID"), MAX_MUSTERMAN);
-        clickOnButton(driver, By.id("ALL_PSD2"));
-        clickOnButton(driver, By.id(SUBMIT_ID));
-        return self();
+    public SELF user_in_consent_ui_provides_sca_result_to_embedded_authorization(WebDriver driver) {
+        return user_in_consent_ui_provides_sca_result_to_embedded_authorization(driver, "sca-result/EMAIL");
     }
 
     public SELF user_max_musterman_in_consent_ui_reviews_transactions_consent_and_accepts(WebDriver driver) {
@@ -204,32 +206,22 @@ public class WebDriverBasedAccountInformation<SELF extends WebDriverBasedAccount
         return self();
     }
 
-    public SELF user_max_musterman_in_consent_ui_provides_pin(WebDriver driver) {
+    public SELF user_in_consent_ui_provides_pin(WebDriver driver) {
         waitForPageLoadAndUrlEndsWithPath(driver, "authenticate");
         sendText(driver, By.id("pin"), PIN_VALUE);
         clickOnButton(driver, By.id(SUBMIT_ID));
         return self();
     }
 
-    public SELF user_max_musterman_in_consent_ui_sees_sca_select_and_selected_type_email2_to_embedded_authorization(WebDriver driver) {
+    public SELF user_in_consent_ui_sees_sca_select_and_selected_type(WebDriver driver, String scaType) {
         waitForPageLoadAndUrlEndsWithPath(driver, "select-sca-method");
-        selectByVisibleInDropdown(driver, By.id("scaMethod"), "EMAIL:max.musterman2@mail.de");
-        clickOnButton(driver, By.id(SUBMIT_ID));
-        return self();
-    }
-
-    public SELF user_max_musterman_in_consent_ui_provides_sca_result_to_embedded_authorization(WebDriver driver) {
-        waitForPageLoadAndUrlEndsWithPath(driver, "sca-result");
-        sendText(driver, By.id("tan"), TAN_VALUE);
+        selectByVisibleInDropdown(driver, By.id("scaMethod"), scaType);
         clickOnButton(driver, By.id(SUBMIT_ID));
         return self();
     }
 
     public SELF user_in_consent_ui_sees_sca_select_and_selected_type_email1_to_embedded_authorization(WebDriver driver) {
-        waitForPageLoadAndUrlEndsWithPath(driver, "select-sca-method");
-        selectByVisibleInDropdown(driver, By.id("scaMethod"), "EMAIL:test_static@example.com");
-        clickOnButton(driver, By.id(SUBMIT_ID));
-        return self();
+        return user_in_consent_ui_sees_sca_select_and_selected_type(driver, "EMAIL:test_static@example.com");
     }
 
     public SELF sandbox_anton_brueckner_navigates_to_bank_auth_page(WebDriver driver) {
@@ -249,7 +241,9 @@ public class WebDriverBasedAccountInformation<SELF extends WebDriverBasedAccount
         return self();
     }
 
-    public SELF update_redirect_code_from_browser_url(WebDriver driver) {
+    public SELF update_redirect_code_from_browser_on_redirect_back_url(WebDriver driver) {
+        // Is mostly hackish way to get redirectCode back
+        waitForPageLoadAndUrlContainsNoReadyStateCheck(driver, "/to-aspsp-redirection");
         MultiValueMap<String, String> parameters =
                 UriComponentsBuilder.fromUriString(driver.getCurrentUrl()).build().getQueryParams();
         this.redirectCode = parameters.getFirst(REDIRECT_CODE_QUERY);
@@ -394,6 +388,10 @@ public class WebDriverBasedAccountInformation<SELF extends WebDriverBasedAccount
     private void waitForPageLoad(WebDriver driver) {
         new WebDriverWait(driver, timeout.getSeconds())
                 .until(wd -> ((JavascriptExecutor) wd).executeScript("return document.readyState").equals("complete"));
+    }
+
+    private void waitForPageLoadAndUrlContainsNoReadyStateCheck(WebDriver driver, String urlContains) {
+        new WebDriverWait(driver, timeout.getSeconds()).until(wd -> driver.getCurrentUrl().contains(urlContains));
     }
 
     private void waitForPageLoadAndUrlContains(WebDriver driver, String urlContains) {

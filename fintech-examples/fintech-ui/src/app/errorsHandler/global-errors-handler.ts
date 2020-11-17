@@ -18,7 +18,8 @@ export class GlobalErrorHandler implements ErrorHandler {
       console.log('status was ', error.status);
       switch (error.status) {
         case 401:
-          this.router.navigate(['/session-expired']);
+          error = 'Incorrect Username or Password';
+          message = errorService.getClientMessage(error);
           break;
         case 403:
           this.router.navigate(['/forbidden-oauth2']);
@@ -58,6 +59,8 @@ export class GlobalErrorHandler implements ErrorHandler {
     switch (errorCode) {
       case 'CONSENT_UNKNOWN':
         return 'The consent is unknown. Please request for new consent by changing settings.';
+      case 'CONSENT_EXPIRED':
+        return 'The consent is expired. Please request for new consent by changing settings.';
       case 'CONSENT_ACCESS_EXCEEDED_LIMIT':
         return 'The consent has been used too many time. Please request for new consent by changing settings or wait till tomorrow and try again.';
         break;

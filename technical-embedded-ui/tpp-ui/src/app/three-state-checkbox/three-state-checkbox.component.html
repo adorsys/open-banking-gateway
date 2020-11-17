@@ -1,9 +1,0 @@
-<mat-checkbox
-              [formControl]="checkbox"
-              [ngModel]="state"
-              [indeterminate]="state === null"
-              [checked]="state"
-              (change)="state = tape[(tape.indexOf(state) + 1) % tape.length];">
-  {{label}}
-</mat-checkbox>
-<input type="hidden" name="{{controlName}}" value="{{state}}">

@@ -11,13 +11,10 @@ import { UpdateConsentAuthorizationService } from './api/updateConsentAuthorizat
   imports:      [],
   declarations: [],
   exports:      [],
-  providers: [
-    AuthStateConsentAuthorizationService,
-    FromASPSPConsentAuthorizationService,
-    UpdateConsentAuthorizationService ]
+  providers: []
 })
 export class ApiModule {
-    public static forRoot(configurationFactory: () => Configuration): ModuleWithProviders {
+    public static forRoot(configurationFactory: () => Configuration): ModuleWithProviders<ApiModule> {
         return {
             ngModule: ApiModule,
             providers: [ { provide: Configuration, useFactory: configurationFactory } ]

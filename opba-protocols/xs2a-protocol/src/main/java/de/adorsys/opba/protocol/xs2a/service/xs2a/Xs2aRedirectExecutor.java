@@ -77,13 +77,10 @@ public class Xs2aRedirectExecutor {
     ) {
         setDestinationUriInContext(execution, destinationUri);
 
-        URI screenUri = URI.create(
-            ContextUtil.evaluateSpelForCtx(
-                uiScreenUriSpel,
-                execution,
-                context
-            )
-        );
+
+        URI screenUri = ContextUtil.buildAndExpandQueryParameters(uiScreenUriSpel, context);
+
+
         Redirect.RedirectBuilder redirect = Redirect.builder();
         redirect.processId(execution.getRootProcessInstanceId());
         redirect.executionId(execution.getId());

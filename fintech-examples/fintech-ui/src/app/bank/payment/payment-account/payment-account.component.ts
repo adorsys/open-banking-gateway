@@ -20,8 +20,9 @@ export class PaymentAccountComponent implements OnInit {
   ngOnInit() {
     this.bankId = this.route.snapshot.params[Consts.BANK_ID_NAME];
     const accountId = this.route.snapshot.params[Consts.ACCOUNT_ID_NAME];
-    this.account = { ...this.getSelectedAccount(accountId), currency: '' };
-    this.router.navigate(['payments'], { relativeTo: this.route });
+
+    this.account = {...this.getSelectedAccount(accountId), currency: ''};
+    this.router.navigate(['payments'], {relativeTo: this.route});
   }
 
   private getSelectedAccount(accountId: string): AccountStruct {
@@ -31,6 +32,8 @@ export class PaymentAccountComponent implements OnInit {
     }
     for (const a of list) {
       if (a.resourceId === accountId) {
+        return a;
+      } else if (a.iban === accountId) {
         return a;
       }
     }

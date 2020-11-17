@@ -20,13 +20,14 @@
     <modelVersion>4.0.0</modelVersion>
     <groupId>de.adorsys.opba</groupId>
     <artifactId>open-banking-gateway</artifactId>
-    <version>0.20.0.2-RC0</version>
+    <version>0.30.0.0</version>
     <packaging>pom</packaging>
 
     <name>open-banking-gateway</name>
     <description>Provides Access to Banking API</description>
 
     <modules>
+        <module>opba-banking-rest-api-ymls</module>
         <module>opba-api-security-signer-generator</module>
         <module>opba-api-security</module>
         <module>opba-rest-api-shared</module>
@@ -36,6 +37,8 @@
         <module>opba-banking-rest-impl</module>
         <module>opba-auth-rest-api</module>
         <module>opba-auth-rest-impl</module>
+        <module>opba-admin-rest-api</module>
+        <module>opba-admin-rest-impl</module>
         <module>opba-banking-protocol-facade</module>
         <module>opba-embedded-starter</module>
         <module>opba-embedded-starter-tests</module>
@@ -83,7 +86,7 @@
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
         <maven-enforcer-plugin.version>3.0.0-M2</maven-enforcer-plugin.version>
-        <java.version>1.8</java.version>
+        <java.version>11</java.version>
         <pmd.plugin.version>3.13.0</pmd.plugin.version>
         <build-helper-maven-plugin.version>3.0.0</build-helper-maven-plugin.version>
 
@@ -94,10 +97,11 @@
         NoFileAssignedException: The packaging plugin for this project did not assign a main file to the project but it has attachments. Change packaging to 'pom'
         -->
         <maven-deploy-plugin.version>2.8.2</maven-deploy-plugin.version>
-        <maven-nexus-staging-plugin.version>1.6.8</maven-nexus-staging-plugin.version>
         <maven-source-plugin.version>3.0.1</maven-source-plugin.version>
         <maven-gpg-plugin.version>1.6</maven-gpg-plugin.version>
-        <maven-javadoc-plugin>3.2.0</maven-javadoc-plugin>
+
+        <master-branch-pattern>.*</master-branch-pattern>
+        <release-branch-pattern>.*</release-branch-pattern>
 
         <!-- Framework libs -->
         <spring-boot.version>2.2.4.RELEASE</spring-boot.version>
@@ -159,10 +163,10 @@
         <slf4j-simple.version>1.7.29</slf4j-simple.version>
         <!-- other properties -->
         <lombok-maven-plugin.version>1.18.6.0</lombok-maven-plugin.version>
-        <maven.dependency.plugin.version>3.1.1</maven.dependency.plugin.version>
+        <maven.dependency.plugin.version>3.1.2</maven.dependency.plugin.version>
         <maven-remote-resources-plugin.version>1.6.0</maven-remote-resources-plugin.version>
         <maven-resources-plugin.version>3.1.0</maven-resources-plugin.version>
-        <maven-javadoc-plugin.version>3.1.1</maven-javadoc-plugin.version>
+        <maven-javadoc-plugin.version>3.2.0</maven-javadoc-plugin.version>
         <spring-framework-spring-tests.version>5.1.7.RELEASE</spring-framework-spring-tests.version>
         <mockito-core.version>2.25.1</mockito-core.version>
         <commons-io.version>2.6</commons-io.version>
@@ -317,8 +321,8 @@
                 <artifactId>maven-compiler-plugin</artifactId>
                 <version>${maven-compiler-plugin.version}</version>
                 <configuration>
-                    <source>1.8</source>
-                    <target>1.8</target>
+                    <source>11</source>
+                    <target>11</target>
                     <annotationProcessorPaths>
                         <path>
                             <groupId>org.projectlombok</groupId>
@@ -506,7 +510,7 @@
                             <snapshotDeploymentRepository>stage</snapshotDeploymentRepository>
 
                             <!-- Allow to promote on ANY branch because Github Actions checkouts tag, not branch (and forcing both seem impossible) -->
-                            <releaseBranchPattern>.*</releaseBranchPattern>
+                            <releaseBranchPattern>${release-branch-pattern}</releaseBranchPattern>
                         </configuration>
                         <executions>
                             <execution>
@@ -620,7 +624,7 @@
                             <skipExistingCatalogFileArtifactAttach>true</skipExistingCatalogFileArtifactAttach>
 
                             <!-- Allow to promote on ANY branch because Github Actions checkouts tag, not branch (and forcing both seem impossible) -->
-                            <masterBranchPattern>.*</masterBranchPattern>
+                            <masterBranchPattern>${master-branch-pattern}</masterBranchPattern>
                         </configuration>
                         <executions>
                             <execution>

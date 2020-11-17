@@ -3,7 +3,8 @@
                    xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.8.xsd">
 
     <changeSet id="create-sequence-bank" author="mhr" >
-        <createSequence sequenceName="bank_id_sequence" incrementBy="50"/>
+        <!-- startValue is high enough to skip auto-filled banks via migrations sql/csv load -->
+        <createSequence sequenceName="bank_id_sequence" startValue="1000000000" incrementBy="50"/>
     </changeSet>
 
     <changeSet id="create-table-bank" author="mhr">
@@ -21,7 +22,8 @@
     </changeSet>
 
     <changeSet id="create-sequence-bank-profile" author="mhr">
-        <createSequence sequenceName="bank_profile_id_sequence" incrementBy="50"/>
+        <!-- startValue is high enough to skip auto-filled banks via migrations sql/csv load -->
+        <createSequence sequenceName="bank_profile_id_sequence" startValue="1000000000" incrementBy="50"/>
     </changeSet>
 
     <changeSet id="create-table-bank-profile" author="mhr">
