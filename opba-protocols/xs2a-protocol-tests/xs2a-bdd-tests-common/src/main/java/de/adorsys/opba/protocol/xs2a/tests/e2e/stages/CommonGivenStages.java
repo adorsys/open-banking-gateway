@@ -26,6 +26,7 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
+import java.util.concurrent.ConcurrentHashMap;
 import java.util.stream.Collectors;
 
 import static de.adorsys.opba.protocol.xs2a.tests.HeaderNames.X_REQUEST_ID;
@@ -51,6 +52,8 @@ public class CommonGivenStages<SELF extends CommonGivenStages<SELF>> extends Sta
 
     @Autowired
     private RequestSigningService signingService;
+
+    protected ConcurrentHashMap.KeySetView<String, Boolean> createdUsers = ConcurrentHashMap.newKeySet();
 
     @Transactional
     public SELF preferred_sca_approach_selected_for_all_banks_in_opba(Approach expectedApproach) {
@@ -117,16 +120,19 @@ public class CommonGivenStages<SELF extends CommonGivenStages<SELF>> extends Sta
     }
 
     public SELF user_registered_in_opba_with_credentials(String username, String password) {
+        if (createdUsers.contains(username)) {
+            return self();
+        }
         RestAssured
-                .given()
-                    .header(X_REQUEST_ID, UUID.randomUUID().toString())
-                    .contentType(MediaType.APPLICATION_JSON_VALUE)
-                    .body(ImmutableMap.of(LOGIN, username, PASSWORD, password))
-                .when()
-                    .post(REGISTER_USER_ENDPOINT)
-                .then()
-                    .statusCode(HttpStatus.CREATED.value());
-
+            .given()
+                .header(X_REQUEST_ID, UUID.randomUUID().toString())
+                .contentType(MediaType.APPLICATION_JSON_VALUE)
+                .body(ImmutableMap.of(LOGIN, username, PASSWORD, password))
+            .when()
+                .post(REGISTER_USER_ENDPOINT)
+            .then()
+                .statusCode(HttpStatus.CREATED.value());
+        createdUsers.add(username);
         return self();
     }
 

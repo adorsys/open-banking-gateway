@@ -52,6 +52,7 @@ public class FinTechAuthorizationImpl implements FinTechAuthorizationApi {
         log.debug("loginPost is called for {}", loginRequest.getUsername());
         Optional<UserEntity> optionalUserEntity = authorizeService.loginWithPassword(loginRequest);
         if (!optionalUserEntity.isPresent()) {
+            log.info("Wrong password for user : {}", loginRequest.getUsername());
             return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
         }
 

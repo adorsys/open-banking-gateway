@@ -39,7 +39,7 @@ public class ConsentRetrievalService {
             userEntity.get(),
             ConsentType.AIS,
             true).stream().forEach(el -> {
-                consentRetrievalResult.getBankIdConsentIdList().add(new BankId2ConsentId(el.getBankId(), el.getTppServiceSessionId()));
+                consentRetrievalResult.getBankIdConsentIdList().add(new BankId2ConsentId(el.getBankId(), el.getCreationTime().toString(), el.getTppServiceSessionId()));
         });
 
         return consentRetrievalResult;
@@ -54,6 +54,7 @@ public class ConsentRetrievalService {
     @Data
     public static class BankId2ConsentId {
         private final String bankId;
+        private final String date;
         private final UUID consentId;
     }
 

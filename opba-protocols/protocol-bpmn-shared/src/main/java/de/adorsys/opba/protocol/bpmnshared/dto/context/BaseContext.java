@@ -20,6 +20,8 @@ import java.util.UUID;
 // FIXME Entire class must be protected https://github.com/adorsys/open-banking-gateway/issues/251
 public class BaseContext implements RequestScoped, UsesRequestScoped {
 
+    public static final String DEFAULT_SCA_METHOD = "EMAIL";
+
     /**
      * Is this context used for:
      * <ul>
@@ -90,6 +92,11 @@ public class BaseContext implements RequestScoped, UsesRequestScoped {
      * Flag to indicate that last provided credentials (SCA challenge/TAN, PIN/password) were wrong
      */
     private Boolean wrongAuthCredentials;
+
+    /**
+     * Selected consent authorization approach (i.e. EMBEDDED).
+     */
+    private String selectedScaType;
 
     /**
      * Request-scoped services and data.

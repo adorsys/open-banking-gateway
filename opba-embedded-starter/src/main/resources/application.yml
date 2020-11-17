@@ -9,6 +9,7 @@ spring:
     driver-class-name: org.postgresql.Driver
     hikari:
       schema: banking_protocol
+
   jpa:
     hibernate:
       naming:
@@ -36,6 +37,13 @@ management:
 # Application configuration
 api:
   banking:
+    admin-api:
+      security:
+        login: Aladdin
+        password: OpenSesame
+        url-patterns-to-protect:
+          - /admin/*
+
     # Bank-search API properties
     bank-search:
       start: 0
@@ -126,7 +134,7 @@ facade:
     # PSU consent encryption
     psu:
       key-pair:
-        cipher-algo: AES256_CBC
+        cipher-algo: AES128_CBC
         key-algo: RSA
         len: 2048
     # Consent requirements encryption
@@ -143,6 +151,40 @@ facade:
         cipher-algo: AES256_CBC
         key-algo: RSA
         len: 2048
+  # Datasafe security configuration
+  datasafe:
+    # Which keystore to use and how to encrypt keys in it
+    key-store:
+      type: BCFKS
+      encryption-algo: AES256_KWP
+      pbkdf:
+        pbkdf2:
+          algo: PRF_SHA512
+          saltLength: 16
+          iterCount: 10240
+      mac-algo: HmacSHA3_512
+      password-keys-algo: PBEWithHmacSHA256AndAES_128
+    # Which keys to create in keystore
+    keys:
+      enc-key-number: 1
+      sign-key-number: 1
+      # Secret key creation
+      secret:
+        algo: AES
+        size: 128
+      # Encrypting key creation
+      encrypting:
+        algo: RSA
+        size: 2048
+        sig-algo: SHA256withRSA
+      # Signing key creation
+      signing:
+        algo: RSA
+        size: 2048
+        sig-algo: SHA256withRSA
+    # How to encrypt documents
+    cms:
+      algo: AES128_GCM
 
 protocol:
   xs2a:
@@ -160,7 +202,7 @@ protocol:
           report-sca-result: ${facade.urls.embedded-ui-base-url}/ais${protocol.xs2a.urls.common.parameters.report-sca-result}
           provide-psu-iban: ${facade.urls.embedded-ui-base-url}/ais${protocol.xs2a.urls.common.parameters.provide-psu-iban}
       pis:
-        to-aspsp: ${facade.urls.embedded-ui-base-url}/pis${protocol.xs2a.urls.common.to-aspsp}?redirectCode=#{context.getRedirectCodeIfAuthContinued()}
+        to-aspsp: ${facade.urls.embedded-ui-base-url}/pis${protocol.xs2a.urls.common.to-aspsp}
         web-hooks:
           ok: ${protocol.xs2a.urls.common.web-hooks.ok}
           nok: ${protocol.xs2a.urls.common.web-hooks.nok}
@@ -172,17 +214,17 @@ protocol:
           report-sca-result: ${facade.urls.embedded-ui-base-url}/pis${protocol.xs2a.urls.common.parameters.report-sca-result}
           provide-psu-iban: ${facade.urls.embedded-ui-base-url}/pis${protocol.xs2a.urls.common.parameters.provide-psu-iban}
       common:
-        to-aspsp: /#{context.getAuthorizationSessionIdIfOpened()}/to-aspsp-redirection?redirectCode=#{context.getRedirectCodeIfAuthContinued()}
+        to-aspsp: /{authSessionId}/to-aspsp-redirection?redirectCode={redirectCode}
         web-hooks:
-          ok: ${facade.urls.embedded-ui-base-url}/embedded-server/v1/consent/#{context.getAuthorizationSessionIdIfOpened()}/fromAspsp/STUB_STATE/ok?redirectCode=#{context.getAspspRedirectCode()}
-          nok: ${facade.urls.embedded-ui-base-url}/embedded-server/v1/consent/#{context.getAuthorizationSessionIdIfOpened()}/fromAspsp/STUB_STATE/nok?redirectCode=#{context.getAspspRedirectCode()}
-          result: /#{context.getAuthorizationSessionIdIfOpened()}/consent-result?redirectCode=#{context.getRedirectCodeIfAuthContinued()}
+          ok: ${facade.urls.embedded-ui-base-url}/embedded-server/v1/consent/{authSessionId}/fromAspsp/STUB_STATE/ok?redirectCode={aspspRedirectCode}
+          nok: ${facade.urls.embedded-ui-base-url}/embedded-server/v1/consent/{authSessionId}/fromAspsp/STUB_STATE/nok?redirectCode={aspspRedirectCode}
+          result: /{authSessionId}/consent-result?redirectCode={redirectCode}
         parameters:
-          provide-more: /#{context.getAuthorizationSessionIdIfOpened()}?redirectCode=#{context.getRedirectCodeIfAuthContinued()}
-          provide-psu-password: /#{context.getAuthorizationSessionIdIfOpened()}/authenticate?wrong=#{context.getWrongAuthCredentials()}
-          select-sca-method: /#{context.getAuthorizationSessionIdIfOpened()}/select-sca-method
-          report-sca-result: /#{context.getAuthorizationSessionIdIfOpened()}/sca-result/#{context.getUserSelectScaType()}?wrong=#{context.getWrongAuthCredentials()}
-          provide-psu-iban: /#{context.getAuthorizationSessionIdIfOpened()}/entry-consent-transactions/dedicated-account-access?wrong=#{context.getWrongAuthCredentials()}
+          provide-more: /{authSessionId}?redirectCode={redirectCode}
+          provide-psu-password: /{authSessionId}/authenticate?wrong={isWrongCreds}
+          select-sca-method: /{authSessionId}/select-sca-method
+          report-sca-result: /{authSessionId}/sca-result/{selectedScaType}?wrong={isWrongCreds}
+          provide-psu-iban: /{authSessionId}/entry-consent-transactions/dedicated-account-access?wrong={isWrongCreds}
     aspspmessages:
       invalid-credentials: PSU_CREDENTIALS_INVALID
       invalid-consent: FORMAT_ERROR
@@ -192,8 +234,8 @@ protocol:
       password: password
   hbci:
     adapter:
-    # hbci-product: product - Your product ID here
-    # hbci-version: 300 - Your HBCI ID here
+      # hbci-product: product - Your product ID here
+      # hbci-version: 300 - Your HBCI ID here
       adorsys-mock-banks-blz:
         - 10000001
         - 20000002
@@ -201,32 +243,32 @@ protocol:
     urls:
       ais:
         redirect:
-          to-aspsp: ${facade.urls.embedded-ui-base-url}/ais/#{context.getAuthorizationSessionIdIfOpened()}/to-aspsp-redirection
+          to-aspsp: ${facade.urls.embedded-ui-base-url}/ais/{authSessionId}/to-aspsp-redirection
           web-hooks:
-            ok: ${facade.urls.embedded-ui-base-url}/embedded-server/v1/consent/#{context.getAuthorizationSessionIdIfOpened()}/fromAspsp/STUB_STATE/ok?redirectCode=#{context.getAspspRedirectCode()}
-            nok: ${facade.urls.embedded-ui-base-url}/embedded-server/v1/consent/#{context.getAuthorizationSessionIdIfOpened()}/fromAspsp/STUB_STATE/nok?redirectCode=#{context.getAspspRedirectCode()}
-            result: ${facade.urls.embedded-ui-base-url}/ais/#{context.getAuthorizationSessionIdIfOpened()}/consent-result?redirectCode=#{context.getRedirectCodeIfAuthContinued()}
+            ok: ${facade.urls.embedded-ui-base-url}/embedded-server/v1/consent/{authSessionId}/fromAspsp/STUB_STATE/ok?redirectCode={aspspRedirectCode}
+            nok: ${facade.urls.embedded-ui-base-url}/embedded-server/v1/consent/{authSessionId}/fromAspsp/STUB_STATE/nok?redirectCode={aspspRedirectCode}
+            result: ${facade.urls.embedded-ui-base-url}/ais/{authSessionId}/consent-result?redirectCode={redirectCode}
           parameters:
             max-array-size: 32
-            provide-more: ${facade.urls.embedded-ui-base-url}/ais/#{context.getAuthorizationSessionIdIfOpened()}?redirectCode=#{context.getRedirectCodeIfAuthContinued()}
-            provide-psu-password: ${facade.urls.embedded-ui-base-url}/ais/#{context.getAuthorizationSessionIdIfOpened()}/authenticate?wrong=#{context.getWrongAuthCredentials()}
-            select-sca-method: ${facade.urls.embedded-ui-base-url}/ais/#{context.getAuthorizationSessionIdIfOpened()}/select-sca-method
-            report-sca-result: ${facade.urls.embedded-ui-base-url}/ais/#{context.getAuthorizationSessionIdIfOpened()}/sca-result/#{context.getUserSelectScaType()}?wrong=#{context.getWrongAuthCredentials()}
-            provide-psu-iban: ${facade.urls.embedded-ui-base-url}/ais/#{context.getAuthorizationSessionIdIfOpened()}/entry-consent-transactions/dedicated-account-access?wrong=#{context.getWrongAuthCredentials()}
+            provide-more: ${facade.urls.embedded-ui-base-url}/ais/{authSessionId}?redirectCode={redirectCode}
+            provide-psu-password: ${facade.urls.embedded-ui-base-url}/ais/{authSessionId}/authenticate?wrong={isWrongCreds}
+            select-sca-method: ${facade.urls.embedded-ui-base-url}/ais/{authSessionId}/select-sca-method
+            report-sca-result: ${facade.urls.embedded-ui-base-url}/ais/{authSessionId}/sca-result/{selectedScaType}?wrong={isWrongCreds}
+            provide-psu-iban: ${facade.urls.embedded-ui-base-url}/ais/{authSessionId}/entry-consent-transactions/dedicated-account-access?wrong={isWrongCreds}
       pis:
         redirect:
-          to-aspsp: ${facade.urls.embedded-ui-base-url}/pis/#{context.getAuthorizationSessionIdIfOpened()}/to-aspsp-redirection
+          to-aspsp: ${facade.urls.embedded-ui-base-url}/pis/{authSessionId}/to-aspsp-redirection
           web-hooks:
-            ok: ${facade.urls.embedded-ui-base-url}/embedded-server/v1/consent/#{context.getAuthorizationSessionIdIfOpened()}/fromAspsp/STUB_STATE/ok?redirectCode=#{context.getAspspRedirectCode()}
-            nok: ${facade.urls.embedded-ui-base-url}/embedded-server/v1/consent/#{context.getAuthorizationSessionIdIfOpened()}/fromAspsp/STUB_STATE/nok?redirectCode=#{context.getAspspRedirectCode()}
-            result: ${facade.urls.embedded-ui-base-url}/pis/#{context.getAuthorizationSessionIdIfOpened()}/consent-result?redirectCode=#{context.getRedirectCodeIfAuthContinued()}
+            ok: ${facade.urls.embedded-ui-base-url}/embedded-server/v1/consent/{authSessionId}/fromAspsp/STUB_STATE/ok?redirectCode={aspspRedirectCode}
+            nok: ${facade.urls.embedded-ui-base-url}/embedded-server/v1/consent/{authSessionId}/fromAspsp/STUB_STATE/nok?redirectCode={aspspRedirectCode}
+            result: ${facade.urls.embedded-ui-base-url}/pis/{authSessionId}/consent-result?redirectCode={redirectCode}
           parameters:
             max-array-size: 32
-            provide-more: ${facade.urls.embedded-ui-base-url}/pis/#{context.getAuthorizationSessionIdIfOpened()}?redirectCode=#{context.getRedirectCodeIfAuthContinued()}
-            provide-psu-password: ${facade.urls.embedded-ui-base-url}/pis/#{context.getAuthorizationSessionIdIfOpened()}/authenticate?wrong=#{context.getWrongAuthCredentials()}
-            select-sca-method: ${facade.urls.embedded-ui-base-url}/pis/#{context.getAuthorizationSessionIdIfOpened()}/select-sca-method
-            report-sca-result: ${facade.urls.embedded-ui-base-url}/pis/#{context.getAuthorizationSessionIdIfOpened()}/sca-result/#{context.getUserSelectScaType()}?wrong=#{context.getWrongAuthCredentials()}
-            provide-psu-iban: ${facade.urls.embedded-ui-base-url}/pis/#{context.getAuthorizationSessionIdIfOpened()}/entry-consent-transactions/dedicated-account-access?wrong=#{context.getWrongAuthCredentials()}
+            provide-more: ${facade.urls.embedded-ui-base-url}/pis/{authSessionId}?redirectCode={redirectCode}
+            provide-psu-password: ${facade.urls.embedded-ui-base-url}/pis/{authSessionId}/authenticate?wrong={isWrongCreds}
+            select-sca-method: ${facade.urls.embedded-ui-base-url}/pis/{authSessionId}/select-sca-method
+            report-sca-result: ${facade.urls.embedded-ui-base-url}/pis/{authSessionId}/sca-result/{selectedScaType}?wrong={isWrongCreds}
+            provide-psu-iban: ${facade.urls.embedded-ui-base-url}/pis/{authSessionId}/entry-consent-transactions/dedicated-account-access?wrong={isWrongCreds}
 
 
 # Flowable comes for all protocols shared

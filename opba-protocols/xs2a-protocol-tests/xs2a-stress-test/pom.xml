@@ -5,7 +5,7 @@
     <parent>
         <groupId>de.adorsys.opba</groupId>
         <artifactId>xs2a-protocol-tests</artifactId>
-        <version>0.20.0.2-RC0</version>
+        <version>0.30.0.0</version>
     </parent>
 
     <!-- Stress test wit Wiremock backed ASPSP -->

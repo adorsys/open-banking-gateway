@@ -40,6 +40,7 @@ class BasicTest extends BaseMockitoTest {
      */
     @Test
     @SneakyThrows
+    @EnabledIfSystemProperty(named = "START_SANDBOX_OLD", matches = TRUE_BOOL)
     void testEnvStartsUp() {
         startSandboxWithJars();
 

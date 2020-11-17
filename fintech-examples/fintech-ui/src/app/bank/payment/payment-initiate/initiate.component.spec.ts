@@ -22,7 +22,7 @@ describe('InitiateComponent', () => {
         {
           provide: ActivatedRoute,
           useValue: {
-            snapshot: { params: { bankid: '1234', accountid: '1234' } }
+            snapshot: { params: { bankid: '1234', accountid: '1234' }, queryParams: {iban: 'AL90208110080000001039531801'} }
           }
         }
       ]

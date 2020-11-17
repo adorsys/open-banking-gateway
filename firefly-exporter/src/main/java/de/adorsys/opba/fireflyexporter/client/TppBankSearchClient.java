@@ -3,11 +3,12 @@ package de.adorsys.opba.fireflyexporter.client;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import de.adorsys.opba.tpp.banksearch.api.resource.generated.TppBankSearchApi;
 import org.springframework.cloud.openfeign.FeignClient;
+import org.springframework.http.HttpHeaders;
 
 import javax.servlet.http.HttpServletRequest;
 import java.util.Optional;
 
-@FeignClient(url = "${open-banking.url}", name = "tppSearch")
+@FeignClient(url = "${open-banking.url}", name = "tppSearch", configuration = TppClientConfig.class)
 public interface TppBankSearchClient extends TppBankSearchApi {
     default Optional<ObjectMapper> getObjectMapper() {
         return Optional.empty();
@@ -18,6 +19,6 @@ public interface TppBankSearchClient extends TppBankSearchApi {
     }
 
     default Optional<String> getAcceptHeader() {
-        return getRequest().map(r -> r.getHeader("Accept"));
+        return getRequest().map(r -> r.getHeader(HttpHeaders.ACCEPT));
     }
 }

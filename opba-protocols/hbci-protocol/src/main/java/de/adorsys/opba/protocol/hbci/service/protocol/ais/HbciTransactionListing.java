@@ -2,7 +2,6 @@ package de.adorsys.opba.protocol.hbci.service.protocol.ais;
 
 import de.adorsys.multibanking.domain.Bank;
 import de.adorsys.multibanking.domain.BankAccess;
-import de.adorsys.multibanking.domain.BankAccount;
 import de.adorsys.multibanking.domain.BankApiUser;
 import de.adorsys.multibanking.domain.request.TransactionRequest;
 import de.adorsys.multibanking.domain.response.TransactionsResponse;
@@ -15,8 +14,11 @@ import de.adorsys.opba.protocol.bpmnshared.service.exec.ValidatedExecution;
 import de.adorsys.opba.protocol.hbci.context.HbciContext;
 import de.adorsys.opba.protocol.hbci.context.TransactionListHbciContext;
 import de.adorsys.opba.protocol.hbci.service.consent.HbciScaRequiredUtil;
+import de.adorsys.opba.protocol.hbci.service.consent.authentication.HbciAuthorizationPossibleErrorHandler;
+import de.adorsys.opba.protocol.hbci.service.protocol.HbciUtil;
 import de.adorsys.opba.protocol.hbci.service.protocol.ais.dto.AisListTransactionsResult;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.flowable.engine.delegate.DelegateExecution;
 import org.springframework.stereotype.Service;
 
@@ -24,17 +26,24 @@ import java.time.Instant;
 
 @Service("hbciTransactionListing")
 @RequiredArgsConstructor
+@Slf4j
 public class HbciTransactionListing extends ValidatedExecution<TransactionListHbciContext> {
 
     private final OnlineBankingService onlineBankingService;
+    private final HbciAuthorizationPossibleErrorHandler errorSink;
 
     @Override
     protected void doRealExecution(DelegateExecution execution, TransactionListHbciContext context) {
+        errorSink.handlePossibleAuthorizationError(
+                () -> aisLoadTransactions(execution, context),
+                ex -> aisOnWrongCredentials(execution)
+        );
+    }
+
+    private void aisLoadTransactions(DelegateExecution execution, TransactionListHbciContext context) {
         HbciConsent consent = context.getHbciDialogConsent();
         TransactionRequest<LoadTransactions> request = create(new LoadTransactions(), new BankApiUser(), new BankAccess(), context.getBank(), consent);
-        BankAccount account = new BankAccount();
-        account.setIban(context.getAccountIban());
-        request.getTransaction().setPsuAccount(account);
+        request.getTransaction().setPsuAccount(HbciUtil.buildBankAccount(context.getAccountIban()));
         TransactionsResponse response = onlineBankingService.loadTransactions(request);
         boolean postScaRequired = HbciScaRequiredUtil.extraCheckIfScaRequired(response);
 
@@ -53,7 +62,6 @@ public class HbciTransactionListing extends ValidatedExecution<TransactionListHb
                         ctx.setTanChallengeRequired(false);
                     }
             );
-
             return;
         }
 
@@ -68,6 +76,18 @@ public class HbciTransactionListing extends ValidatedExecution<TransactionListHb
                 }
         );
     }
+
+    private void aisOnWrongCredentials(DelegateExecution execution) {
+        ContextUtil.getAndUpdateContext(
+                execution,
+                (HbciContext ctx) -> {
+                    log.warn("Request {} of {} has provided incorrect credentials in HbciTransactionListsing", ctx.getRequestId(), ctx.getSagaId());
+                    log.info("set wrong credentials to true");
+                    ctx.setWrongAuthCredentials(true);
+                }
+        );
+    }
+
 
     public static <T extends AbstractTransaction> TransactionRequest<T> create(T transaction,
                                                                                BankApiUser bankApiUser,

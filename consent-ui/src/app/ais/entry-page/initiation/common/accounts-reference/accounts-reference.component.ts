@@ -11,7 +11,7 @@ import { ValidatorService } from 'angular-iban';
 })
 export class AccountsReferenceComponent implements OnInit, OnDestroy {
   @Input() targetForm: FormGroup;
-  @Input() accounts: AccountReference[];
+  @Input() accounts: InternalAccountReference[];
 
   private subscriptions = new Map<string, Subscription>();
 
@@ -31,18 +31,18 @@ export class AccountsReferenceComponent implements OnInit, OnDestroy {
   }
 
   addAccount() {
-    const account = new AccountReference();
+    const account = new InternalAccountReference();
     this.accounts.push(account);
     this.addControlToForm(account);
   }
 
-  removeAccount(account: AccountReference) {
+  removeAccount(account: InternalAccountReference) {
     this.accounts.splice(this.accounts.indexOf(account), 1);
     this.targetForm.removeControl(account.id);
     this.subscriptions[account.id].unsubscribe();
   }
 
-  private addControlToForm(account: AccountReference): FormControl {
+  private addControlToForm(account: InternalAccountReference): FormControl {
     const formControl = new FormControl('', [ValidatorService.validateIban, Validators.required]);
     this.targetForm.addControl(account.id, formControl);
     this.subscriptions[account.id] = formControl.valueChanges.subscribe((it) => (account.iban = it));
@@ -50,13 +50,15 @@ export class AccountsReferenceComponent implements OnInit, OnDestroy {
   }
 }
 
-export class AccountReference {
+export class InternalAccountReference {
   // internally generated unique ID
   id: string;
   iban: string;
+  currency: string;
 
-  constructor(iban?: string) {
+  constructor(iban?: string, currency?: string) {
     this.id = 'account-reference:' + uuid.v4();
     this.iban = iban ? iban : '';
+    this.currency = currency;
   }
 }

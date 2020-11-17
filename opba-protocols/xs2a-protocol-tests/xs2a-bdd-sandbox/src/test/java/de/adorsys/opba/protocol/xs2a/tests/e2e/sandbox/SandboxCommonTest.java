@@ -25,8 +25,8 @@ import java.util.UUID;
 
 public class SandboxCommonTest<GIVEN, WHEN, THEN> extends SpringScenarioTest<GIVEN, WHEN, THEN> {
 
-    protected static final LocalDate DATE_FROM = LocalDate.parse("2018-01-01");
-    protected static final LocalDate DATE_TO = LocalDate.parse("2020-09-30");
+    protected static final LocalDate DATE_FROM = LocalDate.now().minusYears(1);
+    protected static final LocalDate DATE_TO = LocalDate.now();
     protected static final String BOTH_BOOKING = "BOTH";
 
     protected final String OPBA_LOGIN = UUID.randomUUID().toString();

@@ -63,18 +63,18 @@ public class PaymentStagesCommonUtil {
         Instant xTimestampUtc = Instant.now();
 
         return RestAssured
-                       .given()
-                       .header(BANK_ID, bankId)
-                       .header(FINTECH_REDIRECT_URL_OK, FINTECH_REDIR_OK)
-                       .header(FINTECH_REDIRECT_URL_NOK, FINTECH_REDIR_NOK)
-                       .header(SERVICE_SESSION_PASSWORD, SESSION_PASSWORD)
-                       .header(FINTECH_USER_ID, fintechUserId)
-                       .header(FINTECH_ID, DEFAULT_FINTECH_ID)
-                       .header(X_XSRF_TOKEN, XSRF_TOKEN)
-                       .header(X_REQUEST_ID, xRequestId.toString())
-                       .header(X_TIMESTAMP_UTC, xTimestampUtc.toString())
-                       .header(X_PIS_PSU_AUTHENTICATION_REQUIRED, psuAuthenticationRequired)
-                       .header(PSU_IP_ADDRESS, IP_ADDRESS);
+            .given()
+                .header(BANK_ID, bankId)
+                .header(FINTECH_REDIRECT_URL_OK, FINTECH_REDIR_OK)
+                .header(FINTECH_REDIRECT_URL_NOK, FINTECH_REDIR_NOK)
+                .header(SERVICE_SESSION_PASSWORD, SESSION_PASSWORD)
+                .header(FINTECH_USER_ID, fintechUserId)
+                .header(FINTECH_ID, DEFAULT_FINTECH_ID)
+                .header(X_XSRF_TOKEN, XSRF_TOKEN)
+                .header(X_REQUEST_ID, xRequestId.toString())
+                .header(X_TIMESTAMP_UTC, xTimestampUtc.toString())
+                .header(X_PIS_PSU_AUTHENTICATION_REQUIRED, psuAuthenticationRequired)
+                .header(PSU_IP_ADDRESS, IP_ADDRESS);
     }
 
     public static RequestSpecification withPaymentInfoHeaders(String fintechUserId) {
@@ -86,14 +86,14 @@ public class PaymentStagesCommonUtil {
         Instant xTimestampUtc = Instant.now();
 
         return RestAssured
-                       .given()
-                            .header(BANK_ID, bankId)
-                            .header(SERVICE_SESSION_PASSWORD, SESSION_PASSWORD)
-                            .header(FINTECH_USER_ID, fintechUserId)
-                            .header(FINTECH_ID, DEFAULT_FINTECH_ID)
-                            .header(X_XSRF_TOKEN, XSRF_TOKEN)
-                            .header(X_REQUEST_ID, xRequestId.toString())
-                            .header(X_TIMESTAMP_UTC, xTimestampUtc.toString())
-                            .header(PSU_IP_ADDRESS, IP_ADDRESS);
+            .given()
+                .header(BANK_ID, bankId)
+                .header(SERVICE_SESSION_PASSWORD, SESSION_PASSWORD)
+                .header(FINTECH_USER_ID, fintechUserId)
+                .header(FINTECH_ID, DEFAULT_FINTECH_ID)
+                .header(X_XSRF_TOKEN, XSRF_TOKEN)
+                .header(X_REQUEST_ID, xRequestId.toString())
+                .header(X_TIMESTAMP_UTC, xTimestampUtc.toString())
+                .header(PSU_IP_ADDRESS, IP_ADDRESS);
     }
 }

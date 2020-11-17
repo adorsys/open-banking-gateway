@@ -23,4 +23,7 @@ public class OpenBankingConfig {
 
     @NotBlank
     private String dataProtectionPassword;
+
+    @NotBlank
+    private String userId;
 }

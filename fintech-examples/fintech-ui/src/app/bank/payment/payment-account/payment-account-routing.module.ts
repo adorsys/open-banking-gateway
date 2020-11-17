@@ -7,32 +7,46 @@ import { PaymentAccountPaymentsComponent } from '../payment-account-payments/pay
 import { PaymentAccountComponent } from './payment-account.component';
 
 const routes: Routes = [
-  {
-    path: ':accountid',
-    component: PaymentAccountComponent,
-    children: [
-      {
-        path: PaymentAccountPaymentsComponent.ROUTE,
-        component: PaymentAccountPaymentsComponent
-      },
-      {
-        path: InitiateComponent.ROUTE,
-        component: InitiateComponent
-      },
-      {
-        path: ConfirmComponent.ROUTE,
-        component: ConfirmComponent
-      },
-      {
-        path: ResultComponent.ROUTE,
-        component: ResultComponent
-      }
-    ]
-  }
-];
+    {
+      path: 'initiate',
+      component: InitiateComponent,
+    },
+    {
+      path: ConfirmComponent.ROUTE,
+      component: ConfirmComponent
+    },
+    {
+      path: ResultComponent.ROUTE,
+      component: ResultComponent
+    },
+    {
+      path: ':accountid',
+      component: PaymentAccountComponent,
+      children: [
+        {
+          path: PaymentAccountPaymentsComponent.ROUTE,
+          component: PaymentAccountPaymentsComponent
+        },
+        {
+          path: InitiateComponent.ROUTE,
+          component: InitiateComponent
+        },
+        {
+          path: ConfirmComponent.ROUTE,
+          component: ConfirmComponent
+        },
+        {
+          path: ResultComponent.ROUTE,
+          component: ResultComponent
+        }
+      ]
+    }
+  ]
+;
 
 @NgModule({
   imports: [RouterModule.forChild(routes)],
   exports: [RouterModule]
 })
-export class PaymentAccountRoutingModule {}
+export class PaymentAccountRoutingModule {
+}

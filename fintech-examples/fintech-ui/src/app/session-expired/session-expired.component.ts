@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import {Component, NgZone, OnInit} from '@angular/core';
 import { Router } from '@angular/router';
 import { AuthService } from '../services/auth.service';
 import { RoutingPath } from '../models/routing-path.model';
@@ -9,7 +9,9 @@ import { RoutingPath } from '../models/routing-path.model';
   styleUrls: ['./session-expired.component.scss']
 })
 export class SessionExpiredComponent implements OnInit {
-  constructor(private router: Router, private authService: AuthService) {}
+  constructor(private router: Router,
+              private authService: AuthService,
+              private ngZone: NgZone) {}
 
   ngOnInit() {
     if (this.authService.isLoggedIn()) {
@@ -18,6 +20,6 @@ export class SessionExpiredComponent implements OnInit {
   }
 
   public proceed() {
-    this.router.navigate([RoutingPath.LOGIN]);
+    this.ngZone.run(() => this.router.navigate([RoutingPath.LOGIN]));
   }
 }

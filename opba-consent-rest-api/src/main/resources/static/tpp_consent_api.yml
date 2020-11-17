@@ -716,7 +716,7 @@ components:
           type: array
           description: Access to accounts
           items:
-            type: string
+            $ref: "#/components/schemas/AccountReference"
         allPsd2:
           type: string
           description: Consent on all accounts, balances and transactions of psu
@@ -735,12 +735,12 @@ components:
           type: array
           description: Access to balances
           items:
-            type: string
+            $ref: "#/components/schemas/AccountReference"
         transactions:
           type: array
           description: Access to transactions
           items:
-            type: string
+            $ref: "#/components/schemas/AccountReference"
       description: Ais account access information
 
     AisConsentRequest:

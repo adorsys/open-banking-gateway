@@ -1,7 +1,7 @@
 package de.adorsys.opba.fireflyexporter.controller.rest;
 
+import de.adorsys.opba.fireflyexporter.client.TppBankSearchClient;
 import de.adorsys.opba.tpp.banksearch.api.model.generated.BankSearchResponse;
-import de.adorsys.opba.tpp.banksearch.api.resource.generated.TppBankSearchApi;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -14,10 +14,12 @@ import java.util.UUID;
 @RequiredArgsConstructor
 public class SearchController {
 
-    private final TppBankSearchApi bankSearchApi;
+    private static final int DEFAULT_PAGE_SIZE = 10;
+
+    private final TppBankSearchClient bankSearchApi;
 
     @GetMapping("/search")
     public ResponseEntity<BankSearchResponse> searchBank(@RequestParam(value = "q", defaultValue = "") String query) {
-        return bankSearchApi.bankSearchGET(UUID.randomUUID(), query, null, null, null, 0, 10);
+        return bankSearchApi.bankSearchGET(UUID.randomUUID(), query, null, null, null, 0, DEFAULT_PAGE_SIZE);
     }
 }

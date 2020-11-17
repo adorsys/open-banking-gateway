@@ -17,6 +17,12 @@ spring:
 # Application configuration
 api:
   banking:
+    admin-api:
+      security:
+        login: Aladdin
+        password: OpenSesame
+        url-patterns-to-protect:
+          - /admin/*
     # Bank-search API properties
     bank-search:
       query:
@@ -77,7 +83,7 @@ facade:
     # PSU consent encryption
     psu:
       key-pair:
-        cipher-algo: AES256_CBC
+        cipher-algo: AES128_CBC
         key-algo: RSA
         len: 2048
     # Consent requirements encryption

@@ -19,7 +19,7 @@ import javax.tools.Diagnostic;
 import java.util.Set;
 
 @SupportedAnnotationTypes(DataToSignGeneratingProcessor.ANNOTATION_CLASS)
-@SupportedSourceVersion(SourceVersion.RELEASE_8)
+@SupportedSourceVersion(SourceVersion.RELEASE_11)
 @AutoService(Processor.class)
 public class DataToSignGeneratingProcessor extends AbstractProcessor {
 

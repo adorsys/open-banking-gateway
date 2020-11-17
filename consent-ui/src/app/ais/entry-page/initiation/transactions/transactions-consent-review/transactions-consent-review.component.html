@@ -22,7 +22,7 @@
           <div class="ml-4">
             <ul class="list-group ml-5 mb-4">
               <li *ngFor="let account of aisConsent.consent.access.accounts">
-                <strong>{{ account }}</strong>
+                <strong>{{ account.iban }} {{ account.currency }}</strong>
               </li>
             </ul>
           </div>

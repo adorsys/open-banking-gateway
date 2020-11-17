@@ -1,0 +1,42 @@
+package de.adorsys.opba.fireflyexporter.service
+
+import de.adorsys.opba.fireflyexporter.dto.AnalyzeableTransaction
+
+dialect  "mvel"
+
+
+rule "TEST TRANSACTION"
+    no-loop
+    when
+       $t: AnalyzeableTransaction(referenceName matches '.*\\bTEST\\b.*' || purpose matches '.*\\bTEST\\b.*')
+    then
+       $t.category = "TEST";
+       $t.subCategory = "TEST";
+       $t.specification = "TEST TRANSACTION";
+
+       update($t)
+end
+
+rule "DIRECT FUNDS TRANSFER"
+    no-loop
+    when
+       $t: AnalyzeableTransaction(purpose matches '.*TRANSFER.*(TO|FOR).*')
+    then
+       $t.category = "EXPENSE";
+       $t.subCategory = "EXPENSE";
+       $t.specification = "DIRECT FUNDS TRANSFER";
+
+       update($t)
+end
+
+rule "DEPOSIT"
+    no-loop
+    when
+       $t: AnalyzeableTransaction(referenceName matches '.*\\bDEPOSIT\\b.*' || purpose matches '.*\\bDEPOSIT\\b.*')
+    then
+       $t.category = "INCOME";
+       $t.subCategory = "INCOME";
+       $t.specification = "CASH DEPOSIT";
+
+       update($t)
+end

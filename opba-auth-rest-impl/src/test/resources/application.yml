@@ -24,6 +24,12 @@ spring:
 # Application configuration
 api:
   banking:
+    admin-api:
+      security:
+        login: Aladdin
+        password: OpenSesame
+        url-patterns-to-protect:
+          - /admin/*
     # Bank-search API properties
     bank-search:
       query:

@@ -5,7 +5,7 @@
     <parent>
         <artifactId>fintech-examples</artifactId>
         <groupId>de.adorsys.opba</groupId>
-        <version>0.20.0.2-RC0</version>
+        <version>0.30.0.0</version>
     </parent>
     <modelVersion>4.0.0</modelVersion>
 
@@ -14,19 +14,19 @@
         Change this if depth changes. Current: /open-banking-gateway/core -->
         <main.basedir>${project.parent.parent.basedir}</main.basedir>
         <tpp-bank-search-location>
-            ${main.basedir}/opba-banking-rest-api/src/main/resources/static/tpp_banking_api_bank_search.yml
+            ${main.basedir}/opba-banking-rest-api-ymls/src/main/resources/static/tpp_banking_api_bank_search.yml
         </tpp-bank-search-location>
         <tpp-bank-search-prefix>de.adorsys.opba.tpp.banksearch</tpp-bank-search-prefix>
         <tpp-ais-location>
-            ${main.basedir}/opba-banking-rest-api/src/main/resources/static/tpp_banking_api_ais.yml
+            ${main.basedir}/opba-banking-rest-api-ymls/src/main/resources/static/tpp_banking_api_ais.yml
         </tpp-ais-location>
         <tpp-ais-prefix>de.adorsys.opba.tpp.ais</tpp-ais-prefix>
         <tpp-pis-location>
-            ${main.basedir}/opba-banking-rest-api/src/main/resources/static/tpp_banking_api_pis.yml
+            ${main.basedir}/opba-banking-rest-api-ymls/src/main/resources/static/tpp_banking_api_pis.yml
         </tpp-pis-location>
         <tpp-pis-prefix>de.adorsys.opba.tpp.pis</tpp-pis-prefix>
         <open-banking-api-spec-location>
-            ${main.basedir}/opba-banking-rest-api/src/main/resources/static/tpp_banking_api_token.yml
+            ${main.basedir}/opba-banking-rest-api-ymls/src/main/resources/static/tpp_banking_api_token.yml
         </open-banking-api-spec-location>
         <tpp-token-prefix>de.adorsys.opba.tpp.token</tpp-token-prefix>
     </properties>

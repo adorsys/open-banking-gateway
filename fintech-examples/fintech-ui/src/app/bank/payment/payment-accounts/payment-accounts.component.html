@@ -1,7 +1,26 @@
-<p>select account you want to work with</p>
-
-<div class="d-flex flex-wrap">
-  <div *ngFor="let account of accounts" class="add-mr-mb">
-    <app-account-card (eventEmitter)="onSelectAccount($event)" [account]="account"></app-account-card>
+<div class="mb-5" *ngIf="accounts">
+  <label>Select account you want to work with</label>
+  <div class="d-flex flex-wrap">
+    <div *ngFor="let account of accounts" class="add-mr-mb">
+      <app-account-card (eventEmitter)="onSelectAccount($event)" [account]="account"></app-account-card>
+    </div>
   </div>
 </div>
+
+<form (ngSubmit)="initiateSinglePayment()" [formGroup]="ibanForm">
+  <div class="form-group">
+    <label for="iban">Enter IBAN you want to transfer money from</label>
+    <input [ngClass]="{ 'is-invalid': iban?.errors && iban?.dirty }"
+           autocomplete="off"
+           class="form-control"
+           formControlName="iban"
+           id="iban"
+           type="text"/>
+    <div *ngIf="iban?.errors?.required && iban?.dirty" class="invalid-feedback d-block">IBAN is Required</div>
+    <div *ngIf="iban?.errors?.iban && iban?.dirty" class="invalid-feedback">IBAN is invalid</div>
+  </div>
+
+  <button class="btn btn-primary w-100" id="do_submit" type="submit" [disabled]="!ibanForm.valid">
+    Initiate new payment
+  </button>
+</form>

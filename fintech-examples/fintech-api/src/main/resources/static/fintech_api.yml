@@ -261,6 +261,7 @@ paths:
         - $ref: "#/components/parameters/LoARetrievalInformation"
         #query
         - $ref: "#/components/parameters/withBalance"
+        - $ref: "#/components/parameters/online"
 
       security:
         - sessionCookie: []
@@ -291,6 +292,7 @@ paths:
         - $ref: "#/components/parameters/entryReferenceFrom"
         - $ref: "#/components/parameters/bookingStatus"
         - $ref: "#/components/parameters/deltaList"
+        - $ref: "#/components/parameters/online"
 
         #header
         - $ref: "#/components/parameters/X-Request-ID"
@@ -735,6 +737,16 @@ components:
       required: false
       schema:
         type: string
+
+    online:
+      name: online
+      in: query
+      description: |
+        If true, new data will be requested and cache will be updated
+      example: "false"
+      schema:
+        type: boolean
+        default: "true"
 
   responses:
     200_PaymentInitiationStatusResponseList:

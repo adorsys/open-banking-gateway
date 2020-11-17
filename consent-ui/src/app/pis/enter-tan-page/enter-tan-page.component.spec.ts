@@ -10,6 +10,8 @@ describe('PIS EnterTanPageComponent', () => {
   let component: EnterTanPageComponent;
   let fixture: ComponentFixture<EnterTanPageComponent>;
 
+  beforeAll(() => (window.onbeforeunload = jasmine.createSpy()));
+
   beforeEach(async(() => {
     TestBed.configureTestingModule({
       declarations: [EnterTanPageComponent],

@@ -21,6 +21,8 @@ describe('LoginComponent', () => {
   let el: HTMLElement;
   let router: Router;
 
+  beforeAll(() => (window.onbeforeunload = jasmine.createSpy()));
+
   beforeEach(async(() => {
     TestBed.configureTestingModule({
       imports: [

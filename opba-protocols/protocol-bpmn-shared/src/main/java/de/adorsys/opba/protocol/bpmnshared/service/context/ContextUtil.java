@@ -1,16 +1,18 @@
 package de.adorsys.opba.protocol.bpmnshared.service.context;
 
-import com.google.common.net.UrlEscapers;
 import de.adorsys.opba.protocol.bpmnshared.GlobalConst;
-import lombok.Getter;
-import lombok.RequiredArgsConstructor;
+import de.adorsys.opba.protocol.bpmnshared.dto.context.BaseContext;
+import lombok.Data;
 import lombok.experimental.UtilityClass;
 import org.flowable.engine.delegate.DelegateExecution;
-import org.springframework.expression.ExpressionParser;
-import org.springframework.expression.common.TemplateParserContext;
-import org.springframework.expression.spel.standard.SpelExpressionParser;
-import org.springframework.expression.spel.support.StandardEvaluationContext;
+import org.mapstruct.Mapper;
+import org.mapstruct.Mapping;
+import org.mapstruct.factory.Mappers;
+import org.springframework.web.util.UriComponentsBuilder;
 
+import java.net.URI;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.function.Consumer;
 
 /**
@@ -37,39 +39,53 @@ public class ContextUtil {
         execution.setVariable(GlobalConst.CONTEXT, ctx);
     }
 
-    /**
-     * Allows to perform string interpolation like '/ais/#{ctx.getName}' using the process context.
-     */
-    @SuppressWarnings("unchecked")
-    public <R, T> R evaluateSpelForCtx(String expression, DelegateExecution execution, T context) {
-        return (R) evaluateSpelForCtx(expression, execution, context, Object.class);
+    public URI buildAndExpandQueryParameters(String urlTemplate, BaseContext context) {
+        return buildAndExpandQueryParameters(urlTemplate, context, Mappers.getMapper(DefaultContextMapper.class));
+    }
+
+    public URI buildAndExpandQueryParameters(String urlTemplate, BaseContext context, ContextMapper mapper) {
+        return buildAndExpandQueryParameters(urlTemplate, mapper.map(context));
     }
 
     /**
-     * Allows to perform string interpolation like '/ais/#{ctx.getName}' using the process context of defined class.
+     * Allows to perform string interpolation like '/ais/{sessionId}' using the process context.
      */
-    public <R, T> R evaluateSpelForCtx(
-            String expression, DelegateExecution execution, T context, Class<R> resultClass) {
-        ExpressionParser parser = new SpelExpressionParser();
-        StandardEvaluationContext parseContext = new StandardEvaluationContext(new SpelCtx<>(execution, context));
-        return parser.parseExpression(expression, new TemplateParserContext()).getValue(parseContext, resultClass);
+    public URI buildAndExpandQueryParameters(String urlTemplate, UrlContext context) {
+        Map<String, String> expansionContext = new HashMap<>();
+
+        expansionContext.put("authSessionId", context.getAuthSessionId());
+        expansionContext.put("selectedScaType", context.getSelectedScaType());
+        expansionContext.put("redirectCode", context.getRedirectCode());
+        expansionContext.put("aspspRedirectCode", context.getAspspRedirectCode());
+        expansionContext.put("isWrongCreds", null == context.getIsWrongCreds() ? null : context.getIsWrongCreds().toString());
+
+        return UriComponentsBuilder.fromHttpUrl(urlTemplate)
+                .buildAndExpand(expansionContext)
+                .toUri();
     }
 
-    /**
-     * Helper class for string interpolation that allows:
-     * <ul>
-     *     <li>to generate URL safe versions of values: {@link SpelCtx#urlSafe(String)}</li>
-     * </ul>
-     */
-    @Getter
-    @RequiredArgsConstructor
-    private class SpelCtx<T> {
+    @Data
+    public static class UrlContext {
 
-        private final DelegateExecution execution;
-        private final T context;
+        private String authSessionId;
+        private String selectedScaType;
+        private String redirectCode;
+        private String aspspRedirectCode;
+        private Boolean isWrongCreds;
+    }
 
-        public String urlSafe(String original) {
-            return UrlEscapers.urlPathSegmentEscaper().escape(original);
-        }
+    @FunctionalInterface
+    public interface ContextMapper {
+
+        UrlContext map(BaseContext context);
+    }
+
+    @Mapper
+    public interface DefaultContextMapper extends ContextMapper {
+
+        @Mapping(source = "authorizationSessionIdIfOpened", target = "authSessionId")
+        @Mapping(source = "redirectCodeIfAuthContinued", target = "redirectCode")
+        @Mapping(source = "wrongAuthCredentials", target = "isWrongCreds")
+        UrlContext map(BaseContext context);
     }
 }

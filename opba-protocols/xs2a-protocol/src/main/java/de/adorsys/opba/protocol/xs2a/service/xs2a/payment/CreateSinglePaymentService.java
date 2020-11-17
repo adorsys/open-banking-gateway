@@ -46,10 +46,10 @@ public class CreateSinglePaymentService extends ValidatedExecution<Xs2aPisContex
     @Override
     protected void doPrepareContext(DelegateExecution execution, Xs2aPisContext context) {
         context.setRedirectUriOk(
-                ContextUtil.evaluateSpelForCtx(urlsConfiguration.getPis().getWebHooks().getOk(), execution, context)
+                ContextUtil.buildAndExpandQueryParameters(urlsConfiguration.getPis().getWebHooks().getOk(), context).toASCIIString()
         );
         context.setRedirectUriNok(
-                ContextUtil.evaluateSpelForCtx(urlsConfiguration.getPis().getWebHooks().getNok(), execution, context)
+                ContextUtil.buildAndExpandQueryParameters(urlsConfiguration.getPis().getWebHooks().getNok(), context).toASCIIString()
         );
     }
 

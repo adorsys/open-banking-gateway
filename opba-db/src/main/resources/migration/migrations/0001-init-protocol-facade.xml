@@ -78,7 +78,8 @@
                 <constraints nullable="false"/>
             </column>
         </createTable>
-        <createSequence sequenceName="bank_action_id_sequence" incrementBy="50"/>
+        <!-- startValue is high enough to skip auto-filled banks via migrations sql/csv load -->
+        <createSequence sequenceName="bank_action_id_sequence" startValue="1000000000" incrementBy="50"/>
         <addUniqueConstraint tableName="${table-prefix}bank_action" columnNames="bank_uuid,protocol_action"/>
 
         <createTable tableName="${table-prefix}bank_sub_action">
@@ -95,7 +96,8 @@
                 <constraints nullable="false"/>
             </column>
         </createTable>
-        <createSequence sequenceName="bank_sub_action_id_sequence" incrementBy="50"/>
+        <!-- startValue is high enough to skip auto-filled banks via migrations sql/csv load -->
+        <createSequence sequenceName="bank_sub_action_id_sequence" startValue="1000000000" incrementBy="50"/>
         <addUniqueConstraint tableName="${table-prefix}bank_sub_action" columnNames="action_id,protocol_action"/>
         <addForeignKeyConstraint constraintName="${table-prefix}fk_bank_sub_action_bank_action"
                                  baseTableName="${table-prefix}bank_sub_action"
@@ -515,5 +517,15 @@
                                  referencedTableName="${table-prefix}bank_action"
                                  referencedColumnNames="id"/>
         <createSequence sequenceName="validation_rule_sequence" incrementBy="50"/>
+    </changeSet>
+    <changeSet author="iiuex@adorsys.com.ua" id="2020-10-21">
+    <comment>Create datasafe configuration table</comment>
+        <createTable tableName="${table-prefix}datasafe_config">
+            <column name="id" type="BIGINT">
+                <constraints primaryKey="true"/>
+            </column>
+            <column name="config" type="CLOB"/>
+        </createTable>
+        <createSequence sequenceName="datasafe_config_sequence" incrementBy="50"/>
     </changeSet>
 </databaseChangeLog>

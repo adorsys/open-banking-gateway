@@ -6,7 +6,7 @@ spring:
     url: jdbc:h2:mem:testdb
     driver-class-name: org.h2.Driver
     username: sa
-    data-password: password
+    password: password
   jpa:
     database-platform: org.hibernate.dialect.H2Dialect
     open-in-view: false
@@ -22,6 +22,8 @@ spring:
 
 api:
   url: http://localhost:${server.port}
+  redirect-ok-template: ${api.url}/consent-confirmed?redirectCode={redirectCode}
+  redirect-nok-template: ${api.url}/consent-declined
 
 firefly:
   url: http://localhost:9999
@@ -30,6 +32,7 @@ open-banking:
   url: https://obg-dev-openbankinggateway.cloud.adorsys.de/
   client-id: MY-SUPER-FINTECH-ID
   data-protection-password: qwerty
+  user-id: test-user
 
 security:
   # This is the example private key value used only for DEMO purposes
@@ -38,3 +41,10 @@ security:
   signSubject: fintech@awesome-fintech.com
   algorithm: RSA
   claim-name-key: sign-data
+
+drools:
+  categorizer:
+    ruleset:
+      - categorization/rules-sandbox.drl
+      - categorization/rules-de.drl
+      - categorization/rules-en.drl

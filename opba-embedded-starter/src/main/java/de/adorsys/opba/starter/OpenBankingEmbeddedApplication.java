@@ -1,5 +1,6 @@
 package de.adorsys.opba.starter;
 
+import de.adorsys.opba.adminapi.config.EnableAdminApi;
 import de.adorsys.opba.consentapi.config.EnableConsentApi;
 import de.adorsys.opba.db.config.EnableBankingPersistence;
 import de.adorsys.opba.protocol.hbci.EnableHbciProtocol;
@@ -12,6 +13,7 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
 
+@EnableAdminApi
 @EnableConsentApi
 @EnableBankingApi
 @EnableTppAuthApi
