@@ -2,7 +2,6 @@ package de.adorsys.opba.protocol.bpmnshared.config.flowable;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
-// import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.ImmutableMap;
 import de.adorsys.opba.protocol.api.services.scoped.RequestScoped;
 import de.adorsys.opba.protocol.api.services.scoped.RequestScopedServicesProvider;
