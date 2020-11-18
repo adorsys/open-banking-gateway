@@ -3,7 +3,7 @@ import { ActivatedRoute } from '@angular/router';
 import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
 import { RouterTestingModule } from '@angular/router/testing';
-import {ReactiveFormsModule} from "@angular/forms";
+import { ReactiveFormsModule } from '@angular/forms';
 
 import { PaymentAccountPaymentsComponent } from './payment-account-payments.component';
 

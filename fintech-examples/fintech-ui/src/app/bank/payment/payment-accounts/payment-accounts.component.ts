@@ -2,8 +2,8 @@ import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { StorageService } from '../../../services/storage.service';
 import { Consts } from '../../../models/consts';
-import {ValidatorService} from "angular-iban";
-import {FormBuilder, FormGroup, Validators} from "@angular/forms";
+import { ValidatorService } from 'angular-iban';
+import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 
 @Component({
   selector: 'app-list-accounts-for-payment',
@@ -17,8 +17,12 @@ export class PaymentAccountsComponent implements OnInit {
   accounts = [];
   ibanForm: FormGroup;
 
-  constructor(private storageService: StorageService, private formBuilder: FormBuilder,
-              private router: Router, private route: ActivatedRoute) {}
+  constructor(
+    private storageService: StorageService,
+    private formBuilder: FormBuilder,
+    private router: Router,
+    private route: ActivatedRoute
+  ) {}
 
   ngOnInit() {
     this.bankId = this.route.snapshot.params[Consts.BANK_ID_NAME];
@@ -36,8 +40,8 @@ export class PaymentAccountsComponent implements OnInit {
   }
 
   initiateSinglePayment() {
-    const iban = this.ibanForm.get('iban').value.replace(/\s/g, "");
-    this.router.navigate(['../account/initiate'], {relativeTo: this.route, queryParams: {iban}});
+    const iban = this.ibanForm.get('iban').value.replace(/\s/g, '');
+    this.router.navigate(['../account/initiate'], { relativeTo: this.route, queryParams: { iban } });
   }
 
   get iban() {

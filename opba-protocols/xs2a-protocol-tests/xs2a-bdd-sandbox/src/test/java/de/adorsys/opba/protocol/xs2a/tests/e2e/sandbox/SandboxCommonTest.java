@@ -91,7 +91,7 @@ public class SandboxCommonTest<GIVEN, WHEN, THEN> extends SpringScenarioTest<GIV
 
             // push Online-Banking-UI declared port as we use Starter only to check if all apps are up
             JsonNode appConfig = YML.readTree(new File(DOCKER_COMPOSE_SANDBOX_YML));
-            int onlineBankingUiPort = Integer.parseInt(appConfig.at("/services/x2sa-sandbox-onlinebankingui/ports/0").asText().split(":")[0]);
+            int onlineBankingUiPort = Integer.parseInt(appConfig.at("/services/xs2a-sandbox-onlinebankingui/ports/0").asText().split(":")[0]);
             // while it is not launching anything, it allows to await for apps to be ready to use:
             starter = new SandboxAppsStarter(ImmutableMap.of(SandboxApp.ONLINE_BANKING_UI, onlineBankingUiPort));
             // Ensure that ports are clear:
