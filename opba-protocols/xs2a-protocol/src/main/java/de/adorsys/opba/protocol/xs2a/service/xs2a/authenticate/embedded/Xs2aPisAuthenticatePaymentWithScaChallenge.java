@@ -14,6 +14,8 @@ import de.adorsys.opba.protocol.xs2a.service.xs2a.validation.Xs2aValidator;
 import de.adorsys.xs2a.adapter.api.PaymentInitiationService;
 import de.adorsys.xs2a.adapter.api.RequestParams;
 import de.adorsys.xs2a.adapter.api.Response;
+import de.adorsys.xs2a.adapter.api.model.PaymentProduct;
+import de.adorsys.xs2a.adapter.api.model.PaymentService;
 import de.adorsys.xs2a.adapter.api.model.ScaStatusResponse;
 import de.adorsys.xs2a.adapter.api.model.TransactionAuthorisation;
 import lombok.RequiredArgsConstructor;
@@ -55,8 +57,8 @@ public class Xs2aPisAuthenticatePaymentWithScaChallenge extends ValidatedExecuti
             ValidatedPathHeadersBody<Xs2aAuthorizedPaymentParameters, Xs2aStandardHeaders, TransactionAuthorisation> params) {
 
         Response<ScaStatusResponse> authResponse = pis.updatePaymentPsuData(
-                params.getPath().getPaymentType().getValue(),
-                params.getPath().getPaymentProduct(),
+                PaymentService.fromValue(params.getPath().getPaymentType().getValue()),
+                PaymentProduct.fromValue(params.getPath().getPaymentProduct()),
                 params.getPath().getPaymentId(),
                 params.getPath().getAuthorizationId(),
                 params.getHeaders().toHeaders(),

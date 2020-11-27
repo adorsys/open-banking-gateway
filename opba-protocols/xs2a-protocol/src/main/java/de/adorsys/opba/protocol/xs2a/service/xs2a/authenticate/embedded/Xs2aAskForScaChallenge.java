@@ -25,7 +25,7 @@ public class Xs2aAskForScaChallenge extends ValidatedExecution<Xs2aContext> {
 
     @Override
     protected void doRealExecution(DelegateExecution execution, Xs2aContext context) {
-        context.setSelectedScaType(context.getScaSelected().getAuthenticationType());
+        context.setSelectedScaType(context.getScaSelected().getAuthenticationType().toString());
         redirectExecutor.redirect(execution, context, urls -> {
             ProtocolUrlsConfiguration.UrlSet urlSet = ProtocolAction.SINGLE_PAYMENT.equals(context.getAction())
                     ? urls.getPis() : urls.getAis();

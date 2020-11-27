@@ -19,6 +19,7 @@ import de.adorsys.opba.protocol.xs2a.service.xs2a.dto.payment.PaymentInfoParamet
 import de.adorsys.xs2a.adapter.api.PaymentInitiationService;
 import de.adorsys.xs2a.adapter.api.Response;
 import de.adorsys.xs2a.adapter.api.model.PaymentInitiationWithStatusResponse;
+import de.adorsys.xs2a.adapter.api.model.PaymentProduct;
 import lombok.RequiredArgsConstructor;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
@@ -53,7 +54,7 @@ public class Xs2aGetPaymentInfoEntrypoint implements GetPaymentInfoState {
         ValidatedPathHeaders<PaymentInfoParameters, PaymentInfoHeaders> params = extractor.forExecution(prepareContext(context, payment));
 
         Response<PaymentInitiationWithStatusResponse> paymentInformation = pis.getSinglePaymentInformation(
-                context.getRequest().getPaymentProduct().toString(),
+                PaymentProduct.fromValue(context.getRequest().getPaymentProduct().toString()),
                 payment.getPaymentId(),
                 params.getHeaders().toHeaders(),
                 params.getPath().toParameters()

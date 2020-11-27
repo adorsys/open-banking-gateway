@@ -14,6 +14,7 @@ import de.adorsys.opba.protocol.xs2a.service.xs2a.validation.Xs2aValidator;
 import de.adorsys.xs2a.adapter.api.PaymentInitiationService;
 import de.adorsys.xs2a.adapter.api.RequestParams;
 import de.adorsys.xs2a.adapter.api.Response;
+import de.adorsys.xs2a.adapter.api.model.PaymentProduct;
 import de.adorsys.xs2a.adapter.api.model.PaymentService;
 import de.adorsys.xs2a.adapter.api.model.StartScaprocessResponse;
 import de.adorsys.xs2a.adapter.api.model.UpdatePsuAuthentication;
@@ -51,8 +52,8 @@ public class StartPaymentAuthorization extends ValidatedExecution<Xs2aPisContext
         params.getHeaders().setTppRedirectPreferred(tppRedirectPreferredResolver.isRedirectApproachPreferred(config));
 
         Response<StartScaprocessResponse> scaStart = pis.startPaymentAuthorisation(
-                PaymentService.PAYMENTS.toString(),
-                params.getPath().getPaymentProduct(),
+                PaymentService.PAYMENTS,
+                PaymentProduct.fromValue(params.getPath().getPaymentProduct()),
                 params.getPath().getPaymentId(),
                 params.getHeaders().toHeaders(),
                 RequestParams.empty(),
