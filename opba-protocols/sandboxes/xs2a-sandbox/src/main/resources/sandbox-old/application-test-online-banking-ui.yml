@@ -1,5 +1,0 @@
-port: ${common.apps.local.onlinebankingui.port}
-env:
-  # Note that linux uses host network
-  # other OS use host.docker.internal (requires docker 18.03+)
-  ONLINE_BANKING_SERVER_URL: http://${dockerHost}:${common.apps.local.onlinebanking.port}

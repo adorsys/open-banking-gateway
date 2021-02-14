@@ -51,20 +51,26 @@
         <dependency>
             <groupId>de.adorsys.ledgers</groupId>
             <artifactId>gateway-app</artifactId>
-            <version>5.10</version>
+            <version>9.7</version>
         </dependency>
         <!-- adorsys/xs2a-aspsp-profile:5.3+ AspspProfileApplication -->
         <dependency>
             <groupId>de.adorsys.psd2</groupId>
             <artifactId>aspsp-profile-server</artifactId>
-            <version>5.10</version>
+            <version>9.7</version>
             <classifier>exec</classifier>
         </dependency>
         <!-- adorsys/xs2a-consent-management:5.3 -->
         <dependency>
             <groupId>de.adorsys.psd2</groupId>
             <artifactId>cms-standalone-service</artifactId>
-            <version>5.10</version>
+            <version>9.7</version>
+        </dependency>
+        <!-- adorsys/xs2a-certificate-generator -->
+        <dependency>
+            <groupId>de.adorsys.psd2</groupId>
+            <artifactId>certificate-generator</artifactId>
+            <version>9.7</version>
         </dependency>
 
         <!-- https://github.com/adorsys/XS2A-Sandbox -->
@@ -72,19 +78,13 @@
         <dependency>
             <groupId>de.adorsys.psd2.sandbox</groupId>
             <artifactId>online-banking-app</artifactId>
-            <version>2.9</version>
+            <version>5.5</version>
         </dependency>
         <!-- adorsys/xs2a-tpp-rest-server -->
         <dependency>
             <groupId>de.adorsys.psd2.sandbox</groupId>
             <artifactId>tpp-rest-server</artifactId>
-            <version>2.9</version>
-        </dependency>
-        <!-- adorsys/xs2a-certificate-generator -->
-        <dependency>
-            <groupId>de.adorsys.psd2.sandbox</groupId>
-            <artifactId>certificate-generator</artifactId>
-            <version>2.9</version>
+            <version>5.5</version>
         </dependency>
 
         <!-- https://github.com/adorsys/ledgers -->
@@ -92,7 +92,7 @@
         <dependency>
             <groupId>de.adorsys.ledgers</groupId>
             <artifactId>ledgers-app</artifactId>
-            <version>2.8</version>
+            <version>4.5</version>
         </dependency>
         <!-- END -->
 

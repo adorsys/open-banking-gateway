@@ -66,14 +66,14 @@ import static org.awaitility.Awaitility.await;
 @Getter
 public enum SandboxApp {
 
-    ONLINE_BANKING_UI("adorsys/xs2a-online-banking-ui:2.9", true), // adorsys/xs2a-online-banking-ui
-    LEDGERS_APP("ledgers-app-2.8.jar"), // adorsys/ledgers
-    LEDGERS_GATEWAY("gateway-app-5.10.jar", false, ImmutableSet.of(ONLINE_BANKING_UI, LEDGERS_APP)), // adorsys/xs2a-connector-examples
-    ASPSP_PROFILE("aspsp-profile-server-5.10-exec.jar"), // adorsys/xs2a-aspsp-profile
-    CONSENT_MGMT("cms-standalone-service-5.10.jar"), // adorsys/xs2a-consent-management
-    ONLINE_BANKING("online-banking-app-2.9.jar", false, ImmutableSet.of(ONLINE_BANKING_UI, LEDGERS_APP)), // adorsys/xs2a-online-banking
-    TPP_REST("tpp-rest-server-2.9.jar", false, ImmutableSet.of(ONLINE_BANKING_UI, LEDGERS_APP)), // adorsys/xs2a-tpp-rest-server
-    CERT_GENERATOR("certificate-generator-2.9.jar"); // adorsys/xs2a-certificate-generator
+//    ONLINE_BANKING_UI("adorsys/xs2a-online-banking-ui:5.5", true), // adorsys/xs2a-online-banking-ui
+//    LEDGERS_APP("ledgers-app-4.5.jar"), // adorsys/ledgers
+//    LEDGERS_GATEWAY("gateway-app-9.7.jar", false, ImmutableSet.of(ONLINE_BANKING_UI, LEDGERS_APP)), // adorsys/xs2a-connector-examples
+//    ASPSP_PROFILE("aspsp-profile-server-9.7-exec.jar"), // adorsys/xs2a-aspsp-profile
+//    CONSENT_MGMT("cms-standalone-service-9.7.jar"), // adorsys/xs2a-consent-management
+//    ONLINE_BANKING("online-banking-app-5.5.jar", false, ImmutableSet.of(ONLINE_BANKING_UI, LEDGERS_APP)), // adorsys/xs2a-online-banking
+//    TPP_REST("tpp-rest-server-5.5.jar", false, ImmutableSet.of(ONLINE_BANKING_UI, LEDGERS_APP)), // adorsys/xs2a-tpp-rest-server
+    CERT_GENERATOR("certificate-generator-9.7.jar"); // adorsys/xs2a-certificate-generator
 
 
     public static final String SANDBOX_LOG_LEVEL = "SANDBOX_LOG_LEVEL";
@@ -136,7 +136,7 @@ public enum SandboxApp {
             return false;
         }
 
-        JsonNode tree = YML.readTree(Resources.getResource("sandbox-old/application-test-common.yml"));
+        JsonNode tree = YML.readTree(Resources.getResource("sandbox/application-test-common.yml"));
         String pointer = "/common/apps/local/" + name().toLowerCase().replaceAll("_", "") + "/port";
         JsonNode port = tree.at(pointer);
 
@@ -215,10 +215,10 @@ public enum SandboxApp {
         try {
             Map<String, String> envVars = new HashMap<>();
             // sandbox/application-test-common.yml
-            JsonNode commonConfig = YML.readTree(Resources.getResource("sandbox-old/application-test-common.yml"));
+            JsonNode commonConfig = YML.readTree(Resources.getResource("sandbox/application-test-common.yml"));
             // sandbox/application-test-${appName}.yml
             String pointer = "/env";
-            JsonNode appConfig = YML.readTree(Resources.getResource("sandbox-old/application-" + testProfileName() + ".yml"));
+            JsonNode appConfig = YML.readTree(Resources.getResource("sandbox/application-" + testProfileName() + ".yml"));
             JsonNode declaredVars = appConfig.at(pointer);
 
             declaredVars.fields().forEachRemaining(entry -> readYamlVariableToMap(entry, commonConfig, envVars));
@@ -290,15 +290,15 @@ public enum SandboxApp {
             ClassloaderWithJar classloaderWithJar = new ClassloaderWithJar(jarOrDockerFile);
             buildSpringConfigLocation(ctx);
             getMainEntryPoint(classloaderWithJar).invoke(
-                    null,
-                    (Object) new String[] {
-                            "--spring.profiles.include=" + Joiner.on(",").join(activeProfilesForTest()),
-                            "--spring.config.location=" + buildSpringConfigLocation(ctx),
-                            "--primary.profile=" + getPrimaryConfigFile(),
-                            "--testcontainers.postgres.port=" + ctx.getDbPort().get(),
-                            "--logging.level.root=" + getSandboxLogLevel(),
-                            "--feign.client.config.default.loggerLevel=NONE"
-                    }
+                    null, (Object) new String[] {}
+//                    (Object) new String[] {
+//                            "--spring.profiles.include=" + Joiner.on(",").join(activeProfilesForTest()),
+//                            "--spring.config.location=" + buildSpringConfigLocation(ctx),
+//                            "--primary.profile=" + getPrimaryConfigFile(),
+//                            "--testcontainers.postgres.port=" + ctx.getDbPort().get(),
+//                            "--logging.level.root=" + getSandboxLogLevel(),
+//                            "--feign.client.config.default.loggerLevel=NONE"
+//                    }
             );
         } catch (IllegalAccessException | InvocationTargetException ex) {
             log.error("Failed to invoke main() method for {} of {}", name(), jarOrDockerFile, ex);
@@ -316,14 +316,14 @@ public enum SandboxApp {
         return Joiner.on(",").join(
                 "classpath:/",
                 // Due to different classloader used by Spring we can't reference these in other way:
-                getAndValidatePathFromResource("sandbox-old/application-" + dbProfileAndStartDbIfNeeded(ctx) + ".yml"),
-                getAndValidatePathFromResource("sandbox-old/application-test-common.yml"),
+                getAndValidatePathFromResource("sandbox/application-" + dbProfileAndStartDbIfNeeded(ctx) + ".yml"),
+                getAndValidatePathFromResource("sandbox/application-test-common.yml"),
                 getPrimaryConfigFile()
         );
     }
 
     private String getPrimaryConfigFile() {
-        return getAndValidatePathFromResource("sandbox-old/application-" + testProfileName() + ".yml");
+        return getAndValidatePathFromResource("sandbox/application-" + testProfileName() + ".yml");
     }
 
     @SneakyThrows
@@ -353,7 +353,7 @@ public enum SandboxApp {
     // Profiles from spring.profile.active are not always applied, forcing it.
     @SneakyThrows
     public Set<String> extraProfiles() {
-        JsonNode tree = YML.readTree(Resources.getResource("sandbox-old/application-" + testProfileName() + ".yml"));
+        JsonNode tree = YML.readTree(Resources.getResource("sandbox/application-" + testProfileName() + ".yml"));
         String pointer = "/spring/profiles/active";
         JsonNode activeProfiles = tree.at(pointer);
 

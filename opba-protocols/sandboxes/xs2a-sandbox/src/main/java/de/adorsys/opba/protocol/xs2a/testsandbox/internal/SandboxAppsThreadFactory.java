@@ -6,10 +6,6 @@ import lombok.extern.slf4j.Slf4j;
 import org.jetbrains.annotations.NotNull;
 
 import java.lang.reflect.Field;
-import java.lang.reflect.InvocationTargetException;
-import java.lang.reflect.Method;
-import java.net.URL;
-import java.net.URLClassLoader;
 import java.util.concurrent.ThreadFactory;
 
 /**
@@ -42,26 +38,26 @@ class SandboxAppsThreadFactory implements ThreadFactory {
             this.app = computeApp(runnable);
             this.ctx = ctx;
         }
-
-        @Override
-        @SneakyThrows
-        public void setContextClassLoader(ClassLoader loader) {
-            if (null == loader) {
-                return;
-            }
-
-            ctx.getLoader().put(app, loader);
-            // Disable tomcat access to shared VM variable once when started
-            disableTomcatWar(loader);
-
-            super.setContextClassLoader(
-                    new URLClassLoader(
-                            new URL[] {/* Here you can add extra jars */ },
-                            loader
-                    )
-            );
-        }
-
+//
+//        @Override
+//        @SneakyThrows
+//        public void setContextClassLoader(ClassLoader loader) {
+//            if (null == loader) {
+//                return;
+//            }
+//
+//            ctx.getLoader().put(app, loader);
+//            // Disable tomcat access to shared VM variable once when started
+//            disableTomcatWar(loader);
+//
+//            super.setContextClassLoader(
+//                    new URLClassLoader(
+//                            new URL[] {/* Here you can add extra jars */ },
+//                            loader
+//                    )
+//            );
+//        }
+//
         @SneakyThrows
         private SandboxApp computeApp(Runnable runnable) {
             // One thread - one task assumption
@@ -69,19 +65,19 @@ class SandboxAppsThreadFactory implements ThreadFactory {
             f.setAccessible(true);
             return ((SandboxAppExecutor.TaggedFuture) f.get(runnable)).getApp();
         }
-
-        private void disableTomcatWar(ClassLoader loader) {
-            try {
-                Class<?> cls = loader.loadClass("org.apache.catalina.webresources.TomcatURLStreamHandlerFactory");
-                Method disable = cls.getDeclaredMethod("disable");
-                disable.invoke(null);
-
-            } catch (NoSuchMethodException | ClassNotFoundException ex) {
-                log.info("Looks like tomcat is not present", ex);
-            } catch (IllegalAccessException | InvocationTargetException ex) {
-                log.error("Failed disabling tomcat", ex);
-            }
-        }
+//
+//        private void disableTomcatWar(ClassLoader loader) {
+//            try {
+//                Class<?> cls = loader.loadClass("org.apache.catalina.webresources.TomcatURLStreamHandlerFactory");
+//                Method disable = cls.getDeclaredMethod("disable");
+//                disable.invoke(null);
+//
+//            } catch (NoSuchMethodException | ClassNotFoundException ex) {
+//                log.info("Looks like tomcat is not present", ex);
+//            } catch (IllegalAccessException | InvocationTargetException ex) {
+//                log.error("Failed disabling tomcat", ex);
+//            }
+//        }
 
     }
 }
