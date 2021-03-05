@@ -21,6 +21,13 @@ jobs:
         with:
           access_token: ${{ secrets.GITHUB_TOKEN }}
 
+      - name: Free disk space
+        run: |
+          sudo apt clean
+          docker rmi $(docker image ls -aq)
+          echo "Available space"
+          df -h
+
       - name: Build project and run default test suite
         run: ./scripts/build_and_test.sh
         env:

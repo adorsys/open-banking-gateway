@@ -16,6 +16,13 @@ jobs:
         with:
           java-version: 11
 
+      - name: Free disk space
+        run: |
+          sudo apt clean
+          docker rmi $(docker image ls -aq)
+          echo "Available space"
+          df -h
+
       - name: Promote artifacts from OpenShift to DockerHub
         run: ./scripts/promote_oc_image_to_dockerhub.sh scripts/service.list
         env:
