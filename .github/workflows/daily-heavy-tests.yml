@@ -4,6 +4,7 @@ name: Develop branch heavy tests daily build
 on:
   schedule:
     - cron: '0 9 */1 * *' # 9 AM UTC each day
+  [workflow_dispatch]
 
 jobs:
   build:
