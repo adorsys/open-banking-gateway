@@ -30,8 +30,9 @@ jobs:
           df -h
 
       - name: Build project and run default test suite
-        (while true; do df -h sleep 60 done) &
-        run: ./scripts/build_and_test.sh
+        run: |
+          (while true; do df -h sleep 60 done) &
+          ./scripts/build_and_test.sh
         env:
           MAVEN_OPTS: "-Dhttp.keepAlive=false -Dmaven.wagon.http.pool=false -Dmaven.wagon.httpconnectionManager.ttlSeconds=120" # Github-on-Azure tweaks - https://github.com/actions/virtual-environments/issues/1499
           ENABLE_HEAVY_TESTS: true
