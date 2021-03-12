@@ -75,6 +75,18 @@ The following picture displays the overall technical architecture concept of thi
  - [docker-compose-dev.yml](https://github.com/adorsys/open-banking-gateway/tree/develop/docker-compose-dev.yml) - docker-compose file in the project root for **Development** (requires building docker images)
  - [docker-compose.yml](https://github.com/adorsys/open-banking-gateway/tree/develop/docker-compose.yml) - docker-compose file in the project root for **Demo** (Images will be pulled from DockerHub)
 
+## Postman scripts to play with API 
+
+- [postman-collections](postman/collections)
+- [postman-environments](postman/environments)
+
+### Postman collection details
+
+- [postman-ais-collection](https://github.com/adorsys/open-banking-gateway/tree/develop/postman/collections/OPBA-AIS-HBCI-OR-XS2A-EMBEDDED-2-SCA-METHODS.postman_collection.json) Xs2a-embedded or HBCI AIS (account information services) example - getting users' account and transactions list
+
+**Note:** Postman requires disabled request signing functionality - for that use Spring-profile `no-signature-filter`
+
+
 ## Information for developers:
  
  - Working with BPMN: As most protocols use BPMN, we have developed 
