@@ -1,5 +1,5 @@
-# Builds daily develop branch using `heavy tests` test suite
-name: Develop branch heavy tests daily build
+# Builds manually develop branch using `heavy tests` test suite
+name: Develop branch heavy tests MANUAL build
 
 on: [workflow_dispatch]
 
