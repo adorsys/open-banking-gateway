@@ -31,7 +31,6 @@ jobs:
 
       - name: Build project and run default test suite
         run: |
-          (while true; do df -h sleep 60 done) &
           ./scripts/build_and_test.sh
         env:
           MAVEN_OPTS: "-Dhttp.keepAlive=false -Dmaven.wagon.http.pool=false -Dmaven.wagon.httpconnectionManager.ttlSeconds=120" # Github-on-Azure tweaks - https://github.com/actions/virtual-environments/issues/1499
