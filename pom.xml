@@ -127,7 +127,7 @@
         <bouncycastle.version>1.64</bouncycastle.version>
         <datasafe.version>1.0.0.1</datasafe.version>
         <liquibase.version>3.8.0</liquibase.version>
-        <mapstruct.version>1.3.1.Final</mapstruct.version>
+        <mapstruct.version>1.4.2.Final</mapstruct.version>
         <hibernate.version>5.4.9.Final</hibernate.version> <!-- Currently only for bytecode enhancer plugin, can't inherit Spring BOM -->
         <jjwt.version>0.11.1</jjwt.version>
         <nimbus.version>8.18</nimbus.version>
@@ -144,7 +144,7 @@
 
         <!-- Adorsys libs -->
         <xs2a-adapter.version>0.1.8</xs2a-adapter.version>
-        <multibanking.version>5.5.14</multibanking.version>
+        <multibanking.version>5.5.24</multibanking.version>
 
         <!-- Util libs -->
         <iban.4j.version>3.2.1</iban.4j.version>
@@ -163,7 +163,7 @@
         <selenium-jupiter.version>3.3.4</selenium-jupiter.version>
         <slf4j-simple.version>1.7.29</slf4j-simple.version>
         <!-- other properties -->
-        <lombok-maven-plugin.version>1.18.6.0</lombok-maven-plugin.version>
+        <lombok-maven-plugin.version>1.18.18</lombok-maven-plugin.version>
         <maven.dependency.plugin.version>3.1.2</maven.dependency.plugin.version>
         <maven-remote-resources-plugin.version>1.6.0</maven-remote-resources-plugin.version>
         <maven-resources-plugin.version>3.1.0</maven-resources-plugin.version>

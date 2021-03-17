@@ -1,9 +1,7 @@
-# Builds daily develop branch using `heavy tests` test suite
-name: Develop branch heavy tests daily build
+# Builds manually develop branch using `heavy tests` test suite
+name: Develop branch heavy tests MANUAL build
 
-on:
-  schedule:
-    - cron: '0 9 */1 * *' # 9 AM UTC each day
+on: [workflow_dispatch]
 
 jobs:
   build:
@@ -31,6 +29,7 @@ jobs:
 
       - name: Build project and run default test suite
         run: |
+          (while true; do df -h; sleep 60; done;) &
           ./scripts/build_and_test.sh
         env:
           MAVEN_OPTS: "-Dhttp.keepAlive=false -Dmaven.wagon.http.pool=false -Dmaven.wagon.httpconnectionManager.ttlSeconds=120" # Github-on-Azure tweaks - https://github.com/actions/virtual-environments/issues/1499
