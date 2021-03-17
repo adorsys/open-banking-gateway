@@ -33,6 +33,8 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 public class Xs2aAisAuthenticateUserConsentWithPin extends ValidatedExecution<Xs2aContext> {
 
+    private static final String DECOUPLED_AUTHENTICATION_PSU_MESSAGE = "Please check your app to continue";
+
     private final Extractor extractor;
     private final Xs2aValidator validator;
     private final AccountInformationService ais;
@@ -75,6 +77,7 @@ public class Xs2aAisAuthenticateUserConsentWithPin extends ValidatedExecution<Xs
                     ctx.setScaSelected(authResponse.getBody().getChosenScaMethod());
                     ctx.setChallengeData(authResponse.getBody().getChallengeData());
                     ctx.setScaStatus(null == scaStatus ? null : scaStatus.getValue());
+                    setSelectedScaDecoupledIfCanBeChosen(authResponse, ctx);
                 }
         );
     }
@@ -90,26 +93,36 @@ public class Xs2aAisAuthenticateUserConsentWithPin extends ValidatedExecution<Xs
     }
 
     private void setScaAvailableMethodsIfCanBeChosen(
-        Response<UpdatePsuAuthenticationResponse> authResponse, Xs2aContext ctx
+            Response<UpdatePsuAuthenticationResponse> authResponse, Xs2aContext ctx
     ) {
         if (null == authResponse.getBody().getScaMethods()) {
-           return;
+            return;
         }
 
         ctx.setAvailableSca(
-            authResponse.getBody().getScaMethods().stream()
-                .map(ScaMethod.FROM_AUTH::map)
-                .collect(Collectors.toList())
+                authResponse.getBody().getScaMethods().stream()
+                        .map(ScaMethod.FROM_AUTH::map)
+                        .collect(Collectors.toList())
         );
+    }
+
+    private void setSelectedScaDecoupledIfCanBeChosen(
+            Response<UpdatePsuAuthenticationResponse> authResponse, Xs2aContext ctx
+    ) {
+        if (null == authResponse.getBody().getChosenScaMethod() || null == authResponse.getBody().getPsuMessage()) {
+            return;
+        }
+
+        ctx.setSelectedScaDecoupled(authResponse.getBody().getPsuMessage().startsWith(DECOUPLED_AUTHENTICATION_PSU_MESSAGE));
     }
 
     @Service
     public static class Extractor extends PathHeadersBodyMapperTemplate<
-                        Xs2aContext,
-                        Xs2aAuthorizedConsentParameters,
-                        Xs2aStandardHeaders,
-                        ProvidePsuPasswordBody,
-                        UpdatePsuAuthentication> {
+                                                                               Xs2aContext,
+                                                                               Xs2aAuthorizedConsentParameters,
+                                                                               Xs2aStandardHeaders,
+                                                                               ProvidePsuPasswordBody,
+                                                                               UpdatePsuAuthentication> {
 
         public Extractor(
                 DtoMapper<Xs2aContext, ProvidePsuPasswordBody> toValidatableBody,

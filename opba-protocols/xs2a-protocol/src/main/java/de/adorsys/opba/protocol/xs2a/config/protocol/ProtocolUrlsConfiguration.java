@@ -118,5 +118,11 @@ public class ProtocolUrlsConfiguration {
          */
         @NotBlank
         private String providePsuIban;
+
+        /**
+         * Page where the user waits until decoupled SCA is finalized with the external device.
+         */
+        @NotBlank
+        private String waitDecoupledSca;
     }
 }

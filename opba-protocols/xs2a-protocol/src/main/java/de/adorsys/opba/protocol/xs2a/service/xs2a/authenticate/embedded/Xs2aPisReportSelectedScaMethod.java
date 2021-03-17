@@ -28,6 +28,8 @@ import org.springframework.stereotype.Service;
 @RequiredArgsConstructor
 public class Xs2aPisReportSelectedScaMethod extends ValidatedExecution<Xs2aPisContext> {
 
+    private static final String DECOUPLED_AUTHENTICATION_PSU_MESSAGE = "Please check your app to continue";
+
     private final Extractor extractor;
     private final Xs2aValidator validator;
     private final PaymentInitiationService pis;
@@ -56,8 +58,14 @@ public class Xs2aPisReportSelectedScaMethod extends ValidatedExecution<Xs2aPisCo
                 (Xs2aContext ctx) -> {
                     ctx.setScaSelected(authResponse.getBody().getChosenScaMethod());
                     ctx.setChallengeData(authResponse.getBody().getChallengeData());
+                    ctx.setSelectedScaDecoupled(checkDecoupledSca(authResponse.getBody().getPsuMessage()));
                 }
         );
+    }
+
+    private boolean checkDecoupledSca(String psuMessage) {
+        return psuMessage != null
+                       && psuMessage.startsWith(DECOUPLED_AUTHENTICATION_PSU_MESSAGE);
     }
 
     @Service

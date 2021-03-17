@@ -2,6 +2,7 @@ package de.adorsys.opba.protocol.api.dto.result.fromprotocol;
 
 /**
  * Protocol result interface.
+ *
  * @param <T> Result body (i.e. account list)
  */
 public interface Result<T> {
@@ -19,5 +20,12 @@ public interface Result<T> {
      */
     default T getBody() {
         return null;
+    }
+
+    /**
+     * Keeps session key, if this method returns true.
+     */
+    default boolean doNotRemoveKey() {
+        return false;
     }
 }

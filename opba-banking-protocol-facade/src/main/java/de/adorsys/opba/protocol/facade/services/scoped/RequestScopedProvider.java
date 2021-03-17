@@ -132,6 +132,10 @@ public class RequestScopedProvider implements RequestScopedServicesProvider {
         return memoizedProviders.remove(requestScoped.getEncryptionKeyId());
     }
 
+    public InternalRequestScoped getInternalRequestScoped(RequestScoped requestScoped) {
+        return memoizedProviders.get(requestScoped.getEncryptionKeyId());
+    }
+
     @Override
     public RequestScoped findRegisteredByKeyId(String keyId) {
         return memoizedProviders.get(keyId);

@@ -35,6 +35,8 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 public class Xs2aPisAuthenticateUserConsentWithPin extends ValidatedExecution<Xs2aPisContext> {
 
+    private static final String DECOUPLED_AUTHENTICATION_PSU_MESSAGE = "Please check your app to continue";
+
     private final Extractor extractor;
     private final Xs2aValidator validator;
     private final PaymentInitiationService pis;
@@ -80,6 +82,7 @@ public class Xs2aPisAuthenticateUserConsentWithPin extends ValidatedExecution<Xs
                     ctx.setScaSelected(authResponse.getBody().getChosenScaMethod());
                     ctx.setChallengeData(authResponse.getBody().getChallengeData());
                     ctx.setScaStatus(null == scaStatus ? null : scaStatus.getValue());
+                    setSelectedScaDecoupledIfCanBeChosen(authResponse, ctx);
                 }
         );
     }
@@ -106,6 +109,16 @@ public class Xs2aPisAuthenticateUserConsentWithPin extends ValidatedExecution<Xs
                         .map(ScaMethod.FROM_AUTH::map)
                         .collect(Collectors.toList())
         );
+    }
+
+    private void setSelectedScaDecoupledIfCanBeChosen(
+            Response<UpdatePsuAuthenticationResponse> authResponse, Xs2aPisContext ctx
+    ) {
+        if (null == authResponse.getBody().getChosenScaMethod() || null == authResponse.getBody().getPsuMessage()) {
+            return;
+        }
+
+        ctx.setSelectedScaDecoupled(authResponse.getBody().getPsuMessage().startsWith(DECOUPLED_AUTHENTICATION_PSU_MESSAGE));
     }
 
     @Service

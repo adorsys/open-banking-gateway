@@ -57,6 +57,13 @@ public class Xs2aConsentInfo {
     }
 
     /**
+     * Is selected SCA method decoupled
+     */
+    public boolean isDecoupledScaSelected(Xs2aContext ctx) {
+        return ctx.isSelectedScaDecoupled();
+    }
+
+    /**
      * Is the current consent authorization using multiple SCA methods (SMS,email,etc.)
      */
     public boolean isMultipleScaAvailable(Xs2aContext ctx) {
@@ -64,11 +71,19 @@ public class Xs2aConsentInfo {
     }
 
     /**
+     * Is decoupled SCA was finalised bt PSU with mobile or other type of device
+     */
+    public boolean isDecoupledScaFinalizedByPSU(Xs2aContext ctx) {
+        return ctx.isDecoupledScaFinished();
+    }
+
+    /**
      * Is the current consent authorization using zero SCA flow
      */
     public boolean isZeroScaAvailable(Xs2aContext ctx) {
-        return null == ctx.getAvailableSca()
-                       || null != ctx.getAvailableSca() && ctx.getAvailableSca().isEmpty();
+        return (null == ctx.getAvailableSca()
+                       || null != ctx.getAvailableSca() && ctx.getAvailableSca().isEmpty())
+                && null == ctx.getScaSelected();
     }
 
     /**

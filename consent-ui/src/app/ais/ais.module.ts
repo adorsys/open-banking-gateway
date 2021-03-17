@@ -24,6 +24,7 @@ import { ToAspspRedirectionComponent } from './to-aspsp-page/to-aspsp-redirectio
 import { ConsentInfoComponent } from './components/consent-info/consent-info.component';
 import { ConsentSharingComponent } from './entry-page/initiation/consent-sharing/consent-sharing.component';
 import { SharedModule } from '../common/shared.module';
+import {WaitForDecoupled} from "./wait-for-decoupled/wait-for-decoupled";
 
 @NgModule({
   declarations: [
@@ -47,7 +48,8 @@ import { SharedModule } from '../common/shared.module';
     EntryPageAccountsComponent,
     ToAspspRedirectionComponent,
     ConsentInfoComponent,
-    ConsentSharingComponent
+    ConsentSharingComponent,
+    WaitForDecoupled
   ],
   imports: [SharedModule, AisRoutingModule, AngularIbanModule]
 })
