@@ -10,9 +10,9 @@ import de.adorsys.opba.protocol.xs2a.service.mapper.QueryHeadersMapperTemplate;
 import de.adorsys.opba.protocol.xs2a.service.xs2a.dto.Xs2aWithBalanceParameters;
 import de.adorsys.opba.protocol.xs2a.service.xs2a.dto.Xs2aWithConsentIdHeaders;
 import de.adorsys.opba.protocol.xs2a.service.xs2a.validation.Xs2aValidator;
-import de.adorsys.xs2a.adapter.service.AccountInformationService;
-import de.adorsys.xs2a.adapter.service.Response;
-import de.adorsys.xs2a.adapter.service.model.AccountListHolder;
+import de.adorsys.xs2a.adapter.api.AccountInformationService;
+import de.adorsys.xs2a.adapter.api.Response;
+import de.adorsys.xs2a.adapter.api.model.AccountList;
 import lombok.RequiredArgsConstructor;
 import org.flowable.engine.delegate.DelegateExecution;
 import org.springframework.context.ApplicationEventPublisher;
@@ -41,7 +41,7 @@ public class Xs2aAccountListingService extends ValidatedExecution<Xs2aAisContext
     protected void doRealExecution(DelegateExecution execution, Xs2aAisContext context) {
         ValidatedQueryHeaders<Xs2aWithBalanceParameters, Xs2aWithConsentIdHeaders> params = extractor.forExecution(context);
         handler.tryActionOrHandleConsentErrors(execution, eventPublisher, () -> {
-            Response<AccountListHolder> accounts = ais.getAccountList(
+            Response<AccountList> accounts = ais.getAccountList(
                 params.getHeaders().toHeaders(),
                 params.getQuery().toParameters()
             );

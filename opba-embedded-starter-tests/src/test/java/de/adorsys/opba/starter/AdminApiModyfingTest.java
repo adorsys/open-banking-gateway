@@ -27,7 +27,7 @@ import static org.springframework.http.HttpHeaders.AUTHORIZATION;
 /**
  * This is a very basic test to ensure that Admin API functions properly.
  */
-@ActiveProfiles("test")
+@ActiveProfiles(profiles = {"test", "test-separate-db"})  // Use clean DB as may collide
 @Transactional(propagation = Propagation.NOT_SUPPORTED)
 @SpringBootTest(classes = {OpenBankingEmbeddedApplication.class, FintechRequestSigningTestConfig.class}, webEnvironment = RANDOM_PORT)
 class AdminApiModyfingTest {

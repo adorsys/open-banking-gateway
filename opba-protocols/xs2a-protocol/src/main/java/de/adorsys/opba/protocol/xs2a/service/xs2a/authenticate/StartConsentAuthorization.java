@@ -10,9 +10,9 @@ import de.adorsys.opba.protocol.xs2a.service.mapper.PathHeadersMapperTemplate;
 import de.adorsys.opba.protocol.xs2a.service.xs2a.dto.Xs2aInitialConsentParameters;
 import de.adorsys.opba.protocol.xs2a.service.xs2a.dto.Xs2aStandardHeaders;
 import de.adorsys.opba.protocol.xs2a.service.xs2a.validation.Xs2aValidator;
-import de.adorsys.xs2a.adapter.service.AccountInformationService;
-import de.adorsys.xs2a.adapter.service.Response;
-import de.adorsys.xs2a.adapter.service.model.StartScaProcessResponse;
+import de.adorsys.xs2a.adapter.api.AccountInformationService;
+import de.adorsys.xs2a.adapter.api.Response;
+import de.adorsys.xs2a.adapter.api.model.StartScaprocessResponse;
 import lombok.RequiredArgsConstructor;
 import org.flowable.engine.delegate.DelegateExecution;
 import org.springframework.stereotype.Service;
@@ -20,7 +20,7 @@ import org.springframework.stereotype.Service;
 import java.util.UUID;
 
 import static de.adorsys.opba.protocol.xs2a.constant.GlobalConst.CONTEXT;
-import static de.adorsys.xs2a.adapter.service.ResponseHeaders.ASPSP_SCA_APPROACH;
+import static de.adorsys.xs2a.adapter.api.ResponseHeaders.ASPSP_SCA_APPROACH;
 
 /**
  * Initiates the consent authorization. Optionally may provide preferred ASPSP approach.
@@ -48,9 +48,10 @@ public class StartConsentAuthorization extends ValidatedExecution<Xs2aContext> {
 
         params.getHeaders().setTppRedirectPreferred(tppRedirectPreferredResolver.isRedirectApproachPreferred(config));
 
-        Response<StartScaProcessResponse> scaStart = ais.startConsentAuthorisation(
+        Response<StartScaprocessResponse> scaStart = ais.startConsentAuthorisation(
                 params.getPath().getConsentId(),
-                params.getHeaders().toHeaders()
+                params.getHeaders().toHeaders(),
+                params.getPath().toParameters()
         );
 
         String aspspSelectedApproach = scaStart.getHeaders().getHeader(ASPSP_SCA_APPROACH);

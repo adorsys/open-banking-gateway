@@ -16,7 +16,7 @@ import static com.github.tomakehurst.wiremock.client.WireMock.postRequestedFor;
 import static com.github.tomakehurst.wiremock.client.WireMock.urlMatching;
 import static de.adorsys.opba.api.security.external.domain.HttpHeaders.AUTHORIZATION_SESSION_KEY;
 import static de.adorsys.opba.protocol.xs2a.tests.e2e.stages.StagesCommonUtil.withSignatureHeaders;
-import static de.adorsys.xs2a.adapter.service.RequestHeaders.TPP_REDIRECT_URI;
+import static de.adorsys.xs2a.adapter.api.RequestHeaders.TPP_REDIRECT_URI;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.awaitility.Awaitility.await;
 

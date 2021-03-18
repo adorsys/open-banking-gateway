@@ -12,12 +12,14 @@ import de.adorsys.opba.protocol.xs2a.service.xs2a.dto.Xs2aAuthorizedPaymentParam
 import de.adorsys.opba.protocol.xs2a.service.xs2a.dto.Xs2aStandardHeaders;
 import de.adorsys.opba.protocol.xs2a.service.xs2a.dto.authenticate.embedded.ProvidePsuPasswordBody;
 import de.adorsys.opba.protocol.xs2a.service.xs2a.validation.Xs2aValidator;
-import de.adorsys.xs2a.adapter.service.PaymentInitiationService;
-import de.adorsys.xs2a.adapter.service.RequestParams;
-import de.adorsys.xs2a.adapter.service.Response;
-import de.adorsys.xs2a.adapter.service.model.ScaStatus;
-import de.adorsys.xs2a.adapter.service.model.UpdatePsuAuthentication;
-import de.adorsys.xs2a.adapter.service.model.UpdatePsuAuthenticationResponse;
+import de.adorsys.xs2a.adapter.api.PaymentInitiationService;
+import de.adorsys.xs2a.adapter.api.RequestParams;
+import de.adorsys.xs2a.adapter.api.Response;
+import de.adorsys.xs2a.adapter.api.model.PaymentProduct;
+import de.adorsys.xs2a.adapter.api.model.PaymentService;
+import de.adorsys.xs2a.adapter.api.model.ScaStatus;
+import de.adorsys.xs2a.adapter.api.model.UpdatePsuAuthentication;
+import de.adorsys.xs2a.adapter.api.model.UpdatePsuAuthenticationResponse;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.flowable.engine.delegate.DelegateExecution;
@@ -60,8 +62,8 @@ public class Xs2aPisAuthenticateUserConsentWithPin extends ValidatedExecution<Xs
             ValidatedPathHeadersBody<Xs2aAuthorizedPaymentParameters, Xs2aStandardHeaders, UpdatePsuAuthentication>  params) {
 
         Response<UpdatePsuAuthenticationResponse> authResponse = pis.updatePaymentPsuData(
-                params.getPath().getPaymentType().getValue(),
-                params.getPath().getPaymentProduct(),
+                PaymentService.fromValue(params.getPath().getPaymentType().getValue()),
+                PaymentProduct.fromValue(params.getPath().getPaymentProduct()),
                 params.getPath().getPaymentId(),
                 params.getPath().getAuthorizationId(),
                 params.getHeaders().toHeaders(),
@@ -79,7 +81,7 @@ public class Xs2aPisAuthenticateUserConsentWithPin extends ValidatedExecution<Xs
                     setScaAvailableMethodsIfCanBeChosen(authResponse, ctx);
                     ctx.setScaSelected(authResponse.getBody().getChosenScaMethod());
                     ctx.setChallengeData(authResponse.getBody().getChallengeData());
-                    ctx.setScaStatus(null == scaStatus ? null : scaStatus.getValue());
+                    ctx.setScaStatus(null == scaStatus ? null : scaStatus.toString());
                 }
         );
     }

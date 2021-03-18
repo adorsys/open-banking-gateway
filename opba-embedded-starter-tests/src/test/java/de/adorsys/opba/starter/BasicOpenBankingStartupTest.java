@@ -11,7 +11,7 @@ import de.adorsys.opba.protocol.xs2a.entrypoint.pis.Xs2aGetPaymentStatusEntrypoi
 import de.adorsys.opba.protocol.xs2a.entrypoint.pis.Xs2aInitiateSinglePaymentEntrypoint;
 import de.adorsys.opba.protocol.xs2a.tests.e2e.stages.CommonGivenStages;
 import de.adorsys.opba.starter.config.FintechRequestSigningTestConfig;
-import de.adorsys.xs2a.adapter.adapter.StandardPaymentProduct;
+import de.adorsys.xs2a.adapter.api.model.PaymentProduct;
 import io.restassured.RestAssured;
 import io.restassured.filter.Filter;
 import io.restassured.filter.FilterContext;
@@ -199,7 +199,7 @@ class BasicOpenBankingStartupTest {
                     .header(SERVICE_SESSION_ID, UUID.randomUUID().toString())
                 .when()
                     .contentType(ContentType.JSON.withCharset(StandardCharsets.UTF_8))
-                    .get(PIS_PAYMENT_STATUS_ENDPOINT, StandardPaymentProduct.SEPA_CREDIT_TRANSFERS.getSlug())
+                    .get(PIS_PAYMENT_STATUS_ENDPOINT, PaymentProduct.SEPA_CREDIT_TRANSFERS.toString())
                 .then()
                     .statusCode(expected.value());
     }
@@ -210,7 +210,7 @@ class BasicOpenBankingStartupTest {
                 .when()
                     .contentType(ContentType.JSON.withCharset(StandardCharsets.UTF_8))
                     .body(getPaymentBodyStub())
-                    .post(PIS_SINGLE_PAYMENT_ENDPOINT, StandardPaymentProduct.SEPA_CREDIT_TRANSFERS.getSlug())
+                    .post(PIS_SINGLE_PAYMENT_ENDPOINT, PaymentProduct.SEPA_CREDIT_TRANSFERS.toString())
                 .then()
                     .statusCode(expected.value());
     }

@@ -14,8 +14,6 @@ public class AccountListDetailBody {
     private String resourceId;
     private String iban;
     private String bban;
-    private String pan;
-    private String maskedPan;
     private String msisdn;
     private String currency;
     private String name;

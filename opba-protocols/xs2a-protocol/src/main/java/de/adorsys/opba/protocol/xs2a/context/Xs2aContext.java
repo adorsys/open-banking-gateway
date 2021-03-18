@@ -7,10 +7,10 @@ import de.adorsys.opba.protocol.bpmnshared.dto.context.BaseContext;
 import de.adorsys.opba.protocol.api.common.Approach;
 import de.adorsys.opba.protocol.xs2a.domain.dto.forms.ScaMethod;
 import de.adorsys.opba.protocol.xs2a.service.storage.TransientDataEntry;
-import de.adorsys.xs2a.adapter.service.model.AuthenticationObject;
-import de.adorsys.xs2a.adapter.service.model.ChallengeData;
-import de.adorsys.xs2a.adapter.service.model.StartScaProcessResponse;
-import de.adorsys.xs2a.adapter.service.model.TokenResponse;
+import de.adorsys.xs2a.adapter.api.model.AuthenticationObject;
+import de.adorsys.xs2a.adapter.api.model.ChallengeData;
+import de.adorsys.xs2a.adapter.api.model.StartScaprocessResponse;
+import de.adorsys.xs2a.adapter.api.model.TokenResponse;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 
@@ -61,7 +61,7 @@ public class Xs2aContext extends BaseContext {
      * ASPSP response after consent authorization was initiated. Used to retrieve ASPSP redirection link for
      * consent authorization for REDIRECT consent authorization.
      */
-    private StartScaProcessResponse startScaProcessResponse;
+    private StartScaprocessResponse startScaProcessResponse;
 
     /**
      * Consent ID that uniquely identifies the consent within ASPSP. Highly sensitive field.

@@ -2,8 +2,8 @@ package de.adorsys.opba.db.repository;
 
 import de.adorsys.opba.db.domain.entity.BankProfile;
 import de.adorsys.opba.db.repository.jpa.BankProfileJpaRepository;
-import de.adorsys.xs2a.adapter.service.AspspReadOnlyRepository;
-import de.adorsys.xs2a.adapter.service.model.Aspsp;
+import de.adorsys.xs2a.adapter.api.AspspReadOnlyRepository;
+import de.adorsys.xs2a.adapter.api.model.Aspsp;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
 

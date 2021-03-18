@@ -11,11 +11,11 @@ import de.adorsys.opba.protocol.xs2a.service.xs2a.dto.Xs2aAuthorizedConsentParam
 import de.adorsys.opba.protocol.xs2a.service.xs2a.dto.Xs2aStandardHeaders;
 import de.adorsys.opba.protocol.xs2a.service.xs2a.dto.authenticate.embedded.ProvidePsuPasswordBody;
 import de.adorsys.opba.protocol.xs2a.service.xs2a.validation.Xs2aValidator;
-import de.adorsys.xs2a.adapter.service.AccountInformationService;
-import de.adorsys.xs2a.adapter.service.Response;
-import de.adorsys.xs2a.adapter.service.model.ScaStatus;
-import de.adorsys.xs2a.adapter.service.model.UpdatePsuAuthentication;
-import de.adorsys.xs2a.adapter.service.model.UpdatePsuAuthenticationResponse;
+import de.adorsys.xs2a.adapter.api.AccountInformationService;
+import de.adorsys.xs2a.adapter.api.Response;
+import de.adorsys.xs2a.adapter.api.model.ScaStatus;
+import de.adorsys.xs2a.adapter.api.model.UpdatePsuAuthentication;
+import de.adorsys.xs2a.adapter.api.model.UpdatePsuAuthenticationResponse;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.flowable.engine.delegate.DelegateExecution;
@@ -61,6 +61,7 @@ public class Xs2aAisAuthenticateUserConsentWithPin extends ValidatedExecution<Xs
                 params.getPath().getConsentId(),
                 params.getPath().getAuthorizationId(),
                 params.getHeaders().toHeaders(),
+                params.getPath().toParameters(),
                 params.getBody()
         );
 
@@ -74,7 +75,7 @@ public class Xs2aAisAuthenticateUserConsentWithPin extends ValidatedExecution<Xs
                     setScaAvailableMethodsIfCanBeChosen(authResponse, ctx);
                     ctx.setScaSelected(authResponse.getBody().getChosenScaMethod());
                     ctx.setChallengeData(authResponse.getBody().getChallengeData());
-                    ctx.setScaStatus(null == scaStatus ? null : scaStatus.getValue());
+                    ctx.setScaStatus(null == scaStatus ? null : scaStatus.toString());
                 }
         );
     }

@@ -143,7 +143,7 @@
         <maven.replacer.version>1.5.3</maven.replacer.version>
 
         <!-- Adorsys libs -->
-        <xs2a-adapter.version>0.0.9</xs2a-adapter.version>
+        <xs2a-adapter.version>0.1.8</xs2a-adapter.version>
         <multibanking.version>5.5.24</multibanking.version>
 
         <!-- Util libs -->

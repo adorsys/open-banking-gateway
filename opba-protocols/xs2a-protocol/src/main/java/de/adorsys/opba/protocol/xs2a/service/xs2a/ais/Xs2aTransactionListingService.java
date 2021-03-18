@@ -16,9 +16,9 @@ import de.adorsys.opba.protocol.xs2a.service.xs2a.dto.Xs2aResourceParameters;
 import de.adorsys.opba.protocol.xs2a.service.xs2a.dto.Xs2aTransactionParameters;
 import de.adorsys.opba.protocol.xs2a.service.xs2a.dto.Xs2aWithConsentIdHeaders;
 import de.adorsys.opba.protocol.xs2a.service.xs2a.validation.Xs2aValidator;
-import de.adorsys.xs2a.adapter.service.AccountInformationService;
-import de.adorsys.xs2a.adapter.service.Response;
-import de.adorsys.xs2a.adapter.service.model.TransactionsReport;
+import de.adorsys.xs2a.adapter.api.AccountInformationService;
+import de.adorsys.xs2a.adapter.api.Response;
+import de.adorsys.xs2a.adapter.api.model.TransactionsResponse200Json;
 import lombok.RequiredArgsConstructor;
 import org.flowable.engine.delegate.DelegateExecution;
 import org.springframework.context.ApplicationEventPublisher;
@@ -54,7 +54,7 @@ public class Xs2aTransactionListingService extends ValidatedExecution<Transactio
             extractor.forExecution(context);
 
         handler.tryActionOrHandleConsentErrors(execution, eventPublisher, () -> {
-            Response<TransactionsReport> transactionList = ais.getTransactionList(
+            Response<TransactionsResponse200Json> transactionList = ais.getTransactionList(
                 params.getPath().getResourceId(),
                 params.getHeaders().toHeaders(),
                 params.getQuery().toParameters()

@@ -211,52 +211,7 @@ class SandboxE2EProtocolAisTest extends SandboxCommonTest<
                 );
     }
 
-    /**
-     * Not using {@code ParameterizedTest} as OAuth2 is the special case of REDIRECT (to reduce pipeline runtime).
-     */
-    @Test
-    public void testAccountsListWithConsentUsingOAuth2PreStep(FirefoxDriver firefoxDriver) {
-        given()
-                .enabled_oauth2_pre_step_sandbox_mode()
-                .rest_assured_points_to_opba_server_with_fintech_signer_on_banking_api()
-                .user_registered_in_opba_with_credentials(OPBA_LOGIN, OPBA_PASSWORD);
-
-        when()
-                .fintech_calls_list_accounts_for_anton_brueckner()
-                .and()
-                .user_logged_in_into_opba_as_opba_user_with_credentials_using_fintech_supplied_url(OPBA_LOGIN, OPBA_PASSWORD)
-                .and()
-                .user_anton_brueckner_provided_initial_parameters_to_list_accounts_with_all_accounts_consent()
-                .and()
-                .user_anton_brueckner_sees_that_he_needs_to_be_redirected_to_aspsp_and_redirects_to_aspsp()
-                .and()
-                .sandbox_anton_brueckner_navigates_to_bank_auth_page(firefoxDriver)
-                .and()
-                .add_open_banking_auth_session_key_cookie_to_selenium(firefoxDriver)
-                .and()
-                .sandbox_anton_brueckner_inputs_username_and_password_for_oauth2_form(firefoxDriver)
-                .and()
-                .update_redirect_code_from_browser_on_redirect_back_url(firefoxDriver)
-                .and()
-                .user_anton_brueckner_sees_that_he_needs_to_be_redirected_to_aspsp_and_redirects_to_aspsp()
-                .and()
-                .sandbox_anton_brueckner_navigates_to_bank_auth_page(firefoxDriver)
-                .and()
-                .sandbox_anton_brueckner_inputs_username_and_password(firefoxDriver)
-                .and()
-                .sandbox_anton_brueckner_confirms_consent_information(firefoxDriver)
-                .and()
-                .sandbox_anton_brueckner_selects_sca_method(firefoxDriver)
-                .and()
-                .sandbox_anton_brueckner_provides_sca_challenge_result(firefoxDriver)
-                .and()
-                .sandbox_anton_brueckner_clicks_redirect_back_to_tpp_button_api_localhost_cookie_only(firefoxDriver);
-
-        then()
-                .open_banking_has_consent_for_anton_brueckner_account_list()
-                .fintech_calls_consent_activation_for_current_authorization_id()
-                .open_banking_can_read_anton_brueckner_account_data_using_consent_bound_to_service_session(false);
-    }
+    // Note - PreStep is in separate class - SandboxE2EProtocolAisOauth2Test
 
     /**
      * Not using {@code ParameterizedTest} as OAuth2 is the special case of REDIRECT (to reduce pipeline runtime).

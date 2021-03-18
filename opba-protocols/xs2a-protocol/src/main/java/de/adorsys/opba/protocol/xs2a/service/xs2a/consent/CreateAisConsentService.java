@@ -1,18 +1,19 @@
 package de.adorsys.opba.protocol.xs2a.service.xs2a.consent;
 
 import de.adorsys.opba.protocol.xs2a.context.ais.Xs2aAisContext;
-import de.adorsys.opba.protocol.xs2a.service.dto.ValidatedHeadersBody;
+import de.adorsys.opba.protocol.xs2a.service.dto.ValidatedPathHeadersBody;
 import de.adorsys.opba.protocol.xs2a.service.xs2a.dto.consent.ConsentInitiateHeaders;
+import de.adorsys.opba.protocol.xs2a.service.xs2a.dto.consent.ConsentInitiateParameters;
 import de.adorsys.opba.protocol.xs2a.service.xs2a.quirks.QuirkUtil;
-import de.adorsys.xs2a.adapter.service.AccountInformationService;
-import de.adorsys.xs2a.adapter.service.Response;
-import de.adorsys.xs2a.adapter.service.model.ConsentCreationResponse;
-import de.adorsys.xs2a.adapter.service.model.Consents;
+import de.adorsys.xs2a.adapter.api.AccountInformationService;
+import de.adorsys.xs2a.adapter.api.Response;
+import de.adorsys.xs2a.adapter.api.model.Consents;
+import de.adorsys.xs2a.adapter.api.model.ConsentsResponse201;
 import org.flowable.engine.delegate.DelegateExecution;
 import org.springframework.stereotype.Service;
 
 import static de.adorsys.opba.protocol.xs2a.constant.GlobalConst.CONTEXT;
-import static de.adorsys.xs2a.adapter.adapter.link.bg.template.LinksTemplate.SCA_OAUTH;
+import static de.adorsys.xs2a.adapter.impl.link.bg.template.LinksTemplate.SCA_OAUTH;
 
 /**
  * Calls Xs2a API to initiate AIS consent.
@@ -23,9 +24,10 @@ public class CreateAisConsentService {
             AccountInformationService ais,
             DelegateExecution execution,
             Xs2aAisContext context,
-            ValidatedHeadersBody<ConsentInitiateHeaders, Consents> params) {
-        Response<ConsentCreationResponse> consentInit = ais.createConsent(
+            ValidatedPathHeadersBody<ConsentInitiateParameters, ConsentInitiateHeaders, Consents> params) {
+        Response<ConsentsResponse201> consentInit = ais.createConsent(
                 QuirkUtil.pushBicToXs2aAdapterHeaders(context, params.getHeaders().toHeaders()),
+                params.getPath().toParameters(),
                 params.getBody()
         );
 

@@ -5,7 +5,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ArrayNode;
 import de.adorsys.opba.protocol.api.errors.ProcessErrorStrings;
 import de.adorsys.opba.protocol.bpmnshared.dto.messages.InternalReturnableProcessError;
-import de.adorsys.xs2a.adapter.service.exception.ErrorResponseException;
+import de.adorsys.xs2a.adapter.api.exception.ErrorResponseException;
 import lombok.extern.slf4j.Slf4j;
 import org.flowable.engine.delegate.DelegateExecution;
 import org.springframework.context.ApplicationEventPublisher;

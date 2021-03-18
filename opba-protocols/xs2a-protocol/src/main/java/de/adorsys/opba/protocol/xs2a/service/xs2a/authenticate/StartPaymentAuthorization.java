@@ -11,11 +11,13 @@ import de.adorsys.opba.protocol.xs2a.service.mapper.PathHeadersMapperTemplate;
 import de.adorsys.opba.protocol.xs2a.service.xs2a.dto.Xs2aStandardHeaders;
 import de.adorsys.opba.protocol.xs2a.service.xs2a.dto.Xs2aStartPaymentAuthorizationParameters;
 import de.adorsys.opba.protocol.xs2a.service.xs2a.validation.Xs2aValidator;
-import de.adorsys.xs2a.adapter.service.PaymentInitiationService;
-import de.adorsys.xs2a.adapter.service.RequestParams;
-import de.adorsys.xs2a.adapter.service.Response;
-import de.adorsys.xs2a.adapter.service.model.StartScaProcessResponse;
-import de.adorsys.xs2a.adapter.service.model.UpdatePsuAuthentication;
+import de.adorsys.xs2a.adapter.api.PaymentInitiationService;
+import de.adorsys.xs2a.adapter.api.RequestParams;
+import de.adorsys.xs2a.adapter.api.Response;
+import de.adorsys.xs2a.adapter.api.model.PaymentProduct;
+import de.adorsys.xs2a.adapter.api.model.PaymentService;
+import de.adorsys.xs2a.adapter.api.model.StartScaprocessResponse;
+import de.adorsys.xs2a.adapter.api.model.UpdatePsuAuthentication;
 import lombok.RequiredArgsConstructor;
 import org.flowable.engine.delegate.DelegateExecution;
 import org.springframework.stereotype.Service;
@@ -23,7 +25,7 @@ import org.springframework.stereotype.Service;
 import java.util.UUID;
 
 import static de.adorsys.opba.protocol.xs2a.constant.GlobalConst.CONTEXT;
-import static de.adorsys.xs2a.adapter.service.ResponseHeaders.ASPSP_SCA_APPROACH;
+import static de.adorsys.xs2a.adapter.api.ResponseHeaders.ASPSP_SCA_APPROACH;
 
 /**
  * Initiates the payment authorization. Optionally may provide preferred ASPSP approach.
@@ -49,8 +51,9 @@ public class StartPaymentAuthorization extends ValidatedExecution<Xs2aPisContext
 
         params.getHeaders().setTppRedirectPreferred(tppRedirectPreferredResolver.isRedirectApproachPreferred(config));
 
-        Response<StartScaProcessResponse> scaStart = pis.startSinglePaymentAuthorisation(
-                params.getPath().getPaymentProduct(),
+        Response<StartScaprocessResponse> scaStart = pis.startPaymentAuthorisation(
+                PaymentService.PAYMENTS,
+                PaymentProduct.fromValue(params.getPath().getPaymentProduct()),
                 params.getPath().getPaymentId(),
                 params.getHeaders().toHeaders(),
                 RequestParams.empty(),

@@ -11,11 +11,13 @@ import de.adorsys.opba.protocol.xs2a.service.xs2a.dto.Xs2aAuthorizedPaymentParam
 import de.adorsys.opba.protocol.xs2a.service.xs2a.dto.Xs2aStandardHeaders;
 import de.adorsys.opba.protocol.xs2a.service.xs2a.dto.authenticate.embedded.ProvideScaChallengeResultBody;
 import de.adorsys.opba.protocol.xs2a.service.xs2a.validation.Xs2aValidator;
-import de.adorsys.xs2a.adapter.service.PaymentInitiationService;
-import de.adorsys.xs2a.adapter.service.RequestParams;
-import de.adorsys.xs2a.adapter.service.Response;
-import de.adorsys.xs2a.adapter.service.model.ScaStatusResponse;
-import de.adorsys.xs2a.adapter.service.model.TransactionAuthorisation;
+import de.adorsys.xs2a.adapter.api.PaymentInitiationService;
+import de.adorsys.xs2a.adapter.api.RequestParams;
+import de.adorsys.xs2a.adapter.api.Response;
+import de.adorsys.xs2a.adapter.api.model.PaymentProduct;
+import de.adorsys.xs2a.adapter.api.model.PaymentService;
+import de.adorsys.xs2a.adapter.api.model.ScaStatusResponse;
+import de.adorsys.xs2a.adapter.api.model.TransactionAuthorisation;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.flowable.engine.delegate.DelegateExecution;
@@ -55,8 +57,8 @@ public class Xs2aPisAuthenticatePaymentWithScaChallenge extends ValidatedExecuti
             ValidatedPathHeadersBody<Xs2aAuthorizedPaymentParameters, Xs2aStandardHeaders, TransactionAuthorisation> params) {
 
         Response<ScaStatusResponse> authResponse = pis.updatePaymentPsuData(
-                params.getPath().getPaymentType().getValue(),
-                params.getPath().getPaymentProduct(),
+                PaymentService.fromValue(params.getPath().getPaymentType().getValue()),
+                PaymentProduct.fromValue(params.getPath().getPaymentProduct()),
                 params.getPath().getPaymentId(),
                 params.getPath().getAuthorizationId(),
                 params.getHeaders().toHeaders(),
@@ -69,7 +71,7 @@ public class Xs2aPisAuthenticatePaymentWithScaChallenge extends ValidatedExecuti
                 (Xs2aContext ctx) -> {
                     ctx.setLastScaChallenge(null); // eagerly destroy SCA challenge, albeit it is not persisted
                     ctx.setWrongAuthCredentials(false);
-                    ctx.setScaStatus(authResponse.getBody().getScaStatus().getValue());
+                    ctx.setScaStatus(authResponse.getBody().getScaStatus().toString());
                 }
         );
     }

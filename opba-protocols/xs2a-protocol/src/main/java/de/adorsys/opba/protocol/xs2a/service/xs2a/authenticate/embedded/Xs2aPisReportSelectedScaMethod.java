@@ -11,11 +11,13 @@ import de.adorsys.opba.protocol.xs2a.service.xs2a.dto.Xs2aAuthorizedPaymentParam
 import de.adorsys.opba.protocol.xs2a.service.xs2a.dto.Xs2aStandardHeaders;
 import de.adorsys.opba.protocol.xs2a.service.xs2a.dto.authenticate.embedded.SelectScaChallengeBody;
 import de.adorsys.opba.protocol.xs2a.service.xs2a.validation.Xs2aValidator;
-import de.adorsys.xs2a.adapter.service.PaymentInitiationService;
-import de.adorsys.xs2a.adapter.service.RequestParams;
-import de.adorsys.xs2a.adapter.service.Response;
-import de.adorsys.xs2a.adapter.service.model.SelectPsuAuthenticationMethod;
-import de.adorsys.xs2a.adapter.service.model.SelectPsuAuthenticationMethodResponse;
+import de.adorsys.xs2a.adapter.api.PaymentInitiationService;
+import de.adorsys.xs2a.adapter.api.RequestParams;
+import de.adorsys.xs2a.adapter.api.Response;
+import de.adorsys.xs2a.adapter.api.model.PaymentProduct;
+import de.adorsys.xs2a.adapter.api.model.PaymentService;
+import de.adorsys.xs2a.adapter.api.model.SelectPsuAuthenticationMethod;
+import de.adorsys.xs2a.adapter.api.model.SelectPsuAuthenticationMethodResponse;
 import lombok.RequiredArgsConstructor;
 import org.flowable.engine.delegate.DelegateExecution;
 import org.springframework.stereotype.Service;
@@ -42,8 +44,8 @@ public class Xs2aPisReportSelectedScaMethod extends ValidatedExecution<Xs2aPisCo
         ValidatedPathHeadersBody<Xs2aAuthorizedPaymentParameters, Xs2aStandardHeaders, SelectPsuAuthenticationMethod> params = extractor.forExecution(context);
 
         Response<SelectPsuAuthenticationMethodResponse> authResponse = pis.updatePaymentPsuData(
-                params.getPath().getPaymentType().getValue(),
-                params.getPath().getPaymentProduct(),
+                PaymentService.fromValue(params.getPath().getPaymentType().getValue()),
+                PaymentProduct.fromValue(params.getPath().getPaymentProduct()),
                 params.getPath().getPaymentId(),
                 params.getPath().getAuthorizationId(),
                 params.getHeaders().toHeaders(),

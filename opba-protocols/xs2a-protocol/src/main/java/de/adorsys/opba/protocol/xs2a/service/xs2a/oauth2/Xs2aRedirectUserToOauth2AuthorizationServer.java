@@ -14,7 +14,7 @@ import de.adorsys.opba.protocol.xs2a.service.xs2a.Xs2aRedirectExecutor;
 import de.adorsys.opba.protocol.xs2a.service.xs2a.dto.oauth2.Xs2aOauth2Headers;
 import de.adorsys.opba.protocol.xs2a.service.xs2a.dto.oauth2.Xs2aOauth2Parameters;
 import de.adorsys.opba.protocol.xs2a.service.xs2a.validation.Xs2aValidator;
-import de.adorsys.xs2a.adapter.service.Oauth2Service;
+import de.adorsys.xs2a.adapter.api.Oauth2Service;
 import lombok.RequiredArgsConstructor;
 import lombok.SneakyThrows;
 import org.flowable.engine.RuntimeService;

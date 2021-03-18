@@ -67,7 +67,7 @@ public class SandboxServers<SELF extends SandboxServers<SELF>> extends CommonGiv
         RestAssured
                 .given()
                     .contentType(MediaType.APPLICATION_JSON_VALUE)
-                    .body("[\"REDIRECT\",\"EMBEDDED\",\"DECOUPLED\",\"OAUTH\"]")
+                    .body("[\"REDIRECT\",\"EMBEDDED\",\"DECOUPLED\"]")
                 .when()
                     .put(aspspProfileUri + "/api/v1/aspsp-profile/for-debug/sca-approaches")
                 .then()
