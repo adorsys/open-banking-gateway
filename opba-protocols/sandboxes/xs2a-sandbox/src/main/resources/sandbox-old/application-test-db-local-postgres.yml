@@ -4,8 +4,7 @@ common:
   # Database instance for sandbox applications, one should assume that username and password are same and are
   # equal to application profile without '-', ' ', etc.:
   db:
-    url-base: jdbc:postgresql://${db.host-and-port}/sandbox_apps?currentSchema=
-    url: ${common.db.url-base}${localapp.schema.name}
+    url: jdbc:postgresql://${db.host-and-port}/sandbox_apps?currentSchema=${localapp.schema.name}
     driver: org.postgresql.Driver
 
 db:

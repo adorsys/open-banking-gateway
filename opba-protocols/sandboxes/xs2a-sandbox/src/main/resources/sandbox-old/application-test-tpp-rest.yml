@@ -5,22 +5,10 @@ localapp:
 
 spring:
   datasource:
-    hikari:
-      jdbc-url: ${common.db.url}
-      username: testtpprest
-      password: testtpprest
-  consent:
-    datasource:
-      hikari:
-        jdbc-url: ${common.db.url}
-        username: testtpprest
-        password: testtpprest
-  tpp:
-    datasource:
-      hikari:
-        jdbc-url: ${common.db.base-url}tpp
-        username: cms
-        password: cms
+    url: ${common.db.url}
+    username: testtpprest
+    password: testtpprest
+    driver-class-name: ${common.db.driver}
   liquibase:
     enabled: true
 server:
