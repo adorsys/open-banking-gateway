@@ -212,23 +212,15 @@ public class AccountInformationResult<SELF extends AccountInformationResult<SELF
 
         assertThat(body).extracting(it -> it.read("$.transactions.booked[*].creditorAccount.iban")).asList()
                 .containsOnly(
-                        "DE80760700240271232400",
-                        "DE80760700240271232400",
-                        "DE80760700240271232400",
-                        "DE80760700240271232400",
-                        "DE80760700240271232400",
-                        "DE80760700240271232400",
-                        "DE80760700240271232400",
-                        "DE80760700240271232400"
+                        "DE80760700240271232400", "DE80760700240271232400", "DE80760700240271232400",
+                        "DE80760700240271232400", "DE80760700240271232400", "DE80760700240271232400",
+                        "DE80760700240271232400", "DE80760700240271232400"
                 );
 
         assertThat(body).extracting(it -> it.read("$.transactions.booked[*].debtorAccount.iban")).asList()
-                .containsOnly("DE23760700240234367800",
-                        "DE67760700240243265400",
-                        "DE38760700240320465700",
-                        "DE84100100100568753108",
-                        "DE38760700240320465700",
-                        "DE80760700240271232400"
+                .containsOnly(
+                        "DE23760700240234367800", "DE67760700240243265400", "DE38760700240320465700",
+                        "DE84100100100568753108", "DE38760700240320465700", "DE80760700240271232400"
                 );
 
         assertThat(body)
