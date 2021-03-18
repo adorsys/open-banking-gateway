@@ -65,7 +65,6 @@ setting:
     scaApproachesSupported:
       - REDIRECT
       - EMBEDDED
-      - OAUTH
     scaRedirectFlow: REDIRECT
     oauthConfigurationUrl: http://localhost:20015/oauth/authorization-server
     startAuthorisationMode: auto

@@ -150,8 +150,6 @@ public class SandboxE2EProtocolPisTest extends SandboxCommonTest<
                 .and()
                 .sandbox_anton_brueckner_navigates_to_bank_auth_page(firefoxDriver)
                 .and()
-                .sandbox_anton_brueckner_inputs_username_and_password(firefoxDriver)
-                .and()
                 .sandbox_anton_brueckner_confirms_consent_information(firefoxDriver)
                 .and()
                 .sandbox_anton_brueckner_selects_sca_method(firefoxDriver)
