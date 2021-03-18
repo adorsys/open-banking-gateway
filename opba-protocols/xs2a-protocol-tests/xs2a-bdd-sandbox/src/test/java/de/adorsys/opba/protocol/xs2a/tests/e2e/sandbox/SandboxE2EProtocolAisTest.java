@@ -9,7 +9,6 @@ import de.adorsys.opba.protocol.xs2a.tests.e2e.sandbox.servers.config.RetryableC
 import de.adorsys.opba.protocol.xs2a.tests.e2e.stages.AccountInformationResult;
 import de.adorsys.psd2.sandbox.cms.starter.Xs2aCmsAutoConfiguration;
 import io.github.bonigarcia.seljup.SeleniumExtension;
-import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.condition.EnabledIfEnvironmentVariable;
 import org.junit.jupiter.api.extension.ExtendWith;

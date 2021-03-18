@@ -1,7 +1,5 @@
 package de.adorsys.opba.protocol.xs2a.tests.e2e.sandbox;
 
-import com.jayway.jsonpath.JsonPath;
-import de.adorsys.opba.protocol.api.common.Approach;
 import de.adorsys.opba.protocol.xs2a.tests.e2e.JGivenConfig;
 import de.adorsys.opba.protocol.xs2a.tests.e2e.sandbox.servers.SandboxServers;
 import de.adorsys.opba.protocol.xs2a.tests.e2e.sandbox.servers.WebDriverBasedAccountInformation;
@@ -12,8 +10,6 @@ import io.github.bonigarcia.seljup.SeleniumExtension;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.condition.EnabledIfEnvironmentVariable;
 import org.junit.jupiter.api.extension.ExtendWith;
-import org.junit.jupiter.params.ParameterizedTest;
-import org.junit.jupiter.params.provider.EnumSource;
 import org.openqa.selenium.firefox.FirefoxDriver;
 import org.springframework.boot.actuate.autoconfigure.security.servlet.ManagementWebSecurityAutoConfiguration;
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
@@ -28,7 +24,6 @@ import static de.adorsys.opba.protocol.xs2a.tests.Const.ENABLE_HEAVY_TESTS;
 import static de.adorsys.opba.protocol.xs2a.tests.Const.TRUE_BOOL;
 import static de.adorsys.opba.protocol.xs2a.tests.TestProfiles.MOCKED_SANDBOX;
 import static de.adorsys.opba.protocol.xs2a.tests.TestProfiles.ONE_TIME_POSTGRES_RAMFS;
-import static de.adorsys.opba.protocol.xs2a.tests.e2e.stages.StagesCommonUtil.SANDBOX_OAUTH2_INTEGRATED_BANK_ID;
 import static org.springframework.boot.test.context.SpringBootTest.WebEnvironment.RANDOM_PORT;
 
 /**
