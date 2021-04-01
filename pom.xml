@@ -110,7 +110,7 @@
         <commit-id.version>4.0.0</commit-id.version>
         <guava.version>28.1-jre</guava.version>
         <apache.commons-lang3.version>3.9</apache.commons-lang3.version>
-        <fasterxml.version>2.12.1</fasterxml.version>
+        <fasterxml.version>2.12.2</fasterxml.version>
         <fasterxml-data-format.version>2.9.8</fasterxml-data-format.version>
         <swaggerv3.version>2.1.0</swaggerv3.version>
         <swagger.version>1.5.23</swagger.version>
@@ -133,7 +133,7 @@
         <nimbus.version>8.18</nimbus.version>
         <javapoet.version>1.13.0</javapoet.version>
         <swagger-parser.version>2.0.21</swagger-parser.version>
-        <jackson-yaml.version>2.11.1</jackson-yaml.version>
+        <jackson-yaml.version>2.12.1</jackson-yaml.version>
         <auto-service.version>1.0-rc7</auto-service.version>
 
         <!-- Flowable BPMN -->
@@ -265,6 +265,12 @@
             <dependency>
                 <groupId>com.fasterxml.jackson.core</groupId>
                 <artifactId>jackson-databind</artifactId>
+                <version>${fasterxml.version}</version>
+                <scope>compile</scope>
+            </dependency>
+            <dependency>
+                <groupId>com.fasterxml.jackson.core</groupId>
+                <artifactId>jackson-core</artifactId>
                 <version>${fasterxml.version}</version>
                 <scope>compile</scope>
             </dependency>
