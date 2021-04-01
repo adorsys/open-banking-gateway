@@ -12,10 +12,8 @@ import org.springframework.boot.test.context.SpringBootTest;
 
 import java.io.File;
 import java.io.FileWriter;
-import java.util.Arrays;
 import java.util.List;
 import java.util.UUID;
-import java.util.stream.Collectors;
 
 import static de.adorsys.opba.db.BankProtocolActionsSqlGeneratorTest.ENABLE_BANK_PROTOCOL_ACTIONS_SQL_GENERATION;
 import static java.nio.charset.StandardCharsets.UTF_8;
