@@ -21,7 +21,7 @@ import static java.nio.charset.StandardCharsets.UTF_8;
 /**
  * Is not actually a test. This class generates 'bank_action_data.csv', 'bank_profile_data.csv' and 'bank_sub_action_data.csv' out of 'banks.csv',
  * which data to fill into 'opb_bank', 'opb_bank_profile', 'opb_bank_action' and 'opb_bank_sub_action' tables.
- * It is disable by default. To enable it, set 'ENABLE_BANK_PROTOCOL_ACTIONS_SQL_GENERATION' environment variable to 'true'
+ * It is disabled by default. To enable it, set 'ENABLE_BANK_PROTOCOL_ACTIONS_SQL_GENERATION' environment variable to 'true'
  */
 @SpringBootTest(classes = TestConfig.class)
 @EnabledIfEnvironmentVariable(named = ENABLE_BANK_PROTOCOL_ACTIONS_SQL_GENERATION, matches = "true")
@@ -131,7 +131,7 @@ public class BankProtocolActionsSqlGeneratorTest {
     }
 
     private String replaceWithHbciData(String bankRecord) {
-        return String.format("%s%s", UUID.randomUUID().toString(), insertHbciPrefixes(bankRecord));
+        return String.format("%s%s", UUID.randomUUID().toString(), removeUrls(insertHbciPrefixes(bankRecord)));
     }
 
     /**
@@ -142,8 +142,8 @@ public class BankProtocolActionsSqlGeneratorTest {
         int skipCommas = 3;
         char[] chars = input.substring(input.indexOf(',') + 1).toCharArray();
 
-        for (int i = 0; i < chars.length; i++) {
-            if (chars[i] == ',') {
+        for (char aChar : chars) {
+            if (aChar == ',') {
                 skipCommas--;
                 if (skipCommas == 0) {
                     result.append(HBCI_ADAPTER_ID_PREFIX);
@@ -151,10 +151,17 @@ public class BankProtocolActionsSqlGeneratorTest {
                 }
             }
 
-            result.append(chars[i]);
+            result.append(aChar);
         }
 
         return result.toString();
+    }
+
+    private String removeUrls(String input) {
+        String[] segments = input.split(",", -1);
+        segments[3] = "";
+        segments[6] = "";
+        return String.join(",", segments);
     }
 
     @SneakyThrows
