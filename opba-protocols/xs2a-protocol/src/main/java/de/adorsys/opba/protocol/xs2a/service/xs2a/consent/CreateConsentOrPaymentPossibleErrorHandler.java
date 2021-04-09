@@ -45,8 +45,11 @@ public class CreateConsentOrPaymentPossibleErrorHandler {
         } catch (ServiceConfigurationError ex) {
             // FIXME https://github.com/adorsys/xs2a-adapter/issues/577
             // FIXME https://github.com/adorsys/open-banking-gateway/issues/1199
-            if (null != ex.getCause() && ex.getCause().getMessage().contains("Exception during Deutsche bank adapter PSU password encryption")) {
+            if (null != ex.getCause()
+                    && ex.getCause() instanceof PsuPasswordEncodingException
+                    && ex.getCause().getMessage().contains("Exception during Deutsche bank adapter PSU password encryption")) {
                 log.error("Failed to initialize Deutsche bank encryption service, but ignoring it");
+                tryCreate.run(); // Retry, by skipping errored adapter
             } else {
                 throw ex;
             }
