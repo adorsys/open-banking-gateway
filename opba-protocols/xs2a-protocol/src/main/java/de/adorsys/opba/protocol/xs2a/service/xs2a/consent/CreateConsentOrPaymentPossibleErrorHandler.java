@@ -6,6 +6,7 @@ import de.adorsys.opba.protocol.xs2a.config.aspspmessages.AspspMessages;
 import de.adorsys.opba.protocol.xs2a.context.Xs2aContext;
 import de.adorsys.xs2a.adapter.api.exception.ErrorResponseException;
 import de.adorsys.xs2a.adapter.api.exception.OAuthException;
+import de.adorsys.xs2a.adapter.api.exception.PsuPasswordEncodingException;
 import de.adorsys.xs2a.adapter.api.model.MessageCode;
 import de.adorsys.xs2a.adapter.api.model.TppMessage;
 import lombok.RequiredArgsConstructor;
@@ -40,6 +41,14 @@ public class CreateConsentOrPaymentPossibleErrorHandler {
             tryHandleWrongIbanOrCredentialsExceptionOrOauth2(execution, ex);
         } catch (OAuthException ex) {
             tryHandleOauth2Exception(execution);
+        } catch (PsuPasswordEncodingException ex) {
+            // FIXME https://github.com/adorsys/xs2a-adapter/issues/577
+            // FIXME https://github.com/adorsys/open-banking-gateway/issues/1199
+            if (ex.getMessage().contains("Exception during Deutsche bank adapter PSU password encryption")) {
+                log.error("Failed to initialize Deutsche bank encryption service, but ignoring it");
+            } else {
+                throw ex;
+            }
         }
     }
 
