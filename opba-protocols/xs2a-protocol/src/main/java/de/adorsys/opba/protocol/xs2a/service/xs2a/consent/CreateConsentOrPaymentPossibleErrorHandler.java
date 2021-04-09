@@ -15,6 +15,7 @@ import org.flowable.engine.delegate.DelegateExecution;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
+import java.util.ServiceConfigurationError;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -41,10 +42,10 @@ public class CreateConsentOrPaymentPossibleErrorHandler {
             tryHandleWrongIbanOrCredentialsExceptionOrOauth2(execution, ex);
         } catch (OAuthException ex) {
             tryHandleOauth2Exception(execution);
-        } catch (PsuPasswordEncodingException ex) {
+        } catch (ServiceConfigurationError ex) {
             // FIXME https://github.com/adorsys/xs2a-adapter/issues/577
             // FIXME https://github.com/adorsys/open-banking-gateway/issues/1199
-            if (ex.getMessage().contains("Exception during Deutsche bank adapter PSU password encryption")) {
+            if (null != ex.getCause() && ex.getCause().getMessage().contains("Exception during Deutsche bank adapter PSU password encryption")) {
                 log.error("Failed to initialize Deutsche bank encryption service, but ignoring it");
             } else {
                 throw ex;
