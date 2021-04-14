@@ -16,6 +16,7 @@ import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.Method;
 import java.lang.reflect.Proxy;
 import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.Map;
 
 @Slf4j
@@ -32,7 +33,7 @@ public class LogConfig {
             var res = joinPoint.proceed();
             var mapper = new ObjectMapper().disable(SerializationFeature.FAIL_ON_EMPTY_BEANS).findAndRegisterModules().setSerializationInclusion(JsonInclude.Include.NON_NULL);
             if (!joinPoint.getSignature().getName().equals("getStrongCustomerAuthorisation")) {
-                log.info("OBS: {}", mapper.writeValueAsString(Map.of("method", joinPoint.getSignature().getName(), "return", res, "args", joinPoint.getArgs())));
+                log.info("OBS: {}", mapper.writeValueAsString(buildMap(res, joinPoint.getSignature().getName(), joinPoint.getArgs())));
             }
             if (res instanceof StrongCustomerAuthorisable) {
                 return Proxy.newProxyInstance(
@@ -42,6 +43,15 @@ public class LogConfig {
                 );
             }
             return res;
+        }
+
+        private static Map<String, Object> buildMap(Object res, String name, Object[] args) {
+            // Guava and java11 maps don't allow null values.
+            Map<String, Object> map = new LinkedHashMap<>();
+            map.put("method", name);
+            map.put("return", res);
+            map.put("args", args);
+            return map;
         }
 
         @Slf4j
@@ -63,11 +73,7 @@ public class LogConfig {
             public Object invoke(Object proxy, Method method, Object[] args) throws Throwable {
                 Object result = methods.get(method.getName()).invoke(target, args);
                 var mapper = new ObjectMapper().disable(SerializationFeature.FAIL_ON_EMPTY_BEANS).findAndRegisterModules().setSerializationInclusion(JsonInclude.Include.NON_NULL);
-                Map<String, Object> value = new HashMap<>();
-                value.put("method", method.getName());
-                value.put("return", result);
-                value.put("args", args);
-                log.info("OBS.SCA: {}", mapper.writeValueAsString(value));
+                log.info("OBS.SCA: {}", mapper.writeValueAsString(buildMap(result, method.getName(), args)));
                 return result;
             }
         }
