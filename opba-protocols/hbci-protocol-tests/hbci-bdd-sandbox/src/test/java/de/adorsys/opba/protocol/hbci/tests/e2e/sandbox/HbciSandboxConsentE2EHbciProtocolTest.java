@@ -1,5 +1,8 @@
 package de.adorsys.opba.protocol.hbci.tests.e2e.sandbox;
 
+import com.fasterxml.jackson.annotation.JsonInclude;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.SerializationFeature;
 import com.tngtech.jgiven.integration.spring.junit5.SpringScenarioTest;
 import de.adorsys.multibanking.domain.spi.OnlineBankingService;
 import de.adorsys.opba.db.repository.jpa.BankProfileJpaRepository;
@@ -11,6 +14,11 @@ import de.adorsys.opba.protocol.hbci.tests.e2e.sandbox.hbcisteps.HbciAccountInfo
 import de.adorsys.opba.protocol.hbci.tests.e2e.sandbox.hbcisteps.HbciAccountInformationResult;
 import de.adorsys.opba.protocol.hbci.tests.e2e.sandbox.hbcisteps.HbciServers;
 import de.adorsys.opba.protocol.sandbox.hbci.HbciServerApplication;
+import lombok.SneakyThrows;
+import lombok.extern.slf4j.Slf4j;
+import org.aspectj.lang.ProceedingJoinPoint;
+import org.aspectj.lang.annotation.Around;
+import org.aspectj.lang.annotation.Aspect;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
@@ -21,10 +29,12 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.boot.test.mock.mockito.SpyBean;
 import org.springframework.boot.web.server.LocalServerPort;
+import org.springframework.stereotype.Component;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.Map;
 import java.util.Set;
 import java.util.UUID;
 
@@ -46,11 +56,13 @@ import static org.springframework.boot.test.context.SpringBootTest.WebEnvironmen
 /**
  * Happy-path test that uses HBCI Sandbox to drive banking-protocol.
  */
+@Slf4j
 @Transactional(propagation = Propagation.NOT_SUPPORTED)
 @SpringBootTest(classes = {
         HbciProtocolApplication.class,
         HbciServerApplication.class,  // Starting HBCI server within test so that application basically communicates with itself
-        HbciJGivenConfig.class
+        HbciJGivenConfig.class,
+        HbciSandboxConsentE2EHbciProtocolTest.LoggingAspect.class
 }, webEnvironment = RANDOM_PORT)
 @ActiveProfiles(profiles = {ONE_TIME_POSTGRES_RAMFS, MOCKED_SANDBOX, HBCI_SANDBOX_CONFIG})
 class HbciSandboxConsentE2EHbciProtocolTest extends SpringScenarioTest<
@@ -85,6 +97,20 @@ class HbciSandboxConsentE2EHbciProtocolTest extends SpringScenarioTest<
     @Transactional
     void setBaseUrl() {
         makeHbciAdapterToPointToHbciMockEndpoints();
+    }
+
+    @Aspect
+    @Component
+    public static class LoggingAspect {
+
+        @SneakyThrows
+        @Around("execution(public * de.adorsys.multibanking.domain.spi.OnlineBankingService.*(..))")
+        public Object doLog(ProceedingJoinPoint joinPoint) {
+            var res = joinPoint.proceed();
+            var mapper = new ObjectMapper().disable(SerializationFeature.FAIL_ON_EMPTY_BEANS).findAndRegisterModules().setSerializationInclusion(JsonInclude.Include.NON_NULL);
+            log.info("OBS: {}", mapper.writeValueAsString(Map.of("method", joinPoint.getSignature().getName(), "return", res, "args", joinPoint.getArgs())));
+            return res;
+        }
     }
 
     @ValueSource(booleans = {false, true})
