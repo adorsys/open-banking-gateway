@@ -111,9 +111,9 @@ class HbciSandboxConsentE2EHbciProtocolTest extends SpringScenarioTest<
             log.info("OBS: {}", mapper.writeValueAsString(Map.of("method", joinPoint.getSignature().getName(), "return", res, "args", joinPoint.getArgs())));
             if (res instanceof StrongCustomerAuthorisable) {
                 return Proxy.newProxyInstance(
-                        LoggingAspect.class.getClassLoader(),
-                        new Class[] { StrongCustomerAuthorisable.class },
-                        new LoggingDynamicInvocationHandler(res)
+                    LoggingAspect.class.getClassLoader(),
+                    new Class[]{StrongCustomerAuthorisable.class},
+                    new LoggingDynamicInvocationHandler(res)
                 );
             }
             return res;
@@ -129,7 +129,7 @@ class HbciSandboxConsentE2EHbciProtocolTest extends SpringScenarioTest<
             public LoggingDynamicInvocationHandler(Object target) {
                 this.target = target;
 
-                for(Method method: target.getClass().getDeclaredMethods()) {
+                for (Method method : target.getClass().getDeclaredMethods()) {
                     this.methods.put(method.getName(), method);
                 }
             }
