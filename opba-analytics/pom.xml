@@ -1,0 +1,27 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+    <parent>
+        <groupId>de.adorsys.opba</groupId>
+        <artifactId>open-banking-gateway</artifactId>
+        <version>0.31.0-SNAPSHOT</version>
+    </parent>
+
+    <!-- Transaction (booking) categorization and other stuff -->
+    <artifactId>opba-analytics</artifactId>
+    <name>opba-analytics</name>
+    <packaging>pom</packaging>
+
+    <properties>
+      <!-- Hard reference to root directory. Used to reference pmd and checkstyle files from root.
+      Change this if depth changes. Current: /open-banking-gateway/opba-analytics -->
+      <main.basedir>${project.parent.basedir}</main.basedir>
+    </properties>
+
+    <modules>
+        <module>opba-analytics-api</module>
+        <module>smartanalytics</module>
+    </modules>
+</project>
+

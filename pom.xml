@@ -45,6 +45,7 @@
         <module>fintech-examples</module>
         <module>opba-db</module>
         <module>opba-protocols</module>
+        <module>opba-analytics</module>
         <module>opba-facade-protocol-api-shared</module>
         <module>last-module-codecoverage</module>
         <module>smoke-tests</module>
