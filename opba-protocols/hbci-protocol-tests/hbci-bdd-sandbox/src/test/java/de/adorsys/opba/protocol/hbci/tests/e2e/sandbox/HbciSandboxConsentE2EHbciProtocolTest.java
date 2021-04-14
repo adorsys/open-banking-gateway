@@ -5,6 +5,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
 import com.tngtech.jgiven.integration.spring.junit5.SpringScenarioTest;
 import de.adorsys.multibanking.domain.spi.OnlineBankingService;
+import de.adorsys.multibanking.domain.spi.StrongCustomerAuthorisable;
 import de.adorsys.opba.db.repository.jpa.BankProfileJpaRepository;
 import de.adorsys.opba.protocol.api.dto.ValidationIssue;
 import de.adorsys.opba.protocol.api.dto.result.body.ValidationError;
@@ -34,20 +35,19 @@ import org.springframework.test.context.ActiveProfiles;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.lang.reflect.InvocationHandler;
+import java.lang.reflect.Method;
+import java.lang.reflect.Proxy;
+import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
 import java.util.UUID;
 
 import static de.adorsys.opba.protocol.hbci.tests.e2e.sandbox.Const.HBCI_SANDBOX_CONFIG;
-import static de.adorsys.opba.protocol.hbci.tests.e2e.sandbox.hbcisteps.FixtureConst.BANK_BLZ_20000002_ID;
-import static de.adorsys.opba.protocol.hbci.tests.e2e.sandbox.hbcisteps.FixtureConst.BANK_BLZ_30000003_ID;
-import static de.adorsys.opba.protocol.hbci.tests.e2e.sandbox.hbcisteps.FixtureConst.MAX_MUSTERMAN_BANK_BLZ_20000002_ACCOUNT_ID;
-import static de.adorsys.opba.protocol.hbci.tests.e2e.sandbox.hbcisteps.FixtureConst.MAX_MUSTERMAN_BANK_BLZ_30000003_ACCOUNT_ID;
+import static de.adorsys.opba.protocol.hbci.tests.e2e.sandbox.hbcisteps.FixtureConst.*;
 import static de.adorsys.opba.protocol.xs2a.tests.TestProfiles.MOCKED_SANDBOX;
 import static de.adorsys.opba.protocol.xs2a.tests.TestProfiles.ONE_TIME_POSTGRES_RAMFS;
-import static de.adorsys.opba.protocol.xs2a.tests.e2e.wiremock.mocks.WiremockConst.BOTH_BOOKING;
-import static de.adorsys.opba.protocol.xs2a.tests.e2e.wiremock.mocks.WiremockConst.DATE_FROM;
-import static de.adorsys.opba.protocol.xs2a.tests.e2e.wiremock.mocks.WiremockConst.DATE_TO;
+import static de.adorsys.opba.protocol.xs2a.tests.e2e.wiremock.mocks.WiremockConst.*;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
@@ -109,7 +109,39 @@ class HbciSandboxConsentE2EHbciProtocolTest extends SpringScenarioTest<
             var res = joinPoint.proceed();
             var mapper = new ObjectMapper().disable(SerializationFeature.FAIL_ON_EMPTY_BEANS).findAndRegisterModules().setSerializationInclusion(JsonInclude.Include.NON_NULL);
             log.info("OBS: {}", mapper.writeValueAsString(Map.of("method", joinPoint.getSignature().getName(), "return", res, "args", joinPoint.getArgs())));
+            if (res instanceof StrongCustomerAuthorisable) {
+                return Proxy.newProxyInstance(
+                        LoggingAspect.class.getClassLoader(),
+                        new Class[] { StrongCustomerAuthorisable.class },
+                        new LoggingDynamicInvocationHandler(res)
+                );
+            }
             return res;
+        }
+
+        @Slf4j
+        public static class LoggingDynamicInvocationHandler implements InvocationHandler {
+
+            private final Map<String, Method> methods = new HashMap<>();
+
+            private final Object target;
+
+            public LoggingDynamicInvocationHandler(Object target) {
+                this.target = target;
+
+                for(Method method: target.getClass().getDeclaredMethods()) {
+                    this.methods.put(method.getName(), method);
+                }
+            }
+
+            @Override
+            public Object invoke(Object proxy, Method method, Object[] args)
+                    throws Throwable {
+                Object result = methods.get(method.getName()).invoke(target, args);
+                var mapper = new ObjectMapper().disable(SerializationFeature.FAIL_ON_EMPTY_BEANS).findAndRegisterModules().setSerializationInclusion(JsonInclude.Include.NON_NULL);
+                log.info("OBS.SCA: {}", mapper.writeValueAsString(Map.of("method", method.getName(), "return", result, "args", args)));
+                return result;
+            }
         }
     }
 
