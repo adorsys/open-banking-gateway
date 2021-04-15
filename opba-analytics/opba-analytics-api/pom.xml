@@ -5,7 +5,7 @@
     <modelVersion>4.0.0</modelVersion>
     <parent>
         <groupId>de.adorsys.opba</groupId>
-        <artifactId>opba-protocols</artifactId>
+        <artifactId>opba-analytics</artifactId>
         <version>0.31.0-SNAPSHOT</version>
     </parent>
 
@@ -22,12 +22,6 @@
             <groupId>de.adorsys.opba</groupId>
             <artifactId>opba-facade-protocol-api-shared</artifactId>
             <version>${project.version}</version>
-        </dependency>
-
-        <dependency>
-            <groupId>org.mapstruct</groupId>
-            <artifactId>mapstruct</artifactId>
-            <version>${mapstruct.version}</version>
         </dependency>
     </dependencies>
 </project>
