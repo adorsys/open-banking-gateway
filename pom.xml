@@ -146,7 +146,7 @@
         <!-- Adorsys libs -->
         <xs2a-adapter.version>0.1.8</xs2a-adapter.version>
         <multibanking.version>5.5.24</multibanking.version>
-        <smartanalytics.version>2.3.10-RC</smartanalytics.version>
+        <smartanalytics.version>2.3.10-SNAPSHOT</smartanalytics.version>
 
         <!-- Util libs -->
         <iban.4j.version>3.2.1</iban.4j.version>
