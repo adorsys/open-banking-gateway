@@ -21,6 +21,7 @@ import de.adorsys.opba.protocol.api.dto.result.fromprotocol.dialog.RedirectionRe
 import de.adorsys.opba.protocol.api.dto.result.fromprotocol.dialog.ValidationErrorResult;
 import de.adorsys.opba.protocol.api.dto.result.fromprotocol.error.ErrorResult;
 import de.adorsys.opba.protocol.api.dto.result.fromprotocol.ok.SuccessResult;
+import de.adorsys.opba.protocol.api.services.ResultBodyPostProcessor;
 import de.adorsys.opba.protocol.facade.config.encryption.SecretKeyWithIv;
 import de.adorsys.opba.protocol.facade.dto.result.torest.FacadeResult;
 import de.adorsys.opba.protocol.facade.dto.result.torest.redirectable.FacadeRedirectErrorResult;
@@ -39,6 +40,7 @@ import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.net.URI;
+import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -52,6 +54,7 @@ public class ProtocolResultHandler {
     private final AuthorizationSessionRepository authorizationSessions;
     private final TokenBasedAuthService authService;
     private final TppTokenProperties tppTokenProperties;
+    private final List<? extends ResultBodyPostProcessor> postProcessors;
 
     /**
      * This class must ensure that it is separate transaction - so it won't join any other as is used with
@@ -70,7 +73,7 @@ public class ProtocolResultHandler {
         SecretKeyWithIv sessionKey
     ) {
         if (result instanceof SuccessResult) {
-            return handleSuccess((SuccessResult<RESULT>) result, request.getRequestId(), session);
+            return handleSuccess(request, (SuccessResult<RESULT>) result, request.getRequestId(), session);
         }
 
         if (result instanceof ConsentAcquiredResult) {
@@ -105,12 +108,13 @@ public class ProtocolResultHandler {
 
     @NotNull
     protected <RESULT, REQUEST extends FacadeServiceableGetter> FacadeResult<RESULT> handleSuccess(
-        SuccessResult<RESULT> result, UUID xRequestId, ServiceContext<REQUEST> session
+            FacadeServiceableRequest request, SuccessResult<RESULT> result, UUID xRequestId, ServiceContext<REQUEST> session
     ) {
         FacadeSuccessResult<RESULT> mappedResult =
             (FacadeSuccessResult<RESULT>) FacadeSuccessResult.FROM_PROTOCOL.map(result);
         mappedResult.setServiceSessionId(session.getServiceSessionId().toString());
         mappedResult.setXRequestId(xRequestId);
+        postProcessors.stream().filter(it -> it.shouldApply(request, result)).forEach(it -> it.apply(mappedResult.getBody()));
         return mappedResult;
     }
 
