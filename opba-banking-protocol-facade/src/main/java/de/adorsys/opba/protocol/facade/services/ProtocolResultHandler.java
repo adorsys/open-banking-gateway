@@ -131,8 +131,7 @@ public class ProtocolResultHandler {
         FacadeSuccessResult<RESULT> mappedResult =
             (FacadeSuccessResult<RESULT>) FacadeSuccessResult.FROM_PROTOCOL.map(result);
         mappedResult.setServiceSessionId(session.getServiceSessionId().toString());
-        mappedResult.setXRequestId(xRequestId);
-        postProcessors.stream().filter(it -> it.shouldApply(request, result)).forEach(it -> it.apply(mappedResult.getBody()));
+        applyPostProcessorsToResult(request, result, xRequestId, mappedResult);
         return mappedResult;
     }
 
@@ -187,6 +186,16 @@ public class ProtocolResultHandler {
         return authSession
             .map(it -> handleExistingAuthSession(it, result, request, session, sessionKey))
             .orElseGet(() -> handleNewAuthSession(result, request, session, sessionKey));
+    }
+
+    private <RESULT> void applyPostProcessorsToResult(FacadeServiceableRequest request, SuccessResult<RESULT> result, UUID xRequestId, FacadeSuccessResult<RESULT> mappedResult) {
+        mappedResult.setXRequestId(xRequestId);
+        for (var postProcessor: postProcessors) {
+            if (!postProcessor.shouldApply(request, result)) {
+                continue;
+            }
+            mappedResult.setBody((RESULT) postProcessor.apply(mappedResult));
+        }
     }
 
     @NotNull

@@ -3,11 +3,13 @@ package de.adorsys.opba.protocol.api.dto.result.body;
 import lombok.Builder;
 import lombok.Value;
 
+import java.util.List;
+
 /**
  * Transaction result list transactions result from protocol.
  */
 @Value
-@Builder
+@Builder(toBuilder = true)
 public class TransactionsResponseBody implements ResultBody {
 
   /**

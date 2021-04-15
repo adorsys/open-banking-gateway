@@ -4,6 +4,6 @@ import de.adorsys.opba.protocol.api.dto.request.FacadeServiceableRequest;
 
 public interface ResultBodyPostProcessor {
 
-    void apply(Object requestMappedResult);
+    Object apply(Object requestMappedResult);
     boolean shouldApply(FacadeServiceableRequest request, Object requestMappedResult);
 }
