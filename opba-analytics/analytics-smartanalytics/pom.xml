@@ -9,26 +9,43 @@
     </parent>
 
     <!-- Default transactions classifier -->
-    <artifactId>smartanalytics</artifactId>
-    <name>opba-analytics/smartanalytics</name>
+    <artifactId>analytics-smartanalytics</artifactId>
+    <name>opba-analytics/analytics-smartanalytics</name>
 
     <properties>
       <!-- Hard reference to root directory. Used to reference pmd and checkstyle files from root.
-      Change this if depth changes. Current: /open-banking-gateway/opba-analytics/smartanalytics -->
+      Change this if depth changes. Current: /open-banking-gateway/opba-analytics/analytics-smartanalytics -->
       <main.basedir>${project.parent.parent.basedir}</main.basedir>
     </properties>
 
     <dependencies>
         <dependency>
             <groupId>de.adorsys.opba</groupId>
-            <artifactId>opba-analytics</artifactId>
+            <artifactId>opba-analytics-api</artifactId>
             <version>${project.version}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>de.adorsys.smartanalytics</groupId>
+            <artifactId>smartanalytics-core</artifactId>
+            <version>${smartanalytics.version}</version>
+            <exclusions>
+                <exclusion>
+                    <groupId>io.swagger</groupId>
+                    <artifactId>swagger-annotations</artifactId>
+                </exclusion>
+            </exclusions>
         </dependency>
 
         <dependency>
             <groupId>org.mapstruct</groupId>
             <artifactId>mapstruct</artifactId>
             <version>${mapstruct.version}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter</artifactId>
         </dependency>
 
         <dependency>

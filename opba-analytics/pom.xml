@@ -21,7 +21,7 @@
 
     <modules>
         <module>opba-analytics-api</module>
-        <module>smartanalytics</module>
+        <module>analytics-smartanalytics</module>
     </modules>
 </project>
 

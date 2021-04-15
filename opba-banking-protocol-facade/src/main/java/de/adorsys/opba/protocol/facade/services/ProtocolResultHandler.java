@@ -32,7 +32,6 @@ import de.adorsys.opba.protocol.facade.dto.result.torest.redirectable.FacadeRunt
 import de.adorsys.opba.protocol.facade.dto.result.torest.redirectable.FacadeStartAuthorizationResult;
 import de.adorsys.opba.protocol.facade.dto.result.torest.staticres.FacadeSuccessResult;
 import de.adorsys.opba.protocol.facade.services.scoped.RequestScopedProvider;
-import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.jetbrains.annotations.NotNull;
 import org.springframework.beans.factory.annotation.Autowired;
