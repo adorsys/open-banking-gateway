@@ -20,6 +20,11 @@ public class TransactionsResponseBody implements ResultBody {
    */
   private AccountReport transactions;
 
+  /**
+   * Transaction categorization result, optional.
+   */
+  private AnalyticsResult analytics;
+
   @Override
   public Object getBody() {
     return this;

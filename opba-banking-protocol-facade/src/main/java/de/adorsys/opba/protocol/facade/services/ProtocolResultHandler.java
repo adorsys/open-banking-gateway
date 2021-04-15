@@ -35,18 +35,19 @@ import de.adorsys.opba.protocol.facade.services.scoped.RequestScopedProvider;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.jetbrains.annotations.NotNull;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.net.URI;
+import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
 @Slf4j
 @Service
-@RequiredArgsConstructor
 public class ProtocolResultHandler {
     private final RequestScopedProvider provider;
     private final AuthSessionHandler authSessionHandler;
@@ -55,6 +56,23 @@ public class ProtocolResultHandler {
     private final TokenBasedAuthService authService;
     private final TppTokenProperties tppTokenProperties;
     private final List<? extends ResultBodyPostProcessor> postProcessors;
+
+    public ProtocolResultHandler(
+            RequestScopedProvider provider,
+            AuthSessionHandler authSessionHandler,
+            ServiceSessionRepository sessions,
+            AuthorizationSessionRepository authorizationSessions,
+            TokenBasedAuthService authService,
+            TppTokenProperties tppTokenProperties,
+            @Autowired(required = false) List<? extends ResultBodyPostProcessor> postProcessors) {
+        this.provider = provider;
+        this.authSessionHandler = authSessionHandler;
+        this.sessions = sessions;
+        this.authorizationSessions = authorizationSessions;
+        this.authService = authService;
+        this.tppTokenProperties = tppTokenProperties;
+        this.postProcessors = null == postProcessors ? Collections.emptyList() : postProcessors;
+    }
 
     /**
      * This class must ensure that it is separate transaction - so it won't join any other as is used with
