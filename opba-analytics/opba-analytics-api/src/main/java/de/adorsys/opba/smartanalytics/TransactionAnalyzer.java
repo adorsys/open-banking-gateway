@@ -26,7 +26,7 @@ public abstract class TransactionAnalyzer implements ResultBodyPostProcessor {
 
     @Override
     public boolean shouldApply(FacadeServiceableRequest request, Object requestMappedResult) {
-        return requestMappedResult instanceof TransactionsResponseBody;
+        return request.isWithAnalytics() && requestMappedResult instanceof TransactionsResponseBody;
     }
 
     abstract AnalyticsResult analyze(AnalyticsRequest request);

@@ -87,6 +87,7 @@ paths:
         - $ref: "#/components/parameters/bookingStatus"
         - $ref: "#/components/parameters/deltaList"
         - $ref: "#/components/parameters/online"
+        - $ref: "#/components/parameters/analytics"
 
       security:
         - BearerAuthOAuth: []
@@ -215,6 +216,17 @@ components:
       schema:
         type: boolean
         default: "true"
+
+    analytics:
+      name: analytics
+      in: query
+      required: false
+      description: |
+        Analyze transactions (bookings) for categorizations.
+      example: "false"
+      schema:
+        type: boolean
+        default: "false"
 
     deltaList:
       name: deltaList

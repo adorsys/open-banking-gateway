@@ -90,7 +90,8 @@ public class TppBankingApiAisController implements TppBankingApiAccountInformati
         String entryReferenceFrom,
         String bookingStatus,
         Boolean deltaList,
-        Boolean online
+        Boolean online,
+        Boolean analytics
     ) {
         return transactions.execute(
             ListTransactionsRequest.builder()
@@ -106,6 +107,7 @@ public class TppBankingApiAisController implements TppBankingApiAccountInformati
                     .requestId(xRequestID)
                     .bankId(bankID)
                     .online(online)
+                    .withAnalytics(analytics)
                     .build()
                 )
                 .accountId(accountId)
