@@ -153,6 +153,27 @@
                 </executions>
             </plugin>
             <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-remote-resources-plugin</artifactId>
+                <version>${maven-remote-resources-plugin.version}</version>
+                <configuration>
+                    <resourceBundles>
+                        <resourceBundle>de.adorsys.opba:analytics-smartanalytics:${project.version}</resourceBundle>
+                    </resourceBundles>
+                    <includes>
+                        <include>smart-analytics-rules/*.*</include>
+                    </includes>
+                </configuration>
+                <executions>
+                    <execution>
+                        <goals>
+                            <goal>process</goal>
+                            <goal>bundle</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
+            <plugin>
                 <groupId>pl.project13.maven</groupId>
                 <artifactId>git-commit-id-plugin</artifactId>
                 <version>${commit-id.version}</version>

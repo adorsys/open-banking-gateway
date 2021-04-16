@@ -9,3 +9,7 @@ spring:
 
 springdoc:
   packagesToScan: de.adorsys.smartanalytics.web
+
+smartanalytics:
+  conf:
+    path: classpath:smart-analytics-rules

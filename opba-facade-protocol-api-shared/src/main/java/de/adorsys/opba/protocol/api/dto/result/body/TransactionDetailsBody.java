@@ -30,9 +30,4 @@ public class TransactionDetailsBody {
     String remittanceInformationUnstructured;
     String remittanceInformationStructured;
     String proprietaryBankTransactionCode;
-
-    /**
-     * By default, optional fields propagated by transaction analyzers
-     */
-    AnalyticsResult analytics;
 }
