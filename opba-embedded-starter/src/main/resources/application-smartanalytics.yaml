@@ -10,6 +10,7 @@ spring:
 springdoc:
   packagesToScan: de.adorsys.smartanalytics.web
 
-smartanalytics:
-  conf:
-    path: classpath:smart-analytics-rules
+# Can be enabled for i.e. exploded JAR
+#smartanalytics:
+#  conf:
+#    path: classpath:smart-analytics-rules
