@@ -67,7 +67,7 @@ public class TransactionService {
             COMPUTE_X_REQUEST_SIGNATURE,
             COMPUTE_FINTECH_ID, bankId,
             optionalConsent.map(ConsentEntity::getTppServiceSessionId).orElse(null),
-            dateFrom, dateTo, entryReferenceFrom, bookingStatus, deltaList, online);
+            dateFrom, dateTo, entryReferenceFrom, bookingStatus, deltaList, online, true);
         switch (transactions.getStatusCode()) {
             case OK:
                 return new ResponseEntity<>(ManualMapper.fromTppToFintech(transactions.getBody()), HttpStatus.OK);
