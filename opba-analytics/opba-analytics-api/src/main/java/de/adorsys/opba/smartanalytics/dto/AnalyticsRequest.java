@@ -14,5 +14,5 @@ import java.util.List;
 @AllArgsConstructor
 public class AnalyticsRequest {
 
-    private List<TransactionDetailsBody> transactions;
+    private List<TransactionDetailsBody> transactions = List.of();
 }
