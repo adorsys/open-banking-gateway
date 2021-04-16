@@ -50,7 +50,8 @@ public class TppAisClientFeignMock implements TppAisClient {
             String entryReferenceFrom,
             @Valid String bookingStatus,
             @Valid Boolean deltaList,
-            Boolean online
+            Boolean online,
+            Boolean analytics
     ) {
         return null;
     }
