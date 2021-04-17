@@ -189,8 +189,8 @@ public class ProtocolResultHandler {
 
     private <RESULT> void applyPostProcessorsToResult(FacadeServiceableRequest request, SuccessResult<RESULT> result, UUID xRequestId, FacadeSuccessResult<RESULT> mappedResult) {
         mappedResult.setXRequestId(xRequestId);
-        var body = result.getBody();
         for (var postProcessor: postProcessors) {
+            var body = result.getBody();
             if (!postProcessor.shouldApply(request, body)) {
                 continue;
             }
