@@ -25,6 +25,7 @@ jobs:
         run: |
           sudo apt clean
           docker rmi $(docker image ls -aq)
+          docker system prune -af
           echo "Available space"
           df -h
 
