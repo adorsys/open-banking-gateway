@@ -40,4 +40,8 @@ public class AspspMessages {
      */
     @NotEmpty
     private Set<MessageCode> missingOauth2Token;
+
+    // FIXME https://github.com/adorsys/xs2a-adapter/issues/576
+    @NotEmpty
+    private Set<String> missingOauth2TokenMessage;
 }
