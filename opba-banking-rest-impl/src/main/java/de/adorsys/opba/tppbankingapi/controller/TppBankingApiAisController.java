@@ -17,6 +17,7 @@ import de.adorsys.opba.tppbankingapi.ais.model.generated.TransactionsResponse;
 import de.adorsys.opba.tppbankingapi.ais.resource.generated.TppBankingApiAccountInformationServiceAisApi;
 import lombok.RequiredArgsConstructor;
 import org.mapstruct.Mapper;
+import org.mapstruct.Mapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.time.LocalDate;
@@ -90,7 +91,8 @@ public class TppBankingApiAisController implements TppBankingApiAccountInformati
         String entryReferenceFrom,
         String bookingStatus,
         Boolean deltaList,
-        Boolean online
+        Boolean online,
+        Boolean analytics
     ) {
         return transactions.execute(
             ListTransactionsRequest.builder()
@@ -106,6 +108,7 @@ public class TppBankingApiAisController implements TppBankingApiAccountInformati
                     .requestId(xRequestID)
                     .bankId(bankID)
                     .online(online)
+                    .withAnalytics(analytics)
                     .build()
                 )
                 .accountId(accountId)
@@ -167,6 +170,8 @@ public class TppBankingApiAisController implements TppBankingApiAccountInformati
 
     @Mapper(componentModel = SPRING_KEYWORD, implementationPackage = Const.API_MAPPERS_PACKAGE)
     public interface TransactionsFacadeResponseBodyToRestBodyMapper extends FacadeResponseBodyToRestBodyMapper<TransactionsResponse, TransactionsResponseBody> {
+
+        @Mapping(source = "analytics.bookings", target = "analytics")
         TransactionsResponse map(TransactionsResponseBody facadeEntity);
     }
 }

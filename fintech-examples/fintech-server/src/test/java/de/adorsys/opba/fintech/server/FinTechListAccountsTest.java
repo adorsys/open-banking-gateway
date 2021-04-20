@@ -134,7 +134,7 @@ public class FinTechListAccountsTest extends FinTechBankSearchApiTest {
         MvcResult mvcResult = plainListAccounts(NO_CONSENT_BANK_ID);
         assertEquals(ACCEPTED.value(), mvcResult.getResponse().getStatus());
         verify(tppAisClientFeignMock, never()).getTransactions(any(), any(), any(), any(), any(), any(), any(), any(), any(),
-                any(), any(), any(), any(), any(), any(), any(), any());
+                any(), any(), any(), any(), any(), any(), any(), any(), any());
         verify(tppAisClientFeignMock).getAccounts(any(), any(), any(), any(), any(), any(), any(), any(), any(), any(), any(), any());
     }
 

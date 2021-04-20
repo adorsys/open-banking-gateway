@@ -1,0 +1,60 @@
+version: v1
+changeDate: '2018-07-10'
+bookingGroups:
+    - type: STANDING_ORDER
+    - type: RECURRENT_INCOME
+    - name: LEBENSMITTEL
+      type: CUSTOM
+      whitelistMatcher:
+          - UKAT = 'LEBENSMITTEL'
+    - name: TANKSTELLE
+      type: CUSTOM
+      whitelistMatcher:
+          - SPEZ = 'TANKSTELLE'
+    - name: BARGELDABHEBUNG
+      type: CUSTOM
+      whitelistMatcher:
+          - UKAT = 'BARGELDABHEBUNG'
+    - name: KREDITKARTE
+      type: CUSTOM
+      whitelistMatcher:
+          - UKAT = 'KREDITKARTENABRECHNUNG'
+    - name: SHOPPING
+      type: CUSTOM
+      whitelistMatcher:
+          - UKAT = 'SHOPPING'
+    - name: SPAREN
+      type: CUSTOM
+      whitelistMatcher:
+          - UKAT = 'SPAREN_VORSORGE'
+    - type: RECURRENT_SEPA
+      blacklistMatcher:
+          - GID = 'LU96ZZZ0000000000000000058'
+          - IBAN = 'DE88500700100175526303'
+          - GID = 'DE94ZZZ00000561653'
+          - GID = 'DE24ZZZ00000561652' AND NOT VWZ LIKE '%AMAZON%PRIME%GE%BUEHR%'
+          - GID = 'DE78ZZZ00000561650'
+          - GID = 'DE51ZZZ00000561651'
+          - GID = 'DE96ZZZ00000594888'
+          - GID = 'DE39DBV00000002177' AND VWZ LIKE '%FAHRSCHEIN%'
+          - VWZ LIKE '%OFFLINE%' OR VWZ LIKE '%TERMINAL%' OR VWZ LIKE '%KART%ZAHL%'
+          - RFN LIKE 'EC%' OR RFN LIKE '%ELV%ME%' OR RFN LIKE '%KART%ZAHL%'
+          - VWZ LIKE 'EC%' OR VWZ LIKE '%ELV%ME%' OR VWZ LIKE '%KART%ZAHL%'
+          - RFN LIKE '%ELV%' AND VWZ LIKE '%ME%'
+          - HKAT = 'PRIVAT'
+          - UKAT = 'KREDITKARTENABRECHNUNG'
+          - SPEZ = 'SONDERTILGUNG'
+    - type: RECURRENT_NONSEPA
+      blacklistMatcher:
+          - HKAT = 'PRIVAT'
+          - UKAT = 'KREDITKARTENABRECHNUNG'
+    - name: OTHER_INCOME
+      type: OTHER_INCOME
+    - name: OTHER_EXPENSES
+      type: OTHER_EXPENSES
+recurrentWhiteListMatcher:
+    - SPEZ = 'AUTOMOBILCLUB'
+    - SPEZ = 'KFZ_STEUER'
+    - UKAT = 'HOBBY_SPORT'
+    - UKAT = 'VERSICHERUNGEN'
+    - UKAT = 'ABO'

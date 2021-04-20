@@ -92,4 +92,9 @@ public class FacadeServiceableRequest {
      * When false then account or transaction list will be loaded from cache. Otherwise cache will be updated with new data.
      */
     private final boolean online;
+
+    /**
+     * For transaction listing requests triggers transaction analyzers to enrich online result.
+     */
+    private final boolean withAnalytics;
 }

@@ -7,7 +7,7 @@ import lombok.Value;
  * Transaction result list transactions result from protocol.
  */
 @Value
-@Builder
+@Builder(toBuilder = true)
 public class TransactionsResponseBody implements ResultBody {
 
   /**
@@ -19,6 +19,11 @@ public class TransactionsResponseBody implements ResultBody {
    * List of the transactions.
    */
   private AccountReport transactions;
+
+  /**
+   * Transaction categorization result, optional.
+   */
+  private AnalyticsResult analytics;
 
   @Override
   public Object getBody() {
