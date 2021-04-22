@@ -224,6 +224,11 @@ protocol:
       invalid-consent: FORMAT_ERROR
       missing-oauth2-token: TOKEN_INVALID
       missing-oauth2-token-message: Please retrieve token first
+      consent-gone:
+        ACCESS_EXCEEDED: CONSENT_ACCESS_EXCEEDED_LIMIT
+        CONSENT_UNKNOWN: CONSENT_UNKNOWN
+        CONSENT_EXPIRED: CONSENT_EXPIRED
+        CONSENT_INVALID: CONSENT_INVALID
     pkcs12:
       keystore: sample-qwac.keystore
       password: password

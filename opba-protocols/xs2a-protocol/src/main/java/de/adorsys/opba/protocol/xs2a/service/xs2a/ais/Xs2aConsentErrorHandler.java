@@ -1,13 +1,10 @@
 package de.adorsys.opba.protocol.xs2a.service.xs2a.ais;
 
-import com.fasterxml.jackson.databind.JsonNode;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.databind.node.ArrayNode;
-import de.adorsys.opba.protocol.api.errors.ProcessErrorStrings;
-import de.adorsys.opba.protocol.bpmnshared.dto.messages.InternalReturnableProcessError;
+import de.adorsys.opba.protocol.bpmnshared.dto.messages.InternalReturnableConsentGoneProcessError;
+import de.adorsys.opba.protocol.xs2a.config.aspspmessages.AspspMessages;
 import de.adorsys.xs2a.adapter.api.exception.ErrorResponseException;
 import de.adorsys.xs2a.adapter.api.model.MessageCode;
-import de.adorsys.xs2a.adapter.api.model.TppMessage;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.flowable.engine.delegate.DelegateExecution;
 import org.springframework.context.ApplicationEventPublisher;
@@ -15,7 +12,11 @@ import org.springframework.stereotype.Service;
 
 @Slf4j
 @Service
+@RequiredArgsConstructor
 public class Xs2aConsentErrorHandler {
+
+    private final AspspMessages messages;
+
     public void tryActionOrHandleConsentErrors(DelegateExecution execution, ApplicationEventPublisher eventPublisher, Runnable tryCreate) {
         try {
             tryCreate.run();
@@ -29,21 +30,13 @@ public class Xs2aConsentErrorHandler {
             throw ex;
         }
 
-        if (isTppMessage(ex, MessageCode.ACCESS_EXCEEDED)) {
-            eventPublisher.publishEvent(new InternalReturnableProcessError(execution.getRootProcessInstanceId(), execution.getId(),
-                ProcessErrorStrings.CONSENT_ACCESS_EXCEEDED_LIMIT));
-            return;
+        for (var message : messages.getConsentGone().entrySet()) {
+            if (isTppMessage(ex, message.getKey())) {
+                eventPublisher.publishEvent(new InternalReturnableConsentGoneProcessError(execution.getRootProcessInstanceId(), execution.getId(), message.getValue()));
+                return;
+            }
         }
-        if (isTppMessage(ex, MessageCode.CONSENT_UNKNOWN)) {
-            eventPublisher.publishEvent(new InternalReturnableProcessError(execution.getRootProcessInstanceId(), execution.getId(),
-                ProcessErrorStrings.CONSENT_UNKNOWN));
-            return;
-        }
-        if (isTppMessage(ex, MessageCode.CONSENT_EXPIRED)) {
-            eventPublisher.publishEvent(new InternalReturnableProcessError(execution.getRootProcessInstanceId(), execution.getId(),
-                ProcessErrorStrings.CONSENT_EXPIRED));
-            return;
-        }
+
         throw ex;
     }
 
