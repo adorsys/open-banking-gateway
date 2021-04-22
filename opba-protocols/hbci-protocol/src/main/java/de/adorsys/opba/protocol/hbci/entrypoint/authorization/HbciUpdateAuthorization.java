@@ -4,7 +4,6 @@ import de.adorsys.opba.protocol.api.authorization.UpdateAuthorization;
 import de.adorsys.opba.protocol.api.dto.context.ServiceContext;
 import de.adorsys.opba.protocol.api.dto.parameters.ExtraAuthRequestParam;
 import de.adorsys.opba.protocol.api.dto.request.authorization.AuthorizationRequest;
-import de.adorsys.opba.protocol.api.dto.result.body.ScaMethod;
 import de.adorsys.opba.protocol.api.dto.result.body.UpdateAuthBody;
 import de.adorsys.opba.protocol.api.dto.result.fromprotocol.Result;
 import de.adorsys.opba.protocol.hbci.context.HbciContext;
@@ -16,6 +15,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.Map;
 import java.util.concurrent.CompletableFuture;
+import java.util.regex.Pattern;
 
 import static de.adorsys.opba.protocol.api.dto.parameters.ScaConst.PSU_PASSWORD;
 import static de.adorsys.opba.protocol.api.dto.parameters.ScaConst.SCA_CHALLENGE_DATA;
@@ -74,9 +74,37 @@ public class HbciUpdateAuthorization implements UpdateAuthorization {
             context.setUserSelectScaId(scaChallenges.get(SCA_CHALLENGE_ID));
             context.setSelectedScaType(context.getAvailableSca().stream()
                     .filter(it -> context.getUserSelectScaId().equals(it.getKey()))
-                    .map(ScaMethod::getType)
+                    .map(scaMethod -> tryMatchStandartType(scaMethod.getType()))
                     .findFirst().orElse(null));
         }
+    }
+
+    private String tryMatchStandartType(String type) {
+        if (Pattern.compile("SMS", Pattern.CASE_INSENSITIVE).matcher(type).find()) {
+            return "SMS_OTP";
+        }
+
+        if (Pattern.compile("CHIP", Pattern.CASE_INSENSITIVE).matcher(type).find()) {
+            return "CHIP_OTP";
+        }
+
+        if (Pattern.compile("PHOTO", Pattern.CASE_INSENSITIVE).matcher(type).find()) {
+            return "PHOTO_OTP";
+        }
+
+        if (Pattern.compile("PUSH", Pattern.CASE_INSENSITIVE).matcher(type).find()) {
+            return "PUSH_OTP";
+        }
+
+        if (Pattern.compile("PUSH", Pattern.CASE_INSENSITIVE).matcher(type).find()) {
+            return "SMTP_OTP";
+        }
+
+        if (Pattern.compile("EMAIL", Pattern.CASE_INSENSITIVE).matcher(type).find()) {
+            return "EMAIL";
+        }
+
+        return type;
     }
 }
 
