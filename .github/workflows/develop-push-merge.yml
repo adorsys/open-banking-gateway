@@ -64,25 +64,25 @@ jobs:
       # CODECOV Upload BEGIN
       - uses: codecov/codecov-action@v1
         with:
-          files: ./last-module-codecoverage*
+          directory: ./last-module-codecoverage/
           flags: backend
           verbose: true
 
       - uses: codecov/codecov-action@v1
         with:
-          files: ./consent-ui*
+          directory: ./consent-ui/
           flags: frontend
           verbose: true
 
       - uses: codecov/codecov-action@v1
         with:
-          files: ./fintech-examples/fintech-last-module-codecoverage*
+          directory: ./fintech-examples/fintech-last-module-codecoverage/
           flags: fintech
           verbose: true
 
       - uses: codecov/codecov-action@v1
         with:
-          files: ./fintech-examples/fintech-ui*
+          directory: ./fintech-examples/fintech-ui/
           flags: fintech
           verbose: true
       # CODECOV Upload END
