@@ -25,7 +25,7 @@ public class Xs2aConsentErrorHandler {
     }
 
     private void tryHandleConsentException(DelegateExecution execution, ErrorResponseException ex, ApplicationEventPublisher eventPublisher) {
-        if (!ex.getErrorResponse().isPresent() || null == ex.getErrorResponse().get().getTppMessages()) {
+        if (ex.getErrorResponse().isEmpty() || null == ex.getErrorResponse().get().getTppMessages()) {
             throw ex;
         }
 
