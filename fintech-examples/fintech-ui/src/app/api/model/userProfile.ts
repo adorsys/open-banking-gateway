@@ -13,6 +13,6 @@
 
 export interface UserProfile { 
     name?: string;
-    lastLogin?: Date;
+    lastLogin?: string;
 }
 

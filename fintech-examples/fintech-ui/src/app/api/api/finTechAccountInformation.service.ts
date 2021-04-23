@@ -1,9 +1,9 @@
 /**
  * Open Banking Gateway FinTech Example API
- * This is a sample API that shows how to develop FinTech use cases that invoke banking APIs.  #### User Agent and Cookies This Api assumes * that the PsuUserAgent (hosting the FinTechUI) is a modern web browser that stores httpOnly cookies sent with the redirect under the given domain and path as defined by [RFC 6265](https://tools.ietf.org/html/rfc6265). * that any other PsuUserAgent like a native mobile or a desktop application can simulate this same behavior of a modern browser with respect to Cookies.  #### SessionCookies and XSRF After a PSU is authenticated with the FinTech environment (either through the simple login interface defined here, or through an identity provider), the FinTechApi will establish a session with the FinTechUI. This is done by the mean of using a cookie called SessionCookie. This SessionCookie is protected by a corresponding xsrfToken. The response that sets a SessionCookie also carries a corresponding xsrfToken in the response header named \"X-XSRF-TOKEN\".  It is the responsibility of the FinTechUI to : * parse and store this xsrfToken so that a refresh of a browser window can work. This shall be done using user agent capabilities. A web browser application might decide to store the xsrfToken in the browser localStorage, as the cookie we set are all considered persistent. * make sure that each subsequent request that is carrying the SessionCookie also carries the corresponding xsrfToken as header field (see the request path). * remove this xsrfToken from the localStorage when the corresponding SessionCookie is deleted by a server response (setting cookie value to null).  The main difference between an xsrfToken and a SessionCookie is that the sessionCookie is automatically sent with each matching request. The xsrfToken must be explicitely read and sent by application.  #### API- vs. UI-Redirection For simplicity, this Framework is designed to redirect to FinTechUI not to FinTechApi.  #### Explicite vs. Implicite Redirection We define an \"Implicite redirection\" a case where a web browser react to 30X reponse and automatically redirects to the attached endpoint. We define an \"Explicite Redirection\" as a case where the UI-Application reacts to a 20X response, explicitely parses the attached __Location__ header an uses it to reload the new page in the browser window (or start the new UI-Application in case of native apps).  This framework advocates for explicite redirection passing a __20X__ response to the FinTechUI toghether with the __Location__ parameter.  Processing a response that initiates a redirect, the FinTechUI makes sure following happens, * that the exisitng __SessionCookie__ is deleted, as the user will not have a chance for an explicite logout, * that the corresponding xsrfToken is deleted from the local storage, * that a RedirectCookie set is stored (in case UI is not a web browser), so the user can be authenticated against it when sent back to the FinTechUI. The expiration of the RedirectCookie shall be set to the expected duration of the redirect, * that the corresponding xsrfToken is stored in the local storage (under the same cookie path as the RedirectCookie)  #### Redirecting to the ConsentAuthorisationApi For a redirection to the ConsentAuthorisationApi, a generated AUTH-ID is added to the cookie path and used to distinguish authorization processes from each order. This information (AUTH-ID) must be contained in the back redirect url sent to the ConsentAuthorisationApi in the back channel, so that the FinTechUI can invoke the correct code2Token endpoint when activated.
+ * This is a sample API that shows how to develop FinTech use cases that invoke banking APIs.  #### User Agent and Cookies This Api assumes * that the PsuUserAgent (hosting the FinTechUI) is a modern web browser that stores httpOnly cookies sent with the redirect under the given domain and path as defined by [RFC 6265](https://tools.ietf.org/html/rfc6265). * that any other PsuUserAgent like a native mobile or a desktop application can simulate this same behavior of a modern browser with respect to Cookies.  #### SessionCookies and XSRF After a PSU is authenticated with the FinTech environment (either through the simple login interface defined here, or through an identity provider), the FinTechApi will establish a session with the FinTechUI. This is done by the mean of using a cookie called SessionCookie. This SessionCookie is protected by a corresponding xsrfToken. The response that sets a SessionCookie also carries a corresponding xsrfToken in the response header named \"X-XSRF-TOKEN\".  It is the responsibility of the FinTechUI to : * parse and store this xsrfToken so that a refresh of a browser window can work. This shall be done using user agent capabilities. A web browser application might decide to store the xsrfToken in the browser localStorage, as the cookie we set are all considered persistent. * make sure that each subsequent request that is carrying the SessionCookie also carries the corresponding xsrfToken as header field (see the request path). * remove this xsrfToken from the localStorage when the corresponding SessionCookie is deleted by a server response (setting cookie value to null).  The main difference between an xsrfToken and a SessionCookie is that the sessionCookie is automatically sent with each matching request. The xsrfToken must be explicitely read and sent by application.  #### API- vs. UI-Redirection For simplicity, this Framework is designed to redirect to FinTechUI not to FinTechApi.  #### Explicite vs. Implicite Redirection We define an \"Implicite redirection\" a case where a web browser react to 30X reponse and automatically redirects to the attached endpoint. We define an \"Explicite Redirection\" as a case where the UI-Application reacts to a 20X response, explicitely parses the attached __Location__ header an uses it to reload the new page in the browser window (or start the new UI-Application in case of native apps).  This framework advocates for explicite redirection passing a __20X__ response to the FinTechUI toghether with the __Location__ parameter.  Processing a response that initiates a redirect, the FinTechUI makes sure following happens, * that the exisitng __SessionCookie__ is deleted, as the user will not have a chance for an explicite logout, * that the corresponding xsrfToken is deleted from the local storage, * that a RedirectCookie set is stored (in case UI is not a web browser), so the user can be authenticated against it when sent back to the FinTechUI. The expiration of the RedirectCookie shall be set to the expected duration of the redirect, * that the corresponding xsrfToken is stored in the local storage (under the same cookie path as the RedirectCookie)  #### Redirecting to the ConsentAuthorisationApi For a redirection to the ConsentAuthorisationApi, a generated AUTH-ID is added to the cookie path and used to distinguish authorization processes from each order. This information (AUTH-ID) must be contained in the back redirect url sent to the ConsentAuthorisationApi in the back channel, so that the FinTechUI can invoke the correct code2Token endpoint when activated. 
  *
  * The version of the OpenAPI document: 1.0.0
- *
+ * 
  *
  * NOTE: This class is auto generated by OpenAPI Generator (https://openapi-generator.tech).
  * https://openapi-generator.tech
@@ -17,10 +17,10 @@ import { HttpClient, HttpHeaders, HttpParams,
 import { CustomHttpParameterCodec }                          from '../encoder';
 import { Observable }                                        from 'rxjs';
 
-import { AccountList } from '../model/accountList';
-import { ErrorResponse } from '../model/errorResponse';
-import { PsuMessage } from '../model/psuMessage';
-import { TransactionsResponse } from '../model/transactionsResponse';
+import { AccountList } from '../model/models';
+import { ErrorResponse } from '../model/models';
+import { PsuMessage } from '../model/models';
+import { TransactionsResponse } from '../model/models';
 
 import { BASE_PATH, COLLECTION_FORMATS }                     from '../variables';
 import { Configuration }                                     from '../configuration';
@@ -52,32 +52,68 @@ export class FinTechAccountInformationService {
 
 
 
+    private addToHttpParams(httpParams: HttpParams, value: any, key?: string): HttpParams {
+        if (typeof value === "object" && value instanceof Date === false) {
+            httpParams = this.addToHttpParamsRecursive(httpParams, value);
+        } else {
+            httpParams = this.addToHttpParamsRecursive(httpParams, value, key);
+        }
+        return httpParams;
+    }
+
+    private addToHttpParamsRecursive(httpParams: HttpParams, value?: any, key?: string): HttpParams {
+        if (value == null) {
+            return httpParams;
+        }
+
+        if (typeof value === "object") {
+            if (Array.isArray(value)) {
+                (value as any[]).forEach( elem => httpParams = this.addToHttpParamsRecursive(httpParams, elem, key));
+            } else if (value instanceof Date) {
+                if (key != null) {
+                    httpParams = httpParams.append(key,
+                        (value as Date).toISOString().substr(0, 10));
+                } else {
+                   throw Error("key may not be null if value is Date");
+                }
+            } else {
+                Object.keys(value).forEach( k => httpParams = this.addToHttpParamsRecursive(
+                    httpParams, value[k], key != null ? `${key}.${k}` : k));
+            }
+        } else if (key != null) {
+            httpParams = httpParams.append(key, value);
+        } else {
+            throw Error("key may not be null if value is not object or array");
+        }
+        return httpParams;
+    }
+
     /**
      * Provides list of available accounts for the given bank
-     * Read the identifiers of the available payment accounts.  If required by the bank, PSU consent will be obtained before returning the list of bank accounts.  Returns all identifiers of the accounts, to which an account access has been granted to by the PSU. In addition, relevant information about the accounts and hyperlinks to corresponding account information resources are provided if a related consent has been already granted.
-     * @param bankId
-     * @param xRequestID Unique ID that identifies this request through common workflow. Must be contained in HTTP Response as well.
-     * @param X_XSRF_TOKEN XSRF parameter used to validate a SessionCookie or RedirectCookie.
-     * @param fintechRedirectURLOK
-     * @param fintechRedirectURLNOK
-     * @param loARetrievalInformation
+     * Read the identifiers of the available payment accounts.  If required by the bank, PSU consent will be obtained before returning the list of bank accounts.  Returns all identifiers of the accounts, to which an account access has been granted to by the PSU. In addition, relevant information about the accounts and hyperlinks to corresponding account information resources are provided if a related consent has been already granted. 
+     * @param bankId 
+     * @param xRequestID Unique ID that identifies this request through common workflow. Must be contained in HTTP Response as well. 
+     * @param xXSRFTOKEN XSRF parameter used to validate a SessionCookie or RedirectCookie. 
+     * @param fintechRedirectURLOK 
+     * @param fintechRedirectURLNOK 
+     * @param loARetrievalInformation 
      * @param withBalance Provides balances for the given accounts
-     * @param online If false, new data will be requested and cache will be updated
+     * @param online If true, new data will be requested and cache will be updated 
      * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
      * @param reportProgress flag to report request and response progress.
      */
-    public aisAccountsGET(bankId: string, xRequestID: string, X_XSRF_TOKEN: string, fintechRedirectURLOK: string, fintechRedirectURLNOK: string, loARetrievalInformation: 'FROM_TPP_WITH_AVAILABLE_CONSENT' | 'FROM_TPP_WITH_NEW_CONSENT', withBalance?: boolean, online?: boolean, observe?: 'body', reportProgress?: boolean): Observable<AccountList>;
-    public aisAccountsGET(bankId: string, xRequestID: string, X_XSRF_TOKEN: string, fintechRedirectURLOK: string, fintechRedirectURLNOK: string, loARetrievalInformation: 'FROM_TPP_WITH_AVAILABLE_CONSENT' | 'FROM_TPP_WITH_NEW_CONSENT', withBalance?: boolean, online?: boolean, observe?: 'response', reportProgress?: boolean): Observable<HttpResponse<AccountList>>;
-    public aisAccountsGET(bankId: string, xRequestID: string, X_XSRF_TOKEN: string, fintechRedirectURLOK: string, fintechRedirectURLNOK: string, loARetrievalInformation: 'FROM_TPP_WITH_AVAILABLE_CONSENT' | 'FROM_TPP_WITH_NEW_CONSENT', withBalance?: boolean, online?: boolean, observe?: 'events', reportProgress?: boolean): Observable<HttpEvent<AccountList>>;
-    public aisAccountsGET(bankId: string, xRequestID: string, X_XSRF_TOKEN: string, fintechRedirectURLOK: string, fintechRedirectURLNOK: string, loARetrievalInformation: 'FROM_TPP_WITH_AVAILABLE_CONSENT' | 'FROM_TPP_WITH_NEW_CONSENT', withBalance?: boolean, online?: boolean, observe: any = 'body', reportProgress: boolean = false ): Observable<any> {
+    public aisAccountsGET(bankId: string, xRequestID: string, xXSRFTOKEN: string, fintechRedirectURLOK: string, fintechRedirectURLNOK: string, loARetrievalInformation: 'FROM_TPP_WITH_AVAILABLE_CONSENT' | 'FROM_TPP_WITH_NEW_CONSENT', withBalance?: boolean, online?: boolean, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<AccountList>;
+    public aisAccountsGET(bankId: string, xRequestID: string, xXSRFTOKEN: string, fintechRedirectURLOK: string, fintechRedirectURLNOK: string, loARetrievalInformation: 'FROM_TPP_WITH_AVAILABLE_CONSENT' | 'FROM_TPP_WITH_NEW_CONSENT', withBalance?: boolean, online?: boolean, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<HttpResponse<AccountList>>;
+    public aisAccountsGET(bankId: string, xRequestID: string, xXSRFTOKEN: string, fintechRedirectURLOK: string, fintechRedirectURLNOK: string, loARetrievalInformation: 'FROM_TPP_WITH_AVAILABLE_CONSENT' | 'FROM_TPP_WITH_NEW_CONSENT', withBalance?: boolean, online?: boolean, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<HttpEvent<AccountList>>;
+    public aisAccountsGET(bankId: string, xRequestID: string, xXSRFTOKEN: string, fintechRedirectURLOK: string, fintechRedirectURLNOK: string, loARetrievalInformation: 'FROM_TPP_WITH_AVAILABLE_CONSENT' | 'FROM_TPP_WITH_NEW_CONSENT', withBalance?: boolean, online?: boolean, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: 'application/json'}): Observable<any> {
         if (bankId === null || bankId === undefined) {
             throw new Error('Required parameter bankId was null or undefined when calling aisAccountsGET.');
         }
         if (xRequestID === null || xRequestID === undefined) {
             throw new Error('Required parameter xRequestID was null or undefined when calling aisAccountsGET.');
         }
-        if (X_XSRF_TOKEN === null || X_XSRF_TOKEN === undefined) {
-            throw new Error('Required parameter X_XSRF_TOKEN was null or undefined when calling aisAccountsGET.');
+        if (xXSRFTOKEN === null || xXSRFTOKEN === undefined) {
+            throw new Error('Required parameter xXSRFTOKEN was null or undefined when calling aisAccountsGET.');
         }
         if (fintechRedirectURLOK === null || fintechRedirectURLOK === undefined) {
             throw new Error('Required parameter fintechRedirectURLOK was null or undefined when calling aisAccountsGET.');
@@ -91,18 +127,20 @@ export class FinTechAccountInformationService {
 
         let queryParameters = new HttpParams({encoder: this.encoder});
         if (withBalance !== undefined && withBalance !== null) {
-            queryParameters = queryParameters.set('withBalance', <any>withBalance);
+          queryParameters = this.addToHttpParams(queryParameters,
+            <any>withBalance, 'withBalance');
         }
         if (online !== undefined && online !== null) {
-            queryParameters = queryParameters.set('online', <any>online);
+          queryParameters = this.addToHttpParams(queryParameters,
+            <any>online, 'online');
         }
 
         let headers = this.defaultHeaders;
         if (xRequestID !== undefined && xRequestID !== null) {
             headers = headers.set('X-Request-ID', String(xRequestID));
         }
-        if (X_XSRF_TOKEN !== undefined && X_XSRF_TOKEN !== null) {
-            headers = headers.set('X-XSRF-TOKEN', String(X_XSRF_TOKEN));
+        if (xXSRFTOKEN !== undefined && xXSRFTOKEN !== null) {
+            headers = headers.set('X-XSRF-TOKEN', String(xXSRFTOKEN));
         }
         if (fintechRedirectURLOK !== undefined && fintechRedirectURLOK !== null) {
             headers = headers.set('Fintech-Redirect-URL-OK', String(fintechRedirectURLOK));
@@ -115,19 +153,101 @@ export class FinTechAccountInformationService {
         }
 
         // authentication (sessionCookie) required
-        // to determine the Accept header
-        const httpHeaderAccepts: string[] = [
-            'application/json'
-        ];
-        const httpHeaderAcceptSelected: string | undefined = this.configuration.selectHeaderAccept(httpHeaderAccepts);
+        if (this.configuration.apiKeys) {
+            const key: string | undefined = this.configuration.apiKeys["sessionCookie"] || this.configuration.apiKeys["sessionCookie"];
+            if (key) {
+            }
+        }
+
+        let httpHeaderAcceptSelected: string | undefined = options && options.httpHeaderAccept;
+        if (httpHeaderAcceptSelected === undefined) {
+            // to determine the Accept header
+            const httpHeaderAccepts: string[] = [
+                'application/json'
+            ];
+            httpHeaderAcceptSelected = this.configuration.selectHeaderAccept(httpHeaderAccepts);
+        }
         if (httpHeaderAcceptSelected !== undefined) {
             headers = headers.set('Accept', httpHeaderAcceptSelected);
         }
 
 
+        let responseType: 'text' | 'json' = 'json';
+        if(httpHeaderAcceptSelected && httpHeaderAcceptSelected.startsWith('text')) {
+            responseType = 'text';
+        }
+
         return this.httpClient.get<AccountList>(`${this.configuration.basePath}/v1/ais/banks/${encodeURIComponent(String(bankId))}/accounts`,
             {
                 params: queryParameters,
+                responseType: <any>responseType,
+                withCredentials: this.configuration.withCredentials,
+                headers: headers,
+                observe: observe,
+                reportProgress: reportProgress
+            }
+        );
+    }
+
+    /**
+     * Deletes all consents that are associated with bank
+     * Deletes all consents that are associated with bank
+     * @param bankId 
+     * @param xRequestID Unique ID that identifies this request through common workflow. Must be contained in HTTP Response as well. 
+     * @param xXSRFTOKEN XSRF parameter used to validate a SessionCookie or RedirectCookie. 
+     * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
+     * @param reportProgress flag to report request and response progress.
+     */
+    public aisConsentsDELETE(bankId: string, xRequestID: string, xXSRFTOKEN: string, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<object>;
+    public aisConsentsDELETE(bankId: string, xRequestID: string, xXSRFTOKEN: string, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<HttpResponse<object>>;
+    public aisConsentsDELETE(bankId: string, xRequestID: string, xXSRFTOKEN: string, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<HttpEvent<object>>;
+    public aisConsentsDELETE(bankId: string, xRequestID: string, xXSRFTOKEN: string, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: 'application/json'}): Observable<any> {
+        if (bankId === null || bankId === undefined) {
+            throw new Error('Required parameter bankId was null or undefined when calling aisConsentsDELETE.');
+        }
+        if (xRequestID === null || xRequestID === undefined) {
+            throw new Error('Required parameter xRequestID was null or undefined when calling aisConsentsDELETE.');
+        }
+        if (xXSRFTOKEN === null || xXSRFTOKEN === undefined) {
+            throw new Error('Required parameter xXSRFTOKEN was null or undefined when calling aisConsentsDELETE.');
+        }
+
+        let headers = this.defaultHeaders;
+        if (xRequestID !== undefined && xRequestID !== null) {
+            headers = headers.set('X-Request-ID', String(xRequestID));
+        }
+        if (xXSRFTOKEN !== undefined && xXSRFTOKEN !== null) {
+            headers = headers.set('X-XSRF-TOKEN', String(xXSRFTOKEN));
+        }
+
+        // authentication (sessionCookie) required
+        if (this.configuration.apiKeys) {
+            const key: string | undefined = this.configuration.apiKeys["sessionCookie"] || this.configuration.apiKeys["sessionCookie"];
+            if (key) {
+            }
+        }
+
+        let httpHeaderAcceptSelected: string | undefined = options && options.httpHeaderAccept;
+        if (httpHeaderAcceptSelected === undefined) {
+            // to determine the Accept header
+            const httpHeaderAccepts: string[] = [
+                'application/json'
+            ];
+            httpHeaderAcceptSelected = this.configuration.selectHeaderAccept(httpHeaderAccepts);
+        }
+        if (httpHeaderAcceptSelected !== undefined) {
+            headers = headers.set('Accept', httpHeaderAcceptSelected);
+        }
+
+
+        let responseType: 'text' | 'json' = 'json';
+        if(httpHeaderAcceptSelected && httpHeaderAcceptSelected.startsWith('text')) {
+            responseType = 'text';
+        }
+
+        return this.httpClient.delete<object>(`${this.configuration.basePath}/v1/ais/banks/${encodeURIComponent(String(bankId))}/consents`,
+            {
+                responseType: <any>responseType,
                 withCredentials: this.configuration.withCredentials,
                 headers: headers,
                 observe: observe,
@@ -139,26 +259,26 @@ export class FinTechAccountInformationService {
     /**
      * Returns the list of transactions of the given account
      * Returns the list of transactions of the given account.
-     * @param bankId
-     * @param accountId
-     * @param xRequestID Unique ID that identifies this request through common workflow. Must be contained in HTTP Response as well.
-     * @param X_XSRF_TOKEN XSRF parameter used to validate a SessionCookie or RedirectCookie.
-     * @param fintechRedirectURLOK
-     * @param fintechRedirectURLNOK
-     * @param loTRetrievalInformation
-     * @param dateFrom Conditional: Starting date (inclusive the date dateFrom) of the transaction list, mandated if no delta access is required.  For booked transactions, the relevant date is the booking date.  For pending transactions, the relevant date is the entry date, which may not be transparent neither in this API nor other channels of the ASPSP.
-     * @param dateTo End date (inclusive the data dateTo) of the transaction list, default is \&quot;now\&quot; if not given.  Might be ignored if a delta function is used.  For booked transactions, the relevant date is the booking date.  For pending transactions, the relevant date is the entry date, which may not be transparent neither in this API nor other channels of the ASPSP.
-     * @param entryReferenceFrom This data attribute is indicating that the AISP is in favour to get all transactions after the transaction with identification entryReferenceFrom alternatively to the above defined period. This is a implementation of a delta access. If this data element is contained, the entries \&quot;dateFrom\&quot; and \&quot;dateTo\&quot; might be ignored by the ASPSP if a delta report is supported.  Optional if supported by API provider.
-     * @param bookingStatus Permitted codes are   * \&quot;booked\&quot;,   * \&quot;pending\&quot; and   * \&quot;both\&quot; To support the \&quot;pending\&quot; and \&quot;both\&quot; feature is optional for the ASPSP, Error code if not supported in the online banking frontend Default is \&quot;booked\&quot;
-     * @param deltaList This data attribute is indicating that the AISP is in favour to get all transactions after the last report access for this PSU on the addressed account. This is another implementation of a delta access-report.  This delta indicator might be rejected by the ASPSP if this function is not supported.  Optional if supported by API provider
-     * @param online If false, new data will be requested and cache will be updated
+     * @param bankId 
+     * @param accountId 
+     * @param xRequestID Unique ID that identifies this request through common workflow. Must be contained in HTTP Response as well. 
+     * @param xXSRFTOKEN XSRF parameter used to validate a SessionCookie or RedirectCookie. 
+     * @param fintechRedirectURLOK 
+     * @param fintechRedirectURLNOK 
+     * @param loTRetrievalInformation 
+     * @param dateFrom Conditional: Starting date (inclusive the date dateFrom) of the transaction list, mandated if no delta access is required.  For booked transactions, the relevant date is the booking date.  For pending transactions, the relevant date is the entry date, which may not be transparent neither in this API nor other channels of the ASPSP. 
+     * @param dateTo End date (inclusive the data dateTo) of the transaction list, default is \&quot;now\&quot; if not given.  Might be ignored if a delta function is used.  For booked transactions, the relevant date is the booking date.  For pending transactions, the relevant date is the entry date, which may not be transparent neither in this API nor other channels of the ASPSP. 
+     * @param entryReferenceFrom This data attribute is indicating that the AISP is in favour to get all transactions after the transaction with identification entryReferenceFrom alternatively to the above defined period. This is a implementation of a delta access. If this data element is contained, the entries \&quot;dateFrom\&quot; and \&quot;dateTo\&quot; might be ignored by the ASPSP if a delta report is supported.  Optional if supported by API provider. 
+     * @param bookingStatus Permitted codes are   * \&quot;booked\&quot;,   * \&quot;pending\&quot; and   * \&quot;both\&quot; To support the \&quot;pending\&quot; and \&quot;both\&quot; feature is optional for the ASPSP, Error code if not supported in the online banking frontend Default is \&quot;booked\&quot; 
+     * @param deltaList This data attribute is indicating that the AISP is in favour to get all transactions after the last report access for this PSU on the addressed account. This is another implementation of a delta access-report.  This delta indicator might be rejected by the ASPSP if this function is not supported.  Optional if supported by API provider 
+     * @param online If true, new data will be requested and cache will be updated 
      * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
      * @param reportProgress flag to report request and response progress.
      */
-    public aisTransactionsGET(bankId: string, accountId: string, xRequestID: string, X_XSRF_TOKEN: string, fintechRedirectURLOK: string, fintechRedirectURLNOK: string, loTRetrievalInformation: 'FROM_TPP_WITH_AVAILABLE_CONSENT' | 'FROM_TPP_WITH_NEW_CONSENT', dateFrom?: string, dateTo?: string, entryReferenceFrom?: string, bookingStatus?: 'booked' | 'pending' | 'both', deltaList?: boolean, online?: boolean, observe?: 'body', reportProgress?: boolean): Observable<TransactionsResponse>;
-    public aisTransactionsGET(bankId: string, accountId: string, xRequestID: string, X_XSRF_TOKEN: string, fintechRedirectURLOK: string, fintechRedirectURLNOK: string, loTRetrievalInformation: 'FROM_TPP_WITH_AVAILABLE_CONSENT' | 'FROM_TPP_WITH_NEW_CONSENT', dateFrom?: string, dateTo?: string, entryReferenceFrom?: string, bookingStatus?: 'booked' | 'pending' | 'both', deltaList?: boolean, online?: boolean, observe?: 'response', reportProgress?: boolean): Observable<HttpResponse<TransactionsResponse>>;
-    public aisTransactionsGET(bankId: string, accountId: string, xRequestID: string, X_XSRF_TOKEN: string, fintechRedirectURLOK: string, fintechRedirectURLNOK: string, loTRetrievalInformation: 'FROM_TPP_WITH_AVAILABLE_CONSENT' | 'FROM_TPP_WITH_NEW_CONSENT', dateFrom?: string, dateTo?: string, entryReferenceFrom?: string, bookingStatus?: 'booked' | 'pending' | 'both', deltaList?: boolean, online?: boolean, observe?: 'events', reportProgress?: boolean): Observable<HttpEvent<TransactionsResponse>>;
-    public aisTransactionsGET(bankId: string, accountId: string, xRequestID: string, X_XSRF_TOKEN: string, fintechRedirectURLOK: string, fintechRedirectURLNOK: string, loTRetrievalInformation: 'FROM_TPP_WITH_AVAILABLE_CONSENT' | 'FROM_TPP_WITH_NEW_CONSENT', dateFrom?: string, dateTo?: string, entryReferenceFrom?: string, bookingStatus?: 'booked' | 'pending' | 'both', deltaList?: boolean, online?: boolean, observe: any = 'body', reportProgress: boolean = false ): Observable<any> {
+    public aisTransactionsGET(bankId: string, accountId: string, xRequestID: string, xXSRFTOKEN: string, fintechRedirectURLOK: string, fintechRedirectURLNOK: string, loTRetrievalInformation: 'FROM_TPP_WITH_AVAILABLE_CONSENT' | 'FROM_TPP_WITH_NEW_CONSENT', dateFrom?: string, dateTo?: string, entryReferenceFrom?: string, bookingStatus?: 'booked' | 'pending' | 'both', deltaList?: boolean, online?: boolean, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<TransactionsResponse>;
+    public aisTransactionsGET(bankId: string, accountId: string, xRequestID: string, xXSRFTOKEN: string, fintechRedirectURLOK: string, fintechRedirectURLNOK: string, loTRetrievalInformation: 'FROM_TPP_WITH_AVAILABLE_CONSENT' | 'FROM_TPP_WITH_NEW_CONSENT', dateFrom?: string, dateTo?: string, entryReferenceFrom?: string, bookingStatus?: 'booked' | 'pending' | 'both', deltaList?: boolean, online?: boolean, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<HttpResponse<TransactionsResponse>>;
+    public aisTransactionsGET(bankId: string, accountId: string, xRequestID: string, xXSRFTOKEN: string, fintechRedirectURLOK: string, fintechRedirectURLNOK: string, loTRetrievalInformation: 'FROM_TPP_WITH_AVAILABLE_CONSENT' | 'FROM_TPP_WITH_NEW_CONSENT', dateFrom?: string, dateTo?: string, entryReferenceFrom?: string, bookingStatus?: 'booked' | 'pending' | 'both', deltaList?: boolean, online?: boolean, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<HttpEvent<TransactionsResponse>>;
+    public aisTransactionsGET(bankId: string, accountId: string, xRequestID: string, xXSRFTOKEN: string, fintechRedirectURLOK: string, fintechRedirectURLNOK: string, loTRetrievalInformation: 'FROM_TPP_WITH_AVAILABLE_CONSENT' | 'FROM_TPP_WITH_NEW_CONSENT', dateFrom?: string, dateTo?: string, entryReferenceFrom?: string, bookingStatus?: 'booked' | 'pending' | 'both', deltaList?: boolean, online?: boolean, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: 'application/json'}): Observable<any> {
         if (bankId === null || bankId === undefined) {
             throw new Error('Required parameter bankId was null or undefined when calling aisTransactionsGET.');
         }
@@ -168,8 +288,8 @@ export class FinTechAccountInformationService {
         if (xRequestID === null || xRequestID === undefined) {
             throw new Error('Required parameter xRequestID was null or undefined when calling aisTransactionsGET.');
         }
-        if (X_XSRF_TOKEN === null || X_XSRF_TOKEN === undefined) {
-            throw new Error('Required parameter X_XSRF_TOKEN was null or undefined when calling aisTransactionsGET.');
+        if (xXSRFTOKEN === null || xXSRFTOKEN === undefined) {
+            throw new Error('Required parameter xXSRFTOKEN was null or undefined when calling aisTransactionsGET.');
         }
         if (fintechRedirectURLOK === null || fintechRedirectURLOK === undefined) {
             throw new Error('Required parameter fintechRedirectURLOK was null or undefined when calling aisTransactionsGET.');
@@ -183,30 +303,36 @@ export class FinTechAccountInformationService {
 
         let queryParameters = new HttpParams({encoder: this.encoder});
         if (dateFrom !== undefined && dateFrom !== null) {
-            queryParameters = queryParameters.set('dateFrom', <any>dateFrom);
+          queryParameters = this.addToHttpParams(queryParameters,
+            <any>dateFrom, 'dateFrom');
         }
         if (dateTo !== undefined && dateTo !== null) {
-            queryParameters = queryParameters.set('dateTo', <any>dateTo);
+          queryParameters = this.addToHttpParams(queryParameters,
+            <any>dateTo, 'dateTo');
         }
         if (entryReferenceFrom !== undefined && entryReferenceFrom !== null) {
-            queryParameters = queryParameters.set('entryReferenceFrom', <any>entryReferenceFrom);
+          queryParameters = this.addToHttpParams(queryParameters,
+            <any>entryReferenceFrom, 'entryReferenceFrom');
         }
         if (bookingStatus !== undefined && bookingStatus !== null) {
-            queryParameters = queryParameters.set('bookingStatus', <any>bookingStatus);
+          queryParameters = this.addToHttpParams(queryParameters,
+            <any>bookingStatus, 'bookingStatus');
         }
         if (deltaList !== undefined && deltaList !== null) {
-            queryParameters = queryParameters.set('deltaList', <any>deltaList);
+          queryParameters = this.addToHttpParams(queryParameters,
+            <any>deltaList, 'deltaList');
         }
         if (online !== undefined && online !== null) {
-            queryParameters = queryParameters.set('online', <any>online);
+          queryParameters = this.addToHttpParams(queryParameters,
+            <any>online, 'online');
         }
 
         let headers = this.defaultHeaders;
         if (xRequestID !== undefined && xRequestID !== null) {
             headers = headers.set('X-Request-ID', String(xRequestID));
         }
-        if (X_XSRF_TOKEN !== undefined && X_XSRF_TOKEN !== null) {
-            headers = headers.set('X-XSRF-TOKEN', String(X_XSRF_TOKEN));
+        if (xXSRFTOKEN !== undefined && xXSRFTOKEN !== null) {
+            headers = headers.set('X-XSRF-TOKEN', String(xXSRFTOKEN));
         }
         if (fintechRedirectURLOK !== undefined && fintechRedirectURLOK !== null) {
             headers = headers.set('Fintech-Redirect-URL-OK', String(fintechRedirectURLOK));
@@ -219,19 +345,34 @@ export class FinTechAccountInformationService {
         }
 
         // authentication (sessionCookie) required
-        // to determine the Accept header
-        const httpHeaderAccepts: string[] = [
-            'application/json'
-        ];
-        const httpHeaderAcceptSelected: string | undefined = this.configuration.selectHeaderAccept(httpHeaderAccepts);
+        if (this.configuration.apiKeys) {
+            const key: string | undefined = this.configuration.apiKeys["sessionCookie"] || this.configuration.apiKeys["sessionCookie"];
+            if (key) {
+            }
+        }
+
+        let httpHeaderAcceptSelected: string | undefined = options && options.httpHeaderAccept;
+        if (httpHeaderAcceptSelected === undefined) {
+            // to determine the Accept header
+            const httpHeaderAccepts: string[] = [
+                'application/json'
+            ];
+            httpHeaderAcceptSelected = this.configuration.selectHeaderAccept(httpHeaderAccepts);
+        }
         if (httpHeaderAcceptSelected !== undefined) {
             headers = headers.set('Accept', httpHeaderAcceptSelected);
         }
 
 
+        let responseType: 'text' | 'json' = 'json';
+        if(httpHeaderAcceptSelected && httpHeaderAcceptSelected.startsWith('text')) {
+            responseType = 'text';
+        }
+
         return this.httpClient.get<TransactionsResponse>(`${this.configuration.basePath}/v1/ais/banks/${encodeURIComponent(String(bankId))}/accounts/${encodeURIComponent(String(accountId))}/transactions`,
             {
                 params: queryParameters,
+                responseType: <any>responseType,
                 withCredentials: this.configuration.withCredentials,
                 headers: headers,
                 observe: observe,

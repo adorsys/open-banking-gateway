@@ -6,6 +6,7 @@ export * from './accountReport';
 export * from './accountStatus';
 export * from './address';
 export * from './amount';
+export * from './analyticsReportDetails';
 export * from './bankDescriptor';
 export * from './bankProfile';
 export * from './errorResponse';
