@@ -61,7 +61,7 @@ public class FinTechAccountInformationImpl implements FinTechAccountInformationA
     }
 
     @Override
-    public ResponseEntity<Object> aisConsentsDELETE(String bankId, UUID xRequestID, String X_XSRF_TOKEN) {
+    public ResponseEntity<Object> aisConsentsDELETE(String bankId, UUID xRequestID, String xsrfToken) {
         SessionEntity sessionEntity = sessionLogicService.getSession();
         consentService.deleteAllConsentsOfBank(sessionEntity, bankId);
         return ResponseEntity.ok().body(Map.of());
