@@ -75,16 +75,17 @@ public class HbciUpdateAuthorization implements UpdateAuthorization {
             context.setUserSelectScaId(scaChallenges.get(SCA_CHALLENGE_ID));
             context.setSelectedScaType(context.getAvailableSca().stream()
                     .filter(it -> context.getUserSelectScaId().equals(it.getKey()))
-                    .map(scaMethod -> tryMatchStandartType(scaMethod.getType()))
-                    .findFirst().orElse(null));
+                    .map(scaMethod -> tryConvertBankScaTypeToStandardValue(scaMethod.getType()))
+                    .findFirst()
+                    .orElse(null));
         }
     }
 
-    private String tryMatchStandartType(String type) {
+    private String tryConvertBankScaTypeToStandardValue(String type) {
         return scaConfiguration.getAuthenticationTypes().entrySet().stream()
-            .filter(e -> type.toUpperCase().contains(e.getKey().toUpperCase()))
-            .map(Map.Entry::getValue)
-            .findFirst().orElse(type);
+                .filter(e -> type.toUpperCase().contains(e.getKey().toUpperCase()))
+                .map(Map.Entry::getValue)
+                .findFirst().orElse(type);
     }
 }
 
