@@ -38,6 +38,7 @@ public class HbciAccountListing extends ValidatedExecution<AccountListHbciContex
     private final OnlineBankingService onlineBankingService;
 
     @Override
+    @SuppressWarnings("CPD-START")
     protected void doRealExecution(DelegateExecution execution, AccountListHbciContext context) {
 
         HbciConsent consent = context.getHbciDialogConsent();
@@ -61,7 +62,6 @@ public class HbciAccountListing extends ValidatedExecution<AccountListHbciContex
                         ctx.setTanChallengeRequired(false);
                     }
             );
-
             return;
         }
 
@@ -73,6 +73,7 @@ public class HbciAccountListing extends ValidatedExecution<AccountListHbciContex
                 (HbciContext ctx) -> {
                     ctx.setHbciDialogConsent((HbciConsent) response.getBankApiConsentData());
                     ctx.setTanChallengeRequired(true);
+                    ctx.setChallengeData(response.getAuthorisationCodeResponse().getUpdateAuthResponse().getChallenge());
                 }
         );
     }

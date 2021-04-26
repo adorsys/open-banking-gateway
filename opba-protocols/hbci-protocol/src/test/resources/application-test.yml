@@ -1,0 +1,10 @@
+protocol:
+  hbci:
+    sca:
+      authentication-types:
+        SMS: "SMS_OTP"
+        MOBILE: "SMS_OTP"
+        CHIP: "CHIP_OTP"
+        PHOTO: "PHOTO_OTP"
+        PUSH: "PUSH_OTP"
+        EMAIL: "SMTP_OTP"

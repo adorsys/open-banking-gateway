@@ -273,7 +273,14 @@ protocol:
             select-sca-method: ${facade.urls.embedded-ui-base-url}/pis/{authSessionId}/select-sca-method
             report-sca-result: ${facade.urls.embedded-ui-base-url}/pis/{authSessionId}/sca-result/{selectedScaType}?wrong={isWrongCreds}
             provide-psu-iban: ${facade.urls.embedded-ui-base-url}/pis/{authSessionId}/entry-consent-transactions/dedicated-account-access?wrong={isWrongCreds}
-
+    sca:
+      authentication-types:
+        SMS: "SMS_OTP"
+        MOBILE: "SMS_OTP"
+        CHIP: "CHIP_OTP"
+        PHOTO: "PHOTO_OTP"
+        PUSH: "PUSH_OTP"
+        EMAIL: "SMTP_OTP"
 
 # Flowable comes for all protocols shared
 bpmnshared:

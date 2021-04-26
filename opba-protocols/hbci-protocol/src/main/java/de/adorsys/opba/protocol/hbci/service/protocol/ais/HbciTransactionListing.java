@@ -73,6 +73,7 @@ public class HbciTransactionListing extends ValidatedExecution<TransactionListHb
                 (HbciContext ctx) -> {
                     ctx.setHbciDialogConsent((HbciConsent) response.getBankApiConsentData());
                     ctx.setTanChallengeRequired(true);
+                    ctx.setChallengeData(response.getAuthorisationCodeResponse().getUpdateAuthResponse().getChallenge());
                 }
         );
     }

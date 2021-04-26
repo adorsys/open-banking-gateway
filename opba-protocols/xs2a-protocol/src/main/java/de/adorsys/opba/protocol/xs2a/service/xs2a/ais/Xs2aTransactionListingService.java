@@ -41,14 +41,12 @@ public class Xs2aTransactionListingService extends ValidatedExecution<Transactio
     private final AccountInformationService ais;
     private final Xs2aConsentErrorHandler handler;
 
-
     @Override
     protected void doValidate(DelegateExecution execution, TransactionListXs2aContext context) {
         validator.validate(execution, context, this.getClass(), extractor.forValidation(context));
     }
 
     @Override
-    @SuppressWarnings("checkstyle:MagicNumber") // Hardcoded as it is POC, these should be read from context
     protected void doRealExecution(DelegateExecution execution, TransactionListXs2aContext context) {
         ValidatedPathQueryHeaders<Xs2aResourceParameters, Xs2aTransactionParameters, Xs2aWithConsentIdHeaders> params =
             extractor.forExecution(context);

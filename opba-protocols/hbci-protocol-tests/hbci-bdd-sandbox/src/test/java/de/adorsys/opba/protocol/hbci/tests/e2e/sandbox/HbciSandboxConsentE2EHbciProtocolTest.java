@@ -183,7 +183,7 @@ class HbciSandboxConsentE2EHbciProtocolTest extends SpringScenarioTest<
             .and()
             .user_max_musterman_selected_sca_challenge_type_push_tan_to_embedded_authorization()
             .and()
-            .user_max_musterman_provided_sca_challenge_result_to_embedded_authorization_and_sees_redirect_to_fintech_ok("/pushTAN");
+            .user_max_musterman_provided_sca_challenge_result_to_embedded_authorization_and_sees_redirect_to_fintech_ok("/PUSH_OTP");
         then()
             .open_banking_has_consent_for_max_musterman_transaction_list()
             .fintech_calls_consent_activation_for_current_authorization_id()
@@ -208,7 +208,7 @@ class HbciSandboxConsentE2EHbciProtocolTest extends SpringScenarioTest<
             .and()
             .user_max_musterman_selected_sca_challenge_type_push_tan_to_embedded_authorization()
             .and()
-            .user_max_musterman_provided_sca_challenge_result_to_embedded_authorization_and_sees_redirect_to_fintech_ok("/pushTAN");
+            .user_max_musterman_provided_sca_challenge_result_to_embedded_authorization_and_sees_redirect_to_fintech_ok("/PUSH_OTP");
         then()
             .open_banking_has_consent_for_max_musterman_account_list()
             .fintech_calls_consent_activation_for_current_authorization_id()
@@ -298,7 +298,7 @@ class HbciSandboxConsentE2EHbciProtocolTest extends SpringScenarioTest<
                 .and()
                 .user_max_musterman_selected_sca_challenge_type_push_tan_to_embedded_authorization()
                 .and()
-                .user_max_musterman_provided_correct_sca_challenge_result_after_wrong_to_embedded_authorization_and_sees_redirect_to_fintech_ok("/pushTAN");
+                .user_max_musterman_provided_correct_sca_challenge_result_after_wrong_to_embedded_authorization_and_sees_redirect_to_fintech_ok("/PUSH_OTP");
         then()
                 .open_banking_has_consent_for_max_musterman_transaction_list()
                 .fintech_calls_consent_activation_for_current_authorization_id()
