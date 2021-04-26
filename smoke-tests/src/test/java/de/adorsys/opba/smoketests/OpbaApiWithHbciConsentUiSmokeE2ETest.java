@@ -43,7 +43,8 @@ import static org.springframework.boot.test.context.SpringBootTest.WebEnvironmen
 class OpbaApiWithHbciConsentUiSmokeE2ETest extends SpringScenarioTest<SmokeSandboxServers, WebDriverBasedAccountInformation<? extends WebDriverBasedAccountInformation<?>>, AccountInformationResult> {
 
     private static final String MAX_MUSTERMAN_IBAN = "DE59300000033466865655";
-    private static final String PUSH_TAN = "pushTAN";
+    private static final String PUSH_TAN_SCA_NAME = "pushTAN";
+    private static final String PUSH_TAN_PAGE_NAME = "PUSH_OTP";
 
     private final String opbaLogin = UUID.randomUUID().toString();
     private final String opbaPassword = UUID.randomUUID().toString();
@@ -103,9 +104,9 @@ class OpbaApiWithHbciConsentUiSmokeE2ETest extends SpringScenarioTest<SmokeSandb
                 .and()
                 .user_in_consent_ui_provides_pin(firefoxDriver)
                 .and()
-                .user_in_consent_ui_sees_sca_select_and_selected_type(firefoxDriver, PUSH_TAN)
+                .user_in_consent_ui_sees_sca_select_and_selected_type(firefoxDriver, PUSH_TAN_SCA_NAME)
                 .and()
-                .user_in_consent_ui_provides_sca_result_to_embedded_authorization(firefoxDriver, PUSH_TAN)
+                .user_in_consent_ui_provides_sca_result_to_embedded_authorization(firefoxDriver, PUSH_TAN_PAGE_NAME)
                 .and()
                 .user_in_consent_ui_sees_thank_you_for_consent_and_clicks_to_tpp(firefoxDriver);
 
