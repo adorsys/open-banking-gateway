@@ -17,10 +17,10 @@ import { HttpClient, HttpHeaders, HttpParams,
 import { CustomHttpParameterCodec }                          from '../encoder';
 import { Observable }                                        from 'rxjs';
 
-import { ErrorResponse } from '../model/errorResponse';
-import { InlineResponse200 } from '../model/inlineResponse200';
-import { LoginRequest } from '../model/loginRequest';
-import { PsuMessage } from '../model/psuMessage';
+import { ErrorResponse } from '../model/models';
+import { InlineResponse200 } from '../model/models';
+import { LoginRequest } from '../model/models';
+import { PsuMessage } from '../model/models';
 
 import { BASE_PATH, COLLECTION_FORMATS }                     from '../variables';
 import { Configuration }                                     from '../configuration';
@@ -52,6 +52,42 @@ export class FinTechAuthorizationService {
 
 
 
+    private addToHttpParams(httpParams: HttpParams, value: any, key?: string): HttpParams {
+        if (typeof value === "object" && value instanceof Date === false) {
+            httpParams = this.addToHttpParamsRecursive(httpParams, value);
+        } else {
+            httpParams = this.addToHttpParamsRecursive(httpParams, value, key);
+        }
+        return httpParams;
+    }
+
+    private addToHttpParamsRecursive(httpParams: HttpParams, value?: any, key?: string): HttpParams {
+        if (value == null) {
+            return httpParams;
+        }
+
+        if (typeof value === "object") {
+            if (Array.isArray(value)) {
+                (value as any[]).forEach( elem => httpParams = this.addToHttpParamsRecursive(httpParams, elem, key));
+            } else if (value instanceof Date) {
+                if (key != null) {
+                    httpParams = httpParams.append(key,
+                        (value as Date).toISOString().substr(0, 10));
+                } else {
+                   throw Error("key may not be null if value is Date");
+                }
+            } else {
+                Object.keys(value).forEach( k => httpParams = this.addToHttpParamsRecursive(
+                    httpParams, value[k], key != null ? `${key}.${k}` : k));
+            }
+        } else if (key != null) {
+            httpParams = httpParams.append(key, value);
+        } else {
+            throw Error("key may not be null if value is not object or array");
+        }
+        return httpParams;
+    }
+
     /**
      * Oauth2 callback to identify user.
      * Oauth2 callback to authenticate user using some Oauth2 identity provider account. Provider id is set inside state. 
@@ -62,10 +98,10 @@ export class FinTechAuthorizationService {
      * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
      * @param reportProgress flag to report request and response progress.
      */
-    public callbackGetLogin(code: string, state: string, scope: string, error?: string, observe?: 'body', reportProgress?: boolean): Observable<InlineResponse200>;
-    public callbackGetLogin(code: string, state: string, scope: string, error?: string, observe?: 'response', reportProgress?: boolean): Observable<HttpResponse<InlineResponse200>>;
-    public callbackGetLogin(code: string, state: string, scope: string, error?: string, observe?: 'events', reportProgress?: boolean): Observable<HttpEvent<InlineResponse200>>;
-    public callbackGetLogin(code: string, state: string, scope: string, error?: string, observe: any = 'body', reportProgress: boolean = false ): Observable<any> {
+    public callbackGetLogin(code: string, state: string, scope: string, error?: string, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<InlineResponse200>;
+    public callbackGetLogin(code: string, state: string, scope: string, error?: string, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<HttpResponse<InlineResponse200>>;
+    public callbackGetLogin(code: string, state: string, scope: string, error?: string, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<HttpEvent<InlineResponse200>>;
+    public callbackGetLogin(code: string, state: string, scope: string, error?: string, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: 'application/json'}): Observable<any> {
         if (code === null || code === undefined) {
             throw new Error('Required parameter code was null or undefined when calling callbackGetLogin.');
         }
@@ -78,33 +114,46 @@ export class FinTechAuthorizationService {
 
         let queryParameters = new HttpParams({encoder: this.encoder});
         if (code !== undefined && code !== null) {
-            queryParameters = queryParameters.set('code', <any>code);
+          queryParameters = this.addToHttpParams(queryParameters,
+            <any>code, 'code');
         }
         if (state !== undefined && state !== null) {
-            queryParameters = queryParameters.set('state', <any>state);
+          queryParameters = this.addToHttpParams(queryParameters,
+            <any>state, 'state');
         }
         if (scope !== undefined && scope !== null) {
-            queryParameters = queryParameters.set('scope', <any>scope);
+          queryParameters = this.addToHttpParams(queryParameters,
+            <any>scope, 'scope');
         }
         if (error !== undefined && error !== null) {
-            queryParameters = queryParameters.set('error', <any>error);
+          queryParameters = this.addToHttpParams(queryParameters,
+            <any>error, 'error');
         }
 
         let headers = this.defaultHeaders;
 
-        // to determine the Accept header
-        const httpHeaderAccepts: string[] = [
-            'application/json'
-        ];
-        const httpHeaderAcceptSelected: string | undefined = this.configuration.selectHeaderAccept(httpHeaderAccepts);
+        let httpHeaderAcceptSelected: string | undefined = options && options.httpHeaderAccept;
+        if (httpHeaderAcceptSelected === undefined) {
+            // to determine the Accept header
+            const httpHeaderAccepts: string[] = [
+                'application/json'
+            ];
+            httpHeaderAcceptSelected = this.configuration.selectHeaderAccept(httpHeaderAccepts);
+        }
         if (httpHeaderAcceptSelected !== undefined) {
             headers = headers.set('Accept', httpHeaderAcceptSelected);
         }
 
 
+        let responseType: 'text' | 'json' = 'json';
+        if(httpHeaderAcceptSelected && httpHeaderAcceptSelected.startsWith('text')) {
+            responseType = 'text';
+        }
+
         return this.httpClient.get<InlineResponse200>(`${this.configuration.basePath}/v1/login/oauth2`,
             {
                 params: queryParameters,
+                responseType: <any>responseType,
                 withCredentials: this.configuration.withCredentials,
                 headers: headers,
                 observe: observe,
@@ -120,14 +169,14 @@ export class FinTechAuthorizationService {
      * @param okOrNotok 
      * @param redirectCode 
      * @param xRequestID Unique ID that identifies this request through common workflow. Must be contained in HTTP Response as well. 
-     * @param X_XSRF_TOKEN XSRF parameter used to validate a SessionCookie or RedirectCookie. 
+     * @param xXSRFTOKEN XSRF parameter used to validate a SessionCookie or RedirectCookie. 
      * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
      * @param reportProgress flag to report request and response progress.
      */
-    public fromConsentGET(authId: string, okOrNotok: 'OK' | 'NOT_OK', redirectCode: string, xRequestID: string, X_XSRF_TOKEN: string, observe?: 'body', reportProgress?: boolean): Observable<any>;
-    public fromConsentGET(authId: string, okOrNotok: 'OK' | 'NOT_OK', redirectCode: string, xRequestID: string, X_XSRF_TOKEN: string, observe?: 'response', reportProgress?: boolean): Observable<HttpResponse<any>>;
-    public fromConsentGET(authId: string, okOrNotok: 'OK' | 'NOT_OK', redirectCode: string, xRequestID: string, X_XSRF_TOKEN: string, observe?: 'events', reportProgress?: boolean): Observable<HttpEvent<any>>;
-    public fromConsentGET(authId: string, okOrNotok: 'OK' | 'NOT_OK', redirectCode: string, xRequestID: string, X_XSRF_TOKEN: string, observe: any = 'body', reportProgress: boolean = false ): Observable<any> {
+    public fromConsentGET(authId: string, okOrNotok: 'OK' | 'NOT_OK', redirectCode: string, xRequestID: string, xXSRFTOKEN: string, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<any>;
+    public fromConsentGET(authId: string, okOrNotok: 'OK' | 'NOT_OK', redirectCode: string, xRequestID: string, xXSRFTOKEN: string, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<HttpResponse<any>>;
+    public fromConsentGET(authId: string, okOrNotok: 'OK' | 'NOT_OK', redirectCode: string, xRequestID: string, xXSRFTOKEN: string, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<HttpEvent<any>>;
+    public fromConsentGET(authId: string, okOrNotok: 'OK' | 'NOT_OK', redirectCode: string, xRequestID: string, xXSRFTOKEN: string, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: 'application/json'}): Observable<any> {
         if (authId === null || authId === undefined) {
             throw new Error('Required parameter authId was null or undefined when calling fromConsentGET.');
         }
@@ -140,36 +189,46 @@ export class FinTechAuthorizationService {
         if (xRequestID === null || xRequestID === undefined) {
             throw new Error('Required parameter xRequestID was null or undefined when calling fromConsentGET.');
         }
-        if (X_XSRF_TOKEN === null || X_XSRF_TOKEN === undefined) {
-            throw new Error('Required parameter X_XSRF_TOKEN was null or undefined when calling fromConsentGET.');
+        if (xXSRFTOKEN === null || xXSRFTOKEN === undefined) {
+            throw new Error('Required parameter xXSRFTOKEN was null or undefined when calling fromConsentGET.');
         }
 
         let queryParameters = new HttpParams({encoder: this.encoder});
         if (redirectCode !== undefined && redirectCode !== null) {
-            queryParameters = queryParameters.set('redirectCode', <any>redirectCode);
+          queryParameters = this.addToHttpParams(queryParameters,
+            <any>redirectCode, 'redirectCode');
         }
 
         let headers = this.defaultHeaders;
         if (xRequestID !== undefined && xRequestID !== null) {
             headers = headers.set('X-Request-ID', String(xRequestID));
         }
-        if (X_XSRF_TOKEN !== undefined && X_XSRF_TOKEN !== null) {
-            headers = headers.set('X-XSRF-TOKEN', String(X_XSRF_TOKEN));
+        if (xXSRFTOKEN !== undefined && xXSRFTOKEN !== null) {
+            headers = headers.set('X-XSRF-TOKEN', String(xXSRFTOKEN));
         }
 
-        // to determine the Accept header
-        const httpHeaderAccepts: string[] = [
-            'application/json'
-        ];
-        const httpHeaderAcceptSelected: string | undefined = this.configuration.selectHeaderAccept(httpHeaderAccepts);
+        let httpHeaderAcceptSelected: string | undefined = options && options.httpHeaderAccept;
+        if (httpHeaderAcceptSelected === undefined) {
+            // to determine the Accept header
+            const httpHeaderAccepts: string[] = [
+                'application/json'
+            ];
+            httpHeaderAcceptSelected = this.configuration.selectHeaderAccept(httpHeaderAccepts);
+        }
         if (httpHeaderAcceptSelected !== undefined) {
             headers = headers.set('Accept', httpHeaderAcceptSelected);
         }
 
 
+        let responseType: 'text' | 'json' = 'json';
+        if(httpHeaderAcceptSelected && httpHeaderAcceptSelected.startsWith('text')) {
+            responseType = 'text';
+        }
+
         return this.httpClient.get<any>(`${this.configuration.basePath}/v1/${encodeURIComponent(String(authId))}/fromConsent/${encodeURIComponent(String(okOrNotok))}`,
             {
                 params: queryParameters,
+                responseType: <any>responseType,
                 withCredentials: this.configuration.withCredentials,
                 headers: headers,
                 observe: observe,
@@ -185,14 +244,14 @@ export class FinTechAuthorizationService {
      * @param okOrNotok 
      * @param redirectCode 
      * @param xRequestID Unique ID that identifies this request through common workflow. Must be contained in HTTP Response as well. 
-     * @param X_XSRF_TOKEN XSRF parameter used to validate a SessionCookie or RedirectCookie. 
+     * @param xXSRFTOKEN XSRF parameter used to validate a SessionCookie or RedirectCookie. 
      * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
      * @param reportProgress flag to report request and response progress.
      */
-    public fromPaymentGET(authId: string, okOrNotok: 'OK' | 'NOT_OK', redirectCode: string, xRequestID: string, X_XSRF_TOKEN: string, observe?: 'body', reportProgress?: boolean): Observable<any>;
-    public fromPaymentGET(authId: string, okOrNotok: 'OK' | 'NOT_OK', redirectCode: string, xRequestID: string, X_XSRF_TOKEN: string, observe?: 'response', reportProgress?: boolean): Observable<HttpResponse<any>>;
-    public fromPaymentGET(authId: string, okOrNotok: 'OK' | 'NOT_OK', redirectCode: string, xRequestID: string, X_XSRF_TOKEN: string, observe?: 'events', reportProgress?: boolean): Observable<HttpEvent<any>>;
-    public fromPaymentGET(authId: string, okOrNotok: 'OK' | 'NOT_OK', redirectCode: string, xRequestID: string, X_XSRF_TOKEN: string, observe: any = 'body', reportProgress: boolean = false ): Observable<any> {
+    public fromPaymentGET(authId: string, okOrNotok: 'OK' | 'NOT_OK', redirectCode: string, xRequestID: string, xXSRFTOKEN: string, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<any>;
+    public fromPaymentGET(authId: string, okOrNotok: 'OK' | 'NOT_OK', redirectCode: string, xRequestID: string, xXSRFTOKEN: string, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<HttpResponse<any>>;
+    public fromPaymentGET(authId: string, okOrNotok: 'OK' | 'NOT_OK', redirectCode: string, xRequestID: string, xXSRFTOKEN: string, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<HttpEvent<any>>;
+    public fromPaymentGET(authId: string, okOrNotok: 'OK' | 'NOT_OK', redirectCode: string, xRequestID: string, xXSRFTOKEN: string, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: 'application/json'}): Observable<any> {
         if (authId === null || authId === undefined) {
             throw new Error('Required parameter authId was null or undefined when calling fromPaymentGET.');
         }
@@ -205,36 +264,46 @@ export class FinTechAuthorizationService {
         if (xRequestID === null || xRequestID === undefined) {
             throw new Error('Required parameter xRequestID was null or undefined when calling fromPaymentGET.');
         }
-        if (X_XSRF_TOKEN === null || X_XSRF_TOKEN === undefined) {
-            throw new Error('Required parameter X_XSRF_TOKEN was null or undefined when calling fromPaymentGET.');
+        if (xXSRFTOKEN === null || xXSRFTOKEN === undefined) {
+            throw new Error('Required parameter xXSRFTOKEN was null or undefined when calling fromPaymentGET.');
         }
 
         let queryParameters = new HttpParams({encoder: this.encoder});
         if (redirectCode !== undefined && redirectCode !== null) {
-            queryParameters = queryParameters.set('redirectCode', <any>redirectCode);
+          queryParameters = this.addToHttpParams(queryParameters,
+            <any>redirectCode, 'redirectCode');
         }
 
         let headers = this.defaultHeaders;
         if (xRequestID !== undefined && xRequestID !== null) {
             headers = headers.set('X-Request-ID', String(xRequestID));
         }
-        if (X_XSRF_TOKEN !== undefined && X_XSRF_TOKEN !== null) {
-            headers = headers.set('X-XSRF-TOKEN', String(X_XSRF_TOKEN));
+        if (xXSRFTOKEN !== undefined && xXSRFTOKEN !== null) {
+            headers = headers.set('X-XSRF-TOKEN', String(xXSRFTOKEN));
         }
 
-        // to determine the Accept header
-        const httpHeaderAccepts: string[] = [
-            'application/json'
-        ];
-        const httpHeaderAcceptSelected: string | undefined = this.configuration.selectHeaderAccept(httpHeaderAccepts);
+        let httpHeaderAcceptSelected: string | undefined = options && options.httpHeaderAccept;
+        if (httpHeaderAcceptSelected === undefined) {
+            // to determine the Accept header
+            const httpHeaderAccepts: string[] = [
+                'application/json'
+            ];
+            httpHeaderAcceptSelected = this.configuration.selectHeaderAccept(httpHeaderAccepts);
+        }
         if (httpHeaderAcceptSelected !== undefined) {
             headers = headers.set('Accept', httpHeaderAcceptSelected);
         }
 
 
+        let responseType: 'text' | 'json' = 'json';
+        if(httpHeaderAcceptSelected && httpHeaderAcceptSelected.startsWith('text')) {
+            responseType = 'text';
+        }
+
         return this.httpClient.get<any>(`${this.configuration.basePath}/v1/${encodeURIComponent(String(authId))}/fromPayment/${encodeURIComponent(String(okOrNotok))}`,
             {
                 params: queryParameters,
+                responseType: <any>responseType,
                 withCredentials: this.configuration.withCredentials,
                 headers: headers,
                 observe: observe,
@@ -251,10 +320,10 @@ export class FinTechAuthorizationService {
      * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
      * @param reportProgress flag to report request and response progress.
      */
-    public loginPOST(xRequestID: string, loginRequest: LoginRequest, observe?: 'body', reportProgress?: boolean): Observable<InlineResponse200>;
-    public loginPOST(xRequestID: string, loginRequest: LoginRequest, observe?: 'response', reportProgress?: boolean): Observable<HttpResponse<InlineResponse200>>;
-    public loginPOST(xRequestID: string, loginRequest: LoginRequest, observe?: 'events', reportProgress?: boolean): Observable<HttpEvent<InlineResponse200>>;
-    public loginPOST(xRequestID: string, loginRequest: LoginRequest, observe: any = 'body', reportProgress: boolean = false ): Observable<any> {
+    public loginPOST(xRequestID: string, loginRequest: LoginRequest, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<InlineResponse200>;
+    public loginPOST(xRequestID: string, loginRequest: LoginRequest, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<HttpResponse<InlineResponse200>>;
+    public loginPOST(xRequestID: string, loginRequest: LoginRequest, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<HttpEvent<InlineResponse200>>;
+    public loginPOST(xRequestID: string, loginRequest: LoginRequest, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: 'application/json'}): Observable<any> {
         if (xRequestID === null || xRequestID === undefined) {
             throw new Error('Required parameter xRequestID was null or undefined when calling loginPOST.');
         }
@@ -267,11 +336,14 @@ export class FinTechAuthorizationService {
             headers = headers.set('X-Request-ID', String(xRequestID));
         }
 
-        // to determine the Accept header
-        const httpHeaderAccepts: string[] = [
-            'application/json'
-        ];
-        const httpHeaderAcceptSelected: string | undefined = this.configuration.selectHeaderAccept(httpHeaderAccepts);
+        let httpHeaderAcceptSelected: string | undefined = options && options.httpHeaderAccept;
+        if (httpHeaderAcceptSelected === undefined) {
+            // to determine the Accept header
+            const httpHeaderAccepts: string[] = [
+                'application/json'
+            ];
+            httpHeaderAcceptSelected = this.configuration.selectHeaderAccept(httpHeaderAccepts);
+        }
         if (httpHeaderAcceptSelected !== undefined) {
             headers = headers.set('Accept', httpHeaderAcceptSelected);
         }
@@ -286,9 +358,15 @@ export class FinTechAuthorizationService {
             headers = headers.set('Content-Type', httpContentTypeSelected);
         }
 
+        let responseType: 'text' | 'json' = 'json';
+        if(httpHeaderAcceptSelected && httpHeaderAcceptSelected.startsWith('text')) {
+            responseType = 'text';
+        }
+
         return this.httpClient.post<InlineResponse200>(`${this.configuration.basePath}/v1/login`,
             loginRequest,
             {
+                responseType: <any>responseType,
                 withCredentials: this.configuration.withCredentials,
                 headers: headers,
                 observe: observe,
@@ -301,43 +379,58 @@ export class FinTechAuthorizationService {
      * logs out user
      * If user can be authenticated, user will be logged out.
      * @param xRequestID Unique ID that identifies this request through common workflow. Must be contained in HTTP Response as well. 
-     * @param X_XSRF_TOKEN XSRF parameter used to validate a SessionCookie or RedirectCookie. 
+     * @param xXSRFTOKEN XSRF parameter used to validate a SessionCookie or RedirectCookie. 
      * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
      * @param reportProgress flag to report request and response progress.
      */
-    public logoutPOST(xRequestID: string, X_XSRF_TOKEN: string, observe?: 'body', reportProgress?: boolean): Observable<any>;
-    public logoutPOST(xRequestID: string, X_XSRF_TOKEN: string, observe?: 'response', reportProgress?: boolean): Observable<HttpResponse<any>>;
-    public logoutPOST(xRequestID: string, X_XSRF_TOKEN: string, observe?: 'events', reportProgress?: boolean): Observable<HttpEvent<any>>;
-    public logoutPOST(xRequestID: string, X_XSRF_TOKEN: string, observe: any = 'body', reportProgress: boolean = false ): Observable<any> {
+    public logoutPOST(xRequestID: string, xXSRFTOKEN: string, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<any>;
+    public logoutPOST(xRequestID: string, xXSRFTOKEN: string, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<HttpResponse<any>>;
+    public logoutPOST(xRequestID: string, xXSRFTOKEN: string, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<HttpEvent<any>>;
+    public logoutPOST(xRequestID: string, xXSRFTOKEN: string, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: 'application/json'}): Observable<any> {
         if (xRequestID === null || xRequestID === undefined) {
             throw new Error('Required parameter xRequestID was null or undefined when calling logoutPOST.');
         }
-        if (X_XSRF_TOKEN === null || X_XSRF_TOKEN === undefined) {
-            throw new Error('Required parameter X_XSRF_TOKEN was null or undefined when calling logoutPOST.');
+        if (xXSRFTOKEN === null || xXSRFTOKEN === undefined) {
+            throw new Error('Required parameter xXSRFTOKEN was null or undefined when calling logoutPOST.');
         }
 
         let headers = this.defaultHeaders;
         if (xRequestID !== undefined && xRequestID !== null) {
             headers = headers.set('X-Request-ID', String(xRequestID));
         }
-        if (X_XSRF_TOKEN !== undefined && X_XSRF_TOKEN !== null) {
-            headers = headers.set('X-XSRF-TOKEN', String(X_XSRF_TOKEN));
+        if (xXSRFTOKEN !== undefined && xXSRFTOKEN !== null) {
+            headers = headers.set('X-XSRF-TOKEN', String(xXSRFTOKEN));
         }
 
         // authentication (sessionCookie) required
-        // to determine the Accept header
-        const httpHeaderAccepts: string[] = [
-            'application/json'
-        ];
-        const httpHeaderAcceptSelected: string | undefined = this.configuration.selectHeaderAccept(httpHeaderAccepts);
+        if (this.configuration.apiKeys) {
+            const key: string | undefined = this.configuration.apiKeys["sessionCookie"] || this.configuration.apiKeys["sessionCookie"];
+            if (key) {
+            }
+        }
+
+        let httpHeaderAcceptSelected: string | undefined = options && options.httpHeaderAccept;
+        if (httpHeaderAcceptSelected === undefined) {
+            // to determine the Accept header
+            const httpHeaderAccepts: string[] = [
+                'application/json'
+            ];
+            httpHeaderAcceptSelected = this.configuration.selectHeaderAccept(httpHeaderAccepts);
+        }
         if (httpHeaderAcceptSelected !== undefined) {
             headers = headers.set('Accept', httpHeaderAcceptSelected);
         }
 
 
+        let responseType: 'text' | 'json' = 'json';
+        if(httpHeaderAcceptSelected && httpHeaderAcceptSelected.startsWith('text')) {
+            responseType = 'text';
+        }
+
         return this.httpClient.post<any>(`${this.configuration.basePath}/v1/logout`,
             null,
             {
+                responseType: <any>responseType,
                 withCredentials: this.configuration.withCredentials,
                 headers: headers,
                 observe: observe,

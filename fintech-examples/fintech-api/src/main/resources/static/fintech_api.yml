@@ -418,6 +418,31 @@ paths:
         "401":
           $ref: "#/components/responses/401_Unauthorized"
 
+  /v1/ais/banks/{bank-id}/consents:
+    delete:
+      tags:
+        - FinTechAccountInformation
+      operationId: aisConsentsDELETE
+      summary: Deletes all consents that are associated with bank
+      description: Deletes all consents that are associated with bank
+      parameters:
+        #path
+        - $ref: "#/components/parameters/bank-id"
+
+        #header
+        - $ref: "#/components/parameters/X-Request-ID"
+        - $ref: "#/components/parameters/X-XSRF-TOKEN"
+
+      security:
+        - sessionCookie: [ ]
+      responses:
+        "200":
+          $ref: "#/components/responses/200_ConsentRemovalResult"
+        "401":
+          $ref: "#/components/responses/401_Unauthorized"
+        "404":
+          $ref: "#/components/responses/404_NotFound"
+
   /v1/consent/{userid}/{password}:
     get:
       summary: ask for existing consent of user
@@ -953,6 +978,13 @@ components:
 
     200_ConsentRetrievalResult:
       description: List of all consents for all banks of user
+      content:
+        application/json:
+          schema:
+            type: object
+
+    200_ConsentRemovalResult:
+      description: List of all removed consents
       content:
         application/json:
           schema:

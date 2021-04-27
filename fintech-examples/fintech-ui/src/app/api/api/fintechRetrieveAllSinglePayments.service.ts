@@ -17,8 +17,8 @@ import { HttpClient, HttpHeaders, HttpParams,
 import { CustomHttpParameterCodec }                          from '../encoder';
 import { Observable }                                        from 'rxjs';
 
-import { ErrorResponse } from '../model/errorResponse';
-import { PaymentInitiationWithStatusResponse } from '../model/paymentInitiationWithStatusResponse';
+import { ErrorResponse } from '../model/models';
+import { PaymentInitiationWithStatusResponse } from '../model/models';
 
 import { BASE_PATH, COLLECTION_FORMATS }                     from '../variables';
 import { Configuration }                                     from '../configuration';
@@ -50,20 +50,56 @@ export class FintechRetrieveAllSinglePaymentsService {
 
 
 
+    private addToHttpParams(httpParams: HttpParams, value: any, key?: string): HttpParams {
+        if (typeof value === "object" && value instanceof Date === false) {
+            httpParams = this.addToHttpParamsRecursive(httpParams, value);
+        } else {
+            httpParams = this.addToHttpParamsRecursive(httpParams, value, key);
+        }
+        return httpParams;
+    }
+
+    private addToHttpParamsRecursive(httpParams: HttpParams, value?: any, key?: string): HttpParams {
+        if (value == null) {
+            return httpParams;
+        }
+
+        if (typeof value === "object") {
+            if (Array.isArray(value)) {
+                (value as any[]).forEach( elem => httpParams = this.addToHttpParamsRecursive(httpParams, elem, key));
+            } else if (value instanceof Date) {
+                if (key != null) {
+                    httpParams = httpParams.append(key,
+                        (value as Date).toISOString().substr(0, 10));
+                } else {
+                   throw Error("key may not be null if value is Date");
+                }
+            } else {
+                Object.keys(value).forEach( k => httpParams = this.addToHttpParamsRecursive(
+                    httpParams, value[k], key != null ? `${key}.${k}` : k));
+            }
+        } else if (key != null) {
+            httpParams = httpParams.append(key, value);
+        } else {
+            throw Error("key may not be null if value is not object or array");
+        }
+        return httpParams;
+    }
+
     /**
      * Ask for all payments of this account
      * This method is used to get payment status.
      * @param bankId 
      * @param accountId 
      * @param xRequestID Unique ID that identifies this request through common workflow. Must be contained in HTTP Response as well. 
-     * @param X_XSRF_TOKEN XSRF parameter used to validate a SessionCookie or RedirectCookie. 
+     * @param xXSRFTOKEN XSRF parameter used to validate a SessionCookie or RedirectCookie. 
      * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
      * @param reportProgress flag to report request and response progress.
      */
-    public retrieveAllSinglePayments(bankId: string, accountId: string, xRequestID: string, X_XSRF_TOKEN: string, observe?: 'body', reportProgress?: boolean): Observable<Array<PaymentInitiationWithStatusResponse>>;
-    public retrieveAllSinglePayments(bankId: string, accountId: string, xRequestID: string, X_XSRF_TOKEN: string, observe?: 'response', reportProgress?: boolean): Observable<HttpResponse<Array<PaymentInitiationWithStatusResponse>>>;
-    public retrieveAllSinglePayments(bankId: string, accountId: string, xRequestID: string, X_XSRF_TOKEN: string, observe?: 'events', reportProgress?: boolean): Observable<HttpEvent<Array<PaymentInitiationWithStatusResponse>>>;
-    public retrieveAllSinglePayments(bankId: string, accountId: string, xRequestID: string, X_XSRF_TOKEN: string, observe: any = 'body', reportProgress: boolean = false ): Observable<any> {
+    public retrieveAllSinglePayments(bankId: string, accountId: string, xRequestID: string, xXSRFTOKEN: string, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<Array<PaymentInitiationWithStatusResponse>>;
+    public retrieveAllSinglePayments(bankId: string, accountId: string, xRequestID: string, xXSRFTOKEN: string, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<HttpResponse<Array<PaymentInitiationWithStatusResponse>>>;
+    public retrieveAllSinglePayments(bankId: string, accountId: string, xRequestID: string, xXSRFTOKEN: string, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<HttpEvent<Array<PaymentInitiationWithStatusResponse>>>;
+    public retrieveAllSinglePayments(bankId: string, accountId: string, xRequestID: string, xXSRFTOKEN: string, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: 'application/json'}): Observable<any> {
         if (bankId === null || bankId === undefined) {
             throw new Error('Required parameter bankId was null or undefined when calling retrieveAllSinglePayments.');
         }
@@ -73,30 +109,39 @@ export class FintechRetrieveAllSinglePaymentsService {
         if (xRequestID === null || xRequestID === undefined) {
             throw new Error('Required parameter xRequestID was null or undefined when calling retrieveAllSinglePayments.');
         }
-        if (X_XSRF_TOKEN === null || X_XSRF_TOKEN === undefined) {
-            throw new Error('Required parameter X_XSRF_TOKEN was null or undefined when calling retrieveAllSinglePayments.');
+        if (xXSRFTOKEN === null || xXSRFTOKEN === undefined) {
+            throw new Error('Required parameter xXSRFTOKEN was null or undefined when calling retrieveAllSinglePayments.');
         }
 
         let headers = this.defaultHeaders;
         if (xRequestID !== undefined && xRequestID !== null) {
             headers = headers.set('X-Request-ID', String(xRequestID));
         }
-        if (X_XSRF_TOKEN !== undefined && X_XSRF_TOKEN !== null) {
-            headers = headers.set('X-XSRF-TOKEN', String(X_XSRF_TOKEN));
+        if (xXSRFTOKEN !== undefined && xXSRFTOKEN !== null) {
+            headers = headers.set('X-XSRF-TOKEN', String(xXSRFTOKEN));
         }
 
-        // to determine the Accept header
-        const httpHeaderAccepts: string[] = [
-            'application/json'
-        ];
-        const httpHeaderAcceptSelected: string | undefined = this.configuration.selectHeaderAccept(httpHeaderAccepts);
+        let httpHeaderAcceptSelected: string | undefined = options && options.httpHeaderAccept;
+        if (httpHeaderAcceptSelected === undefined) {
+            // to determine the Accept header
+            const httpHeaderAccepts: string[] = [
+                'application/json'
+            ];
+            httpHeaderAcceptSelected = this.configuration.selectHeaderAccept(httpHeaderAccepts);
+        }
         if (httpHeaderAcceptSelected !== undefined) {
             headers = headers.set('Accept', httpHeaderAcceptSelected);
         }
 
 
+        let responseType: 'text' | 'json' = 'json';
+        if(httpHeaderAcceptSelected && httpHeaderAcceptSelected.startsWith('text')) {
+            responseType = 'text';
+        }
+
         return this.httpClient.get<Array<PaymentInitiationWithStatusResponse>>(`${this.configuration.basePath}/v1/pis/banks/${encodeURIComponent(String(bankId))}/accounts/${encodeURIComponent(String(accountId))}/payments/single`,
             {
+                responseType: <any>responseType,
                 withCredentials: this.configuration.withCredentials,
                 headers: headers,
                 observe: observe,

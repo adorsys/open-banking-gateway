@@ -1,5 +1,6 @@
 package de.adorsys.opba.protocol.xs2a.config.aspspmessages;
 
+import de.adorsys.opba.protocol.api.errors.ProcessErrorConsentGone;
 import de.adorsys.xs2a.adapter.api.model.MessageCode;
 import lombok.Data;
 import org.springframework.boot.context.properties.ConfigurationProperties;
@@ -7,6 +8,7 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.validation.annotation.Validated;
 
 import javax.validation.constraints.NotEmpty;
+import java.util.Map;
 import java.util.Set;
 
 import static de.adorsys.opba.protocol.xs2a.config.ConfigConst.XS2A_PROTOCOL_CONFIG_PREFIX;
@@ -33,6 +35,9 @@ public class AspspMessages {
      */
     @NotEmpty
     private Set<MessageCode> invalidConsent;
+
+    @NotEmpty
+    private Map<MessageCode, ProcessErrorConsentGone> consentGone;
 
     /**
      * Represents message templates for the missing OAuth2 token case.

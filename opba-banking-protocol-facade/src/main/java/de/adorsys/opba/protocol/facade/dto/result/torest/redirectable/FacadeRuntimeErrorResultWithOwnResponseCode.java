@@ -1,7 +1,7 @@
 package de.adorsys.opba.protocol.facade.dto.result.torest.redirectable;
 
 import de.adorsys.opba.protocol.api.dto.result.body.ReturnableProcessErrorResult;
-import de.adorsys.opba.protocol.api.errors.ProcessErrorStrings;
+import de.adorsys.opba.protocol.api.errors.ProcessErrorConsentGone;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
@@ -19,6 +19,7 @@ public class FacadeRuntimeErrorResultWithOwnResponseCode<T> extends FacadeRuntim
 
     private static final int CONSENT_UNKNOWN_RESPONSE_CODE = 410;
     private static final int CONSENT_EXPIRED_RESPONSE_CODE = 410;
+    private static final int CONSENT_INVALID_RESPONSE_CODE = 410;
     private static final int CONSENT_USAGE_LIMIT_EXCEEDED_HTTP_RESPONSE_CODE = 429;
 
     private int responseCode = DEFAULT_RESPONSE_CODE;
@@ -34,15 +35,19 @@ public class FacadeRuntimeErrorResultWithOwnResponseCode<T> extends FacadeRuntim
             FacadeRuntimeErrorResultWithOwnResponseCode mapped = new FacadeRuntimeErrorResultWithOwnResponseCode<>();
             map(result, mapped);
             mapped.getHeaders().put(X_ERROR_CODE, result.getErrorCodeString());
-            switch (result.getErrorCodeString()) {
-                case ProcessErrorStrings.CONSENT_ACCESS_EXCEEDED_LIMIT:
+            var code = ProcessErrorConsentGone.valueOf(result.getErrorCodeString());
+            switch (code) {
+                case CONSENT_ACCESS_EXCEEDED_LIMIT:
                     mapped.setResponseCode(CONSENT_USAGE_LIMIT_EXCEEDED_HTTP_RESPONSE_CODE);
                     break;
-                case ProcessErrorStrings.CONSENT_UNKNOWN:
+                case CONSENT_UNKNOWN:
                     mapped.setResponseCode(CONSENT_UNKNOWN_RESPONSE_CODE);
                     break;
-                case ProcessErrorStrings.CONSENT_EXPIRED:
+                case CONSENT_EXPIRED:
                     mapped.setResponseCode(CONSENT_EXPIRED_RESPONSE_CODE);
+                    break;
+                case CONSENT_INVALID:
+                    mapped.setResponseCode(CONSENT_INVALID_RESPONSE_CODE);
                     break;
                 default:
                     mapped.setResponseCode(DEFAULT_RESPONSE_CODE);

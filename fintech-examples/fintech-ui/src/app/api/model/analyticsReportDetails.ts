@@ -9,87 +9,63 @@
  * https://openapi-generator.tech
  * Do not edit the class manually.
  */
-import { AccountStatus } from './accountStatus';
-import { Address } from './address';
-import { LinksAccountDetails } from './linksAccountDetails';
-import { AccountBalance } from './accountBalance';
 
 
 /**
- * The ASPSP shall give at least one of the account reference identifiers:   - iban   - bban   - pan   - maskedPan   - msisdn If the account is a multicurrency account currency code in \"currency\" is set to \"XXX\". 
+ * JSON based analytics report. This account report contains transaction categorization result. 
  */
-export interface AccountDetails { 
+export interface AnalyticsReportDetails { 
     /**
-     * This shall be filled, if addressable resource are created by the ASPSP on the /accounts or /card-accounts endpoint.
+     * The id of transaction this analytics result refers to.
      */
-    resourceId?: string;
+    transactionId?: string;
     /**
-     * International bank account number ISO 31616.
+     * Main category of the booking.
      */
-    iban?: string;
+    mainCategory?: string;
     /**
-     * Basic Bank Account Number (BBAN) Identifier.  This data element can be used in the body of the Consent request.   Message for retrieving Account access Consent from this Account. This   data elements is used for payment Accounts which have no IBAN.   ISO20022: Basic Bank Account Number (BBAN).    Identifier used nationally by financial institutions, i.e., in individual countries,   generally as part of a National Account Numbering Scheme(s),   which uniquely identifies the account of a customer. 
+     * Sub category of the booking.
      */
-    bban?: string;
+    subCategory?: string;
     /**
-     * Primary Account Number according to ISO/IEC 7812. 
+     * Specification of the booking.
      */
-    pan?: string;
+    specification?: string;
     /**
-     * Masked Primary Account Number. 
+     * Related account.
      */
-    maskedPan?: string;
+    otherAccount?: string;
     /**
-     * Mobile phone number.
+     * Logo.
      */
-    msisdn?: string;
+    logo?: string;
     /**
-     * ISO 4217 Alpha 3 currency code. 
+     * Homepage.
      */
-    currency: string;
+    homepage?: string;
     /**
-     * Name of the account given by the bank or the PSU in online-banking.
+     * Hotline.
      */
-    name?: string;
+    hotline?: string;
     /**
-     * Product name of the bank for this account, proprietary definition.
+     * Email.
      */
-    product?: string;
+    email?: string;
     /**
-     * ExternalCashAccountType1Code from ISO 20022. 
+     * Custom information about analyzed transaction.
      */
-    cashAccountType?: string;
-    status?: AccountStatus;
+    custom?: { [key: string]: string; };
     /**
-     * BICFI 
+     * Rules that were used to analyze.
      */
-    bic?: string;
+    usedRules?: Array<string>;
     /**
-     * Case of a set of pending card transactions, the APSP will provide the relevant cash account the card is set up on.
+     * Classification next booking date.
      */
-    linkedAccounts?: string;
+    nextBookingDate?: string;
     /**
-     * Specifies the usage of the account:   * PRIV: private personal account   * ORGA: professional account 
+     * Classification cycle result.
      */
-    usage?: AccountDetails.UsageEnum;
-    /**
-     * Specifications that might be provided by the ASPSP:   - characteristics of the account   - characteristics of the relevant card 
-     */
-    details?: string;
-    _links?: LinksAccountDetails;
-    /**
-     * Name of the legal account owner. If there is more than one owner, then e.g. two names might be noted here.
-     */
-    ownerName?: string;
-    ownerAddress?: Address;
-    balances?: Array<AccountBalance>;
+    cycle?: string;
 }
-export namespace AccountDetails {
-    export type UsageEnum = 'PRIV' | 'ORGA';
-    export const UsageEnum = {
-        PRIV: 'PRIV' as UsageEnum,
-        ORGA: 'ORGA' as UsageEnum
-    };
-}
-
 

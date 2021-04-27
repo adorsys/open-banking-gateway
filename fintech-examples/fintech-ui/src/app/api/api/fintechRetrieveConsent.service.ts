@@ -26,7 +26,7 @@ import { Configuration }                                     from '../configurat
 @Injectable({
   providedIn: 'root'
 })
-export class FinTechOauth2AuthenticationService {
+export class FintechRetrieveConsentService {
 
     protected basePath = 'http://localhost';
     public defaultHeaders = new HttpHeaders();
@@ -85,33 +85,31 @@ export class FinTechOauth2AuthenticationService {
     }
 
     /**
-     * Identifies the PSU in the Realm of the FinTechApi using his Gmail or other IDP provider account.
-     * Use Oauth2 for Gmail users\&#39; account to identify him 
-     * @param xRequestID Unique ID that identifies this request through common workflow. Must be contained in HTTP Response as well. 
-     * @param idpProvider IDP provider id for Oauth2 authentication (i.e. &#x60;gmail&#x60;)
+     * ask for existing consent of user
+     * This method is disabled by default. It can be enabled by profile \&quot;CONSENT_RETRIEVAL\&quot;
+     * @param userid 
+     * @param password 
      * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
      * @param reportProgress flag to report request and response progress.
      */
-    public oauthLoginPOST(xRequestID: string, idpProvider: 'gmail', observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: undefined}): Observable<any>;
-    public oauthLoginPOST(xRequestID: string, idpProvider: 'gmail', observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: undefined}): Observable<HttpResponse<any>>;
-    public oauthLoginPOST(xRequestID: string, idpProvider: 'gmail', observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: undefined}): Observable<HttpEvent<any>>;
-    public oauthLoginPOST(xRequestID: string, idpProvider: 'gmail', observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: undefined}): Observable<any> {
-        if (xRequestID === null || xRequestID === undefined) {
-            throw new Error('Required parameter xRequestID was null or undefined when calling oauthLoginPOST.');
+    public retrieveConsent(userid: string, password: string, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<object>;
+    public retrieveConsent(userid: string, password: string, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<HttpResponse<object>>;
+    public retrieveConsent(userid: string, password: string, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<HttpEvent<object>>;
+    public retrieveConsent(userid: string, password: string, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: 'application/json'}): Observable<any> {
+        if (userid === null || userid === undefined) {
+            throw new Error('Required parameter userid was null or undefined when calling retrieveConsent.');
         }
-        if (idpProvider === null || idpProvider === undefined) {
-            throw new Error('Required parameter idpProvider was null or undefined when calling oauthLoginPOST.');
+        if (password === null || password === undefined) {
+            throw new Error('Required parameter password was null or undefined when calling retrieveConsent.');
         }
 
         let headers = this.defaultHeaders;
-        if (xRequestID !== undefined && xRequestID !== null) {
-            headers = headers.set('X-Request-ID', String(xRequestID));
-        }
 
         let httpHeaderAcceptSelected: string | undefined = options && options.httpHeaderAccept;
         if (httpHeaderAcceptSelected === undefined) {
             // to determine the Accept header
             const httpHeaderAccepts: string[] = [
+                'application/json'
             ];
             httpHeaderAcceptSelected = this.configuration.selectHeaderAccept(httpHeaderAccepts);
         }
@@ -125,8 +123,7 @@ export class FinTechOauth2AuthenticationService {
             responseType = 'text';
         }
 
-        return this.httpClient.post<any>(`${this.configuration.basePath}/v1/oauth2/${encodeURIComponent(String(idpProvider))}/login`,
-            null,
+        return this.httpClient.get<object>(`${this.configuration.basePath}/v1/consent/${encodeURIComponent(String(userid))}/${encodeURIComponent(String(password))}`,
             {
                 responseType: <any>responseType,
                 withCredentials: this.configuration.withCredentials,

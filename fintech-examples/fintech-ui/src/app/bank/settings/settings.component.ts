@@ -4,6 +4,7 @@ import { Location } from '@angular/common';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { LoARetrievalInformation, LoTRetrievalInformation } from '../../models/consts';
 import { StorageService } from '../../services/storage.service';
+import {FinTechAccountInformationService} from "../../api";
 
 @Component({
   selector: 'app-settings',
@@ -24,7 +25,8 @@ export class SettingsComponent implements OnInit {
     private location: Location,
     private route: ActivatedRoute,
     private formBuilder: FormBuilder,
-    private storageService: StorageService
+    private storageService: StorageService,
+    private accountService: FinTechAccountInformationService
   ) {}
 
   ngOnInit() {
@@ -43,6 +45,10 @@ export class SettingsComponent implements OnInit {
   onConfirm() {
     this.storageService.setSettings({ ...this.settingsForm.getRawValue() });
     this.onNavigateBack();
+  }
+
+  onDelete() {
+    this.accountService.aisConsentsDELETE(this.bankId, '', '').subscribe();
   }
 
   onNavigateBack() {

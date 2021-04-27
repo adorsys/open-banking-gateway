@@ -7,6 +7,7 @@ import de.adorsys.opba.fintech.impl.controller.utils.LoARetrievalInformation;
 import de.adorsys.opba.fintech.impl.controller.utils.LoTRetrievalInformation;
 import de.adorsys.opba.fintech.impl.database.entities.SessionEntity;
 import de.adorsys.opba.fintech.impl.service.AccountService;
+import de.adorsys.opba.fintech.impl.service.ConsentService;
 import de.adorsys.opba.fintech.impl.service.SessionLogicService;
 import de.adorsys.opba.fintech.impl.service.TransactionService;
 import lombok.RequiredArgsConstructor;
@@ -16,6 +17,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.time.LocalDate;
+import java.util.Map;
 import java.util.UUID;
 
 @Slf4j
@@ -26,6 +28,7 @@ public class FinTechAccountInformationImpl implements FinTechAccountInformationA
     private final SessionLogicService sessionLogicService;
     private final AccountService accountService;
     private final TransactionService transactionService;
+    private final ConsentService consentService;
 
     @Override
     public ResponseEntity<AccountList> aisAccountsGET(String bankId, UUID xRequestID, String xsrfToken,
@@ -55,5 +58,12 @@ public class FinTechAccountInformationImpl implements FinTechAccountInformationA
         return sessionLogicService.addSessionMaxAgeToHeader(
                 transactionService.listTransactions(sessionEntity, fintechRedirectURLOK, fintechRedirectURLNOK,
                 bankId, accountId, dateFrom, dateTo, entryReferenceFrom, bookingStatus, deltaList, LoTRetrievalInformation.valueOf(loTRetrievalInformation), online));
+    }
+
+    @Override
+    public ResponseEntity<Object> aisConsentsDELETE(String bankId, UUID xRequestID, String xsrfToken) {
+        SessionEntity sessionEntity = sessionLogicService.getSession();
+        consentService.deleteAllConsentsOfBank(sessionEntity, bankId);
+        return ResponseEntity.ok().body(Map.of());
     }
 }
