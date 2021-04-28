@@ -27,6 +27,7 @@ import org.springframework.stereotype.Service;
 @Slf4j
 @Service("xs2aAuthenticateConsentWithScaChallenge")
 @RequiredArgsConstructor
+@SuppressWarnings("CPD-START")
 public class Xs2aAisAuthenticateConsentWithScaChallenge extends ValidatedExecution<Xs2aContext> {
 
     private final Extractor extractor;

@@ -121,7 +121,7 @@ public interface Xs2aDtoToLogObjectsMapper {
     @Mapping(target = "creditorAddress", source = "body.creditorAddress")
     @Mapping(target = "remittanceInformationUnstructured", source = "body.remittanceInformationUnstructured")
     PisPathHeadersBodyParametersLog mapFromPathHeadersBodyDtoToPisPathHeadersBodyLog(
-            Xs2aInitialPaymentParameters path, PaymentInitiateHeaders header, PaymentInitiationJson body);
+            Xs2aInitialPaymentParameters path, PaymentInitiateHeaders headers, PaymentInitiationJson body);
 
     @Mapping(target = "consentId", source = "path.consentId")
     @Mapping(target = "psuId", source = "headers.psuId")
@@ -130,7 +130,7 @@ public interface Xs2aDtoToLogObjectsMapper {
     @Mapping(target = "oauth2Token", source = "headers.oauth2Token")
     @Mapping(target = "tppRedirectPreferred", source = "headers.tppRedirectPreferred")
     ConsentPathHeadersParametersLog mapFromPathHeadersDtoToConsentPathHeadersLog(
-            Xs2aInitialConsentParameters path, Xs2aStandardHeaders header);
+            Xs2aInitialConsentParameters path, Xs2aStandardHeaders headers);
 
     @Mapping(target = "paymentId", source = "path.paymentId")
     @Mapping(target = "paymentType", source = "path.paymentType")

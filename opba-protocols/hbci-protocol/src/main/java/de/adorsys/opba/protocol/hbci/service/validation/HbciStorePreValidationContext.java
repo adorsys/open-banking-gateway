@@ -1,6 +1,5 @@
 package de.adorsys.opba.protocol.hbci.service.validation;
 
-import de.adorsys.opba.protocol.hbci.context.AccountListHbciContext;
 import de.adorsys.opba.protocol.hbci.util.logresolver.HbciLogResolver;
 import org.flowable.engine.delegate.DelegateExecution;
 import org.flowable.engine.delegate.JavaDelegate;

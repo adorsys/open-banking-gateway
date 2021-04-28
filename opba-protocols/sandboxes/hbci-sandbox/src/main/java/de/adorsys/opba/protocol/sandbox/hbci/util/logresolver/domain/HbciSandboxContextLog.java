@@ -8,8 +8,8 @@ import lombok.ToString;
 public class HbciSandboxContextLog extends HbciSandboxContext {
 
     public String getNotSensitiveData() {
-        return "HbciSandboxContextLog(" +
-                "request=" + this.getRequest()
+        return "HbciSandboxContextLog("
+                + "request=" + this.getRequest()
                 + ", dialogId=" + this.getDialogId()
                 + ", userId=" + this.getUserId()
                 + ", sysId=" + this.getSysId()

@@ -31,6 +31,7 @@ import org.springframework.stereotype.Service;
 @Slf4j
 @Service("xs2aAuthenticatePaymentWithScaChallenge")
 @RequiredArgsConstructor
+@SuppressWarnings("CPD-START")
 public class Xs2aPisAuthenticatePaymentWithScaChallenge extends ValidatedExecution<Xs2aPisContext> {
 
     private final Extractor extractor;

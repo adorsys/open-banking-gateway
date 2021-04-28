@@ -7,7 +7,7 @@ import java.time.LocalDate;
 
 
 @Data
-@ToString(callSuper=true)
+@ToString(callSuper = true)
 public class TransactionListXs2aContextLog extends Xs2aContextLog {
 
     private String iban;
