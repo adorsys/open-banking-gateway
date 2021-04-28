@@ -17,6 +17,7 @@ import de.adorsys.opba.protocol.hbci.service.consent.HbciScaRequiredUtil;
 import de.adorsys.opba.protocol.hbci.service.protocol.HbciUtil;
 import de.adorsys.opba.protocol.hbci.service.protocol.pis.dto.PaymentInitiateBody;
 import de.adorsys.opba.protocol.hbci.service.protocol.pis.dto.PisSinglePaymentResult;
+import de.adorsys.opba.protocol.hbci.util.logresolver.HbciLogResolver;
 import lombok.RequiredArgsConstructor;
 import org.flowable.engine.delegate.DelegateExecution;
 import org.mapstruct.Mapper;
@@ -29,11 +30,15 @@ import static de.adorsys.opba.protocol.hbci.constant.GlobalConst.HBCI_MAPPERS_PA
 @Service("hbciPaymentExecutor")
 @RequiredArgsConstructor
 public class HbciPayment extends ValidatedExecution<PaymentHbciContext> {
+
     private final OnlineBankingService onlineBankingService;
     private final PaymentMapper paymentMapper;
+    private final HbciLogResolver logResolver = new HbciLogResolver(getClass());
 
     @Override
     protected void doRealExecution(DelegateExecution execution, PaymentHbciContext context) {
+        logResolver.log("doRealExecution: execution ({}) with context ({})", execution, context);
+
         HbciConsent consent = context.getHbciDialogConsent();
         SinglePayment singlePayment = paymentMapper.map(context.getPayment());
         singlePayment.setPsuAccount(HbciUtil.buildBankAccount(context.getAccountIban()));
@@ -43,6 +48,7 @@ public class HbciPayment extends ValidatedExecution<PaymentHbciContext> {
         PaymentResponse response = onlineBankingService.executePayment(request);
         boolean postScaRequired = HbciScaRequiredUtil.extraCheckIfScaRequired(response);
 
+        logResolver.log("AuthorisationCodeResponse is empty: {}, postScaRequired: {}", response.getAuthorisationCodeResponse() == null, postScaRequired);
         if (null == response.getAuthorisationCodeResponse() && !postScaRequired) {
             ContextUtil.getAndUpdateContext(
                     execution,

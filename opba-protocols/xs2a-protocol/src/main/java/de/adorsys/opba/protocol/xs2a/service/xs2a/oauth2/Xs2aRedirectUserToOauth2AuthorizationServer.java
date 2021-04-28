@@ -14,6 +14,7 @@ import de.adorsys.opba.protocol.xs2a.service.xs2a.Xs2aRedirectExecutor;
 import de.adorsys.opba.protocol.xs2a.service.xs2a.dto.oauth2.Xs2aOauth2Headers;
 import de.adorsys.opba.protocol.xs2a.service.xs2a.dto.oauth2.Xs2aOauth2Parameters;
 import de.adorsys.opba.protocol.xs2a.service.xs2a.validation.Xs2aValidator;
+import de.adorsys.opba.protocol.xs2a.util.logresolver.Xs2aLogResolver;
 import de.adorsys.xs2a.adapter.api.Oauth2Service;
 import lombok.RequiredArgsConstructor;
 import lombok.SneakyThrows;
@@ -36,13 +37,17 @@ public class Xs2aRedirectUserToOauth2AuthorizationServer extends ValidatedExecut
     private final Extractor extractor;
     private final Oauth2Service oauth2Service;
     private final Xs2aRedirectExecutor redirectExecutor;
+    private final Xs2aLogResolver logResolver = new Xs2aLogResolver(getClass());
 
     @Override
     @SneakyThrows
     protected void doRealExecution(DelegateExecution execution, Xs2aContext context) {
+        logResolver.log("doRealExecution: execution ({}) with context ({})", execution, context);
+
         ValidatedQueryHeaders<Xs2aOauth2Parameters, Xs2aOauth2Headers> validated = extractor.forExecution(context);
         enrichParametersAndContext(execution, context, validated.getQuery());
 
+        // TODO logResolver.log("getAuthorizationRequestUri with parameters: {}", params);
         URI oauth2RedirectUserTo = oauth2Service.getAuthorizationRequestUri(
                 validated.getHeaders().toHeaders().toMap(),
                 validated.getQuery().toParameters()
@@ -59,6 +64,8 @@ public class Xs2aRedirectUserToOauth2AuthorizationServer extends ValidatedExecut
 
     @Override
     protected void doValidate(DelegateExecution execution, Xs2aContext context) {
+        logResolver.log("doValidate: execution ({}) with context ({})", execution, context);
+
         QueryHeadersToValidate<Xs2aOauth2Parameters, Xs2aOauth2Headers> toValidate = extractor.forValidation(context);
         enrichParametersAndContext(execution, context, toValidate.getQuery());
 
@@ -67,6 +74,8 @@ public class Xs2aRedirectUserToOauth2AuthorizationServer extends ValidatedExecut
 
     @Override
     protected void doMockedExecution(DelegateExecution execution, Xs2aContext context) {
+        logResolver.log("doMockedExecution: execution ({}) with context ({})", execution, context);
+
         runtimeService.trigger(execution.getId());
     }
 

@@ -7,11 +7,15 @@ import de.adorsys.opba.protocol.bpmnshared.dto.messages.ValidationProblem;
 import de.adorsys.opba.protocol.bpmnshared.service.context.ContextUtil;
 import de.adorsys.opba.protocol.xs2a.config.protocol.ProtocolUrlsConfiguration;
 import de.adorsys.opba.protocol.xs2a.context.LastViolations;
+import de.adorsys.opba.protocol.xs2a.util.logresolver.Xs2aLogResolver;
 import lombok.RequiredArgsConstructor;
 import org.flowable.engine.delegate.DelegateExecution;
 import org.flowable.engine.delegate.JavaDelegate;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.stereotype.Service;
+
+import java.time.LocalDateTime;
+import java.time.ZoneOffset;
 
 import static de.adorsys.opba.protocol.xs2a.constant.GlobalConst.LAST_REDIRECTION_TARGET;
 import static de.adorsys.opba.protocol.xs2a.constant.GlobalConst.LAST_VALIDATION_ISSUES;
@@ -27,11 +31,15 @@ public class Xs2aReportValidationError implements JavaDelegate {
 
     private final ProtocolUrlsConfiguration urlsConfiguration;
     private final ApplicationEventPublisher eventPublisher;
+    private final Xs2aLogResolver logResolver = new Xs2aLogResolver(getClass());
 
     @Override
     public void execute(DelegateExecution execution) {
         // Make transient context with all violations for clear mapping
         BaseContext current = ContextUtil.getContext(execution, BaseContext.class);
+
+        logResolver.log("execute: execution ({}) with context ({})", execution, current);
+
         LastViolations violations = execution.getVariable(LAST_VALIDATION_ISSUES, LastViolations.class);
         LastRedirectionTarget redirectionTarget = execution.getVariable(LAST_REDIRECTION_TARGET, LastRedirectionTarget.class);
         current.setLastRedirection(redirectionTarget);
@@ -48,5 +56,7 @@ public class Xs2aReportValidationError implements JavaDelegate {
                         .issues(current.getViolations())
                         .build()
         );
+
+        logResolver.log("done execution ({}) with context ({})", execution, current);
     }
 }

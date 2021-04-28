@@ -17,6 +17,7 @@ import de.adorsys.opba.protocol.hbci.service.consent.HbciScaRequiredUtil;
 import de.adorsys.opba.protocol.hbci.service.consent.authentication.HbciAuthorizationPossibleErrorHandler;
 import de.adorsys.opba.protocol.hbci.service.protocol.HbciUtil;
 import de.adorsys.opba.protocol.hbci.service.protocol.ais.dto.AisListTransactionsResult;
+import de.adorsys.opba.protocol.hbci.util.logresolver.HbciLogResolver;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.flowable.engine.delegate.DelegateExecution;
@@ -31,9 +32,12 @@ public class HbciTransactionListing extends ValidatedExecution<TransactionListHb
 
     private final OnlineBankingService onlineBankingService;
     private final HbciAuthorizationPossibleErrorHandler errorSink;
+    private final HbciLogResolver logResolver = new HbciLogResolver(getClass());
 
     @Override
     protected void doRealExecution(DelegateExecution execution, TransactionListHbciContext context) {
+        logResolver.log("doRealExecution: execution ({}) with context ({})", execution, context);
+
         errorSink.handlePossibleAuthorizationError(
                 () -> aisLoadTransactions(execution, context),
                 ex -> aisOnWrongCredentials(execution)
@@ -47,6 +51,7 @@ public class HbciTransactionListing extends ValidatedExecution<TransactionListHb
         TransactionsResponse response = onlineBankingService.loadTransactions(request);
         boolean postScaRequired = HbciScaRequiredUtil.extraCheckIfScaRequired(response);
 
+        logResolver.log("AuthorisationCodeResponse is empty: {}, postScaRequired: {}", response.getAuthorisationCodeResponse() == null, postScaRequired);
         if (null == response.getAuthorisationCodeResponse() && !postScaRequired) {
             ContextUtil.getAndUpdateContext(
                     execution,

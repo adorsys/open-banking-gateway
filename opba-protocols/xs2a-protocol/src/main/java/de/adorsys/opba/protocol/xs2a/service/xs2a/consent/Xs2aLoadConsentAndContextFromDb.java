@@ -8,6 +8,7 @@ import de.adorsys.opba.protocol.bpmnshared.service.exec.ValidatedExecution;
 import de.adorsys.opba.protocol.xs2a.context.ais.AccountListXs2aContext;
 import de.adorsys.opba.protocol.xs2a.context.ais.TransactionListXs2aContext;
 import de.adorsys.opba.protocol.xs2a.context.ais.Xs2aAisContext;
+import de.adorsys.opba.protocol.xs2a.util.logresolver.Xs2aLogResolver;
 import lombok.RequiredArgsConstructor;
 import lombok.SneakyThrows;
 import org.flowable.engine.delegate.DelegateExecution;
@@ -37,14 +38,19 @@ public class Xs2aLoadConsentAndContextFromDb extends ValidatedExecution<Xs2aAisC
     private final ContextMerger merger;
     private final FlowableProperties properties;
     private final FlowableObjectMapper mapper;
+    private final Xs2aLogResolver logResolver = new Xs2aLogResolver(getClass());
 
     @Override
     protected void doRealExecution(DelegateExecution execution, Xs2aAisContext context) {
+        logResolver.log("doRealExecution: execution ({}) with context ({})", execution, context);
+
         loadContext(execution, context);
     }
 
     @Override
     protected void doMockedExecution(DelegateExecution execution, Xs2aAisContext context) {
+        logResolver.log("doMockedExecution: execution ({}) with context ({})", execution, context);
+
         loadContext(execution, context);
     }
 

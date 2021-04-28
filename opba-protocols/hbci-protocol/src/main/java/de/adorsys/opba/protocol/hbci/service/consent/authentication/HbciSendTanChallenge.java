@@ -10,6 +10,7 @@ import de.adorsys.multibanking.hbci.model.HbciConsent;
 import de.adorsys.opba.protocol.bpmnshared.service.context.ContextUtil;
 import de.adorsys.opba.protocol.bpmnshared.service.exec.ValidatedExecution;
 import de.adorsys.opba.protocol.hbci.context.HbciContext;
+import de.adorsys.opba.protocol.hbci.util.logresolver.HbciLogResolver;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.flowable.engine.delegate.DelegateExecution;
@@ -26,9 +27,11 @@ public class HbciSendTanChallenge extends ValidatedExecution<HbciContext> {
 
     private final OnlineBankingService onlineBankingService;
     private final HbciAuthorizationPossibleErrorHandler errorSink;
+    private final HbciLogResolver logResolver = new HbciLogResolver(getClass());
 
     @Override
     protected void doRealExecution(DelegateExecution execution, HbciContext context) {
+        logResolver.log("doRealExecution: execution ({}) with context ({})", execution, context);
 
         errorSink.handlePossibleAuthorizationError(
                 () -> askForCredentials(execution, context),

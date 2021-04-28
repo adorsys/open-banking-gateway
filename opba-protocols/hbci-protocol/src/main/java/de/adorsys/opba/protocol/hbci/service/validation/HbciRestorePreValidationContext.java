@@ -5,6 +5,7 @@ import de.adorsys.opba.protocol.bpmnshared.dto.context.LastRedirectionTarget;
 import de.adorsys.opba.protocol.bpmnshared.service.context.ContextUtil;
 import de.adorsys.opba.protocol.hbci.context.HbciContext;
 import de.adorsys.opba.protocol.hbci.context.LastViolations;
+import de.adorsys.opba.protocol.hbci.util.logresolver.HbciLogResolver;
 import lombok.RequiredArgsConstructor;
 import org.flowable.engine.delegate.DelegateExecution;
 import org.flowable.engine.delegate.JavaDelegate;
@@ -24,9 +25,14 @@ import static de.adorsys.opba.protocol.hbci.constant.GlobalConst.LAST_VALIDATION
 @Service("hbciRestorePreValidationContext")
 public class HbciRestorePreValidationContext implements JavaDelegate {
 
+    private final HbciLogResolver logResolver = new HbciLogResolver(getClass());
+
     @Override
     public void execute(DelegateExecution execution) {
         HbciContext current = ContextUtil.getContext(execution, HbciContext.class);
+
+        logResolver.log("execute: execution ({}) with context ({})", execution, current);
+
         execution.setVariable(
             LAST_VALIDATION_ISSUES,
             new LastViolations(current.getViolations(), current.isConsentIncompatible(), current.getRequestScoped())
@@ -40,6 +46,8 @@ public class HbciRestorePreValidationContext implements JavaDelegate {
 
         execution.setVariable(CONTEXT, restored);
         execution.removeVariable(BEFORE_VALIDATION_CONTEXT);
+
+        logResolver.log("done execution ({}) with context ({})", execution, current);
     }
 
     // FIXME SerializerUtil does not support nestedness

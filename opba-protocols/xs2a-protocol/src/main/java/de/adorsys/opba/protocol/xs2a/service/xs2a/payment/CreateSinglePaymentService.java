@@ -13,6 +13,7 @@ import de.adorsys.opba.protocol.xs2a.service.xs2a.dto.payment.PaymentInitiateBod
 import de.adorsys.opba.protocol.xs2a.service.xs2a.dto.payment.PaymentInitiateHeaders;
 import de.adorsys.opba.protocol.xs2a.service.xs2a.quirks.QuirkUtil;
 import de.adorsys.opba.protocol.xs2a.service.xs2a.validation.Xs2aValidator;
+import de.adorsys.opba.protocol.xs2a.util.logresolver.Xs2aLogResolver;
 import de.adorsys.xs2a.adapter.api.PaymentInitiationService;
 import de.adorsys.xs2a.adapter.api.RequestParams;
 import de.adorsys.xs2a.adapter.api.Response;
@@ -43,6 +44,7 @@ public class CreateSinglePaymentService extends ValidatedExecution<Xs2aPisContex
     private final ProtocolUrlsConfiguration urlsConfiguration;
     private final CreateConsentOrPaymentPossibleErrorHandler handler;
     private final Extractor extractor;
+    private final Xs2aLogResolver logResolver = new Xs2aLogResolver(getClass());
 
     @Override
     protected void doPrepareContext(DelegateExecution execution, Xs2aPisContext context) {
@@ -56,17 +58,27 @@ public class CreateSinglePaymentService extends ValidatedExecution<Xs2aPisContex
 
     @Override
     protected void doValidate(DelegateExecution execution, Xs2aPisContext context) {
+        logResolver.log("doValidate: execution ({}) with context ({})", execution, context);
+
         validator.validate(execution, context, this.getClass(), extractor.forValidation(context));
     }
 
     @Override
     protected void doRealExecution(DelegateExecution execution, Xs2aPisContext context) {
+        logResolver.log("doRealExecution: execution ({}) with context ({})", execution, context);
+
         ValidatedPathHeadersBody<Xs2aInitialPaymentParameters, PaymentInitiateHeaders, PaymentInitiationJson> params = extractor.forExecution(context);
-        handler.tryCreateAndHandleErrors(execution, () -> initiatePayment(execution, context, params));
+        handler.tryCreateAndHandleErrors(execution, () -> {
+            logResolver.log("initiatePayment with parameters: {}", params.getPath(), params.getHeaders(), params.getBody());
+
+            initiatePayment(execution, context, params);
+        });
     }
 
     @Override
     protected void doMockedExecution(DelegateExecution execution, Xs2aPisContext context) {
+        logResolver.log("doMockedExecution: execution ({}) with context ({})", execution, context);
+
         context.setPaymentId("MOCK-" + UUID.randomUUID().toString());
         execution.setVariable(CONTEXT, context);
     }

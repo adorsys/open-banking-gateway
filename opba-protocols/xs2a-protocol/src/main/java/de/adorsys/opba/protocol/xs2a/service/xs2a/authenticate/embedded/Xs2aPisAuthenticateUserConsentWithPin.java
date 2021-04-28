@@ -12,6 +12,7 @@ import de.adorsys.opba.protocol.xs2a.service.xs2a.dto.Xs2aAuthorizedPaymentParam
 import de.adorsys.opba.protocol.xs2a.service.xs2a.dto.Xs2aStandardHeaders;
 import de.adorsys.opba.protocol.xs2a.service.xs2a.dto.authenticate.embedded.ProvidePsuPasswordBody;
 import de.adorsys.opba.protocol.xs2a.service.xs2a.validation.Xs2aValidator;
+import de.adorsys.opba.protocol.xs2a.util.logresolver.Xs2aLogResolver;
 import de.adorsys.xs2a.adapter.api.PaymentInitiationService;
 import de.adorsys.xs2a.adapter.api.RequestParams;
 import de.adorsys.xs2a.adapter.api.Response;
@@ -41,14 +42,19 @@ public class Xs2aPisAuthenticateUserConsentWithPin extends ValidatedExecution<Xs
     private final Xs2aValidator validator;
     private final PaymentInitiationService pis;
     private final AuthorizationPossibleErrorHandler errorSink;
+    private final Xs2aLogResolver logResolver = new Xs2aLogResolver(getClass());
 
     @Override
     protected void doValidate(DelegateExecution execution, Xs2aPisContext context) {
+        logResolver.log("doValidate: execution ({}) with context ({})", execution, context);
+
         validator.validate(execution, context, this.getClass(), extractor.forValidation(context));
     }
 
     @Override
     protected void doRealExecution(DelegateExecution execution, Xs2aPisContext context) {
+        logResolver.log("doRealExecution: execution ({}) with context ({})", execution, context);
+
         ValidatedPathHeadersBody<Xs2aAuthorizedPaymentParameters, Xs2aStandardHeaders, UpdatePsuAuthentication> params = extractor.forExecution(context);
 
         errorSink.handlePossibleAuthorizationError(
@@ -60,6 +66,8 @@ public class Xs2aPisAuthenticateUserConsentWithPin extends ValidatedExecution<Xs
     private void pisAuthorizeWithPassword(
             DelegateExecution execution,
             ValidatedPathHeadersBody<Xs2aAuthorizedPaymentParameters, Xs2aStandardHeaders, UpdatePsuAuthentication>  params) {
+
+//      TODO logResolver.log("updatePaymentPsuData with parameters: {}", params);
 
         Response<UpdatePsuAuthenticationResponse> authResponse = pis.updatePaymentPsuData(
                 PaymentService.fromValue(params.getPath().getPaymentType().getValue()),
