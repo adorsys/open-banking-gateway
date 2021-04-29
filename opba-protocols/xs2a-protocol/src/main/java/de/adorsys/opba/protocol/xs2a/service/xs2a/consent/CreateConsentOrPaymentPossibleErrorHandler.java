@@ -35,10 +35,6 @@ public class CreateConsentOrPaymentPossibleErrorHandler {
      * @param tryCreate Consent/payment creation function to call
      */
     public void tryCreateAndHandleErrors(DelegateExecution execution, Runnable tryCreate) {
-        tryCreateAndHandleErrors(execution, tryCreate, 0);
-    }
-
-    private void tryCreateAndHandleErrors(DelegateExecution execution, Runnable tryCreate, int retryCount) {
         try {
             tryCreate.run();
         } catch (ErrorResponseException ex) {
