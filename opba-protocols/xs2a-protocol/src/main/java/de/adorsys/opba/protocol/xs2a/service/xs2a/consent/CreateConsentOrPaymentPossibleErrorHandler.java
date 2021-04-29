@@ -6,7 +6,6 @@ import de.adorsys.opba.protocol.xs2a.config.aspspmessages.AspspMessages;
 import de.adorsys.opba.protocol.xs2a.context.Xs2aContext;
 import de.adorsys.xs2a.adapter.api.exception.ErrorResponseException;
 import de.adorsys.xs2a.adapter.api.exception.OAuthException;
-import de.adorsys.xs2a.adapter.api.exception.PsuPasswordEncodingException;
 import de.adorsys.xs2a.adapter.api.model.MessageCode;
 import de.adorsys.xs2a.adapter.api.model.TppMessage;
 import lombok.RequiredArgsConstructor;
@@ -16,7 +15,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
 import java.util.Objects;
-import java.util.ServiceConfigurationError;
 import java.util.Set;
 import java.util.stream.Collectors;
 
