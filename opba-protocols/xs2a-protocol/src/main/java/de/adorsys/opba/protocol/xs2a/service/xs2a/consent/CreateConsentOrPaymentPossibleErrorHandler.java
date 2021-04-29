@@ -38,8 +38,10 @@ public class CreateConsentOrPaymentPossibleErrorHandler {
         try {
             tryCreate.run();
         } catch (ErrorResponseException ex) {
+            log.debug("Trying to handle ErrorResponseException", ex);
             tryHandleWrongIbanOrCredentialsExceptionOrOauth2(execution, ex);
         } catch (OAuthException ex) {
+            log.debug("Trying to handle OAuthException", ex);
             tryHandleOauth2Exception(execution);
         }
     }
