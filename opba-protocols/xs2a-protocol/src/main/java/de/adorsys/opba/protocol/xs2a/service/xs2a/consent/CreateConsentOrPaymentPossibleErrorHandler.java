@@ -29,7 +29,6 @@ import java.util.stream.Collectors;
 @Service
 @RequiredArgsConstructor
 public class CreateConsentOrPaymentPossibleErrorHandler {
-    private static final int MAX_RETRY_COUNT = 3;
 
     private final AspspMessages messageConfig;
 
@@ -48,25 +47,6 @@ public class CreateConsentOrPaymentPossibleErrorHandler {
             tryHandleWrongIbanOrCredentialsExceptionOrOauth2(execution, ex);
         } catch (OAuthException ex) {
             tryHandleOauth2Exception(execution);
-        } catch (ServiceConfigurationError ex) {
-            // FIXME https://github.com/adorsys/xs2a-adapter/issues/577
-            // FIXME https://github.com/adorsys/open-banking-gateway/issues/1199
-            handlePsuPasswordEncodingException(execution, tryCreate, retryCount, ex);
-        }
-    }
-
-    private void handlePsuPasswordEncodingException(DelegateExecution execution, Runnable tryCreate, int retryCount, ServiceConfigurationError ex) {
-        if (null != ex.getCause()
-                && ex.getCause() instanceof PsuPasswordEncodingException
-                && ex.getCause().getMessage().contains("Exception during Deutsche bank adapter PSU password encryption")) {
-            log.error("Failed to initialize Deutsche bank encryption service, but ignoring it");
-            if (retryCount < MAX_RETRY_COUNT) {
-                tryCreateAndHandleErrors(execution, tryCreate, retryCount + 1); // Retry, by skipping errored adapter
-            } else {
-                throw ex;
-            }
-        } else {
-            throw ex;
         }
     }
 
