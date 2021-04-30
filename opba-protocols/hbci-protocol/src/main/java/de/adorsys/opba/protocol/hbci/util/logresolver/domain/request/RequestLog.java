@@ -2,27 +2,34 @@ package de.adorsys.opba.protocol.hbci.util.logresolver.domain.request;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import de.adorsys.multibanking.domain.request.AbstractRequest;
-import lombok.Data;
+import lombok.Getter;
+import lombok.RequiredArgsConstructor;
 import lombok.SneakyThrows;
 
 
-@Data
+@Getter
+@RequiredArgsConstructor
 public class RequestLog<T extends AbstractRequest> {
 
-    private T request;
+    private static final ObjectMapper MAPPER = new ObjectMapper();
+
+    private final T request;
 
     public String getNotSensitiveData() {
+        if (null == request) {
+            return "null";
+        }
+
         return "RequestLog("
                 + "requestClass=" + request.getClass()
-                + "bankApi=" + request.getBankApiUser().getBankApi()
+                + "bankApi=" + (null != request.getBankApiUser() ? request.getBankApiUser().getBankApi() : "null")
                 + ")";
     }
 
     @SneakyThrows
     @Override
     public String toString() {
-        ObjectMapper mapper = new ObjectMapper();
-        String json = mapper.writeValueAsString(request);
+        String json = MAPPER.writeValueAsString(request);
 
         return "RequestLog{"
                 + "requestClass=" + request.getClass()

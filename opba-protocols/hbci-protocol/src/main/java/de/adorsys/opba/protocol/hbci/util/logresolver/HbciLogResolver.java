@@ -134,8 +134,7 @@ public class HbciLogResolver {
     }
 
     public void log(String message, UpdatePsuAuthenticationRequest request) {
-        RequestLog<UpdatePsuAuthenticationRequest> requestLog = new RequestLog<>();
-        requestLog.setRequest(request);
+        RequestLog<UpdatePsuAuthenticationRequest> requestLog = new RequestLog<>(request);
 
         if (log.isDebugEnabled()) {
             log.debug(message, requestLog);
@@ -145,8 +144,7 @@ public class HbciLogResolver {
     }
 
     public void log(String message, TransactionAuthorisationRequest request) {
-        RequestLog<TransactionAuthorisationRequest> requestLog = new RequestLog<>();
-        requestLog.setRequest(request);
+        RequestLog<TransactionAuthorisationRequest> requestLog = new RequestLog<>(request);
 
         if (log.isDebugEnabled()) {
             log.debug(message, requestLog);
@@ -156,8 +154,7 @@ public class HbciLogResolver {
     }
 
     public void log(String message, SelectPsuAuthenticationMethodRequest request) {
-        RequestLog<SelectPsuAuthenticationMethodRequest> requestLog = new RequestLog<>();
-        requestLog.setRequest(request);
+        RequestLog<SelectPsuAuthenticationMethodRequest> requestLog = new RequestLog<>(request);
 
         if (log.isDebugEnabled()) {
             log.debug(message, requestLog);
