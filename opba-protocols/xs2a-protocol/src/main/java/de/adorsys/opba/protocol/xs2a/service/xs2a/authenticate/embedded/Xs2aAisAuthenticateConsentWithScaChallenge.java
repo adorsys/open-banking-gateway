@@ -60,7 +60,7 @@ public class Xs2aAisAuthenticateConsentWithScaChallenge extends ValidatedExecuti
             DelegateExecution execution,
             ValidatedPathHeadersBody<Xs2aAuthorizedConsentParameters, Xs2aStandardHeaders, TransactionAuthorisation> params) {
 
-        //      TODO logResolver.log("updateConsentsPsuData with parameters: {}", params);
+        logResolver.log("updateConsentsPsuData with parameters: {}", params.getPath(), params.getHeaders(), params.getBody());
 
         Response<ScaStatusResponse> authResponse = ais.updateConsentsPsuData(
                 params.getPath().getConsentId(),
@@ -69,6 +69,8 @@ public class Xs2aAisAuthenticateConsentWithScaChallenge extends ValidatedExecuti
                 params.getPath().toParameters(),
                 params.getBody()
         );
+
+        logResolver.log("updateConsentsPsuData response: {}", authResponse);
 
         ContextUtil.getAndUpdateContext(
                 execution,

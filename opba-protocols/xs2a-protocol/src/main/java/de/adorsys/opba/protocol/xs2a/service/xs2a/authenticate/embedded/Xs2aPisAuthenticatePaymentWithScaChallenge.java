@@ -63,7 +63,7 @@ public class Xs2aPisAuthenticatePaymentWithScaChallenge extends ValidatedExecuti
             DelegateExecution execution,
             ValidatedPathHeadersBody<Xs2aAuthorizedPaymentParameters, Xs2aStandardHeaders, TransactionAuthorisation> params) {
 
-        //      TODO logResolver.log("updatePaymentPsuData with parameters: {}", params);
+        logResolver.log("updatePaymentPsuData with parameters: {}", params.getPath(), params.getHeaders(), params.getBody());
 
         Response<ScaStatusResponse> authResponse = pis.updatePaymentPsuData(
                 PaymentService.fromValue(params.getPath().getPaymentType().getValue()),
@@ -74,6 +74,8 @@ public class Xs2aPisAuthenticatePaymentWithScaChallenge extends ValidatedExecuti
                 RequestParams.empty(),
                 params.getBody()
         );
+
+        logResolver.log("updatePaymentPsuData response: {}", authResponse);
 
         ContextUtil.getAndUpdateContext(
                 execution,

@@ -67,7 +67,7 @@ public class Xs2aPisAuthenticateUserConsentWithPin extends ValidatedExecution<Xs
             DelegateExecution execution,
             ValidatedPathHeadersBody<Xs2aAuthorizedPaymentParameters, Xs2aStandardHeaders, UpdatePsuAuthentication>  params) {
 
-//      TODO logResolver.log("updatePaymentPsuData with parameters: {}", params);
+        logResolver.log("updatePaymentPsuData with parameters: {}", params.getPath(), params.getHeaders(), params.getBody());
 
         Response<UpdatePsuAuthenticationResponse> authResponse = pis.updatePaymentPsuData(
                 PaymentService.fromValue(params.getPath().getPaymentType().getValue()),
@@ -78,6 +78,8 @@ public class Xs2aPisAuthenticateUserConsentWithPin extends ValidatedExecution<Xs
                 RequestParams.empty(),
                 params.getBody()
         );
+
+        logResolver.log("updatePaymentPsuData response: {}", authResponse);
 
         ScaStatus scaStatus = authResponse.getBody().getScaStatus();
 

@@ -4,10 +4,8 @@ import de.adorsys.opba.protocol.bpmnshared.dto.context.BaseContext;
 import de.adorsys.opba.protocol.xs2a.context.Xs2aContext;
 import de.adorsys.opba.protocol.xs2a.context.ais.TransactionListXs2aContext;
 import de.adorsys.opba.protocol.xs2a.context.pis.Xs2aPisContext;
-import de.adorsys.opba.protocol.xs2a.service.dto.ValidatedPathHeadersBody;
-import de.adorsys.opba.protocol.xs2a.service.dto.ValidatedPathQueryHeaders;
-import de.adorsys.opba.protocol.xs2a.service.dto.ValidatedQueryHeaders;
 import de.adorsys.opba.protocol.xs2a.service.xs2a.dto.Xs2aAuthorizedConsentParameters;
+import de.adorsys.opba.protocol.xs2a.service.xs2a.dto.Xs2aAuthorizedPaymentParameters;
 import de.adorsys.opba.protocol.xs2a.service.xs2a.dto.Xs2aInitialConsentParameters;
 import de.adorsys.opba.protocol.xs2a.service.xs2a.dto.Xs2aInitialPaymentParameters;
 import de.adorsys.opba.protocol.xs2a.service.xs2a.dto.Xs2aResourceParameters;
@@ -18,18 +16,28 @@ import de.adorsys.opba.protocol.xs2a.service.xs2a.dto.Xs2aWithBalanceParameters;
 import de.adorsys.opba.protocol.xs2a.service.xs2a.dto.Xs2aWithConsentIdHeaders;
 import de.adorsys.opba.protocol.xs2a.service.xs2a.dto.consent.ConsentInitiateHeaders;
 import de.adorsys.opba.protocol.xs2a.service.xs2a.dto.consent.ConsentInitiateParameters;
+import de.adorsys.opba.protocol.xs2a.service.xs2a.dto.oauth2.Xs2aOauth2Headers;
+import de.adorsys.opba.protocol.xs2a.service.xs2a.dto.oauth2.Xs2aOauth2Parameters;
+import de.adorsys.opba.protocol.xs2a.service.xs2a.dto.oauth2.Xs2aOauth2WithCodeParameters;
 import de.adorsys.opba.protocol.xs2a.service.xs2a.dto.payment.PaymentInitiateHeaders;
+import de.adorsys.opba.protocol.xs2a.util.logresolver.domain.response.ResponseLog;
 import de.adorsys.opba.protocol.xs2a.util.logresolver.mapper.Xs2aDtoToLogObjectsMapper;
+import de.adorsys.xs2a.adapter.api.Response;
 import de.adorsys.xs2a.adapter.api.model.Consents;
 import de.adorsys.xs2a.adapter.api.model.PaymentInitiationJson;
 import de.adorsys.xs2a.adapter.api.model.SelectPsuAuthenticationMethod;
+import de.adorsys.xs2a.adapter.api.model.TokenResponse;
+import de.adorsys.xs2a.adapter.api.model.TransactionAuthorisation;
+import de.adorsys.xs2a.adapter.api.model.UpdatePsuAuthentication;
 import org.flowable.engine.delegate.DelegateExecution;
 import org.mapstruct.factory.Mappers;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.net.URI;
 
-public class Xs2aLogResolver {
+
+public class Xs2aLogResolver<T> {
     private final Logger log;
     private final Xs2aDtoToLogObjectsMapper mapper;
 
@@ -38,14 +46,7 @@ public class Xs2aLogResolver {
         mapper = Mappers.getMapper(Xs2aDtoToLogObjectsMapper.class);
     }
 
-//    public void log(String message, Object... parameters) {
-//        if (log.isDebugEnabled()) {
-//            log.debug(message, parameters);
-//        } else {
-//            log.info(message, parameters);
-//        }
-//    }
-
+    //executions+context
     public void log(String message, DelegateExecution execution) {
         log.info(
                 message,
@@ -117,101 +118,148 @@ public class Xs2aLogResolver {
         }
     }
 
-    public void log(String message, ValidatedQueryHeaders<Xs2aWithBalanceParameters, Xs2aWithConsentIdHeaders> parameters) {
+    //parameters
+    public void log(String message, Xs2aWithBalanceParameters query, Xs2aWithConsentIdHeaders headers) {
         if (log.isDebugEnabled()) {
-            log.debug(
-                    message,
-                    mapper.mapFromQueryHeadersDtoToQueryHeadersLog(parameters)
-            );
+            log.debug(message, mapper.mapFromQueryHeadersToXs2aValidatedQueryHeadersLog(query, headers));
         } else {
-            log.info(
-                    message,
-                    mapper.mapFromQueryHeadersDtoToQueryHeadersLog(parameters).getNotSensitiveData()
+            log.info(message, mapper.mapFromQueryHeadersToXs2aValidatedQueryHeadersLog(query, headers).getNotSensitiveData());
+        }
+    }
+
+    public void log(String message, Xs2aOauth2WithCodeParameters query, Xs2aOauth2Headers headers) {
+        if (log.isDebugEnabled()) {
+            log.debug(message, mapper.mapFromQueryHeadersToXs2aValidatedQueryHeadersLog(query, headers));
+        } else {
+            log.info(message, mapper.mapFromQueryHeadersToXs2aValidatedQueryHeadersLog(query, headers).getNotSensitiveData());
+        }
+    }
+
+    public void log(String message, Xs2aOauth2Parameters query, Xs2aOauth2Headers headers) {
+        if (log.isDebugEnabled()) {
+            log.debug(message, mapper.mapFromQueryHeadersToXs2aValidatedQueryHeadersLog(query, headers));
+        } else {
+            log.info(message, mapper.mapFromQueryHeadersToXs2aValidatedQueryHeadersLog(query, headers).getNotSensitiveData());
+        }
+    }
+
+    public void log(String message, Xs2aResourceParameters path, Xs2aTransactionParameters query, Xs2aWithConsentIdHeaders headers) {
+        if (log.isDebugEnabled()) {
+            log.debug(message, mapper.mapFromPathQueryHeadersToXs2aValidatedPathQueryHeadersLog(path, query, headers));
+        } else {
+            log.info(message, mapper.mapFromPathQueryHeadersToXs2aValidatedPathQueryHeadersLog(path, query, headers).getNotSensitiveData()
             );
         }
     }
 
-    public void log(String message, ValidatedPathQueryHeaders<Xs2aResourceParameters, Xs2aTransactionParameters, Xs2aWithConsentIdHeaders> parameters) {
+    public void log(String message, ConsentInitiateParameters path, ConsentInitiateHeaders headers, Consents body) {
         if (log.isDebugEnabled()) {
-            log.debug(
-                    message,
-                    mapper.mapFromPathQueryHeadersDtoToPathQueryHeadersLog(parameters)
+            log.debug(message, mapper.mapFromPathHeadersBodyToXs2aValidatedPathHeadersBodyLog(path, headers, body)
             );
         } else {
-            log.info(
-                    message,
-                    mapper.mapFromPathQueryHeadersDtoToPathQueryHeadersLog(parameters).getNotSensitiveData()
-            );
-        }
-    }
-
-    public void log(String message, ValidatedPathHeadersBody<ConsentInitiateParameters, ConsentInitiateHeaders, Consents> parameters) {
-        if (log.isDebugEnabled()) {
-            log.debug(
-                    message,
-                    mapper.mapFromPathHeadersBodyDtoToPathHeadersBodyLog(parameters)
-            );
-        } else {
-            log.info(
-                    message,
-                    mapper.mapFromPathHeadersBodyDtoToPathHeadersBodyLog(parameters).getNotSensitiveData()
-            );
+            log.info(message, mapper.mapFromPathHeadersBodyToXs2aValidatedPathHeadersBodyLog(path, headers, body).getNotSensitiveData());
         }
     }
 
     public void log(String message, Xs2aInitialPaymentParameters path, PaymentInitiateHeaders header, PaymentInitiationJson body) {
         if (log.isDebugEnabled()) {
-             log.debug(
-                     message,
-                     mapper.mapFromPathHeadersBodyDtoToPisPathHeadersBodyLog(path, header, body)
-             );
+            log.debug(message, mapper.mapFromPathHeadersBodyToXs2aValidatedPathHeadersBodyLog(path, header, body));
         } else {
-            log.info(
-                    message,
-                    mapper.mapFromPathHeadersBodyDtoToPisPathHeadersBodyLog(path, header, body).getNotSensitiveData()
-            );
+            log.info(message, mapper.mapFromPathHeadersBodyToXs2aValidatedPathHeadersBodyLog(path, header, body).getNotSensitiveData());
         }
     }
 
     public void log(String message, Xs2aInitialConsentParameters path, Xs2aStandardHeaders header) {
         if (log.isDebugEnabled()) {
-            log.debug(
-                    message,
-                    mapper.mapFromPathHeadersDtoToConsentPathHeadersLog(path, header)
-            );
+            log.debug(message, mapper.mapFromPathHeadersToXs2aValidatedPathHeadersLog(path, header));
         } else {
-            log.info(
-                    message,
-                    mapper.mapFromPathHeadersDtoToConsentPathHeadersLog(path, header).getNotSensitiveData()
-            );
+            log.info(message, mapper.mapFromPathHeadersToXs2aValidatedPathHeadersLog(path, header).getNotSensitiveData());
         }
     }
 
     public void log(String message, Xs2aStartPaymentAuthorizationParameters path, Xs2aStandardHeaders headers) {
         if (log.isDebugEnabled()) {
-            log.debug(
-                    message,
-                    mapper.mapFromPathHeadersDtoToPisPathHeadersLog(path, headers)
-            );
+            log.debug(message, mapper.mapFromPathHeadersToXs2aValidatedPathHeadersLog(path, headers));
         } else {
-            log.info(
-                    message,
-                    mapper.mapFromPathHeadersDtoToPisPathHeadersLog(path, headers).getNotSensitiveData()
-            );
+            log.info(message, mapper.mapFromPathHeadersToXs2aValidatedPathHeadersLog(path, headers).getNotSensitiveData());
         }
     }
 
     public void log(String message, Xs2aAuthorizedConsentParameters path, Xs2aStandardHeaders headers, SelectPsuAuthenticationMethod body) {
         if (log.isDebugEnabled()) {
-            log.debug(
-                    message,
-                    mapper.mapFromPathHeadersBodyDtoToConsentPathHeadersBodyLog(path, headers, body)
-            );
+            log.debug(message, mapper.mapFromPathHeadersBodyToXs2aValidatedPathHeadersBodyLog(path, headers, body));
         } else {
-            log.info(
-                    message,
-                    mapper.mapFromPathHeadersBodyDtoToConsentPathHeadersBodyLog(path, headers, body).getNotSensitiveData()
-            );
+            log.info(message, mapper.mapFromPathHeadersBodyToXs2aValidatedPathHeadersBodyLog(path, headers, body).getNotSensitiveData());
+        }
+    }
+
+    public void log(String message, Xs2aAuthorizedConsentParameters path, Xs2aStandardHeaders headers, TransactionAuthorisation body) {
+        if (log.isDebugEnabled()) {
+            log.debug(message, mapper.mapFromPathHeadersBodyToXs2aValidatedPathHeadersBodyLog(path, headers, body));
+        } else {
+            log.info(message, mapper.mapFromPathHeadersBodyToXs2aValidatedPathHeadersBodyLog(path, headers, body).getNotSensitiveData());
+        }
+    }
+
+    public void log(String message, Xs2aAuthorizedConsentParameters path, Xs2aStandardHeaders headers, UpdatePsuAuthentication body) {
+        if (log.isDebugEnabled()) {
+            log.debug(message, mapper.mapFromPathHeadersBodyToXs2aValidatedPathHeadersBodyLog(path, headers, body));
+        } else {
+            log.info(message, mapper.mapFromPathHeadersBodyToXs2aValidatedPathHeadersBodyLog(path, headers, body).getNotSensitiveData());
+        }
+    }
+
+    public void log(String message, Xs2aAuthorizedPaymentParameters path, Xs2aStandardHeaders headers, TransactionAuthorisation body) {
+        if (log.isDebugEnabled()) {
+            log.debug(message, mapper.mapFromPathHeadersBodyToXs2aValidatedPathHeadersBodyLog(path, headers, body));
+        } else {
+            log.info(message, mapper.mapFromPathHeadersBodyToXs2aValidatedPathHeadersBodyLog(path, headers, body).getNotSensitiveData());
+        }
+    }
+
+    public void log(String message, Xs2aAuthorizedPaymentParameters path, Xs2aStandardHeaders headers, UpdatePsuAuthentication body) {
+        if (log.isDebugEnabled()) {
+            log.debug(message, mapper.mapFromPathHeadersBodyToXs2aValidatedPathHeadersBodyLog(path, headers, body));
+        } else {
+            log.info(message, mapper.mapFromPathHeadersBodyToXs2aValidatedPathHeadersBodyLog(path, headers, body).getNotSensitiveData());
+        }
+    }
+
+    public void log(String message, Xs2aAuthorizedPaymentParameters path, Xs2aStandardHeaders headers, SelectPsuAuthenticationMethod body) {
+        if (log.isDebugEnabled()) {
+            log.debug(message, mapper.mapFromPathHeadersBodyToXs2aValidatedPathHeadersBodyLog(path, headers, body));
+        } else {
+            log.info(message, mapper.mapFromPathHeadersBodyToXs2aValidatedPathHeadersBodyLog(path, headers, body).getNotSensitiveData());
+        }
+    }
+
+    //responses
+    public void log(String message, Response<T> response) {
+        ResponseLog<T> responseLog = new ResponseLog<>();
+        responseLog.setStatusCode(response.getStatusCode());
+        responseLog.setHeaders(response.getHeaders());
+        responseLog.setBody(response.getBody());
+
+        if (log.isDebugEnabled()) {
+            log.debug(message, responseLog);
+        } else {
+            log.info(message, responseLog.getNotSensitiveData());
+        }
+    }
+
+    public void log(String message, TokenResponse response) {
+        if (log.isDebugEnabled()) {
+            log.debug(message, mapper.mapFromTokenResponseToTokenResponseLog(response));
+        } else {
+            log.info(message, mapper.mapFromTokenResponseToTokenResponseLog(response).getNotSensitiveData());
+        }
+    }
+
+    public void log(String message, URI response) {
+        if (log.isDebugEnabled()) {
+            log.debug(message, mapper.mapFromURIToURILog(response));
+        } else {
+            log.info(message, mapper.mapFromURIToURILog(response).getNotSensitiveData());
         }
     }
 }

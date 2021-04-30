@@ -30,7 +30,6 @@ public class HbciPaymentStatus extends ValidatedExecution<PaymentHbciContext> {
     @Override
     protected void doRealExecution(DelegateExecution execution, PaymentHbciContext context) {
         logResolver.log("doRealExecution: execution ({}) with context ({})", execution, context);
-
         HbciConsent consent = context.getHbciDialogConsent();
 
         PaymentStatusReqest paymentStatusReqest = new PaymentStatusReqest();
@@ -39,9 +38,11 @@ public class HbciPaymentStatus extends ValidatedExecution<PaymentHbciContext> {
 
         TransactionRequest<PaymentStatusReqest> request = create(paymentStatusReqest, new BankApiUser(),
                 new BankAccess(), context.getBank(), consent);
+        logResolver.log("getPaymentStatus request: {}", request);
         PaymentStatusResponse response = onlineBankingService.getStrongCustomerAuthorisation().getPaymentStatus(request);
-        boolean postScaRequired = HbciScaRequiredUtil.extraCheckIfScaRequired(response);
+        logResolver.log("getPaymentStatus response: {}", response);
 
+        boolean postScaRequired = HbciScaRequiredUtil.extraCheckIfScaRequired(response);
         logResolver.log("AuthorisationCodeResponse is empty: {}, postScaRequired: {}", response.getAuthorisationCodeResponse() == null, postScaRequired);
         if (null == response.getAuthorisationCodeResponse() && !postScaRequired) {
             ContextUtil.getAndUpdateContext(

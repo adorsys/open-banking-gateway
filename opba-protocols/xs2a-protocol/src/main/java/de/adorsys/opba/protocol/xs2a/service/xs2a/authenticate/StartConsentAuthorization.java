@@ -62,6 +62,8 @@ public class StartConsentAuthorization extends ValidatedExecution<Xs2aContext> {
                 params.getPath().toParameters()
         );
 
+        logResolver.log("startConsentAuthorisation response: {}", scaStart);
+
         String aspspSelectedApproach = scaStart.getHeaders().getHeader(ASPSP_SCA_APPROACH);
         context.setAspspScaApproach(null == aspspSelectedApproach ? config.getPreferredApproach().name() : aspspSelectedApproach);
         context.setAuthorizationId(scaStart.getBody().getAuthorisationId());

@@ -56,6 +56,8 @@ public class Xs2aAisReportSelectedScaMethod extends ValidatedExecution<Xs2aConte
                 params.getBody()
         );
 
+        logResolver.log("updateConsentsPsuData response: {}", authResponse);
+
         ContextUtil.getAndUpdateContext(
                 execution,
                 (Xs2aContext ctx) -> {

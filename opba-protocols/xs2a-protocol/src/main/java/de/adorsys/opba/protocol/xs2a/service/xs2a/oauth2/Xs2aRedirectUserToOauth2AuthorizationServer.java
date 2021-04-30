@@ -47,11 +47,14 @@ public class Xs2aRedirectUserToOauth2AuthorizationServer extends ValidatedExecut
         ValidatedQueryHeaders<Xs2aOauth2Parameters, Xs2aOauth2Headers> validated = extractor.forExecution(context);
         enrichParametersAndContext(execution, context, validated.getQuery());
 
-        // TODO logResolver.log("getAuthorizationRequestUri with parameters: {}", params);
+        logResolver.log("getAuthorizationRequestUri with parameters: {}", validated.getQuery(), validated.getHeaders());
+
         URI oauth2RedirectUserTo = oauth2Service.getAuthorizationRequestUri(
                 validated.getHeaders().toHeaders().toMap(),
                 validated.getQuery().toParameters()
         );
+
+        logResolver.log("getAuthorizationRequestUri response: {}", oauth2RedirectUserTo);
 
         redirectExecutor.redirect(
                 execution,

@@ -48,12 +48,14 @@ public class Xs2aAccountListingService extends ValidatedExecution<Xs2aAisContext
         ValidatedQueryHeaders<Xs2aWithBalanceParameters, Xs2aWithConsentIdHeaders> params = extractor.forExecution(context);
         handler.tryActionOrHandleConsentErrors(execution, eventPublisher, () -> {
 
-            logResolver.log("getAccountList with parameters: {}", params);
+            logResolver.log("getAccountList with parameters: {}", params.getQuery(), params.getHeaders());
 
             Response<AccountList> accounts = ais.getAccountList(
                 params.getHeaders().toHeaders(),
                 params.getQuery().toParameters()
             );
+
+            logResolver.log("getAccountList response: {}", accounts);
 
             eventPublisher.publishEvent(
                 new ProcessResponse(execution.getRootProcessInstanceId(), execution.getId(), accounts.getBody())

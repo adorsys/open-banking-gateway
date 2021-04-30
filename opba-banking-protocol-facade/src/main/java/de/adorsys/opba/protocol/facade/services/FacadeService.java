@@ -27,14 +27,15 @@ public abstract class FacadeService<REQUEST extends FacadeServiceableGetter, RES
     private final TransactionTemplate txTemplate;
 
     public CompletableFuture<FacadeResult<RESULT>> execute(REQUEST request) {
-        //request
+        //TODO-1201 request
+
         ProtocolWithCtx<ACTION, REQUEST> protocolWithCtx = txTemplate.execute(callback -> {
             InternalContext<REQUEST, ACTION> contextWithoutProtocol = contextFor(request);
             InternalContext<REQUEST, ACTION> ctx = selectAndSetProtocolTo(contextWithoutProtocol);
             ServiceContext<REQUEST> serviceContext = addRequestScopedFor(request, ctx);
             return new ProtocolWithCtx<>(ctx.getAction(), serviceContext);
         });
-        //request's protocol + action
+        //TODO-1201 request's protocol + action
         if (protocolWithCtx == null || protocolWithCtx.getProtocol() == null) {
             throw new NoProtocolRegisteredException("can't create service context or determine protocol");
         }
@@ -67,7 +68,7 @@ public abstract class FacadeService<REQUEST extends FacadeServiceableGetter, RES
     }
 
     protected FacadeResult<RESULT> handleResult(Result<RESULT> result, FacadeServiceableRequest request, ServiceContext<REQUEST> ctx) {
-        //handling result with parameters: result, request, ctx
+        //TODO-1201 handling result with parameters: result, request, ctx
         return handler.handleResult(result, request, ctx);
     }
 

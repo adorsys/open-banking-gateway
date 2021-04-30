@@ -37,7 +37,6 @@ public class CreateAisAccountListConsentService extends ValidatedExecution<Accou
     private final CreateAisConsentService createAisConsentService;
     private final Xs2aLogResolver logResolver = new Xs2aLogResolver(getClass());
 
-
     @Override
     protected void doPrepareContext(DelegateExecution execution, AccountListXs2aContext context) {
         context.setRedirectUriOk(
@@ -61,7 +60,8 @@ public class CreateAisAccountListConsentService extends ValidatedExecution<Accou
 
         ValidatedPathHeadersBody<ConsentInitiateParameters, ConsentInitiateHeaders, Consents> params = extractor.forExecution(context);
         handler.tryCreateAndHandleErrors(execution, () -> {
-            logResolver.log("createConsent with parameters: {}", params);
+            logResolver.log("createConsent with parameters: {}", params.getPath(), params.getHeaders(), params.getBody());
+
             createAisConsentService.createConsent(ais, execution, context, params);
         });
     }

@@ -63,6 +63,9 @@ public class Xs2aAisAuthenticateUserConsentWithPin extends ValidatedExecution<Xs
     private void aisAuthorizeWithPassword(
             DelegateExecution execution,
             ValidatedPathHeadersBody<Xs2aAuthorizedConsentParameters, Xs2aStandardHeaders, UpdatePsuAuthentication> params) {
+
+        logResolver.log("updateConsentsPsuData with parameters: {}", params.getPath(), params.getHeaders(), params.getBody());
+
         Response<UpdatePsuAuthenticationResponse> authResponse = ais.updateConsentsPsuData(
                 params.getPath().getConsentId(),
                 params.getPath().getAuthorizationId(),
@@ -70,6 +73,8 @@ public class Xs2aAisAuthenticateUserConsentWithPin extends ValidatedExecution<Xs
                 params.getPath().toParameters(),
                 params.getBody()
         );
+
+        logResolver.log("updateConsentsPsuData response: {}", authResponse);
 
         ScaStatus scaStatus = authResponse.getBody().getScaStatus();
 

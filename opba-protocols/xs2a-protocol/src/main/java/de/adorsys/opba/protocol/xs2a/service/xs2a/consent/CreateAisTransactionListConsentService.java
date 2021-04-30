@@ -60,7 +60,7 @@ public class CreateAisTransactionListConsentService extends ValidatedExecution<T
 
         ValidatedPathHeadersBody<ConsentInitiateParameters, ConsentInitiateHeaders, Consents> params = extractor.forExecution(context);
         handler.tryCreateAndHandleErrors(execution, () -> {
-            logResolver.log("createConsent with parameters: {}", params);
+            logResolver.log("createConsent with parameters: {}", params.getPath(), params.getHeaders(), params.getBody());
 
             createAisConsentService.createConsent(ais, execution, context, params);
         });

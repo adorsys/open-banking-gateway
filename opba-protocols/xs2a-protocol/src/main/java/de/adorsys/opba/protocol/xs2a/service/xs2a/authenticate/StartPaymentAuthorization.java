@@ -67,6 +67,8 @@ public class StartPaymentAuthorization extends ValidatedExecution<Xs2aPisContext
                 RequestParams.empty(),
                 new UpdatePsuAuthentication());
 
+        logResolver.log("startPaymentAuthorisation response: {}", scaStart);
+
         String aspspSelectedApproach = scaStart.getHeaders().getHeader(ASPSP_SCA_APPROACH);
         context.setAspspScaApproach(null == aspspSelectedApproach ? config.getPreferredApproach().name() : aspspSelectedApproach);
         context.setAuthorizationId(scaStart.getBody().getAuthorisationId());

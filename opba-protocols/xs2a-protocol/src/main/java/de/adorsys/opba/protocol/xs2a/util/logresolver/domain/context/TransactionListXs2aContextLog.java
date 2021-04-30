@@ -1,4 +1,4 @@
-package de.adorsys.opba.protocol.xs2a.util.logresolver.domain;
+package de.adorsys.opba.protocol.xs2a.util.logresolver.domain.context;
 
 import lombok.Data;
 import lombok.ToString;

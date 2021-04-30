@@ -90,6 +90,7 @@ public class ProtocolResultHandler {
         SecretKeyWithIv sessionKey
     ) {
         if (result instanceof SuccessResult) {
+            //TODO-1201 add result and his type for each type
             return handleSuccess(request, (SuccessResult<RESULT>) result, request.getRequestId(), session);
         }
 

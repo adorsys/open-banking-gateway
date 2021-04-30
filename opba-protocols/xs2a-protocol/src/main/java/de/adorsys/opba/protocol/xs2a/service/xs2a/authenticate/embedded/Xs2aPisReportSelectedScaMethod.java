@@ -49,7 +49,8 @@ public class Xs2aPisReportSelectedScaMethod extends ValidatedExecution<Xs2aPisCo
 
         ValidatedPathHeadersBody<Xs2aAuthorizedPaymentParameters, Xs2aStandardHeaders, SelectPsuAuthenticationMethod> params = extractor.forExecution(context);
 
-//      TODO logResolver.log("updatePaymentPsuData with parameters: {}", params);
+        logResolver.log("updatePaymentPsuData with parameters: {}", params.getPath(), params.getHeaders(), params.getBody());
+
         Response<SelectPsuAuthenticationMethodResponse> authResponse = pis.updatePaymentPsuData(
                 PaymentService.fromValue(params.getPath().getPaymentType().getValue()),
                 PaymentProduct.fromValue(params.getPath().getPaymentProduct()),
@@ -59,6 +60,8 @@ public class Xs2aPisReportSelectedScaMethod extends ValidatedExecution<Xs2aPisCo
                 RequestParams.empty(),
                 params.getBody()
         );
+
+        logResolver.log("updatePaymentPsuData response: {}", authResponse);
 
         ContextUtil.getAndUpdateContext(
                 execution,

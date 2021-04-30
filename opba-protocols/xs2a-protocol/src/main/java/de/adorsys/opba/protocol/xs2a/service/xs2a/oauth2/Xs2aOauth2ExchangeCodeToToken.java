@@ -32,10 +32,15 @@ public class Xs2aOauth2ExchangeCodeToToken extends ValidatedExecution<Xs2aContex
         logResolver.log("doRealExecution: execution ({}) with context ({})", execution, context);
 
         ValidatedQueryHeaders<Xs2aOauth2WithCodeParameters, Xs2aOauth2Headers> validated = extractor.forExecution(context);
+
+        logResolver.log("getToken with parameters: {}", validated.getQuery(), validated.getHeaders());
+
         TokenResponse response = oauth2Service.getToken(
                 validated.getHeaders().toHeaders().toMap(),
                 validated.getQuery().toParameters()
         );
+
+        logResolver.log("getToken response: {}", response);
 
         ContextUtil.getAndUpdateContext(
                 execution,

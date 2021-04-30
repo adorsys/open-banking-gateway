@@ -45,7 +45,10 @@ public class HbciPayment extends ValidatedExecution<PaymentHbciContext> {
 
         TransactionRequest<SinglePayment> request = create(singlePayment, new BankApiUser(), new BankAccess(),
                 context.getBank(), consent);
+        logResolver.log("executePayment request: {}", request);
         PaymentResponse response = onlineBankingService.executePayment(request);
+        logResolver.log("executePayment response: {}", response);
+
         boolean postScaRequired = HbciScaRequiredUtil.extraCheckIfScaRequired(response);
 
         logResolver.log("AuthorisationCodeResponse is empty: {}, postScaRequired: {}", response.getAuthorisationCodeResponse() == null, postScaRequired);

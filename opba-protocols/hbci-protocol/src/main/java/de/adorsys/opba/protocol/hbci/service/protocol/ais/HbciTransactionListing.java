@@ -48,9 +48,11 @@ public class HbciTransactionListing extends ValidatedExecution<TransactionListHb
         HbciConsent consent = context.getHbciDialogConsent();
         TransactionRequest<LoadTransactions> request = create(new LoadTransactions(), new BankApiUser(), new BankAccess(), context.getBank(), consent);
         request.getTransaction().setPsuAccount(HbciUtil.buildBankAccount(context.getAccountIban()));
+        logResolver.log("loadTransactions request: {}", request);
         TransactionsResponse response = onlineBankingService.loadTransactions(request);
-        boolean postScaRequired = HbciScaRequiredUtil.extraCheckIfScaRequired(response);
+        logResolver.log("loadTransactions response: {}", response);
 
+        boolean postScaRequired = HbciScaRequiredUtil.extraCheckIfScaRequired(response);
         logResolver.log("AuthorisationCodeResponse is empty: {}, postScaRequired: {}", response.getAuthorisationCodeResponse() == null, postScaRequired);
         if (null == response.getAuthorisationCodeResponse() && !postScaRequired) {
             ContextUtil.getAndUpdateContext(

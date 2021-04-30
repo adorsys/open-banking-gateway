@@ -58,13 +58,15 @@ public class Xs2aTransactionListingService extends ValidatedExecution<Transactio
 
         handler.tryActionOrHandleConsentErrors(execution, eventPublisher, () -> {
 
-            logResolver.log("getTransactionList with parameters: {}", params);
+            logResolver.log("getTransactionList with parameters: {}", params.getPath(), params.getQuery(), params.getHeaders());
 
             Response<TransactionsResponse200Json> transactionList = ais.getTransactionList(
                 params.getPath().getResourceId(),
                 params.getHeaders().toHeaders(),
                 params.getQuery().toParameters()
             );
+
+            logResolver.log("getTransactionList response: {}", transactionList);
 
             eventPublisher.publishEvent(
                 new ProcessResponse(execution.getRootProcessInstanceId(), execution.getId(), transactionList.getBody())

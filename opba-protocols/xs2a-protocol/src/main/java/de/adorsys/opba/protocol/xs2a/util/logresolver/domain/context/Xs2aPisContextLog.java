@@ -1,7 +1,6 @@
-package de.adorsys.opba.protocol.xs2a.util.logresolver.domain.payment;
+package de.adorsys.opba.protocol.xs2a.util.logresolver.domain.context;
 
 import de.adorsys.opba.protocol.api.dto.payment.PaymentType;
-import de.adorsys.opba.protocol.xs2a.util.logresolver.domain.Xs2aContextLog;
 import lombok.Data;
 import lombok.ToString;
 

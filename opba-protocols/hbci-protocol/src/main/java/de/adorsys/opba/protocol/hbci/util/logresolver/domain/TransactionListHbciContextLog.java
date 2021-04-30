@@ -1,11 +1,16 @@
 package de.adorsys.opba.protocol.hbci.util.logresolver.domain;
 
-import de.adorsys.opba.protocol.hbci.context.TransactionListHbciContext;
+import de.adorsys.opba.protocol.hbci.service.protocol.ais.dto.AisListTransactionsResult;
+import lombok.Data;
 import lombok.ToString;
 
 
+@Data
 @ToString(callSuper = true)
-public class TransactionListHbciContextLog extends TransactionListHbciContext {
+public class TransactionListHbciContextLog extends HbciContextLog {
+
+    private String accountIban;
+    private AisListTransactionsResult response;
 
     public String getNotSensitiveData() {
         return "ContextLog("

@@ -44,7 +44,12 @@ public class HbciSubmitSelectedMethodAndAskForTanChallenge extends ValidatedExec
 
         request.setAuthenticationMethodId(selected.getId());
 
+        logResolver.log("selectPsuAuthenticationMethod request: {}", request);
+
         UpdateAuthResponse response = onlineBankingService.getStrongCustomerAuthorisation().selectPsuAuthenticationMethod(request);
+
+        logResolver.log("selectPsuAuthenticationMethod response: {}", response);
+
         ContextUtil.getAndUpdateContext(
                 execution,
                 (HbciContext ctx) -> {

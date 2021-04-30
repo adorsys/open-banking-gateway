@@ -60,7 +60,12 @@ public class HbciSendTanChallenge extends ValidatedExecution<HbciContext> {
         TransactionAuthorisationRequest request = create(new BankApiUser(), new BankAccess(), context.getBank(), consent);
         request.setScaAuthenticationData(context.getPsuTan());
 
+        logResolver.log("authorizeConsent request: {}", request);
+
         UpdateAuthResponse response = onlineBankingService.getStrongCustomerAuthorisation().authorizeConsent(request);
+
+        logResolver.log("authorizeConsent response: {}", response);
+
         ContextUtil.getAndUpdateContext(
                 execution,
                 (HbciContext ctx) -> {
