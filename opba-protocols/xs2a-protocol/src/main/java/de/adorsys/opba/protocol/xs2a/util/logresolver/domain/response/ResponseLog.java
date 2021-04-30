@@ -9,6 +9,7 @@ import lombok.SneakyThrows;
 
 @Data
 public class ResponseLog<T> implements NotSensitiveData {
+    private static final ObjectMapper MAPPER = new ObjectMapper();
 
     private int statusCode;
     private T body;
@@ -23,9 +24,8 @@ public class ResponseLog<T> implements NotSensitiveData {
     @SneakyThrows
     @Override
     public String toString() {
-        ObjectMapper mapper = new ObjectMapper();
-        String headersJson = mapper.writeValueAsString(headers);
-        String bodyJson = mapper.writeValueAsString(body);
+        String headersJson = MAPPER.writeValueAsString(headers);
+        String bodyJson = MAPPER.writeValueAsString(body);
 
         return "ResponseLog{"
                 + "statusCode=" + statusCode
