@@ -11,6 +11,7 @@ import de.adorsys.opba.protocol.xs2a.service.mapper.PathHeadersMapperTemplate;
 import de.adorsys.opba.protocol.xs2a.service.xs2a.dto.Xs2aStandardHeaders;
 import de.adorsys.opba.protocol.xs2a.service.xs2a.dto.Xs2aStartPaymentAuthorizationParameters;
 import de.adorsys.opba.protocol.xs2a.service.xs2a.validation.Xs2aValidator;
+import de.adorsys.opba.protocol.xs2a.util.logresolver.Xs2aLogResolver;
 import de.adorsys.xs2a.adapter.api.PaymentInitiationService;
 import de.adorsys.xs2a.adapter.api.RequestParams;
 import de.adorsys.xs2a.adapter.api.Response;
@@ -38,18 +39,25 @@ public class StartPaymentAuthorization extends ValidatedExecution<Xs2aPisContext
     private final Xs2aValidator validator;
     private final PaymentInitiationService pis;
     private final TppRedirectPreferredResolver tppRedirectPreferredResolver;
+    private final Xs2aLogResolver logResolver = new Xs2aLogResolver(getClass());
 
     @Override
     protected void doValidate(DelegateExecution execution, Xs2aPisContext context) {
+        logResolver.log("doValidate: execution ({}) with context ({})", execution, context);
+
         validator.validate(execution, context, this.getClass(), extractor.forValidation(context));
     }
 
     @Override
     protected void doRealExecution(DelegateExecution execution, Xs2aPisContext context) {
+        logResolver.log("doRealExecution: execution ({}) with context ({})", execution, context);
+
         CurrentBankProfile config = context.aspspProfile();
         ValidatedPathHeaders<Xs2aStartPaymentAuthorizationParameters, Xs2aStandardHeaders> params = extractor.forExecution(context);
 
         params.getHeaders().setTppRedirectPreferred(tppRedirectPreferredResolver.isRedirectApproachPreferred(config));
+
+        logResolver.log("startPaymentAuthorisation with parameters: {}", params.getPath(), params.getHeaders());
 
         Response<StartScaprocessResponse> scaStart = pis.startPaymentAuthorisation(
                 PaymentService.PAYMENTS,
@@ -58,6 +66,8 @@ public class StartPaymentAuthorization extends ValidatedExecution<Xs2aPisContext
                 params.getHeaders().toHeaders(),
                 RequestParams.empty(),
                 new UpdatePsuAuthentication());
+
+        logResolver.log("startPaymentAuthorisation response: {}", scaStart);
 
         String aspspSelectedApproach = scaStart.getHeaders().getHeader(ASPSP_SCA_APPROACH);
         context.setAspspScaApproach(null == aspspSelectedApproach ? config.getPreferredApproach().name() : aspspSelectedApproach);

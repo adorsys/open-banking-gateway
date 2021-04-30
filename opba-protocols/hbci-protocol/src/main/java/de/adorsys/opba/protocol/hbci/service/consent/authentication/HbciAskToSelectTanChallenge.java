@@ -6,6 +6,7 @@ import de.adorsys.opba.protocol.bpmnshared.service.exec.ValidatedExecution;
 import de.adorsys.opba.protocol.hbci.config.HbciProtocolConfiguration;
 import de.adorsys.opba.protocol.hbci.context.HbciContext;
 import de.adorsys.opba.protocol.hbci.service.HbciRedirectExecutor;
+import de.adorsys.opba.protocol.hbci.util.logresolver.HbciLogResolver;
 import lombok.RequiredArgsConstructor;
 import org.flowable.engine.RuntimeService;
 import org.flowable.engine.delegate.DelegateExecution;
@@ -20,9 +21,13 @@ public class HbciAskToSelectTanChallenge extends ValidatedExecution<HbciContext>
 
     private final RuntimeService runtimeService;
     private final HbciRedirectExecutor redirectExecutor;
+    private final HbciLogResolver logResolver = new HbciLogResolver(getClass());
 
     @Override
     protected void doRealExecution(DelegateExecution execution, HbciContext context) {
+        logResolver.log("doRealExecution: execution ({}) with context ({})", execution, context);
+
+        logResolver.log("Number of available SCA methods: {}", context.getAvailableSca().size());
         if (context.getAvailableSca().size() >= 2) {
             redirectExecutor.redirect(execution, context, redir -> {
                 HbciProtocolConfiguration.UrlSet urlSet = ProtocolAction.SINGLE_PAYMENT.equals(context.getAction())
@@ -45,6 +50,8 @@ public class HbciAskToSelectTanChallenge extends ValidatedExecution<HbciContext>
 
     @Override
     protected void doMockedExecution(DelegateExecution execution, HbciContext context) {
+        logResolver.log("doMockedExecution: execution ({}) with context ({})", execution, context);
+
         runtimeService.trigger(execution.getId());
     }
 }

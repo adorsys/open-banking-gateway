@@ -5,6 +5,7 @@ import de.adorsys.opba.protocol.api.services.scoped.consent.ProtocolFacingConsen
 import de.adorsys.opba.protocol.bpmnshared.config.flowable.FlowableObjectMapper;
 import de.adorsys.opba.protocol.bpmnshared.service.exec.ValidatedExecution;
 import de.adorsys.opba.protocol.xs2a.context.Xs2aContext;
+import de.adorsys.opba.protocol.xs2a.util.logresolver.Xs2aLogResolver;
 import lombok.RequiredArgsConstructor;
 import lombok.SneakyThrows;
 import org.flowable.engine.delegate.DelegateExecution;
@@ -19,10 +20,13 @@ import org.springframework.stereotype.Service;
 public class Xs2aPersistConsentAndContext extends ValidatedExecution<Xs2aContext> {
 
     private final FlowableObjectMapper mapper;
+    private final Xs2aLogResolver logResolver = new Xs2aLogResolver(getClass());
 
     @Override
     @SneakyThrows
     protected void doRealExecution(DelegateExecution execution, Xs2aContext context) {
+        logResolver.log("doRealExecution: execution ({}) with context ({})", execution, context);
+
         ProtocolFacingConsent consent = context.consentAccess().findSingleByCurrentServiceSession()
                 .orElseGet(() -> context.consentAccess().createDoNotPersist());
 

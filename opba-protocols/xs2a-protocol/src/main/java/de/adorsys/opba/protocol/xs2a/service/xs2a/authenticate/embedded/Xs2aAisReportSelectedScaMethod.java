@@ -10,6 +10,7 @@ import de.adorsys.opba.protocol.xs2a.service.xs2a.dto.Xs2aAuthorizedConsentParam
 import de.adorsys.opba.protocol.xs2a.service.xs2a.dto.Xs2aStandardHeaders;
 import de.adorsys.opba.protocol.xs2a.service.xs2a.dto.authenticate.embedded.SelectScaChallengeBody;
 import de.adorsys.opba.protocol.xs2a.service.xs2a.validation.Xs2aValidator;
+import de.adorsys.opba.protocol.xs2a.util.logresolver.Xs2aLogResolver;
 import de.adorsys.xs2a.adapter.api.AccountInformationService;
 import de.adorsys.xs2a.adapter.api.Response;
 import de.adorsys.xs2a.adapter.api.model.SelectPsuAuthenticationMethod;
@@ -29,16 +30,24 @@ public class Xs2aAisReportSelectedScaMethod extends ValidatedExecution<Xs2aConte
     private final Extractor extractor;
     private final Xs2aValidator validator;
     private final AccountInformationService ais;
+    private final Xs2aLogResolver logResolver = new Xs2aLogResolver(getClass());
 
     @Override
     protected void doValidate(DelegateExecution execution, Xs2aContext context) {
+        logResolver.log("doValidate: execution ({}) with context ({})", execution, context);
+
         validator.validate(execution, context, this.getClass(), extractor.forValidation(context));
     }
 
     @Override
     protected void doRealExecution(DelegateExecution execution, Xs2aContext context) {
+        logResolver.log("doRealExecution: execution ({}) with context ({})", execution, context);
+
         ValidatedPathHeadersBody<Xs2aAuthorizedConsentParameters, Xs2aStandardHeaders, SelectPsuAuthenticationMethod> params =
                 extractor.forExecution(context);
+
+        logResolver.log("updateConsentsPsuData with parameters: {}", params.getPath(), params.getHeaders(), params.getBody());
+
         Response<SelectPsuAuthenticationMethodResponse> authResponse = ais.updateConsentsPsuData(
                 params.getPath().getConsentId(),
                 params.getPath().getAuthorizationId(),
@@ -46,6 +55,8 @@ public class Xs2aAisReportSelectedScaMethod extends ValidatedExecution<Xs2aConte
                 params.getPath().toParameters(),
                 params.getBody()
         );
+
+        logResolver.log("updateConsentsPsuData response: {}", authResponse);
 
         ContextUtil.getAndUpdateContext(
                 execution,

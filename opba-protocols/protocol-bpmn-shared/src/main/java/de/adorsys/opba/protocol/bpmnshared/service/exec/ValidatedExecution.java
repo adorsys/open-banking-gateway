@@ -2,6 +2,7 @@ package de.adorsys.opba.protocol.bpmnshared.service.exec;
 
 import de.adorsys.opba.protocol.bpmnshared.dto.context.BaseContext;
 import de.adorsys.opba.protocol.bpmnshared.dto.context.ContextMode;
+import de.adorsys.opba.protocol.bpmnshared.util.logResolver.LogResolver;
 import de.adorsys.opba.protocol.bpmnshared.service.context.ContextUtil;
 import lombok.RequiredArgsConstructor;
 import org.flowable.engine.delegate.BpmnError;
@@ -17,6 +18,8 @@ import org.springframework.transaction.annotation.Transactional;
 @RequiredArgsConstructor
 public abstract class ValidatedExecution<T extends BaseContext> implements JavaDelegate {
 
+    private final LogResolver logResolver = new LogResolver(getClass());
+
     /**
      * Entrypoint for Flowable BPMN to call the service.
      */
@@ -26,14 +29,20 @@ public abstract class ValidatedExecution<T extends BaseContext> implements JavaD
         @SuppressWarnings("unchecked")
         T context = (T) ContextUtil.getContext(execution, BaseContext.class);
 
+        logResolver.log("execute: execution ({}) with context ({})", execution, context);
+
         doPrepareContext(execution, context);
         doValidate(execution, context);
+
+        logResolver.log("execution contextMode ({})", context.getMode());
         if (ContextMode.MOCK_REAL_CALLS == context.getMode()) {
             doMockedExecution(execution, context);
         } else {
             doRealExecution(execution, context);
         }
         doAfterCall(execution, context);
+
+        logResolver.log("done execution ({}) with context ({})", execution, context);
     }
 
     /**

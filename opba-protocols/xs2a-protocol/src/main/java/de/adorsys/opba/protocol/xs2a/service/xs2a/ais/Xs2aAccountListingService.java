@@ -10,6 +10,7 @@ import de.adorsys.opba.protocol.xs2a.service.mapper.QueryHeadersMapperTemplate;
 import de.adorsys.opba.protocol.xs2a.service.xs2a.dto.Xs2aWithBalanceParameters;
 import de.adorsys.opba.protocol.xs2a.service.xs2a.dto.Xs2aWithConsentIdHeaders;
 import de.adorsys.opba.protocol.xs2a.service.xs2a.validation.Xs2aValidator;
+import de.adorsys.opba.protocol.xs2a.util.logresolver.Xs2aLogResolver;
 import de.adorsys.xs2a.adapter.api.AccountInformationService;
 import de.adorsys.xs2a.adapter.api.Response;
 import de.adorsys.xs2a.adapter.api.model.AccountList;
@@ -31,20 +32,31 @@ public class Xs2aAccountListingService extends ValidatedExecution<Xs2aAisContext
     private final Xs2aValidator validator;
     private final AccountInformationService ais;
     private final Xs2aConsentErrorHandler handler;
+    private final Xs2aLogResolver logResolver = new Xs2aLogResolver(getClass());
 
     @Override
     protected void doValidate(DelegateExecution execution, Xs2aAisContext context) {
+        logResolver.log("doValidate: execution ({}) with context ({})", execution, context);
+
         validator.validate(execution, context, this.getClass(), extractor.forValidation(context));
     }
 
     @Override
     protected void doRealExecution(DelegateExecution execution, Xs2aAisContext context) {
+        logResolver.log("doRealExecution: execution ({}) with context ({})", execution, context);
+
         ValidatedQueryHeaders<Xs2aWithBalanceParameters, Xs2aWithConsentIdHeaders> params = extractor.forExecution(context);
         handler.tryActionOrHandleConsentErrors(execution, eventPublisher, () -> {
+
+            logResolver.log("getAccountList with parameters: {}", params.getQuery(), params.getHeaders());
+
             Response<AccountList> accounts = ais.getAccountList(
                 params.getHeaders().toHeaders(),
                 params.getQuery().toParameters()
             );
+
+            logResolver.log("getAccountList response: {}", accounts);
+
             eventPublisher.publishEvent(
                 new ProcessResponse(execution.getRootProcessInstanceId(), execution.getId(), accounts.getBody())
             );

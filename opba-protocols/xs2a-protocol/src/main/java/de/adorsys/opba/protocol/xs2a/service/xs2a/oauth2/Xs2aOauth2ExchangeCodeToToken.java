@@ -9,6 +9,7 @@ import de.adorsys.opba.protocol.xs2a.service.mapper.QueryHeadersMapperTemplate;
 import de.adorsys.opba.protocol.xs2a.service.xs2a.dto.oauth2.Xs2aOauth2Headers;
 import de.adorsys.opba.protocol.xs2a.service.xs2a.dto.oauth2.Xs2aOauth2WithCodeParameters;
 import de.adorsys.opba.protocol.xs2a.service.xs2a.validation.Xs2aValidator;
+import de.adorsys.opba.protocol.xs2a.util.logresolver.Xs2aLogResolver;
 import de.adorsys.xs2a.adapter.api.Oauth2Service;
 import de.adorsys.xs2a.adapter.api.model.TokenResponse;
 import lombok.RequiredArgsConstructor;
@@ -23,15 +24,23 @@ public class Xs2aOauth2ExchangeCodeToToken extends ValidatedExecution<Xs2aContex
     private final Xs2aValidator validator;
     private final Extractor extractor;
     private final Oauth2Service oauth2Service;
+    private final Xs2aLogResolver logResolver = new Xs2aLogResolver(getClass());
 
     @Override
     @SneakyThrows
     protected void doRealExecution(DelegateExecution execution, Xs2aContext context) {
+        logResolver.log("doRealExecution: execution ({}) with context ({})", execution, context);
+
         ValidatedQueryHeaders<Xs2aOauth2WithCodeParameters, Xs2aOauth2Headers> validated = extractor.forExecution(context);
+
+        logResolver.log("getToken with parameters: {}", validated.getQuery(), validated.getHeaders());
+
         TokenResponse response = oauth2Service.getToken(
                 validated.getHeaders().toHeaders().toMap(),
                 validated.getQuery().toParameters()
         );
+
+        logResolver.log("getToken response: {}", response);
 
         ContextUtil.getAndUpdateContext(
                 execution,
@@ -44,6 +53,8 @@ public class Xs2aOauth2ExchangeCodeToToken extends ValidatedExecution<Xs2aContex
 
     @Override
     protected void doValidate(DelegateExecution execution, Xs2aContext context) {
+        logResolver.log("doValidate: execution ({}) with context ({})", execution, context);
+
         validator.validate(execution, context, this.getClass(), extractor.forValidation(context));
     }
 

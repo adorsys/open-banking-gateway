@@ -10,6 +10,7 @@ import de.adorsys.opba.protocol.xs2a.service.xs2a.dto.Xs2aAuthorizedConsentParam
 import de.adorsys.opba.protocol.xs2a.service.xs2a.dto.Xs2aStandardHeaders;
 import de.adorsys.opba.protocol.xs2a.service.xs2a.dto.authenticate.embedded.ProvideScaChallengeResultBody;
 import de.adorsys.opba.protocol.xs2a.service.xs2a.validation.Xs2aValidator;
+import de.adorsys.opba.protocol.xs2a.util.logresolver.Xs2aLogResolver;
 import de.adorsys.xs2a.adapter.api.AccountInformationService;
 import de.adorsys.xs2a.adapter.api.Response;
 import de.adorsys.xs2a.adapter.api.model.ScaStatusResponse;
@@ -26,20 +27,26 @@ import org.springframework.stereotype.Service;
 @Slf4j
 @Service("xs2aAuthenticateConsentWithScaChallenge")
 @RequiredArgsConstructor
+@SuppressWarnings("CPD-START")
 public class Xs2aAisAuthenticateConsentWithScaChallenge extends ValidatedExecution<Xs2aContext> {
 
     private final Extractor extractor;
     private final Xs2aValidator validator;
     private final AccountInformationService ais;
     private final AuthorizationPossibleErrorHandler errorSink;
+    private final Xs2aLogResolver logResolver = new Xs2aLogResolver(getClass());
 
     @Override
     protected void doValidate(DelegateExecution execution, Xs2aContext context) {
+        logResolver.log("doValidate: execution ({}) with context ({})", execution, context);
+
         validator.validate(execution, context, this.getClass(), extractor.forValidation(context));
     }
 
     @Override
     protected void doRealExecution(DelegateExecution execution, Xs2aContext context) {
+        logResolver.log("doRealExecution: execution ({}) with context ({})", execution, context);
+
         ValidatedPathHeadersBody<Xs2aAuthorizedConsentParameters, Xs2aStandardHeaders, TransactionAuthorisation> params =
                 extractor.forExecution(context);
 
@@ -52,6 +59,9 @@ public class Xs2aAisAuthenticateConsentWithScaChallenge extends ValidatedExecuti
     private void aisAuthorizeWithSca(
             DelegateExecution execution,
             ValidatedPathHeadersBody<Xs2aAuthorizedConsentParameters, Xs2aStandardHeaders, TransactionAuthorisation> params) {
+
+        logResolver.log("updateConsentsPsuData with parameters: {}", params.getPath(), params.getHeaders(), params.getBody());
+
         Response<ScaStatusResponse> authResponse = ais.updateConsentsPsuData(
                 params.getPath().getConsentId(),
                 params.getPath().getAuthorizationId(),
@@ -59,6 +69,8 @@ public class Xs2aAisAuthenticateConsentWithScaChallenge extends ValidatedExecuti
                 params.getPath().toParameters(),
                 params.getBody()
         );
+
+        logResolver.log("updateConsentsPsuData response: {}", authResponse);
 
         ContextUtil.getAndUpdateContext(
                 execution,

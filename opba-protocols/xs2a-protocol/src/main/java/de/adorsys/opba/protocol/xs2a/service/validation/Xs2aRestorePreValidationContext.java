@@ -4,6 +4,7 @@ import de.adorsys.opba.protocol.bpmnshared.dto.context.BaseContext;
 import de.adorsys.opba.protocol.bpmnshared.dto.context.LastRedirectionTarget;
 import de.adorsys.opba.protocol.bpmnshared.service.context.ContextUtil;
 import de.adorsys.opba.protocol.xs2a.context.LastViolations;
+import de.adorsys.opba.protocol.xs2a.util.logresolver.Xs2aLogResolver;
 import lombok.RequiredArgsConstructor;
 import org.flowable.engine.delegate.DelegateExecution;
 import org.flowable.engine.delegate.JavaDelegate;
@@ -23,9 +24,14 @@ import static de.adorsys.opba.protocol.xs2a.constant.GlobalConst.LAST_VALIDATION
 @Service("xs2aRestorePreValidationContext")
 public class Xs2aRestorePreValidationContext implements JavaDelegate {
 
+    private final Xs2aLogResolver logResolver = new Xs2aLogResolver(getClass());
+
     @Override
     public void execute(DelegateExecution execution) {
         BaseContext current = ContextUtil.getContext(execution, BaseContext.class);
+
+        logResolver.log("execute: execution ({}) with context ({})", execution, current);
+
         execution.setVariable(
             LAST_VALIDATION_ISSUES,
             new LastViolations(current.getViolations(), current.getRequestScoped())
@@ -36,6 +42,8 @@ public class Xs2aRestorePreValidationContext implements JavaDelegate {
         );
         execution.setVariable(CONTEXT, execution.getVariable(BEFORE_VALIDATION_CONTEXT));
         execution.removeVariable(BEFORE_VALIDATION_CONTEXT);
+
+        logResolver.log("done execution ({}) with context ({})", execution, current);
     }
 
     // FIXME SerializerUtil does not support nestedness

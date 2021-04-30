@@ -9,6 +9,7 @@ import de.adorsys.opba.protocol.api.dto.codes.TypeCode;
 import de.adorsys.opba.protocol.bpmnshared.service.context.ContextUtil;
 import de.adorsys.opba.protocol.bpmnshared.service.exec.ValidatedExecution;
 import de.adorsys.opba.protocol.hbci.context.HbciContext;
+import de.adorsys.opba.protocol.hbci.util.logresolver.HbciLogResolver;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.flowable.engine.delegate.DelegateExecution;
@@ -22,13 +23,19 @@ import org.springframework.stereotype.Service;
 @RequiredArgsConstructor
 public class HbciAisConsentService extends ValidatedExecution<HbciContext> {
 
+    private final HbciLogResolver logResolver = new HbciLogResolver(getClass());
+
     @Override
     protected void doRealExecution(DelegateExecution execution, HbciContext context) {
+        logResolver.log("doRealExecution: execution ({}) with context ({})", execution, context);
+
         ContextUtil.getAndUpdateContext(execution, (HbciContext ctx) -> ctx.setViolations(ImmutableSet.of()));
     }
 
     @Override
     protected void doMockedExecution(DelegateExecution execution, HbciContext context) {
+        logResolver.log("doMockedExecution: execution ({}) with context ({})", execution, context);
+
         if (!Strings.isNullOrEmpty(context.getPsuId())) {
             return;
         }

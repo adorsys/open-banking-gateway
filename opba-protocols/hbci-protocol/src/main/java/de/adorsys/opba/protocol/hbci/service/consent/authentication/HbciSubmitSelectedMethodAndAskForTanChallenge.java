@@ -12,6 +12,7 @@ import de.adorsys.multibanking.hbci.model.HbciConsent;
 import de.adorsys.opba.protocol.bpmnshared.service.context.ContextUtil;
 import de.adorsys.opba.protocol.bpmnshared.service.exec.ValidatedExecution;
 import de.adorsys.opba.protocol.hbci.context.HbciContext;
+import de.adorsys.opba.protocol.hbci.util.logresolver.HbciLogResolver;
 import lombok.RequiredArgsConstructor;
 import org.flowable.engine.RuntimeService;
 import org.flowable.engine.delegate.DelegateExecution;
@@ -26,9 +27,12 @@ public class HbciSubmitSelectedMethodAndAskForTanChallenge extends ValidatedExec
 
     private final OnlineBankingService onlineBankingService;
     private final RuntimeService runtimeService;
+    private final HbciLogResolver logResolver = new HbciLogResolver(getClass());
 
     @Override
     protected void doRealExecution(DelegateExecution execution, HbciContext context) {
+        logResolver.log("doRealExecution: execution ({}) with context ({})", execution, context);
+
         HbciConsent consent = context.getHbciDialogConsent();
         String selectedTanId = context.getUserSelectScaId();
 
@@ -40,7 +44,12 @@ public class HbciSubmitSelectedMethodAndAskForTanChallenge extends ValidatedExec
 
         request.setAuthenticationMethodId(selected.getId());
 
+        logResolver.log("selectPsuAuthenticationMethod request: {}", request);
+
         UpdateAuthResponse response = onlineBankingService.getStrongCustomerAuthorisation().selectPsuAuthenticationMethod(request);
+
+        logResolver.log("selectPsuAuthenticationMethod response: {}", response);
+
         ContextUtil.getAndUpdateContext(
                 execution,
                 (HbciContext ctx) -> {
@@ -52,6 +61,8 @@ public class HbciSubmitSelectedMethodAndAskForTanChallenge extends ValidatedExec
 
     @Override
     protected void doMockedExecution(DelegateExecution execution, HbciContext context) {
+        logResolver.log("doMockedExecution: execution ({}) with context ({})", execution, context);
+
         ContextUtil.getAndUpdateContext(
                 execution,
                 (HbciContext ctx) -> ctx.setPsuTan("mock-challenge")
