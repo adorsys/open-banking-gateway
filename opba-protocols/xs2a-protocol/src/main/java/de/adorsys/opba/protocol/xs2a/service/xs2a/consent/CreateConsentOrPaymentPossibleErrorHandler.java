@@ -6,7 +6,6 @@ import de.adorsys.opba.protocol.xs2a.config.aspspmessages.AspspMessages;
 import de.adorsys.opba.protocol.xs2a.context.Xs2aContext;
 import de.adorsys.xs2a.adapter.api.exception.ErrorResponseException;
 import de.adorsys.xs2a.adapter.api.exception.OAuthException;
-import de.adorsys.xs2a.adapter.api.exception.PsuPasswordEncodingException;
 import de.adorsys.xs2a.adapter.api.model.MessageCode;
 import de.adorsys.xs2a.adapter.api.model.TppMessage;
 import lombok.RequiredArgsConstructor;
@@ -16,7 +15,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
 import java.util.Objects;
-import java.util.ServiceConfigurationError;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -29,7 +27,6 @@ import java.util.stream.Collectors;
 @Service
 @RequiredArgsConstructor
 public class CreateConsentOrPaymentPossibleErrorHandler {
-    private static final int MAX_RETRY_COUNT = 3;
 
     private final AspspMessages messageConfig;
 
@@ -38,35 +35,14 @@ public class CreateConsentOrPaymentPossibleErrorHandler {
      * @param tryCreate Consent/payment creation function to call
      */
     public void tryCreateAndHandleErrors(DelegateExecution execution, Runnable tryCreate) {
-        tryCreateAndHandleErrors(execution, tryCreate, 0);
-    }
-
-    private void tryCreateAndHandleErrors(DelegateExecution execution, Runnable tryCreate, int retryCount) {
         try {
             tryCreate.run();
         } catch (ErrorResponseException ex) {
+            log.debug("Trying to handle ErrorResponseException", ex);
             tryHandleWrongIbanOrCredentialsExceptionOrOauth2(execution, ex);
         } catch (OAuthException ex) {
+            log.debug("Trying to handle OAuthException", ex);
             tryHandleOauth2Exception(execution);
-        } catch (ServiceConfigurationError ex) {
-            // FIXME https://github.com/adorsys/xs2a-adapter/issues/577
-            // FIXME https://github.com/adorsys/open-banking-gateway/issues/1199
-            handlePsuPasswordEncodingException(execution, tryCreate, retryCount, ex);
-        }
-    }
-
-    private void handlePsuPasswordEncodingException(DelegateExecution execution, Runnable tryCreate, int retryCount, ServiceConfigurationError ex) {
-        if (null != ex.getCause()
-                && ex.getCause() instanceof PsuPasswordEncodingException
-                && ex.getCause().getMessage().contains("Exception during Deutsche bank adapter PSU password encryption")) {
-            log.error("Failed to initialize Deutsche bank encryption service, but ignoring it");
-            if (retryCount < MAX_RETRY_COUNT) {
-                tryCreateAndHandleErrors(execution, tryCreate, retryCount + 1); // Retry, by skipping errored adapter
-            } else {
-                throw ex;
-            }
-        } else {
-            throw ex;
         }
     }
 
