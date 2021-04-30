@@ -5,6 +5,7 @@ import de.adorsys.opba.protocol.xs2a.service.dto.ValidatedPathHeadersBody;
 import de.adorsys.opba.protocol.xs2a.service.xs2a.dto.consent.ConsentInitiateHeaders;
 import de.adorsys.opba.protocol.xs2a.service.xs2a.dto.consent.ConsentInitiateParameters;
 import de.adorsys.opba.protocol.xs2a.service.xs2a.quirks.QuirkUtil;
+import de.adorsys.opba.protocol.xs2a.util.logresolver.Xs2aLogResolver;
 import de.adorsys.xs2a.adapter.api.AccountInformationService;
 import de.adorsys.xs2a.adapter.api.Response;
 import de.adorsys.xs2a.adapter.api.model.Consents;
@@ -20,16 +21,21 @@ import static de.adorsys.xs2a.adapter.impl.link.bg.template.LinksTemplate.SCA_OA
  */
 @Service
 public class CreateAisConsentService {
+
+    private final Xs2aLogResolver logResolver = new Xs2aLogResolver(getClass());
+
     void createConsent(
             AccountInformationService ais,
             DelegateExecution execution,
             Xs2aAisContext context,
             ValidatedPathHeadersBody<ConsentInitiateParameters, ConsentInitiateHeaders, Consents> params) {
+        logResolver.log("createConsent with parameters: {}", params.getPath(), params.getHeaders(), params.getBody());
         Response<ConsentsResponse201> consentInit = ais.createConsent(
                 QuirkUtil.pushBicToXs2aAdapterHeaders(context, params.getHeaders().toHeaders()),
                 params.getPath().toParameters(),
                 params.getBody()
         );
+        logResolver.log("createConsent response: {}", consentInit);
 
         context.setWrongAuthCredentials(false);
         context.setConsentId(consentInit.getBody().getConsentId());

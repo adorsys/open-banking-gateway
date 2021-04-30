@@ -59,11 +59,7 @@ public class CreateAisTransactionListConsentService extends ValidatedExecution<T
         logResolver.log("doRealExecution: execution ({}) with context ({})", execution, context);
 
         ValidatedPathHeadersBody<ConsentInitiateParameters, ConsentInitiateHeaders, Consents> params = extractor.forExecution(context);
-        handler.tryCreateAndHandleErrors(execution, () -> {
-            logResolver.log("createConsent with parameters: {}", params.getPath(), params.getHeaders(), params.getBody());
-
-            createAisConsentService.createConsent(ais, execution, context, params);
-        });
+        handler.tryCreateAndHandleErrors(execution, () -> createAisConsentService.createConsent(ais, execution, context, params));
     }
 
     @Override
