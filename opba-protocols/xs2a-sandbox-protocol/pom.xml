@@ -156,6 +156,26 @@
             We customize only 'xs2a-list-transactions.bpmn20.xml' flow as it is the only one that needs custom beans.
             -->
             <plugin>
+                <groupId>org.codehaus.mojo</groupId>
+                <artifactId>build-helper-maven-plugin</artifactId>
+                <version>1.8</version>
+                <executions>
+                    <execution>
+                        <id>regex-property</id>
+                        <phase>prepare-package</phase>
+                        <goals>
+                            <goal>regex-property</goal>
+                        </goals>
+                        <configuration>
+                            <name>normalizedPath</name>
+                            <value>${project.build.directory}</value>
+                            <regex>\\</regex>
+                            <replacement>/</replacement>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+            <plugin>
                 <groupId>com.google.code.maven-replacer-plugin</groupId>
                 <artifactId>replacer</artifactId>
                 <version>${maven.replacer.version}</version>
@@ -168,10 +188,10 @@
                     </execution>
                 </executions>
                 <configuration>
-                    <filesToInclude>${project.build.directory}/shared-processes/processes/xs2a/accounts/xs2a-list-transactions.bpmn20.xml</filesToInclude>
+                    <filesToInclude>${normalizedPath}/shared-processes/processes/xs2a/accounts/xs2a-list-transactions.bpmn20.xml</filesToInclude>
                     <tokenValueMap>${project.basedir}/src/main/resources/context.properties</tokenValueMap>
-                    <inputFilePattern>${project.build.directory}/shared-processes/processes/(.*)/([A-Za-z0-9\.\-]+)$</inputFilePattern>
-                    <outputFilePattern>${project.build.directory}/classes/processes/$1/sandbox-$2</outputFilePattern>
+                    <inputFilePattern>${normalizedPath}/shared-processes/processes/(.*)/([A-Za-z0-9\.\-]+)$</inputFilePattern>
+                    <outputFilePattern>${normalizedPath}/classes/processes/$1/sandbox-$2</outputFilePattern>
                 </configuration>
             </plugin>
             <!-- FLOW CUSTOMIZATION END -->
