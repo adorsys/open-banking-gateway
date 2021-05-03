@@ -152,13 +152,14 @@
             </plugin>
             <!-- Protocol customization: -->
             <!--
-            This plugin performs replacement of flowable-called beans with protocol customary ones.
+            This plugins performs replacement of flowable-called beans with protocol customary ones.
             We customize only 'xs2a-list-transactions.bpmn20.xml' flow as it is the only one that needs custom beans.
             -->
+            <!-- Normalize paths on Windows -->
             <plugin>
                 <groupId>org.codehaus.mojo</groupId>
                 <artifactId>build-helper-maven-plugin</artifactId>
-                <version>1.8</version>
+                <version>3.2.0</version>
                 <executions>
                     <execution>
                         <id>regex-property</id>
@@ -171,10 +172,12 @@
                             <value>${project.build.directory}</value>
                             <regex>\\</regex>
                             <replacement>/</replacement>
+                            <failIfNoMatch>false</failIfNoMatch>
                         </configuration>
                     </execution>
                 </executions>
             </plugin>
+            <!-- Copy and modify 'basic' flows -->
             <plugin>
                 <groupId>com.google.code.maven-replacer-plugin</groupId>
                 <artifactId>replacer</artifactId>
