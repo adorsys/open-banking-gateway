@@ -163,7 +163,7 @@
                 <executions>
                     <execution>
                         <id>regex-property</id>
-                        <phase>prepare-package</phase>
+                        <phase>generate-resources</phase>
                         <goals>
                             <goal>regex-property</goal>
                         </goals>
