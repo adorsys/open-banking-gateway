@@ -10,6 +10,16 @@ export class ConsentUtil {
     return storageService.getConsentObject(authorizationId, () => new AisConsentToGrant());
   }
 
+  public static rollbackConsent(authorizationId: string, sessionService: SessionService) {
+    const consentObj = ConsentUtil.getOrDefault(authorizationId, sessionService);
+    consentObj.consent.access.availableAccounts = null;
+    consentObj.consent.access.allPsd2 = null;
+    consentObj.consent.access.accounts = null;
+    consentObj.consent.access.balances = null;
+    consentObj.consent.access.transactions = null;
+    sessionService.setConsentObject(authorizationId, consentObj);
+  }
+
   private static initializeConsentObject(): AisConsentToGrant {
     const aisConsent = new AisConsentToGrant();
     // FIXME: These fields MUST be initialized by FinTech through API and user can only adjust it.
