@@ -1,7 +1,6 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { CustomConsentComponent } from './custom-consent.component';
-import {DedicatedAccessComponent} from "../dedicated-access/dedicated-access.component";
 import {CUSTOM_ELEMENTS_SCHEMA} from "@angular/core";
 import {ReactiveFormsModule} from "@angular/forms";
 import {RouterTestingModule} from "@angular/router/testing";
