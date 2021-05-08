@@ -1,6 +1,7 @@
 package de.adorsys.opba.protocol.xs2a.util.logresolver.domain.response;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import de.adorsys.opba.protocol.xs2a.util.logresolver.domain.NotSensitiveData;
 import de.adorsys.xs2a.adapter.api.ResponseHeaders;
 import lombok.Data;
@@ -9,7 +10,7 @@ import lombok.SneakyThrows;
 
 @Data
 public class ResponseLog<T> implements NotSensitiveData {
-    private static final ObjectMapper MAPPER = new ObjectMapper();
+    private static final ObjectMapper MAPPER = new ObjectMapper().registerModule(new JavaTimeModule());
 
     private int statusCode;
     private T body;
