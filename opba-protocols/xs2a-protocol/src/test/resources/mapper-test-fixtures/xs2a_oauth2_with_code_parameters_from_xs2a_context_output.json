@@ -1,0 +1,5 @@
+{
+  "oauth2Code": "Oauth2-code",
+  "oauth2RedirectBackLink": "http://example.com/back",
+  "grantType": "authorization_code"
+}
