@@ -20,10 +20,14 @@ public class Xs2aOauth2WithCodeParameters {
     @NotBlank
     private String oauth2Code;
 
+    @NotBlank
+    private String grantType = Oauth2Service.GrantType.AUTHORIZATION_CODE.toString(); // TODO Xs2a Adapter should set it?
+
     public Oauth2Service.Parameters toParameters() {
         Oauth2Service.Parameters parameters = new Oauth2Service.Parameters();
         parameters.setAuthorizationCode(oauth2Code);
         parameters.setRedirectUri(oauth2RedirectBackLink);
+        parameters.setGrantType(grantType);
         return parameters;
     }
 
