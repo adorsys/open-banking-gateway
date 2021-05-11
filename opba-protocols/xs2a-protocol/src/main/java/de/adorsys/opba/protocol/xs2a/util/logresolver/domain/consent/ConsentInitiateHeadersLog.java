@@ -11,7 +11,6 @@ public class ConsentInitiateHeadersLog implements NotSensitiveData {
     private String aspspId;
     private String requestId;
     private String oauth2Token;
-
     private String psuIpAddress;
     private String redirectUriOk;
     private String redirectUriNok;

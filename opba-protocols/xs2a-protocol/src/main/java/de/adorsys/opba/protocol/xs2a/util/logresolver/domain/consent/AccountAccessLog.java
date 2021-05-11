@@ -18,4 +18,5 @@ public class AccountAccessLog {
     private AccountAccess.AvailableAccountsWithBalance availableAccountsWithBalance;
     private AccountAccess.AllPsd2 allPsd2;
     private List<String> restrictedTo;
+
 }

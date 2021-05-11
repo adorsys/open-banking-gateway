@@ -1,14 +1,8 @@
 package de.adorsys.opba.protocol.hbci.util.logresolver;
 
-import de.adorsys.multibanking.domain.request.SelectPsuAuthenticationMethodRequest;
-import de.adorsys.multibanking.domain.request.TransactionAuthorisationRequest;
+import de.adorsys.multibanking.domain.request.AbstractRequest;
 import de.adorsys.multibanking.domain.request.TransactionRequest;
-import de.adorsys.multibanking.domain.request.UpdatePsuAuthenticationRequest;
-import de.adorsys.multibanking.domain.response.AccountInformationResponse;
-import de.adorsys.multibanking.domain.response.PaymentResponse;
-import de.adorsys.multibanking.domain.response.PaymentStatusResponse;
-import de.adorsys.multibanking.domain.response.TransactionsResponse;
-import de.adorsys.multibanking.domain.response.UpdateAuthResponse;
+import de.adorsys.multibanking.domain.response.AbstractResponse;
 import de.adorsys.multibanking.domain.transaction.AbstractTransaction;
 import de.adorsys.opba.protocol.bpmnshared.dto.context.BaseContext;
 import de.adorsys.opba.protocol.hbci.context.AccountListHbciContext;
@@ -25,7 +19,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 
-public class HbciLogResolver {
+public class HbciLogResolver<REQUEST extends AbstractRequest, RESPONSE extends AbstractResponse> {
 
     private final Logger log;
     private final HbciDtoToLogObjectsMapper mapper;
@@ -133,8 +127,8 @@ public class HbciLogResolver {
         }
     }
 
-    public void log(String message, UpdatePsuAuthenticationRequest request) {
-        RequestLog<UpdatePsuAuthenticationRequest> requestLog = new RequestLog<>(request);
+    public void log(String message, REQUEST request) {
+        RequestLog<REQUEST> requestLog = new RequestLog<>(request);
 
         if (log.isDebugEnabled()) {
             log.debug(message, requestLog);
@@ -143,28 +137,8 @@ public class HbciLogResolver {
         }
     }
 
-    public void log(String message, TransactionAuthorisationRequest request) {
-        RequestLog<TransactionAuthorisationRequest> requestLog = new RequestLog<>(request);
-
-        if (log.isDebugEnabled()) {
-            log.debug(message, requestLog);
-        } else {
-            log.info(message, requestLog.getNotSensitiveData());
-        }
-    }
-
-    public void log(String message, SelectPsuAuthenticationMethodRequest request) {
-        RequestLog<SelectPsuAuthenticationMethodRequest> requestLog = new RequestLog<>(request);
-
-        if (log.isDebugEnabled()) {
-            log.debug(message, requestLog);
-        } else {
-            log.info(message, requestLog.getNotSensitiveData());
-        }
-    }
-
-    public void log(String message, AccountInformationResponse response) {
-        ResponseLog<AccountInformationResponse> responseLog = new ResponseLog<>();
+    public void log(String message, RESPONSE response) {
+        ResponseLog<RESPONSE> responseLog = new ResponseLog<>();
         responseLog.setResponse(response);
 
         if (log.isDebugEnabled()) {
@@ -174,47 +148,4 @@ public class HbciLogResolver {
         }
     }
 
-    public void log(String message, UpdateAuthResponse response) {
-        ResponseLog<UpdateAuthResponse> responseLog = new ResponseLog<>();
-        responseLog.setResponse(response);
-
-        if (log.isDebugEnabled()) {
-            log.debug(message, responseLog);
-        } else {
-            log.info(message, responseLog.getNotSensitiveData());
-        }
-    }
-
-    public void log(String message, PaymentResponse response) {
-        ResponseLog<PaymentResponse> responseLog = new ResponseLog<>();
-        responseLog.setResponse(response);
-
-        if (log.isDebugEnabled()) {
-            log.debug(message, responseLog);
-        } else {
-            log.info(message, responseLog.getNotSensitiveData());
-        }
-    }
-
-    public void log(String message, TransactionsResponse response) {
-        ResponseLog<TransactionsResponse> responseLog = new ResponseLog<>();
-        responseLog.setResponse(response);
-
-        if (log.isDebugEnabled()) {
-            log.debug(message, responseLog);
-        } else {
-            log.info(message, responseLog.getNotSensitiveData());
-        }
-    }
-
-    public void log(String message, PaymentStatusResponse response) {
-        ResponseLog<PaymentStatusResponse> responseLog = new ResponseLog<>();
-        responseLog.setResponse(response);
-
-        if (log.isDebugEnabled()) {
-            log.debug(message, responseLog);
-        } else {
-            log.info(message, responseLog.getNotSensitiveData());
-        }
-    }
 }

@@ -1,28 +1,32 @@
-package de.adorsys.opba.protocol.hbci.util.logresolver.domain.request;
+package de.adorsys.opba.protocol.facade.util.logresolver.domain.request;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import de.adorsys.multibanking.domain.request.AbstractRequest;
+import de.adorsys.opba.protocol.api.dto.request.FacadeServiceableRequest;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.SneakyThrows;
 
+import static de.adorsys.opba.protocol.facade.util.logresolver.Constants.NULL;
+
 
 @Getter
 @RequiredArgsConstructor
-public class RequestLog<T extends AbstractRequest> {
+public class FacadeServiceableRequestLog {
 
     private static final ObjectMapper MAPPER = new ObjectMapper();
 
-    private final T request;
+    private final FacadeServiceableRequest request;
 
     public String getNotSensitiveData() {
         if (null == request) {
-            return "null";
+            return NULL;
         }
 
-        return "RequestLog("
+        return "FacadeServiceableRequestLog("
                 + "requestClass=" + request.getClass()
-                + ", bankApi=" + (null != request.getBankApiUser() ? request.getBankApiUser().getBankApi() : "null")
+                + ", requestId=" + request.getRequestId()
+                + ", serviceSessionId=" + request.getServiceSessionId()
+                + ", authorizationSessionId=" + request.getAuthorizationSessionId()
                 + ")";
     }
 
@@ -31,7 +35,7 @@ public class RequestLog<T extends AbstractRequest> {
     public String toString() {
         String json = MAPPER.writeValueAsString(request);
 
-        return "RequestLog{"
+        return "FacadeServiceableRequestLog{"
                 + "requestClass=" + request.getClass()
                 + ", request=" + json
                 + '}';

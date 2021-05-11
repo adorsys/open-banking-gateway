@@ -18,4 +18,5 @@ public class StartScaprocessResponseLog {
         private ChallengeDataLog challengeData;
         private Map<String, HrefType> links;
         private String psuMessage;
+
 }

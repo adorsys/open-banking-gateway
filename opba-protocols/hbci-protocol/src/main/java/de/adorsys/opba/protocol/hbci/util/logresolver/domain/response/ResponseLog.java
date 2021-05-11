@@ -25,7 +25,7 @@ public class ResponseLog<T extends AbstractResponse> {
 
         return "ResponseLog{"
                 + "responseClass=" + response.getClass()
-                + "response=" + json
+                + ", response=" + json
                 + '}';
     }
 }

@@ -13,7 +13,7 @@ public class TransactionRequestLog {
     public String getNotSensitiveData() {
         return "TransactionRequestLog("
                 + "bankApi=" + request.getBankApiUser().getBankApi()
-                + "orderId=" + request.getTransaction().getOrderId()
+                + ", orderId=" + request.getTransaction().getOrderId()
                 + ")";
     }
 

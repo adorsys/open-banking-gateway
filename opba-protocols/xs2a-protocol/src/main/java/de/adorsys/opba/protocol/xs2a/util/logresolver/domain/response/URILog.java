@@ -29,7 +29,6 @@ public class URILog implements NotSensitiveData {
     public String getNotSensitiveData() {
         return "URILog("
                 + "urlHash=" + getHash()
-//                + "url=" + getString() // it's sensitive??
                 + ")";
     }
 }

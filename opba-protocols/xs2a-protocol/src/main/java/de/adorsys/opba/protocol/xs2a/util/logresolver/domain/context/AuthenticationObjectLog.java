@@ -12,4 +12,5 @@ public class AuthenticationObjectLog {
         private String authenticationMethodId;
         private String name;
         private String explanation;
+
 }
