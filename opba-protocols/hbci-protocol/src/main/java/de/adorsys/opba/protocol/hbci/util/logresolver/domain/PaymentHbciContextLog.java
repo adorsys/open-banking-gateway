@@ -14,6 +14,7 @@ public class PaymentHbciContextLog extends HbciContextLog {
     private PaymentInitiateBody payment;
     private PisSinglePaymentResult response;
 
+    @Override
     public String getNotSensitiveData() {
         return "ContextLog("
                 + "mode=" + this.getMode()

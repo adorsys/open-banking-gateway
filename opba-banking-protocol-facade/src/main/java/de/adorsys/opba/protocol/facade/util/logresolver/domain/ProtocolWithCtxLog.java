@@ -1,5 +1,6 @@
 package de.adorsys.opba.protocol.facade.util.logresolver.domain;
 
+import de.adorsys.opba.protocol.api.dto.NotSensitiveData;
 import de.adorsys.opba.protocol.api.dto.request.FacadeServiceableGetter;
 import de.adorsys.opba.protocol.facade.util.logresolver.domain.context.ServiceContextLog;
 import lombok.Getter;
@@ -11,11 +12,12 @@ import static de.adorsys.opba.protocol.facade.util.logresolver.Constants.NULL;
 
 @Getter
 @RequiredArgsConstructor
-public class ProtocolWithCtxLog<REQUEST extends FacadeServiceableGetter> {
+public class ProtocolWithCtxLog<REQUEST extends FacadeServiceableGetter> implements NotSensitiveData {
 
     private final ActionLog protocol;
     private final ServiceContextLog<REQUEST> context;
 
+    @Override
     public String getNotSensitiveData() {
 
         return "ProtocolWithCtxLog("
@@ -29,8 +31,8 @@ public class ProtocolWithCtxLog<REQUEST extends FacadeServiceableGetter> {
     public String toString() {
 
         return "ServiceContextLog{"
-                + "protocol=" + protocol.toString()
-                + ", context=" + context.toString()
+                + "protocol=" + (null != protocol ? protocol.toString() : NULL)
+                + ", context=" + (null != context ? context.toString() : NULL)
                 + '}';
     }
 }

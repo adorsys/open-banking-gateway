@@ -28,6 +28,8 @@ import de.adorsys.opba.protocol.xs2a.util.logresolver.domain.common.SelectPsuAut
 import de.adorsys.opba.protocol.xs2a.util.logresolver.domain.common.StartScaprocessResponseLog;
 import de.adorsys.opba.protocol.xs2a.util.logresolver.domain.common.TransactionAuthorisationLog;
 import de.adorsys.opba.protocol.xs2a.util.logresolver.domain.context.TransactionListXs2aContextLog;
+import de.adorsys.opba.protocol.xs2a.util.logresolver.domain.payment.AddressLog;
+import de.adorsys.opba.protocol.xs2a.util.logresolver.domain.payment.AmountLog;
 import de.adorsys.opba.protocol.xs2a.util.logresolver.domain.response.URILog;
 import de.adorsys.opba.protocol.xs2a.util.logresolver.domain.common.UpdatePsuAuthenticationLog;
 import de.adorsys.opba.protocol.xs2a.util.logresolver.domain.common.Xs2aOauth2HeadersLog;
@@ -60,6 +62,8 @@ import de.adorsys.opba.protocol.xs2a.util.logresolver.domain.context.Xs2aPisCont
 import de.adorsys.opba.protocol.xs2a.util.logresolver.domain.payment.Xs2aStartPaymentAuthorizationParametersLog;
 import de.adorsys.xs2a.adapter.api.model.AccountAccess;
 import de.adorsys.xs2a.adapter.api.model.AccountReference;
+import de.adorsys.xs2a.adapter.api.model.Address;
+import de.adorsys.xs2a.adapter.api.model.Amount;
 import de.adorsys.xs2a.adapter.api.model.AuthenticationObject;
 import de.adorsys.xs2a.adapter.api.model.ChallengeData;
 import de.adorsys.xs2a.adapter.api.model.Consents;
@@ -201,9 +205,9 @@ public interface Xs2aDtoToLogObjectsMapper {
     SelectPsuAuthenticationMethodLog mapFromSelectPsuAuthenticationMethodToSelectPsuAuthenticationMethodLog(SelectPsuAuthenticationMethod body);
 
 
-//    AmountLog mapAmountToAmountLog(Amount amount);
-//
-//    AddressLog mapAddressToAddressLog(Address address);
+    AmountLog mapAmountToAmountLog(Amount amount);
+
+    AddressLog mapAddressToAddressLog(Address address);
 
 
     AccountReferenceLog mapAccountReferenceToAccountReferenceLog(AccountReference accountReference);
@@ -211,8 +215,6 @@ public interface Xs2aDtoToLogObjectsMapper {
     AccountAccessLog mapAccountAccessToAccountAccessLog(AccountAccess access);
 
     //responses mappers
-
-//    ResponseLog<T> mapFromResponseToResponseLog(Response<T> response);
 
     TokenResponseLog mapFromTokenResponseToTokenResponseLog(TokenResponse response);
 

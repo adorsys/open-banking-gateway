@@ -1,7 +1,7 @@
 package de.adorsys.opba.protocol.xs2a.util.logresolver.domain.payment;
 
 import de.adorsys.opba.protocol.api.dto.payment.PaymentType;
-import de.adorsys.opba.protocol.xs2a.util.logresolver.domain.NotSensitiveData;
+import de.adorsys.opba.protocol.api.dto.NotSensitiveData;
 import de.adorsys.xs2a.adapter.api.model.PaymentProduct;
 import lombok.Data;
 

@@ -38,7 +38,7 @@ public abstract class FacadeService<REQUEST extends FacadeServiceableGetter, RES
             return new ProtocolWithCtx<>(ctx.getAction(), serviceContext);
         });
 
-        logResolver.log("Result of TransactionTemplate execution: {}", protocolWithCtx);
+        logResolver.log("Result of protocol execution: {}", protocolWithCtx);
 
         if (protocolWithCtx == null || protocolWithCtx.getProtocol() == null) {
             throw new NoProtocolRegisteredException("can't create service context or determine protocol");

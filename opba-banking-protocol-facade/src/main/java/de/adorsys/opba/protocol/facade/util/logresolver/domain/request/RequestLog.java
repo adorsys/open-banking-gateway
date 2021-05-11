@@ -3,6 +3,7 @@ package de.adorsys.opba.protocol.facade.util.logresolver.domain.request;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
+import de.adorsys.opba.protocol.api.dto.NotSensitiveData;
 import de.adorsys.opba.protocol.api.dto.request.FacadeServiceableGetter;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
@@ -13,7 +14,7 @@ import static de.adorsys.opba.protocol.facade.util.logresolver.Constants.NULL;
 
 @Getter
 @RequiredArgsConstructor
-public class RequestLog<T extends FacadeServiceableGetter> {
+public class RequestLog<T extends FacadeServiceableGetter> implements NotSensitiveData {
 
     private static final ObjectMapper MAPPER = new ObjectMapper()
             .registerModule(new JavaTimeModule())
@@ -21,6 +22,7 @@ public class RequestLog<T extends FacadeServiceableGetter> {
 
     private final T request;
 
+    @Override
     public String getNotSensitiveData() {
         if (null == request) {
             return NULL;
@@ -40,7 +42,7 @@ public class RequestLog<T extends FacadeServiceableGetter> {
         String json = MAPPER.writeValueAsString(request);
 
         return "RequestLog{"
-                + ", requestClass=" + request.getClass()
+                + ", requestClass=" + (null != request ? request.getClass() : NULL)
                 + ", request=" + json
                 + '}';
     }

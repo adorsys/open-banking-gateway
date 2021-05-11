@@ -27,18 +27,10 @@ public class ContextLog {
     public String getNotSensitiveData() {
         return "ContextLog("
                 + "mode=" + this.getMode()
-//                + ", aspspId=" + this.getAspspId()
                 + ", action=" + this.getAction()
                 + ", sagaId=" + this.getSagaId()
                 + ", requestId=" + this.getRequestId()
                 + ", serviceSessionId=" + this.getServiceSessionId()
-//                + ", authorizationSessionIdIfOpened=" + this.getAuthorizationSessionIdIfOpened()
-//                + ", redirectCodeIfAuthContinued=" + this.getRedirectCodeIfAuthContinued()
-//                + ", aspspRedirectCode=" + this.getAspspRedirectCode()
-//                + ", lastRedirectTo=" + this.getLastRedirectTo()
-//                + ", lastRedirectToUiScreen=" + this.getLastRedirectToUiScreen()
-//                + ", wrongAuthCredentials=" + this.getWrongAuthCredentials()
-//                + ", selectedScaType=" + this.getSelectedScaType()
                 + ")";
     }
 }

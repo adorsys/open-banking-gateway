@@ -117,8 +117,7 @@ public class HbciLogResolver<REQUEST extends AbstractRequest, RESPONSE extends A
     }
 
     public void log(String message, TransactionRequest<? extends AbstractTransaction> request) {
-        TransactionRequestLog requestLog = new TransactionRequestLog();
-        requestLog.setRequest(request);
+        TransactionRequestLog requestLog = new TransactionRequestLog(request);
 
         if (log.isDebugEnabled()) {
             log.debug(message, requestLog);
@@ -138,8 +137,7 @@ public class HbciLogResolver<REQUEST extends AbstractRequest, RESPONSE extends A
     }
 
     public void log(String message, RESPONSE response) {
-        ResponseLog<RESPONSE> responseLog = new ResponseLog<>();
-        responseLog.setResponse(response);
+        ResponseLog<RESPONSE> responseLog = new ResponseLog<>(response);
 
         if (log.isDebugEnabled()) {
             log.debug(message, responseLog);

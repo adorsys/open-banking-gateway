@@ -1,6 +1,7 @@
 package de.adorsys.opba.protocol.facade.util.logresolver.domain.request;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import de.adorsys.opba.protocol.api.dto.NotSensitiveData;
 import de.adorsys.opba.protocol.api.dto.request.FacadeServiceableRequest;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
@@ -11,12 +12,13 @@ import static de.adorsys.opba.protocol.facade.util.logresolver.Constants.NULL;
 
 @Getter
 @RequiredArgsConstructor
-public class FacadeServiceableRequestLog {
+public class FacadeServiceableRequestLog implements NotSensitiveData {
 
     private static final ObjectMapper MAPPER = new ObjectMapper();
 
     private final FacadeServiceableRequest request;
 
+    @Override
     public String getNotSensitiveData() {
         if (null == request) {
             return NULL;
@@ -36,7 +38,7 @@ public class FacadeServiceableRequestLog {
         String json = MAPPER.writeValueAsString(request);
 
         return "FacadeServiceableRequestLog{"
-                + "requestClass=" + request.getClass()
+                + "requestClass=" + (null != request ? request.getClass() : NULL)
                 + ", request=" + json
                 + '}';
     }

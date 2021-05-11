@@ -1,7 +1,7 @@
 package de.adorsys.opba.protocol.xs2a.util.logresolver.domain.context;
 
 import de.adorsys.opba.protocol.bpmnshared.dto.context.BaseContext;
-import de.adorsys.opba.protocol.xs2a.util.logresolver.domain.NotSensitiveData;
+import de.adorsys.opba.protocol.api.dto.NotSensitiveData;
 import lombok.Data;
 import lombok.ToString;
 

@@ -2,26 +2,37 @@ package de.adorsys.opba.protocol.hbci.util.logresolver.domain.request;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import de.adorsys.multibanking.domain.request.TransactionRequest;
-import lombok.Data;
+import de.adorsys.opba.protocol.api.dto.NotSensitiveData;
+import lombok.Getter;
+import lombok.RequiredArgsConstructor;
 import lombok.SneakyThrows;
 
-@Data
-public class TransactionRequestLog {
+import static de.adorsys.opba.protocol.hbci.util.logresolver.Constants.NULL;
 
-    private TransactionRequest request;
+@Getter
+@RequiredArgsConstructor
+public class TransactionRequestLog implements NotSensitiveData {
 
+    private static final ObjectMapper MAPPER = new ObjectMapper();
+
+    private final TransactionRequest request;
+
+    @Override
     public String getNotSensitiveData() {
+        if (null == request) {
+            return NULL;
+        }
+
         return "TransactionRequestLog("
-                + "bankApi=" + request.getBankApiUser().getBankApi()
-                + ", orderId=" + request.getTransaction().getOrderId()
+                + "bankApi=" + (null != request.getBankApiUser() ? request.getBankApiUser().getBankApi() : NULL)
+                + ", orderId=" + (null != request.getTransaction() ? request.getTransaction().getOrderId() : NULL)
                 + ")";
     }
 
     @SneakyThrows
     @Override
     public String toString() {
-        ObjectMapper mapper = new ObjectMapper();
-        String json = mapper.writeValueAsString(request);
+        String json = MAPPER.writeValueAsString(request);
 
         return "TransactionRequestLog{"
                 + "request=" + json

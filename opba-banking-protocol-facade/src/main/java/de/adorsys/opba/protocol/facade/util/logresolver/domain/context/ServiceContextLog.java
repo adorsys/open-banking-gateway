@@ -3,6 +3,7 @@ package de.adorsys.opba.protocol.facade.util.logresolver.domain.context;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
+import de.adorsys.opba.protocol.api.dto.NotSensitiveData;
 import de.adorsys.opba.protocol.api.dto.context.Context;
 import de.adorsys.opba.protocol.api.dto.request.FacadeServiceableGetter;
 import de.adorsys.opba.protocol.facade.util.logresolver.domain.request.RequestLog;
@@ -15,7 +16,7 @@ import static de.adorsys.opba.protocol.facade.util.logresolver.Constants.NULL;
 
 @Getter
 @RequiredArgsConstructor
-public class ServiceContextLog<REQUEST extends FacadeServiceableGetter> {
+public class ServiceContextLog<REQUEST extends FacadeServiceableGetter> implements NotSensitiveData {
 
     private static final ObjectMapper MAPPER = new ObjectMapper()
             .registerModule(new JavaTimeModule())
@@ -23,6 +24,7 @@ public class ServiceContextLog<REQUEST extends FacadeServiceableGetter> {
 
     private final Context<REQUEST> ctx;
 
+    @Override
     public String getNotSensitiveData() {
         if (null == ctx) {
             return NULL;
@@ -43,7 +45,7 @@ public class ServiceContextLog<REQUEST extends FacadeServiceableGetter> {
         String json = MAPPER.writeValueAsString(ctx);
 
         return "ServiceContextLog{"
-                + "contextClass=" + ctx.getClass()
+                + "contextClass=" + (null != ctx ? ctx.getClass() : NULL)
                 + ", context=" + json
                 + '}';
     }

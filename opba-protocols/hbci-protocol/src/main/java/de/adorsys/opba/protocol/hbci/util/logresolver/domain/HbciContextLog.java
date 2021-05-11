@@ -32,6 +32,7 @@ public class HbciContextLog extends BaseContextLog {
     private HbciResultCache cachedResult;
     private Boolean online;
 
+    @Override
     public String getNotSensitiveData() {
         return "HbciContextLog("
                 + "mode=" + this.getMode()
