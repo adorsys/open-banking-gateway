@@ -22,12 +22,14 @@ import de.adorsys.xs2a.adapter.api.model.PaymentInitiationJson;
 import de.adorsys.xs2a.adapter.api.model.PaymentService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.logging.log4j.util.Strings;
 import org.flowable.engine.delegate.DelegateExecution;
 import org.springframework.stereotype.Service;
 
 import java.util.UUID;
 
 import static de.adorsys.opba.protocol.xs2a.constant.GlobalConst.CONTEXT;
+import static de.adorsys.xs2a.adapter.api.ResponseHeaders.ASPSP_SCA_APPROACH;
 import static de.adorsys.xs2a.adapter.impl.link.bg.template.LinksTemplate.SCA_OAUTH;
 
 /**
@@ -100,6 +102,13 @@ public class CreateSinglePaymentService extends ValidatedExecution<Xs2aPisContex
         if (null != paymentInit.getBody().getLinks() && paymentInit.getBody().getLinks().containsKey(SCA_OAUTH)) {
             context.setOauth2IntegratedNeeded(true);
             context.setScaOauth2Link(paymentInit.getBody().getLinks().get(SCA_OAUTH).getHref());
+        }
+
+        if (null != paymentInit.getHeaders() && Strings.isNotBlank(paymentInit.getHeaders().getHeader(ASPSP_SCA_APPROACH))) {
+            context.setAspspScaApproach(paymentInit.getHeaders().getHeader(ASPSP_SCA_APPROACH));
+            if (null != paymentInit.getBody()) {
+                context.setConsentOrPayemntCreateLinks(paymentInit.getBody().getLinks());
+            }
         }
         execution.setVariable(CONTEXT, context);
     }

@@ -2,14 +2,14 @@ package de.adorsys.opba.protocol.xs2a.context;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.google.common.collect.ImmutableMap;
+import de.adorsys.opba.protocol.api.common.Approach;
 import de.adorsys.opba.protocol.api.common.ProtocolAction;
 import de.adorsys.opba.protocol.bpmnshared.dto.context.BaseContext;
-import de.adorsys.opba.protocol.api.common.Approach;
 import de.adorsys.opba.protocol.xs2a.domain.dto.forms.ScaMethod;
 import de.adorsys.opba.protocol.xs2a.service.storage.TransientDataEntry;
 import de.adorsys.xs2a.adapter.api.model.AuthenticationObject;
 import de.adorsys.xs2a.adapter.api.model.ChallengeData;
-import de.adorsys.xs2a.adapter.api.model.ConsentsResponse201;
+import de.adorsys.xs2a.adapter.api.model.HrefType;
 import de.adorsys.xs2a.adapter.api.model.StartScaprocessResponse;
 import de.adorsys.xs2a.adapter.api.model.TokenResponse;
 import lombok.Data;
@@ -59,9 +59,9 @@ public class Xs2aContext extends BaseContext {
     private String aspspScaApproach;
 
     /**
-     * Consent create response from ASPSP.
+     * Consent/Payment create links response from ASPSP.
      */
-    private ConsentsResponse201 consentCreateResponse;
+    private Map<String, HrefType> consentOrPayemntCreateLinks;
 
     /**
      * ASPSP response after consent authorization was initiated. Used to retrieve ASPSP redirection link for
