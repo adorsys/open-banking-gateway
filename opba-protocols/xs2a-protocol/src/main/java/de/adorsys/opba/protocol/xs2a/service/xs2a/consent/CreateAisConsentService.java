@@ -48,6 +48,7 @@ public class CreateAisConsentService {
 
         if (null != consentInit.getHeaders() && Strings.isNotBlank(consentInit.getHeaders().getHeader(ASPSP_SCA_APPROACH))) {
             context.setAspspScaApproach(consentInit.getHeaders().getHeader(ASPSP_SCA_APPROACH));
+            context.setConsentCreateResponse(consentInit.getBody());
         }
 
         execution.setVariable(CONTEXT, context);

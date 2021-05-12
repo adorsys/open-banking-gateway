@@ -9,6 +9,7 @@ import de.adorsys.opba.protocol.xs2a.domain.dto.forms.ScaMethod;
 import de.adorsys.opba.protocol.xs2a.service.storage.TransientDataEntry;
 import de.adorsys.xs2a.adapter.api.model.AuthenticationObject;
 import de.adorsys.xs2a.adapter.api.model.ChallengeData;
+import de.adorsys.xs2a.adapter.api.model.ConsentsResponse201;
 import de.adorsys.xs2a.adapter.api.model.StartScaprocessResponse;
 import de.adorsys.xs2a.adapter.api.model.TokenResponse;
 import lombok.Data;
@@ -56,6 +57,11 @@ public class Xs2aContext extends BaseContext {
      * Selected consent authorization approach (i.e. EMBEDDED).
      */
     private String aspspScaApproach;
+
+    /**
+     * Consent create response from ASPSP.
+     */
+    private ConsentsResponse201 consentCreateResponse;
 
     /**
      * ASPSP response after consent authorization was initiated. Used to retrieve ASPSP redirection link for
