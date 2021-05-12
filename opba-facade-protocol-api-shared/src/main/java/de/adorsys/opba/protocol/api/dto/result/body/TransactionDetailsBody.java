@@ -1,14 +1,14 @@
 package de.adorsys.opba.protocol.api.dto.result.body;
 
 import lombok.Builder;
-import lombok.Value;
+import lombok.Data;
 
 import java.time.LocalDate;
 
 /**
  * Transaction details representation list transactions result from protocol.
  */
-@Value
+@Data
 @Builder
 public class TransactionDetailsBody {
 
