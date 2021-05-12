@@ -3,6 +3,7 @@ package de.adorsys.opba.protocol.xs2a.service.xs2a.consent;
 import de.adorsys.opba.protocol.bpmnshared.service.context.ContextUtil;
 import de.adorsys.opba.protocol.bpmnshared.service.exec.ValidatedExecution;
 import de.adorsys.opba.protocol.xs2a.config.protocol.ProtocolUrlsConfiguration;
+import de.adorsys.opba.protocol.xs2a.context.Xs2aContext;
 import de.adorsys.opba.protocol.xs2a.context.ais.AccountListXs2aContext;
 import de.adorsys.opba.protocol.xs2a.service.dto.ValidatedPathHeadersBody;
 import de.adorsys.opba.protocol.xs2a.service.xs2a.dto.consent.ConsentInitiateHeaders;
@@ -10,7 +11,9 @@ import de.adorsys.opba.protocol.xs2a.service.xs2a.dto.consent.ConsentInitiatePar
 import de.adorsys.opba.protocol.xs2a.service.xs2a.validation.Xs2aValidator;
 import de.adorsys.opba.protocol.xs2a.util.logresolver.Xs2aLogResolver;
 import de.adorsys.xs2a.adapter.api.AccountInformationService;
+import de.adorsys.xs2a.adapter.api.Response;
 import de.adorsys.xs2a.adapter.api.model.Consents;
+import de.adorsys.xs2a.adapter.api.model.ConsentsResponse201;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.flowable.engine.delegate.DelegateExecution;
@@ -59,7 +62,14 @@ public class CreateAisAccountListConsentService extends ValidatedExecution<Accou
         logResolver.log("doRealExecution: execution ({}) with context ({})", execution, context);
 
         ValidatedPathHeadersBody<ConsentInitiateParameters, ConsentInitiateHeaders, Consents> params = extractor.forExecution(context);
-        handler.tryCreateAndHandleErrors(execution, () -> createAisConsentService.createConsent(ais, execution, context, params));
+        var result = handler.tryCreateAndHandleErrors(execution, () -> createAisConsentService.createConsent(ais, context, params));
+        if (null == result) {
+            execution.setVariable(CONTEXT, context);
+            log.warn("Consent creation failed");
+            return;
+        }
+
+        postHandleCreatedConsent(result, execution, context);
     }
 
     @Override
@@ -68,5 +78,9 @@ public class CreateAisAccountListConsentService extends ValidatedExecution<Accou
 
         context.setConsentId("MOCK-" + UUID.randomUUID().toString());
         execution.setVariable(CONTEXT, context);
+    }
+
+    protected void postHandleCreatedConsent(Response<ConsentsResponse201> consentInit, DelegateExecution execution, Xs2aContext context) {
+        ConsentUtil.postHandleCreatedConsent(consentInit, execution, context);
     }
 }

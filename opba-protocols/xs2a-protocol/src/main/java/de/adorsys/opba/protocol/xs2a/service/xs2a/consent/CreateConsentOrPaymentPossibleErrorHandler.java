@@ -16,6 +16,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.Objects;
 import java.util.Set;
+import java.util.function.Supplier;
 import java.util.stream.Collectors;
 
 /**
@@ -34,15 +35,17 @@ public class CreateConsentOrPaymentPossibleErrorHandler {
      * Swallows retryable (like wrong IBAN) consent initiation exceptions.
      * @param tryCreate Consent/payment creation function to call
      */
-    public void tryCreateAndHandleErrors(DelegateExecution execution, Runnable tryCreate) {
+    public <T> T tryCreateAndHandleErrors(DelegateExecution execution, Supplier<T> tryCreate) {
         try {
-            tryCreate.run();
+            return tryCreate.get();
         } catch (ErrorResponseException ex) {
             log.debug("Trying to handle ErrorResponseException", ex);
             tryHandleWrongIbanOrCredentialsExceptionOrOauth2(execution, ex);
+            return null;
         } catch (OAuthException ex) {
             log.debug("Trying to handle OAuthException", ex);
             tryHandleOauth2Exception(execution);
+            return null;
         }
     }
 

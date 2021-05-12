@@ -168,7 +168,11 @@
                     </execution>
                 </executions>
                 <configuration>
-                    <filesToInclude>${project.build.directory}/shared-processes/processes/xs2a/accounts/xs2a-list-transactions.bpmn20.xml</filesToInclude>
+                    <filesToInclude>
+                        ${project.build.directory}/shared-processes/processes/xs2a/accounts/xs2a-list-transactions.bpmn20.xml
+                        ${project.build.directory}/shared-processes/processes/xs2a/accounts/xs2a-list-accounts.bpmn20.xml
+                        ${project.build.directory}/shared-processes/processes/xs2a/payment/xs2a-payment.bpmn20.xml
+                    </filesToInclude>
                     <tokenValueMap>${project.basedir}/src/main/resources/context.properties</tokenValueMap>
                     <inputFilePattern>${project.build.directory}/shared-processes/processes/(.*)/([A-Za-z0-9\.\-]+)$</inputFilePattern>
                     <outputFilePattern>${project.build.directory}/classes/processes/$1/sandbox-$2</outputFilePattern>

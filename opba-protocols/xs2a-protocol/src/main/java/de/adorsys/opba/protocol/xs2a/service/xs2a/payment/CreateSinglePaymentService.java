@@ -70,7 +70,14 @@ public class CreateSinglePaymentService extends ValidatedExecution<Xs2aPisContex
         logResolver.log("doRealExecution: execution ({}) with context ({})", execution, context);
 
         ValidatedPathHeadersBody<Xs2aInitialPaymentParameters, PaymentInitiateHeaders, PaymentInitiationJson> params = extractor.forExecution(context);
-        handler.tryCreateAndHandleErrors(execution, () -> initiatePayment(execution, context, params));
+        var result = handler.tryCreateAndHandleErrors(execution, () -> initiatePayment(context, params));
+        if (null == result) {
+            execution.setVariable(CONTEXT, context);
+            log.warn("Payment creation failed");
+            return;
+        }
+
+        postHandleCreatedPayment(result, execution, context);
     }
 
     @Override
@@ -81,22 +88,7 @@ public class CreateSinglePaymentService extends ValidatedExecution<Xs2aPisContex
         execution.setVariable(CONTEXT, context);
     }
 
-    private void initiatePayment(
-            DelegateExecution execution,
-            Xs2aPisContext context,
-            ValidatedPathHeadersBody<Xs2aInitialPaymentParameters, PaymentInitiateHeaders, PaymentInitiationJson> params) {
-
-        logResolver.log("initiatePayment with parameters: {}", params.getPath(), params.getHeaders(), params.getBody());
-
-        Response<PaymentInitationRequestResponse201> paymentInit = pis.initiatePayment(PaymentService.PAYMENTS,
-                params.getPath().getPaymentProduct(),
-                QuirkUtil.pushBicToXs2aAdapterHeaders(context, params.getHeaders().toHeaders()),
-                RequestParams.empty(),
-                params.getBody()
-        );
-
-        logResolver.log("initiatePayment response: {}", paymentInit);
-
+    protected void postHandleCreatedPayment(Response<PaymentInitationRequestResponse201> paymentInit, DelegateExecution execution, Xs2aPisContext context) {
         context.setWrongAuthCredentials(false);
         context.setPaymentId(paymentInit.getBody().getPaymentId());
         if (null != paymentInit.getBody().getLinks() && paymentInit.getBody().getLinks().containsKey(SCA_OAUTH)) {
@@ -111,6 +103,23 @@ public class CreateSinglePaymentService extends ValidatedExecution<Xs2aPisContex
             }
         }
         execution.setVariable(CONTEXT, context);
+    }
+
+    private Response<PaymentInitationRequestResponse201> initiatePayment(
+            Xs2aPisContext context,
+            ValidatedPathHeadersBody<Xs2aInitialPaymentParameters, PaymentInitiateHeaders, PaymentInitiationJson> params) {
+
+        logResolver.log("initiatePayment with parameters: {}", params.getPath(), params.getHeaders(), params.getBody());
+
+        Response<PaymentInitationRequestResponse201> paymentInit = pis.initiatePayment(PaymentService.PAYMENTS,
+                params.getPath().getPaymentProduct(),
+                QuirkUtil.pushBicToXs2aAdapterHeaders(context, params.getHeaders().toHeaders()),
+                RequestParams.empty(),
+                params.getBody()
+        );
+
+        logResolver.log("initiatePayment response: {}", paymentInit);
+        return paymentInit;
     }
 
     @Service
