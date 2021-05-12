@@ -1,6 +1,5 @@
 package de.adorsys.opba.protocol.bpmnshared.config.flowable;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.common.collect.ImmutableSet;
 import de.adorsys.opba.protocol.bpmnshared.dto.messages.ProcessError;
 import lombok.SneakyThrows;
