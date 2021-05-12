@@ -42,6 +42,9 @@
             <column name="try_to_use_preferred_approach" type="BOOLEAN" defaultValue="false">
                 <constraints nullable="false"/>
             </column>
+            <column name="xs2a_skip_consent_authorization" type="BOOLEAN" defaultValue="false">
+                <constraints nullable="false"/>
+            </column>
             <column name="unique_payment_purpose" type="BOOLEAN" defaultValue="false">
                 <constraints nullable="false"/>
             </column>

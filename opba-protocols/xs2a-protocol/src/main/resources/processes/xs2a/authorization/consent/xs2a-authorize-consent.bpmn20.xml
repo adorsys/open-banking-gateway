@@ -89,7 +89,7 @@
     </sequenceFlow>
     <sequenceFlow id="sid-6ad44981-0d14-42c9-ae1c-dc4b971c8f35" sourceRef="start" targetRef="sid-28d87700-36b4-4ef7-9f81-42473767bb7e"/>
     <sequenceFlow id="isRedirectBeforeAuth" sourceRef="sid-28d87700-36b4-4ef7-9f81-42473767bb7e" targetRef="notifyUserWithRedirectAfterCreate" name="redirect">
-      <conditionExpression xsi:type="tFormalExpression">#{xs2aConsentInfo.isRedirect(CONTEXT)}</conditionExpression>
+      <conditionExpression xsi:type="tFormalExpression">#{xs2aConsentInfo.isTrySkipStartConsentAuthorization(CONTEXT) &amp;&amp; xs2aConsentInfo.isRedirect(CONTEXT)}</conditionExpression>
     </sequenceFlow>
     <serviceTask id="notifyUserWithRedirectAfterCreate" name="Notify user with redirect url for challenge. Suspends to wait" flowable:async="true" flowable:exclusive="true" flowable:delegateExpression="${xs2aDoScaRedirectToAspspForScaChallengeAfterCreate}" flowable:triggerable="true"/>
     <sequenceFlow id="sid-593f127d-f36b-4250-a9a3-6d6097587ec9" sourceRef="notifyUserWithRedirectAfterCreate" targetRef="wasRedirectConsentGrantSuccessful"/>
