@@ -35,7 +35,7 @@ public class Xs2aDoScaRedirectToAspspForScaChallenge extends ValidatedExecution<
                 execution,
                 context,
                 urlSet.getToAspsp(),
-                getRedirectToAspspUrl(),
+                getRedirectToAspspUrl(context),
                 redirect -> new RedirectToAspsp(redirect.build())
         );
     }
