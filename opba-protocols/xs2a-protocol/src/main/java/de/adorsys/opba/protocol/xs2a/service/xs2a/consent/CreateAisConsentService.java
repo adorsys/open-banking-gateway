@@ -10,10 +10,12 @@ import de.adorsys.xs2a.adapter.api.AccountInformationService;
 import de.adorsys.xs2a.adapter.api.Response;
 import de.adorsys.xs2a.adapter.api.model.Consents;
 import de.adorsys.xs2a.adapter.api.model.ConsentsResponse201;
+import org.apache.logging.log4j.util.Strings;
 import org.flowable.engine.delegate.DelegateExecution;
 import org.springframework.stereotype.Service;
 
 import static de.adorsys.opba.protocol.xs2a.constant.GlobalConst.CONTEXT;
+import static de.adorsys.xs2a.adapter.api.ResponseHeaders.ASPSP_SCA_APPROACH;
 import static de.adorsys.xs2a.adapter.impl.link.bg.template.LinksTemplate.SCA_OAUTH;
 
 /**
@@ -43,6 +45,11 @@ public class CreateAisConsentService {
             context.setOauth2IntegratedNeeded(true);
             context.setScaOauth2Link(consentInit.getBody().getLinks().get(SCA_OAUTH).getHref());
         }
+
+        if (null != consentInit.getHeaders() && Strings.isNotBlank(consentInit.getHeaders().getHeader(ASPSP_SCA_APPROACH))) {
+            context.setAspspScaApproach(consentInit.getHeaders().getHeader(ASPSP_SCA_APPROACH));
+        }
+
         execution.setVariable(CONTEXT, context);
     }
 }
