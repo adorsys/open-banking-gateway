@@ -1,7 +1,9 @@
 package de.adorsys.opba.protocol.bpmnshared.config.flowable;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.common.collect.ImmutableSet;
 import de.adorsys.opba.protocol.bpmnshared.dto.messages.ProcessError;
+import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
 import org.flowable.common.engine.api.delegate.event.FlowableEngineEntityEvent;
 import org.flowable.common.engine.api.delegate.event.FlowableExceptionEvent;
@@ -17,6 +19,7 @@ import static org.flowable.common.engine.api.delegate.event.FlowableEngineEventT
 public class FlowableJobEventListener extends AbstractFlowableEngineEventListener {
 
     private final ApplicationEventPublisher applicationEventPublisher;
+    private final ObjectMapper mapper = new ObjectMapper();
 
     public FlowableJobEventListener(ApplicationEventPublisher applicationEventPublisher) {
         super(ImmutableSet.of(JOB_EXECUTION_FAILURE, PROCESS_COMPLETED_WITH_ERROR_END_EVENT));
@@ -33,9 +36,12 @@ public class FlowableJobEventListener extends AbstractFlowableEngineEventListene
         handleError(event);
     }
 
+    @SneakyThrows
     private void handleError(FlowableEngineEntityEvent event) {
         if (event instanceof FlowableExceptionEvent) {
-            log.error("Exception occurred for execution {} of process {}", event.getExecutionId(), event.getProcessInstanceId(), ((FlowableExceptionEvent) event).getCause());
+            var cause = ((FlowableExceptionEvent) event).getCause();
+            log.error("Exception occurred for execution {} of process {}", event.getExecutionId(), event.getProcessInstanceId(), cause);
+            log.error("Full cause dump {}", mapper.writeValueAsString(cause));
         }
 
         ProcessError result = ProcessError.builder()
