@@ -2,13 +2,15 @@ package de.adorsys.opba.protocol.bpmnshared.service.exec;
 
 import de.adorsys.opba.protocol.bpmnshared.dto.context.BaseContext;
 import de.adorsys.opba.protocol.bpmnshared.dto.context.ContextMode;
-import de.adorsys.opba.protocol.bpmnshared.util.logResolver.LogResolver;
 import de.adorsys.opba.protocol.bpmnshared.service.context.ContextUtil;
+import de.adorsys.opba.protocol.bpmnshared.util.logResolver.LogResolver;
 import lombok.RequiredArgsConstructor;
 import org.flowable.engine.delegate.BpmnError;
 import org.flowable.engine.delegate.DelegateExecution;
 import org.flowable.engine.delegate.JavaDelegate;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.util.UUID;
 
 /**
  * Class that provides generic functionality for Services that can be called in Validation({@link ContextMode#MOCK_REAL_CALLS}
@@ -31,6 +33,7 @@ public abstract class ValidatedExecution<T extends BaseContext> implements JavaD
 
         logResolver.log("execute: execution ({}) with context ({})", execution, context);
 
+        doUpdateXRequestId(execution, context);
         doPrepareContext(execution, context);
         doValidate(execution, context);
 
@@ -43,6 +46,13 @@ public abstract class ValidatedExecution<T extends BaseContext> implements JavaD
         doAfterCall(execution, context);
 
         logResolver.log("done execution ({}) with context ({})", execution, context);
+    }
+
+    /**
+     * Used to update X-Request-ID.
+     */
+    protected void doUpdateXRequestId(DelegateExecution execution, T context) {
+        context.setRequestId(UUID.randomUUID().toString());
     }
 
     /**
