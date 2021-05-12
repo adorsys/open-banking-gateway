@@ -19,6 +19,6 @@ public class Xs2aDoScaRedirectToAspspForScaChallengeAfterCreate extends Xs2aDoSc
 
     @Override
     protected String getRedirectToAspspUrl(Xs2aContext context) {
-        return context.getConsentOrPayemntCreateLinks().get(SCA_REDIRECT).getHref();
+        return context.getConsentOrPaymentCreateLinks().get(SCA_REDIRECT).getHref();
     }
 }

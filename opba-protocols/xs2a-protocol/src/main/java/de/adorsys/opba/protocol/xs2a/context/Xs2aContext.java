@@ -61,7 +61,7 @@ public class Xs2aContext extends BaseContext {
     /**
      * Consent/Payment create links response from ASPSP.
      */
-    private Map<String, HrefType> consentOrPayemntCreateLinks;
+    private Map<String, HrefType> consentOrPaymentCreateLinks;
 
     /**
      * ASPSP response after consent authorization was initiated. Used to retrieve ASPSP redirection link for

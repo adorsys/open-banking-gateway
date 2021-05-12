@@ -107,7 +107,7 @@ public class CreateSinglePaymentService extends ValidatedExecution<Xs2aPisContex
         if (null != paymentInit.getHeaders() && Strings.isNotBlank(paymentInit.getHeaders().getHeader(ASPSP_SCA_APPROACH))) {
             context.setAspspScaApproach(paymentInit.getHeaders().getHeader(ASPSP_SCA_APPROACH));
             if (null != paymentInit.getBody()) {
-                context.setConsentOrPayemntCreateLinks(paymentInit.getBody().getLinks());
+                context.setConsentOrPaymentCreateLinks(paymentInit.getBody().getLinks());
             }
         }
         execution.setVariable(CONTEXT, context);

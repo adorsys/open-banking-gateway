@@ -49,7 +49,7 @@ public class CreateAisConsentService {
         if (null != consentInit.getHeaders() && Strings.isNotBlank(consentInit.getHeaders().getHeader(ASPSP_SCA_APPROACH))) {
             context.setAspspScaApproach(consentInit.getHeaders().getHeader(ASPSP_SCA_APPROACH));
             if (null != consentInit.getBody()) {
-                context.setConsentOrPayemntCreateLinks(consentInit.getBody().getLinks());
+                context.setConsentOrPaymentCreateLinks(consentInit.getBody().getLinks());
             }
         }
 
