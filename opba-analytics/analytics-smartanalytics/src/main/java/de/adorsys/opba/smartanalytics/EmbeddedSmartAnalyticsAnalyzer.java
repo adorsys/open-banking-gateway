@@ -6,6 +6,7 @@ import de.adorsys.opba.smartanalytics.dto.AnalyticsRequest;
 import de.adorsys.smartanalytics.api.Booking;
 import de.adorsys.smartanalytics.core.AnalyticsService;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.mapstruct.AfterMapping;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
@@ -15,6 +16,7 @@ import org.springframework.stereotype.Service;
 import java.math.BigDecimal;
 import java.util.List;
 
+@Slf4j
 @Service
 @RequiredArgsConstructor
 public class EmbeddedSmartAnalyticsAnalyzer extends TransactionAnalyzer {
@@ -26,8 +28,14 @@ public class EmbeddedSmartAnalyticsAnalyzer extends TransactionAnalyzer {
     AnalyticsResult analyze(AnalyticsRequest request) {
         var mappedRequest = mapper.map(request);
         mappedRequest.setCustomRules(List.of()); // Builder prevents usage of AfterMapping
-        var analyzed = smartAnalytics.analytics(mappedRequest);
-        return mapper.map(analyzed);
+        try {
+            var analyzed = smartAnalytics.analytics(mappedRequest);
+            return mapper.map(analyzed);
+        } catch (RuntimeException ex) {
+            log.error("Failed to obtain analytics result", ex);
+        }
+
+        return null;
     }
 
     @Mapper(componentModel = GlobalConst.SPRING_KEYWORD, implementationPackage = GlobalConst.SMARTANALYTICS_MAPPERS_PACKAGE)
