@@ -6,7 +6,7 @@ import de.adorsys.opba.protocol.api.dto.result.body.ResultBody;
 import lombok.RequiredArgsConstructor;
 import lombok.SneakyThrows;
 
-import static de.adorsys.opba.protocol.facade.util.logresolver.Constants.NULL;
+import static de.adorsys.opba.protocol.api.Constants.NULL;
 
 
 @RequiredArgsConstructor

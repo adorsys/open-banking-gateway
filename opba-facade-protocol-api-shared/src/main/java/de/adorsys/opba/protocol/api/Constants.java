@@ -1,6 +1,7 @@
-package de.adorsys.opba.protocol.hbci.util.logresolver;
+package de.adorsys.opba.protocol.api;
 
 import lombok.experimental.UtilityClass;
+
 
 /**
  * LogResolver constant names.

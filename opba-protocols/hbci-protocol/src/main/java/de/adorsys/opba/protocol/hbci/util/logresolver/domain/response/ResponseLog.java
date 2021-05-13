@@ -7,7 +7,7 @@ import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.SneakyThrows;
 
-import static de.adorsys.opba.protocol.hbci.util.logresolver.Constants.NULL;
+import static de.adorsys.opba.protocol.api.Constants.NULL;
 
 
 @Getter

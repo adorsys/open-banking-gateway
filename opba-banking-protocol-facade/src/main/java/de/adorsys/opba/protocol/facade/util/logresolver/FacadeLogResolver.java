@@ -16,8 +16,7 @@ import de.adorsys.opba.protocol.facade.util.logresolver.domain.response.ResultLo
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-
-import static de.adorsys.opba.protocol.facade.util.logresolver.Constants.NULL;
+import static de.adorsys.opba.protocol.api.Constants.NULL;
 
 
 public class FacadeLogResolver<REQUEST extends FacadeServiceableGetter, RESULT extends Result, RESULTBODY extends ResultBody, ACTION extends Action<REQUEST, RESULTBODY>> {
