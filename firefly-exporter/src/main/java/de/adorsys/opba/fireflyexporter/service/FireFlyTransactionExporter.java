@@ -130,7 +130,7 @@ public class FireFlyTransactionExporter {
                 "both",
                 false,
                 null,
-                false
+                null
         );
 
         if (transactions.getStatusCode() == HttpStatus.ACCEPTED) {
@@ -171,7 +171,7 @@ public class FireFlyTransactionExporter {
         }
 
         BigDecimal transactionAmount = new BigDecimal(transaction.getTransactionAmount().getAmount());
-        if (availableAccountsInFireFlyByIban.contains(transaction.getDebtorAccount().getIban())) {
+        if (null != transaction.getDebtorAccount() && availableAccountsInFireFlyByIban.contains(transaction.getDebtorAccount().getIban())) {
             parseTransactionAmount(transaction.getDebtorAccount(), transaction.getCreditorAccount(), transactionAmount, split);
         } else {
             parseTransactionAmount(transaction.getCreditorAccount(), transaction.getDebtorAccount(), transactionAmount.negate(), split);
