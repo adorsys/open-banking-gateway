@@ -18,6 +18,8 @@ import org.springframework.stereotype.Service;
 @RequiredArgsConstructor
 public class Xs2aDoScaRedirectToAspspForScaChallenge extends ValidatedExecution<Xs2aContext> {
 
+    public static final String SCA_REDIRECT = "scaRedirect";
+
     private final ProtocolUrlsConfiguration urlsConfiguration;
     private final RuntimeService runtimeService;
     private final Xs2aRedirectExecutor redirectExecutor;
@@ -33,7 +35,7 @@ public class Xs2aDoScaRedirectToAspspForScaChallenge extends ValidatedExecution<
                 execution,
                 context,
                 urlSet.getToAspsp(),
-                context.getStartScaProcessResponse().getLinks().get("scaRedirect").getHref(),
+                getRedirectToAspspUrl(context),
                 redirect -> new RedirectToAspsp(redirect.build())
         );
     }
@@ -43,5 +45,9 @@ public class Xs2aDoScaRedirectToAspspForScaChallenge extends ValidatedExecution<
         logResolver.log("doMockedExecution: execution ({}) with context ({})", execution, context);
 
         runtimeService.trigger(execution.getId());
+    }
+
+    protected String getRedirectToAspspUrl(Xs2aContext context) {
+        return context.getStartScaProcessResponse().getLinks().get(SCA_REDIRECT).getHref();
     }
 }

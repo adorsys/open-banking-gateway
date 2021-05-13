@@ -22,12 +22,14 @@ import de.adorsys.xs2a.adapter.api.model.PaymentInitiationJson;
 import de.adorsys.xs2a.adapter.api.model.PaymentService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.logging.log4j.util.Strings;
 import org.flowable.engine.delegate.DelegateExecution;
 import org.springframework.stereotype.Service;
 
 import java.util.UUID;
 
 import static de.adorsys.opba.protocol.xs2a.constant.GlobalConst.CONTEXT;
+import static de.adorsys.xs2a.adapter.api.ResponseHeaders.ASPSP_SCA_APPROACH;
 import static de.adorsys.xs2a.adapter.impl.link.bg.template.LinksTemplate.SCA_OAUTH;
 
 /**
@@ -68,7 +70,14 @@ public class CreateSinglePaymentService extends ValidatedExecution<Xs2aPisContex
         logResolver.log("doRealExecution: execution ({}) with context ({})", execution, context);
 
         ValidatedPathHeadersBody<Xs2aInitialPaymentParameters, PaymentInitiateHeaders, PaymentInitiationJson> params = extractor.forExecution(context);
-        handler.tryCreateAndHandleErrors(execution, () -> initiatePayment(execution, context, params));
+        var result = handler.tryCreateAndHandleErrors(execution, () -> initiatePayment(context, params));
+        if (null == result) {
+            execution.setVariable(CONTEXT, context);
+            log.warn("Payment creation failed");
+            return;
+        }
+
+        postHandleCreatedPayment(result, execution, context);
     }
 
     @Override
@@ -79,8 +88,24 @@ public class CreateSinglePaymentService extends ValidatedExecution<Xs2aPisContex
         execution.setVariable(CONTEXT, context);
     }
 
-    private void initiatePayment(
-            DelegateExecution execution,
+    protected void postHandleCreatedPayment(Response<PaymentInitationRequestResponse201> paymentInit, DelegateExecution execution, Xs2aPisContext context) {
+        context.setWrongAuthCredentials(false);
+        context.setPaymentId(paymentInit.getBody().getPaymentId());
+        if (null != paymentInit.getBody().getLinks() && paymentInit.getBody().getLinks().containsKey(SCA_OAUTH)) {
+            context.setOauth2IntegratedNeeded(true);
+            context.setScaOauth2Link(paymentInit.getBody().getLinks().get(SCA_OAUTH).getHref());
+        }
+
+        if (null != paymentInit.getHeaders() && Strings.isNotBlank(paymentInit.getHeaders().getHeader(ASPSP_SCA_APPROACH))) {
+            context.setAspspScaApproach(paymentInit.getHeaders().getHeader(ASPSP_SCA_APPROACH));
+            if (null != paymentInit.getBody()) {
+                context.setConsentOrPaymentCreateLinks(paymentInit.getBody().getLinks());
+            }
+        }
+        execution.setVariable(CONTEXT, context);
+    }
+
+    private Response<PaymentInitationRequestResponse201> initiatePayment(
             Xs2aPisContext context,
             ValidatedPathHeadersBody<Xs2aInitialPaymentParameters, PaymentInitiateHeaders, PaymentInitiationJson> params) {
 
@@ -94,14 +119,7 @@ public class CreateSinglePaymentService extends ValidatedExecution<Xs2aPisContex
         );
 
         logResolver.log("initiatePayment response: {}", paymentInit);
-
-        context.setWrongAuthCredentials(false);
-        context.setPaymentId(paymentInit.getBody().getPaymentId());
-        if (null != paymentInit.getBody().getLinks() && paymentInit.getBody().getLinks().containsKey(SCA_OAUTH)) {
-            context.setOauth2IntegratedNeeded(true);
-            context.setScaOauth2Link(paymentInit.getBody().getLinks().get(SCA_OAUTH).getHref());
-        }
-        execution.setVariable(CONTEXT, context);
+        return paymentInit;
     }
 
     @Service

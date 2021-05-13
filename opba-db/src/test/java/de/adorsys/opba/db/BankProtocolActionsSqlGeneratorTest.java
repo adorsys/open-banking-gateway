@@ -71,7 +71,7 @@ public class BankProtocolActionsSqlGeneratorTest {
         int authorizationId;
 
         writelnToFile(BANK_ACTION_DESTINATION_PATH, String.format("%d,%s,LIST_ACCOUNTS,xs2aListAccounts,true", bankActionId++, bankUUID));
-        writelnToFile(BANK_ACTION_DESTINATION_PATH, String.format("%d,%s,LIST_TRANSACTIONS,xs2aSandboxListTransactions,true", bankActionId++, bankUUID));
+        writelnToFile(BANK_ACTION_DESTINATION_PATH, String.format("%d,%s,LIST_TRANSACTIONS,xs2aListTransactions,true", bankActionId++, bankUUID));
         writelnToFile(BANK_ACTION_DESTINATION_PATH, String.format("%d,%s,AUTHORIZATION,,true", authorizationId = bankActionId++, bankUUID));
         writelnToFile(BANK_ACTION_DESTINATION_PATH, String.format("%d,%s,SINGLE_PAYMENT,xs2aInitiateSinglePayment,true", bankActionId++, bankUUID));
         writelnToFile(BANK_ACTION_DESTINATION_PATH, String.format("%d,%s,GET_PAYMENT_INFORMATION,xs2aGetPaymentInfoState,true", bankActionId++, bankUUID));
