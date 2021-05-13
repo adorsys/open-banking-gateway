@@ -1,9 +1,7 @@
 package de.adorsys.opba.protocol.xs2a.util.logresolver.domain.payment;
 
-import de.adorsys.opba.protocol.xs2a.util.logresolver.domain.NotSensitiveData;
+import de.adorsys.opba.protocol.api.dto.NotSensitiveData;
 import de.adorsys.xs2a.adapter.api.model.AccountReference;
-import de.adorsys.xs2a.adapter.api.model.Address;
-import de.adorsys.xs2a.adapter.api.model.Amount;
 import lombok.Data;
 
 
@@ -12,12 +10,12 @@ public class PaymentInitiationJsonLog implements NotSensitiveData {
 
     private String endToEndIdentification;
     private AccountReference debtorAccount;
-    private Amount instructedAmount;
+    private AmountLog instructedAmount;
     private AccountReference creditorAccount;
     private String creditorAgent;
     private String creditorAgentName;
     private String creditorName;
-    private Address creditorAddress;
+    private AddressLog creditorAddress;
     private String remittanceInformationUnstructured;
 
     @Override

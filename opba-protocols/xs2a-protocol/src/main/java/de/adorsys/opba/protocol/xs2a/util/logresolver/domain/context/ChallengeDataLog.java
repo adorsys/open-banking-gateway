@@ -8,9 +8,11 @@ import java.util.List;
 
 @Data
 public class ChallengeDataLog {
+
         private List<String> data;
         private String imageLink;
         private Integer otpMaxLength;
         private ChallengeData.OtpFormat otpFormat;
         private String additionalInformation;
+
 }

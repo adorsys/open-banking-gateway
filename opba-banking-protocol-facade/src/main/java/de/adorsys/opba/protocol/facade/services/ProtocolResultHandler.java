@@ -32,6 +32,7 @@ import de.adorsys.opba.protocol.facade.dto.result.torest.redirectable.FacadeRunt
 import de.adorsys.opba.protocol.facade.dto.result.torest.redirectable.FacadeStartAuthorizationResult;
 import de.adorsys.opba.protocol.facade.dto.result.torest.staticres.FacadeSuccessResult;
 import de.adorsys.opba.protocol.facade.services.scoped.RequestScopedProvider;
+import de.adorsys.opba.protocol.facade.util.logresolver.FacadeLogResolver;
 import lombok.extern.slf4j.Slf4j;
 import org.jetbrains.annotations.NotNull;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -55,6 +56,7 @@ public class ProtocolResultHandler {
     private final TokenBasedAuthService authService;
     private final TppTokenProperties tppTokenProperties;
     private final List<? extends ResultBodyPostProcessor> postProcessors;
+    private final FacadeLogResolver logResolver = new FacadeLogResolver(getClass());
 
     public ProtocolResultHandler(
             RequestScopedProvider provider,
@@ -90,23 +92,32 @@ public class ProtocolResultHandler {
         SecretKeyWithIv sessionKey
     ) {
         if (result instanceof SuccessResult) {
-            //TODO-1201 add result and his type for each type
+            logResolver.log("handle success result: result({}), request({}), session({})", result, request, session);
+
             return handleSuccess(request, (SuccessResult<RESULT>) result, request.getRequestId(), session);
         }
 
         if (result instanceof ConsentAcquiredResult) {
+            logResolver.log("handle consent acquired result: result({})", result);
+
             return handleConsentAcquired((ConsentAcquiredResult<RESULT, ?>) result);
         }
 
         if (result instanceof ErrorResult) {
+            logResolver.log("handle error result: result({}), request({}), session({})", result, request, session);
+
             return handleError((ErrorResult<RESULT>) result, request.getRequestId(), session, request);
         }
 
         if (result instanceof RedirectionResult) {
+            logResolver.log("handle redirection result: result({}), request({}), session({})", result, request, session);
+
             return handleRedirect((RedirectionResult<RESULT, ?>) result, request, session, sessionKey);
         }
 
         if (result instanceof ReturnableProcessErrorResult) {
+            logResolver.log("handle returnable process error result: result({}), request({}), session({})", result, request, session);
+
             return handleReturnableError((ReturnableProcessErrorResult) result, request, session);
         }
 

@@ -1,6 +1,6 @@
 package de.adorsys.opba.protocol.xs2a.util.logresolver.domain.consent;
 
-import de.adorsys.opba.protocol.xs2a.util.logresolver.domain.NotSensitiveData;
+import de.adorsys.opba.protocol.api.dto.NotSensitiveData;
 import lombok.Data;
 
 
@@ -11,7 +11,6 @@ public class ConsentInitiateHeadersLog implements NotSensitiveData {
     private String aspspId;
     private String requestId;
     private String oauth2Token;
-
     private String psuIpAddress;
     private String redirectUriOk;
     private String redirectUriNok;

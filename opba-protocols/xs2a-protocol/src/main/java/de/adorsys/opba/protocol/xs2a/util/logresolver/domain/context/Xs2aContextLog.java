@@ -27,7 +27,6 @@ public class Xs2aContextLog extends BaseContextLog {
     private String redirectUriNok;
     private String fintechRedirectUriOk;
     private String fintechRedirectUriNok;
-
     private boolean redirectConsentOk;
     private String psuIpPort;
     private ChallengeDataLog challengeData;

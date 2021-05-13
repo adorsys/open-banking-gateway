@@ -1,5 +1,6 @@
 package de.adorsys.opba.protocol.hbci.util.logresolver.domain;
 
+import de.adorsys.opba.protocol.api.dto.NotSensitiveData;
 import de.adorsys.opba.protocol.bpmnshared.dto.context.BaseContext;
 import lombok.Data;
 import lombok.ToString;
@@ -7,8 +8,9 @@ import lombok.ToString;
 
 @Data
 @ToString(callSuper = true)
-public class BaseContextLog extends BaseContext {
+public class BaseContextLog extends BaseContext implements NotSensitiveData {
 
+    @Override
     public String getNotSensitiveData() {
         return "BaseContextLog("
                 + "mode=" + this.getMode()

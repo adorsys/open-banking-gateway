@@ -12,6 +12,7 @@ public class TransactionListHbciContextLog extends HbciContextLog {
     private String accountIban;
     private AisListTransactionsResult response;
 
+    @Override
     public String getNotSensitiveData() {
         return "ContextLog("
                 + "mode=" + this.getMode()

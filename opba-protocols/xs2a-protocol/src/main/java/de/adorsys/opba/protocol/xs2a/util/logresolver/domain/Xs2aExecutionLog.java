@@ -11,9 +11,4 @@ public class Xs2aExecutionLog {
     private String rootProcessInstanceId;
     private String parentId;
 
-//    public String getNotSensitiveData() {
-//        return "QueryHeadersParametersLog("
-//                + "eventName=" + getEventName() + ")";
-//    }
-
 }

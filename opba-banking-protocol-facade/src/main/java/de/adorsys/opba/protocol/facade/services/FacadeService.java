@@ -10,6 +10,7 @@ import de.adorsys.opba.protocol.api.dto.result.fromprotocol.Result;
 import de.adorsys.opba.protocol.facade.dto.result.torest.FacadeResult;
 import de.adorsys.opba.protocol.facade.exceptions.NoProtocolRegisteredException;
 import de.adorsys.opba.protocol.facade.services.context.ServiceContextProvider;
+import de.adorsys.opba.protocol.facade.util.logresolver.FacadeLogResolver;
 import lombok.RequiredArgsConstructor;
 import org.springframework.transaction.support.TransactionTemplate;
 
@@ -25,9 +26,10 @@ public abstract class FacadeService<REQUEST extends FacadeServiceableGetter, RES
     private final ServiceContextProvider provider;
     private final ProtocolResultHandler handler;
     private final TransactionTemplate txTemplate;
+    private final FacadeLogResolver logResolver = new FacadeLogResolver(getClass());
 
     public CompletableFuture<FacadeResult<RESULT>> execute(REQUEST request) {
-        //TODO-1201 request
+        logResolver.log("execute request({})", request);
 
         ProtocolWithCtx<ACTION, REQUEST> protocolWithCtx = txTemplate.execute(callback -> {
             InternalContext<REQUEST, ACTION> contextWithoutProtocol = contextFor(request);
@@ -35,7 +37,9 @@ public abstract class FacadeService<REQUEST extends FacadeServiceableGetter, RES
             ServiceContext<REQUEST> serviceContext = addRequestScopedFor(request, ctx);
             return new ProtocolWithCtx<>(ctx.getAction(), serviceContext);
         });
-        //TODO-1201 request's protocol + action
+
+        logResolver.log("Result of protocol execution: {}", protocolWithCtx);
+
         if (protocolWithCtx == null || protocolWithCtx.getProtocol() == null) {
             throw new NoProtocolRegisteredException("can't create service context or determine protocol");
         }
@@ -68,7 +72,8 @@ public abstract class FacadeService<REQUEST extends FacadeServiceableGetter, RES
     }
 
     protected FacadeResult<RESULT> handleResult(Result<RESULT> result, FacadeServiceableRequest request, ServiceContext<REQUEST> ctx) {
-        //TODO-1201 handling result with parameters: result, request, ctx
+        logResolver.log("handleResult result({}), request({}), context({})", result, request, ctx);
+
         return handler.handleResult(result, request, ctx);
     }
 
