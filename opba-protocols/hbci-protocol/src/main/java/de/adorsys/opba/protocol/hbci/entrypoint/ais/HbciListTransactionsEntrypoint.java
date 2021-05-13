@@ -58,7 +58,7 @@ public class HbciListTransactionsEntrypoint implements ListTransactions {
 
         registrar.addHandler(
                 instance.getProcessInstanceId(),
-                new HbciOutcomeMapper<>(result, extractor::extractTransactionsReport, errorMapper)
+                new HbciOutcomeMapper<>(result, res -> extractor.extractTransactionsReport(res, serviceContext), errorMapper)
         );
 
         return result;
