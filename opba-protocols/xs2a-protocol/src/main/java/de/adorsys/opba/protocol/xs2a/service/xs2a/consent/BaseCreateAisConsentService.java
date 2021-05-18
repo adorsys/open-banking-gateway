@@ -30,7 +30,7 @@ public abstract class BaseCreateAisConsentService<T extends Xs2aContext> extends
         context.setWrongAuthCredentials(false);
         context.setConsentId(consentInit.getBody().getConsentId());
         if (null != consentInit.getBody()) {
-            OAuth2Util.handlePossibleOAuth2(consentInit.getBody().getLinks(), context);
+            handleOAuthIfPossible(consentInit, context);
         }
 
         if (null != consentInit.getHeaders() && Strings.isNotBlank(consentInit.getHeaders().getHeader(ASPSP_SCA_APPROACH))) {
@@ -41,5 +41,15 @@ public abstract class BaseCreateAisConsentService<T extends Xs2aContext> extends
         }
 
         execution.setVariable(CONTEXT, context);
+    }
+
+    private void handleOAuthIfPossible(Response<ConsentsResponse201> consentInit, Xs2aContext context) {
+        var links = consentInit.getBody().getLinks();
+        if (null == links && null == consentInit.getBody().getConsentId()) { // NOTE that PIS does not contain similar logic (per ING bank impl)
+            context.setOauth2IntegratedNeeded(true);
+            context.setOauth2ConsentNeeded(true);
+        } else {
+            OAuth2Util.handlePossibleOAuth2(links, context);
+        }
     }
 }

@@ -56,13 +56,6 @@ public class Xs2aConsentInfo {
     }
 
     /**
-     * Is the oauthConsent (ING) special case is required.
-     */
-    public boolean isOauth2ConsentRequired(Xs2aContext ctx) {
-        return ctx.isOauth2ConsentNeeded();
-    }
-
-    /**
      * Is the Oauth2 token available and ready to use (not expired)
      */
     public boolean isOauth2TokenAvailableAndReadyToUse(Xs2aContext ctx) {

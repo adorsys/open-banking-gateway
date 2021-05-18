@@ -6,7 +6,6 @@ import lombok.experimental.UtilityClass;
 
 import java.util.Map;
 
-import static de.adorsys.opba.protocol.xs2a.constant.GlobalConst.OAUTH_CONSENT;
 import static de.adorsys.xs2a.adapter.impl.link.bg.template.LinksTemplate.SCA_OAUTH;
 
 @UtilityClass
@@ -20,9 +19,6 @@ public class OAuth2Util {
         if (bodyLinks.containsKey(SCA_OAUTH)) {
             context.setOauth2IntegratedNeeded(true);
             context.setScaOauth2Link(bodyLinks.get(SCA_OAUTH).getHref());
-        } else if (bodyLinks.containsKey(OAUTH_CONSENT)) {
-            context.setOauth2IntegratedNeeded(true);
-            context.setOauth2ConsentNeeded(true);
         }
     }
 }

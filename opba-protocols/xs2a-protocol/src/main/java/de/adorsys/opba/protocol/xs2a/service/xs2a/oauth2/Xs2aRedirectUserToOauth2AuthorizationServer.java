@@ -6,6 +6,7 @@ import de.adorsys.opba.protocol.bpmnshared.service.context.ContextUtil;
 import de.adorsys.opba.protocol.bpmnshared.service.exec.ValidatedExecution;
 import de.adorsys.opba.protocol.xs2a.config.protocol.ProtocolUrlsConfiguration;
 import de.adorsys.opba.protocol.xs2a.context.Xs2aContext;
+import de.adorsys.opba.protocol.xs2a.context.ais.Xs2aAisContext;
 import de.adorsys.opba.protocol.xs2a.context.pis.Xs2aPisContext;
 import de.adorsys.opba.protocol.xs2a.service.dto.QueryHeadersToValidate;
 import de.adorsys.opba.protocol.xs2a.service.dto.ValidatedQueryHeaders;
@@ -16,6 +17,7 @@ import de.adorsys.opba.protocol.xs2a.service.xs2a.dto.oauth2.Xs2aOauth2Parameter
 import de.adorsys.opba.protocol.xs2a.service.xs2a.validation.Xs2aValidator;
 import de.adorsys.opba.protocol.xs2a.util.logresolver.Xs2aLogResolver;
 import de.adorsys.xs2a.adapter.api.Oauth2Service;
+import de.adorsys.xs2a.adapter.api.model.Scope;
 import lombok.RequiredArgsConstructor;
 import lombok.SneakyThrows;
 import org.flowable.engine.RuntimeService;
@@ -96,7 +98,23 @@ public class Xs2aRedirectUserToOauth2AuthorizationServer extends ValidatedExecut
             parameters.setPaymentId(((Xs2aPisContext) context).getPaymentId());
         }
 
+        handleOauth2Consent(context, parameters);
+
         ContextUtil.getAndUpdateContext(execution, (Xs2aContext ctx) -> ctx.setOauth2RedirectBackLink(redirectBack));
+    }
+
+    private void handleOauth2Consent(Xs2aContext context, Xs2aOauth2Parameters parameters) {
+        // ING special case
+        if (!context.isOauth2ConsentNeeded()) {
+            return;
+        }
+
+        if (context instanceof Xs2aAisContext) {
+            // TODO Better scope mapping
+            parameters.setScope(Scope.AIS.getValue());
+        } else {
+            parameters.setScope(Scope.PIS.getValue());
+        }
     }
 
     @Service
