@@ -1,21 +1,12 @@
 package de.adorsys.opba.protocol.xs2a.service.xs2a.oauth2;
 
-import de.adorsys.opba.protocol.bpmnshared.dto.DtoMapper;
 import de.adorsys.opba.protocol.bpmnshared.dto.messages.RedirectToAspsp;
 import de.adorsys.opba.protocol.bpmnshared.service.context.ContextUtil;
 import de.adorsys.opba.protocol.bpmnshared.service.exec.ValidatedExecution;
 import de.adorsys.opba.protocol.xs2a.config.protocol.ProtocolUrlsConfiguration;
 import de.adorsys.opba.protocol.xs2a.context.Xs2aContext;
-import de.adorsys.opba.protocol.xs2a.context.pis.Xs2aPisContext;
-import de.adorsys.opba.protocol.xs2a.service.dto.QueryHeadersToValidate;
-import de.adorsys.opba.protocol.xs2a.service.dto.ValidatedQueryHeaders;
-import de.adorsys.opba.protocol.xs2a.service.mapper.QueryHeadersMapperTemplate;
 import de.adorsys.opba.protocol.xs2a.service.xs2a.Xs2aRedirectExecutor;
-import de.adorsys.opba.protocol.xs2a.service.xs2a.dto.oauth2.Xs2aOauth2Headers;
-import de.adorsys.opba.protocol.xs2a.service.xs2a.dto.oauth2.Xs2aOauth2Parameters;
-import de.adorsys.opba.protocol.xs2a.service.xs2a.validation.Xs2aValidator;
 import de.adorsys.opba.protocol.xs2a.util.logresolver.Xs2aLogResolver;
-import de.adorsys.xs2a.adapter.api.Oauth2Service;
 import de.adorsys.xs2a.adapter.ing.IngOauth2Api;
 import lombok.RequiredArgsConstructor;
 import lombok.SneakyThrows;
@@ -23,7 +14,6 @@ import org.flowable.engine.RuntimeService;
 import org.flowable.engine.delegate.DelegateExecution;
 import org.springframework.stereotype.Service;
 
-import java.net.URI;
 import java.util.Collections;
 
 /**
