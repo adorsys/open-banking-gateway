@@ -13,6 +13,10 @@ import static de.adorsys.xs2a.adapter.impl.link.bg.template.LinksTemplate.SCA_OA
 public class OAuth2Util {
 
     public void handlePossibleOAuth2(Map<String, HrefType> bodyLinks, Xs2aContext context) {
+        if (null == bodyLinks) {
+            return;
+        }
+
         if (bodyLinks.containsKey(SCA_OAUTH)) {
             context.setOauth2IntegratedNeeded(true);
             context.setScaOauth2Link(bodyLinks.get(SCA_OAUTH).getHref());
