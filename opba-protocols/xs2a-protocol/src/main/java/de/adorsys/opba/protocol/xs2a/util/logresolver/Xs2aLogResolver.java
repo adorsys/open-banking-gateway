@@ -262,4 +262,12 @@ public class Xs2aLogResolver<T> {
             log.info(message, mapper.mapFromURIToURILog(response).getNotSensitiveData());
         }
     }
+
+    public void log(String message, String response) {
+        if (log.isDebugEnabled()) {
+            log.debug(message, response);
+        } else {
+            log.info(message, "****");
+        }
+    }
 }

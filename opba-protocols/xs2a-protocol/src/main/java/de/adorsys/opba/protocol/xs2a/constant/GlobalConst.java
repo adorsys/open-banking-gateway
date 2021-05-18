@@ -48,4 +48,9 @@ public class GlobalConst {
      * Commonly used keyword for DTO mappers.
      */
     public static final String SPRING_KEYWORD = "spring";
+
+    /**
+     * ING-specific xs2a Adapter peculiarity.
+     */
+    public static final String OAUTH_CONSENT = "oauthConsent";
 }
