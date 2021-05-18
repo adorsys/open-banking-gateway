@@ -9,6 +9,7 @@ import { SessionService } from '../../../../../common/session.service';
 import { ConsentUtil } from '../../../../common/consent-util';
 import { ApiHeaders } from '../../../../../api/api.headers';
 import { ConsentAuth, UpdateConsentAuthorizationService, PsuAuthRequest } from '../../../../../api';
+import {DATA_PATTERN} from "../../../../common/constant/constant";
 
 @Component({
   selector: 'consent-app-accounts-consent-review',
@@ -29,6 +30,7 @@ export class AccountsConsentReviewComponent implements OnInit {
 
   accountAccessLevel = AccountAccessLevel;
 
+  public actualDate: string;
   public finTechName: string;
   public aspspName: string;
   public aisConsent: AisConsentToGrant;
@@ -41,7 +43,37 @@ export class AccountsConsentReviewComponent implements OnInit {
       this.aisConsent = ConsentUtil.getOrDefault(this.authorizationId, this.sessionService);
       this.aspspName = this.sessionService.getBankName(res.authId);
       this.finTechName = this.sessionService.getFintechName(res.authId);
+      this.actualDate = this.getActualDate();
     });
+  }
+
+  onRecurringIndicatorChanged(value: boolean) {
+    this.aisConsent.consent.recurringIndicator = value;
+  }
+
+  onValidUntilChanged(value: string) {
+    const pattern = new RegExp(DATA_PATTERN);
+
+    if (value.match(pattern)) {
+      const actualDate = new Date(this.actualDate);
+      const date = new Date(value);
+
+      if (date >= actualDate) {
+        this.aisConsent.consent.validUntil = value;
+      } else {
+        console.error('Invalid date: ' + value)
+      }
+    } else {
+      console.error('Invalid date format: ' + value)
+    }
+  }
+
+  onFrequencyPerDayChanged(value: string) {
+    const frequency = Number(value);
+
+    if (frequency > 0) {
+      this.aisConsent.consent.frequencyPerDay = frequency;
+    }
   }
 
   onConfirm() {
@@ -68,5 +100,11 @@ export class AccountsConsentReviewComponent implements OnInit {
 
   onBack() {
     this.location.back();
+  }
+
+  private getActualDate(): string {
+    const result = new Date();
+    result.setDate(result.getDate());
+    return result.toISOString().split('T')[0];
   }
 }

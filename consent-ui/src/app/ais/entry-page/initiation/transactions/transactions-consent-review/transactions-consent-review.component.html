@@ -30,14 +30,40 @@
         <div class="flex-container">
           <img src="assets/icons/icons8-approval.png" alt="approval" class="icons" />
           <p>
-            The consent will be valid until <strong>{{ aisConsent.consent.validUntil }}</strong>
+            The consent will be valid until:
           </p>
+          <input #validUntilDate
+                 class="form-control customDate"
+                 type="date"
+                 id="validUntilDate"
+                 min="{{actualDate}}"
+                 required
+                 value="{{ aisConsent.consent.validUntil }}"
+                 (change)="onValidUntilChanged(validUntilDate.value)"/>
         </div>
         <div class="flex-container">
           <img src="assets/icons/icons8-last_24_hours.png" alt="24_hours" class="icons" />
           <p>
-            The consent can be used <strong>{{ aisConsent.consent.frequencyPerDay }} times per day </strong>
+            The consent can be used:
           </p>
+            <input #frequencyPerDayNumber
+                   class="form-control customNumber"
+                   type="number"
+                   id="frecuencyPerDayNumber"
+                   min="1"
+                   max="1000"
+                   value="{{ aisConsent.consent.frequencyPerDay }}"
+                   (change)="onFrequencyPerDayChanged(frequencyPerDayNumber.value)"/>
+            <strong style="padding: 5px 0 0 0px"> times per day </strong>
+        </div>
+        <div class="form-check inputWrapper">
+          <input #recurringIndicatorCheckBox
+                 type="checkbox"
+                 class="form-check-input"
+                 id="recurringIndicatorCheckBox"
+                 [checked]="aisConsent.consent.recurringIndicator"
+                 (change)="onRecurringIndicatorChanged(recurringIndicatorCheckBox.checked)"/>
+          <label class="form-check-label checkboxLabel" for="recurringIndicatorCheckBox">The consent is for recurring access to the account data</label>
         </div>
       </section>
     </ng-container>
