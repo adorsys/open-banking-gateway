@@ -54,7 +54,7 @@ export class AccountsConsentReviewComponent implements OnInit {
   onValidUntilChanged(value: string) {
     const pattern = new RegExp(DATA_PATTERN);
 
-    if (value.match(pattern)) {
+    if (pattern.test(value)) {
       const actualDate = new Date(this.actualDate);
       const date = new Date(value);
 
