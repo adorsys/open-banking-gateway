@@ -30,6 +30,10 @@ public class Xs2aPersistConsentAndContext extends ValidatedExecution<Xs2aContext
         ProtocolFacingConsent consent = context.consentAccess().findSingleByCurrentServiceSession()
                 .orElseGet(() -> context.consentAccess().createDoNotPersist());
 
+        if (null == context.getConsentId()) {
+            context.setConsentAcquired(true);
+        }
+
         consent.setConsentId(context.getConsentId());
 
         consent.setConsentContext(

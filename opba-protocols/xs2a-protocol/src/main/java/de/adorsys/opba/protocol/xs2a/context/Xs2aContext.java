@@ -75,6 +75,12 @@ public class Xs2aContext extends BaseContext {
     private String consentId;
 
     /**
+     * For banks that do not support 'consentId' (ING), indicates that consent was acquired.
+     */
+    private boolean consentAcquired;
+
+
+    /**
      * Authorization ID (ASPSP facing) to use for current authorization session.
      */
     private String authorizationId;
