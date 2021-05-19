@@ -18,6 +18,7 @@ import lombok.RequiredArgsConstructor;
 import org.flowable.engine.delegate.DelegateExecution;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.stereotype.Service;
+import org.springframework.util.StringUtils;
 
 /**
  * Calls ASPSP XS2A API to list the accounts using already existing consent.
@@ -38,7 +39,13 @@ public class Xs2aAccountListingService extends ValidatedExecution<Xs2aAisContext
     protected void doValidate(DelegateExecution execution, Xs2aAisContext context) {
         logResolver.log("doValidate: execution ({}) with context ({})", execution, context);
 
-        validator.validate(execution, context, this.getClass(), extractor.forValidation(context));
+        if (context.isConsentAcquired() && StringUtils.isEmpty(context.getConsentId())) { // ING specific
+            context.setConsentId("DUMMY");
+            validator.validate(execution, context, this.getClass(), extractor.forValidation(context));
+            context.setConsentId(null);
+        } else {
+            validator.validate(execution, context, this.getClass(), extractor.forValidation(context));
+        }
     }
 
     @Override

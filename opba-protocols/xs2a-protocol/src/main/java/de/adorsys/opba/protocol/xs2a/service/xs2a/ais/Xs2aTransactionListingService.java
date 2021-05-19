@@ -24,6 +24,7 @@ import lombok.RequiredArgsConstructor;
 import org.flowable.engine.delegate.DelegateExecution;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.stereotype.Service;
+import org.springframework.util.StringUtils;
 
 import java.util.Collections;
 import java.util.Set;
@@ -42,11 +43,18 @@ public class Xs2aTransactionListingService extends ValidatedExecution<Transactio
     private final AccountInformationService ais;
     private final Xs2aConsentErrorHandler handler;
     private final Xs2aLogResolver logResolver = new Xs2aLogResolver(getClass());
+
     @Override
     protected void doValidate(DelegateExecution execution, TransactionListXs2aContext context) {
         logResolver.log("doValidate: execution ({}) with context ({})", execution, context);
 
-        validator.validate(execution, context, this.getClass(), extractor.forValidation(context));
+        if (context.isConsentAcquired() && StringUtils.isEmpty(context.getConsentId())) { // ING specific
+            context.setConsentId("DUMMY");
+            validator.validate(execution, context, this.getClass(), extractor.forValidation(context));
+            context.setConsentId(null);
+        } else {
+            validator.validate(execution, context, this.getClass(), extractor.forValidation(context));
+        }
     }
 
     @Override
