@@ -106,24 +106,28 @@ public class Xs2aLoadConsentAndContextFromDb extends ValidatedExecution<Xs2aAisC
         @Mapping(target = "flowByAction", ignore = true)
         @Mapping(target = "psuPassword", ignore = true)
         @Mapping(target = "lastScaChallenge", ignore = true)
+        @Mapping(target = "consentAcquired", ignore = true)
         void merge(Xs2aAisContext source, @MappingTarget Xs2aAisContext target);
 
         @Mapping(target = "mode", ignore = true)
         @Mapping(target = "flowByAction", ignore = true)
         @Mapping(target = "psuPassword", ignore = true)
         @Mapping(target = "lastScaChallenge", ignore = true)
+        @Mapping(target = "consentAcquired", ignore = true)
         void merge(Xs2aAisContext source, @MappingTarget TransactionListXs2aContext target);
 
         @Mapping(target = "mode", ignore = true)
         @Mapping(target = "flowByAction", ignore = true)
         @Mapping(target = "psuPassword", ignore = true)
         @Mapping(target = "lastScaChallenge", ignore = true)
+        @Mapping(target = "consentAcquired", ignore = true)
         void merge(TransactionListXs2aContext source, @MappingTarget TransactionListXs2aContext target);
 
         @Mapping(target = "mode", ignore = true)
         @Mapping(target = "flowByAction", ignore = true)
         @Mapping(target = "psuPassword", ignore = true)
         @Mapping(target = "lastScaChallenge", ignore = true)
+        @Mapping(target = "consentAcquired", ignore = true)
         void merge(AccountListXs2aContext source, @MappingTarget TransactionListXs2aContext target);
     }
 }
