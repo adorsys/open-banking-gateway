@@ -174,7 +174,8 @@ public class FireFlyTransactionExporter {
         if (null != transaction.getDebtorAccount() && availableAccountsInFireFlyByIban.contains(transaction.getDebtorAccount().getIban())) {
             parseTransactionAmount(transaction.getDebtorAccount(), transaction.getCreditorAccount(), transactionAmount, split);
         } else {
-            parseTransactionAmount(transaction.getCreditorAccount(), transaction.getDebtorAccount(), transactionAmount.negate(), split);
+            transactionAmount = transactionAmount.compareTo(BigDecimal.ZERO) < 0 ? transactionAmount : transactionAmount.negate();
+            parseTransactionAmount(transaction.getCreditorAccount(), transaction.getDebtorAccount(), transactionAmount, split);
         }
 
         split.setCurrencyCode(transaction.getTransactionAmount().getCurrency());
