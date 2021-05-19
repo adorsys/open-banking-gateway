@@ -48,13 +48,12 @@ public class Xs2aTransactionListingService extends ValidatedExecution<Transactio
     protected void doValidate(DelegateExecution execution, TransactionListXs2aContext context) {
         logResolver.log("doValidate: execution ({}) with context ({})", execution, context);
 
+        var consentId = context.getConsentId();
         if (context.isConsentAcquired() && StringUtils.isEmpty(context.getConsentId())) { // ING specific
             context.setConsentId("DUMMY");
-            validator.validate(execution, context, this.getClass(), extractor.forValidation(context));
-            context.setConsentId(null);
-        } else {
-            validator.validate(execution, context, this.getClass(), extractor.forValidation(context));
         }
+        validator.validate(execution, context, this.getClass(), extractor.forValidation(context));
+        context.setConsentId(consentId);
     }
 
     @Override
