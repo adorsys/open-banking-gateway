@@ -62,6 +62,10 @@ public class CmsEncryptionOper {
         @Override
         @SneakyThrows
         public byte[] encrypt(byte[] data) {
+            if (null == data) {
+                return new byte[0];
+            }
+
             CMSEnvelopedDataGenerator generator = new CMSEnvelopedDataGenerator();
             generator.addRecipientInfoGenerator(new JceKeyTransRecipientInfoGenerator(encryptionKeyId.getBytes(StandardCharsets.UTF_8), publicKey));
             return generator.generate(
@@ -72,7 +76,7 @@ public class CmsEncryptionOper {
         @Override
         @SneakyThrows
         public byte[] decrypt(byte[] data) {
-            if (null == data) {
+            if (null == data || 0 == data.length) {
                 return null;
             }
 
