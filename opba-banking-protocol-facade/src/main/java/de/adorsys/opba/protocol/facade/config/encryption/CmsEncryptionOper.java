@@ -72,6 +72,10 @@ public class CmsEncryptionOper {
         @Override
         @SneakyThrows
         public byte[] decrypt(byte[] data) {
+            if (null == data) {
+                return null;
+            }
+
             CMSEnvelopedDataParser parser = new CMSEnvelopedDataParser(data);
             return parser.getRecipientInfos().iterator().next().getContent(new JceKeyTransEnvelopedRecipient(privateKey));
         }
