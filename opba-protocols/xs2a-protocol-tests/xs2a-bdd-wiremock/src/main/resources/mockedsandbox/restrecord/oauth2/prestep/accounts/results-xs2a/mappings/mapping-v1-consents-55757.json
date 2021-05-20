@@ -18,13 +18,13 @@
         "equalTo": "Bearer eyJraWQiOiJFWmtfUDNHd1I2OG9iUEwzSGxDbng0IiwiYWxnIjoiSFMyNTYifQ.eyJzdWIiOiJkMGF1dUlxN1J6QXR6dkNEVDh6bV9vIiwidG9rZW5fdXNhZ2UiOiJMT0dJTiIsInJvbGUiOiJDVVNUT01FUiIsInNjYV9pZCI6Im12RU5SbE5pU3NjcXJuWVNqdnZnYlUiLCJhdXRob3Jpc2F0aW9uX2lkIjoibXZFTlJsTmlTc2Nxcm5ZU2p2dmdiVSIsImV4cCI6MTU5OTY1Mzk5NywibG9naW4iOiJhbnRvbi5icnVlY2tuZXIiLCJpYXQiOjE1OTk2NTM2OTcsImp0aSI6ImdMeVZoZlVLUmdRaU9vbmpaMzVqakkifQ.d3A5uBRFkDcpY8IvYHf3niiDA_BmDgp5aIuoaT2t4xE"
       },
       "TPP-Nok-Redirect-URI": {
-        "matches": "http://localhost:\\d+/v1/consent/.+/fromAspsp/STUB_STATE/nok\\?redirectCode=.+"
+        "matches": "http://localhost:\\d+/v1/consent/.+/fromAspsp/STUB_STATE/nok/.+"
       },
       "PSU-IP-Address": {
         "matches": "\\b((25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)(\\.|$)){4}\\b"
       },
       "TPP-Redirect-URI": {
-        "matches": "http://localhost:\\d+/v1/consent/.+/fromAspsp/STUB_STATE/ok\\?redirectCode=.+"
+        "matches": "http://localhost:\\d+/v1/consent/.+/fromAspsp/STUB_STATE/ok/.+"
       },
       "Content-Type": {
         "equalTo": "application/json; charset=UTF-8"
