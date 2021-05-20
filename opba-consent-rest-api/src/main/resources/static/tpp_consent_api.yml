@@ -185,7 +185,7 @@ paths:
       security:
         - sessionCookie: []
 
-  /v1/consent/{auth-id}/fromAspsp/{redirectState}/ok:
+  /v1/consent/{auth-id}/fromAspsp/{redirectState}/ok/{fromAspspRedirectCode}:
     get:
       operationId: fromAspspOkUsingGET
       tags:
@@ -215,8 +215,8 @@ paths:
         #path
         - $ref: "#/components/parameters/auth-id"
         - $ref: "#/components/parameters/redirectState"
+        - $ref: "#/components/parameters/fromAspspRedirectCode"
         #query
-        - $ref: "#/components/parameters/redirectCode"
         - $ref: "#/components/parameters/code"
       responses:
         "200":
@@ -226,7 +226,7 @@ paths:
       security:
         - redirectCookie: []
 
-  /v1/consent/{auth-id}/fromAspsp/{redirectState}/nok:
+  /v1/consent/{auth-id}/fromAspsp/{redirectState}/nok/{fromAspspRedirectCode}:
     get:
       operationId: fromAspspNokUsingGET
       tags:
@@ -239,8 +239,7 @@ paths:
         #path
         - $ref: "#/components/parameters/auth-id"
         - $ref: "#/components/parameters/redirectState"
-        #query
-        - $ref: "#/components/parameters/redirectCode"
+        - $ref: "#/components/parameters/fromAspspRedirectCode"
       responses:
         "200":
           $ref: "#/components/responses/200_AuthorizeResponse"
@@ -353,7 +352,17 @@ components:
       name: redirectCode
       in: query
       description: Code used to retrieve a redirect session. This is
-        generaly transported as a query parameter
+        generaly transported as a query parameter.
+      example: "faadsf93nlas32wx"
+      schema:
+        type: string
+
+    fromAspspRedirectCode:
+      name: fromAspspRedirectCode
+      in: path
+      description: Code used to retrieve a redirect session. This is
+        generaly transported as a path parameter due to some banks limitiations (ING ASPSP) instead of
+        being transported as query parameter
       example: "faadsf93nlas32wx"
       schema:
         type: string

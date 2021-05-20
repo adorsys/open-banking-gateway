@@ -75,6 +75,12 @@ public class Xs2aContext extends BaseContext {
     private String consentId;
 
     /**
+     * For banks that do not support 'consentId' (ING), indicates that consent was acquired.
+     */
+    private boolean consentAcquired;
+
+
+    /**
      * Authorization ID (ASPSP facing) to use for current authorization session.
      */
     private String authorizationId;
@@ -164,6 +170,11 @@ public class Xs2aContext extends BaseContext {
      * Indicates that ASPSP requires Oauth2-integrated step for consent authorization.
      */
     private boolean oauth2IntegratedNeeded;
+
+    /**
+     * Indicates that ASPSP requires Oauth2-Consent of special type (ING bank).
+     */
+    private boolean oauth2ConsentNeeded;
 
     /**
      * SCA Oauth2 link to follow.

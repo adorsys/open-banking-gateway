@@ -13,6 +13,6 @@ import org.springframework.stereotype.Service;
 public class ConsentFinder {
 
     public boolean consentExists(Xs2aContext context) {
-        return !Strings.isNullOrEmpty(context.getConsentId());
+        return context.isConsentAcquired() || !Strings.isNullOrEmpty(context.getConsentId());
     }
 }

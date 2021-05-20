@@ -66,7 +66,7 @@ public class WiremockPaymentRequest<SELF extends WiremockPaymentRequest<SELF>> e
                 .given()
                     .cookie(AUTHORIZATION_SESSION_KEY, authSessionCookie)
                 .when()
-                    .get(redirectOkUri + "&code=" + code)
+                    .get(redirectOkUri + "?code=" + code)
                 .then()
                     .statusCode(HttpStatus.SEE_OTHER.value())
                 .extract();

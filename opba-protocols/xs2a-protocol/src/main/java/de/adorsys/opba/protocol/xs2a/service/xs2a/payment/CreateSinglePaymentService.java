@@ -11,6 +11,7 @@ import de.adorsys.opba.protocol.xs2a.service.xs2a.consent.CreateConsentOrPayment
 import de.adorsys.opba.protocol.xs2a.service.xs2a.dto.Xs2aInitialPaymentParameters;
 import de.adorsys.opba.protocol.xs2a.service.xs2a.dto.payment.PaymentInitiateBody;
 import de.adorsys.opba.protocol.xs2a.service.xs2a.dto.payment.PaymentInitiateHeaders;
+import de.adorsys.opba.protocol.xs2a.service.xs2a.oauth2.OAuth2Util;
 import de.adorsys.opba.protocol.xs2a.service.xs2a.quirks.QuirkUtil;
 import de.adorsys.opba.protocol.xs2a.service.xs2a.validation.Xs2aValidator;
 import de.adorsys.opba.protocol.xs2a.util.logresolver.Xs2aLogResolver;
@@ -30,7 +31,6 @@ import java.util.UUID;
 
 import static de.adorsys.opba.protocol.xs2a.constant.GlobalConst.CONTEXT;
 import static de.adorsys.xs2a.adapter.api.ResponseHeaders.ASPSP_SCA_APPROACH;
-import static de.adorsys.xs2a.adapter.impl.link.bg.template.LinksTemplate.SCA_OAUTH;
 
 /**
  * Initiates Account list consent by sending mapped {@link de.adorsys.opba.protocol.api.dto.request.authorization.AisConsent}
@@ -91,9 +91,8 @@ public class CreateSinglePaymentService extends ValidatedExecution<Xs2aPisContex
     protected void postHandleCreatedPayment(Response<PaymentInitationRequestResponse201> paymentInit, DelegateExecution execution, Xs2aPisContext context) {
         context.setWrongAuthCredentials(false);
         context.setPaymentId(paymentInit.getBody().getPaymentId());
-        if (null != paymentInit.getBody().getLinks() && paymentInit.getBody().getLinks().containsKey(SCA_OAUTH)) {
-            context.setOauth2IntegratedNeeded(true);
-            context.setScaOauth2Link(paymentInit.getBody().getLinks().get(SCA_OAUTH).getHref());
+        if (null != paymentInit.getBody()) {
+            OAuth2Util.handlePossibleOAuth2(paymentInit.getBody().getLinks(), context);
         }
 
         if (null != paymentInit.getHeaders() && Strings.isNotBlank(paymentInit.getHeaders().getHeader(ASPSP_SCA_APPROACH))) {

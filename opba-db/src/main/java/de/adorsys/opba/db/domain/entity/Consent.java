@@ -84,11 +84,17 @@ public class Consent {
     }
 
     public String getConsentId(EncryptionService encryption) {
-        return new String(encryption.decrypt(encConsentId), StandardCharsets.UTF_8);
+        byte[] decryptedConsent = encryption.decrypt(encConsentId);
+        if (null == decryptedConsent) {
+            return null;
+        }
+
+        return new String(decryptedConsent, StandardCharsets.UTF_8);
     }
 
     public void setConsentId(EncryptionService encryption, String consent) {
-        this.encConsentId = encryption.encrypt(consent.getBytes(StandardCharsets.UTF_8));
+        byte[] consentToEncrypt = null == consent ? null : consent.getBytes(StandardCharsets.UTF_8);
+        this.encConsentId = encryption.encrypt(consentToEncrypt);
     }
 }
 

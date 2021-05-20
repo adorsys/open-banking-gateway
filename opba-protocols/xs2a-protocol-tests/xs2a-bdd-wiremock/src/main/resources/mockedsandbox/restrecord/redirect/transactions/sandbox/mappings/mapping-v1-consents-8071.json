@@ -20,10 +20,10 @@
         "equalTo": "application/json; charset=UTF-8"
       },
       "TPP-Redirect-URI": {
-        "matches": "http://localhost:\\d+/v1/consent/.+/fromAspsp/.+/ok\\?.+"
+        "matches": "http://localhost:\\d+/v1/consent/.+/fromAspsp/.+/ok/.+"
       },
       "TPP-Nok-Redirect-URI": {
-        "matches": "http://localhost:\\d+/v1/consent/.+/fromAspsp/.+/nok\\?.+"
+        "matches": "http://localhost:\\d+/v1/consent/.+/fromAspsp/.+/nok/.+"
       }
     },
     "bodyPatterns": [

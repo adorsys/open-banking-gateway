@@ -2,6 +2,7 @@ package de.adorsys.opba.protocol.xs2a.service.xs2a.consent;
 
 import de.adorsys.opba.protocol.bpmnshared.service.exec.ValidatedExecution;
 import de.adorsys.opba.protocol.xs2a.context.Xs2aContext;
+import de.adorsys.opba.protocol.xs2a.service.xs2a.oauth2.OAuth2Util;
 import de.adorsys.opba.protocol.xs2a.util.logresolver.Xs2aLogResolver;
 import de.adorsys.xs2a.adapter.api.Response;
 import de.adorsys.xs2a.adapter.api.model.ConsentsResponse201;
@@ -12,7 +13,6 @@ import java.util.UUID;
 
 import static de.adorsys.opba.protocol.bpmnshared.GlobalConst.CONTEXT;
 import static de.adorsys.xs2a.adapter.api.ResponseHeaders.ASPSP_SCA_APPROACH;
-import static de.adorsys.xs2a.adapter.impl.link.bg.template.LinksTemplate.SCA_OAUTH;
 
 public abstract class BaseCreateAisConsentService<T extends Xs2aContext> extends ValidatedExecution<T> {
 
@@ -29,9 +29,8 @@ public abstract class BaseCreateAisConsentService<T extends Xs2aContext> extends
     protected void postHandleCreatedConsent(Response<ConsentsResponse201> consentInit, DelegateExecution execution, Xs2aContext context) {
         context.setWrongAuthCredentials(false);
         context.setConsentId(consentInit.getBody().getConsentId());
-        if (null != consentInit.getBody().getLinks() && consentInit.getBody().getLinks().containsKey(SCA_OAUTH)) {
-            context.setOauth2IntegratedNeeded(true);
-            context.setScaOauth2Link(consentInit.getBody().getLinks().get(SCA_OAUTH).getHref());
+        if (null != consentInit.getBody()) {
+            handleOAuthIfPossible(consentInit, context);
         }
 
         if (null != consentInit.getHeaders() && Strings.isNotBlank(consentInit.getHeaders().getHeader(ASPSP_SCA_APPROACH))) {
@@ -42,5 +41,15 @@ public abstract class BaseCreateAisConsentService<T extends Xs2aContext> extends
         }
 
         execution.setVariable(CONTEXT, context);
+    }
+
+    private void handleOAuthIfPossible(Response<ConsentsResponse201> consentInit, Xs2aContext context) {
+        var links = consentInit.getBody().getLinks();
+        if (null == links && null == consentInit.getBody().getConsentId()) { // NOTE that PIS does not contain similar logic (per ING bank impl)
+            context.setOauth2IntegratedNeeded(true);
+            context.setOauth2ConsentNeeded(true);
+        } else {
+            OAuth2Util.handlePossibleOAuth2(links, context);
+        }
     }
 }
