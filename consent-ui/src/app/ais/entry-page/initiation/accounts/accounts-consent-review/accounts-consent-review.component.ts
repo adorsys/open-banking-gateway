@@ -4,12 +4,13 @@ import { SharedRoutes } from '../../common/shared-routes';
 import { AccountAccessLevel, AisConsentToGrant } from '../../../../common/dto/ais-consent';
 import { StubUtil } from '../../../../../common/utils/stub-util';
 import { ActivatedRoute, Router } from '@angular/router';
-import { FormBuilder } from '@angular/forms';
+import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { SessionService } from '../../../../../common/session.service';
 import { ConsentUtil } from '../../../../common/consent-util';
 import { ApiHeaders } from '../../../../../api/api.headers';
 import { ConsentAuth, UpdateConsentAuthorizationService, PsuAuthRequest } from '../../../../../api';
-import {DATA_PATTERN} from "../../../../common/constant/constant";
+import { DATA_PATTERN, MAX_FREQUENCY_PER_DAY } from '../../../../common/constant/constant';
+import { DateUtil } from '../../../../common/date-util';
 
 @Component({
   selector: 'consent-app-accounts-consent-review',
@@ -17,6 +18,9 @@ import {DATA_PATTERN} from "../../../../common/constant/constant";
   styleUrls: ['./accounts-consent-review.component.scss']
 })
 export class AccountsConsentReviewComponent implements OnInit {
+
+  targetForm: FormGroup;
+
   constructor(
     private location: Location,
     private router: Router,
@@ -43,40 +47,20 @@ export class AccountsConsentReviewComponent implements OnInit {
       this.aisConsent = ConsentUtil.getOrDefault(this.authorizationId, this.sessionService);
       this.aspspName = this.sessionService.getBankName(res.authId);
       this.finTechName = this.sessionService.getFintechName(res.authId);
-      this.actualDate = this.getActualDate();
+      this.actualDate = DateUtil.getActualDate();
     });
-  }
-
-  onRecurringIndicatorChanged(value: boolean) {
-    this.aisConsent.consent.recurringIndicator = value;
-  }
-
-  onValidUntilChanged(value: string) {
-    const pattern = new RegExp(DATA_PATTERN);
-
-    if (pattern.test(value)) {
-      const actualDate = new Date(this.actualDate);
-      const date = new Date(value);
-
-      if (date >= actualDate) {
-        this.aisConsent.consent.validUntil = value;
-      } else {
-        console.error('Invalid date: ' + value)
-      }
-    } else {
-      console.error('Invalid date format: ' + value)
-    }
-  }
-
-  onFrequencyPerDayChanged(value: string) {
-    const frequency = Number(value);
-
-    if (frequency > 0) {
-      this.aisConsent.consent.frequencyPerDay = frequency;
-    }
+    this.createForm();
   }
 
   onConfirm() {
+    if (this.targetForm.invalid) {
+      return;
+    }
+
+    this.aisConsent.consent.recurringIndicator = this.targetForm.value.recurringIndicator;
+    this.aisConsent.consent.validUntil = this.targetForm.value.validUntilDate;
+    this.aisConsent.consent.frequencyPerDay = this.targetForm.value.frequencyPerDay;
+
     const body = { extras: this.aisConsent.extras } as PsuAuthRequest;
 
     if (this.aisConsent) {
@@ -102,9 +86,33 @@ export class AccountsConsentReviewComponent implements OnInit {
     this.location.back();
   }
 
-  private getActualDate(): string {
-    const result = new Date();
-    result.setDate(result.getDate());
-    return result.toISOString().split('T')[0];
+  private createForm() {
+    this.targetForm = this.formBuilder.group({
+      recurringIndicator: this.aisConsent.consent.recurringIndicator,
+      validUntilDate: [
+        this.aisConsent.consent.validUntil,
+        [
+          Validators.required,
+          Validators.pattern(DATA_PATTERN),
+          DateUtil.isDateNotInThePastValidator()
+        ]
+      ],
+      frequencyPerDay: [
+        this.aisConsent.consent.frequencyPerDay,
+        [
+          Validators.required,
+          Validators.min(1),
+          Validators.max(MAX_FREQUENCY_PER_DAY)
+        ]
+      ]
+    })
+  }
+
+  get _validUntilDate() {
+    return this.targetForm.get('validUntilDate')
+  }
+
+  get _frequencyPerDay() {
+    return this.targetForm.get('frequencyPerDay')
   }
 }

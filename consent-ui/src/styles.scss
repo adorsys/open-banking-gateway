@@ -92,8 +92,8 @@ a {
 
     }
     .customDate {
-      width: 9.5rem;
-      height: 3.3rem;
+      width: 12.5rem;
+      height: 2.3rem;
       border: 1px solid #15b6ca;
       border-radius: 5px;
       background-color: #fff;
@@ -101,14 +101,17 @@ a {
       margin-left: 1rem;
     }
     .customNumber {
-      width: 5rem;
-      height: 3.3rem;
+      width: 8rem;
+      height: 2.3rem;
       border: 1px solid #15b6ca;
       border-radius: 5px;
       background-color: #fff;
       padding-top: 18px;
       margin-left: 1rem;
       margin-right: 1rem;
+    }
+    .customStrong {
+      padding: 5px 0 0 0px;
     }
   }
 
@@ -131,7 +134,7 @@ a {
   padding-left: 0;
 
   .checkboxLabel {
-    padding-left: 0;
+    padding: 0 0 0 20.5px;
   }
 
   label {
@@ -174,7 +177,8 @@ a {
 }
 
 .inputWrapper {
-  margin-left: 3.375rem;
+  //margin-left: 3.375rem;
+  margin-left: 2.03124rem;
 }
 
 @media (max-width: 767px) {
