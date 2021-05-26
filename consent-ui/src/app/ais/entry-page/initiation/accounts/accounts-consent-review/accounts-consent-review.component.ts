@@ -19,7 +19,7 @@ import { DateUtil } from '../../../../common/date-util';
 })
 export class AccountsConsentReviewComponent implements OnInit {
 
-  targetForm: FormGroup;
+  consentReviewForm: FormGroup;
 
   constructor(
     private location: Location,
@@ -53,13 +53,15 @@ export class AccountsConsentReviewComponent implements OnInit {
   }
 
   onConfirm() {
-    if (this.targetForm.invalid) {
+    if (this.consentReviewForm.invalid) {
       return;
     }
 
-    this.aisConsent.consent.recurringIndicator = this.targetForm.value.recurringIndicator;
-    this.aisConsent.consent.validUntil = this.targetForm.value.validUntilDate;
-    this.aisConsent.consent.frequencyPerDay = this.targetForm.value.frequencyPerDay;
+    this.aisConsent.consent.recurringIndicator = this.consentReviewForm.value.recurringIndicator;
+    this.aisConsent.consent.validUntil = this.consentReviewForm.value.validUntilDate;
+    this.aisConsent.consent.frequencyPerDay = this.consentReviewForm.value.frequencyPerDay;
+
+    this.sessionService.setConsentObject(this.authorizationId, this.aisConsent);
 
     const body = { extras: this.aisConsent.extras } as PsuAuthRequest;
 
@@ -87,7 +89,7 @@ export class AccountsConsentReviewComponent implements OnInit {
   }
 
   private createForm() {
-    this.targetForm = this.formBuilder.group({
+    this.consentReviewForm = this.formBuilder.group({
       recurringIndicator: this.aisConsent.consent.recurringIndicator,
       validUntilDate: [
         this.aisConsent.consent.validUntil,
@@ -108,11 +110,11 @@ export class AccountsConsentReviewComponent implements OnInit {
     })
   }
 
-  get _validUntilDate() {
-    return this.targetForm.get('validUntilDate')
+  get validUntilDate() {
+    return this.consentReviewForm.get('validUntilDate')
   }
 
-  get _frequencyPerDay() {
-    return this.targetForm.get('frequencyPerDay')
+  get frequencyPerDay() {
+    return this.consentReviewForm.get('frequencyPerDay')
   }
 }

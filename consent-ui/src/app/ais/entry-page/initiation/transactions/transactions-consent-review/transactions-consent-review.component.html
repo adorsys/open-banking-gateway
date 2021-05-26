@@ -6,7 +6,7 @@
         Review an account access level for <strong>{{ finTechName }}</strong>
       </p>
     </section>
-    <form [formGroup]="targetForm">
+    <form [formGroup]="consentReviewForm">
     <ng-container [ngSwitch]="aisConsent.level">
       <section>
         <ng-container *ngSwitchCase="accountAccessLevel.ALL_PSD2">
@@ -30,7 +30,7 @@
         </ng-container>
         <div
           class="flex-container"
-          [ngClass]="{ 'is-invalid': _validUntilDate.touched && _validUntilDate.errors }">
+          [ngClass]="{ 'is-invalid': validUntilDate.touched && validUntilDate.errors }">
           <img src="assets/icons/icons8-approval.png" alt="approval" class="icons" />
           <p>
             The consent will be valid until:
@@ -41,12 +41,12 @@
               id="validUntilDate"
               name="validUntilDate"
               formControlName="validUntilDate"
-              [ngClass]="{ 'is-invalid': _validUntilDate.touched && _validUntilDate.errors }"
+              [ngClass]="{ 'is-invalid': validUntilDate.touched && validUntilDate.errors }"
             />
         </div>
         <div
           class="flex-container"
-          [ngClass]="{ 'is-invalid': _frequencyPerDay.touched && _frequencyPerDay.errors }">
+          [ngClass]="{ 'is-invalid': frequencyPerDay.touched && frequencyPerDay.errors }">
           <img src="assets/icons/icons8-last_24_hours.png" alt="24_hours" class="icons" />
           <p>
             The consent can be used:
@@ -57,7 +57,7 @@
             id="frequencyPerDay"
             name="frequencyPerDay"
             formControlName="frequencyPerDay"
-            [ngClass]="{ 'is-invalid': _frequencyPerDay.touched && _frequencyPerDay.errors }"/>
+            [ngClass]="{ 'is-invalid': frequencyPerDay.touched && frequencyPerDay.errors }"/>
           <strong class="customStrong"> times per day </strong>
         </div>
         <div class="form-check inputWrapper">
@@ -71,11 +71,11 @@
         </div>
         <div class="invalid-feedback mb-2">
           <span
-            *ngIf="_frequencyPerDay.touched && _frequencyPerDay.errors;">
+            *ngIf="frequencyPerDay.touched && frequencyPerDay.errors;">
             The value must be greater than or equal to 1.
           </span>
           <span
-            *ngIf="_validUntilDate.touched && _validUntilDate.errors;">
+            *ngIf="validUntilDate.touched && validUntilDate.errors;">
             Incorrect date format or date (past dates cannot be used).
           </span>
         </div>
@@ -84,7 +84,9 @@
     </form>
     <div class="d-sm-flex">
       <button id="do_deny" class="btn btn-outline-back w-100 mr-4" (click)="onBack()">Back</button>
-      <button id="do_submit" type="button" class="btn btn-primary w-100" (click)="onConfirm()">Confirm</button>
+      <button
+        [disabled]="!consentReviewForm.valid"
+        id="do_submit" type="button" class="btn btn-primary w-100" (click)="onConfirm()">Confirm</button>
     </div>
   </div>
 </div>
