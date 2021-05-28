@@ -1,0 +1,123 @@
+server:
+  port: 8087
+
+# Actuator:
+management:
+  info:
+    git:
+      mode: full
+
+# Application configuration
+protocol:
+  xs2a:
+    urls:
+      ais:
+        to-aspsp: ${facade.urls.embedded-ui-base-url}/ais${protocol.xs2a.urls.common.to-aspsp}
+        web-hooks:
+          ok: ${protocol.xs2a.urls.common.web-hooks.ok}
+          nok: ${protocol.xs2a.urls.common.web-hooks.nok}
+          result: ${facade.urls.embedded-ui-base-url}/ais${protocol.xs2a.urls.common.web-hooks.result}
+        parameters:
+          provide-more: ${facade.urls.embedded-ui-base-url}/ais${protocol.xs2a.urls.common.parameters.provide-more}
+          provide-psu-password: ${facade.urls.embedded-ui-base-url}/ais${protocol.xs2a.urls.common.parameters.provide-psu-password}
+          select-sca-method: ${facade.urls.embedded-ui-base-url}/ais${protocol.xs2a.urls.common.parameters.select-sca-method}
+          report-sca-result: ${facade.urls.embedded-ui-base-url}/ais${protocol.xs2a.urls.common.parameters.report-sca-result}
+          provide-psu-iban: ${facade.urls.embedded-ui-base-url}/ais${protocol.xs2a.urls.common.parameters.provide-psu-iban}
+      pis:
+        to-aspsp: ${facade.urls.embedded-ui-base-url}/pis${protocol.xs2a.urls.common.to-aspsp}
+        web-hooks:
+          ok: ${protocol.xs2a.urls.common.web-hooks.ok}
+          nok: ${protocol.xs2a.urls.common.web-hooks.nok}
+          result: ${facade.urls.embedded-ui-base-url}/pis${protocol.xs2a.urls.common.web-hooks.result}
+        parameters:
+          provide-more: ${facade.urls.embedded-ui-base-url}/pis${protocol.xs2a.urls.common.parameters.provide-more}
+          provide-psu-password: ${facade.urls.embedded-ui-base-url}/pis${protocol.xs2a.urls.common.parameters.provide-psu-password}
+          select-sca-method: ${facade.urls.embedded-ui-base-url}/pis${protocol.xs2a.urls.common.parameters.select-sca-method}
+          report-sca-result: ${facade.urls.embedded-ui-base-url}/pis${protocol.xs2a.urls.common.parameters.report-sca-result}
+          provide-psu-iban: ${facade.urls.embedded-ui-base-url}/pis${protocol.xs2a.urls.common.parameters.provide-psu-iban}
+      common:
+        to-aspsp: /{authSessionId}/to-aspsp-redirection?redirectCode={redirectCode}
+        web-hooks:
+          ok: ${facade.urls.embedded-ui-base-url}/embedded-server/v1/consent/{authSessionId}/fromAspsp/STUB_STATE/ok/{aspspRedirectCode}
+          nok: ${facade.urls.embedded-ui-base-url}/embedded-server/v1/consent/{authSessionId}/fromAspsp/STUB_STATE/nok/{aspspRedirectCode}
+          result: /{authSessionId}/consent-result?redirectCode={redirectCode}
+        parameters:
+          provide-more: /{authSessionId}?redirectCode={redirectCode}
+          provide-psu-password: /{authSessionId}/authenticate?wrong={isWrongCreds}
+          select-sca-method: /{authSessionId}/select-sca-method
+          report-sca-result: /{authSessionId}/sca-result/{selectedScaType}?wrong={isWrongCreds}
+          provide-psu-iban: /{authSessionId}/entry-consent-transactions/dedicated-account-access?wrong={isWrongCreds}
+    aspspmessages:
+      invalid-credentials: PSU_CREDENTIALS_INVALID
+      invalid-consent: FORMAT_ERROR
+      missing-oauth2-token: TOKEN_INVALID
+      missing-oauth2-token-message: Please retrieve token first
+      consent-gone:
+        ACCESS_EXCEEDED: CONSENT_ACCESS_EXCEEDED_LIMIT
+        CONSENT_UNKNOWN: CONSENT_UNKNOWN
+        CONSENT_EXPIRED: CONSENT_EXPIRED
+        CONSENT_INVALID: CONSENT_INVALID
+    pkcs12:
+      keystore: sample-qwac.keystore
+      password: password
+  hbci:
+    adapter:
+      # hbci-product: product - Your product ID here
+      # hbci-version: 300 - Your HBCI ID here
+      adorsys-mock-banks-blz:
+        - 10000001
+        - 20000002
+        - 30000003
+    urls:
+      ais:
+        redirect:
+          to-aspsp: ${facade.urls.embedded-ui-base-url}/ais/{authSessionId}/to-aspsp-redirection
+          web-hooks:
+            ok: ${facade.urls.embedded-ui-base-url}/embedded-server/v1/consent/{authSessionId}/fromAspsp/STUB_STATE/ok/{aspspRedirectCode}
+            nok: ${facade.urls.embedded-ui-base-url}/embedded-server/v1/consent/{authSessionId}/fromAspsp/STUB_STATE/nok/{aspspRedirectCode}
+            result: ${facade.urls.embedded-ui-base-url}/ais/{authSessionId}/consent-result?redirectCode={redirectCode}
+          parameters:
+            max-array-size: 32
+            provide-more: ${facade.urls.embedded-ui-base-url}/ais/{authSessionId}?redirectCode={redirectCode}
+            provide-psu-password: ${facade.urls.embedded-ui-base-url}/ais/{authSessionId}/authenticate?wrong={isWrongCreds}
+            select-sca-method: ${facade.urls.embedded-ui-base-url}/ais/{authSessionId}/select-sca-method
+            report-sca-result: ${facade.urls.embedded-ui-base-url}/ais/{authSessionId}/sca-result/{selectedScaType}?wrong={isWrongCreds}
+            provide-psu-iban: ${facade.urls.embedded-ui-base-url}/ais/{authSessionId}/entry-consent-transactions/dedicated-account-access?wrong={isWrongCreds}
+      pis:
+        redirect:
+          to-aspsp: ${facade.urls.embedded-ui-base-url}/pis/{authSessionId}/to-aspsp-redirection
+          web-hooks:
+            ok: ${facade.urls.embedded-ui-base-url}/embedded-server/v1/consent/{authSessionId}/fromAspsp/STUB_STATE/ok/{aspspRedirectCode}
+            nok: ${facade.urls.embedded-ui-base-url}/embedded-server/v1/consent/{authSessionId}/fromAspsp/STUB_STATE/nok/{aspspRedirectCode}
+            result: ${facade.urls.embedded-ui-base-url}/pis/{authSessionId}/consent-result?redirectCode={redirectCode}
+          parameters:
+            max-array-size: 32
+            provide-more: ${facade.urls.embedded-ui-base-url}/pis/{authSessionId}?redirectCode={redirectCode}
+            provide-psu-password: ${facade.urls.embedded-ui-base-url}/pis/{authSessionId}/authenticate?wrong={isWrongCreds}
+            select-sca-method: ${facade.urls.embedded-ui-base-url}/pis/{authSessionId}/select-sca-method
+            report-sca-result: ${facade.urls.embedded-ui-base-url}/pis/{authSessionId}/sca-result/{selectedScaType}?wrong={isWrongCreds}
+            provide-psu-iban: ${facade.urls.embedded-ui-base-url}/pis/{authSessionId}/entry-consent-transactions/dedicated-account-access?wrong={isWrongCreds}
+    sca:
+      authentication-types:
+        SMS: "SMS_OTP"
+        MOBILE: "SMS_OTP"
+        CHIP: "CHIP_OTP"
+        PHOTO: "PHOTO_OTP"
+        PUSH: "PUSH_OTP"
+        EMAIL: "SMTP_OTP"
+
+# Flowable comes for all protocols shared
+bpmnshared:
+  flowable:
+    serialization:
+      serialize-only-packages:
+        - de.adorsys.opba.protocol.bpmnshared.dto.context
+        - de.adorsys.opba.protocol.xs2a.context
+        - de.adorsys.opba.protocol.hbci.context
+        - de.adorsys.opba.protocol.hbci.service.protocol.ais.dto
+    expirable:
+      expire-after-write: PT600S
+    # TODO: re-enable retry after proper error handling implementation
+    number-of-retries: 0
+flowable:
+  process-definition-location-prefix: classpath*:/processes/**/
