@@ -1,4 +1,4 @@
-package de.adorsys.opba.starter;
+package de.adorsys.opba.helpers.protocol.testing;
 
 import de.adorsys.opba.protocol.hbci.EnableHbciProtocol;
 import de.adorsys.opba.protocol.xs2a.EnableXs2aProtocol;

@@ -1,4 +1,4 @@
-package de.adorsys.opba.starter.config;
+package de.adorsys.opba.helpers.protocol.testing.config;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.databind.ObjectMapper;
