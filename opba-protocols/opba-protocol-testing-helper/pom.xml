@@ -73,7 +73,7 @@
                 <artifactId>spring-boot-maven-plugin</artifactId>
                 <version>${spring-boot.version}</version>
                 <configuration>
-                    <mainClass>de.adorsys.opba.helpers.protocol.testing.OpenBankingEmbeddedApplication</mainClass>
+                    <mainClass>de.adorsys.opba.helpers.protocol.testing.OpenBankingTestingHelperApplication</mainClass>
                     <skip>false</skip>
                     <classifier>exec</classifier>
                 </configuration>

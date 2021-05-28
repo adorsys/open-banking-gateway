@@ -13,9 +13,9 @@ import org.springframework.boot.context.properties.EnableConfigurationProperties
 @SpringBootApplication
 @EnableConfigurationProperties
 @SuppressWarnings("checkstyle:HideUtilityClassConstructor") // Springboot starter class is not an utility class
-public class OpenBankingEmbeddedApplication {
+public class OpenBankingTestingHelperApplication {
 
     public static void main(String[] args) {
-        SpringApplication.run(OpenBankingEmbeddedApplication.class, args);
+        SpringApplication.run(OpenBankingTestingHelperApplication.class, args);
     }
 }
