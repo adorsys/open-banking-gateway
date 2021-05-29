@@ -1,6 +1,22 @@
 server:
   port: 8087
 
+spring:
+  # Note this is just a parameter name required for configutation bean, Liquibase is not present
+  liquibase:
+    parameters:
+      adorsys-hbci-sandbox-url: http://localhost:8090/hbci-mock/
+  datasource:
+    url: jdbc:h2:mem:testdb
+    driver-class-name: org.h2.Driver
+    username: sa
+    data-password: password
+  jpa:
+    database-platform: org.hibernate.dialect.H2Dialect
+    open-in-view: false
+    hibernate:
+      ddl-auto: validate
+
 # Actuator:
 management:
   info:
@@ -8,6 +24,11 @@ management:
       mode: full
 
 # Application configuration
+
+facade:
+  urls:
+    embedded-ui-base-url: http://localhost:4200
+
 protocol:
   xs2a:
     urls:
