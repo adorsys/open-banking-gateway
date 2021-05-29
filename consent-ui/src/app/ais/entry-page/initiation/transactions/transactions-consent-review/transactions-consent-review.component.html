@@ -6,6 +6,7 @@
         Review an account access level for <strong>{{ finTechName }}</strong>
       </p>
     </section>
+    <form [formGroup]="consentReviewForm">
     <ng-container [ngSwitch]="aisConsent.level">
       <section>
         <ng-container *ngSwitchCase="accountAccessLevel.ALL_PSD2">
@@ -27,23 +28,65 @@
             </ul>
           </div>
         </ng-container>
-        <div class="flex-container">
+        <div
+          class="flex-container"
+          [ngClass]="{ 'is-invalid': validUntilDate.touched && validUntilDate.errors }">
           <img src="assets/icons/icons8-approval.png" alt="approval" class="icons" />
           <p>
-            The consent will be valid until <strong>{{ aisConsent.consent.validUntil }}</strong>
+            The consent will be valid until:
           </p>
+            <input
+              class="form-control customDate"
+              type="date"
+              id="validUntilDate"
+              name="validUntilDate"
+              formControlName="validUntilDate"
+              [ngClass]="{ 'is-invalid': validUntilDate.touched && validUntilDate.errors }"
+            />
         </div>
-        <div class="flex-container">
+        <div
+          class="flex-container"
+          [ngClass]="{ 'is-invalid': frequencyPerDay.touched && frequencyPerDay.errors }">
           <img src="assets/icons/icons8-last_24_hours.png" alt="24_hours" class="icons" />
           <p>
-            The consent can be used <strong>{{ aisConsent.consent.frequencyPerDay }} times per day </strong>
+            The consent can be used:
           </p>
+          <input
+            class="form-control customNumber"
+            type="number"
+            id="frequencyPerDay"
+            name="frequencyPerDay"
+            formControlName="frequencyPerDay"
+            [ngClass]="{ 'is-invalid': frequencyPerDay.touched && frequencyPerDay.errors }"/>
+          <strong class="customStrong"> times per day </strong>
+        </div>
+        <div class="form-check inputWrapper">
+          <input
+            class="form-check-input"
+            type="checkbox"
+            id="recurringIndicator"
+            name="recurringIndicator"
+            formControlName="recurringIndicator"/>
+          <label class="form-check-label checkboxLabel" for="recurringIndicator">The consent is for recurring access to the account data</label>
+        </div>
+        <div class="invalid-feedback mb-2">
+          <span
+            *ngIf="frequencyPerDay.touched && frequencyPerDay.errors;">
+            The value must be greater than or equal to 1.
+          </span>
+          <span
+            *ngIf="validUntilDate.touched && validUntilDate.errors;">
+            Incorrect date format or date (past dates cannot be used).
+          </span>
         </div>
       </section>
     </ng-container>
+    </form>
     <div class="d-sm-flex">
       <button id="do_deny" class="btn btn-outline-back w-100 mr-4" (click)="onBack()">Back</button>
-      <button id="do_submit" type="button" class="btn btn-primary w-100" (click)="onConfirm()">Confirm</button>
+      <button
+        [disabled]="!consentReviewForm.valid"
+        id="do_submit" type="button" class="btn btn-primary w-100" (click)="onConfirm()">Confirm</button>
     </div>
   </div>
 </div>
