@@ -190,6 +190,13 @@
                                     <replacement>/</replacement>
                                     <failIfNoMatch>false</failIfNoMatch>
                                 </regexPropertySetting>
+                                <regexPropertySetting>
+                                    <name>file-sep</name>
+                                    <value>${file.separator}</value>
+                                    <regex>\\</regex>
+                                    <replacement>\\\\</replacement>
+                                    <failIfNoMatch>false</failIfNoMatch>
+                                </regexPropertySetting>
                             </regexPropertySettings>
                         </configuration>
                     </execution>
@@ -212,7 +219,7 @@
                     <filesToInclude>${build-dir.normalized.slash-path}/shared-processes/processes/xs2a/accounts/xs2a-list-transactions.bpmn20.xml</filesToInclude>
                     <tokenValueMap>${base-dir.normalized.slash-path}/src/main/resources/context.properties</tokenValueMap>
                     <inputFilePattern>${build-dir.normalized.backslash-path}[/\\]shared-processes[/\\]processes[/\\](.*)[/\\]([A-Za-z0-9\.\-]+)$</inputFilePattern>
-                    <outputFilePattern>${build-dir.normalized.backslash-path}\\classes\\processes\\$1\\sandbox-$2</outputFilePattern>
+                    <outputFilePattern>${build-dir.normalized.backslash-path}${file-sep}classes${file-sep}processes${file-sep}$1${file-sep}sandbox-$2</outputFilePattern>
                 </configuration>
             </plugin>
             <!-- FLOW CUSTOMIZATION END -->
