@@ -1,11 +1,15 @@
 package de.adorsys.opba.helpers.protocol.testing.controller;
 
 import de.adorsys.opba.helpers.protocol.testing.service.MapBasedRequestScopedServicesProvider;
+import de.adorsys.opba.protocol.api.Action;
 import de.adorsys.opba.protocol.api.ais.ListAccounts;
+import de.adorsys.opba.protocol.api.authorization.UpdateAuthorization;
 import de.adorsys.opba.protocol.api.dto.context.Context;
 import de.adorsys.opba.protocol.api.dto.context.ServiceContext;
 import de.adorsys.opba.protocol.api.dto.request.accounts.ListAccountsRequest;
+import de.adorsys.opba.protocol.api.dto.request.authorization.AuthorizationRequest;
 import de.adorsys.opba.protocol.api.dto.result.body.AccountListBody;
+import de.adorsys.opba.protocol.api.dto.result.body.UpdateAuthBody;
 import de.adorsys.opba.protocol.api.dto.result.fromprotocol.Result;
 import lombok.Data;
 import lombok.RequiredArgsConstructor;
@@ -26,7 +30,20 @@ public class ProtocolTestingController {
     public CompletableFuture<Result<AccountListBody>> listAccounts(@PathVariable UUID sessionId,
                                                                    @PathVariable String listAccountsBeanName,
                                                                    @RequestBody Request<ListAccountsRequest> request) {
-        var bean = context.getBean(listAccountsBeanName, ListAccounts.class);
+        return executeRequest(sessionId, listAccountsBeanName, request, ListAccounts.class);
+    }
+
+    @PostMapping("/{sessionId}/updateAuthorization/{updateAuthorizationBeanName}")
+    public CompletableFuture<Result<UpdateAuthBody>> updateAuthorization(
+            @PathVariable UUID sessionId, @PathVariable String updateAuthorizationBeanName,
+            @RequestBody Request<AuthorizationRequest> request
+    ) {
+        return executeRequest(sessionId, updateAuthorizationBeanName, request, UpdateAuthorization.class);
+    }
+
+    private <T, A extends Action<T, R>, R> CompletableFuture<Result<R>> executeRequest(
+            UUID sessionId, String beanName, Request<T> request, Class<A> actionClass) {
+        var bean = context.getBean(beanName, actionClass);
         var ctx = supplyContext(
                 request.getBank().getId().toString(),
                 sessionId,
