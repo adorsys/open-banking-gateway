@@ -7,6 +7,7 @@ import de.adorsys.opba.protocol.api.dto.context.ServiceContext;
 import de.adorsys.opba.protocol.api.dto.request.accounts.ListAccountsRequest;
 import de.adorsys.opba.protocol.api.dto.result.body.AccountListBody;
 import de.adorsys.opba.protocol.api.dto.result.fromprotocol.Result;
+import lombok.Data;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.ApplicationContext;
 import org.springframework.web.bind.annotation.*;
@@ -21,13 +22,19 @@ public class ProtocolTestingController {
     private final ApplicationContext context;
     private final MapBasedRequestScopedServicesProvider servicesProvider;
 
-    @PostMapping("/{bankId}/{sessionId}/listAccounts/{listAccountsBeanName}")
-    public CompletableFuture<Result<AccountListBody>> listAccounts(@PathVariable String bankId,
-                                                                   @PathVariable UUID sessionId,
+    @PostMapping("/{sessionId}/listAccounts/{listAccountsBeanName}")
+    public CompletableFuture<Result<AccountListBody>> listAccounts(@PathVariable UUID sessionId,
                                                                    @PathVariable String listAccountsBeanName,
-                                                                   @RequestBody ListAccountsRequest request) {
+                                                                   @RequestBody Request<ListAccountsRequest> request) {
         var bean = context.getBean(listAccountsBeanName, ListAccounts.class);
-        var ctx = supplyContext(bankId, sessionId, request);
+        var ctx = supplyContext(
+                request.getBank().getId().toString(),
+                sessionId,
+                request.getRequest()
+        );
+        var services = servicesProvider.getRequestScopedFor(sessionId.toString());
+        services.setBankProfile(request.getBank());
+        services.getConsentAccessor().setConsent(request.getConsent());
         return bean.execute(supplyServiceContext(sessionId, ctx));
     }
 
@@ -52,5 +59,12 @@ public class ProtocolTestingController {
                 .ctx((Context) ctx)
                 .requestScoped(servicesProvider.findRegisteredByKeyId(sessionId.toString()))
                 .build();
+    }
+
+    @Data
+    public static class Request<T> {
+        private T request;
+        private MapBasedRequestScopedServicesProvider.Consent consent;
+        private MapBasedRequestScopedServicesProvider.BankProfile bank;
     }
 }

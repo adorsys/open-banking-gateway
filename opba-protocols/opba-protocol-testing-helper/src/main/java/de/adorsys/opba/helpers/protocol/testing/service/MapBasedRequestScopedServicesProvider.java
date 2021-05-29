@@ -9,48 +9,61 @@ import de.adorsys.opba.protocol.api.services.scoped.RequestScoped;
 import de.adorsys.opba.protocol.api.services.scoped.RequestScopedServicesProvider;
 import de.adorsys.opba.protocol.api.services.scoped.consent.ConsentAccess;
 import de.adorsys.opba.protocol.api.services.scoped.consent.PaymentAccess;
+import de.adorsys.opba.protocol.api.services.scoped.consent.ProtocolFacingConsent;
 import de.adorsys.opba.protocol.api.services.scoped.transientdata.TransientStorage;
 import de.adorsys.opba.protocol.api.services.scoped.validation.FieldsToIgnoreLoader;
 import de.adorsys.opba.protocol.api.services.scoped.validation.IgnoreValidationRule;
+import lombok.Data;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
+import lombok.Setter;
 import lombok.experimental.Delegate;
 import org.springframework.stereotype.Service;
 
-import java.util.Map;
+import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.atomic.AtomicReference;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 @Service
 @RequiredArgsConstructor
 public class MapBasedRequestScopedServicesProvider implements RequestScopedServicesProvider {
 
-    private final Map<String, RequestScoped> requestScopedInMem = new ConcurrentHashMap<>();
+    private final Map<String, NoOpRequestScoped> requestScopedInMem = new ConcurrentHashMap<>();
 
     @Override
     public RequestScoped findRegisteredByKeyId(String keyId) {
         return requestScopedInMem.computeIfAbsent(keyId, NoOpRequestScoped::new);
     }
 
-    public void updateRequestScopedFor(String keyId, RequestScoped requestScoped) {
+    public NoOpRequestScoped getRequestScopedFor(String keyId) {
+        return requestScopedInMem.computeIfAbsent(keyId, NoOpRequestScoped::new);
+    }
+
+    public void updateRequestScopedFor(String keyId, NoOpRequestScoped requestScoped) {
         requestScopedInMem.put(keyId, requestScoped);
     }
 
     @Getter
+    @Setter
     @RequiredArgsConstructor
     public static class NoOpRequestScoped implements RequestScoped {
 
         private final String encryptionKeyId;
+
         private final TransientStorage transientStorage = new TransientStorageImpl();
+        private BankProfile bankProfile = new BankProfile();
+        private ConsentAccessor consentAccessor = new ConsentAccessor();
 
         @Override
         public CurrentBankProfile aspspProfile() {
-            return null;
+            return bankProfile;
         }
 
         @Override
         public ConsentAccess consentAccess() {
-            return null;
+            return consentAccessor;
         }
 
         @Override
@@ -106,5 +119,65 @@ public class MapBasedRequestScopedServicesProvider implements RequestScopedServi
         @Delegate
         @SuppressWarnings("PMD.UnusedPrivateField") // it is used through Delegate - via TransientStorage interface
         private final AtomicReference<Object> value = new AtomicReference<>();
+    }
+
+    @Data
+    public static class BankProfile implements CurrentBankProfile {
+        private Long id;
+        private String url;
+        private String adapterId;
+        private String idpUrl;
+        private List<Approach> scaApproaches;
+        private Approach preferredApproach;
+        private boolean tryToUsePreferredApproach;
+        private boolean uniquePaymentPurpose;
+        private boolean xs2aSkipConsentAuthorization;
+        private String bic;
+        private String bankCode;
+        private String name;
+    }
+
+    @Data
+    public static class ConsentAccessor implements ConsentAccess {
+
+        private ProtocolFacingConsent consent;
+        private boolean finTechScope;
+
+        @Override
+        public ProtocolFacingConsent createDoNotPersist() {
+            return new Consent();
+        }
+
+        @Override
+        public void save(ProtocolFacingConsent consent) {
+            this.consent = consent;
+        }
+
+        @Override
+        public void delete(ProtocolFacingConsent consent) {
+           this.consent = null;
+        }
+
+        @Override
+        public List<ProtocolFacingConsent> findByCurrentServiceSessionOrderByModifiedDesc() {
+            return Stream.of(consent).filter(Objects::nonNull).collect(Collectors.toList());
+        }
+
+        @Override
+        public Optional<ProtocolFacingConsent> findSingleByCurrentServiceSession() {
+            return Optional.ofNullable(consent);
+        }
+
+        @Override
+        public Collection<ProtocolFacingConsent> getAvailableConsentsForCurrentPsu() {
+            return Stream.of(consent).filter(Objects::nonNull).collect(Collectors.toList());
+        }
+    }
+
+    @Data
+    public static class Consent implements ProtocolFacingConsent {
+
+        private String consentId;
+        private String consentContext;
     }
 }
