@@ -14,7 +14,7 @@ public class RedirectToAspspResult<T> extends AuthorizationRequiredResult<T, Obj
     }
 
     @Override
-    public String authContext() {
+    public String getAuthContext() {
         return executionId;
     }
 }

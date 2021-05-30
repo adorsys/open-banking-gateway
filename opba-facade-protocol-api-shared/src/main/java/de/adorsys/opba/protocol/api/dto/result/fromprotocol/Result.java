@@ -10,7 +10,7 @@ public interface Result<T> {
      * Non-sensitive information that can be persisted with authorization session and read on subsequent requests.
      * For example some internal ID.
      */
-    default String authContext() {
+    default String getAuthContext() {
         return null;
     }
 

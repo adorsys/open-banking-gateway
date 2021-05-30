@@ -30,7 +30,7 @@ public class ResultLog<RESULT extends Result> implements NotSensitiveData {
 
         return "ResultLog("
                 + "resultClass=" + result.getClass()
-                + ", authContext=" + result.authContext()
+                + ", authContext=" + result.getAuthContext()
                 + ")";
     }
 

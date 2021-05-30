@@ -16,7 +16,7 @@ public class MapBasedAspspRepository implements AspspReadOnlyRepository {
 
     @Override
     public Optional<Aspsp> findById(String id) {
-        return Optional.of(aspspById.get(id));
+        return Optional.ofNullable(aspspById.get(id));
     }
 
     @Override

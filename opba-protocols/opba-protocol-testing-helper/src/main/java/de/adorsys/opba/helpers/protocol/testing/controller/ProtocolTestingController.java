@@ -47,7 +47,8 @@ public class ProtocolTestingController {
         var ctx = supplyContext(
                 request.getBank().getId().toString(),
                 sessionId,
-                request.getRequest()
+                request.getRequest(),
+                request.getAuthContext()
         );
         var services = servicesProvider.getRequestScopedFor(sessionId.toString());
         services.setBankProfile(request.getBank());
@@ -55,7 +56,7 @@ public class ProtocolTestingController {
         return bean.execute(supplyServiceContext(sessionId, ctx));
     }
 
-    private <T> Context<T> supplyContext(String bankId, UUID sessionId, T request) {
+    private <T> Context<T> supplyContext(String bankId, UUID sessionId, T request, String authCtx) {
         return new Context<>(
                 0L,
                 0L,
@@ -66,7 +67,7 @@ public class ProtocolTestingController {
                 UUID.randomUUID(),
                 UUID.randomUUID(),
                 request,
-                ""
+                authCtx
         );
     }
 
@@ -83,5 +84,6 @@ public class ProtocolTestingController {
         private T request;
         private MapBasedRequestScopedServicesProvider.Consent consent;
         private MapBasedRequestScopedServicesProvider.BankProfile bank;
+        private String authContext;
     }
 }
