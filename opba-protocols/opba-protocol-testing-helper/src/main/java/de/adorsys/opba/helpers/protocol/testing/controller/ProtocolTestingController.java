@@ -1,5 +1,9 @@
 package de.adorsys.opba.helpers.protocol.testing.controller;
 
+import com.fasterxml.jackson.core.JsonGenerator;
+import com.fasterxml.jackson.databind.DeserializationFeature;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import de.adorsys.opba.helpers.protocol.testing.service.MapBasedAspspRepository;
 import de.adorsys.opba.helpers.protocol.testing.service.MapBasedRequestScopedServicesProvider;
 import de.adorsys.opba.protocol.api.Action;
 import de.adorsys.opba.protocol.api.ais.ListAccounts;
@@ -11,6 +15,9 @@ import de.adorsys.opba.protocol.api.dto.request.authorization.AuthorizationReque
 import de.adorsys.opba.protocol.api.dto.result.body.AccountListBody;
 import de.adorsys.opba.protocol.api.dto.result.body.UpdateAuthBody;
 import de.adorsys.opba.protocol.api.dto.result.fromprotocol.Result;
+import de.adorsys.opba.protocol.api.services.scoped.consent.ProtocolFacingConsent;
+import de.adorsys.xs2a.adapter.api.model.Aspsp;
+import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.ApplicationContext;
@@ -23,7 +30,11 @@ import java.util.concurrent.CompletableFuture;
 @RequiredArgsConstructor
 public class ProtocolTestingController {
 
+    private static final ObjectMapper CUSTOM_MAPPER = new ObjectMapper()
+            .configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
+
     private final ApplicationContext context;
+    private final MapBasedAspspRepository aspspRepository;
     private final MapBasedRequestScopedServicesProvider servicesProvider;
 
     @PostMapping("/{sessionId}/listAccounts/{listAccountsBeanName}")
@@ -34,24 +45,32 @@ public class ProtocolTestingController {
     }
 
     @PostMapping("/{sessionId}/updateAuthorization/{updateAuthorizationBeanName}")
-    public CompletableFuture<Result<UpdateAuthBody>> updateAuthorization(
+    public CompletableFuture<WrappedResult<Result<UpdateAuthBody>>> updateAuthorization(
             @PathVariable UUID sessionId, @PathVariable String updateAuthorizationBeanName,
             @RequestBody Request<AuthorizationRequest> request
     ) {
-        return executeRequest(sessionId, updateAuthorizationBeanName, request, UpdateAuthorization.class);
+        return executeRequest(sessionId, updateAuthorizationBeanName, request, UpdateAuthorization.class)
+                .thenApply(it -> new WrappedResult<>(
+                        it,
+                        servicesProvider.getRequestScopedFor(sessionId.toString()).consentAccess().findSingleByCurrentServiceSession().orElse(null))
+                );
     }
 
     private <T, A extends Action<T, R>, R> CompletableFuture<Result<R>> executeRequest(
             UUID sessionId, String beanName, Request<T> request, Class<A> actionClass) {
         var bean = context.getBean(beanName, actionClass);
         var ctx = supplyContext(
-                request.getBank().getId().toString(),
+                request.getBank().getUuid(),
                 sessionId,
                 request.getRequest(),
                 request.getAuthContext()
         );
         var services = servicesProvider.getRequestScopedFor(sessionId.toString());
         services.setBankProfile(request.getBank());
+        if (null != request.getBank()) {
+            var aspsp = CUSTOM_MAPPER.convertValue(request.getBank(), Aspsp.class);
+            aspspRepository.setAspsp(request.getBank().getUuid(), aspsp);
+        }
         services.getConsentAccessor().setConsent(request.getConsent());
         return bean.execute(supplyServiceContext(sessionId, ctx));
     }
@@ -85,5 +104,12 @@ public class ProtocolTestingController {
         private MapBasedRequestScopedServicesProvider.Consent consent;
         private MapBasedRequestScopedServicesProvider.BankProfile bank;
         private String authContext;
+    }
+
+    @Data
+    @AllArgsConstructor
+    public static class WrappedResult<T> {
+        private T result;
+        private ProtocolFacingConsent consent;
     }
 }

@@ -127,6 +127,7 @@ public class MapBasedRequestScopedServicesProvider implements RequestScopedServi
         private String url;
         private String adapterId;
         private String idpUrl;
+        private String uuid;
         private List<Approach> scaApproaches;
         private Approach preferredApproach;
         private boolean tryToUsePreferredApproach;

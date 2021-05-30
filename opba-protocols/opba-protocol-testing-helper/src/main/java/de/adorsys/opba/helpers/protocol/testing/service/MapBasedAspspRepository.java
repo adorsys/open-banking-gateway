@@ -14,6 +14,10 @@ public class MapBasedAspspRepository implements AspspReadOnlyRepository {
 
     private final Map<String, Aspsp> aspspById = new ConcurrentHashMap<>();
 
+    public void setAspsp(String id, Aspsp aspsp) {
+        aspspById.put(id, aspsp);
+    }
+
     @Override
     public Optional<Aspsp> findById(String id) {
         return Optional.ofNullable(aspspById.get(id));

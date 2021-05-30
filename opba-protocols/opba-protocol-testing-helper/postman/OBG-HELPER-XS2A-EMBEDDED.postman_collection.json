@@ -1,0 +1,355 @@
+{
+	"info": {
+		"_postman_id": "7140b9c0-ac7a-4cf6-b134-8f79787d3042",
+		"name": "OBG-HELPER-XS2A-EMBEDDED",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "0. List accounts without consent",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"var jsonData = pm.response.json();\r",
+							"var authorizationSessionId = jsonData.redirectionTo.match(\"ais/(.+)\\\\?\")[1]\r",
+							"pm.collectionVariables.set(\"authorizationSessionId\", authorizationSessionId);\r",
+							"pm.collectionVariables.set(\"authContext\", jsonData.authContext);"
+						],
+						"type": "text/javascript"
+					}
+				},
+				{
+					"listen": "prerequest",
+					"script": {
+						"exec": [
+							"pm.collectionVariables.set(\r",
+							"    \"bank\", \r",
+							"    JSON.stringify({\r",
+							"        \"id\": 0,\r",
+							"        \"uuid\": \"aa750320-2958-455e-9926-e9fca5ddfa92\",\r",
+							"        \"url\": \"http://localhost:20014\",\r",
+							"        \"adapterId\": \"adorsys-adapter\",\r",
+							"        \"idpUrl\": \"string\",\r",
+							"        \"scaApproaches\": [\r",
+							"            \"EMBEDDED\"\r",
+							"        ],\r",
+							"        \"preferredApproach\": \"EMBEDDED\",\r",
+							"        \"tryToUsePreferredApproach\": true,\r",
+							"        \"uniquePaymentPurpose\": false,\r",
+							"        \"xs2aSkipConsentAuthorization\": false\r",
+							"    })\r",
+							");"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "accept",
+						"value": "*/*"
+					},
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"request\": {\r\n        \"facadeServiceable\": {\r\n            \"uaContext\": {\r\n                \"psuIpAddress\": \"8.8.8.8\"\r\n            },\r\n            \"requestId\": \"3fa85f64-5717-4562-b3fc-2c963f66afa6\",\r\n            \"serviceSessionId\": \"3fa85f64-5717-4562-b3fc-2c963f66afa6\",\r\n            \"redirectCode\": \"string\",\r\n            \"authorization\": \"string\",\r\n            \"bankId\": \"aa750320-2958-455e-9926-e9fca5ddfa92\",\r\n            \"fintechUserId\": \"string\",\r\n            \"fintechRedirectUrlOk\": \"string\",\r\n            \"fintechRedirectUrlNok\": \"string\",\r\n            \"sessionPassword\": \"string\",\r\n            \"authorizationKey\": \"string\",\r\n            \"psuAspspKeyId\": \"string\",\r\n            \"anonymousPsuAllowed\": false,\r\n            \"online\": true,\r\n            \"withAnalytics\": false\r\n        },\r\n        \"withBalance\": true\r\n    },\r\n    \"bank\": {{bank}}\r\n}"
+				},
+				"url": {
+					"raw": "http://localhost:8087/3fa85f64-5717-4562-b3fc-2c963f66afa6/listAccounts/xs2aListAccounts",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8087",
+					"path": [
+						"3fa85f64-5717-4562-b3fc-2c963f66afa6",
+						"listAccounts",
+						"xs2aListAccounts"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "1. Update authorization - describe consent",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"var jsonData = pm.response.json();\r",
+							"pm.collectionVariables.set(\"authContext\", jsonData.result.authContext);"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "accept",
+						"value": "*/*"
+					},
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"authContext\": \"{{authContext}}\",\r\n    \"request\": {\r\n        \"aisConsent\": {\r\n            \"access\": {\r\n                \"allPsd2\": \"ALL_ACCOUNTS\"\r\n            },\r\n            \"frequencyPerDay\": 12,\r\n            \"recurringIndicator\": true,\r\n            \"combinedServiceIndicator\": false,\r\n            \"validUntil\": \"2021-05-30\"\r\n        }\r\n    },\r\n    \"bank\": {{bank}}\r\n}"
+				},
+				"url": {
+					"raw": "http://localhost:8087/3500fbf6-4e86-4807-a26d-76567f6a4c58/updateAuthorization/xs2aUpdateAuthorization",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8087",
+					"path": [
+						"3500fbf6-4e86-4807-a26d-76567f6a4c58",
+						"updateAuthorization",
+						"xs2aUpdateAuthorization"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "2. Update authorization - provide PSU ID",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"var jsonData = pm.response.json();\r",
+							"pm.collectionVariables.set(\"authContext\", jsonData.result.authContext);"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "accept",
+						"value": "*/*"
+					},
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"authContext\": \"{{authContext}}\",\r\n    \"request\": {\r\n        \"extras\": {\r\n            \"PSU_ID\": \"anton.brueckner\"\r\n        }\r\n    },\r\n    \"bank\": {{bank}}\r\n}"
+				},
+				"url": {
+					"raw": "http://localhost:8087/3500fbf6-4e86-4807-a26d-76567f6a4c58/updateAuthorization/xs2aUpdateAuthorization",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8087",
+					"path": [
+						"3500fbf6-4e86-4807-a26d-76567f6a4c58",
+						"updateAuthorization",
+						"xs2aUpdateAuthorization"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "3. Update authorization - provide PSU PIN",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"var jsonData = pm.response.json();\r",
+							"pm.collectionVariables.set(\"authContext\", jsonData.result.authContext);"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "accept",
+						"value": "*/*"
+					},
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"authContext\": \"{{authContext}}\",\r\n    \"request\": {\r\n        \"scaAuthenticationData\": {\r\n            \"PSU_PASSWORD\": \"12345\"\r\n        }\r\n    },\r\n    \"bank\": {{bank}}\r\n}"
+				},
+				"url": {
+					"raw": "http://localhost:8087/3500fbf6-4e86-4807-a26d-76567f6a4c58/updateAuthorization/xs2aUpdateAuthorization",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8087",
+					"path": [
+						"3500fbf6-4e86-4807-a26d-76567f6a4c58",
+						"updateAuthorization",
+						"xs2aUpdateAuthorization"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "4. Update authorization - provide TAN",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"var jsonData = pm.response.json();\r",
+							"pm.collectionVariables.set(\"authContext\", jsonData.result.authContext);\r",
+							"pm.collectionVariables.set(\"consent\", JSON.stringify(jsonData.consent));"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "accept",
+						"value": "*/*"
+					},
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"authContext\": \"{{authContext}}\",\r\n    \"request\": {\r\n        \"scaAuthenticationData\": {\r\n            \"SCA_CHALLENGE_DATA\": \"123456\"\r\n        }\r\n    },\r\n    \"bank\": {{bank}}\r\n}"
+				},
+				"url": {
+					"raw": "http://localhost:8087/3500fbf6-4e86-4807-a26d-76567f6a4c58/updateAuthorization/xs2aUpdateAuthorization",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8087",
+					"path": [
+						"3500fbf6-4e86-4807-a26d-76567f6a4c58",
+						"updateAuthorization",
+						"xs2aUpdateAuthorization"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "5. List accounts WITH consent",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							""
+						],
+						"type": "text/javascript"
+					}
+				},
+				{
+					"listen": "prerequest",
+					"script": {
+						"exec": [
+							"pm.collectionVariables.set(\r",
+							"    \"bank\", \r",
+							"    JSON.stringify({\r",
+							"        \"id\": 0,\r",
+							"        \"uuid\": \"aa750320-2958-455e-9926-e9fca5ddfa92\",\r",
+							"        \"url\": \"http://localhost:20014\",\r",
+							"        \"adapterId\": \"adorsys-adapter\",\r",
+							"        \"idpUrl\": \"string\",\r",
+							"        \"scaApproaches\": [\r",
+							"            \"EMBEDDED\"\r",
+							"        ],\r",
+							"        \"preferredApproach\": \"EMBEDDED\",\r",
+							"        \"tryToUsePreferredApproach\": true,\r",
+							"        \"uniquePaymentPurpose\": false,\r",
+							"        \"xs2aSkipConsentAuthorization\": false\r",
+							"    })\r",
+							");"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "accept",
+						"value": "*/*"
+					},
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"request\": {\r\n        \"facadeServiceable\": {\r\n            \"uaContext\": {\r\n                \"psuIpAddress\": \"8.8.8.8\"\r\n            },\r\n            \"requestId\": \"3fa85f64-5717-4562-b3fc-2c963f66afa6\",\r\n            \"serviceSessionId\": \"3fa85f64-5717-4562-b3fc-2c963f66afa6\",\r\n            \"redirectCode\": \"string\",\r\n            \"authorization\": \"string\",\r\n            \"bankId\": \"aa750320-2958-455e-9926-e9fca5ddfa92\",\r\n            \"fintechUserId\": \"string\",\r\n            \"fintechRedirectUrlOk\": \"string\",\r\n            \"fintechRedirectUrlNok\": \"string\",\r\n            \"sessionPassword\": \"string\",\r\n            \"authorizationKey\": \"string\",\r\n            \"psuAspspKeyId\": \"string\",\r\n            \"anonymousPsuAllowed\": false,\r\n            \"online\": true,\r\n            \"withAnalytics\": false\r\n        },\r\n        \"withBalance\": true\r\n    },\r\n    \"bank\": {{bank}},\r\n    \"consent\": {{consent}}\r\n}"
+				},
+				"url": {
+					"raw": "http://localhost:8087/3fa85f64-5717-4562-b3fc-2c963f66afa6/listAccounts/xs2aListAccounts",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8087",
+					"path": [
+						"3fa85f64-5717-4562-b3fc-2c963f66afa6",
+						"listAccounts",
+						"xs2aListAccounts"
+					]
+				}
+			},
+			"response": []
+		}
+	],
+	"variable": [
+		{
+			"key": "authorizationSessionId",
+			"value": ""
+		},
+		{
+			"key": "authContext",
+			"value": ""
+		},
+		{
+			"key": "bank",
+			"value": ""
+		},
+		{
+			"key": "consent",
+			"value": ""
+		}
+	]
+}
