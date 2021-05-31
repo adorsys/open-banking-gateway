@@ -101,7 +101,7 @@ public class Xs2aOutcomeMapper<T> implements OutcomeMapper<T> {
         }
 
         @Override
-        public String authContext() {
+        public String getAuthContext() {
             return executionId;
         }
     }

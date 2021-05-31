@@ -31,6 +31,8 @@
         <module>hbci-protocol-tests</module>
         <!-- Support -->
         <module>sandboxes</module>
+        <!-- Protocol testing helper -->
+        <module>opba-protocol-testing-helper</module>
     </modules>
 </project>
 

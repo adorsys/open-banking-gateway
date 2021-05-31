@@ -1,0 +1,17 @@
+<configuration>
+    <appender name="STDOUT" class="ch.qos.logback.core.ConsoleAppender">
+        <encoder>
+            <pattern>%d{HH:mm:ss.SSS} [%thread] %-5level %logger{50} - %msg%n</pattern>
+        </encoder>
+    </appender>
+
+    <!--
+    <logger name="de.adorsys.opba.tppauthapi.controller.PsuAuthController" level="debug"/>
+    <logger name="de.adorsys.opba.api.security.internal.config.AuthorizationSessionKeyConfig" level="debug"/>
+    <logger name="de.adorsys.opba.api.security.internal.filter" level="debug"/>
+    -->
+
+    <root level="info">
+        <appender-ref ref="STDOUT" />
+    </root>
+</configuration>
