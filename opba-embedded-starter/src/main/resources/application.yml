@@ -115,7 +115,7 @@ facade:
         page:
           for-ais: ${facade.urls.embedded-ui-base-url}/auth/ais/{authorizationSessionId}/login?redirectCode={fintechUserTempPassword}
           for-pis: ${facade.urls.embedded-ui-base-url}/auth/pis/{authorizationSessionId}/login?redirectCode={fintechUserTempPassword}
-          # PIS allows anonymous users in OPBA
+          for-ais-anonymous: ${facade.urls.embedded-ui-base-url}/auth/ais/{authorizationSessionId}/anonymous?redirectCode={fintechUserTempPassword}
           for-pis-anonymous: ${facade.urls.embedded-ui-base-url}/auth/pis/{authorizationSessionId}/anonymous?redirectCode={fintechUserTempPassword}
         password:
           byte-size: 8
