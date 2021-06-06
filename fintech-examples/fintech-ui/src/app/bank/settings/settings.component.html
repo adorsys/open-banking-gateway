@@ -43,7 +43,7 @@
           </div>
           <div class="form-check">
             <input type="radio" value="{{ lotFromTppWithNewConsent }}" formControlName="lot" id="lot2" />
-            <label for="lot2">Discard propably existing consent ONE TIME ONLY.</label>
+            <label for="lot2">Discard probably existing consent ONE TIME ONLY.</label>
           </div>
           <div class="form-check">
             <input
@@ -53,6 +53,15 @@
               id="cacheLot"
             />
             <label for="cacheLot">Use protocol cache of TPP Server</label>
+          </div>
+          <div class="form-check">
+            <input
+              type="checkbox"
+              value="{{ settingsForm.get('consentRequiresAuthentication') }}"
+              formControlName="consentRequiresAuthentication"
+              id="consent"
+            />
+            <label for="consent">Consent requires authentication</label>
           </div>
         </div>
 

@@ -96,14 +96,14 @@ export class FintechSinglePaymentInitiationService {
      * @param fintechRedirectURLOK 
      * @param fintechRedirectURLNOK 
      * @param singlePaymentInitiationRequest Single payment initiation request
-     * @param xPisPsuAuthenticationRequired If false, login form to OPBA will not be displayed as there might be nothing to share for payments, so that authentication is not necessary. If absent or true - login form for payments will be displayed. 
+     * @param xPsuAuthenticationRequired If false, login form to OPBA will not be displayed as there might be nothing to share for payments, so that authentication is not necessary. If absent or true - login form for payments will be displayed. 
      * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
      * @param reportProgress flag to report request and response progress.
      */
-    public initiateSinglePayment(bankId: string, accountId: string, xRequestID: string, xXSRFTOKEN: string, fintechRedirectURLOK: string, fintechRedirectURLNOK: string, singlePaymentInitiationRequest: SinglePaymentInitiationRequest, xPisPsuAuthenticationRequired?: boolean, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<any>;
-    public initiateSinglePayment(bankId: string, accountId: string, xRequestID: string, xXSRFTOKEN: string, fintechRedirectURLOK: string, fintechRedirectURLNOK: string, singlePaymentInitiationRequest: SinglePaymentInitiationRequest, xPisPsuAuthenticationRequired?: boolean, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<HttpResponse<any>>;
-    public initiateSinglePayment(bankId: string, accountId: string, xRequestID: string, xXSRFTOKEN: string, fintechRedirectURLOK: string, fintechRedirectURLNOK: string, singlePaymentInitiationRequest: SinglePaymentInitiationRequest, xPisPsuAuthenticationRequired?: boolean, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<HttpEvent<any>>;
-    public initiateSinglePayment(bankId: string, accountId: string, xRequestID: string, xXSRFTOKEN: string, fintechRedirectURLOK: string, fintechRedirectURLNOK: string, singlePaymentInitiationRequest: SinglePaymentInitiationRequest, xPisPsuAuthenticationRequired?: boolean, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: 'application/json'}): Observable<any> {
+    public initiateSinglePayment(bankId: string, accountId: string, xRequestID: string, xXSRFTOKEN: string, fintechRedirectURLOK: string, fintechRedirectURLNOK: string, singlePaymentInitiationRequest: SinglePaymentInitiationRequest, xPsuAuthenticationRequired?: boolean, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<any>;
+    public initiateSinglePayment(bankId: string, accountId: string, xRequestID: string, xXSRFTOKEN: string, fintechRedirectURLOK: string, fintechRedirectURLNOK: string, singlePaymentInitiationRequest: SinglePaymentInitiationRequest, xPsuAuthenticationRequired?: boolean, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<HttpResponse<any>>;
+    public initiateSinglePayment(bankId: string, accountId: string, xRequestID: string, xXSRFTOKEN: string, fintechRedirectURLOK: string, fintechRedirectURLNOK: string, singlePaymentInitiationRequest: SinglePaymentInitiationRequest, xPsuAuthenticationRequired?: boolean, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<HttpEvent<any>>;
+    public initiateSinglePayment(bankId: string, accountId: string, xRequestID: string, xXSRFTOKEN: string, fintechRedirectURLOK: string, fintechRedirectURLNOK: string, singlePaymentInitiationRequest: SinglePaymentInitiationRequest, xPsuAuthenticationRequired?: boolean, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: 'application/json'}): Observable<any> {
         if (bankId === null || bankId === undefined) {
             throw new Error('Required parameter bankId was null or undefined when calling initiateSinglePayment.');
         }
@@ -133,8 +133,8 @@ export class FintechSinglePaymentInitiationService {
         if (xXSRFTOKEN !== undefined && xXSRFTOKEN !== null) {
             headers = headers.set('X-XSRF-TOKEN', String(xXSRFTOKEN));
         }
-        if (xPisPsuAuthenticationRequired !== undefined && xPisPsuAuthenticationRequired !== null) {
-            headers = headers.set('X-Pis-Psu-Authentication-Required', String(xPisPsuAuthenticationRequired));
+        if (xPsuAuthenticationRequired !== undefined && xPsuAuthenticationRequired !== null) {
+            headers = headers.set('X-Psu-Authentication-Required', String(xPsuAuthenticationRequired));
         }
         if (fintechRedirectURLOK !== undefined && fintechRedirectURLOK !== null) {
             headers = headers.set('Fintech-Redirect-URL-OK', String(fintechRedirectURLOK));

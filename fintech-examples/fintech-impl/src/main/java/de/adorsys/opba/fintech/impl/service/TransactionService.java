@@ -43,7 +43,7 @@ public class TransactionService {
     public ResponseEntity listTransactions(SessionEntity sessionEntity, String fintechOkUrl, String fintechNOkUrl, String bankId,
                                            String accountId, LocalDate dateFrom, LocalDate dateTo, String entryReferenceFrom,
                                            String bookingStatus, Boolean deltaList, LoTRetrievalInformation loTRetrievalInformation,
-                                           Boolean online) {
+                                           Boolean psuAuthenticationRequired, Boolean online) {
         log.info("LoT {}", loTRetrievalInformation);
         String fintechRedirectCode = UUID.randomUUID().toString();
         Optional<ConsentEntity> optionalConsent = Optional.empty();
@@ -68,7 +68,7 @@ public class TransactionService {
             COMPUTE_X_REQUEST_SIGNATURE,
             COMPUTE_FINTECH_ID,
             bankId,
-            null,
+            psuAuthenticationRequired,
             optionalConsent.map(ConsentEntity::getTppServiceSessionId).orElse(null),
             dateFrom,
             dateTo,
