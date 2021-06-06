@@ -13,6 +13,7 @@ import de.adorsys.opba.protocol.facade.config.encryption.PsuEncryptionServicePro
 import de.adorsys.opba.protocol.facade.config.encryption.impl.fintech.FintechSecureStorage;
 import de.adorsys.opba.protocol.facade.services.scoped.ConsentAccessUtil;
 import lombok.RequiredArgsConstructor;
+import org.jetbrains.annotations.NotNull;
 
 import javax.persistence.EntityManager;
 import java.security.PrivateKey;
@@ -65,8 +66,14 @@ public class FintechConsentAccess implements ConsentAccess {
     @Override
     public List<ProtocolFacingConsent> findByCurrentServiceSessionOrderByModifiedDesc() {
         ServiceSession serviceSession = entityManager.find(ServiceSession.class, serviceSessionId);
-        if (null == serviceSession || null == serviceSession.getAuthSession() || null == serviceSession.getAuthSession().getPsu()) {
+        if (null == serviceSession || null == serviceSession.getAuthSession()) {
             return Collections.emptyList();
+        }
+
+        List<Consent> consent = consents.findByServiceSessionIdOrderByModifiedAtDesc(serviceSession.getId());
+        // Anonymous consent session:
+        if (null == serviceSession.getAuthSession().getPsu()) {
+            return anonymousConsent(consent);
         }
 
         Optional<FintechPsuAspspPrvKey> psuAspspPrivateKey = keys.findByFintechIdAndPsuIdAndAspspId(
@@ -74,7 +81,6 @@ public class FintechConsentAccess implements ConsentAccess {
                 serviceSession.getAuthSession().getPsu().getId(),
                 serviceSession.getAuthSession().getAction().getBankProfile().getBank().getId()
         );
-        List<Consent> consent = consents.findByServiceSessionIdOrderByModifiedAtDesc(serviceSession.getId());
         if (!psuAspspPrivateKey.isPresent() || consent.isEmpty()) {
             return Collections.emptyList();
         }
@@ -87,5 +93,21 @@ public class FintechConsentAccess implements ConsentAccess {
     @Override
     public Collection<ProtocolFacingConsent> getAvailableConsentsForCurrentPsu() {
         return Collections.emptyList();
+    }
+
+    @NotNull
+    private List<ProtocolFacingConsent> anonymousConsent(List<Consent> consent) {
+        return consent.stream()
+                .map(it -> new ProtocolFacingConsentImpl(
+                        it,
+                        encryptionService.forPrivateKey(
+                                it.getFintechPubKey().getId(),
+                                fintechVault.fintechOnlyPrvKeyFromPrivate(
+                                        it.getFintechPubKey().getPrvKey(),
+                                        fintech,
+                                        fintechPassword
+                                )
+                        ))
+                ).collect(Collectors.toList());
     }
 }

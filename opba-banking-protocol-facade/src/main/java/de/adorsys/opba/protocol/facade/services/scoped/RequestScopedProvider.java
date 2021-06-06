@@ -100,7 +100,15 @@ public class RequestScopedProvider implements RequestScopedServicesProvider {
 
     private ConsentAccess getPsuConsentAccess(AuthSession authSession) {
         if (authSession.isPsuAnonymous()) {
-            return null;
+            if (null != authSession.getPsu()) {
+                throw new IllegalStateException("Expected anonymous session");
+            }
+
+            return consentAccessProvider.consentForAnonymousPsu(
+                    authSession.getFintechUser().getFintech(),
+                    authSession.getAction().getBankProfile().getBank(),
+                    authSession.getParent()
+            );
         }
 
         return consentAccessProvider.consentForPsuAndAspsp(
