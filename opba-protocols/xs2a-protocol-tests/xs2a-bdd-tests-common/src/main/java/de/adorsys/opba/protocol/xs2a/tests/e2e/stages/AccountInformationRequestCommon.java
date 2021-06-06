@@ -16,8 +16,7 @@ import org.springframework.web.util.UriComponentsBuilder;
 import java.util.UUID;
 
 import static de.adorsys.opba.api.security.external.domain.HttpHeaders.AUTHORIZATION_SESSION_KEY;
-import static de.adorsys.opba.protocol.xs2a.tests.HeaderNames.X_REQUEST_ID;
-import static de.adorsys.opba.protocol.xs2a.tests.HeaderNames.X_XSRF_TOKEN;
+import static de.adorsys.opba.protocol.xs2a.tests.HeaderNames.*;
 import static de.adorsys.opba.protocol.xs2a.tests.e2e.ResourceUtil.readResource;
 import static de.adorsys.opba.protocol.xs2a.tests.e2e.stages.AccountInformationResult.ONLINE;
 import static de.adorsys.opba.protocol.xs2a.tests.e2e.stages.PaymentStagesCommonUtil.PIS_ANONYMOUS_LOGIN_USER_ENDPOINT;
@@ -57,15 +56,23 @@ public class AccountInformationRequestCommon<SELF extends AccountInformationRequ
         return fintech_calls_list_accounts_for_anton_brueckner(SANDBOX_BANK_ID);
     }
 
+    public SELF fintech_calls_list_accounts_for_anonymous() {
+        return fintech_calls_list_accounts_for_anton_brueckner(SANDBOX_BANK_ID, false, true);
+    }
+
     // Note that anton.brueckner is typically used for REDIRECT (real REDIRECT that is returned by bank, and not REDIRECT approach in table)
     public SELF fintech_calls_list_accounts_for_anton_brueckner(String bankId) {
         return fintech_calls_list_accounts_for_anton_brueckner(bankId, false);
     }
 
-
     public SELF fintech_calls_list_accounts_for_anton_brueckner(String bankId, boolean online) {
+        return fintech_calls_list_accounts_for_anton_brueckner(bankId, online, false);
+    }
+
+    public SELF fintech_calls_list_accounts_for_anton_brueckner(String bankId, boolean online, boolean anonymous) {
         ExtractableResponse<Response> response = withAccountsHeaders(ANTON_BRUECKNER, bankId)
                 .header(SERVICE_SESSION_ID, UUID.randomUUID().toString())
+                .header(X_PSU_AUTHENTICATION_REQUIRED, !anonymous)
                 .queryParam(ONLINE, online)
             .when()
                 .get(AIS_ACCOUNTS_ENDPOINT)
