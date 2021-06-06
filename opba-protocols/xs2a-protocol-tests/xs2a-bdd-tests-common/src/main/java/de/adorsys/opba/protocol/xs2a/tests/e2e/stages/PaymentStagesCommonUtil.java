@@ -13,7 +13,7 @@ import static de.adorsys.opba.protocol.xs2a.tests.HeaderNames.FINTECH_REDIRECT_U
 import static de.adorsys.opba.protocol.xs2a.tests.HeaderNames.FINTECH_REDIRECT_URL_OK;
 import static de.adorsys.opba.protocol.xs2a.tests.HeaderNames.FINTECH_USER_ID;
 import static de.adorsys.opba.protocol.xs2a.tests.HeaderNames.SERVICE_SESSION_PASSWORD;
-import static de.adorsys.opba.protocol.xs2a.tests.HeaderNames.X_PIS_PSU_AUTHENTICATION_REQUIRED;
+import static de.adorsys.opba.protocol.xs2a.tests.HeaderNames.X_PSU_AUTHENTICATION_REQUIRED;
 import static de.adorsys.opba.protocol.xs2a.tests.HeaderNames.X_REQUEST_ID;
 import static de.adorsys.opba.protocol.xs2a.tests.HeaderNames.X_TIMESTAMP_UTC;
 import static de.adorsys.opba.protocol.xs2a.tests.HeaderNames.X_XSRF_TOKEN;
@@ -73,7 +73,7 @@ public class PaymentStagesCommonUtil {
                 .header(X_XSRF_TOKEN, XSRF_TOKEN)
                 .header(X_REQUEST_ID, xRequestId.toString())
                 .header(X_TIMESTAMP_UTC, xTimestampUtc.toString())
-                .header(X_PIS_PSU_AUTHENTICATION_REQUIRED, psuAuthenticationRequired)
+                .header(X_PSU_AUTHENTICATION_REQUIRED, psuAuthenticationRequired)
                 .header(PSU_IP_ADDRESS, IP_ADDRESS);
     }
 

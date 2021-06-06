@@ -17,7 +17,7 @@ public class HeaderNames {
     public static final String SERVICE_SESSION_PASSWORD = "Service-Session-Password";
     public static final String X_XSRF_TOKEN = "X-XSRF-TOKEN";
 
-    public static final String X_PIS_PSU_AUTHENTICATION_REQUIRED = "X-Pis-Psu-Authentication-Required";
+    public static final String X_PSU_AUTHENTICATION_REQUIRED = "X-Psu-Authentication-Required";
     public static final String X_TIMESTAMP_UTC = "X-Timestamp-UTC";
     public static final String X_REQUEST_SIGNATURE = "X-Request-Signature";
     public static final String X_REQUEST_ID = "X-Request-ID";

@@ -1,5 +1,6 @@
 package de.adorsys.opba.db.domain.entity;
 
+import de.adorsys.opba.db.domain.entity.fintech.FintechPubKey;
 import de.adorsys.opba.db.domain.entity.psu.Psu;
 import de.adorsys.opba.db.domain.entity.sessions.ServiceSession;
 import de.adorsys.opba.db.domain.generators.AssignedUuidGenerator;
@@ -54,6 +55,9 @@ public class Consent {
     @ManyToOne(fetch = FetchType.LAZY)
     private Bank aspsp;
 
+    /**
+     * If the consent encryption key can be identified by the PSU + ASPSP encryption key.
+     */
     @ManyToOne(fetch = FetchType.LAZY)
     private Psu psu;
 
@@ -66,6 +70,12 @@ public class Consent {
     @Basic(fetch = FetchType.LAZY)
     @Column(nullable = false)
     private byte[] encContext;
+
+    /**
+     * If the consent encryption key can be identified by Key ID stored in FinTech keystore (anonymous consent).
+     */
+    @ManyToOne(fetch = FetchType.LAZY)
+    private FintechPubKey fintechPubKey;
 
     private boolean confirmed;
 

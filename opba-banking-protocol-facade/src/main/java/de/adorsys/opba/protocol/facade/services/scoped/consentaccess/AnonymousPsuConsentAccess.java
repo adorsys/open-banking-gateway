@@ -3,21 +3,16 @@ package de.adorsys.opba.protocol.facade.services.scoped.consentaccess;
 import com.google.common.collect.Iterables;
 import de.adorsys.opba.db.domain.entity.Bank;
 import de.adorsys.opba.db.domain.entity.Consent;
-import de.adorsys.opba.db.domain.entity.Payment;
 import de.adorsys.opba.db.domain.entity.fintech.Fintech;
 import de.adorsys.opba.db.domain.entity.fintech.FintechPubKey;
 import de.adorsys.opba.db.domain.entity.sessions.ServiceSession;
 import de.adorsys.opba.db.repository.jpa.ConsentRepository;
-import de.adorsys.opba.db.repository.jpa.PaymentRepository;
 import de.adorsys.opba.db.repository.jpa.fintech.FintechOnlyPubKeyRepository;
 import de.adorsys.opba.protocol.api.services.EncryptionService;
 import de.adorsys.opba.protocol.api.services.scoped.consent.ConsentAccess;
-import de.adorsys.opba.protocol.api.services.scoped.consent.PaymentAccess;
 import de.adorsys.opba.protocol.api.services.scoped.consent.ProtocolFacingConsent;
-import de.adorsys.opba.protocol.api.services.scoped.consent.ProtocolFacingPayment;
 import de.adorsys.opba.protocol.facade.config.encryption.PsuEncryptionServiceProvider;
 import de.adorsys.opba.protocol.facade.services.scoped.ConsentAccessUtil;
-import de.adorsys.opba.protocol.facade.services.scoped.paymentaccess.ProtocolFacingPaymentImpl;
 import lombok.RequiredArgsConstructor;
 
 import java.util.Collection;
@@ -27,6 +22,7 @@ import java.util.Optional;
 import java.util.concurrent.ThreadLocalRandom;
 import java.util.stream.Collectors;
 
+@SuppressWarnings("CPD-START") // Acceptable duplication, as entities are quite different in their essence
 @RequiredArgsConstructor
 public class AnonymousPsuConsentAccess implements ConsentAccess {
 
@@ -51,9 +47,10 @@ public class AnonymousPsuConsentAccess implements ConsentAccess {
         Consent newConsent = Consent.builder()
                 .serviceSession(serviceSession)
                 .aspsp(aspsp)
+                .fintechPubKey(fintechPubKey)
                 .build();
 
-        return new ProtocolFacingConsentImpl(newConsent, anonymousEncryptionServiceBasedOnRandomKeyFromFintech(fintechPubKey));
+        return new ProtocolFacingConsentImpl(newConsent, anonymousEncryptionServiceBasedOnKeyFromFintech(fintechPubKey));
     }
 
     @Override
@@ -75,7 +72,12 @@ public class AnonymousPsuConsentAccess implements ConsentAccess {
     public List<ProtocolFacingConsent> findByCurrentServiceSessionOrderByModifiedDesc() {
         return consentRepository.findByServiceSessionIdOrderByModifiedAtDesc(serviceSession.getId())
                 .stream()
-                .map(it -> new ProtocolFacingConsentImpl(it, encryptionService))
+                .map(it ->
+                        new ProtocolFacingConsentImpl(
+                                it,
+                                anonymousEncryptionServiceBasedOnKeyFromFintech(it.getFintechPubKey())
+                        )
+                )
                 .collect(Collectors.toList());
     }
 
@@ -84,7 +86,7 @@ public class AnonymousPsuConsentAccess implements ConsentAccess {
         return Collections.emptyList();
     }
 
-    private EncryptionService anonymousEncryptionServiceBasedOnRandomKeyFromFintech(FintechPubKey fintechPubKey) {
+    private EncryptionService anonymousEncryptionServiceBasedOnKeyFromFintech(FintechPubKey fintechPubKey) {
         return psuEncryption.forPublicKey(fintechPubKey.getId(), fintechPubKey.getKey());
     }
 }

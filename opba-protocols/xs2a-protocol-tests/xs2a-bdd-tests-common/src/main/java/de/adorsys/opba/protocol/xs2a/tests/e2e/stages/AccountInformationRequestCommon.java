@@ -11,7 +11,6 @@ import io.restassured.response.Response;
 import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.MediaType;
 import org.springframework.web.util.UriComponentsBuilder;
 
 import java.util.UUID;
@@ -21,6 +20,7 @@ import static de.adorsys.opba.protocol.xs2a.tests.HeaderNames.X_REQUEST_ID;
 import static de.adorsys.opba.protocol.xs2a.tests.HeaderNames.X_XSRF_TOKEN;
 import static de.adorsys.opba.protocol.xs2a.tests.e2e.ResourceUtil.readResource;
 import static de.adorsys.opba.protocol.xs2a.tests.e2e.stages.AccountInformationResult.ONLINE;
+import static de.adorsys.opba.protocol.xs2a.tests.e2e.stages.PaymentStagesCommonUtil.PIS_ANONYMOUS_LOGIN_USER_ENDPOINT;
 import static de.adorsys.opba.protocol.xs2a.tests.e2e.stages.StagesCommonUtil.AIS_ACCOUNTS_ENDPOINT;
 import static de.adorsys.opba.protocol.xs2a.tests.e2e.stages.StagesCommonUtil.AIS_LOGIN_USER_ENDPOINT;
 import static de.adorsys.opba.protocol.xs2a.tests.e2e.stages.StagesCommonUtil.AIS_TRANSACTIONS_ENDPOINT;
@@ -40,6 +40,8 @@ import static de.adorsys.opba.protocol.xs2a.tests.e2e.stages.StagesCommonUtil.wi
 import static de.adorsys.opba.protocol.xs2a.tests.e2e.stages.StagesCommonUtil.withTransactionsHeaders;
 import static de.adorsys.opba.restapi.shared.HttpHeaders.SERVICE_SESSION_ID;
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.springframework.http.HttpStatus.ACCEPTED;
+import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
 
 @Slf4j
 @JGivenStage
@@ -68,7 +70,7 @@ public class AccountInformationRequestCommon<SELF extends AccountInformationRequ
             .when()
                 .get(AIS_ACCOUNTS_ENDPOINT)
             .then()
-                .statusCode(HttpStatus.ACCEPTED.value())
+                .statusCode(ACCEPTED.value())
                 .extract();
         updateServiceSessionId(response);
         updateRedirectCode(response);
@@ -82,7 +84,7 @@ public class AccountInformationRequestCommon<SELF extends AccountInformationRequ
             .when()
                 .get(AIS_ACCOUNTS_ENDPOINT)
             .then()
-                .statusCode(HttpStatus.ACCEPTED.value())
+                .statusCode(ACCEPTED.value())
                 .extract();
 
         updateServiceSessionId(response);
@@ -103,7 +105,7 @@ public class AccountInformationRequestCommon<SELF extends AccountInformationRequ
             .when()
                 .get(AIS_ACCOUNTS_ENDPOINT)
             .then()
-                .statusCode(HttpStatus.ACCEPTED.value())
+                .statusCode(ACCEPTED.value())
                 .extract();
 
         updateServiceSessionId(response);
@@ -120,7 +122,7 @@ public class AccountInformationRequestCommon<SELF extends AccountInformationRequ
             .when()
                 .get(AIS_ACCOUNTS_ENDPOINT)
             .then()
-                .statusCode(HttpStatus.ACCEPTED.value())
+                .statusCode(ACCEPTED.value())
                 .extract();
 
         updateServiceSessionId(response);
@@ -135,7 +137,7 @@ public class AccountInformationRequestCommon<SELF extends AccountInformationRequ
              .when()
                   .get(AIS_ACCOUNTS_ENDPOINT)
              .then()
-                  .statusCode(HttpStatus.ACCEPTED.value())
+                  .statusCode(ACCEPTED.value())
                   .extract();
 
         updateServiceSessionId(response);
@@ -150,7 +152,7 @@ public class AccountInformationRequestCommon<SELF extends AccountInformationRequ
             .when()
                 .get(AIS_TRANSACTIONS_WITHOUT_RESOURCE_ID_ENDPOINT)
             .then()
-                .statusCode(HttpStatus.ACCEPTED.value())
+                .statusCode(ACCEPTED.value())
                 .extract();
 
         updateServiceSessionId(response);
@@ -169,7 +171,7 @@ public class AccountInformationRequestCommon<SELF extends AccountInformationRequ
              .when()
                 .get(AIS_TRANSACTIONS_ENDPOINT, resourceId)
              .then()
-                .statusCode(HttpStatus.ACCEPTED.value())
+                .statusCode(ACCEPTED.value())
                 .extract();
 
         updateServiceSessionId(response);
@@ -197,7 +199,7 @@ public class AccountInformationRequestCommon<SELF extends AccountInformationRequ
             .when()
                 .get(AIS_TRANSACTIONS_ENDPOINT, resourceId)
             .then()
-                .statusCode(HttpStatus.ACCEPTED.value())
+                .statusCode(ACCEPTED.value())
                 .extract();
 
         updateServiceSessionId(response);
@@ -207,21 +209,36 @@ public class AccountInformationRequestCommon<SELF extends AccountInformationRequ
     }
 
     public SELF user_logged_in_into_opba_as_opba_user_with_credentials_using_fintech_supplied_url(String username, String password) {
-        String fintechUserTempPassword = UriComponentsBuilder
-                .fromHttpUrl(redirectUriToGetUserParams).build()
-                .getQueryParams()
-                .getFirst(REDIRECT_CODE_QUERY);
+        String fintechUserTempPassword = getFinTechPassword();
 
         ExtractableResponse<Response> response =  RestAssured
             .given()
                 .header(X_REQUEST_ID, UUID.randomUUID().toString())
-                .contentType(MediaType.APPLICATION_JSON_VALUE)
+                .contentType(APPLICATION_JSON_VALUE)
                 .queryParam(REDIRECT_CODE_QUERY, fintechUserTempPassword)
                 .body(ImmutableMap.of(LOGIN, username, PASSWORD, password))
             .when()
                 .post(AIS_LOGIN_USER_ENDPOINT, serviceSessionId)
             .then()
-                .statusCode(HttpStatus.ACCEPTED.value())
+                .statusCode(ACCEPTED.value())
+                .extract();
+
+        this.authSessionCookie = response.cookie(AUTHORIZATION_SESSION_KEY);
+        return self();
+    }
+
+    public SELF user_logged_in_into_opba_as_anonymous_user_with_credentials_using_fintech_supplied_url() {
+        String fintechUserTempPassword = getFinTechPassword();
+
+        ExtractableResponse<Response> response = RestAssured
+                .given()
+                    .header(X_REQUEST_ID, UUID.randomUUID().toString())
+                    .queryParam(REDIRECT_CODE_QUERY, fintechUserTempPassword)
+                    .contentType(APPLICATION_JSON_VALUE)
+                .when()
+                    .post(PIS_ANONYMOUS_LOGIN_USER_ENDPOINT, serviceSessionId)
+                .then()
+                    .statusCode(ACCEPTED.value())
                 .extract();
 
         this.authSessionCookie = response.cookie(AUTHORIZATION_SESSION_KEY);
@@ -261,12 +278,12 @@ public class AccountInformationRequestCommon<SELF extends AccountInformationRequ
                 .header(X_XSRF_TOKEN, UUID.randomUUID().toString())
                 .cookie(AUTHORIZATION_SESSION_KEY, authSessionCookie)
                 .queryParam(REDIRECT_CODE_QUERY, redirectCode)
-                .contentType(MediaType.APPLICATION_JSON_VALUE)
+                .contentType(APPLICATION_JSON_VALUE)
                 .body("{}")
             .when()
                 .post(DENY_CONSENT_AUTH_ENDPOINT, serviceSessionId)
             .then()
-                .statusCode(HttpStatus.ACCEPTED.value())
+                .statusCode(ACCEPTED.value())
             .extract();
 
         assertThat(LocationExtractorUtil.getLocation(response)).isEqualTo(FINTECH_REDIR_NOK);
@@ -367,7 +384,7 @@ public class AccountInformationRequestCommon<SELF extends AccountInformationRequ
         String resource = "restrecord/tpp-ui-input/params/max-musterman-dedicated-account-consent-wrong-iban.json";
 
         ExtractableResponse<Response> response =
-                startInitialInternalConsentAuthorization(AUTHORIZE_CONSENT_ENDPOINT, readResource(resource), HttpStatus.ACCEPTED);
+                startInitialInternalConsentAuthorization(AUTHORIZE_CONSENT_ENDPOINT, readResource(resource), ACCEPTED);
 
         assertThat(this.redirectUriToGetUserParams).contains("ais").contains("entry-consent-transactions/dedicated-account-access").contains("wrong=true");
 
@@ -381,7 +398,7 @@ public class AccountInformationRequestCommon<SELF extends AccountInformationRequ
         String resource = "restrecord/tpp-ui-input/params/max-musterman-transactions-single-account-consent.json";
 
         ExtractableResponse<Response> response =
-                startInitialInternalConsentAuthorization(AUTHORIZE_CONSENT_ENDPOINT, readResource(resource), HttpStatus.ACCEPTED);
+                startInitialInternalConsentAuthorization(AUTHORIZE_CONSENT_ENDPOINT, readResource(resource), ACCEPTED);
 
         assertThat(this.redirectUriToGetUserParams).contains("authenticate").contains("wrong=false");
 
@@ -439,7 +456,7 @@ public class AccountInformationRequestCommon<SELF extends AccountInformationRequ
         ExtractableResponse<Response> response = provideParametersToBankingProtocolWithBody(
                 AUTHORIZE_CONSENT_ENDPOINT,
                 readResource("restrecord/tpp-ui-input/params/max-musterman-wrong-password.json"),
-                HttpStatus.ACCEPTED
+                ACCEPTED
         );
 
         assertThat(LocationExtractorUtil.getLocation(response)).contains("authenticate").contains("wrong=true");
@@ -450,7 +467,7 @@ public class AccountInformationRequestCommon<SELF extends AccountInformationRequ
         provideParametersToBankingProtocolWithBody(
                 AUTHORIZE_CONSENT_ENDPOINT,
             selectedScaBody("EMAIL:max.musterman@mail.de"),
-            HttpStatus.ACCEPTED
+            ACCEPTED
         );
         return self();
     }
@@ -459,7 +476,7 @@ public class AccountInformationRequestCommon<SELF extends AccountInformationRequ
         provideParametersToBankingProtocolWithBody(
                 AUTHORIZE_CONSENT_ENDPOINT,
             selectedScaBody("EMAIL:max.musterman2@mail.de"),
-            HttpStatus.ACCEPTED
+            ACCEPTED
         );
         return self();
     }
@@ -468,7 +485,7 @@ public class AccountInformationRequestCommon<SELF extends AccountInformationRequ
         provideParametersToBankingProtocolWithBody(
                 AUTHORIZE_CONSENT_ENDPOINT,
                 selectedScaBody("PHOTO_OTP:photo_otp"),
-                HttpStatus.ACCEPTED
+                ACCEPTED
         );
         return self();
     }
@@ -493,7 +510,7 @@ public class AccountInformationRequestCommon<SELF extends AccountInformationRequ
         provideParametersToBankingProtocolWithBody(
                 AUTHORIZE_CONSENT_ENDPOINT,
                 selectedScaBody("EMAIL:test_static@example.com"),
-                HttpStatus.ACCEPTED
+                ACCEPTED
         );
         return self();
     }
@@ -530,7 +547,7 @@ public class AccountInformationRequestCommon<SELF extends AccountInformationRequ
         ExtractableResponse<Response> response = provideParametersToBankingProtocolWithBody(
                 AUTHORIZE_CONSENT_ENDPOINT,
                 readResource("restrecord/tpp-ui-input/params/max-musterman-wrong-sca-challenge-result.json"),
-                HttpStatus.ACCEPTED
+                ACCEPTED
         );
 
         assertThat(LocationExtractorUtil.getLocation(response)).contains("sca-result").contains("/EMAIL").contains("wrong=true");
@@ -541,7 +558,7 @@ public class AccountInformationRequestCommon<SELF extends AccountInformationRequ
         ExtractableResponse<Response> response = provideParametersToBankingProtocolWithBody(
                 AUTHORIZE_CONSENT_ENDPOINT,
                 readResource("restrecord/tpp-ui-input/params/max-musterman-wrong-sca-challenge-result.json"),
-                HttpStatus.ACCEPTED
+                ACCEPTED
         );
 
         assertThat(LocationExtractorUtil.getLocation(response)).contains("select-sca-method");
@@ -610,7 +627,7 @@ public class AccountInformationRequestCommon<SELF extends AccountInformationRequ
                     .header(X_REQUEST_ID, UUID.randomUUID().toString())
                     .header(X_XSRF_TOKEN, UUID.randomUUID().toString())
                     .queryParam(REDIRECT_CODE_QUERY, redirectCode)
-                    .contentType(MediaType.APPLICATION_JSON_VALUE)
+                    .contentType(APPLICATION_JSON_VALUE)
                     .body(readResource("restrecord/tpp-ui-input/params/anton-brueckner-account-all-accounts-consent.json"))
                 .when()
                     .post(AUTHORIZE_CONSENT_ENDPOINT, serviceSessionId)
@@ -635,7 +652,7 @@ public class AccountInformationRequestCommon<SELF extends AccountInformationRequ
 
     protected ExtractableResponse<Response> startInitialInternalConsentAuthorization(String uriPath, String resourceData) {
         ExtractableResponse<Response> response =
-                startInitialInternalConsentAuthorization(uriPath, resourceData, HttpStatus.ACCEPTED);
+                startInitialInternalConsentAuthorization(uriPath, resourceData, ACCEPTED);
         updateServiceSessionId(response);
         updateRedirectCode(response);
 
@@ -648,5 +665,12 @@ public class AccountInformationRequestCommon<SELF extends AccountInformationRequ
 
     protected ExtractableResponse<Response> provideGetConsentAuthStateRequest() {
         return provideGetConsentAuthStateRequest(serviceSessionId);
+    }
+
+    protected String getFinTechPassword() {
+        return UriComponentsBuilder
+                .fromHttpUrl(redirectUriToGetUserParams).build()
+                .getQueryParams()
+                .getFirst(REDIRECT_CODE_QUERY);
     }
 }

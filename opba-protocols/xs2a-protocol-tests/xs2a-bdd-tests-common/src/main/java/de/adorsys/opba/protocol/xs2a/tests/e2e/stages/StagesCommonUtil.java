@@ -34,6 +34,7 @@ public class StagesCommonUtil {
 
     public static final String REGISTER_USER_ENDPOINT = "/v1/psu/register";
     public static final String AIS_LOGIN_USER_ENDPOINT = "/v1/psu/ais/{authorizationId}/for-approval/login";
+    public static final String PIS_ANONYMOUS_LOGIN_USER_ENDPOINT = "//v1/psu/ais/{authorizationId}/for-approval/anonymous";
     public static final String CONFIRM_CONSENT_ENDPOINT = "/v1/banking/consents/{authorizationId}/confirm";
     public static final String CONFIRM_PAYMENT_ENDPOINT = "/v1/banking/payments/{authorizationId}/confirm";
     public static final String PIS_LOGIN_USER_ENDPOINT = "/v1/psu/pis/{authorizationId}/for-approval/login";

@@ -113,6 +113,7 @@ public class AccountService {
             COMPUTE_X_REQUEST_SIGNATURE,
             COMPUTE_FINTECH_ID,
             bankID,
+            null,
             serviceSessionID,
             withBalance,
             online);
@@ -130,6 +131,14 @@ public class AccountService {
             COMPUTE_X_TIMESTAMP_UTC,
             COMPUTE_X_REQUEST_SIGNATURE,
             COMPUTE_FINTECH_ID,
-            bankID, serviceSessionID, null, null, null, null, null);
+            bankID,
+            null,
+            serviceSessionID,
+            null,
+            null,
+    null,
+        null,
+            null
+        );
     }
 }

@@ -99,7 +99,7 @@ public class AuthSessionHandler {
                         .parent(entityManager.find(ServiceSession.class, context.getServiceSessionId()))
                         .action(authAction)
                         .fintechUser(user)
-                        .psuAnonymous(request.isAnonymousPsuAllowed())
+                        .psuAnonymous(request.isAnonymousPsu())
                         .redirectCode(context.getFutureRedirectCode().toString())
                         .build()
         );
@@ -151,11 +151,17 @@ public class AuthSessionHandler {
                 )
         );
 
-        String url = facadeAuthConfig.getRedirect().getConsentLogin().getPage().getForAis();
+        if (!(context.getRequest() instanceof FacadeServiceableRequest)) {
+            throw new IllegalStateException("Wrong request type: " + context.getRequest());
+        }
+        FacadeServiceableRequest request = (FacadeServiceableRequest) context.getRequest();
+
+        String url = request.isAnonymousPsu()
+                ? facadeAuthConfig.getRedirect().getConsentLogin().getPage().getForAis()
+                : facadeAuthConfig.getRedirect().getConsentLogin().getPage().getForAisAnonymous();
 
         if (context.getRequest() instanceof InitiateSinglePaymentRequest) {
-            InitiateSinglePaymentRequest request = (InitiateSinglePaymentRequest) context.getRequest();
-            url = request.getFacadeServiceable().isAnonymousPsuAllowed()
+            url = request.isAnonymousPsu()
                     ? facadeAuthConfig.getRedirect().getConsentLogin().getPage().getForPisAnonymous()
                     : facadeAuthConfig.getRedirect().getConsentLogin().getPage().getForPis();
         }

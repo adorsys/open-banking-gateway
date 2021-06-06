@@ -39,6 +39,7 @@ public class TransactionService {
     private final ConsentRepository consentRepository;
     private final HandleAcceptedService handleAcceptedService;
 
+    @SuppressWarnings("checkstyle:MethodLength") //  FIXME - It is just too many lines of text
     public ResponseEntity listTransactions(SessionEntity sessionEntity, String fintechOkUrl, String fintechNOkUrl, String bankId,
                                            String accountId, LocalDate dateFrom, LocalDate dateTo, String entryReferenceFrom,
                                            String bookingStatus, Boolean deltaList, LoTRetrievalInformation loTRetrievalInformation,
@@ -65,9 +66,18 @@ public class TransactionService {
             UUID.fromString(restRequestContext.getRequestId()),
             COMPUTE_X_TIMESTAMP_UTC,
             COMPUTE_X_REQUEST_SIGNATURE,
-            COMPUTE_FINTECH_ID, bankId,
+            COMPUTE_FINTECH_ID,
+            bankId,
+            null,
             optionalConsent.map(ConsentEntity::getTppServiceSessionId).orElse(null),
-            dateFrom, dateTo, entryReferenceFrom, bookingStatus, deltaList, online, true);
+            dateFrom,
+            dateTo,
+            entryReferenceFrom,
+            bookingStatus,
+            deltaList,
+            online,
+            true
+        );
         switch (transactions.getStatusCode()) {
             case OK:
                 return new ResponseEntity<>(ManualMapper.fromTppToFintech(transactions.getBody()), HttpStatus.OK);
