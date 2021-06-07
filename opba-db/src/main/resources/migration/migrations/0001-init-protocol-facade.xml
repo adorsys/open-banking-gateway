@@ -70,10 +70,10 @@
             <column name="bank_uuid" type="VARCHAR(36)">
                 <constraints nullable="false"/>
             </column>
-            <column name="protocol_action" type="VARCHAR(32)">
+            <column name="protocol_action" type="VARCHAR(64)">
                 <constraints nullable="false"/>
             </column>
-            <column name="protocol_bean_name" type="VARCHAR(32)">
+            <column name="protocol_bean_name" type="VARCHAR(64)">
                 <constraints nullable="false"/>
             </column>
             <column name="consent_supported" type="BOOLEAN" defaultValue="true">
@@ -91,10 +91,10 @@
             <column name="action_id" type="BIGINT">
                 <constraints nullable="false"/>
             </column>
-            <column name="protocol_action" type="VARCHAR(32)">
+            <column name="protocol_action" type="VARCHAR(64)">
                 <constraints nullable="false"/>
             </column>
-            <column name="sub_protocol_bean_name" type="VARCHAR(32)">
+            <column name="sub_protocol_bean_name" type="VARCHAR(64)">
                 <constraints nullable="false"/>
             </column>
         </createTable>

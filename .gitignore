@@ -74,3 +74,6 @@ site/
 
 # Disable test profiles
 opba-embedded-starter/src/main/resources/test-profiles/
+
+# Disable developer secrets
+**/application-my-secrets.yml
