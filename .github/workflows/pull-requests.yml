@@ -34,3 +34,8 @@ jobs:
         run: ./scripts/build_and_test.sh
         env:
           MAVEN_OPTS: "-Dhttp.keepAlive=false -Dmaven.wagon.http.pool=false -Dmaven.wagon.httpconnectionManager.ttlSeconds=120" # Github-on-Azure tweaks - https://github.com/actions/virtual-environments/issues/1499
+
+        - name: Build FireFly improter
+          run: ./scripts/build_firefly_exporter_mvn.sh
+          env:
+            MAVEN_OPTS: "-Dhttp.keepAlive=false -Dmaven.wagon.http.pool=false -Dmaven.wagon.httpconnectionManager.ttlSeconds=120" # Github-on-Azure tweaks - https://github.com/actions/virtual-environments/issues/1499
