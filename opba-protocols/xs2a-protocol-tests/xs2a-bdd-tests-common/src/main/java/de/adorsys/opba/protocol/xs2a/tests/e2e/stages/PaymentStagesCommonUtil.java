@@ -25,8 +25,8 @@ import static de.adorsys.opba.restapi.shared.HttpHeaders.UserAgentContext.PSU_IP
 public class PaymentStagesCommonUtil {
 
     public static final String INITIATE_PAYMENT_ENDPOINT = "/v1/banking/pis/payments/{payment-product}";
-    public static final String PIS_LOGIN_USER_ENDPOINT = "/v1/psu/pis/{authorizationId}/for-approval/login";
-    public static final String PIS_ANONYMOUS_LOGIN_USER_ENDPOINT = "/v1/psu/pis/{authorizationId}/anonymous";
+    public static final String PIS_LOGIN_USER_ENDPOINT = "/v1/psu/{authorizationId}/for-approval/login";
+    public static final String PIS_ANONYMOUS_LOGIN_USER_ENDPOINT = "/v1/psu/{authorizationId}/for-approval/anonymous";
     public static final String GET_PAYMENT_AUTH_STATE = "/v1/consent/{serviceSessionId}";
     public static final String AUTHORIZE_PAYMENT_ENDPOINT = "/v1/consent/{serviceSessionId}/embedded";
 
