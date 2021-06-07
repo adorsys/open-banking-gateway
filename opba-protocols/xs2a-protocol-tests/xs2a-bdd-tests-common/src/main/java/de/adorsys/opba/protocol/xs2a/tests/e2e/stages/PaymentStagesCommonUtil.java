@@ -13,7 +13,7 @@ import static de.adorsys.opba.protocol.xs2a.tests.HeaderNames.FINTECH_REDIRECT_U
 import static de.adorsys.opba.protocol.xs2a.tests.HeaderNames.FINTECH_REDIRECT_URL_OK;
 import static de.adorsys.opba.protocol.xs2a.tests.HeaderNames.FINTECH_USER_ID;
 import static de.adorsys.opba.protocol.xs2a.tests.HeaderNames.SERVICE_SESSION_PASSWORD;
-import static de.adorsys.opba.protocol.xs2a.tests.HeaderNames.X_PIS_PSU_AUTHENTICATION_REQUIRED;
+import static de.adorsys.opba.protocol.xs2a.tests.HeaderNames.X_PSU_AUTHENTICATION_REQUIRED;
 import static de.adorsys.opba.protocol.xs2a.tests.HeaderNames.X_REQUEST_ID;
 import static de.adorsys.opba.protocol.xs2a.tests.HeaderNames.X_TIMESTAMP_UTC;
 import static de.adorsys.opba.protocol.xs2a.tests.HeaderNames.X_XSRF_TOKEN;
@@ -25,8 +25,8 @@ import static de.adorsys.opba.restapi.shared.HttpHeaders.UserAgentContext.PSU_IP
 public class PaymentStagesCommonUtil {
 
     public static final String INITIATE_PAYMENT_ENDPOINT = "/v1/banking/pis/payments/{payment-product}";
-    public static final String PIS_LOGIN_USER_ENDPOINT = "/v1/psu/pis/{authorizationId}/for-approval/login";
-    public static final String PIS_ANONYMOUS_LOGIN_USER_ENDPOINT = "/v1/psu/pis/{authorizationId}/anonymous";
+    public static final String PIS_LOGIN_USER_ENDPOINT = "/v1/psu/{authorizationId}/for-approval/login";
+    public static final String PIS_ANONYMOUS_LOGIN_USER_ENDPOINT = "/v1/psu/{authorizationId}/for-approval/anonymous";
     public static final String GET_PAYMENT_AUTH_STATE = "/v1/consent/{serviceSessionId}";
     public static final String AUTHORIZE_PAYMENT_ENDPOINT = "/v1/consent/{serviceSessionId}/embedded";
 
@@ -73,7 +73,7 @@ public class PaymentStagesCommonUtil {
                 .header(X_XSRF_TOKEN, XSRF_TOKEN)
                 .header(X_REQUEST_ID, xRequestId.toString())
                 .header(X_TIMESTAMP_UTC, xTimestampUtc.toString())
-                .header(X_PIS_PSU_AUTHENTICATION_REQUIRED, psuAuthenticationRequired)
+                .header(X_PSU_AUTHENTICATION_REQUIRED, psuAuthenticationRequired)
                 .header(PSU_IP_ADDRESS, IP_ADDRESS);
     }
 

@@ -160,6 +160,7 @@ export class StorageService {
         withBalance: true,
         cacheLoa: false,
         cacheLot: false,
+        consentRequiresAuthentication: true,
         paymentRequiresAuthentication: false
       };
     }

@@ -48,6 +48,9 @@ public class FacadeAuthConfig {
 
                 @NotBlank
                 private String forPisAnonymous;
+
+                @NotBlank
+                private String forAisAnonymous;
             }
 
             @NotNull

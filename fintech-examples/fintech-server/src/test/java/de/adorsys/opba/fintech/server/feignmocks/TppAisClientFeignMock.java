@@ -25,6 +25,7 @@ public class TppAisClientFeignMock implements TppAisClient {
             String xRequestSignature,
             String fintechId,
             String bankID,
+            Boolean xPsuAuthenticationRequired,
             UUID serviceSessionID,
             Boolean useObgCache,
             Boolean withBalance
@@ -44,6 +45,7 @@ public class TppAisClientFeignMock implements TppAisClient {
             String xRequestSignature,
             String fintechId,
             String bankID,
+            Boolean xPsuAuthenticationRequired,
             UUID serviceSessionID,
             LocalDate dateFrom,
             @Valid LocalDate dateTo,
@@ -67,6 +69,7 @@ public class TppAisClientFeignMock implements TppAisClient {
             String xRequestSignature,
             String fintechID,
             String bankID,
+            Boolean xPsuAuthenticationRequired,
             UUID serviceSessionID,
             LocalDate dateFrom,
             LocalDate dateTo,

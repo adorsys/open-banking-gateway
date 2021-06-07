@@ -17,9 +17,9 @@ import { HttpClient, HttpHeaders, HttpParams,
 import { CustomHttpParameterCodec }                          from '../encoder';
 import { Observable }                                        from 'rxjs';
 
-import { GeneralError } from '../model/generalError';
-import { LoginResponse } from '../model/loginResponse';
-import { PsuAuthBody } from '../model/psuAuthBody';
+import { GeneralError } from '../model/models';
+import { LoginResponse } from '../model/models';
+import { PsuAuthBody } from '../model/models';
 
 import { BASE_PATH, COLLECTION_FORMATS }                     from '../variables';
 import { Configuration }                                     from '../configuration';
@@ -51,6 +51,42 @@ export class PsuAuthenticationService {
 
 
 
+    private addToHttpParams(httpParams: HttpParams, value: any, key?: string): HttpParams {
+        if (typeof value === "object" && value instanceof Date === false) {
+            httpParams = this.addToHttpParamsRecursive(httpParams, value);
+        } else {
+            httpParams = this.addToHttpParamsRecursive(httpParams, value, key);
+        }
+        return httpParams;
+    }
+
+    private addToHttpParamsRecursive(httpParams: HttpParams, value?: any, key?: string): HttpParams {
+        if (value == null) {
+            return httpParams;
+        }
+
+        if (typeof value === "object") {
+            if (Array.isArray(value)) {
+                (value as any[]).forEach( elem => httpParams = this.addToHttpParamsRecursive(httpParams, elem, key));
+            } else if (value instanceof Date) {
+                if (key != null) {
+                    httpParams = httpParams.append(key,
+                        (value as Date).toISOString().substr(0, 10));
+                } else {
+                   throw Error("key may not be null if value is Date");
+                }
+            } else {
+                Object.keys(value).forEach( k => httpParams = this.addToHttpParamsRecursive(
+                    httpParams, value[k], key != null ? `${key}.${k}` : k));
+            }
+        } else if (key != null) {
+            httpParams = httpParams.append(key, value);
+        } else {
+            throw Error("key may not be null if value is not object or array");
+        }
+        return httpParams;
+    }
+
     /**
      * Login user to open-banking
      * TBD
@@ -59,10 +95,10 @@ export class PsuAuthenticationService {
      * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
      * @param reportProgress flag to report request and response progress.
      */
-    public login(xRequestID: string, psuAuthBody: PsuAuthBody, observe?: 'body', reportProgress?: boolean): Observable<LoginResponse>;
-    public login(xRequestID: string, psuAuthBody: PsuAuthBody, observe?: 'response', reportProgress?: boolean): Observable<HttpResponse<LoginResponse>>;
-    public login(xRequestID: string, psuAuthBody: PsuAuthBody, observe?: 'events', reportProgress?: boolean): Observable<HttpEvent<LoginResponse>>;
-    public login(xRequestID: string, psuAuthBody: PsuAuthBody, observe: any = 'body', reportProgress: boolean = false ): Observable<any> {
+    public login(xRequestID: string, psuAuthBody: PsuAuthBody, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<LoginResponse>;
+    public login(xRequestID: string, psuAuthBody: PsuAuthBody, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<HttpResponse<LoginResponse>>;
+    public login(xRequestID: string, psuAuthBody: PsuAuthBody, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<HttpEvent<LoginResponse>>;
+    public login(xRequestID: string, psuAuthBody: PsuAuthBody, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: 'application/json'}): Observable<any> {
         if (xRequestID === null || xRequestID === undefined) {
             throw new Error('Required parameter xRequestID was null or undefined when calling login.');
         }
@@ -75,11 +111,14 @@ export class PsuAuthenticationService {
             headers = headers.set('X-Request-ID', String(xRequestID));
         }
 
-        // to determine the Accept header
-        const httpHeaderAccepts: string[] = [
-            'application/json'
-        ];
-        const httpHeaderAcceptSelected: string | undefined = this.configuration.selectHeaderAccept(httpHeaderAccepts);
+        let httpHeaderAcceptSelected: string | undefined = options && options.httpHeaderAccept;
+        if (httpHeaderAcceptSelected === undefined) {
+            // to determine the Accept header
+            const httpHeaderAccepts: string[] = [
+                'application/json'
+            ];
+            httpHeaderAcceptSelected = this.configuration.selectHeaderAccept(httpHeaderAccepts);
+        }
         if (httpHeaderAcceptSelected !== undefined) {
             headers = headers.set('Accept', httpHeaderAcceptSelected);
         }
@@ -94,9 +133,15 @@ export class PsuAuthenticationService {
             headers = headers.set('Content-Type', httpContentTypeSelected);
         }
 
+        let responseType: 'text' | 'json' = 'json';
+        if(httpHeaderAcceptSelected && httpHeaderAcceptSelected.startsWith('text')) {
+            responseType = 'text';
+        }
+
         return this.httpClient.post<LoginResponse>(`${this.configuration.basePath}/v1/psu/login`,
             psuAuthBody,
             {
+                responseType: <any>responseType,
                 withCredentials: this.configuration.withCredentials,
                 headers: headers,
                 observe: observe,
@@ -113,10 +158,10 @@ export class PsuAuthenticationService {
      * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
      * @param reportProgress flag to report request and response progress.
      */
-    public registration(xRequestID: string, psuAuthBody: PsuAuthBody, observe?: 'body', reportProgress?: boolean): Observable<any>;
-    public registration(xRequestID: string, psuAuthBody: PsuAuthBody, observe?: 'response', reportProgress?: boolean): Observable<HttpResponse<any>>;
-    public registration(xRequestID: string, psuAuthBody: PsuAuthBody, observe?: 'events', reportProgress?: boolean): Observable<HttpEvent<any>>;
-    public registration(xRequestID: string, psuAuthBody: PsuAuthBody, observe: any = 'body', reportProgress: boolean = false ): Observable<any> {
+    public registration(xRequestID: string, psuAuthBody: PsuAuthBody, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<any>;
+    public registration(xRequestID: string, psuAuthBody: PsuAuthBody, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<HttpResponse<any>>;
+    public registration(xRequestID: string, psuAuthBody: PsuAuthBody, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<HttpEvent<any>>;
+    public registration(xRequestID: string, psuAuthBody: PsuAuthBody, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: 'application/json'}): Observable<any> {
         if (xRequestID === null || xRequestID === undefined) {
             throw new Error('Required parameter xRequestID was null or undefined when calling registration.');
         }
@@ -129,11 +174,14 @@ export class PsuAuthenticationService {
             headers = headers.set('X-Request-ID', String(xRequestID));
         }
 
-        // to determine the Accept header
-        const httpHeaderAccepts: string[] = [
-            'application/json'
-        ];
-        const httpHeaderAcceptSelected: string | undefined = this.configuration.selectHeaderAccept(httpHeaderAccepts);
+        let httpHeaderAcceptSelected: string | undefined = options && options.httpHeaderAccept;
+        if (httpHeaderAcceptSelected === undefined) {
+            // to determine the Accept header
+            const httpHeaderAccepts: string[] = [
+                'application/json'
+            ];
+            httpHeaderAcceptSelected = this.configuration.selectHeaderAccept(httpHeaderAccepts);
+        }
         if (httpHeaderAcceptSelected !== undefined) {
             headers = headers.set('Accept', httpHeaderAcceptSelected);
         }
@@ -148,9 +196,15 @@ export class PsuAuthenticationService {
             headers = headers.set('Content-Type', httpContentTypeSelected);
         }
 
+        let responseType: 'text' | 'json' = 'json';
+        if(httpHeaderAcceptSelected && httpHeaderAcceptSelected.startsWith('text')) {
+            responseType = 'text';
+        }
+
         return this.httpClient.post<any>(`${this.configuration.basePath}/v1/psu/register`,
             psuAuthBody,
             {
+                responseType: <any>responseType,
                 withCredentials: this.configuration.withCredentials,
                 headers: headers,
                 observe: observe,
@@ -167,10 +221,10 @@ export class PsuAuthenticationService {
      * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
      * @param reportProgress flag to report request and response progress.
      */
-    public renewalAuthorizationSessionKey(xRequestID: string, authorizationId: string, observe?: 'body', reportProgress?: boolean): Observable<any>;
-    public renewalAuthorizationSessionKey(xRequestID: string, authorizationId: string, observe?: 'response', reportProgress?: boolean): Observable<HttpResponse<any>>;
-    public renewalAuthorizationSessionKey(xRequestID: string, authorizationId: string, observe?: 'events', reportProgress?: boolean): Observable<HttpEvent<any>>;
-    public renewalAuthorizationSessionKey(xRequestID: string, authorizationId: string, observe: any = 'body', reportProgress: boolean = false ): Observable<any> {
+    public renewalAuthorizationSessionKey(xRequestID: string, authorizationId: string, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<any>;
+    public renewalAuthorizationSessionKey(xRequestID: string, authorizationId: string, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<HttpResponse<any>>;
+    public renewalAuthorizationSessionKey(xRequestID: string, authorizationId: string, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<HttpEvent<any>>;
+    public renewalAuthorizationSessionKey(xRequestID: string, authorizationId: string, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: 'application/json'}): Observable<any> {
         if (xRequestID === null || xRequestID === undefined) {
             throw new Error('Required parameter xRequestID was null or undefined when calling renewalAuthorizationSessionKey.');
         }
@@ -183,18 +237,27 @@ export class PsuAuthenticationService {
             headers = headers.set('X-Request-ID', String(xRequestID));
         }
 
-        // to determine the Accept header
-        const httpHeaderAccepts: string[] = [
-            'application/json'
-        ];
-        const httpHeaderAcceptSelected: string | undefined = this.configuration.selectHeaderAccept(httpHeaderAccepts);
+        let httpHeaderAcceptSelected: string | undefined = options && options.httpHeaderAccept;
+        if (httpHeaderAcceptSelected === undefined) {
+            // to determine the Accept header
+            const httpHeaderAccepts: string[] = [
+                'application/json'
+            ];
+            httpHeaderAcceptSelected = this.configuration.selectHeaderAccept(httpHeaderAccepts);
+        }
         if (httpHeaderAcceptSelected !== undefined) {
             headers = headers.set('Accept', httpHeaderAcceptSelected);
         }
 
 
+        let responseType: 'text' | 'json' = 'json';
+        if(httpHeaderAcceptSelected && httpHeaderAcceptSelected.startsWith('text')) {
+            responseType = 'text';
+        }
+
         return this.httpClient.get<any>(`${this.configuration.basePath}/v1/psu/ais/${encodeURIComponent(String(authorizationId))}/renewal-authorization-session-key`,
             {
+                responseType: <any>responseType,
                 withCredentials: this.configuration.withCredentials,
                 headers: headers,
                 observe: observe,

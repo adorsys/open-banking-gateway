@@ -30,7 +30,7 @@ paths:
           $ref: "#/components/responses/202_UserAccepted"
         "401":
           $ref: "#/components/responses/401_Unauthorised"
-  /v1/psu/ais/{authorization-id}/for-approval/login:
+  /v1/psu/{authorization-id}/for-approval/login:
     post:
       tags:
         - Psu Authentication and consent approval
@@ -56,37 +56,11 @@ paths:
           $ref: "#/components/responses/202_UserAccepted"
         "401":
           $ref: "#/components/responses/401_Unauthorised"
-  /v1/psu/pis/{authorization-id}/for-approval/login:
+  /v1/psu/{authorization-id}/for-approval/anonymous:
     post:
       tags:
         - Psu Authentication and consent approval
-      operationId: loginForPaymentApproval
-      summary: Login user to open-banking to perform payment
-      description: TBD
-      requestBody:
-        description: User credentials object
-        content:
-          application/json:
-            schema:
-              $ref: "#/components/schemas/PsuAuthBody"
-        required: true
-      parameters:
-        #common header parameter
-        - $ref: "#/components/parameters/X-Request-ID"
-        #path
-        - $ref: "#/components/parameters/authorization-id"
-        #query
-        - $ref: "#/components/parameters/redirectCode"
-      responses:
-        "202":
-          $ref: "#/components/responses/202_UserAccepted"
-        "401":
-          $ref: "#/components/responses/401_Unauthorised"
-  /v1/psu/pis/{authorization-id}/anonymous:
-    post:
-      tags:
-        - Psu Authentication and consent approval
-      operationId: loginForAnonymousPaymentApproval
+      operationId: loginForAnonymousApproval
       summary: Login user to open-banking to perform payment (anonymous to OPBA)
       description: TBD
       parameters:
@@ -168,6 +142,7 @@ components:
     authorization-id:
       name: authorization-id
       in: path
+      required: true
       description: Authorization session ID to approve
       example: "99391c7e-ad88-49ec-a2ad-99ddcb1f7721"
       schema:

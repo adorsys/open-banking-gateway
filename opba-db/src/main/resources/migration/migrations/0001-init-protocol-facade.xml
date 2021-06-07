@@ -12,9 +12,11 @@
             <column name="service_session_id" type="UUID">
                 <constraints nullable="false"/>
             </column>
-            <column name="psu_id" type="BIGINT">
-                <constraints nullable="false"/>
-            </column>
+            <!-- Key is selected either by psu_id or directly by key_id -->
+            <column name="psu_id" type="BIGINT"/> <!-- PSU ID can be null for anonymous consent -->
+            <!-- Is null if PSU id is set -->
+            <column name="fintech_pub_key_id" type="UUID"/>
+
             <column name="aspsp_id" type="BIGINT">
                 <constraints nullable="false"/>
             </column>

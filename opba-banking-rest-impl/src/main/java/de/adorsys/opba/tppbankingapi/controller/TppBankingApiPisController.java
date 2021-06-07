@@ -44,7 +44,7 @@ public class TppBankingApiPisController implements TppBankingApiSinglePaymentPis
                                              String xRequestSignature,
                                              String fintechID,
                                              String bankID,
-                                             Boolean xPisPsuAuthenticationRequired
+                                             Boolean xPsuAuthenticationRequired
     ) {
         return payments.execute(
                 InitiateSinglePaymentRequest.builder()
@@ -58,7 +58,7 @@ public class TppBankingApiPisController implements TppBankingApiSinglePaymentPis
                                                    .fintechRedirectUrlNok(fintechRedirectURLNOK)
                                                    .requestId(xRequestID)
                                                    .bankId(bankID)
-                                                   .anonymousPsuAllowed(null != xPisPsuAuthenticationRequired && !xPisPsuAuthenticationRequired)
+                                                   .anonymousPsu(null != xPsuAuthenticationRequired && !xPsuAuthenticationRequired)
                                                    .build()
                         )
                         .singlePayment(pisSinglePaymentMapper.map(body, PaymentProductDetails.fromValue(paymentProduct)))

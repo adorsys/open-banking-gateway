@@ -48,6 +48,7 @@ public class TppBankingApiAisController implements TppBankingApiAccountInformati
         String xRequestSignature,
         String fintechId,
         String bankID,
+        Boolean xPsuAuthenticationRequired,
         UUID serviceSessionId,
         Boolean withBalance,
         Boolean online
@@ -65,6 +66,7 @@ public class TppBankingApiAisController implements TppBankingApiAccountInformati
                     .serviceSessionId(serviceSessionId)
                     .requestId(xRequestID)
                     .bankId(bankID)
+                    .anonymousPsu(null != xPsuAuthenticationRequired && !xPsuAuthenticationRequired)
                     .online(online)
                     .build()
                 )
@@ -85,6 +87,7 @@ public class TppBankingApiAisController implements TppBankingApiAccountInformati
         String xRequestSignature,
         String fintechId,
         String bankID,
+        Boolean xPsuAuthenticationRequired,
         UUID serviceSessionId,
         LocalDate dateFrom,
         LocalDate dateTo,
@@ -107,6 +110,7 @@ public class TppBankingApiAisController implements TppBankingApiAccountInformati
                     .serviceSessionId(serviceSessionId)
                     .requestId(xRequestID)
                     .bankId(bankID)
+                    .anonymousPsu(null != xPsuAuthenticationRequired && !xPsuAuthenticationRequired)
                     .online(online)
                     .withAnalytics(analytics)
                     .build()
@@ -132,6 +136,7 @@ public class TppBankingApiAisController implements TppBankingApiAccountInformati
         String xRequestSignature,
         String fintechId,
         String bankId,
+        Boolean xPsuAuthenticationRequired,
         UUID serviceSessionId,
         LocalDate dateFrom,
         LocalDate dateTo,
@@ -152,6 +157,7 @@ public class TppBankingApiAisController implements TppBankingApiAccountInformati
                     .serviceSessionId(serviceSessionId)
                     .requestId(xRequestID)
                     .bankId(bankId)
+                    .anonymousPsu(null != xPsuAuthenticationRequired && !xPsuAuthenticationRequired)
                     .build()
                 )
                 .dateFrom(dateFrom)

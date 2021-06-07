@@ -38,6 +38,7 @@ export class SettingsComponent implements OnInit {
       withBalance: settingsData.withBalance,
       cacheLoa: settingsData.cacheLoa,
       cacheLot: settingsData.cacheLot,
+      consentRequiresAuthentication: settingsData.consentRequiresAuthentication,
       paymentRequiresAuthentication: settingsData.paymentRequiresAuthentication
     });
   }
@@ -62,5 +63,6 @@ export class SettingsData {
   withBalance: boolean;
   cacheLoa: boolean;
   cacheLot: boolean;
+  consentRequiresAuthentication: boolean;
   paymentRequiresAuthentication: boolean;
 }

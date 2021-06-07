@@ -59,7 +59,7 @@ describe('LoginComponent', () => {
   });
 
   it('should be true if the form is invalid', () => {
-    authServiceSpy = spyOn(authService, 'userLoginForConsent').and.returnValue(of(response));
+    authServiceSpy = spyOn(authService, 'userLogin').and.returnValue(of(response));
 
     form.controls.login.setValue(usernameInput);
     form.controls.password.setValue('');
@@ -70,7 +70,7 @@ describe('LoginComponent', () => {
   });
 
   it('should call login service', () => {
-    authServiceSpy = spyOn(authService, 'userLoginForConsent').and.callThrough();
+    authServiceSpy = spyOn(authService, 'userLogin').and.callThrough();
 
     const authID = route.snapshot.parent.params.authId;
     const redirectCode = 'redirectCode654';
@@ -86,7 +86,7 @@ describe('LoginComponent', () => {
   });
 
   it('should be invalid if password is not set', () => {
-    authServiceSpy = spyOn(authService, 'userLoginForConsent').and.returnValue(of(response));
+    authServiceSpy = spyOn(authService, 'userLogin').and.returnValue(of(response));
 
     form.controls.login.setValue(usernameInput);
     form.controls.password.setValue('');
@@ -96,7 +96,7 @@ describe('LoginComponent', () => {
     expect(component.loginForm.invalid).toBe(true);
   });
   it('should be invalid if username is not set', () => {
-    authServiceSpy = spyOn(authService, 'userLoginForConsent').and.returnValue(of(response));
+    authServiceSpy = spyOn(authService, 'userLogin').and.returnValue(of(response));
 
     form.controls.login.setValue('');
     form.controls.password.setValue(passwordInput);

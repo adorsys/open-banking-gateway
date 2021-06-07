@@ -36,6 +36,12 @@ public class ConsentConfirmationService {
         }
 
         consentRepository.setConfirmed(session.get().getParent().getId());
+
+        // Handling anonymous consent grant flow:
+        if (null == session.get().getPsu()) {
+            return true;
+        }
+
         PrivateKey psuAspspKey = vault.psuAspspKeyFromInbox(
                 session.get(),
                 finTechPassword::toCharArray

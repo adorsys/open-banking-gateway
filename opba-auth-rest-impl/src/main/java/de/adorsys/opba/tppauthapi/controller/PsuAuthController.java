@@ -10,7 +10,7 @@ import de.adorsys.opba.api.security.internal.service.TokenBasedAuthService;
 import de.adorsys.opba.db.domain.entity.psu.Psu;
 import de.adorsys.opba.protocol.facade.config.auth.FacadeAuthConfig;
 import de.adorsys.opba.protocol.facade.config.auth.UriExpandConst;
-import de.adorsys.opba.protocol.facade.services.authorization.PsuLoginForAisService;
+import de.adorsys.opba.protocol.facade.services.authorization.PsuLoginService;
 import de.adorsys.opba.protocol.facade.services.psu.PsuAuthService;
 import de.adorsys.opba.tppauthapi.model.generated.LoginResponse;
 import de.adorsys.opba.tppauthapi.model.generated.PsuAuthBody;
@@ -46,7 +46,7 @@ import static org.springframework.http.HttpHeaders.SET_COOKIE;
 public class PsuAuthController implements PsuAuthenticationApi, PsuAuthenticationAndConsentApprovalApi {
 
     public static final Base64.Encoder ENCODER = Base64.getEncoder();
-    private final PsuLoginForAisService aisService;
+    private final PsuLoginService loginService;
     private final PsuAuthService psuAuthService;
     private final TokenBasedAuthService authService;
     private final FacadeAuthConfig authConfig;
@@ -81,18 +81,13 @@ public class PsuAuthController implements PsuAuthenticationApi, PsuAuthenticatio
 
     @Override
     public ResponseEntity<LoginResponse> loginForApproval(PsuAuthBody body, UUID xRequestId, String redirectCode, UUID authorizationId) {
-        PsuLoginForAisService.Outcome outcome = aisService.loginInPsuScopeAndAssociateAuthSession(body.getLogin(), body.getPassword(), authorizationId, redirectCode);
+        PsuLoginService.Outcome outcome = loginService.loginInPsuScopeAndAssociateAuthSession(body.getLogin(), body.getPassword(), authorizationId, redirectCode);
         return createResponseWithSecretKeyInCookieOnAllPaths(xRequestId, authorizationId, outcome);
     }
 
     @Override
-    public ResponseEntity<LoginResponse> loginForPaymentApproval(PsuAuthBody body, UUID xRequestId, String redirectCode, UUID authorizationId) {
-        return loginForApproval(body, xRequestId, redirectCode, authorizationId);
-    }
-
-    @Override
-    public ResponseEntity<LoginResponse> loginForAnonymousPaymentApproval(UUID xRequestId, UUID authorizationId, String redirectCode) {
-        PsuLoginForAisService.Outcome outcome = aisService.anonymousPsuAssociateAuthSession(authorizationId, redirectCode);
+    public ResponseEntity<LoginResponse> loginForAnonymousApproval(UUID xRequestId, UUID authorizationId, String redirectCode) {
+        PsuLoginService.Outcome outcome = loginService.anonymousPsuAssociateAuthSession(authorizationId, redirectCode);
         return createResponseWithSecretKeyInCookieOnAllPaths(xRequestId, authorizationId, outcome);
     }
 
@@ -134,7 +129,7 @@ public class PsuAuthController implements PsuAuthenticationApi, PsuAuthenticatio
     }
 
     @NotNull
-    private ResponseEntity<LoginResponse> createResponseWithSecretKeyInCookieOnAllPaths(UUID xRequestId, UUID authorizationId, PsuLoginForAisService.Outcome outcome) {
+    private ResponseEntity<LoginResponse> createResponseWithSecretKeyInCookieOnAllPaths(UUID xRequestId, UUID authorizationId, PsuLoginService.Outcome outcome) {
         String ttl = Long.toString(cookieProperties.getMaxAge().getSeconds());
         log.debug("created new session cookie for authid {}", authorizationId);
         return ResponseEntity

@@ -256,6 +256,7 @@ paths:
         #header
         - $ref: "#/components/parameters/X-Request-ID"
         - $ref: "#/components/parameters/X-XSRF-TOKEN"
+        - $ref: "#/components/parameters/X-Psu-Authentication-Required"
         - $ref: "#/components/parameters/Fintech-Redirect-URL-OK"
         - $ref: "#/components/parameters/Fintech-Redirect-URL-NOK"
         - $ref: "#/components/parameters/LoARetrievalInformation"
@@ -297,6 +298,7 @@ paths:
         #header
         - $ref: "#/components/parameters/X-Request-ID"
         - $ref: "#/components/parameters/X-XSRF-TOKEN"
+        - $ref: "#/components/parameters/X-Psu-Authentication-Required"
         - $ref: "#/components/parameters/Fintech-Redirect-URL-OK"
         - $ref: "#/components/parameters/Fintech-Redirect-URL-NOK"
         - $ref: "#/components/parameters/LoTRetrievalInformation"
@@ -401,7 +403,7 @@ paths:
         #header
         - $ref: "#/components/parameters/X-Request-ID"
         - $ref: "#/components/parameters/X-XSRF-TOKEN"
-        - $ref: "#/components/parameters/X-Pis-Psu-Authentication-Required"
+        - $ref: "#/components/parameters/X-Psu-Authentication-Required"
         - $ref: "#/components/parameters/Fintech-Redirect-URL-OK"
         - $ref: "#/components/parameters/Fintech-Redirect-URL-NOK"
 
@@ -616,8 +618,19 @@ components:
         type: string
         format: uuid
 
-    X-Pis-Psu-Authentication-Required:
-      name: X-Pis-Psu-Authentication-Required
+    X-Ais-Psu-Authentication-Required:
+      name: X-Ais-Psu-Authentication-Required
+      in: header
+      description: |
+        If false, login form to OPBA will not be displayed, so
+        that authentication is not necessary. If absent or true - login form for consents will be displayed.
+      example: "true"
+      schema:
+        type: boolean
+        default: "true"
+
+    X-Psu-Authentication-Required:
+      name: X-Psu-Authentication-Required
       in: header
       description: |
         If false, login form to OPBA will not be displayed as there might be nothing to share for payments, so
