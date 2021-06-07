@@ -121,7 +121,8 @@ public class AccountService {
             online);
     }
 
-    private ResponseEntity consentNotYetAvailable(String bankID, SessionEntity sessionEntity, String redirectCode, UUID xRequestId, Boolean psuAuthenticationRequired, Optional<ConsentEntity> optionalConsent) {
+    private ResponseEntity consentNotYetAvailable(String bankID, SessionEntity sessionEntity, String redirectCode, UUID xRequestId,
+                                                  Boolean psuAuthenticationRequired, Optional<ConsentEntity> optionalConsent) {
         log.info("do LOT (instead of loa) for bank {} {} consent", bankID, optionalConsent.isPresent() ? "with" : "without");
         UUID serviceSessionID = optionalConsent.map(ConsentEntity::getTppServiceSessionId).orElse(null);
         return tppAisClient.getTransactionsWithoutAccountId(

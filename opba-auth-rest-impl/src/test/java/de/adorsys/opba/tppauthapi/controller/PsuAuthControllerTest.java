@@ -10,7 +10,7 @@ import de.adorsys.opba.db.domain.entity.psu.Psu;
 import de.adorsys.opba.db.repository.jpa.psu.PsuRepository;
 import de.adorsys.opba.protocol.facade.config.auth.FacadeAuthConfig;
 import de.adorsys.opba.protocol.facade.config.encryption.impl.psu.PsuSecureStorage;
-import de.adorsys.opba.protocol.facade.services.authorization.PsuLoginForAisService;
+import de.adorsys.opba.protocol.facade.services.authorization.PsuLoginService;
 import de.adorsys.opba.protocol.facade.services.psu.PsuAuthService;
 import de.adorsys.opba.tppauthapi.config.ApplicationTest;
 import de.adorsys.opba.tppauthapi.model.generated.PsuAuthBody;
@@ -56,7 +56,7 @@ public class PsuAuthControllerTest {
     private PsuSecureStorage psuSecureStorage;
     @MockBean
     @SuppressWarnings("PMD.UnusedPrivateField") // Injecting into Spring context
-    private PsuLoginForAisService psuLoginForAisService;
+    private PsuLoginService psuLoginService;
     @MockBean
     private PsuAuthService psuAuthService;
     @MockBean

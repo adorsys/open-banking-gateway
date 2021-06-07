@@ -17,7 +17,7 @@ import java.util.UUID;
 
 @Service
 @RequiredArgsConstructor
-public class PsuLoginForAisService {
+public class PsuLoginService {
 
     private final EncryptionKeySerde serde;
     private final PsuRepository psus;
