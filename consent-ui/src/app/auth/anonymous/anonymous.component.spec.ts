@@ -45,7 +45,7 @@ describe('AnonymousComponent', () => {
   });
 
   it('should call login service', () => {
-    authServiceSpy = spyOn(authService, 'userLoginForAnonymousPayment').and.callThrough();
+    authServiceSpy = spyOn(authService, 'userLoginForAnonymous').and.callThrough();
 
     const authID = route.snapshot.parent.params.authId;
     const redirectCode = 'redirectCode654';
