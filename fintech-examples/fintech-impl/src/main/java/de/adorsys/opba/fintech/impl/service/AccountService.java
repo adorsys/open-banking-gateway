@@ -94,7 +94,7 @@ public class AccountService {
         if (null != bankProfile.getBankProfileDescriptor().getConsentSupportByService()
             && "true".equals(bankProfile.getBankProfileDescriptor().getConsentSupportByService().get(Actions.LIST_ACCOUNTS.name()))) {
             log.info("LoA no valid ais consent for user {} bank {} available", sessionEntity.getUserEntity().getLoginUserName(), bankID);
-            return consentNotYetAvailable(bankID, sessionEntity, redirectCode, xRequestId, optionalConsent);
+            return consentNotYetAvailable(bankID, sessionEntity, redirectCode, xRequestId, psuAuthenticationRequired, optionalConsent);
         }
 
         return consentAvailable(bankID, sessionEntity, redirectCode, xRequestId, optionalConsent, withBalance, psuAuthenticationRequired, online);
@@ -121,7 +121,7 @@ public class AccountService {
             online);
     }
 
-    private ResponseEntity consentNotYetAvailable(String bankID, SessionEntity sessionEntity, String redirectCode, UUID xRequestId, Optional<ConsentEntity> optionalConsent) {
+    private ResponseEntity consentNotYetAvailable(String bankID, SessionEntity sessionEntity, String redirectCode, UUID xRequestId, Boolean psuAuthenticationRequired, Optional<ConsentEntity> optionalConsent) {
         log.info("do LOT (instead of loa) for bank {} {} consent", bankID, optionalConsent.isPresent() ? "with" : "without");
         UUID serviceSessionID = optionalConsent.map(ConsentEntity::getTppServiceSessionId).orElse(null);
         return tppAisClient.getTransactionsWithoutAccountId(
@@ -134,7 +134,7 @@ public class AccountService {
             COMPUTE_X_REQUEST_SIGNATURE,
             COMPUTE_FINTECH_ID,
             bankID,
-            null,
+                psuAuthenticationRequired,
             serviceSessionID,
             null,
             null,

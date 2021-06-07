@@ -16,7 +16,9 @@ import org.springframework.web.util.UriComponentsBuilder;
 import java.util.UUID;
 
 import static de.adorsys.opba.api.security.external.domain.HttpHeaders.AUTHORIZATION_SESSION_KEY;
-import static de.adorsys.opba.protocol.xs2a.tests.HeaderNames.*;
+import static de.adorsys.opba.protocol.xs2a.tests.HeaderNames.X_PSU_AUTHENTICATION_REQUIRED;
+import static de.adorsys.opba.protocol.xs2a.tests.HeaderNames.X_REQUEST_ID;
+import static de.adorsys.opba.protocol.xs2a.tests.HeaderNames.X_XSRF_TOKEN;
 import static de.adorsys.opba.protocol.xs2a.tests.e2e.ResourceUtil.readResource;
 import static de.adorsys.opba.protocol.xs2a.tests.e2e.stages.AccountInformationResult.ONLINE;
 import static de.adorsys.opba.protocol.xs2a.tests.e2e.stages.PaymentStagesCommonUtil.PIS_ANONYMOUS_LOGIN_USER_ENDPOINT;
