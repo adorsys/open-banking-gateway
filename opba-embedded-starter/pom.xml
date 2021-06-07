@@ -86,6 +86,11 @@
             <artifactId>xs2a-sandbox-protocol</artifactId>
             <version>${project.version}</version>
         </dependency>
+        <dependency>
+            <groupId>de.adorsys.opba</groupId>
+            <artifactId>finapi-protocol</artifactId>
+            <version>${project.version}</version>
+        </dependency>
 
         <!-- Analytics -->
         <dependency>

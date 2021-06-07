@@ -286,6 +286,14 @@ protocol:
         PHOTO: "PHOTO_OTP"
         PUSH: "PUSH_OTP"
         EMAIL: "SMTP_OTP"
+  finapi:
+    api-url: https://sandbox.finapi.io
+    token-url: ${protocol.finapi.api-url}/oauth/token
+    token-scope: all
+    client-id: dummy
+    client-secret: dummy
+    client-api-cache-size: 100
+    client-api-expire-after-access: PT30M
 
 # Flowable comes for all protocols shared
 bpmnshared:
