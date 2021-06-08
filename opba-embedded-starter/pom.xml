@@ -90,6 +90,13 @@
             <groupId>de.adorsys.opba</groupId>
             <artifactId>finapi-protocol</artifactId>
             <version>${project.version}</version>
+            <scope>runtime</scope>
+            <exclusions>
+                <exclusion>
+                    <groupId>de.adorsys.opba</groupId>
+                    <artifactId>opba-protocol-api</artifactId>
+                </exclusion>
+            </exclusions>
         </dependency>
 
         <!-- Analytics -->
