@@ -19,6 +19,7 @@ import de.adorsys.opba.tpp.ais.api.model.generated.TransactionsResponse;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.logging.log4j.util.Strings;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.scheduling.annotation.Async;
@@ -49,6 +50,11 @@ public class FireFlyTransactionExporter {
     private final BankConsentRepository consentRepository;
     private final TransactionCategorizer categorizer;
     private final TransactionExportJobRepository exportJobRepository;
+
+    @Value("${firefly.pages.page:1}")
+    private int page;
+    @Value("${firefly.pages.perPage:500}")
+    private int perPage;
 
     @Async
     @SuppressWarnings("checkstyle:MethodLength") // Method length is mostly from long argument list to API call
@@ -131,7 +137,9 @@ public class FireFlyTransactionExporter {
                 "both",
                 false,
                 null,
-                null
+                null,
+                page,
+                perPage
         );
 
         if (transactions.getStatusCode() == HttpStatus.ACCEPTED) {

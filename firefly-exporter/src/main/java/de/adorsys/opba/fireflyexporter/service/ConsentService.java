@@ -11,6 +11,7 @@ import de.adorsys.opba.tpp.ais.api.model.generated.TransactionsResponse;
 import de.adorsys.opba.tpp.ais.api.resource.generated.TppBankingApiAccountInformationServiceAisApi;
 import de.adorsys.opba.tpp.token.api.model.generated.PsuConsentSessionResponse;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -29,6 +30,11 @@ public class ConsentService {
     private final TppBankingApiAccountInformationServiceAisApi aisApi;
     private final RedirectStateRepository redirectStateRepository;
     private final OpenBankingConfig bankingConfig;
+
+    @Value("${firefly.pages.page:1}")
+    private int page;
+    @Value("${firefly.pages.perPage:500}")
+    private int perPage;
 
     @Transactional
     public String createConsentForAccountsAndTransactions(String bankId) {
@@ -51,7 +57,9 @@ public class ConsentService {
                 null,
                 null,
                 "both",
-                false
+                false,
+                page,
+                perPage
         );
 
         if (apiResponse.getStatusCode() == HttpStatus.ACCEPTED) {
