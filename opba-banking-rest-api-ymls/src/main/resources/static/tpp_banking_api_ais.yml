@@ -90,6 +90,8 @@ paths:
         - $ref: "#/components/parameters/deltaList"
         - $ref: "#/components/parameters/online"
         - $ref: "#/components/parameters/analytics"
+        - $ref: "#/components/parameters/page"
+        - $ref: "#/components/parameters/perPage"
 
       security:
         - BearerAuthOAuth: []
@@ -129,6 +131,8 @@ paths:
         - $ref: "#/components/parameters/entryReferenceFrom"
         - $ref: "#/components/parameters/bookingStatus"
         - $ref: "#/components/parameters/deltaList"
+        - $ref: "#/components/parameters/page"
+        - $ref: "#/components/parameters/perPage"
       security:
         - BearerAuthOAuth: []
       responses:
@@ -199,6 +203,41 @@ components:
       schema:
         type: string
         format: date
+
+    page:
+      name: page
+      in: query
+      description: |
+        Result page that you want to retrieve.
+
+        By default it's 1.
+
+        Minimum value is 1.
+
+      required: false
+      schema:
+        type: integer
+        format: int32
+        minimum: 1
+        default: 1
+
+    perPage:
+      name: perPage
+      in: query
+      description: |
+        Maximum number of records per page.
+
+        By default it's 20.
+
+        Can be at most 500.
+
+      required: false
+      schema:
+        type: integer
+        format: int32
+        maximum: 500
+        minimum: 1
+        default: 20
 
     withBalance:
       name: withBalance
@@ -550,6 +589,41 @@ components:
           $ref: "#/components/schemas/hrefType"
         transactions:
           $ref: "#/components/schemas/hrefType"
+
+    paging:
+      description: |
+        Container for pagination information
+      type: object
+      required:
+        - page
+        - pageCount
+        - perPage
+        - totalCount
+      properties:
+        page:
+          description: Current page number
+          type: integer
+          format: int32
+          minimum: 1
+          example: 1
+        perPage:
+          description: Current page size (number of entries in this page)
+          type: integer
+          format: int32
+          minimum: 1
+          example: 20
+        pageCount:
+          description: Total number of pages
+          type: integer
+          format: int32
+          minimum: 0
+          example: 10
+        totalCount:
+          description: Total number of entries across all pages
+          type: integer
+          format: int64
+          minimum: 0
+          example: 200
 
     proprietaryBankTransactionCode:
       description: |
@@ -978,6 +1052,8 @@ components:
           $ref: "#/components/schemas/accountReport"
         analytics:
           $ref: "#/components/schemas/analyticsReport"
+        paging:
+          $ref: "#/components/schemas/paging"
 
     ultimateCreditor:
       description: Ultimate Creditor.

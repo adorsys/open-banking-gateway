@@ -45,6 +45,18 @@ public class Xs2aTransactionParameters extends Xs2aWithBalanceParameters {
     @NotNull(message = "{no.ctx.dateTo}")
     private LocalDate dateTo;
 
+    /**
+     * Result page number.
+     */
+    @NotNull(message = "{no.ctx.page}")
+    private Integer page;
+
+    /**
+     * Records per page.
+     */
+    @NotNull(message = "{no.ctx.perPage}")
+    private Integer perPage;
+
     // TODO - MapStruct?
     @Override
     public RequestParams toParameters() {

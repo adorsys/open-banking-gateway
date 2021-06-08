@@ -25,6 +25,11 @@ public class TransactionsResponseBody implements ResultBody {
    */
   private AnalyticsResult analytics;
 
+  /**
+   * Information for pagination
+   */
+  private Paging paging;
+
   @Override
   public Object getBody() {
     return this;
