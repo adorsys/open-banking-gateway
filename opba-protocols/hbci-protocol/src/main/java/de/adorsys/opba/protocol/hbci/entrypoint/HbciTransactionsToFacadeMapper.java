@@ -5,7 +5,6 @@ import de.adorsys.opba.protocol.api.dto.context.ServiceContext;
 import de.adorsys.opba.protocol.api.dto.request.transactions.ListTransactionsRequest;
 import de.adorsys.opba.protocol.api.dto.result.body.AccountReference;
 import de.adorsys.opba.protocol.api.dto.result.body.AccountReport;
-import de.adorsys.opba.protocol.api.dto.result.body.Paging;
 import de.adorsys.opba.protocol.api.dto.result.body.TransactionDetailsBody;
 import de.adorsys.opba.protocol.api.dto.result.body.TransactionListBody;
 import de.adorsys.opba.protocol.api.dto.result.body.TransactionsResponseBody;
@@ -28,27 +27,14 @@ import static de.adorsys.opba.protocol.hbci.constant.GlobalConst.HBCI_MAPPERS_PA
 public class HbciTransactionsToFacadeMapper {
 
     private final HbciToTransactionBodyMapper mapper;
-    private final HbciBookingsPaginator paginator;
 
     public TransactionsResponseBody map(AisListTransactionsResult transactionsResult, ServiceContext<ListTransactionsRequest> context) {
         TransactionsResponseBody.TransactionsResponseBodyBuilder response = TransactionsResponseBody.builder();
 
         if (null != transactionsResult.getBookings()) {
-            Paging paging = Paging.builder()
-                    .page(context.getRequest().getPage())
-                    .perPage(context.getRequest().getPerPage())
-                    .pageCount((int) Math.ceil(transactionsResult.getBookings().size() / context.getRequest().getPerPage()))
-                    .totalCount(transactionsResult.getBookings().size())
-                    .build();
-
-            List<Booking> bookings = paginator.getTransactionsPage(transactionsResult.getBookings(), paging);
-
-            if (null != bookings) {
-                response.transactions(mapBookings(bookings, context));
-            }
-
-            response.paging(paging);
+            response.transactions(mapBookings(transactionsResult.getBookings(), context));
         }
+
         return response.build();
     }
 
