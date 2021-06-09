@@ -210,24 +210,19 @@ components:
       description: |
         Result page that you want to retrieve.
 
-        By default it's 1.
-
-        Minimum value is 1.
+        Minimum value is 0.
 
       required: false
       schema:
         type: integer
         format: int32
-        minimum: 1
-        default: 1
+        minimum: 0
 
     perPage:
       name: perPage
       in: query
       description: |
         Maximum number of records per page.
-
-        By default it's 20.
 
         Can be at most 500.
 
@@ -237,7 +232,6 @@ components:
         format: int32
         maximum: 500
         minimum: 1
-        default: 20
 
     withBalance:
       name: withBalance
@@ -604,8 +598,8 @@ components:
           description: Current page number
           type: integer
           format: int32
-          minimum: 1
-          example: 1
+          minimum: 0
+          example: 0
         perPage:
           description: Current page size (number of entries in this page)
           type: integer

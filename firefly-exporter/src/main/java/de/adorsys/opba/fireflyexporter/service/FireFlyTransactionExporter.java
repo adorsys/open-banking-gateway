@@ -51,11 +51,6 @@ public class FireFlyTransactionExporter {
     private final TransactionCategorizer categorizer;
     private final TransactionExportJobRepository exportJobRepository;
 
-    @Value("${firefly.pages.page:1}")
-    private int page;
-    @Value("${firefly.pages.perPage:500}")
-    private int perPage;
-
     @Async
     @SuppressWarnings("checkstyle:MethodLength") // Method length is mostly from long argument list to API call
     public void exportToFirefly(String fireFlyToken, long exportJobId, String bankId, List<String> accountsTransactionsToExport, LocalDate from, LocalDate to) {
@@ -138,8 +133,8 @@ public class FireFlyTransactionExporter {
                 false,
                 null,
                 null,
-                page,
-                perPage
+                null,
+                null
         );
 
         if (transactions.getStatusCode() == HttpStatus.ACCEPTED) {

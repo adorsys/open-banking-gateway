@@ -31,9 +31,6 @@ import static de.adorsys.opba.fintech.impl.tppclients.Consts.COMPUTE_X_TIMESTAMP
 @Slf4j
 @RequiredArgsConstructor
 public class TransactionService {
-    //TODO Fix hardcoded values
-    private static final int PAGE = 1;
-    private static final int TRANSACTIONS_PER_PAGE = 500;
 
     private final FintechUiConfig uiConfig;
     private final TppAisClient tppAisClient;
@@ -81,8 +78,8 @@ public class TransactionService {
             deltaList,
             online,
             true,
-            PAGE,
-            TRANSACTIONS_PER_PAGE
+            null,
+            null
         );
         switch (transactions.getStatusCode()) {
             case OK:

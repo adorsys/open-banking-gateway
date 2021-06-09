@@ -31,11 +31,6 @@ public class ConsentService {
     private final RedirectStateRepository redirectStateRepository;
     private final OpenBankingConfig bankingConfig;
 
-    @Value("${firefly.pages.page:1}")
-    private int page;
-    @Value("${firefly.pages.perPage:500}")
-    private int perPage;
-
     @Transactional
     public String createConsentForAccountsAndTransactions(String bankId) {
         UUID redirectCode = UUID.randomUUID();
@@ -58,8 +53,8 @@ public class ConsentService {
                 null,
                 "both",
                 false,
-                page,
-                perPage
+                null,
+                null
         );
 
         if (apiResponse.getStatusCode() == HttpStatus.ACCEPTED) {

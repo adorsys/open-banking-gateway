@@ -26,7 +26,7 @@ public class TransactionsResponseBody implements ResultBody {
   private AnalyticsResult analytics;
 
   /**
-   * Information for pagination
+   * Optional information for pagination
    */
   private Paging paging;
 

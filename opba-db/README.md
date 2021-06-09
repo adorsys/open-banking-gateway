@@ -3,7 +3,7 @@
 ## Populate database with data from CSV file
 
 To facilitate database population with bank data, `BankProtocolActionsSqlGeneratorTest.java` class contains a script that 
-generates all neccassary data, that can be used by liquibase plugin. The instruction how to use this script is the following:
+generates all necessary data, that can be used by liquibase plugin. The instruction how to use this script is the following:
 
 * add or replace your bank data to the `./opba-db/src/main/resources/migration/migrations/banks.csv` 
 file, with the same format it is now;
