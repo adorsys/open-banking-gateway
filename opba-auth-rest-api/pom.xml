@@ -88,6 +88,7 @@
                                 <defaultInterfaces>false</defaultInterfaces>
                                 <useTags>true</useTags>
                                 <library>spring-mvc</library>
+                                <async>true</async>
                                 <swaggerDocketConfig>false</swaggerDocketConfig>
                                 <generateApiDocumentation>false</generateApiDocumentation>
                                 <generateModelDocumentation>false</generateModelDocumentation>
