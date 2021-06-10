@@ -294,6 +294,7 @@ protocol:
     client-secret: dummy
     client-api-cache-size: 100
     client-api-expire-after-access: PT30M
+    from-aspsp-url: ${facade.urls.embedded-ui-base-url}/embedded-server/v1/consent/{authSessionId}/fromAspsp/STUB_STATE/ok/{aspspRedirectCode}
 
 # Flowable comes for all protocols shared
 bpmnshared:
