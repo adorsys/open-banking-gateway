@@ -84,14 +84,14 @@ public class PsuAuthController implements PsuAuthenticationApi, PsuAuthenticatio
 
     @Override
     public CompletableFuture<ResponseEntity<LoginResponse>> loginForApproval(PsuAuthBody body, UUID xRequestId, String redirectCode, UUID authorizationId) {
-        PsuLoginService.Outcome outcome = loginService.loginInPsuScopeAndAssociateAuthSession(body.getLogin(), body.getPassword(), authorizationId, redirectCode);
-        return CompletableFuture.completedFuture(createResponseWithSecretKeyInCookieOnAllPaths(xRequestId, authorizationId, outcome));
+        var outcome = loginService.loginInPsuScopeAndAssociateAuthSession(body.getLogin(), body.getPassword(), authorizationId, redirectCode);
+        return outcome.thenApply(it -> createResponseWithSecretKeyInCookieOnAllPaths(xRequestId, authorizationId, it));
     }
 
     @Override
     public CompletableFuture<ResponseEntity<LoginResponse>> loginForAnonymousApproval(UUID xRequestId, UUID authorizationId, String redirectCode) {
-        PsuLoginService.Outcome outcome = loginService.anonymousPsuAssociateAuthSession(authorizationId, redirectCode);
-        return CompletableFuture.completedFuture(createResponseWithSecretKeyInCookieOnAllPaths(xRequestId, authorizationId, outcome));
+        var outcome = loginService.anonymousPsuAssociateAuthSession(authorizationId, redirectCode);
+        return outcome.thenApply(it -> createResponseWithSecretKeyInCookieOnAllPaths(xRequestId, authorizationId, it));
     }
 
     @Override
