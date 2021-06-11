@@ -42,10 +42,10 @@ public class PsuLoginService {
             associationService.sharePsuAspspSecretKeyWithFintech(psuPassword, session);
             FintechConsentSpecSecureStorage.FinTechUserInboxData inbox = associationService.readInboxFromFinTech(session, authorizationPassword);
             authRepository.save(session);
-            return new SessionAndInbox(session, inbox);
+            return new SessionAndInbox(session.getRedirectCode(), inbox);
         });
 
-        return executeOnLoginAndMap(exchange.getInbox(), authorizationId, exchange.getSession().getRedirectCode());
+        return executeOnLoginAndMap(exchange.getInbox(), authorizationId, exchange.getRedirectCode());
     }
 
     /**
@@ -63,10 +63,10 @@ public class PsuLoginService {
 
             FintechConsentSpecSecureStorage.FinTechUserInboxData inbox = associationService.readInboxFromFinTech(session, authorizationPassword);
             authRepository.save(session);
-            return new SessionAndInbox(session, inbox);
+            return new SessionAndInbox(session.getRedirectCode(), inbox);
         });
 
-        return executeOnLoginAndMap(exchange.getInbox(), authorizationId, exchange.getSession().getRedirectCode());
+        return executeOnLoginAndMap(exchange.getInbox(), authorizationId, exchange.getRedirectCode());
     }
 
     private CompletableFuture<Outcome> executeOnLoginAndMap(FintechConsentSpecSecureStorage.FinTechUserInboxData association, UUID authorizationSessionId, String redirectCode) {
@@ -99,7 +99,7 @@ public class PsuLoginService {
 
     @Data
     private static class SessionAndInbox {
-        private final AuthSession session;
+        private final String redirectCode;
         private final FintechConsentSpecSecureStorage.FinTechUserInboxData inbox;
     }
 }

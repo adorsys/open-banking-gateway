@@ -265,7 +265,7 @@ public class ProtocolResultHandler {
         FacadeResultRedirectable<RESULT, ?> mappedResult
     ) {
         authSession.setRedirectCode(session.getFutureRedirectCode().toString());
-        authSession.setContext(result.getAuthContext());
+        authSession.setAuthSessionContext(result.getAuthContext());
         authorizationSessions.save(authSession);
 
         mappedResult.setAuthorizationSessionId(authSession.getId().toString());

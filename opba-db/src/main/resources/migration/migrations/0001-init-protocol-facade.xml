@@ -206,6 +206,7 @@
                 <constraints nullable="false"/>
             </column>
             <column name="context" type="VARCHAR(64)"/>
+            <column name="long_context" type="BLOB"/>
             <column name="psu_anonymous" type="BOOLEAN" defaultValueBoolean="false">
                 <constraints nullable="false"/>
             </column>
