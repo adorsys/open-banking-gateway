@@ -1,7 +1,9 @@
 package de.adorsys.opba.protocol.xs2a.entrypoint;
 
 import com.google.common.base.Strings;
+import de.adorsys.opba.protocol.api.dto.context.ServiceContext;
 import de.adorsys.opba.protocol.api.dto.request.payments.SinglePaymentBody;
+import de.adorsys.opba.protocol.api.dto.request.transactions.ListTransactionsRequest;
 import de.adorsys.opba.protocol.api.dto.result.body.AccountListBody;
 import de.adorsys.opba.protocol.api.dto.result.body.TransactionsResponseBody;
 import de.adorsys.opba.protocol.bpmnshared.dto.messages.ProcessResponse;
@@ -31,7 +33,7 @@ public class Xs2aResultBodyExtractor {
         return mapper.map((AccountList) result.getResult());
     }
 
-    public TransactionsResponseBody extractTransactionsReport(ProcessResponse result) {
+    public TransactionsResponseBody extractTransactionsReport(ProcessResponse result, ServiceContext<ListTransactionsRequest> context) {
         return mapper.map((TransactionsResponse200Json) result.getResult());
     }
 
@@ -42,6 +44,7 @@ public class Xs2aResultBodyExtractor {
     @Mapper(componentModel = SPRING_KEYWORD, implementationPackage = XS2A_MAPPERS_PACKAGE)
     public interface Xs2aToFacadeMapper {
         AccountListBody map(AccountList accountList);
+
         TransactionsResponseBody map(TransactionsResponse200Json transactions);
 
         @Mapping(source = "singlePaymentInitiationBody.creditorAddress.townName", target = "creditorAddress.city")
@@ -61,7 +64,7 @@ public class Xs2aResultBodyExtractor {
 
         default void append(StringBuilder builder, String referenceType) {
             if (Strings.isNullOrEmpty(referenceType)) {
-               return;
+                return;
             }
 
             builder.append(referenceType);

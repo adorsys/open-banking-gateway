@@ -33,6 +33,7 @@ import static de.adorsys.opba.fintech.impl.tppclients.Consts.COMPUTE_X_TIMESTAMP
 @Slf4j
 @RequiredArgsConstructor
 public class AccountService {
+
     private final FintechUiConfig uiConfig;
     private final TppAisClient tppAisClient;
     private final RestRequestContext restRequestContext;
@@ -135,12 +136,14 @@ public class AccountService {
             COMPUTE_X_REQUEST_SIGNATURE,
             COMPUTE_FINTECH_ID,
             bankID,
-                psuAuthenticationRequired,
+            psuAuthenticationRequired,
             serviceSessionID,
             null,
             null,
-    null,
-        null,
+            null,
+            null,
+            null,
+            null,
             null
         );
     }

@@ -27,6 +27,7 @@ api:
 
 firefly:
   url: http://localhost:9999
+  #  Result transactions page that you want to retrieve.
 
 open-banking:
   url: https://obg-dev-openbankinggateway.cloud.adorsys.de/

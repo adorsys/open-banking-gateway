@@ -105,12 +105,12 @@ public class FinTechListAccountsTest extends FinTechBankSearchApiTest {
         BankProfileTestResult result = getBankProfileTestResult();
         createConsent(null, null);
         when(tppAisClientFeignMock.getTransactionsWithoutAccountId(any(), any(), any(), any(), any(), any(), any(), any(), any(), any(),
-                any(), any(), any(), any(), any(), any())).thenReturn(accepted);
+                any(), any(), any(), any(), any(), any(), any(), any())).thenReturn(accepted);
 
         MvcResult mvcResult = plainListAccounts(result.getBankUUID());
         assertEquals(ACCEPTED.value(), mvcResult.getResponse().getStatus());
         verify(tppAisClientFeignMock).getTransactionsWithoutAccountId(any(), any(), any(), any(), any(), any(), any(), any(), any(),
-                any(), any(), any(), any(), any(), any(), any());
+                any(), any(), any(), any(), any(), any(), any(), any(), any());
         verify(tppAisClientFeignMock, never()).getAccounts(any(), any(), any(), any(), any(), any(), any(), any(), any(), any(), any(), any(), any());
     }
 
@@ -134,7 +134,7 @@ public class FinTechListAccountsTest extends FinTechBankSearchApiTest {
         MvcResult mvcResult = plainListAccounts(NO_CONSENT_BANK_ID);
         assertEquals(ACCEPTED.value(), mvcResult.getResponse().getStatus());
         verify(tppAisClientFeignMock, never()).getTransactions(any(), any(), any(), any(), any(), any(), any(), any(), any(), any(),
-                any(), any(), any(), any(), any(), any(), any(), any(), any());
+                any(), any(), any(), any(), any(), any(), any(), any(), any(), any(), any());
         verify(tppAisClientFeignMock).getAccounts(any(), any(), any(), any(), any(), any(), any(), any(), any(), any(), any(), any(), any());
     }
 

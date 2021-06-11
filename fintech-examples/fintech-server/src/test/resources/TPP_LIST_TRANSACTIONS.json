@@ -112,5 +112,11 @@
         "proprietaryBankTransactionCode": "string"
       }
     ]
+  },
+  "paging": {
+    "page": 1,
+    "perPage": 20,
+    "pageCount": 1,
+    "totalCount": 2
   }
 }

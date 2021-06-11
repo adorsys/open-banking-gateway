@@ -31,6 +31,7 @@ import static de.adorsys.opba.fintech.impl.tppclients.Consts.COMPUTE_X_TIMESTAMP
 @Slf4j
 @RequiredArgsConstructor
 public class TransactionService {
+
     private final FintechUiConfig uiConfig;
     private final TppAisClient tppAisClient;
     private final RestRequestContext restRequestContext;
@@ -76,7 +77,9 @@ public class TransactionService {
             bookingStatus,
             deltaList,
             online,
-            true
+            true,
+            null,
+            null
         );
         switch (transactions.getStatusCode()) {
             case OK:
