@@ -91,7 +91,7 @@ paths:
         - $ref: "#/components/parameters/online"
         - $ref: "#/components/parameters/analytics"
         - $ref: "#/components/parameters/page"
-        - $ref: "#/components/parameters/perPage"
+        - $ref: "#/components/parameters/pageSize"
 
       security:
         - BearerAuthOAuth: []
@@ -132,7 +132,7 @@ paths:
         - $ref: "#/components/parameters/bookingStatus"
         - $ref: "#/components/parameters/deltaList"
         - $ref: "#/components/parameters/page"
-        - $ref: "#/components/parameters/perPage"
+        - $ref: "#/components/parameters/pageSize"
       security:
         - BearerAuthOAuth: []
       responses:
@@ -218,8 +218,8 @@ components:
         format: int32
         minimum: 0
 
-    perPage:
-      name: perPage
+    pageSize:
+      name: pageSize
       in: query
       description: |
         Maximum number of records per page.
@@ -591,7 +591,7 @@ components:
       required:
         - page
         - pageCount
-        - perPage
+        - pageSize
         - totalCount
       properties:
         page:
@@ -600,7 +600,7 @@ components:
           format: int32
           minimum: 0
           example: 0
-        perPage:
+        pageSize:
           description: Current page size (number of entries in this page)
           type: integer
           format: int32

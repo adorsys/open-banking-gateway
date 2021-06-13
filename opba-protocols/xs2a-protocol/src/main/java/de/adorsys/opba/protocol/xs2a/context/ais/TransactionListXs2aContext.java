@@ -52,6 +52,6 @@ public class TransactionListXs2aContext extends Xs2aAisContext {
     /**
      * Records per page.
      */
-    private Integer perPage;
+    private Integer pageSize;
 
 }

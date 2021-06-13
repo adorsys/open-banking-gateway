@@ -61,7 +61,7 @@ public class ListTransactionsRequest implements FacadeServiceableGetter {
     /**
      * Records per page.
      */
-    private Integer perPage;
+    private Integer pageSize;
 
     /**
      * Additional (protocol-customary) request parameters.
