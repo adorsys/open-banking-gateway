@@ -286,6 +286,7 @@ protocol:
         PHOTO: "PHOTO_OTP"
         PUSH: "PUSH_OTP"
         EMAIL: "SMTP_OTP"
+  # Is an optional protocol from extensions
   finapi:
     api-url: https://sandbox.finapi.io
     token-url: ${protocol.finapi.api-url}/oauth/token
