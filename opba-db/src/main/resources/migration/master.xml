@@ -8,5 +8,5 @@
     <include relativeToChangelogFile="true" file="migrations/0002-mock-data.xml"/>
     <include relativeToChangelogFile="true" file="migrations/0003-add-staging-bank-configuration.xml"/>
     <include relativeToChangelogFile="true" file="migrations/0004-add-skip-auth-for-deutsche-bank.xml"/>
-    <include relativeToChangelogFile="true" file="migrations/0005-enable-finapi-extensions.xml" context="finapi-extension"/>
+    <include relativeToChangelogFile="true" file="migrations/0005-enable-finapi-extension.xml" context="finapi-extension"/>
 </databaseChangeLog>
