@@ -10,6 +10,7 @@ import lombok.Data;
 import lombok.EqualsAndHashCode;
 import org.mapstruct.Mapper;
 
+import javax.annotation.Nullable;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 import java.time.LocalDate;
@@ -44,6 +45,18 @@ public class Xs2aTransactionParameters extends Xs2aWithBalanceParameters {
      */
     @NotNull(message = "{no.ctx.dateTo}")
     private LocalDate dateTo;
+
+    /**
+     * Result page number.
+     */
+    @Nullable
+    private Integer page;
+
+    /**
+     * Records per page.
+     */
+    @Nullable
+    private Integer perPage;
 
     // TODO - MapStruct?
     @Override

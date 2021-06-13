@@ -30,9 +30,11 @@ public class HbciTransactionsToFacadeMapper {
 
     public TransactionsResponseBody map(AisListTransactionsResult transactionsResult, ServiceContext<ListTransactionsRequest> context) {
         TransactionsResponseBody.TransactionsResponseBodyBuilder response = TransactionsResponseBody.builder();
+
         if (null != transactionsResult.getBookings()) {
             response.transactions(mapBookings(transactionsResult.getBookings(), context));
         }
+
         return response.build();
     }
 

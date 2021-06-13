@@ -38,6 +38,7 @@ public class Xs2AToFacadeMapperTest {
     void transactionsMapperTest() {
         TransactionsResponse200Json mappingInput = fixtureProvider.getFromFile(PATH_PREFIX + "transactions_input.json",
                 TransactionsResponse200Json.class);
+
         TransactionsResponseBody mappingResult = mapper.map(mappingInput);
 
         TransactionsResponseBody expected = fixtureProvider.getFromFile(PATH_PREFIX + "transactions_output.json",

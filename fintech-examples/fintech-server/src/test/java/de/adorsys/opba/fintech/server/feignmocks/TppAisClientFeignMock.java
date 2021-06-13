@@ -53,7 +53,9 @@ public class TppAisClientFeignMock implements TppAisClient {
             @Valid String bookingStatus,
             @Valid Boolean deltaList,
             Boolean online,
-            Boolean analytics
+            Boolean analytics,
+            Integer page,
+            Integer perPage
     ) {
         return null;
     }
@@ -75,7 +77,9 @@ public class TppAisClientFeignMock implements TppAisClient {
             LocalDate dateTo,
             String entryReferenceFrom,
             String bookingStatus,
-            Boolean deltaList
+            Boolean deltaList,
+            Integer page,
+            Integer perPage
     ) {
         return null;
     }

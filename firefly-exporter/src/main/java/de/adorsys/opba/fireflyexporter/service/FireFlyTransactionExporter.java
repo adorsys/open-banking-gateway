@@ -19,6 +19,7 @@ import de.adorsys.opba.tpp.ais.api.model.generated.TransactionsResponse;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.logging.log4j.util.Strings;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.scheduling.annotation.Async;
@@ -130,6 +131,8 @@ public class FireFlyTransactionExporter {
                 null,
                 "both",
                 false,
+                null,
+                null,
                 null,
                 null
         );
