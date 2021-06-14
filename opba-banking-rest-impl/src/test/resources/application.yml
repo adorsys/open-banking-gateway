@@ -13,6 +13,7 @@ spring:
       table-prefix: opb_
       adorsys-sandbox-url: http://localhost:20014
       fill-with-mock-data: true
+    contexts: none
 
 # Application configuration
 api:

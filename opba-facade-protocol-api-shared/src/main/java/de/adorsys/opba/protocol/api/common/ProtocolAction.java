@@ -22,6 +22,10 @@ public enum ProtocolAction {
      */
     AUTHORIZATION("authorization"),
     /**
+     * {@code de.adorsys.opba.protocol.api.authorization.OnLogin}
+     */
+    ON_LOGIN("on-login", AUTHORIZATION),
+    /**
      * {@code de.adorsys.opba.protocol.api.authorization.GetAuthorizationState}
      */
     GET_AUTHORIZATION_STATE("get-authorization-state", AUTHORIZATION),

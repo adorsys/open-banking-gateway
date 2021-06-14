@@ -32,6 +32,7 @@ import static de.adorsys.opba.restapi.shared.HttpHeaders.X_REQUEST_ID;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
 import static org.springframework.http.MediaType.APPLICATION_JSON;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.asyncDispatch;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.header;
@@ -97,14 +98,16 @@ public class PsuAuthControllerTest {
         );
 
         String xRequestId = UUID.randomUUID().toString();
-        mockMvc.perform(post(TPP_AUTH_API_REGISTRATION_URL)
+        var result = mockMvc.perform(post(TPP_AUTH_API_REGISTRATION_URL)
                 .header(X_REQUEST_ID, xRequestId)
                 .content(new Gson().toJson(getPsuAuthBody()))
                 .contentType(APPLICATION_JSON))
+                .andReturn();
+
+        mockMvc.perform(asyncDispatch(result))
                 .andExpect(status().isCreated())
                 .andExpect(header().string("Location", REDIRECT_TO))
-                .andDo(print())
-                .andReturn();
+                .andDo(print());
     }
 
     @Test
@@ -114,10 +117,13 @@ public class PsuAuthControllerTest {
         when(privateSpace.read(any())).thenReturn(null);
 
         String xRequestId = UUID.randomUUID().toString();
-        mockMvc.perform(post(TPP_AUTH_API_LOGIN_URL)
+        var result = mockMvc.perform(post(TPP_AUTH_API_LOGIN_URL)
                 .header(X_REQUEST_ID, xRequestId)
                 .content(new Gson().toJson(getPsuAuthBody()))
                 .contentType(APPLICATION_JSON))
+                .andReturn();
+
+        mockMvc.perform(asyncDispatch(result))
                 .andExpect(status().isAccepted())
                 .andExpect(header().exists("Set-Cookie"))
                 .andDo(print())

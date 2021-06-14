@@ -56,7 +56,7 @@ public class Xs2aTransactionParameters extends Xs2aWithBalanceParameters {
      * Records per page.
      */
     @Nullable
-    private Integer perPage;
+    private Integer pageSize;
 
     // TODO - MapStruct?
     @Override

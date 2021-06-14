@@ -19,7 +19,7 @@ public class Paging {
     /**
      * Current page size (number of entries in this page)
      */
-    private Integer perPage;
+    private Integer pageSize;
 
     /**
      * Total number of pages

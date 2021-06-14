@@ -55,7 +55,7 @@ public class TppAisClientFeignMock implements TppAisClient {
             Boolean online,
             Boolean analytics,
             Integer page,
-            Integer perPage
+            Integer pageSize
     ) {
         return null;
     }
@@ -79,7 +79,7 @@ public class TppAisClientFeignMock implements TppAisClient {
             String bookingStatus,
             Boolean deltaList,
             Integer page,
-            Integer perPage
+            Integer pageSize
     ) {
         return null;
     }

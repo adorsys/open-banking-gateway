@@ -95,7 +95,7 @@ public class AccountService {
         if (null != bankProfile.getBankProfileDescriptor().getConsentSupportByService()
             && "true".equals(bankProfile.getBankProfileDescriptor().getConsentSupportByService().get(Actions.LIST_ACCOUNTS.name()))) {
             log.info("LoA no valid ais consent for user {} bank {} available", sessionEntity.getUserEntity().getLoginUserName(), bankID);
-            return consentNotYetAvailable(bankID, sessionEntity, redirectCode, xRequestId, psuAuthenticationRequired, optionalConsent);
+            return consentNotYetAvailable(bankID, sessionEntity, redirectCode, xRequestId, psuAuthenticationRequired, optionalConsent, withBalance, online);
         }
 
         return consentAvailable(bankID, sessionEntity, redirectCode, xRequestId, optionalConsent, withBalance, psuAuthenticationRequired, online);
@@ -123,10 +123,11 @@ public class AccountService {
     }
 
     private ResponseEntity consentNotYetAvailable(String bankID, SessionEntity sessionEntity, String redirectCode, UUID xRequestId,
-                                                  Boolean psuAuthenticationRequired, Optional<ConsentEntity> optionalConsent) {
+                                                  Boolean psuAuthenticationRequired, Optional<ConsentEntity> optionalConsent,
+                                                  boolean withBalance, Boolean online) {
         log.info("do LOT (instead of loa) for bank {} {} consent", bankID, optionalConsent.isPresent() ? "with" : "without");
         UUID serviceSessionID = optionalConsent.map(ConsentEntity::getTppServiceSessionId).orElse(null);
-        return tppAisClient.getTransactionsWithoutAccountId(
+        var response = tppAisClient.getTransactionsWithoutAccountId(
             tppProperties.getServiceSessionPassword(),
             sessionEntity.getUserEntity().getFintechUserId(),
             RedirectUrlsEntity.buildOkUrl(uiConfig, redirectCode),
@@ -145,6 +146,20 @@ public class AccountService {
             null,
             null,
             null
+        );
+        if (response.getStatusCode() != HttpStatus.OK) {
+            return response;
+        }
+
+        return consentAvailable(
+                bankID,
+                sessionEntity,
+                redirectCode,
+                UUID.randomUUID(),
+                optionalConsent,
+                withBalance,
+                psuAuthenticationRequired,
+                online
         );
     }
 }

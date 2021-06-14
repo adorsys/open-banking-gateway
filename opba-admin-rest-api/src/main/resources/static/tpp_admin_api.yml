@@ -182,6 +182,7 @@ components:
             - list-accounts
             - list-transactions
             - authorization
+            - on-login
             - get-authorization-state
             - update-authorization
             - deny-authorization
@@ -251,6 +252,7 @@ components:
             - list-accounts
             - list-transactions
             - authorization
+            - on-login
             - get-authorization-state
             - update-authorization
             - deny-authorization

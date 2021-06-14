@@ -58,7 +58,7 @@ public class ServiceContextProviderForFintech implements ServiceContextProvider 
                         .authorizationBankProtocolId(null == authSession ? null : authSession.getAction().getId())
                         .bankId(request.getFacadeServiceable().getBankId())
                         .authSessionId(null == authSession ? null : authSession.getId())
-                        .authContext(null == authSession ? null : authSession.getContext())
+                        .authContext(null == authSession ? null : authSession.getAuthSessionContext())
                         // Currently 1-1 auth-session to service session
                         .futureAuthSessionId(session.getId())
                         .futureRedirectCode(UUID.randomUUID())

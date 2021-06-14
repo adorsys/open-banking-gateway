@@ -97,7 +97,7 @@ public class TppBankingApiAisController implements TppBankingApiAccountInformati
         Boolean online,
         Boolean analytics,
         Integer page,
-        Integer perPage
+        Integer pageSize
     ) {
         return transactions.execute(
             ListTransactionsRequest.builder()
@@ -124,7 +124,7 @@ public class TppBankingApiAisController implements TppBankingApiAccountInformati
                 .bookingStatus(bookingStatus)
                 .deltaList(deltaList)
                 .page(page)
-                .perPage(perPage)
+                .pageSize(pageSize)
                 .build()
         ).thenApply((FacadeResult<TransactionsResponseBody> result) -> mapper.translate(result, transactionsRestMapper));
     }
@@ -148,7 +148,7 @@ public class TppBankingApiAisController implements TppBankingApiAccountInformati
         String bookingStatus,
         Boolean deltaList,
         Integer page,
-        Integer perPage
+        Integer pageSize
     ) {
         return transactions.execute(
             ListTransactionsRequest.builder()
@@ -172,7 +172,7 @@ public class TppBankingApiAisController implements TppBankingApiAccountInformati
                 .bookingStatus(bookingStatus)
                 .deltaList(deltaList)
                 .page(page)
-                .perPage(perPage)
+                .pageSize(pageSize)
                 .build()
         ).thenApply((FacadeResult<TransactionsResponseBody> result) -> mapper.translate(result, transactionsRestMapper));
     }
