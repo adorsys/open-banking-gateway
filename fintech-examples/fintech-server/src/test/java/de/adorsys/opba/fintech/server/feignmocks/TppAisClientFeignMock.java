@@ -3,6 +3,7 @@ package de.adorsys.opba.fintech.server.feignmocks;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import de.adorsys.opba.fintech.impl.tppclients.TppAisClient;
 import de.adorsys.opba.tpp.ais.api.model.generated.AccountList;
+import de.adorsys.opba.tpp.ais.api.model.generated.AisConsentRequest;
 import de.adorsys.opba.tpp.ais.api.model.generated.TransactionsResponse;
 import org.springframework.http.ResponseEntity;
 
@@ -27,6 +28,7 @@ public class TppAisClientFeignMock implements TppAisClient {
             String bankID,
             Boolean xPsuAuthenticationRequired,
             UUID serviceSessionID,
+            AisConsentRequest createConsentIfNone,
             Boolean useObgCache,
             Boolean withBalance
     ) {
@@ -47,6 +49,7 @@ public class TppAisClientFeignMock implements TppAisClient {
             String bankID,
             Boolean xPsuAuthenticationRequired,
             UUID serviceSessionID,
+            AisConsentRequest createConsentIfNone,
             LocalDate dateFrom,
             @Valid LocalDate dateTo,
             String entryReferenceFrom,
@@ -73,6 +76,7 @@ public class TppAisClientFeignMock implements TppAisClient {
             String bankID,
             Boolean xPsuAuthenticationRequired,
             UUID serviceSessionID,
+            AisConsentRequest createConsentIfNone,
             LocalDate dateFrom,
             LocalDate dateTo,
             String entryReferenceFrom,

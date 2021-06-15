@@ -1,11 +1,13 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { AisService } from '../services/ais.service';
-import { AccountReport } from '../../api';
+import {AccountReport, AisAccountAccessInfo, AisConsentRequest} from '../../api';
 import { RedirectStruct, RedirectType } from '../redirect-page/redirect-struct';
 import { Consts, HeaderConfig } from '../../models/consts';
 import { StorageService } from '../../services/storage.service';
 import { RoutingPath } from '../../models/routing-path.model';
+import AvailableAccountsEnum = AisAccountAccessInfo.AvailableAccountsEnum;
+import AllPsd2Enum = AisAccountAccessInfo.AllPsd2Enum;
 
 @Component({
   selector: 'app-list-transactions',
@@ -36,8 +38,20 @@ export class ListTransactionsComponent implements OnInit {
   private loadTransactions(): void {
     const settings = this.storageService.getSettings();
     const online = !this.storageService.isAfterRedirect() && !settings.cacheLot;
+
+    let consent: AisConsentRequest = {
+      access: {
+        allPsd2: AllPsd2Enum.ACCOUNTSWITHBALANCES,
+        availableAccounts: AvailableAccountsEnum.ACCOUNTSWITHBALANCES
+      },
+      frequencyPerDay: settings.frequencyPerDay,
+      validUntil: settings.validUntil,
+      recurringIndicator: settings.recurringIndicator,
+      combinedServiceIndicator: settings.combinedServiceIndicator
+    }
+
     this.aisService
-      .getTransactions(this.bankId, this.accountId, settings.lot, online, settings.consentRequiresAuthentication)
+      .getTransactions(this.bankId, this.accountId, settings.lot, JSON.stringify(consent), online, settings.consentRequiresAuthentication)
       .subscribe((response) => {
         switch (response.status) {
           case 202:

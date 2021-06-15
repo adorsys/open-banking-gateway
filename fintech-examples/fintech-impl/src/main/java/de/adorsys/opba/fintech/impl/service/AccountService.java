@@ -13,7 +13,7 @@ import de.adorsys.opba.fintech.impl.tppclients.Actions;
 import de.adorsys.opba.fintech.impl.tppclients.AisErrorDecoder;
 import de.adorsys.opba.fintech.impl.tppclients.ConsentType;
 import de.adorsys.opba.fintech.impl.tppclients.TppAisClient;
-import de.adorsys.opba.tpp.banksearch.api.model.generated.BankProfileResponse;
+import de.adorsys.opba.tpp.ais.api.model.generated.AisConsentRequest;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpHeaders;
@@ -21,6 +21,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
+import java.util.Map;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -45,13 +46,14 @@ public class AccountService {
 
     public ResponseEntity listAccounts(SessionEntity sessionEntity,
                                        String fintechOkUrl, String fintechNOKUrl,
-                                       String bankId, LoARetrievalInformation loARetrievalInformation, boolean withBalance, Boolean psuAuthenticationRequired, Boolean online) {
+                                       String bankId, LoARetrievalInformation loARetrievalInformation, AisConsentRequest createConsentIfNone,
+                                       boolean withBalance, Boolean psuAuthenticationRequired, Boolean online) {
 
         log.info("List of accounts {} with balance {}", loARetrievalInformation, withBalance);
         final String fintechRedirectCode = UUID.randomUUID().toString();
 
         try {
-            ResponseEntity accounts = readOpbaResponse(bankId, sessionEntity, fintechRedirectCode, loARetrievalInformation, withBalance, psuAuthenticationRequired, online);
+            ResponseEntity accounts = readOpbaResponse(bankId, sessionEntity, fintechRedirectCode, loARetrievalInformation, createConsentIfNone, withBalance, psuAuthenticationRequired, online);
 
             switch (accounts.getStatusCode()) {
                 case OK:
@@ -68,14 +70,14 @@ public class AccountService {
         } catch (ConsentException consentException) {
             HttpHeaders headers = new HttpHeaders();
             headers.add(AisErrorDecoder.X_ERROR_CODE, consentException.getXErrorCode());
-            return new ResponseEntity(headers, HttpStatus.valueOf(consentException.getHttpResponseCode()));
+            return new ResponseEntity<>(headers, HttpStatus.valueOf(consentException.getHttpResponseCode()));
         }
     }
 
 
     private ResponseEntity readOpbaResponse(String bankID, SessionEntity sessionEntity, String redirectCode,
-                                            LoARetrievalInformation loARetrievalInformation, boolean withBalance,
-                                            Boolean psuAuthenticationRequired, Boolean online) {
+                                            LoARetrievalInformation loARetrievalInformation, AisConsentRequest createConsentIfNone,
+                                            boolean withBalance, Boolean psuAuthenticationRequired, Boolean online) {
         UUID xRequestId = UUID.fromString(restRequestContext.getRequestId());
         Optional<ConsentEntity> optionalConsent = Optional.empty();
         if (loARetrievalInformation.equals(LoARetrievalInformation.FROM_TPP_WITH_AVAILABLE_CONSENT)) {
@@ -88,21 +90,20 @@ public class AccountService {
                 optionalConsent.get().getUserEntity().getLoginUserName(),
                 optionalConsent.get().getBankId(),
                 optionalConsent.get().getCreationTime());
-            return consentAvailable(bankID, sessionEntity, redirectCode, xRequestId, optionalConsent, withBalance, psuAuthenticationRequired, online);
+            return consentAvailable(bankID, sessionEntity, redirectCode, xRequestId, optionalConsent, createConsentIfNone, withBalance, psuAuthenticationRequired, online);
         }
 
-        BankProfileResponse bankProfile = searchService.getBankProfileById(bankID).getBody();
-        if (null != bankProfile.getBankProfileDescriptor().getConsentSupportByService()
-            && "true".equals(bankProfile.getBankProfileDescriptor().getConsentSupportByService().get(Actions.LIST_ACCOUNTS.name()))) {
+        Map<String, String> consentSupportByService = searchService.getBankProfileById(bankID).getBody().getBankProfileDescriptor().getConsentSupportByService();
+        if (null != consentSupportByService && "true".equals(consentSupportByService.get(Actions.LIST_ACCOUNTS.name()))) {
             log.info("LoA no valid ais consent for user {} bank {} available", sessionEntity.getUserEntity().getLoginUserName(), bankID);
-            return consentNotYetAvailable(bankID, sessionEntity, redirectCode, xRequestId, psuAuthenticationRequired, optionalConsent, withBalance, online);
+            return consentNotYetAvailable(bankID, sessionEntity, redirectCode, xRequestId, psuAuthenticationRequired, optionalConsent, withBalance, online, createConsentIfNone);
         }
 
-        return consentAvailable(bankID, sessionEntity, redirectCode, xRequestId, optionalConsent, withBalance, psuAuthenticationRequired, online);
+        return consentAvailable(bankID, sessionEntity, redirectCode, xRequestId, optionalConsent, createConsentIfNone, withBalance, psuAuthenticationRequired, online);
     }
 
     private ResponseEntity consentAvailable(String bankID, SessionEntity sessionEntity, String redirectCode,
-                                            UUID xRequestId, Optional<ConsentEntity> optionalConsent, boolean withBalance,
+                                            UUID xRequestId, Optional<ConsentEntity> optionalConsent, AisConsentRequest createConsentIfNone, boolean withBalance,
                                             Boolean psuAuthenticationRequired, Boolean online) {
         log.info("do LOA for bank {} {} consent", bankID, optionalConsent.isPresent() ? "with" : "without");
         UUID serviceSessionID = optionalConsent.map(ConsentEntity::getTppServiceSessionId).orElse(null);
@@ -118,13 +119,14 @@ public class AccountService {
             bankID,
             psuAuthenticationRequired,
             serviceSessionID,
+            createConsentIfNone,
             withBalance,
             online);
     }
 
     private ResponseEntity consentNotYetAvailable(String bankID, SessionEntity sessionEntity, String redirectCode, UUID xRequestId,
                                                   Boolean psuAuthenticationRequired, Optional<ConsentEntity> optionalConsent,
-                                                  boolean withBalance, Boolean online) {
+                                                  boolean withBalance, Boolean online, AisConsentRequest createConsentIfNone) {
         log.info("do LOT (instead of loa) for bank {} {} consent", bankID, optionalConsent.isPresent() ? "with" : "without");
         UUID serviceSessionID = optionalConsent.map(ConsentEntity::getTppServiceSessionId).orElse(null);
         var response = tppAisClient.getTransactionsWithoutAccountId(
@@ -139,6 +141,7 @@ public class AccountService {
             bankID,
             psuAuthenticationRequired,
             serviceSessionID,
+            createConsentIfNone,
             null,
             null,
             null,
@@ -157,6 +160,7 @@ public class AccountService {
                 redirectCode,
                 UUID.randomUUID(),
                 optionalConsent,
+                createConsentIfNone,
                 withBalance,
                 psuAuthenticationRequired,
                 online

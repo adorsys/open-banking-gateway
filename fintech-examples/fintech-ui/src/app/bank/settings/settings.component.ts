@@ -4,7 +4,7 @@ import { Location } from '@angular/common';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { LoARetrievalInformation, LoTRetrievalInformation } from '../../models/consts';
 import { StorageService } from '../../services/storage.service';
-import {FinTechAccountInformationService} from "../../api";
+import { FinTechAccountInformationService} from "../../api";
 
 @Component({
   selector: 'app-settings',
@@ -39,7 +39,11 @@ export class SettingsComponent implements OnInit {
       cacheLoa: settingsData.cacheLoa,
       cacheLot: settingsData.cacheLot,
       consentRequiresAuthentication: settingsData.consentRequiresAuthentication,
-      paymentRequiresAuthentication: settingsData.paymentRequiresAuthentication
+      paymentRequiresAuthentication: settingsData.paymentRequiresAuthentication,
+      frequencyPerDay: settingsData.frequencyPerDay,
+      recurringIndicator: settingsData.recurringIndicator,
+      validUntil: settingsData.validUntil,
+      combinedServiceIndicator: settingsData.combinedServiceIndicator
     });
   }
 
@@ -65,4 +69,8 @@ export class SettingsData {
   cacheLot: boolean;
   consentRequiresAuthentication: boolean;
   paymentRequiresAuthentication: boolean;
+  frequencyPerDay: number;
+  recurringIndicator: boolean;
+  validUntil: string;
+  combinedServiceIndicator: boolean;
 }

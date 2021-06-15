@@ -79,7 +79,7 @@ public class FinTechListAccountsTest extends FinTechBankSearchApiTest {
 
     @SneakyThrows
     List<String> listAccountsForOk(BankProfileTestResult result) {
-        when(tppAisClientFeignMock.getAccounts(any(), any(), any(), any(), any(), any(), any(), any(), any(), any(), any(), any(), any()))
+        when(tppAisClientFeignMock.getAccounts(any(), any(), any(), any(), any(), any(), any(), any(), any(), any(), any(), any(), any(), any()))
                 .thenReturn(ResponseEntity.ok(GSON.fromJson(readFile("TPP_LIST_ACCOUNTS.json"), AccountList.class)));
 
         MvcResult mvcResult = plainListAccounts(result.getBankUUID());
@@ -105,13 +105,13 @@ public class FinTechListAccountsTest extends FinTechBankSearchApiTest {
         BankProfileTestResult result = getBankProfileTestResult();
         createConsent(null, null);
         when(tppAisClientFeignMock.getTransactionsWithoutAccountId(any(), any(), any(), any(), any(), any(), any(), any(), any(), any(),
-                any(), any(), any(), any(), any(), any(), any(), any())).thenReturn(accepted);
+                any(), any(), any(), any(), any(), any(), any(), any(), any())).thenReturn(accepted);
 
         MvcResult mvcResult = plainListAccounts(result.getBankUUID());
         assertEquals(ACCEPTED.value(), mvcResult.getResponse().getStatus());
         verify(tppAisClientFeignMock).getTransactionsWithoutAccountId(any(), any(), any(), any(), any(), any(), any(), any(), any(),
-                any(), any(), any(), any(), any(), any(), any(), any(), any());
-        verify(tppAisClientFeignMock, never()).getAccounts(any(), any(), any(), any(), any(), any(), any(), any(), any(), any(), any(), any(), any());
+                any(), any(), any(), any(), any(), any(), any(), any(), any(), any());
+        verify(tppAisClientFeignMock, never()).getAccounts(any(), any(), any(), any(), any(), any(), any(), any(), any(), any(), any(), any(), any(), any());
     }
 
     @Test
@@ -129,13 +129,13 @@ public class FinTechListAccountsTest extends FinTechBankSearchApiTest {
                 .build();
         createConsent(null, null);
         when(tppAisClientFeignMock.getAccounts(any(), any(), any(), any(), any(), any(), any(), any(), any(), any(),
-                any(), any(), any())).thenReturn(accepted);
+                any(), any(), any(), any())).thenReturn(accepted);
 
         MvcResult mvcResult = plainListAccounts(NO_CONSENT_BANK_ID);
         assertEquals(ACCEPTED.value(), mvcResult.getResponse().getStatus());
         verify(tppAisClientFeignMock, never()).getTransactions(any(), any(), any(), any(), any(), any(), any(), any(), any(), any(),
-                any(), any(), any(), any(), any(), any(), any(), any(), any(), any(), any());
-        verify(tppAisClientFeignMock).getAccounts(any(), any(), any(), any(), any(), any(), any(), any(), any(), any(), any(), any(), any());
+                any(), any(), any(), any(), any(), any(), any(), any(), any(), any(), any(), any());
+        verify(tppAisClientFeignMock).getAccounts(any(), any(), any(), any(), any(), any(), any(), any(), any(), any(), any(), any(), any(), any());
     }
 
 

@@ -11,6 +11,7 @@ import de.adorsys.opba.fintech.impl.mapper.ManualMapper;
 import de.adorsys.opba.fintech.impl.properties.TppProperties;
 import de.adorsys.opba.fintech.impl.tppclients.ConsentType;
 import de.adorsys.opba.fintech.impl.tppclients.TppAisClient;
+import de.adorsys.opba.tpp.ais.api.model.generated.AisConsentRequest;
 import de.adorsys.opba.tpp.ais.api.model.generated.TransactionsResponse;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -42,7 +43,7 @@ public class TransactionService {
 
     @SuppressWarnings("checkstyle:MethodLength") //  FIXME - It is just too many lines of text
     public ResponseEntity listTransactions(SessionEntity sessionEntity, String fintechOkUrl, String fintechNOkUrl, String bankId,
-                                           String accountId, LocalDate dateFrom, LocalDate dateTo, String entryReferenceFrom,
+                                           String accountId, AisConsentRequest createConsentIfNone, LocalDate dateFrom, LocalDate dateTo, String entryReferenceFrom,
                                            String bookingStatus, Boolean deltaList, LoTRetrievalInformation loTRetrievalInformation,
                                            Boolean psuAuthenticationRequired, Boolean online) {
         log.info("LoT {}", loTRetrievalInformation);
@@ -71,6 +72,7 @@ public class TransactionService {
             bankId,
             psuAuthenticationRequired,
             optionalConsent.map(ConsentEntity::getTppServiceSessionId).orElse(null),
+            createConsentIfNone,
             dateFrom,
             dateTo,
             entryReferenceFrom,
