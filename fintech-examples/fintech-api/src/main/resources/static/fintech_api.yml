@@ -612,7 +612,9 @@ components:
       required: false
       in: header
       schema:
-        $ref: "#/components/schemas/aisConsentRequest"
+        type: string
+        description: json representation of AisConsentRequest object
+        example:
 
     X-Request-ID:
       name: X-Request-ID
@@ -2015,77 +2017,3 @@ components:
         referenceDate:
           type: string
           format: date
-
-    aisAccountAccessInfo:
-      title: AisAccountAccessInfo
-      type: object
-      properties:
-        accounts:
-          type: array
-          description: Access to accounts
-          items:
-            $ref: "#/components/schemas/accountReference"
-        allPsd2:
-          type: string
-          description: Consent on all accounts, balances and transactions of psu
-          example: ALL_ACCOUNTS
-          enum:
-            - ALL_ACCOUNTS
-            - ALL_ACCOUNTS_WITH_BALANCES
-        availableAccounts:
-          type: string
-          description: Consent on all available accounts of psu
-          example: ALL_ACCOUNTS
-          enum:
-            - ALL_ACCOUNTS
-            - ALL_ACCOUNTS_WITH_BALANCES
-        balances:
-          type: array
-          description: Access to balances
-          items:
-            $ref: "#/components/schemas/accountReference"
-        transactions:
-          type: array
-          description: Access to transactions
-          items:
-            $ref: "#/components/schemas/accountReference"
-      description: Ais account access information
-
-    aisConsentRequest:
-      title: AisConsentRequest
-      required:
-        - access
-        - frequencyPerDay
-        - recurringIndicator
-        - validUntil
-      type: object
-      properties:
-        access:
-          $ref: "#/components/schemas/aisAccountAccessInfo"
-        frequencyPerDay:
-          type: integer
-          description:
-            Maximum frequency for an access per day. For a once-off access,
-            this attribute is set to 1
-          format: int32
-          example: 4
-        recurringIndicator:
-          type: boolean
-          description:
-            "'true', if the consent is for recurring access to the account
-              data , 'false', if the consent is for one access to the account data"
-          example: false
-        validUntil:
-          type: string
-          description:
-            Consent`s expiration date. The content is the local ASPSP date
-            in ISODate Format
-          format: date
-          example: 2020-10-10
-        combinedServiceIndicator:
-          type: boolean
-          description:
-            "'true', if the consent is i.e. account list and then payment
-              'false', if the consent is for one access to the account data"
-          default: false
-      description: Ais consent request

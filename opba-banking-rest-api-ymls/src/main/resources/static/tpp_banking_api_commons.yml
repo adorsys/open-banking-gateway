@@ -201,7 +201,9 @@ components:
       required: false
       in: header
       schema:
-        $ref: "#/components/schemas/aisConsentRequest"
+        type: string
+        description: json representation of AisConsentRequest object
+        example:
 
 
   responses:

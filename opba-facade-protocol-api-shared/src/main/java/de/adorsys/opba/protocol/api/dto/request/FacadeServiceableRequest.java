@@ -1,7 +1,6 @@
 package de.adorsys.opba.protocol.api.dto.request;
 
 import de.adorsys.opba.protocol.api.dto.context.UserAgentContext;
-import de.adorsys.opba.protocol.api.dto.request.authorization.AisConsent;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -98,6 +97,4 @@ public class FacadeServiceableRequest {
      * For transaction listing requests triggers transaction analyzers to enrich online result.
      */
     private final boolean withAnalytics;
-
-    private final AisConsent aisConsent;
 }

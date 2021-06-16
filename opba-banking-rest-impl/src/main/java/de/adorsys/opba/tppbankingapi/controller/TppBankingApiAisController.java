@@ -1,6 +1,8 @@
 package de.adorsys.opba.tppbankingapi.controller;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import de.adorsys.opba.protocol.api.dto.context.UserAgentContext;
+import de.adorsys.opba.protocol.api.dto.parameters.ExtraRequestParam;
 import de.adorsys.opba.protocol.api.dto.request.FacadeServiceableRequest;
 import de.adorsys.opba.protocol.api.dto.request.accounts.ListAccountsRequest;
 import de.adorsys.opba.protocol.api.dto.request.authorization.DeleteConsentRequest;
@@ -16,16 +18,17 @@ import de.adorsys.opba.restapi.shared.mapper.FacadeResponseBodyToRestBodyMapper;
 import de.adorsys.opba.restapi.shared.service.FacadeResponseMapper;
 import de.adorsys.opba.tppbankingapi.Const;
 import de.adorsys.opba.tppbankingapi.ais.model.generated.AccountList;
-import de.adorsys.opba.tppbankingapi.ais.model.generated.AisConsentRequest;
 import de.adorsys.opba.tppbankingapi.ais.model.generated.TransactionsResponse;
 import de.adorsys.opba.tppbankingapi.ais.resource.generated.TppBankingApiAccountInformationServiceAisApi;
 import lombok.RequiredArgsConstructor;
+import lombok.SneakyThrows;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.time.LocalDate;
+import java.util.Collections;
 import java.util.UUID;
 import java.util.concurrent.CompletableFuture;
 
@@ -42,9 +45,10 @@ public class TppBankingApiAisController implements TppBankingApiAccountInformati
     private final FacadeResponseMapper mapper;
     private final AccountListFacadeResponseBodyToRestBodyMapper accountListRestMapper;
     private final TransactionsFacadeResponseBodyToRestBodyMapper transactionsRestMapper;
-    private final AisConsentMapper consentMapper;
+    private final ObjectMapper objectMapper;
 
     @Override
+    @SneakyThrows
     public CompletableFuture getAccounts(
         String serviceSessionPassword,
         String fintechUserID,
@@ -57,7 +61,7 @@ public class TppBankingApiAisController implements TppBankingApiAccountInformati
         String bankID,
         Boolean xPsuAuthenticationRequired,
         UUID serviceSessionId,
-        AisConsentRequest createConsentIfNone,
+        String createConsentIfNone,
         Boolean withBalance,
         Boolean online
     ) {
@@ -76,15 +80,16 @@ public class TppBankingApiAisController implements TppBankingApiAccountInformati
                     .bankId(bankID)
                     .anonymousPsu(null != xPsuAuthenticationRequired && !xPsuAuthenticationRequired)
                     .online(online)
-                    .aisConsent(consentMapper.map(createConsentIfNone))
                     .build()
                 )
                 .withBalance(withBalance)
+                .extras(Collections.singletonMap(ExtraRequestParam.CONSENT, objectMapper.readValue(createConsentIfNone, AisConsent.class)))
                 .build()
         ).thenApply((FacadeResult<AccountListBody> result) -> mapper.translate(result, accountListRestMapper));
     }
 
     @Override
+    @SneakyThrows
     public CompletableFuture getTransactions(
         String accountId,
         String serviceSessionPassword,
@@ -98,7 +103,7 @@ public class TppBankingApiAisController implements TppBankingApiAccountInformati
         String bankID,
         Boolean xPsuAuthenticationRequired,
         UUID serviceSessionId,
-        AisConsentRequest createConsentIfNone,
+        String createConsentIfNone,
         LocalDate dateFrom,
         LocalDate dateTo,
         String entryReferenceFrom,
@@ -124,7 +129,6 @@ public class TppBankingApiAisController implements TppBankingApiAccountInformati
                     .bankId(bankID)
                     .anonymousPsu(null != xPsuAuthenticationRequired && !xPsuAuthenticationRequired)
                     .online(online)
-                    .aisConsent(consentMapper.map(createConsentIfNone))
                     .withAnalytics(analytics)
                     .build()
                 )
@@ -136,11 +140,13 @@ public class TppBankingApiAisController implements TppBankingApiAccountInformati
                 .deltaList(deltaList)
                 .page(page)
                 .pageSize(pageSize)
+                .extras(Collections.singletonMap(ExtraRequestParam.CONSENT, objectMapper.readValue(createConsentIfNone, AisConsent.class)))
                 .build()
         ).thenApply((FacadeResult<TransactionsResponseBody> result) -> mapper.translate(result, transactionsRestMapper));
     }
 
     @Override
+    @SneakyThrows
     public CompletableFuture getTransactionsWithoutAccountId(
         String serviceSessionPassword,
         String fintechUserId,
@@ -153,7 +159,7 @@ public class TppBankingApiAisController implements TppBankingApiAccountInformati
         String bankId,
         Boolean xPsuAuthenticationRequired,
         UUID serviceSessionId,
-        AisConsentRequest createConsentIfNone,
+        String createConsentIfNone,
         LocalDate dateFrom,
         LocalDate dateTo,
         String entryReferenceFrom,
@@ -176,7 +182,6 @@ public class TppBankingApiAisController implements TppBankingApiAccountInformati
                     .requestId(xRequestID)
                     .bankId(bankId)
                     .anonymousPsu(null != xPsuAuthenticationRequired && !xPsuAuthenticationRequired)
-                    .aisConsent(consentMapper.map(createConsentIfNone))
                     .build()
                 )
                 .dateFrom(dateFrom)
@@ -186,6 +191,7 @@ public class TppBankingApiAisController implements TppBankingApiAccountInformati
                 .deltaList(deltaList)
                 .page(page)
                 .pageSize(pageSize)
+                .extras(Collections.singletonMap(ExtraRequestParam.CONSENT, objectMapper.readValue(createConsentIfNone, AisConsent.class)))
                 .build()
         ).thenApply((FacadeResult<TransactionsResponseBody> result) -> mapper.translate(result, transactionsRestMapper));
     }
@@ -218,10 +224,5 @@ public class TppBankingApiAisController implements TppBankingApiAccountInformati
 
         @Mapping(source = "analytics.bookings", target = "analytics")
         TransactionsResponse map(TransactionsResponseBody facadeEntity);
-    }
-
-    @Mapper(componentModel = SPRING_KEYWORD, implementationPackage = Const.API_MAPPERS_PACKAGE)
-    public interface AisConsentMapper extends FacadeResponseBodyToRestBodyMapper<AisConsent, AisConsentRequest> {
-        AisConsent map(AisConsentRequest consentRequest);
     }
 }

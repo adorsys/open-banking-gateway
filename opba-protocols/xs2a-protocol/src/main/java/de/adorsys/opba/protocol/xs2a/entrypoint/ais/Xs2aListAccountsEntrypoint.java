@@ -6,6 +6,7 @@ import de.adorsys.opba.protocol.api.common.ProtocolAction;
 import de.adorsys.opba.protocol.api.dto.ValidationIssue;
 import de.adorsys.opba.protocol.api.dto.context.ServiceContext;
 import de.adorsys.opba.protocol.api.dto.request.accounts.ListAccountsRequest;
+import de.adorsys.opba.protocol.api.dto.request.authorization.AisConsent;
 import de.adorsys.opba.protocol.api.dto.result.body.AccountListBody;
 import de.adorsys.opba.protocol.api.dto.result.body.ValidationError;
 import de.adorsys.opba.protocol.api.dto.result.fromprotocol.Result;
@@ -16,6 +17,7 @@ import de.adorsys.opba.protocol.xs2a.entrypoint.ExtendWithServiceContext;
 import de.adorsys.opba.protocol.xs2a.entrypoint.Xs2aOutcomeMapper;
 import de.adorsys.opba.protocol.xs2a.entrypoint.Xs2aResultBodyExtractor;
 import de.adorsys.opba.protocol.xs2a.entrypoint.helpers.Xs2aUuidMapper;
+import de.adorsys.opba.protocol.xs2a.service.xs2a.dto.consent.AisConsentInitiateBody;
 import lombok.RequiredArgsConstructor;
 import org.flowable.engine.RuntimeService;
 import org.flowable.engine.runtime.ProcessInstance;
@@ -83,6 +85,10 @@ public class Xs2aListAccountsEntrypoint implements ListAccounts {
         @Mapping(source = "facadeServiceable.fintechRedirectUrlOk", target = "fintechRedirectUriOk")
         @Mapping(source = "facadeServiceable.fintechRedirectUrlNok", target = "fintechRedirectUriNok")
         @Mapping(source = "facadeServiceable.uaContext.psuAccept", target = "contentType", nullValuePropertyMappingStrategy = IGNORE)
+        @Mapping(target = "aisConsent", expression = "java(map(((de.adorsys.opba.protocol.api.dto.request.authorization.AisConsent) "
+            + "ctx.getExtras().get(de.adorsys.opba.protocol.api.dto.parameters.ExtraRequestParam.CONSENT))))")
         AccountListXs2aContext map(ListAccountsRequest ctx);
+
+        AisConsentInitiateBody map(AisConsent consent);
     }
 }
