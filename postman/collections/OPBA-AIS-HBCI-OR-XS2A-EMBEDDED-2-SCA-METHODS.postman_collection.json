@@ -1,6 +1,6 @@
 {
 	"info": {
-		"_postman_id": "2fc8093b-ee18-4983-900f-45d7ffcf2595",
+		"_postman_id": "45ea8ed6-38ea-418a-a53b-7fe9fa4d50cf",
 		"name": "OPBA-AIS-HBCI-OR-XS2A-EMBEDDED-2-SCA-METHODS",
 		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
 	},
@@ -248,14 +248,13 @@
 					}
 				},
 				"url": {
-					"raw": "{{opba-base}}/v1/psu/ais/{{authorization-session-id}}/for-approval/login?redirectCode={{fintech-user-temp-password}}",
+					"raw": "{{opba-base}}/v1/psu/{{authorization-session-id}}/for-approval/login?redirectCode={{fintech-user-temp-password}}",
 					"host": [
 						"{{opba-base}}"
 					],
 					"path": [
 						"v1",
 						"psu",
-						"ais",
 						"{{authorization-session-id}}",
 						"for-approval",
 						"login"
