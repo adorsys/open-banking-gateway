@@ -2,14 +2,13 @@ package de.adorsys.opba.protocol.xs2a.service.xs2a.validation;
 
 import com.google.common.base.Strings;
 import de.adorsys.opba.protocol.xs2a.service.xs2a.annotations.ValidConsentBody;
+import de.adorsys.opba.protocol.xs2a.service.xs2a.dto.consent.AccountAccessType;
 import de.adorsys.opba.protocol.xs2a.service.xs2a.dto.consent.AisConsentInitiateBody;
 import org.springframework.util.CollectionUtils;
 
 import javax.validation.ConstraintValidator;
 import javax.validation.ConstraintValidatorContext;
-
-import static de.adorsys.opba.protocol.xs2a.service.xs2a.dto.consent.AccountAccessType.ALL_ACCOUNTS;
-import static de.adorsys.opba.protocol.xs2a.service.xs2a.dto.consent.AccountAccessType.ALL_ACCOUNTS_WITH_BALANCES;
+import java.util.Arrays;
 
 /**
  * Special validator to check that AIS consent scope object {@link AisConsentInitiateBody} can be used to call ASPSP.
@@ -40,15 +39,14 @@ public class AccountAccessBodyValidator implements ConstraintValidator<ValidCons
 
         boolean validDedicatedWithoutAccounts = isEmptyAccountInfo(body)
                                                         && Strings.isNullOrEmpty(body.getAllPsd2())
-                                                        && (ALL_ACCOUNTS.getApiName().equals(body.getAvailableAccounts())
-                                                                    || ALL_ACCOUNTS_WITH_BALANCES.getApiName().equals(body.getAvailableAccounts()));
+                                                        && Arrays.stream(AccountAccessType.values()).anyMatch(it -> it.getApiName().equals(body.getAllPsd2()));
 
         return validDedicatedWithAccounts || validDedicatedWithoutAccounts;
     }
 
     private boolean isValidGlobalConsent(AisConsentInitiateBody.AccountAccessBody body) {
         return isEmptyAccountInfo(body)
-                       && ALL_ACCOUNTS.getApiName().equals(body.getAllPsd2())
+                       && Arrays.stream(AccountAccessType.values()).anyMatch(it -> it.getApiName().equals(body.getAllPsd2()))
                        && Strings.isNullOrEmpty(body.getAvailableAccounts());
     }
 

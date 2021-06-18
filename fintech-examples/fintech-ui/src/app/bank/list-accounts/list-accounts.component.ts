@@ -40,8 +40,7 @@ export class ListAccountsComponent implements OnInit {
 
     let consent: AisConsentRequest = {
       access: {
-        allPsd2: AllPsd2Enum.ACCOUNTSWITHBALANCES,
-        availableAccounts: AvailableAccountsEnum.ACCOUNTSWITHBALANCES
+        allPsd2: AllPsd2Enum.ACCOUNTSWITHBALANCES
       },
       frequencyPerDay: settings.frequencyPerDay,
       validUntil: settings.validUntil,

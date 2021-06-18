@@ -203,7 +203,7 @@ components:
       schema:
         type: string
         description: json representation of AisConsentRequest object
-        example:
+        example: {"access":{"allPsd2":"ALL_ACCOUNTS_WITH_BALANCES"},"frequencyPerDay":4,"validUntil":"2021-06-18","recurringIndicator":true,"combinedServiceIndicator":false}
 
 
   responses:
