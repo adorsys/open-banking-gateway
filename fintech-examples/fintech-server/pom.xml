@@ -123,6 +123,8 @@
                 <version>${spring-boot.version}</version>
                 <configuration>
                     <mainClass>de.adorsys.opba.fintech.server.FinTechServer</mainClass>
+                    <skip>false</skip>
+                    <classifier>exec</classifier>
                 </configuration>
                 <executions>
                     <execution>
