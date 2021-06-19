@@ -1,5 +1,6 @@
 package de.adorsys.opba.protocol.xs2a.util.logresolver.mapper;
 
+import de.adorsys.opba.protocol.api.dto.context.ServiceContext;
 import de.adorsys.opba.protocol.bpmnshared.dto.context.BaseContext;
 import de.adorsys.opba.protocol.xs2a.context.Xs2aContext;
 import de.adorsys.opba.protocol.xs2a.context.ais.TransactionListXs2aContext;
@@ -20,46 +21,47 @@ import de.adorsys.opba.protocol.xs2a.service.xs2a.dto.oauth2.Xs2aOauth2Headers;
 import de.adorsys.opba.protocol.xs2a.service.xs2a.dto.oauth2.Xs2aOauth2Parameters;
 import de.adorsys.opba.protocol.xs2a.service.xs2a.dto.oauth2.Xs2aOauth2WithCodeParameters;
 import de.adorsys.opba.protocol.xs2a.service.xs2a.dto.payment.PaymentInitiateHeaders;
-import de.adorsys.opba.protocol.xs2a.util.logresolver.domain.consent.AccountAccessLog;
-import de.adorsys.opba.protocol.xs2a.util.logresolver.domain.context.AuthenticationObjectLog;
-import de.adorsys.opba.protocol.xs2a.util.logresolver.domain.context.BaseContextLog;
-import de.adorsys.opba.protocol.xs2a.util.logresolver.domain.context.ChallengeDataLog;
+import de.adorsys.opba.protocol.xs2a.util.logresolver.domain.ValidatedPathHeadersBodyLog;
+import de.adorsys.opba.protocol.xs2a.util.logresolver.domain.ValidatedPathHeadersLog;
+import de.adorsys.opba.protocol.xs2a.util.logresolver.domain.ValidatedPathQueryHeadersLog;
+import de.adorsys.opba.protocol.xs2a.util.logresolver.domain.ValidatedQueryHeadersLog;
+import de.adorsys.opba.protocol.xs2a.util.logresolver.domain.Xs2aExecutionLog;
+import de.adorsys.opba.protocol.xs2a.util.logresolver.domain.common.PsuDataLog;
 import de.adorsys.opba.protocol.xs2a.util.logresolver.domain.common.SelectPsuAuthenticationMethodLog;
 import de.adorsys.opba.protocol.xs2a.util.logresolver.domain.common.StartScaprocessResponseLog;
 import de.adorsys.opba.protocol.xs2a.util.logresolver.domain.common.TransactionAuthorisationLog;
-import de.adorsys.opba.protocol.xs2a.util.logresolver.domain.context.TransactionListXs2aContextLog;
-import de.adorsys.opba.protocol.xs2a.util.logresolver.domain.payment.AddressLog;
-import de.adorsys.opba.protocol.xs2a.util.logresolver.domain.payment.AmountLog;
-import de.adorsys.opba.protocol.xs2a.util.logresolver.domain.response.URILog;
 import de.adorsys.opba.protocol.xs2a.util.logresolver.domain.common.UpdatePsuAuthenticationLog;
 import de.adorsys.opba.protocol.xs2a.util.logresolver.domain.common.Xs2aOauth2HeadersLog;
 import de.adorsys.opba.protocol.xs2a.util.logresolver.domain.common.Xs2aOauth2ParametersLog;
 import de.adorsys.opba.protocol.xs2a.util.logresolver.domain.common.Xs2aOauth2WithCodeParametersLog;
 import de.adorsys.opba.protocol.xs2a.util.logresolver.domain.common.Xs2aResourceParametersLog;
+import de.adorsys.opba.protocol.xs2a.util.logresolver.domain.common.Xs2aStandardHeadersLog;
 import de.adorsys.opba.protocol.xs2a.util.logresolver.domain.common.Xs2aTransactionParametersLog;
-import de.adorsys.opba.protocol.xs2a.util.logresolver.domain.ValidatedPathQueryHeadersLog;
-import de.adorsys.opba.protocol.xs2a.util.logresolver.domain.common.PsuDataLog;
-import de.adorsys.opba.protocol.xs2a.util.logresolver.domain.response.TokenResponseLog;
-import de.adorsys.opba.protocol.xs2a.util.logresolver.domain.consent.Xs2aAuthorizedConsentParametersLog;
-import de.adorsys.opba.protocol.xs2a.util.logresolver.domain.context.Xs2aContextLog;
-import de.adorsys.opba.protocol.xs2a.util.logresolver.domain.Xs2aExecutionLog;
-import de.adorsys.opba.protocol.xs2a.util.logresolver.domain.ValidatedPathHeadersBodyLog;
-import de.adorsys.opba.protocol.xs2a.util.logresolver.domain.ValidatedPathHeadersLog;
-import de.adorsys.opba.protocol.xs2a.util.logresolver.domain.ValidatedQueryHeadersLog;
 import de.adorsys.opba.protocol.xs2a.util.logresolver.domain.common.Xs2aWithBalanceParametersLog;
 import de.adorsys.opba.protocol.xs2a.util.logresolver.domain.common.Xs2aWithConsentIdHeadersLog;
+import de.adorsys.opba.protocol.xs2a.util.logresolver.domain.consent.AccountAccessLog;
+import de.adorsys.opba.protocol.xs2a.util.logresolver.domain.consent.AccountReferenceLog;
 import de.adorsys.opba.protocol.xs2a.util.logresolver.domain.consent.ConsentInitiateHeadersLog;
 import de.adorsys.opba.protocol.xs2a.util.logresolver.domain.consent.ConsentInitiateParametersLog;
 import de.adorsys.opba.protocol.xs2a.util.logresolver.domain.consent.ConsentsLog;
+import de.adorsys.opba.protocol.xs2a.util.logresolver.domain.consent.Xs2aAuthorizedConsentParametersLog;
 import de.adorsys.opba.protocol.xs2a.util.logresolver.domain.consent.Xs2aInitialConsentParametersLog;
-import de.adorsys.opba.protocol.xs2a.util.logresolver.domain.common.Xs2aStandardHeadersLog;
-import de.adorsys.opba.protocol.xs2a.util.logresolver.domain.consent.AccountReferenceLog;
+import de.adorsys.opba.protocol.xs2a.util.logresolver.domain.context.AuthenticationObjectLog;
+import de.adorsys.opba.protocol.xs2a.util.logresolver.domain.context.BaseContextLog;
+import de.adorsys.opba.protocol.xs2a.util.logresolver.domain.context.ChallengeDataLog;
+import de.adorsys.opba.protocol.xs2a.util.logresolver.domain.context.ServiceContextLog;
+import de.adorsys.opba.protocol.xs2a.util.logresolver.domain.context.TransactionListXs2aContextLog;
+import de.adorsys.opba.protocol.xs2a.util.logresolver.domain.context.Xs2aContextLog;
+import de.adorsys.opba.protocol.xs2a.util.logresolver.domain.context.Xs2aPisContextLog;
+import de.adorsys.opba.protocol.xs2a.util.logresolver.domain.payment.AddressLog;
+import de.adorsys.opba.protocol.xs2a.util.logresolver.domain.payment.AmountLog;
 import de.adorsys.opba.protocol.xs2a.util.logresolver.domain.payment.PaymentInitiateHeadersLog;
 import de.adorsys.opba.protocol.xs2a.util.logresolver.domain.payment.PaymentInitiationJsonLog;
 import de.adorsys.opba.protocol.xs2a.util.logresolver.domain.payment.Xs2aAuthorizedPaymentParametersLog;
 import de.adorsys.opba.protocol.xs2a.util.logresolver.domain.payment.Xs2aInitialPaymentParametersLog;
-import de.adorsys.opba.protocol.xs2a.util.logresolver.domain.context.Xs2aPisContextLog;
 import de.adorsys.opba.protocol.xs2a.util.logresolver.domain.payment.Xs2aStartPaymentAuthorizationParametersLog;
+import de.adorsys.opba.protocol.xs2a.util.logresolver.domain.response.TokenResponseLog;
+import de.adorsys.opba.protocol.xs2a.util.logresolver.domain.response.URILog;
 import de.adorsys.xs2a.adapter.api.model.AccountAccess;
 import de.adorsys.xs2a.adapter.api.model.AccountReference;
 import de.adorsys.xs2a.adapter.api.model.Address;
@@ -90,6 +92,8 @@ public interface Xs2aDtoToLogObjectsMapper {
     //context mappers
 
     BaseContextLog mapBaseContextDtoToBaseContextLog(BaseContext context);
+
+    ServiceContextLog mapServiceContextDtoToServiceContextLog(ServiceContext context);
 
     Xs2aContextLog mapFromXs2aContextDtoToXs2aContextLog(Xs2aContext context);
 

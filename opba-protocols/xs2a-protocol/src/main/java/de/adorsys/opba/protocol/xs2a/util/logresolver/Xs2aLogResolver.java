@@ -1,5 +1,6 @@
 package de.adorsys.opba.protocol.xs2a.util.logresolver;
 
+import de.adorsys.opba.protocol.api.dto.context.ServiceContext;
 import de.adorsys.opba.protocol.bpmnshared.dto.context.BaseContext;
 import de.adorsys.opba.protocol.xs2a.context.Xs2aContext;
 import de.adorsys.opba.protocol.xs2a.context.ais.TransactionListXs2aContext;
@@ -66,6 +67,26 @@ public class Xs2aLogResolver<T> {
                     message,
                     mapper.mapFromExecutionToXs2aExecutionLog(execution),
                     mapper.mapBaseContextDtoToBaseContextLog(context).getNotSensitiveData()
+            );
+        }
+    }
+
+    public void log(String message, ServiceContext context) {
+        log(message, context, null);
+    }
+
+    public void log(String message, ServiceContext context, Throwable ex) {
+        if (log.isDebugEnabled()) {
+            log.debug(
+                    message,
+                    mapper.mapServiceContextDtoToServiceContextLog(context),
+                    ex
+            );
+        } else {
+            log.info(
+                    message,
+                    mapper.mapServiceContextDtoToServiceContextLog(context).getNotSensitiveData(),
+                    ex
             );
         }
     }
