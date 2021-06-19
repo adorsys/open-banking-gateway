@@ -78,6 +78,7 @@ import de.adorsys.xs2a.adapter.api.model.TransactionAuthorisation;
 import de.adorsys.xs2a.adapter.api.model.UpdatePsuAuthentication;
 import org.flowable.engine.delegate.DelegateExecution;
 import org.mapstruct.Mapper;
+import org.mapstruct.Mapping;
 
 import java.net.URI;
 
@@ -93,6 +94,7 @@ public interface Xs2aDtoToLogObjectsMapper {
 
     BaseContextLog mapBaseContextDtoToBaseContextLog(BaseContext context);
 
+    @Mapping(source = ".", target = "context")
     ServiceContextLog mapServiceContextDtoToServiceContextLog(ServiceContext context);
 
     Xs2aContextLog mapFromXs2aContextDtoToXs2aContextLog(Xs2aContext context);

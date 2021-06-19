@@ -2,13 +2,23 @@ package de.adorsys.opba.protocol.xs2a.util.logresolver.domain.context;
 
 import de.adorsys.opba.protocol.api.dto.NotSensitiveData;
 import de.adorsys.opba.protocol.api.dto.context.Context;
+import lombok.AllArgsConstructor;
 import lombok.Builder;
+import lombok.Data;
+import lombok.NonNull;
 import lombok.ToString;
+import lombok.experimental.Delegate;
+import lombok.experimental.SuperBuilder;
+import org.jetbrains.annotations.NotNull;
 
+import java.util.UUID;
 
+@Data
 @ToString(callSuper = true)
-@Builder
-public class ServiceContextLog extends Context implements NotSensitiveData {
+public class ServiceContextLog implements NotSensitiveData {
+
+    @Delegate
+    private Context context;
 
     @Override
     public String getNotSensitiveData() {
@@ -20,3 +30,4 @@ public class ServiceContextLog extends Context implements NotSensitiveData {
                 + ")";
     }
 }
+
