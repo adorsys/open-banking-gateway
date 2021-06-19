@@ -3,10 +3,12 @@ package de.adorsys.opba.tppbankingapi.controller;
 import de.adorsys.opba.protocol.api.dto.context.UserAgentContext;
 import de.adorsys.opba.protocol.api.dto.request.FacadeServiceableRequest;
 import de.adorsys.opba.protocol.api.dto.request.accounts.ListAccountsRequest;
+import de.adorsys.opba.protocol.api.dto.request.authorization.DeleteConsentRequest;
 import de.adorsys.opba.protocol.api.dto.request.transactions.ListTransactionsRequest;
 import de.adorsys.opba.protocol.api.dto.result.body.AccountListBody;
 import de.adorsys.opba.protocol.api.dto.result.body.TransactionsResponseBody;
 import de.adorsys.opba.protocol.facade.dto.result.torest.FacadeResult;
+import de.adorsys.opba.protocol.facade.services.ais.DeleteConsentService;
 import de.adorsys.opba.protocol.facade.services.ais.ListAccountsService;
 import de.adorsys.opba.protocol.facade.services.ais.ListTransactionsService;
 import de.adorsys.opba.restapi.shared.mapper.FacadeResponseBodyToRestBodyMapper;
@@ -18,6 +20,7 @@ import de.adorsys.opba.tppbankingapi.ais.resource.generated.TppBankingApiAccount
 import lombok.RequiredArgsConstructor;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.time.LocalDate;
@@ -31,6 +34,7 @@ import static de.adorsys.opba.tppbankingapi.Const.SPRING_KEYWORD;
 public class TppBankingApiAisController implements TppBankingApiAccountInformationServiceAisApi {
 
     private final UserAgentContext userAgentContext;
+    private final DeleteConsentService deleteConsent;
     private final ListAccountsService accounts;
     private final ListTransactionsService transactions;
     private final FacadeResponseMapper mapper;
@@ -175,6 +179,24 @@ public class TppBankingApiAisController implements TppBankingApiAccountInformati
                 .pageSize(pageSize)
                 .build()
         ).thenApply((FacadeResult<TransactionsResponseBody> result) -> mapper.translate(result, transactionsRestMapper));
+    }
+
+    @Override
+    @SuppressWarnings("unchecked")
+    public CompletableFuture<ResponseEntity<Void>> deleteConsent(UUID serviceSessionId, String serviceSessionPassword, UUID xRequestID,
+                                                                 String xTimestampUTC, String xRequestSignature, String fintechId) {
+        return deleteConsent.execute(
+                DeleteConsentRequest.builder()
+                        .facadeServiceable(FacadeServiceableRequest.builder()
+                                // Get rid of CGILIB here by copying:
+                                .authorization(fintechId)
+                                .sessionPassword(serviceSessionPassword)
+                                .serviceSessionId(serviceSessionId)
+                                .requestId(xRequestID)
+                                .build()
+                        )
+                        .build()
+        ).thenApply(it -> (ResponseEntity<Void>) mapper.translate(it, body -> null));
     }
 
     @Mapper(componentModel = SPRING_KEYWORD, implementationPackage = Const.API_MAPPERS_PACKAGE)
