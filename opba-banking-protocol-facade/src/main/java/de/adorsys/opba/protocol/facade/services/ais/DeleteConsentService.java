@@ -13,6 +13,7 @@ import org.springframework.transaction.support.TransactionTemplate;
 
 import java.util.Map;
 
+import static de.adorsys.opba.protocol.api.common.ProtocolAction.DELETE_CONSENT;
 import static de.adorsys.opba.protocol.api.common.ProtocolAction.LIST_ACCOUNTS;
 import static de.adorsys.opba.protocol.facade.services.context.ServiceContextProviderForFintech.FINTECH_CONTEXT_PROVIDER;
 
@@ -25,6 +26,6 @@ public class DeleteConsentService extends FacadeService<DeleteConsentRequest, De
         @Qualifier(FINTECH_CONTEXT_PROVIDER) ServiceContextProvider provider,
         ProtocolResultHandler handler,
         TransactionTemplate txTemplate) {
-        super(LIST_ACCOUNTS, actionProviders, selector, provider, handler, txTemplate);
+        super(DELETE_CONSENT, actionProviders, selector, provider, handler, txTemplate);
     }
 }
