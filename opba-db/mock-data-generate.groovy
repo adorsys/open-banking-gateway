@@ -3,7 +3,7 @@ import java.util.stream.IntStream
 file = new File('./out.txt')
 
 def generateXs2aStatements(id, bankId, note, authId, authActionIdDelta) {
-    def authActionId = authId + authActionIdDelta
+    def authActionId = id + authActionIdDelta
 
     def baseStatements =
             """
@@ -35,13 +35,12 @@ insert into \${table-prefix}bank_sub_action (id, action_id, protocol_action, sub
         generatedStatements += "insert into \${table-prefix}bank_sub_action (id, action_id, protocol_action, sub_protocol_bean_name) values (${authId++}, ${authActionId}, 'XS2A_STUB${pos}', 'xs2aStub${pos}');\n"
     }
 
-    print(generatedStatements)
     file << generatedStatements
     return [id, authId]
 }
 
 def generateHbciStatements(id, bankId, note, authId, authActionIdDelta) {
-    def authActionId = authId + authActionIdDelta
+    def authActionId = id + authActionIdDelta
 
     def baseStatements =
             """
@@ -73,7 +72,7 @@ insert into \${table-prefix}bank_sub_action (id, action_id, protocol_action, sub
 }
 
 def generateGeneric(id, bankId, note, authId, authActionIdDelta) {
-    def authActionId = authId + authActionIdDelta
+    def authActionId = id + authActionIdDelta
     def generatedStatements = "\n<!--  ${note}  -->\n"
 
     IntStream.rangeClosed(1, 20).forEach {
@@ -115,7 +114,7 @@ xs2aData.forEach {
 }
 file << ("\n\n<!-- HBCI MOCK banks -->\n\n")
 hbciData.forEach {
-    def res = generateXs2aStatements(id, it[0], it[1], authId, it[2])
+    def res = generateHbciStatements(id, it[0], it[1], authId, it[2])
     id = res[0]
     authId = res[1]
 }

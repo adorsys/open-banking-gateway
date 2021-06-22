@@ -1,5 +1,6 @@
 package de.adorsys.opba.db.domain.entity;
 
+import de.adorsys.opba.db.domain.converter.ProtocolActionConverter;
 import de.adorsys.opba.protocol.api.common.ProtocolAction;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -7,6 +8,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import javax.persistence.Convert;
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
@@ -32,7 +34,7 @@ public class BankSubAction {
     @ManyToOne(optional = false)
     private BankAction action;
 
-    @Enumerated(EnumType.STRING)
+    @Convert(converter = ProtocolActionConverter.class)
     private ProtocolAction protocolAction;
 
     private String subProtocolBeanName;

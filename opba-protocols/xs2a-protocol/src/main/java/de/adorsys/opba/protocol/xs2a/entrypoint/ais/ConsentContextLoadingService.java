@@ -1,6 +1,7 @@
 package de.adorsys.opba.protocol.xs2a.entrypoint.ais;
 
 import com.fasterxml.jackson.databind.JsonNode;
+import de.adorsys.opba.protocol.api.services.scoped.RequestScoped;
 import de.adorsys.opba.protocol.api.services.scoped.consent.ProtocolFacingConsent;
 import de.adorsys.opba.protocol.bpmnshared.config.flowable.FlowableObjectMapper;
 import de.adorsys.opba.protocol.bpmnshared.config.flowable.FlowableProperties;
@@ -22,8 +23,15 @@ public class ConsentContextLoadingService {
 
     @NotNull
     public Xs2aAisContext contextFromConsent(Optional<ProtocolFacingConsent> consent) {
+        return contextFromConsent(consent, null);
+    }
+
+    @NotNull
+    public Xs2aAisContext contextFromConsent(Optional<ProtocolFacingConsent> consent, RequestScoped scoped) {
         ProtocolFacingConsent target = consent.get();
-        return contextFromConsent(target);
+        var result = contextFromConsent(target);
+        result.setRequestScoped(scoped);
+        return result;
     }
 
     @NotNull

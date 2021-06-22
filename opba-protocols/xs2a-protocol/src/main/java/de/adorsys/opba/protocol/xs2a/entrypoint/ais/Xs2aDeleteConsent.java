@@ -12,6 +12,7 @@ import de.adorsys.opba.protocol.xs2a.util.logresolver.Xs2aLogResolver;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.concurrent.CompletableFuture;
 
@@ -25,6 +26,7 @@ public class Xs2aDeleteConsent implements DeleteConsent {
     private final Xs2aLogResolver logResolver = new Xs2aLogResolver(getClass());
 
     @Override
+    @Transactional
     public CompletableFuture<Result<DeleteConsentBody>> execute(ServiceContext<DeleteConsentRequest> ctx) {
         logResolver.log("Delete consent for {}", ctx);
         var singleConsent = ctx.getRequestScoped().consentAccess().findSingleByCurrentServiceSession();
@@ -34,7 +36,7 @@ public class Xs2aDeleteConsent implements DeleteConsent {
 
         logResolver.log("Removing single consent for session {}", ctx);
         // Fail if ASPSP does not abort consent because it might still be active
-        abortConsent.abortConsent(contextLoader.contextFromConsent(singleConsent));
+        abortConsent.abortConsent(contextLoader.contextFromConsent(singleConsent, ctx.getRequestScoped()));
         // Remove any remaining consents, ignore failures as they are probably inactive
         for (var consent : ctx.getRequestScoped().consentAccess().findByCurrentServiceSessionOrderByModifiedDesc()) {
             logResolver.log("Removing remaining consent for session {}", ctx);

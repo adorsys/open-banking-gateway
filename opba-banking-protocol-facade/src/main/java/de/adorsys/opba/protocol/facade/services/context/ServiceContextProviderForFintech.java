@@ -182,7 +182,7 @@ public class ServiceContextProviderForFintech implements ServiceContextProvider 
             ServiceSession session,
             long bankProtocolId
     ) {
-        BankProfile profile = getBankProfileFromRequest(request.getFacadeServiceable());
+        BankProfile profile = session.getBankProfile();
 
         // FinTech requests should be signed, so creating Fintech entity if it does not exist.
         Fintech fintech = authenticator.authenticateOrCreateFintech(request.getFacadeServiceable());

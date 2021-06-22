@@ -1,5 +1,6 @@
 package de.adorsys.opba.db.domain.entity;
 
+import de.adorsys.opba.db.domain.converter.ProtocolActionConverter;
 import de.adorsys.opba.db.domain.entity.sessions.AuthSession;
 import de.adorsys.opba.protocol.api.common.ProtocolAction;
 import lombok.AllArgsConstructor;
@@ -9,6 +10,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import javax.persistence.CascadeType;
+import javax.persistence.Convert;
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
@@ -39,7 +41,7 @@ public class BankAction {
     @JoinColumn(name = "bank_uuid", referencedColumnName = "bank_uuid", nullable = false)
     private BankProfile bankProfile;
 
-    @Enumerated(EnumType.STRING)
+    @Convert(converter = ProtocolActionConverter.class)
     private ProtocolAction protocolAction;
 
     private String protocolBeanName;
