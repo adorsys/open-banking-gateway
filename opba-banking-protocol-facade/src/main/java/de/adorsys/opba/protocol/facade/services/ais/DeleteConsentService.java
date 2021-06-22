@@ -14,7 +14,6 @@ import org.springframework.transaction.support.TransactionTemplate;
 import java.util.Map;
 
 import static de.adorsys.opba.protocol.api.common.ProtocolAction.DELETE_CONSENT;
-import static de.adorsys.opba.protocol.api.common.ProtocolAction.LIST_ACCOUNTS;
 import static de.adorsys.opba.protocol.facade.services.context.ServiceContextProviderForFintech.FINTECH_CONTEXT_PROVIDER;
 
 @Service
