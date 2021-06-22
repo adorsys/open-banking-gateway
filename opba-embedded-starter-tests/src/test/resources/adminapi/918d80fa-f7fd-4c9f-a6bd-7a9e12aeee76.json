@@ -24,27 +24,117 @@
         "protocolBeanName": "hbciListTransactions",
         "consentSupported": false
       },
+      "UNDEFINED_STUB": {
+        "protocolAction": "undefined-stub",
+        "protocolBeanName": "hbciStub20",
+        "consentSupported": false
+      },
       "AUTHORIZATION": {
         "protocolAction": "authorization",
         "consentSupported": false,
         "subProtocols": [
           {
-            "protocolAction": "get-authorization-state",
-            "subProtocolBeanName": "hbciGetAuthorizationState"
-          },
-          {
-            "protocolAction": "update-authorization",
-            "subProtocolBeanName": "hbciUpdateAuthorization"
+            "protocolAction": "deny-authorization",
+            "subProtocolBeanName": "hbciDenyAuthorization"
           },
           {
             "protocolAction": "from-aspsp",
             "subProtocolBeanName": "hbciFromAspspRedirect"
           },
           {
-            "protocolAction": "deny-authorization",
-            "subProtocolBeanName": "hbciDenyAuthorization"
+            "protocolAction": "get-authorization-state",
+            "subProtocolBeanName": "hbciGetAuthorizationState"
+          },
+          {
+            "protocolAction": "undefined-stub",
+            "subProtocolBeanName": "hbciStub01"
+          },
+          {
+            "protocolAction": "undefined-stub",
+            "subProtocolBeanName": "hbciStub02"
+          },
+          {
+            "protocolAction": "undefined-stub",
+            "subProtocolBeanName": "hbciStub03"
+          },
+          {
+            "protocolAction": "undefined-stub",
+            "subProtocolBeanName": "hbciStub04"
+          },
+          {
+            "protocolAction": "undefined-stub",
+            "subProtocolBeanName": "hbciStub05"
+          },
+          {
+            "protocolAction": "undefined-stub",
+            "subProtocolBeanName": "hbciStub06"
+          },
+          {
+            "protocolAction": "undefined-stub",
+            "subProtocolBeanName": "hbciStub07"
+          },
+          {
+            "protocolAction": "undefined-stub",
+            "subProtocolBeanName": "hbciStub08"
+          },
+          {
+            "protocolAction": "undefined-stub",
+            "subProtocolBeanName": "hbciStub09"
+          },
+          {
+            "protocolAction": "undefined-stub",
+            "subProtocolBeanName": "hbciStub10"
+          },
+          {
+            "protocolAction": "undefined-stub",
+            "subProtocolBeanName": "hbciStub11"
+          },
+          {
+            "protocolAction": "undefined-stub",
+            "subProtocolBeanName": "hbciStub12"
+          },
+          {
+            "protocolAction": "undefined-stub",
+            "subProtocolBeanName": "hbciStub13"
+          },
+          {
+            "protocolAction": "undefined-stub",
+            "subProtocolBeanName": "hbciStub14"
+          },
+          {
+            "protocolAction": "undefined-stub",
+            "subProtocolBeanName": "hbciStub15"
+          },
+          {
+            "protocolAction": "undefined-stub",
+            "subProtocolBeanName": "hbciStub16"
+          },
+          {
+            "protocolAction": "undefined-stub",
+            "subProtocolBeanName": "hbciStub17"
+          },
+          {
+            "protocolAction": "undefined-stub",
+            "subProtocolBeanName": "hbciStub18"
+          },
+          {
+            "protocolAction": "undefined-stub",
+            "subProtocolBeanName": "hbciStub19"
+          },
+          {
+            "protocolAction": "undefined-stub",
+            "subProtocolBeanName": "hbciStub20"
+          },
+          {
+            "protocolAction": "update-authorization",
+            "subProtocolBeanName": "hbciUpdateAuthorization"
           }
         ]
+      },
+      "DELETE_CONSENT": {
+        "protocolAction": "delete-consent",
+        "protocolBeanName": "hbciDeleteConsent",
+        "consentSupported": false
       }
     },
     "bankCode": "10000001",

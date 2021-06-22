@@ -15,54 +15,14 @@
             insert into ${table-prefix}bank_action (id, bank_uuid, protocol_action, protocol_bean_name) values (1003, '223f8daa-767c-43f8-851b-26c8ee6193db', 'SINGLE_PAYMENT', 'finapiWebFormGetPaymentInfoState');
             insert into ${table-prefix}bank_action (id, bank_uuid, protocol_action, protocol_bean_name) values (1004, '223f8daa-767c-43f8-851b-26c8ee6193db', 'GET_PAYMENT_INFORMATION', 'finapiWebFormGetPaymentInfoState');
             insert into ${table-prefix}bank_action (id, bank_uuid, protocol_action, protocol_bean_name) values (1005, '223f8daa-767c-43f8-851b-26c8ee6193db', 'GET_PAYMENT_STATUS', 'finapiWebFormGetPaymentStatusState');
+            insert into ${table-prefix}bank_action (id, bank_uuid, protocol_action, protocol_bean_name) values (1006, '223f8daa-767c-43f8-851b-26c8ee6193db', 'DELETE_CONSENT', 'finapiWebFormDeleteConsent');
+            insert into ${table-prefix}bank_action (id, bank_uuid, protocol_action, protocol_bean_name) values (1007, '223f8daa-767c-43f8-851b-26c8ee6193db', 'GET_CONSENT_STATUS', 'finapiWebFormGetConsentStatus');
 
             insert into ${table-prefix}bank_sub_action (id, action_id, protocol_action, sub_protocol_bean_name) values (1000, 1002, 'ON_LOGIN', 'finapiWebFormOnLogin');
             insert into ${table-prefix}bank_sub_action (id, action_id, protocol_action, sub_protocol_bean_name) values (1001, 1002, 'GET_AUTHORIZATION_STATE', 'finapiWebFormGetAuthorizationState');
             insert into ${table-prefix}bank_sub_action (id, action_id, protocol_action, sub_protocol_bean_name) values (1002, 1002, 'UPDATE_AUTHORIZATION', 'finapiWebFormUpdateAuthorization');
             insert into ${table-prefix}bank_sub_action (id, action_id, protocol_action, sub_protocol_bean_name) values (1003, 1002, 'FROM_ASPSP_REDIRECT', 'finapiWebFormFromAspspRedirect');
             insert into ${table-prefix}bank_sub_action (id, action_id, protocol_action, sub_protocol_bean_name) values (1004, 1002, 'DENY_AUTHORIZATION', 'finapiWebFormDenyAuthorization');
-
-            insert into ${table-prefix}bank_action (id, bank_uuid, protocol_action, protocol_bean_name, consent_supported) values (1006, '125ef2c6-f414-4a10-a865-e3cdddf9753d', 'FINAPI_STUB01', 'finapiStub01', false);
-            insert into ${table-prefix}bank_action (id, bank_uuid, protocol_action, protocol_bean_name, consent_supported) values (1007, '125ef2c6-f414-4a10-a865-e3cdddf9753d', 'FINAPI_STUB02', 'finapiStub02', false);
-            insert into ${table-prefix}bank_action (id, bank_uuid, protocol_action, protocol_bean_name, consent_supported) values (1008, '125ef2c6-f414-4a10-a865-e3cdddf9753d', 'FINAPI_STUB03', 'finapiStub03', false);
-            insert into ${table-prefix}bank_action (id, bank_uuid, protocol_action, protocol_bean_name, consent_supported) values (1009, '125ef2c6-f414-4a10-a865-e3cdddf9753d', 'FINAPI_STUB04', 'finapiStub04', false);
-            insert into ${table-prefix}bank_action (id, bank_uuid, protocol_action, protocol_bean_name, consent_supported) values (1010, '125ef2c6-f414-4a10-a865-e3cdddf9753d', 'FINAPI_STUB05', 'finapiStub05', false);
-            insert into ${table-prefix}bank_action (id, bank_uuid, protocol_action, protocol_bean_name, consent_supported) values (1011, '125ef2c6-f414-4a10-a865-e3cdddf9753d', 'FINAPI_STUB06', 'finapiStub06', false);
-            insert into ${table-prefix}bank_action (id, bank_uuid, protocol_action, protocol_bean_name, consent_supported) values (1012, '125ef2c6-f414-4a10-a865-e3cdddf9753d', 'FINAPI_STUB07', 'finapiStub07', false);
-            insert into ${table-prefix}bank_action (id, bank_uuid, protocol_action, protocol_bean_name, consent_supported) values (1013, '125ef2c6-f414-4a10-a865-e3cdddf9753d', 'FINAPI_STUB08', 'finapiStub08', false);
-            insert into ${table-prefix}bank_action (id, bank_uuid, protocol_action, protocol_bean_name, consent_supported) values (1014, '125ef2c6-f414-4a10-a865-e3cdddf9753d', 'FINAPI_STUB09', 'finapiStub09', false);
-            insert into ${table-prefix}bank_action (id, bank_uuid, protocol_action, protocol_bean_name, consent_supported) values (1015, '125ef2c6-f414-4a10-a865-e3cdddf9753d', 'FINAPI_STUB10', 'finapiStub10', false);
-            insert into ${table-prefix}bank_action (id, bank_uuid, protocol_action, protocol_bean_name, consent_supported) values (1016, '125ef2c6-f414-4a10-a865-e3cdddf9753d', 'FINAPI_STUB11', 'finapiStub11', false);
-            insert into ${table-prefix}bank_action (id, bank_uuid, protocol_action, protocol_bean_name, consent_supported) values (1017, '125ef2c6-f414-4a10-a865-e3cdddf9753d', 'FINAPI_STUB12', 'finapiStub12', false);
-            insert into ${table-prefix}bank_action (id, bank_uuid, protocol_action, protocol_bean_name, consent_supported) values (1018, '125ef2c6-f414-4a10-a865-e3cdddf9753d', 'FINAPI_STUB13', 'finapiStub13', false);
-            insert into ${table-prefix}bank_action (id, bank_uuid, protocol_action, protocol_bean_name, consent_supported) values (1019, '125ef2c6-f414-4a10-a865-e3cdddf9753d', 'FINAPI_STUB14', 'finapiStub14', false);
-            insert into ${table-prefix}bank_action (id, bank_uuid, protocol_action, protocol_bean_name, consent_supported) values (1020, '125ef2c6-f414-4a10-a865-e3cdddf9753d', 'FINAPI_STUB15', 'finapiStub15', false);
-            insert into ${table-prefix}bank_action (id, bank_uuid, protocol_action, protocol_bean_name, consent_supported) values (1021, '125ef2c6-f414-4a10-a865-e3cdddf9753d', 'FINAPI_STUB16', 'finapiStub16', false);
-            insert into ${table-prefix}bank_action (id, bank_uuid, protocol_action, protocol_bean_name, consent_supported) values (1022, '125ef2c6-f414-4a10-a865-e3cdddf9753d', 'FINAPI_STUB17', 'finapiStub17', false);
-            insert into ${table-prefix}bank_action (id, bank_uuid, protocol_action, protocol_bean_name, consent_supported) values (1023, '125ef2c6-f414-4a10-a865-e3cdddf9753d', 'FINAPI_STUB18', 'finapiStub18', false);
-            insert into ${table-prefix}bank_action (id, bank_uuid, protocol_action, protocol_bean_name, consent_supported) values (1024, '125ef2c6-f414-4a10-a865-e3cdddf9753d', 'FINAPI_STUB19', 'finapiStub19', false);
-            insert into ${table-prefix}bank_action (id, bank_uuid, protocol_action, protocol_bean_name, consent_supported) values (1025, '125ef2c6-f414-4a10-a865-e3cdddf9753d', 'FINAPI_STUB20', 'finapiStub20', false);
-
-            insert into ${table-prefix}bank_sub_action (id, action_id, protocol_action, sub_protocol_bean_name) values (1005, 1002, 'FINAPI_STUB01', 'finapiStub01');
-            insert into ${table-prefix}bank_sub_action (id, action_id, protocol_action, sub_protocol_bean_name) values (1006, 1002, 'FINAPI_STUB02', 'finapiStub02');
-            insert into ${table-prefix}bank_sub_action (id, action_id, protocol_action, sub_protocol_bean_name) values (1007, 1002, 'FINAPI_STUB03', 'finapiStub03');
-            insert into ${table-prefix}bank_sub_action (id, action_id, protocol_action, sub_protocol_bean_name) values (1008, 1002, 'FINAPI_STUB04', 'finapiStub04');
-            insert into ${table-prefix}bank_sub_action (id, action_id, protocol_action, sub_protocol_bean_name) values (1009, 1002, 'FINAPI_STUB05', 'finapiStub05');
-            insert into ${table-prefix}bank_sub_action (id, action_id, protocol_action, sub_protocol_bean_name) values (1010, 1002, 'FINAPI_STUB06', 'finapiStub06');
-            insert into ${table-prefix}bank_sub_action (id, action_id, protocol_action, sub_protocol_bean_name) values (1011, 1002, 'FINAPI_STUB07', 'finapiStub07');
-            insert into ${table-prefix}bank_sub_action (id, action_id, protocol_action, sub_protocol_bean_name) values (1012, 1002, 'FINAPI_STUB08', 'finapiStub08');
-            insert into ${table-prefix}bank_sub_action (id, action_id, protocol_action, sub_protocol_bean_name) values (1013, 1002, 'FINAPI_STUB09', 'finapiStub09');
-            insert into ${table-prefix}bank_sub_action (id, action_id, protocol_action, sub_protocol_bean_name) values (1014, 1002, 'FINAPI_STUB10', 'finapiStub10');
-            insert into ${table-prefix}bank_sub_action (id, action_id, protocol_action, sub_protocol_bean_name) values (1015, 1002, 'FINAPI_STUB11', 'finapiStub11');
-            insert into ${table-prefix}bank_sub_action (id, action_id, protocol_action, sub_protocol_bean_name) values (1016, 1002, 'FINAPI_STUB12', 'finapiStub12');
-            insert into ${table-prefix}bank_sub_action (id, action_id, protocol_action, sub_protocol_bean_name) values (1017, 1002, 'FINAPI_STUB13', 'finapiStub13');
-            insert into ${table-prefix}bank_sub_action (id, action_id, protocol_action, sub_protocol_bean_name) values (1018, 1002, 'FINAPI_STUB14', 'finapiStub14');
-            insert into ${table-prefix}bank_sub_action (id, action_id, protocol_action, sub_protocol_bean_name) values (1019, 1002, 'FINAPI_STUB15', 'finapiStub15');
-            insert into ${table-prefix}bank_sub_action (id, action_id, protocol_action, sub_protocol_bean_name) values (1020, 1002, 'FINAPI_STUB16', 'finapiStub16');
-            insert into ${table-prefix}bank_sub_action (id, action_id, protocol_action, sub_protocol_bean_name) values (1021, 1002, 'FINAPI_STUB17', 'finapiStub17');
-            insert into ${table-prefix}bank_sub_action (id, action_id, protocol_action, sub_protocol_bean_name) values (1022, 1002, 'FINAPI_STUB18', 'finapiStub18');
-            insert into ${table-prefix}bank_sub_action (id, action_id, protocol_action, sub_protocol_bean_name) values (1023, 1002, 'FINAPI_STUB19', 'finapiStub19');
-            insert into ${table-prefix}bank_sub_action (id, action_id, protocol_action, sub_protocol_bean_name) values (1024, 1002, 'FINAPI_STUB20', 'finapiStub20');
         </sql>
     </changeSet>
 

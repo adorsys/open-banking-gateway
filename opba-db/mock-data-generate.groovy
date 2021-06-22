@@ -25,16 +25,6 @@ insert into \${table-prefix}bank_sub_action (id, action_id, protocol_action, sub
 
     def generatedStatements = baseStatements
 
-    IntStream.rangeClosed(1, 20).forEach {
-        def pos = String.format('%02d', it)
-        generatedStatements += "insert into \${table-prefix}bank_action (id, bank_uuid, protocol_action, protocol_bean_name) values (${id++}, '${bankId}', 'XS2A_STUB${pos}', 'xs2aStub${pos}');\n"
-    }
-    generatedStatements += '\n'
-    IntStream.rangeClosed(1, 20).forEach {
-        def pos = String.format('%02d', it)
-        generatedStatements += "insert into \${table-prefix}bank_sub_action (id, action_id, protocol_action, sub_protocol_bean_name) values (${authId++}, ${authActionId}, 'XS2A_STUB${pos}', 'xs2aStub${pos}');\n"
-    }
-
     file << generatedStatements
     return [id, authId]
 }
@@ -58,16 +48,6 @@ insert into \${table-prefix}bank_sub_action (id, action_id, protocol_action, sub
 """
 
     def generatedStatements = baseStatements
-
-    IntStream.rangeClosed(1, 20).forEach {
-        def pos = String.format('%02d', it)
-        generatedStatements += "insert into \${table-prefix}bank_action (id, bank_uuid, protocol_action, protocol_bean_name, consent_supported) values (${id++}, '${bankId}', 'HBCI_STUB${pos}', 'hbciStub${pos}', false);\n";
-    }
-    generatedStatements += '\n'
-    IntStream.rangeClosed(1, 20).forEach {
-        def pos = String.format('%02d', it)
-        generatedStatements += "insert into \${table-prefix}bank_sub_action (id, action_id, protocol_action, sub_protocol_bean_name) values (${authId++}, ${authActionId}, 'HBCI_STUB${pos}', 'hbciStub${pos}');\n"
-    }
 
     file << generatedStatements
     return [id, authId]

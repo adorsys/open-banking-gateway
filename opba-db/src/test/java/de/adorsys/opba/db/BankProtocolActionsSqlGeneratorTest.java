@@ -14,7 +14,6 @@ import java.io.File;
 import java.io.FileWriter;
 import java.util.List;
 import java.util.UUID;
-import java.util.stream.IntStream;
 
 import static de.adorsys.opba.db.BankProtocolActionsSqlGeneratorTest.ENABLE_BANK_PROTOCOL_ACTIONS_SQL_GENERATION;
 import static java.nio.charset.StandardCharsets.UTF_8;
@@ -85,9 +84,6 @@ public class BankProtocolActionsSqlGeneratorTest {
 
         writelnToFile(BANK_ACTION_DESTINATION_PATH, String.format("%d,%s,DELETE_CONSENT,xs2aDeleteConsent,true", bankActionId++, bankUUID));
         writelnToFile(BANK_ACTION_DESTINATION_PATH, String.format("%d,%s,GET_CONSENT_STATUS,xs2aGetConsentStatus,true", bankActionId++, bankUUID));
-
-        IntStream.rangeClosed(1, 20).forEach(it -> writelnToFile(BANK_ACTION_DESTINATION_PATH, String.format("%d,%s,XS2A_STUB%02d,xs2aStub%02d,true", bankActionId++, bankUUID, it, it)));
-        IntStream.rangeClosed(1, 20).forEach(it -> writelnToFile(BANK_SUB_ACTION_DESTINATION_PATH, String.format("%d,%d,XS2A_STUB%02d,xs2aStub%02d", bankSubActionId++, authorizationId, it, it)));
     }
 
     private void writeHbciBankData(String bankRecord) {
@@ -114,9 +110,6 @@ public class BankProtocolActionsSqlGeneratorTest {
 
         writelnToFile(BANK_ACTION_DESTINATION_PATH, String.format("%d,%s,DELETE_CONSENT,hbciDeleteConsent,false", bankActionId++, bankUUID));
         writelnToFile(BANK_ACTION_DESTINATION_PATH, String.format("%d,%s,GET_CONSENT_STATUS,hbciGetConsentStatus,false", bankActionId++, bankUUID));
-
-        IntStream.rangeClosed(1, 20).forEach(it -> writelnToFile(BANK_ACTION_DESTINATION_PATH, String.format("%d,%s,HBCI_STUB%02d,hbciStub%02d,false", bankActionId++, bankUUID, it, it)));
-        IntStream.rangeClosed(1, 20).forEach(it -> writelnToFile(BANK_SUB_ACTION_DESTINATION_PATH, String.format("%d,%d,HBCI_STUB%02d,hbciStub%02d", bankSubActionId++, authorizationId, it, it)));
     }
 
     private void prepareDestinationFiles() {
