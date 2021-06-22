@@ -78,13 +78,14 @@ The following picture displays the overall technical architecture concept of thi
 ## Postman scripts to play with API 
 
 - [postman-collections](postman/collections)
-- [postman-environments](postman/environments)
+- [postman-environments](postman/environments) (for playing use [this Postman environment](https://github.com/adorsys/open-banking-gateway/tree/develop/postman/environments/OPBA-DEV-NO-SIG.postman_environment.json))
 
 ### Postman collection details
 
 - [postman-ais-collection](https://github.com/adorsys/open-banking-gateway/tree/develop/postman/collections/OPBA-AIS-HBCI-OR-XS2A-EMBEDDED-2-SCA-METHODS.postman_collection.json) Xs2a-embedded or HBCI AIS (account information services) example - getting users' account and transactions list
 
-**Note:** Postman requires disabled request signing functionality - for that use Spring-profile `no-signature-filter`
+**Note:** Postman requires disabled request signing functionality - for that use Spring-profile `no-signature-filter`.
+You can use our DEV environment (without signature check) if you import [this Postman environment](https://github.com/adorsys/open-banking-gateway/tree/develop/postman/environments/OPBA-DEV-NO-SIG.postman_environment.json)
 
 
 ## Information for developers:
