@@ -1,7 +1,7 @@
 {
 	"info": {
-		"_postman_id": "7dd86e2c-f147-495b-a0c0-84911b17dec9",
-		"name": "OPBA-AIS-HBCI-OR-XS2A-EMBEDDED-2-SCA-METHODS",
+		"_postman_id": "551e4490-c406-4ea5-b48d-2728c55fa35e",
+		"name": "OPBA-AIS-HBCI-2-SCA-METHODS",
 		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
 	},
 	"item": [
@@ -325,82 +325,6 @@
 			"response": []
 		},
 		{
-			"name": "06. [CONSENT-UI] Describe desired consent - AIS accounts+transactions (as stated on step #5 - consent was missing)",
-			"event": [
-				{
-					"listen": "test",
-					"script": {
-						"exec": [
-							"pm.test('Success', function() {",
-							"    pm.response.to.have.status(202)",
-							"})",
-							"",
-							"pm.environment.set(\"redirect-code\", pm.response.headers.get('Redirect-Code'))"
-						],
-						"type": "text/javascript"
-					}
-				},
-				{
-					"listen": "prerequest",
-					"script": {
-						"exec": [
-							""
-						],
-						"type": "text/javascript"
-					}
-				}
-			],
-			"request": {
-				"method": "POST",
-				"header": [
-					{
-						"key": "Cookie",
-						"type": "text",
-						"value": "{{session-cookie}}"
-					},
-					{
-						"key": "X-Request-ID",
-						"value": "{{x-request-id}}",
-						"type": "text"
-					},
-					{
-						"key": "X-Xsrf-Token",
-						"value": "a8b24683-242a-428b-8295-2f4805bb0a30",
-						"description": "Deprecated field",
-						"type": "text"
-					}
-				],
-				"body": {
-					"mode": "raw",
-					"raw": "{\"consentAuth\":{\"consent\":{\"access\":{\"allPsd2\":\"ALL_ACCOUNTS\"},\"frequencyPerDay\":24,\"recurringIndicator\":true,\"validUntil\":\"2032-03-12\"}}}",
-					"options": {
-						"raw": {
-							"language": "json"
-						}
-					}
-				},
-				"url": {
-					"raw": "{{opba-base}}/v1/consent/{{authorization-session-id}}/embedded?redirectCode={{redirect-code}}",
-					"host": [
-						"{{opba-base}}"
-					],
-					"path": [
-						"v1",
-						"consent",
-						"{{authorization-session-id}}",
-						"embedded"
-					],
-					"query": [
-						{
-							"key": "redirectCode",
-							"value": "{{redirect-code}}"
-						}
-					]
-				}
-			},
-			"response": []
-		},
-		{
 			"name": "07. [CONSENT-UI]  Provide PSU ID as was required on step #05",
 			"event": [
 				{
@@ -685,82 +609,6 @@
 			"response": []
 		},
 		{
-			"name": "10. [CONSENT-UI] Provide PSU TAN",
-			"event": [
-				{
-					"listen": "test",
-					"script": {
-						"exec": [
-							"pm.test('Success', function() {",
-							"    pm.response.to.have.status(202)",
-							"})",
-							"",
-							"pm.environment.set(\"redirect-code\", pm.response.headers.get('Redirect-Code'))"
-						],
-						"type": "text/javascript"
-					}
-				},
-				{
-					"listen": "prerequest",
-					"script": {
-						"exec": [
-							""
-						],
-						"type": "text/javascript"
-					}
-				}
-			],
-			"request": {
-				"method": "POST",
-				"header": [
-					{
-						"key": "Cookie",
-						"type": "text",
-						"value": "{{session-cookie}}"
-					},
-					{
-						"key": "X-Request-ID",
-						"value": "{{x-request-id}}",
-						"type": "text"
-					},
-					{
-						"key": "X-Xsrf-Token",
-						"value": "a8b24683-242a-428b-8295-2f4805bb0a30",
-						"description": "Deprecated field",
-						"type": "text"
-					}
-				],
-				"body": {
-					"mode": "raw",
-					"raw": "{\"scaAuthenticationData\":{\"SCA_CHALLENGE_DATA\":\"123456\"}}",
-					"options": {
-						"raw": {
-							"language": "json"
-						}
-					}
-				},
-				"url": {
-					"raw": "{{opba-base}}/v1/consent/{{authorization-session-id}}/embedded?redirectCode={{redirect-code}}",
-					"host": [
-						"{{opba-base}}"
-					],
-					"path": [
-						"v1",
-						"consent",
-						"{{authorization-session-id}}",
-						"embedded"
-					],
-					"query": [
-						{
-							"key": "redirectCode",
-							"value": "{{redirect-code}}"
-						}
-					]
-				}
-			},
-			"response": []
-		},
-		{
 			"name": "11. [CONSENT-UI] Get current consent state (finished)",
 			"event": [
 				{
@@ -952,7 +800,7 @@
 					}
 				],
 				"url": {
-					"raw": "{{opba-base}}/v1/banking/ais/accounts",
+					"raw": "{{opba-base}}/v1/banking/ais/accounts?online=false",
 					"host": [
 						"{{opba-base}}"
 					],
@@ -961,6 +809,12 @@
 						"banking",
 						"ais",
 						"accounts"
+					],
+					"query": [
+						{
+							"key": "online",
+							"value": "false"
+						}
 					]
 				}
 			},
