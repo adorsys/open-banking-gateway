@@ -84,6 +84,12 @@ public class TppAisClientFeignMock implements TppAisClient {
         return null;
     }
 
+    @Override
+    public ResponseEntity<Void> deleteConsent(UUID serviceSessionID, String serviceSessionPassword, UUID xRequestID,
+                                              String xTimestampUTC, String xRequestSignature, String fintechID) {
+        return null;
+    }
+
     // TODO: https://github.com/adorsys/open-banking-gateway/issues/559
     @Override
     public Optional<ObjectMapper> getObjectMapper() {

@@ -60,12 +60,12 @@ insert into \${table-prefix}bank_sub_action (id, action_id, protocol_action, sub
 
     IntStream.rangeClosed(1, 20).forEach {
         def pos = String.format('%02d', it)
-        generatedStatements += "insert into \${table-prefix}bank_action (id, bank_uuid, protocol_action, protocol_bean_name, consent_supported) values (${id++}, '${bankId}', 'HBCI_STUB${pos}', 'hbciStub${pos}', false)\n";
+        generatedStatements += "insert into \${table-prefix}bank_action (id, bank_uuid, protocol_action, protocol_bean_name, consent_supported) values (${id++}, '${bankId}', 'HBCI_STUB${pos}', 'hbciStub${pos}', false);\n";
     }
     generatedStatements += '\n'
     IntStream.rangeClosed(1, 20).forEach {
         def pos = String.format('%02d', it)
-        generatedStatements += "insert into \${table-prefix}bank_sub_action (id, action_id, protocol_action, sub_protocol_bean_name) values (${authId++}, ${authActionId}, 'HBCI_STUB${pos}', 'hbciStub${pos}')\n"
+        generatedStatements += "insert into \${table-prefix}bank_sub_action (id, action_id, protocol_action, sub_protocol_bean_name) values (${authId++}, ${authActionId}, 'HBCI_STUB${pos}', 'hbciStub${pos}');\n"
     }
 
     file << generatedStatements
@@ -78,12 +78,12 @@ def generateGeneric(id, bankId, note, authId, authActionIdDelta) {
 
     IntStream.rangeClosed(1, 20).forEach {
         def pos = String.format('%02d', it)
-        generatedStatements += "insert into \${table-prefix}bank_action (id, bank_uuid, protocol_action, protocol_bean_name, consent_supported) values (${id++}, '${bankId}', 'HBCI_STUB${pos}', 'hbciStub${pos}', false)\n";
+        generatedStatements += "insert into \${table-prefix}bank_action (id, bank_uuid, protocol_action, protocol_bean_name, consent_supported) values (${id++}, '${bankId}', 'HBCI_STUB${pos}', 'hbciStub${pos}', false);\n";
     }
     generatedStatements += '\n'
     IntStream.rangeClosed(1, 20).forEach {
         def pos = String.format('%02d', it)
-        generatedStatements += "insert into \${table-prefix}bank_sub_action (id, action_id, protocol_action, sub_protocol_bean_name) values (${authId++}, ${authActionId}, 'HBCI_STUB${pos}', 'hbciStub${pos}')\n"
+        generatedStatements += "insert into \${table-prefix}bank_sub_action (id, action_id, protocol_action, sub_protocol_bean_name) values (${authId++}, ${authActionId}, 'HBCI_STUB${pos}', 'hbciStub${pos}');\n"
     }
 
     file << generatedStatements
@@ -119,9 +119,12 @@ hbciData.forEach {
     id = res[0]
     authId = res[1]
 }
+
+/*
 file << ("\n\n<!-- STUB MOCK banks -->\n\n")
 IntStream.rangeClosed(1, 50).forEach{
     def res = generateGeneric(id, UUID.randomUUID().toString(), "STUB BANK #${it}", authId, 2)
     id = res[0]
     authId = res[1]
 }
+ */
