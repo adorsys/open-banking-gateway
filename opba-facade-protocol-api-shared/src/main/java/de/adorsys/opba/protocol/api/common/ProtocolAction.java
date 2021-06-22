@@ -20,6 +20,10 @@ public enum ProtocolAction {
      * {@code de.adorsys.opba.protocol.api.ais.DeleteConsent}
      */
     DELETE_CONSENT("delete-consent"),
+    /**
+     * {@code de.adorsys.opba.protocol.api.ais.GetConsentStatus}
+     */
+    GET_CONSENT_STATUS("get-consent-status"),
     // Consent authorization
     /**
      * Root action for all authorizations
@@ -51,10 +55,7 @@ public enum ProtocolAction {
 
     GET_PAYMENT_STATUS("get-payment-status"),
 
-    GET_PAYMENT_INFORMATION("get-payment-information"),
-
-    // STUB
-    UNDEFINED_STUB("undefined-stub");
+    GET_PAYMENT_INFORMATION("get-payment-information");
 
     private final String name;
 

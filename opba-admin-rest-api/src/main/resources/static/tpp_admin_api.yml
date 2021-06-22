@@ -182,6 +182,7 @@ components:
             - list-accounts
             - list-transactions
             - delete-consent
+            - get-consent-status
             - authorization
             - on-login
             - get-authorization-state
@@ -191,7 +192,6 @@ components:
             - single-payment
             - get-payment-status
             - get-payment-information
-            - undefined-stub
         protocolBeanName:
           type: string
         consentSupported:
@@ -254,6 +254,7 @@ components:
             - list-accounts
             - list-transactions
             - delete-consent
+            - get-consent-status
             - authorization
             - on-login
             - get-authorization-state
@@ -263,7 +264,6 @@ components:
             - single-payment
             - get-payment-status
             - get-payment-information
-            - undefined-stub
         subProtocolBeanName:
           type: string
     PageBankData:
