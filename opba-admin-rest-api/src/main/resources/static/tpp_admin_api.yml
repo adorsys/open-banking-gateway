@@ -191,6 +191,7 @@ components:
             - single-payment
             - get-payment-status
             - get-payment-information
+            - undefined-stub
         protocolBeanName:
           type: string
         consentSupported:
@@ -262,6 +263,7 @@ components:
             - single-payment
             - get-payment-status
             - get-payment-information
+            - undefined-stub
         subProtocolBeanName:
           type: string
     PageBankData:

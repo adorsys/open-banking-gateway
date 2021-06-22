@@ -48,6 +48,8 @@ def generateHbciStatements(id, bankId, note, authId, authActionIdDelta) {
 insert into \${table-prefix}bank_action (id, bank_uuid, protocol_action, protocol_bean_name, consent_supported) values (${id++}, '${bankId}', 'LIST_ACCOUNTS', 'hbciListAccounts', false);
 insert into \${table-prefix}bank_action (id, bank_uuid, protocol_action, protocol_bean_name, consent_supported) values (${id++}, '${bankId}', 'LIST_TRANSACTIONS', 'hbciListTransactions', false);
 insert into \${table-prefix}bank_action (id, bank_uuid, protocol_action, protocol_bean_name, consent_supported) values (${id++}, '${bankId}', 'AUTHORIZATION', '', false);
+insert into \${table-prefix}bank_action (id, bank_uuid, protocol_action, protocol_bean_name, consent_supported) values (${id++}, '${bankId}', 'DELETE_CONSENT', 'hbciDeleteConsent', false);
+insert into \${table-prefix}bank_action (id, bank_uuid, protocol_action, protocol_bean_name, consent_supported) values (${id++}, '${bankId}', 'GET_CONSENT_STATUS', 'hbciGetConsentStatus', false);
 
 insert into \${table-prefix}bank_sub_action (id, action_id, protocol_action, sub_protocol_bean_name) values (${authId++}, ${authActionId}, 'GET_AUTHORIZATION_STATE', 'hbciGetAuthorizationState');
 insert into \${table-prefix}bank_sub_action (id, action_id, protocol_action, sub_protocol_bean_name) values (${authId++}, ${authActionId}, 'UPDATE_AUTHORIZATION', 'hbciUpdateAuthorization');

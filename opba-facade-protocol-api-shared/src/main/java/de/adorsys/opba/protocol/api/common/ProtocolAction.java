@@ -51,7 +51,10 @@ public enum ProtocolAction {
 
     GET_PAYMENT_STATUS("get-payment-status"),
 
-    GET_PAYMENT_INFORMATION("get-payment-information");
+    GET_PAYMENT_INFORMATION("get-payment-information"),
+
+    // STUB
+    UNDEFINED_STUB("undefined-stub");
 
     private final String name;
 
