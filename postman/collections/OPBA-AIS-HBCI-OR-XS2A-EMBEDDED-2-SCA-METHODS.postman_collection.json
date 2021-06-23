@@ -1045,7 +1045,7 @@
 					}
 				],
 				"url": {
-					"raw": "{{opba-base}}/v1/banking/ais/accounts/{{resource-id}}/transactions?dateFrom=1970-01-01&dateTo=2022-03-12&bookingStatus=both",
+					"raw": "{{opba-base}}/v1/banking/ais/accounts/{{resource-id}}/transactions?dateFrom=1970-01-01&dateTo=2099-03-12&bookingStatus=both",
 					"host": [
 						"{{opba-base}}"
 					],
@@ -1064,7 +1064,7 @@
 						},
 						{
 							"key": "dateTo",
-							"value": "2022-03-12"
+							"value": "2099-03-12"
 						},
 						{
 							"key": "bookingStatus",
