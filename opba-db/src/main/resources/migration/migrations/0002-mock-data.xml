@@ -147,10 +147,11 @@
             insert into ${table-prefix}bank_action (id, bank_uuid, protocol_action, protocol_bean_name, consent_supported) values (41, '918d80fa-f7fd-4c9f-a6bd-7a9e12aeee76', 'LIST_ACCOUNTS', 'hbciListAccounts', false);
             insert into ${table-prefix}bank_action (id, bank_uuid, protocol_action, protocol_bean_name, consent_supported) values (42, '918d80fa-f7fd-4c9f-a6bd-7a9e12aeee76', 'LIST_TRANSACTIONS', 'hbciListTransactions', false);
             insert into ${table-prefix}bank_action (id, bank_uuid, protocol_action, protocol_bean_name, consent_supported) values (43, '918d80fa-f7fd-4c9f-a6bd-7a9e12aeee76', 'AUTHORIZATION', '', false);
-            insert into ${table-prefix}bank_action (id, bank_uuid, protocol_action, protocol_bean_name, consent_supported) values (44, '918d80fa-f7fd-4c9f-a6bd-7a9e12aeee76', 'GET_PAYMENT_INFORMATION', 'hbciGetPaymentInfoState', false);
-            insert into ${table-prefix}bank_action (id, bank_uuid, protocol_action, protocol_bean_name, consent_supported) values (45, '918d80fa-f7fd-4c9f-a6bd-7a9e12aeee76', 'GET_PAYMENT_STATUS', 'hbciGetPaymentStatusState', false);
-            insert into ${table-prefix}bank_action (id, bank_uuid, protocol_action, protocol_bean_name, consent_supported) values (46, '918d80fa-f7fd-4c9f-a6bd-7a9e12aeee76', 'DELETE_CONSENT', 'hbciDeleteConsent', false);
-            insert into ${table-prefix}bank_action (id, bank_uuid, protocol_action, protocol_bean_name, consent_supported) values (47, '918d80fa-f7fd-4c9f-a6bd-7a9e12aeee76', 'GET_CONSENT_STATUS', 'hbciGetConsentStatus', false);
+            insert into ${table-prefix}bank_action (id, bank_uuid, protocol_action, protocol_bean_name, consent_supported) values (44, '918d80fa-f7fd-4c9f-a6bd-7a9e12aeee76', 'SINGLE_PAYMENT', 'hbciInitiateSinglePayment', false);
+            insert into ${table-prefix}bank_action (id, bank_uuid, protocol_action, protocol_bean_name, consent_supported) values (45, '918d80fa-f7fd-4c9f-a6bd-7a9e12aeee76', 'GET_PAYMENT_INFORMATION', 'hbciGetPaymentInfoState', false);
+            insert into ${table-prefix}bank_action (id, bank_uuid, protocol_action, protocol_bean_name, consent_supported) values (46, '918d80fa-f7fd-4c9f-a6bd-7a9e12aeee76', 'GET_PAYMENT_STATUS', 'hbciGetPaymentStatusState', false);
+            insert into ${table-prefix}bank_action (id, bank_uuid, protocol_action, protocol_bean_name, consent_supported) values (47, '918d80fa-f7fd-4c9f-a6bd-7a9e12aeee76', 'DELETE_CONSENT', 'hbciDeleteConsent', false);
+            insert into ${table-prefix}bank_action (id, bank_uuid, protocol_action, protocol_bean_name, consent_supported) values (48, '918d80fa-f7fd-4c9f-a6bd-7a9e12aeee76', 'GET_CONSENT_STATUS', 'hbciGetConsentStatus', false);
 
             insert into ${table-prefix}bank_sub_action (id, action_id, protocol_action, sub_protocol_bean_name) values (21, 43, 'GET_AUTHORIZATION_STATE', 'hbciGetAuthorizationState');
             insert into ${table-prefix}bank_sub_action (id, action_id, protocol_action, sub_protocol_bean_name) values (22, 43, 'UPDATE_AUTHORIZATION', 'hbciUpdateAuthorization');
@@ -158,32 +159,34 @@
             insert into ${table-prefix}bank_sub_action (id, action_id, protocol_action, sub_protocol_bean_name) values (24, 43, 'DENY_AUTHORIZATION', 'hbciDenyAuthorization');
 
             <!--  HBCI BLZ 20000002  -->
-            insert into ${table-prefix}bank_action (id, bank_uuid, protocol_action, protocol_bean_name, consent_supported) values (48, '0a1a6417-4913-4238-ab56-058025c3b2b8', 'LIST_ACCOUNTS', 'hbciListAccounts', false);
-            insert into ${table-prefix}bank_action (id, bank_uuid, protocol_action, protocol_bean_name, consent_supported) values (49, '0a1a6417-4913-4238-ab56-058025c3b2b8', 'LIST_TRANSACTIONS', 'hbciListTransactions', false);
-            insert into ${table-prefix}bank_action (id, bank_uuid, protocol_action, protocol_bean_name, consent_supported) values (50, '0a1a6417-4913-4238-ab56-058025c3b2b8', 'AUTHORIZATION', '', false);
-            insert into ${table-prefix}bank_action (id, bank_uuid, protocol_action, protocol_bean_name, consent_supported) values (51, '0a1a6417-4913-4238-ab56-058025c3b2b8', 'GET_PAYMENT_INFORMATION', 'hbciGetPaymentInfoState', false);
-            insert into ${table-prefix}bank_action (id, bank_uuid, protocol_action, protocol_bean_name, consent_supported) values (52, '0a1a6417-4913-4238-ab56-058025c3b2b8', 'GET_PAYMENT_STATUS', 'hbciGetPaymentStatusState', false);
-            insert into ${table-prefix}bank_action (id, bank_uuid, protocol_action, protocol_bean_name, consent_supported) values (53, '0a1a6417-4913-4238-ab56-058025c3b2b8', 'DELETE_CONSENT', 'hbciDeleteConsent', false);
-            insert into ${table-prefix}bank_action (id, bank_uuid, protocol_action, protocol_bean_name, consent_supported) values (54, '0a1a6417-4913-4238-ab56-058025c3b2b8', 'GET_CONSENT_STATUS', 'hbciGetConsentStatus', false);
+            insert into ${table-prefix}bank_action (id, bank_uuid, protocol_action, protocol_bean_name, consent_supported) values (49, '0a1a6417-4913-4238-ab56-058025c3b2b8', 'LIST_ACCOUNTS', 'hbciListAccounts', false);
+            insert into ${table-prefix}bank_action (id, bank_uuid, protocol_action, protocol_bean_name, consent_supported) values (50, '0a1a6417-4913-4238-ab56-058025c3b2b8', 'LIST_TRANSACTIONS', 'hbciListTransactions', false);
+            insert into ${table-prefix}bank_action (id, bank_uuid, protocol_action, protocol_bean_name, consent_supported) values (51, '0a1a6417-4913-4238-ab56-058025c3b2b8', 'AUTHORIZATION', '', false);
+            insert into ${table-prefix}bank_action (id, bank_uuid, protocol_action, protocol_bean_name, consent_supported) values (52, '0a1a6417-4913-4238-ab56-058025c3b2b8', 'SINGLE_PAYMENT', 'hbciInitiateSinglePayment', false);
+            insert into ${table-prefix}bank_action (id, bank_uuid, protocol_action, protocol_bean_name, consent_supported) values (53, '0a1a6417-4913-4238-ab56-058025c3b2b8', 'GET_PAYMENT_INFORMATION', 'hbciGetPaymentInfoState', false);
+            insert into ${table-prefix}bank_action (id, bank_uuid, protocol_action, protocol_bean_name, consent_supported) values (54, '0a1a6417-4913-4238-ab56-058025c3b2b8', 'GET_PAYMENT_STATUS', 'hbciGetPaymentStatusState', false);
+            insert into ${table-prefix}bank_action (id, bank_uuid, protocol_action, protocol_bean_name, consent_supported) values (55, '0a1a6417-4913-4238-ab56-058025c3b2b8', 'DELETE_CONSENT', 'hbciDeleteConsent', false);
+            insert into ${table-prefix}bank_action (id, bank_uuid, protocol_action, protocol_bean_name, consent_supported) values (56, '0a1a6417-4913-4238-ab56-058025c3b2b8', 'GET_CONSENT_STATUS', 'hbciGetConsentStatus', false);
 
-            insert into ${table-prefix}bank_sub_action (id, action_id, protocol_action, sub_protocol_bean_name) values (25, 50, 'GET_AUTHORIZATION_STATE', 'hbciGetAuthorizationState');
-            insert into ${table-prefix}bank_sub_action (id, action_id, protocol_action, sub_protocol_bean_name) values (26, 50, 'UPDATE_AUTHORIZATION', 'hbciUpdateAuthorization');
-            insert into ${table-prefix}bank_sub_action (id, action_id, protocol_action, sub_protocol_bean_name) values (27, 50, 'FROM_ASPSP_REDIRECT', 'hbciFromAspspRedirect');
-            insert into ${table-prefix}bank_sub_action (id, action_id, protocol_action, sub_protocol_bean_name) values (28, 50, 'DENY_AUTHORIZATION', 'hbciDenyAuthorization');
+            insert into ${table-prefix}bank_sub_action (id, action_id, protocol_action, sub_protocol_bean_name) values (25, 51, 'GET_AUTHORIZATION_STATE', 'hbciGetAuthorizationState');
+            insert into ${table-prefix}bank_sub_action (id, action_id, protocol_action, sub_protocol_bean_name) values (26, 51, 'UPDATE_AUTHORIZATION', 'hbciUpdateAuthorization');
+            insert into ${table-prefix}bank_sub_action (id, action_id, protocol_action, sub_protocol_bean_name) values (27, 51, 'FROM_ASPSP_REDIRECT', 'hbciFromAspspRedirect');
+            insert into ${table-prefix}bank_sub_action (id, action_id, protocol_action, sub_protocol_bean_name) values (28, 51, 'DENY_AUTHORIZATION', 'hbciDenyAuthorization');
 
             <!--  HBCI BLZ 30000003  -->
-            insert into ${table-prefix}bank_action (id, bank_uuid, protocol_action, protocol_bean_name, consent_supported) values (55, '125ef2c6-f414-4a10-a865-e3cdddf9753d', 'LIST_ACCOUNTS', 'hbciListAccounts', false);
-            insert into ${table-prefix}bank_action (id, bank_uuid, protocol_action, protocol_bean_name, consent_supported) values (56, '125ef2c6-f414-4a10-a865-e3cdddf9753d', 'LIST_TRANSACTIONS', 'hbciListTransactions', false);
-            insert into ${table-prefix}bank_action (id, bank_uuid, protocol_action, protocol_bean_name, consent_supported) values (57, '125ef2c6-f414-4a10-a865-e3cdddf9753d', 'AUTHORIZATION', '', false);
-            insert into ${table-prefix}bank_action (id, bank_uuid, protocol_action, protocol_bean_name, consent_supported) values (58, '125ef2c6-f414-4a10-a865-e3cdddf9753d', 'GET_PAYMENT_INFORMATION', 'hbciGetPaymentInfoState', false);
-            insert into ${table-prefix}bank_action (id, bank_uuid, protocol_action, protocol_bean_name, consent_supported) values (59, '125ef2c6-f414-4a10-a865-e3cdddf9753d', 'GET_PAYMENT_STATUS', 'hbciGetPaymentStatusState', false);
-            insert into ${table-prefix}bank_action (id, bank_uuid, protocol_action, protocol_bean_name, consent_supported) values (60, '125ef2c6-f414-4a10-a865-e3cdddf9753d', 'DELETE_CONSENT', 'hbciDeleteConsent', false);
-            insert into ${table-prefix}bank_action (id, bank_uuid, protocol_action, protocol_bean_name, consent_supported) values (61, '125ef2c6-f414-4a10-a865-e3cdddf9753d', 'GET_CONSENT_STATUS', 'hbciGetConsentStatus', false);
+            insert into ${table-prefix}bank_action (id, bank_uuid, protocol_action, protocol_bean_name, consent_supported) values (57, '125ef2c6-f414-4a10-a865-e3cdddf9753d', 'LIST_ACCOUNTS', 'hbciListAccounts', false);
+            insert into ${table-prefix}bank_action (id, bank_uuid, protocol_action, protocol_bean_name, consent_supported) values (58, '125ef2c6-f414-4a10-a865-e3cdddf9753d', 'LIST_TRANSACTIONS', 'hbciListTransactions', false);
+            insert into ${table-prefix}bank_action (id, bank_uuid, protocol_action, protocol_bean_name, consent_supported) values (59, '125ef2c6-f414-4a10-a865-e3cdddf9753d', 'AUTHORIZATION', '', false);
+            insert into ${table-prefix}bank_action (id, bank_uuid, protocol_action, protocol_bean_name, consent_supported) values (60, '125ef2c6-f414-4a10-a865-e3cdddf9753d', 'SINGLE_PAYMENT', 'hbciInitiateSinglePayment', false);
+            insert into ${table-prefix}bank_action (id, bank_uuid, protocol_action, protocol_bean_name, consent_supported) values (61, '125ef2c6-f414-4a10-a865-e3cdddf9753d', 'GET_PAYMENT_INFORMATION', 'hbciGetPaymentInfoState', false);
+            insert into ${table-prefix}bank_action (id, bank_uuid, protocol_action, protocol_bean_name, consent_supported) values (62, '125ef2c6-f414-4a10-a865-e3cdddf9753d', 'GET_PAYMENT_STATUS', 'hbciGetPaymentStatusState', false);
+            insert into ${table-prefix}bank_action (id, bank_uuid, protocol_action, protocol_bean_name, consent_supported) values (63, '125ef2c6-f414-4a10-a865-e3cdddf9753d', 'DELETE_CONSENT', 'hbciDeleteConsent', false);
+            insert into ${table-prefix}bank_action (id, bank_uuid, protocol_action, protocol_bean_name, consent_supported) values (64, '125ef2c6-f414-4a10-a865-e3cdddf9753d', 'GET_CONSENT_STATUS', 'hbciGetConsentStatus', false);
 
-            insert into ${table-prefix}bank_sub_action (id, action_id, protocol_action, sub_protocol_bean_name) values (29, 57, 'GET_AUTHORIZATION_STATE', 'hbciGetAuthorizationState');
-            insert into ${table-prefix}bank_sub_action (id, action_id, protocol_action, sub_protocol_bean_name) values (30, 57, 'UPDATE_AUTHORIZATION', 'hbciUpdateAuthorization');
-            insert into ${table-prefix}bank_sub_action (id, action_id, protocol_action, sub_protocol_bean_name) values (31, 57, 'FROM_ASPSP_REDIRECT', 'hbciFromAspspRedirect');
-            insert into ${table-prefix}bank_sub_action (id, action_id, protocol_action, sub_protocol_bean_name) values (32, 57, 'DENY_AUTHORIZATION', 'hbciDenyAuthorization');
+            insert into ${table-prefix}bank_sub_action (id, action_id, protocol_action, sub_protocol_bean_name) values (29, 59, 'GET_AUTHORIZATION_STATE', 'hbciGetAuthorizationState');
+            insert into ${table-prefix}bank_sub_action (id, action_id, protocol_action, sub_protocol_bean_name) values (30, 59, 'UPDATE_AUTHORIZATION', 'hbciUpdateAuthorization');
+            insert into ${table-prefix}bank_sub_action (id, action_id, protocol_action, sub_protocol_bean_name) values (31, 59, 'FROM_ASPSP_REDIRECT', 'hbciFromAspspRedirect');
+            insert into ${table-prefix}bank_sub_action (id, action_id, protocol_action, sub_protocol_bean_name) values (32, 59, 'DENY_AUTHORIZATION', 'hbciDenyAuthorization');
         </sql>
     </changeSet>
 
