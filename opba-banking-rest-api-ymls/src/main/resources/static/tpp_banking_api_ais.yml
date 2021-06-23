@@ -143,6 +143,36 @@ paths:
         "401":
           $ref: "./tpp_banking_api_commons.yml#/components/responses/401_UNAUTHORIZED"
 
+
+  /v1/banking/ais/consents/{Service-Session-ID}:
+    delete:
+      operationId: deleteConsent
+      summary: Deletes consent associated with service session.
+      tags:
+        - TPP Banking API Account information service (AIS)
+      description: >-
+        Deletes consent(s) that is associated with service session, deletes them in ASPSP,
+        deletes data that is associated with the consent.
+
+      parameters:
+        #path
+        - $ref: "./tpp_banking_api_commons.yml#/components/parameters/Service-Session-ID-Path"
+        #header
+        #common header parameter
+        - $ref: "./tpp_banking_api_commons.yml#/components/parameters/X-Timestamp-UTC"
+        - $ref: "./tpp_banking_api_commons.yml#/components/parameters/X-Request-Signature"
+        - $ref: "./tpp_banking_api_commons.yml#/components/parameters/Fintech-ID"
+        - $ref: "./tpp_banking_api_commons.yml#/components/parameters/ServiceSessionPassword"
+        - $ref: "./tpp_banking_api_commons.yml#/components/parameters/X-Request-ID"
+
+      security:
+        - BearerAuthOAuth: [ ]
+      responses:
+        "200":
+          $ref: "#/components/responses/204_NoContent"
+        "401":
+          $ref: "./tpp_banking_api_commons.yml#/components/responses/401_UNAUTHORIZED"
+
 components:
   parameters:
     account-id:
@@ -335,6 +365,12 @@ components:
         application/json:
           schema:
             $ref: "#/components/schemas/accountList"
+
+    204_NoContent:
+      description: OK
+      headers:
+        X-Request-ID:
+          $ref: "./tpp_banking_api_commons.yml#/components/headers/X-Request-ID"
 
   schemas:
     accountDetails:

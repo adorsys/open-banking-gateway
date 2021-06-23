@@ -56,7 +56,7 @@ public class ServiceContextProviderForFintech implements ServiceContextProvider 
                 .serviceCtx(Context.<REQUEST>builder()
                         .serviceSessionId(session.getId())
                         .authorizationBankProtocolId(null == authSession ? null : authSession.getAction().getId())
-                        .bankId(request.getFacadeServiceable().getBankId())
+                        .bankId(null != request.getFacadeServiceable().getBankId() ? request.getFacadeServiceable().getBankId() : session.getBankProfile().getBank().getUuid())
                         .authSessionId(null == authSession ? null : authSession.getId())
                         .authContext(null == authSession ? null : authSession.getAuthSessionContext())
                         // Currently 1-1 auth-session to service session
@@ -182,7 +182,7 @@ public class ServiceContextProviderForFintech implements ServiceContextProvider 
             ServiceSession session,
             long bankProtocolId
     ) {
-        BankProfile profile = getBankProfileFromRequest(request.getFacadeServiceable());
+        BankProfile profile = session.getBankProfile();
 
         // FinTech requests should be signed, so creating Fintech entity if it does not exist.
         Fintech fintech = authenticator.authenticateOrCreateFintech(request.getFacadeServiceable());

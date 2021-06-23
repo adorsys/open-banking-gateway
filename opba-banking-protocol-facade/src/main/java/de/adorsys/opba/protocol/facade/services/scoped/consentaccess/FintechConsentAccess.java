@@ -55,7 +55,7 @@ public class FintechConsentAccess implements ConsentAccess {
 
     @Override
     public void delete(ProtocolFacingConsent consent) {
-        throw new IllegalStateException("No PSU present - can't delete consent");
+        consents.delete(((ProtocolFacingConsentImpl) consent).getConsent());
     }
 
     @Override

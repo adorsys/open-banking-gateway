@@ -1,12 +1,12 @@
 {
 	"info": {
-		"_postman_id": "45ea8ed6-38ea-418a-a53b-7fe9fa4d50cf",
+		"_postman_id": "7dd86e2c-f147-495b-a0c0-84911b17dec9",
 		"name": "OPBA-AIS-HBCI-OR-XS2A-EMBEDDED-2-SCA-METHODS",
 		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
 	},
 	"item": [
 		{
-			"name": "01. Search bank by name",
+			"name": "01. [FINTECH] Search bank by name",
 			"event": [
 				{
 					"listen": "test",
@@ -63,7 +63,7 @@
 			"response": []
 		},
 		{
-			"name": "02. Get users account list (without consent)",
+			"name": "02. [FINTECH] Get users account list (without consent)",
 			"event": [
 				{
 					"listen": "test",
@@ -157,7 +157,7 @@
 			"response": []
 		},
 		{
-			"name": "03. (Optional) Register PSU (accounts holder) in OpenBanking",
+			"name": "03. [CONSENT-UI] (Optional) Register PSU (accounts holder) in OpenBanking",
 			"event": [
 				{
 					"listen": "test",
@@ -204,7 +204,7 @@
 			"response": []
 		},
 		{
-			"name": "04. PSU logs in to OpenBanking",
+			"name": "04.  [CONSENT-UI] PSU logs in to OpenBanking",
 			"event": [
 				{
 					"listen": "test",
@@ -270,7 +270,7 @@
 			"response": []
 		},
 		{
-			"name": "05. Get current consent authorization state",
+			"name": "05. [CONSENT-UI] Get current consent authorization state",
 			"event": [
 				{
 					"listen": "test",
@@ -325,7 +325,7 @@
 			"response": []
 		},
 		{
-			"name": "06. Describe desired consent - AIS accounts+transactions (as stated on step #5 - consent was missing)",
+			"name": "06. [CONSENT-UI] Describe desired consent - AIS accounts+transactions (as stated on step #5 - consent was missing)",
 			"event": [
 				{
 					"listen": "test",
@@ -401,7 +401,7 @@
 			"response": []
 		},
 		{
-			"name": "07. Provide PSU ID as was required on step #05",
+			"name": "07. [CONSENT-UI]  Provide PSU ID as was required on step #05",
 			"event": [
 				{
 					"listen": "test",
@@ -477,7 +477,7 @@
 			"response": []
 		},
 		{
-			"name": "08. Provide PSU pin",
+			"name": "08. [CONSENT-UI] Provide PSU pin",
 			"event": [
 				{
 					"listen": "test",
@@ -553,7 +553,7 @@
 			"response": []
 		},
 		{
-			"name": "09. List available SCA challenges",
+			"name": "09. [CONSENT-UI] List available SCA challenges",
 			"event": [
 				{
 					"listen": "test",
@@ -609,7 +609,7 @@
 			"response": []
 		},
 		{
-			"name": "09. Select SCA challenge",
+			"name": "09. [CONSENT-UI] Select SCA challenge",
 			"event": [
 				{
 					"listen": "test",
@@ -685,7 +685,7 @@
 			"response": []
 		},
 		{
-			"name": "10. Provide PSU TAN",
+			"name": "10. [CONSENT-UI] Provide PSU TAN",
 			"event": [
 				{
 					"listen": "test",
@@ -761,7 +761,7 @@
 			"response": []
 		},
 		{
-			"name": "11. Get current consent state (finished)",
+			"name": "11. [CONSENT-UI] Get current consent state (finished)",
 			"event": [
 				{
 					"listen": "test",
@@ -816,7 +816,7 @@
 			"response": []
 		},
 		{
-			"name": "12. Confirm PSU consent grant (redirect back to FinTech confirmation)",
+			"name": "12. [FINTECH] Confirm PSU consent grant (redirect back to FinTech confirmation)",
 			"event": [
 				{
 					"listen": "test",
@@ -875,7 +875,7 @@
 			"response": []
 		},
 		{
-			"name": "13. Get users account list with consent",
+			"name": "13. [FINTECH] Get users account list with consent",
 			"event": [
 				{
 					"listen": "test",
@@ -967,7 +967,7 @@
 			"response": []
 		},
 		{
-			"name": "14. Get users transaction list with consent",
+			"name": "14. [FINTECH] Get users transaction list with consent",
 			"event": [
 				{
 					"listen": "test",
@@ -1070,6 +1070,96 @@
 							"key": "bookingStatus",
 							"value": "both"
 						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "15. [FINTECH] Delete users' consent",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test('Success', function() {",
+							"    pm.response.to.have.status(200);",
+							"})"
+						],
+						"type": "text/javascript"
+					}
+				},
+				{
+					"listen": "prerequest",
+					"script": {
+						"exec": [
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "DELETE",
+				"header": [
+					{
+						"key": "X-Request-ID",
+						"type": "text",
+						"value": "{{x-request-id}}"
+					},
+					{
+						"key": "X-Request-Signature",
+						"type": "text",
+						"value": "{{x-request-signature}}"
+					},
+					{
+						"key": "Fintech-ID",
+						"type": "text",
+						"value": "{{fintech-id}}"
+					},
+					{
+						"key": "Fintech-Redirect-URL-OK",
+						"type": "text",
+						"value": "https://google.com?q=OK"
+					},
+					{
+						"key": "Fintech-Redirect-URL-NOK",
+						"type": "text",
+						"value": "https://google.com?q=NOK"
+					},
+					{
+						"key": "Fintech-User-ID",
+						"type": "text",
+						"value": "{{fintech-user-id}}"
+					},
+					{
+						"key": "Service-Session-Password",
+						"type": "text",
+						"value": "{{service-session-password}}"
+					},
+					{
+						"key": "Bank-ID",
+						"type": "text",
+						"value": "{{bank-id}}"
+					},
+					{
+						"key": "Service-Session-ID",
+						"value": "{{service-session-id}}",
+						"description": "Actually is a consent ID",
+						"type": "text"
+					}
+				],
+				"url": {
+					"raw": "{{opba-base}}/v1/banking/ais/consents/{{service-session-id}}",
+					"host": [
+						"{{opba-base}}"
+					],
+					"path": [
+						"v1",
+						"banking",
+						"ais",
+						"consents",
+						"{{service-session-id}}"
 					]
 				}
 			},

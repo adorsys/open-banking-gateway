@@ -81,6 +81,9 @@ public class BankProtocolActionsSqlGeneratorTest {
         writelnToFile(BANK_SUB_ACTION_DESTINATION_PATH, String.format("%d,%d,UPDATE_AUTHORIZATION,xs2aUpdateAuthorization", bankSubActionId++, authorizationId));
         writelnToFile(BANK_SUB_ACTION_DESTINATION_PATH, String.format("%d,%d,FROM_ASPSP_REDIRECT,xs2aFromAspspRedirect", bankSubActionId++, authorizationId));
         writelnToFile(BANK_SUB_ACTION_DESTINATION_PATH, String.format("%d,%d,DENY_AUTHORIZATION,xs2aDenyAuthorization", bankSubActionId++, authorizationId));
+
+        writelnToFile(BANK_ACTION_DESTINATION_PATH, String.format("%d,%s,DELETE_CONSENT,xs2aDeleteConsent,true", bankActionId++, bankUUID));
+        writelnToFile(BANK_ACTION_DESTINATION_PATH, String.format("%d,%s,GET_CONSENT_STATUS,xs2aGetConsentStatus,true", bankActionId++, bankUUID));
     }
 
     private void writeHbciBankData(String bankRecord) {
@@ -104,6 +107,9 @@ public class BankProtocolActionsSqlGeneratorTest {
         writelnToFile(BANK_SUB_ACTION_DESTINATION_PATH, String.format("%d,%d,UPDATE_AUTHORIZATION,hbciUpdateAuthorization", bankSubActionId++, authorizationId));
         writelnToFile(BANK_SUB_ACTION_DESTINATION_PATH, String.format("%d,%d,FROM_ASPSP_REDIRECT,hbciFromAspspRedirect", bankSubActionId++, authorizationId));
         writelnToFile(BANK_SUB_ACTION_DESTINATION_PATH, String.format("%d,%d,DENY_AUTHORIZATION,hbciDenyAuthorization", bankSubActionId++, authorizationId));
+
+        writelnToFile(BANK_ACTION_DESTINATION_PATH, String.format("%d,%s,DELETE_CONSENT,hbciDeleteConsent,false", bankActionId++, bankUUID));
+        writelnToFile(BANK_ACTION_DESTINATION_PATH, String.format("%d,%s,GET_CONSENT_STATUS,hbciGetConsentStatus,false", bankActionId++, bankUUID));
     }
 
     private void prepareDestinationFiles() {
@@ -131,7 +137,7 @@ public class BankProtocolActionsSqlGeneratorTest {
     }
 
     private String replaceWithHbciData(String bankRecord) {
-        return String.format("%s%s", UUID.randomUUID().toString(), removeUrls(insertHbciPrefixes(bankRecord)));
+        return String.format("%s%s", UUID.randomUUID(), removeUrls(insertHbciPrefixes(bankRecord)));
     }
 
     /**

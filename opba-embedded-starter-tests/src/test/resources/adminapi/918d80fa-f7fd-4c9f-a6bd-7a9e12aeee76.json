@@ -24,6 +24,16 @@
         "protocolBeanName": "hbciListTransactions",
         "consentSupported": false
       },
+      "DELETE_CONSENT": {
+        "protocolAction": "delete-consent",
+        "protocolBeanName": "hbciDeleteConsent",
+        "consentSupported": false
+      },
+      "GET_CONSENT_STATUS": {
+        "protocolAction": "get-consent-status",
+        "protocolBeanName": "hbciGetConsentStatus",
+        "consentSupported": false
+      },
       "AUTHORIZATION": {
         "protocolAction": "authorization",
         "consentSupported": false,

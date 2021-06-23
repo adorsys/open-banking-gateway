@@ -9,18 +9,20 @@
             insert into ${table-prefix}bank (uuid, name, bic, bank_code) values ('223f8daa-767c-43f8-851b-26c8ee6193db', 'FinAPI Sandbox', 'FINAPI SBX', '');
             insert into ${table-prefix}bank_profile (bank_uuid, adapter_id) values ('223f8daa-767c-43f8-851b-26c8ee6193db', 'finapi-adapter');
 
-            insert into ${table-prefix}bank_action (id, bank_uuid, protocol_action, protocol_bean_name) values (100000, '223f8daa-767c-43f8-851b-26c8ee6193db', 'LIST_ACCOUNTS', 'finapiWebFormListAccounts');
-            insert into ${table-prefix}bank_action (id, bank_uuid, protocol_action, protocol_bean_name) values (100001, '223f8daa-767c-43f8-851b-26c8ee6193db', 'LIST_TRANSACTIONS', 'finapiWebFormListTransactions');
-            insert into ${table-prefix}bank_action (id, bank_uuid, protocol_action, protocol_bean_name) values (100002, '223f8daa-767c-43f8-851b-26c8ee6193db', 'AUTHORIZATION', '');
-            insert into ${table-prefix}bank_action (id, bank_uuid, protocol_action, protocol_bean_name) values (100003, '223f8daa-767c-43f8-851b-26c8ee6193db', 'SINGLE_PAYMENT', 'finapiWebFormGetPaymentInfoState');
-            insert into ${table-prefix}bank_action (id, bank_uuid, protocol_action, protocol_bean_name) values (100004, '223f8daa-767c-43f8-851b-26c8ee6193db', 'GET_PAYMENT_INFORMATION', 'finapiWebFormGetPaymentInfoState');
-            insert into ${table-prefix}bank_action (id, bank_uuid, protocol_action, protocol_bean_name) values (100005, '223f8daa-767c-43f8-851b-26c8ee6193db', 'GET_PAYMENT_STATUS', 'finapiWebFormGetPaymentStatusState');
+            insert into ${table-prefix}bank_action (id, bank_uuid, protocol_action, protocol_bean_name) values (1000, '223f8daa-767c-43f8-851b-26c8ee6193db', 'LIST_ACCOUNTS', 'finapiWebFormListAccounts');
+            insert into ${table-prefix}bank_action (id, bank_uuid, protocol_action, protocol_bean_name) values (1001, '223f8daa-767c-43f8-851b-26c8ee6193db', 'LIST_TRANSACTIONS', 'finapiWebFormListTransactions');
+            insert into ${table-prefix}bank_action (id, bank_uuid, protocol_action, protocol_bean_name) values (1002, '223f8daa-767c-43f8-851b-26c8ee6193db', 'AUTHORIZATION', '');
+            insert into ${table-prefix}bank_action (id, bank_uuid, protocol_action, protocol_bean_name) values (1003, '223f8daa-767c-43f8-851b-26c8ee6193db', 'SINGLE_PAYMENT', 'finapiWebFormGetPaymentInfoState');
+            insert into ${table-prefix}bank_action (id, bank_uuid, protocol_action, protocol_bean_name) values (1004, '223f8daa-767c-43f8-851b-26c8ee6193db', 'GET_PAYMENT_INFORMATION', 'finapiWebFormGetPaymentInfoState');
+            insert into ${table-prefix}bank_action (id, bank_uuid, protocol_action, protocol_bean_name) values (1005, '223f8daa-767c-43f8-851b-26c8ee6193db', 'GET_PAYMENT_STATUS', 'finapiWebFormGetPaymentStatusState');
+            insert into ${table-prefix}bank_action (id, bank_uuid, protocol_action, protocol_bean_name) values (1006, '223f8daa-767c-43f8-851b-26c8ee6193db', 'DELETE_CONSENT', 'finapiWebFormDeleteConsent');
+            insert into ${table-prefix}bank_action (id, bank_uuid, protocol_action, protocol_bean_name) values (1007, '223f8daa-767c-43f8-851b-26c8ee6193db', 'GET_CONSENT_STATUS', 'finapiWebFormGetConsentStatus');
 
-            insert into ${table-prefix}bank_sub_action (id, action_id, protocol_action, sub_protocol_bean_name) values (100001, 100002, 'ON_LOGIN', 'finapiWebFormOnLogin');
-            insert into ${table-prefix}bank_sub_action (id, action_id, protocol_action, sub_protocol_bean_name) values (100002, 100002, 'GET_AUTHORIZATION_STATE', 'finapiWebFormGetAuthorizationState');
-            insert into ${table-prefix}bank_sub_action (id, action_id, protocol_action, sub_protocol_bean_name) values (100003, 100002, 'UPDATE_AUTHORIZATION', 'finapiWebFormUpdateAuthorization');
-            insert into ${table-prefix}bank_sub_action (id, action_id, protocol_action, sub_protocol_bean_name) values (100004, 100002, 'FROM_ASPSP_REDIRECT', 'finapiWebFormFromAspspRedirect');
-            insert into ${table-prefix}bank_sub_action (id, action_id, protocol_action, sub_protocol_bean_name) values (100005, 100002, 'DENY_AUTHORIZATION', 'finapiWebFormDenyAuthorization');
+            insert into ${table-prefix}bank_sub_action (id, action_id, protocol_action, sub_protocol_bean_name) values (1000, 1002, 'ON_LOGIN', 'finapiWebFormOnLogin');
+            insert into ${table-prefix}bank_sub_action (id, action_id, protocol_action, sub_protocol_bean_name) values (1001, 1002, 'GET_AUTHORIZATION_STATE', 'finapiWebFormGetAuthorizationState');
+            insert into ${table-prefix}bank_sub_action (id, action_id, protocol_action, sub_protocol_bean_name) values (1002, 1002, 'UPDATE_AUTHORIZATION', 'finapiWebFormUpdateAuthorization');
+            insert into ${table-prefix}bank_sub_action (id, action_id, protocol_action, sub_protocol_bean_name) values (1003, 1002, 'FROM_ASPSP_REDIRECT', 'finapiWebFormFromAspspRedirect');
+            insert into ${table-prefix}bank_sub_action (id, action_id, protocol_action, sub_protocol_bean_name) values (1004, 1002, 'DENY_AUTHORIZATION', 'finapiWebFormDenyAuthorization');
         </sql>
     </changeSet>
 

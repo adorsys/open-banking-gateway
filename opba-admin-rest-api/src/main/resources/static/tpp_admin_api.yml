@@ -181,6 +181,8 @@ components:
           enum:
             - list-accounts
             - list-transactions
+            - delete-consent
+            - get-consent-status
             - authorization
             - on-login
             - get-authorization-state
@@ -251,6 +253,8 @@ components:
           enum:
             - list-accounts
             - list-transactions
+            - delete-consent
+            - get-consent-status
             - authorization
             - on-login
             - get-authorization-state
