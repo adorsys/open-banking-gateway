@@ -12,8 +12,14 @@ export class AisService {
     return toConvert.toISOString().split('T')[0];
   }
 
-  getAccounts(bankId: string, loARetrievalInformation: LoARetrievalInformation, createConsentIfNone: string, withBalance: boolean, online: boolean,
-              authenticatePsu: boolean) {
+  getAccounts(
+    bankId: string,
+    loARetrievalInformation: LoARetrievalInformation,
+    createConsentIfNone: string,
+    withBalance: boolean,
+    online: boolean,
+    authenticatePsu: boolean
+  ) {
     const okurl = window.location.pathname;
     const notOkUrl = okurl.replace(/account.*/, '');
 

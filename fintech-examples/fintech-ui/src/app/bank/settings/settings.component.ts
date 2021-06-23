@@ -4,7 +4,7 @@ import { Location } from '@angular/common';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { LoARetrievalInformation, LoTRetrievalInformation } from '../../models/consts';
 import { StorageService } from '../../services/storage.service';
-import { FinTechAccountInformationService} from "../../api";
+import { FinTechAccountInformationService } from '../../api';
 
 @Component({
   selector: 'app-settings',

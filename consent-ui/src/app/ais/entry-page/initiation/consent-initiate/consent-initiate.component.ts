@@ -57,8 +57,7 @@ export class ConsentInitiateComponent implements OnInit {
 
         this.sessionService.setRedirectCode(authorizationId, res.headers.get(ApiHeaders.X_XSRF_TOKEN));
 
-        let consent = {"consent":{"access":{"allPsd2":"ALL_ACCOUNTS_WITH_BALANCES"},"frequencyPerDay":4,"validUntil":"2021-06-18","recurringIndicator":true,"combinedServiceIndicator":false}};
-        this.sessionService.setConsentObject(authorizationId, consent);
+        this.sessionService.setConsentObject(authorizationId, res.body);
         this.navigate(authorizationId, res.body);
       });
   }

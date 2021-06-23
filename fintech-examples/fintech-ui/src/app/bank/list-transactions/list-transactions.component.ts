@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { AisService } from '../services/ais.service';
-import {AccountReport, AisAccountAccessInfo, AisConsentRequest} from '../../api';
+import { AccountReport, AisAccountAccessInfo, AisConsentRequest } from '../../api';
 import { RedirectStruct, RedirectType } from '../redirect-page/redirect-struct';
 import { Consts, HeaderConfig } from '../../models/consts';
 import { StorageService } from '../../services/storage.service';
@@ -39,7 +39,7 @@ export class ListTransactionsComponent implements OnInit {
     const settings = this.storageService.getSettings();
     const online = !this.storageService.isAfterRedirect() && !settings.cacheLot;
 
-    let consent: AisConsentRequest = {
+    const consent: AisConsentRequest = {
       access: {
         allPsd2: AllPsd2Enum.ACCOUNTSWITHBALANCES
       },
@@ -47,10 +47,17 @@ export class ListTransactionsComponent implements OnInit {
       validUntil: settings.validUntil,
       recurringIndicator: settings.recurringIndicator,
       combinedServiceIndicator: settings.combinedServiceIndicator
-    }
+    };
 
     this.aisService
-      .getTransactions(this.bankId, this.accountId, settings.lot, JSON.stringify(consent), online, settings.consentRequiresAuthentication)
+      .getTransactions(
+        this.bankId,
+        this.accountId,
+        settings.lot,
+        JSON.stringify(consent),
+        online,
+        settings.consentRequiresAuthentication
+      )
       .subscribe((response) => {
         switch (response.status) {
           case 202:
