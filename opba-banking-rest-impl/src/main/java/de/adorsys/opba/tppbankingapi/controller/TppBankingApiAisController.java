@@ -22,6 +22,7 @@ import de.adorsys.opba.tppbankingapi.ais.model.generated.TransactionsResponse;
 import de.adorsys.opba.tppbankingapi.ais.resource.generated.TppBankingApiAccountInformationServiceAisApi;
 import lombok.RequiredArgsConstructor;
 import lombok.SneakyThrows;
+import org.jetbrains.annotations.NotNull;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.springframework.http.ResponseEntity;
@@ -29,6 +30,8 @@ import org.springframework.web.bind.annotation.RestController;
 
 import java.time.LocalDate;
 import java.util.Collections;
+import java.util.EnumMap;
+import java.util.Map;
 import java.util.UUID;
 import java.util.concurrent.CompletableFuture;
 
@@ -83,7 +86,7 @@ public class TppBankingApiAisController implements TppBankingApiAccountInformati
                     .build()
                 )
                 .withBalance(withBalance)
-                .extras(Collections.singletonMap(ExtraRequestParam.CONSENT, objectMapper.readValue(createConsentIfNone, AisConsent.class)))
+                .extras(getExtras(createConsentIfNone))
                 .build()
         ).thenApply((FacadeResult<AccountListBody> result) -> mapper.translate(result, accountListRestMapper));
     }
@@ -140,7 +143,7 @@ public class TppBankingApiAisController implements TppBankingApiAccountInformati
                 .deltaList(deltaList)
                 .page(page)
                 .pageSize(pageSize)
-                .extras(Collections.singletonMap(ExtraRequestParam.CONSENT, objectMapper.readValue(createConsentIfNone, AisConsent.class)))
+                .extras(getExtras(createConsentIfNone))
                 .build()
         ).thenApply((FacadeResult<TransactionsResponseBody> result) -> mapper.translate(result, transactionsRestMapper));
     }
@@ -191,7 +194,7 @@ public class TppBankingApiAisController implements TppBankingApiAccountInformati
                 .deltaList(deltaList)
                 .page(page)
                 .pageSize(pageSize)
-                .extras(Collections.singletonMap(ExtraRequestParam.CONSENT, objectMapper.readValue(createConsentIfNone, AisConsent.class)))
+                .extras(getExtras(createConsentIfNone))
                 .build()
         ).thenApply((FacadeResult<TransactionsResponseBody> result) -> mapper.translate(result, transactionsRestMapper));
     }
@@ -212,6 +215,13 @@ public class TppBankingApiAisController implements TppBankingApiAccountInformati
                         )
                         .build()
         ).thenApply(it -> (ResponseEntity<Void>) mapper.translate(it, body -> null));
+    }
+
+
+    @NotNull
+    private Map<ExtraRequestParam, Object> getExtras(String createConsentIfNone) throws com.fasterxml.jackson.core.JsonProcessingException {
+        return createConsentIfNone == null ? new EnumMap<>(ExtraRequestParam.class)
+            : Collections.singletonMap(ExtraRequestParam.CONSENT, objectMapper.readValue(createConsentIfNone, AisConsent.class));
     }
 
     @Mapper(componentModel = SPRING_KEYWORD, implementationPackage = Const.API_MAPPERS_PACKAGE)

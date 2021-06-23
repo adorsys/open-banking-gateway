@@ -39,7 +39,7 @@ public class AccountAccessBodyValidator implements ConstraintValidator<ValidCons
 
         boolean validDedicatedWithoutAccounts = isEmptyAccountInfo(body)
                                                         && Strings.isNullOrEmpty(body.getAllPsd2())
-                                                        && Arrays.stream(AccountAccessType.values()).anyMatch(it -> it.getApiName().equals(body.getAllPsd2()));
+                                                        && Arrays.stream(AccountAccessType.values()).anyMatch(it -> it.getApiName().equals(body.getAvailableAccounts()));
 
         return validDedicatedWithAccounts || validDedicatedWithoutAccounts;
     }

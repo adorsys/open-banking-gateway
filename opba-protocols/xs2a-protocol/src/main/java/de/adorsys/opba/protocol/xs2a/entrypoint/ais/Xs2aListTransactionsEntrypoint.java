@@ -5,6 +5,7 @@ import de.adorsys.opba.protocol.api.ais.ListTransactions;
 import de.adorsys.opba.protocol.api.common.ProtocolAction;
 import de.adorsys.opba.protocol.api.dto.ValidationIssue;
 import de.adorsys.opba.protocol.api.dto.context.ServiceContext;
+import de.adorsys.opba.protocol.api.dto.parameters.ExtraRequestParam;
 import de.adorsys.opba.protocol.api.dto.request.authorization.AisConsent;
 import de.adorsys.opba.protocol.api.dto.request.transactions.ListTransactionsRequest;
 import de.adorsys.opba.protocol.api.dto.result.body.TransactionsResponseBody;
@@ -25,6 +26,7 @@ import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.springframework.stereotype.Service;
 
+import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ConcurrentHashMap;
@@ -87,9 +89,15 @@ public class Xs2aListTransactionsEntrypoint implements ListTransactions {
         @Mapping(source = "facadeServiceable.fintechRedirectUrlOk", target = "fintechRedirectUriOk")
         @Mapping(source = "facadeServiceable.fintechRedirectUrlNok", target = "fintechRedirectUriNok")
         @Mapping(source = "facadeServiceable.uaContext.psuAccept", target = "contentType", nullValuePropertyMappingStrategy = IGNORE)
-        @Mapping(target = "aisConsent", expression = "java(map(((de.adorsys.opba.protocol.api.dto.request.authorization.AisConsent) "
-            + "ctx.getExtras().get(de.adorsys.opba.protocol.api.dto.parameters.ExtraRequestParam.CONSENT))))")
+        @Mapping(source = "extras", target = "aisConsent")
         TransactionListXs2aContext map(ListTransactionsRequest ctx);
+
+        default AisConsentInitiateBody map(Map<ExtraRequestParam, Object> extras) {
+            if (extras == null || !extras.containsKey(ExtraRequestParam.CONSENT)) {
+                return new AisConsentInitiateBody();
+            }
+            return map((AisConsent) extras.get(ExtraRequestParam.CONSENT));
+        }
 
         AisConsentInitiateBody map(AisConsent consent);
     }
