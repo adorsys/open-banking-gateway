@@ -10,7 +10,6 @@
     "id": 1,
     "url": "http://localhost:8090/hbci-mock/",
     "adapterId": "hbci-adapter",
-    "preferredApproach": "REDIRECT",
     "tryToUsePreferredApproach": false,
     "uniquePaymentPurpose": true,
     "actions": {
@@ -24,14 +23,29 @@
         "protocolBeanName": "hbciListTransactions",
         "consentSupported": false
       },
-      "DELETE_CONSENT": {
-        "protocolAction": "delete-consent",
-        "protocolBeanName": "hbciDeleteConsent",
-        "consentSupported": false
-      },
       "GET_CONSENT_STATUS": {
         "protocolAction": "get-consent-status",
         "protocolBeanName": "hbciGetConsentStatus",
+        "consentSupported": false
+      },
+      "GET_PAYMENT_INFORMATION": {
+        "protocolAction": "get-payment-information",
+        "protocolBeanName": "hbciGetPaymentInfoState",
+        "consentSupported": false
+      },
+      "GET_PAYMENT_STATUS": {
+        "protocolAction": "get-payment-status",
+        "protocolBeanName": "hbciGetPaymentStatusState",
+        "consentSupported": false
+      },
+      "SINGLE_PAYMENT": {
+        "protocolAction": "single-payment",
+        "protocolBeanName": "hbciInitiateSinglePayment",
+        "consentSupported": false
+      },
+      "DELETE_CONSENT": {
+        "protocolAction": "delete-consent",
+        "protocolBeanName": "hbciDeleteConsent",
         "consentSupported": false
       },
       "AUTHORIZATION": {
@@ -39,20 +53,20 @@
         "consentSupported": false,
         "subProtocols": [
           {
-            "protocolAction": "get-authorization-state",
-            "subProtocolBeanName": "hbciGetAuthorizationState"
-          },
-          {
-            "protocolAction": "update-authorization",
-            "subProtocolBeanName": "hbciUpdateAuthorization"
+            "protocolAction": "deny-authorization",
+            "subProtocolBeanName": "hbciDenyAuthorization"
           },
           {
             "protocolAction": "from-aspsp",
             "subProtocolBeanName": "hbciFromAspspRedirect"
           },
           {
-            "protocolAction": "deny-authorization",
-            "subProtocolBeanName": "hbciDenyAuthorization"
+            "protocolAction": "get-authorization-state",
+            "subProtocolBeanName": "hbciGetAuthorizationState"
+          },
+          {
+            "protocolAction": "update-authorization",
+            "subProtocolBeanName": "hbciUpdateAuthorization"
           }
         ]
       }
