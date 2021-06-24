@@ -1,5 +1,6 @@
 package de.adorsys.opba.protocol.xs2a.service.xs2a.authenticate;
 
+import de.adorsys.opba.protocol.api.common.Approach;
 import de.adorsys.opba.protocol.api.common.CurrentBankProfile;
 import de.adorsys.opba.protocol.bpmnshared.dto.DtoMapper;
 import de.adorsys.opba.protocol.bpmnshared.service.context.ContextUtil;
@@ -79,7 +80,7 @@ public class StartConsentAuthorization extends ValidatedExecution<Xs2aContext> {
         CurrentBankProfile config = context.aspspProfile();
 
         ContextUtil.getAndUpdateContext(execution, (Xs2aContext ctx) -> {
-            ctx.setAspspScaApproach(config.getPreferredApproach().name());
+            ctx.setAspspScaApproach(null != config.getPreferredApproach() ? config.getPreferredApproach().name() : Approach.REDIRECT.name());
             ctx.setAuthorizationId(UUID.randomUUID().toString());
         });
     }

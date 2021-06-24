@@ -17,7 +17,7 @@
             </column>
             <column name="name" type="VARCHAR(255)"/>
             <column name="bic" type="VARCHAR(11)"/>
-            <column name="bank_code" type="VARCHAR(8)"/>
+            <column name="bank_code" type="VARCHAR(16)"/>
         </createTable>
     </changeSet>
 
