@@ -247,6 +247,9 @@ components:
           type: string
         externalId:
           type: string
+        externalInterfaces:
+          type: string
+          description: Comma-separated external interfaces
         protocolType:
           type: string
         isSandbox:

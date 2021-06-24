@@ -49,6 +49,7 @@
                 <constraints nullable="false"/>
             </column>
             <column name="external_id" type="VARCHAR(64)"/>
+            <column name="external_interfaces" type="VARCHAR(512)"/>
             <column name="protocol_type" type="VARCHAR(32)"/>
             <column name="is_sandbox" type="BOOLEAN" defaultValue="false">
                 <constraints nullable="false"/>

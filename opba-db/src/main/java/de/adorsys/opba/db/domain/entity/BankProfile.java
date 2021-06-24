@@ -74,6 +74,7 @@ public class BankProfile implements Serializable, CurrentBankProfile {
     private boolean uniquePaymentPurpose;
     private boolean xs2aSkipConsentAuthorization;
     private String externalId;
+    private String externalInterfaces;
     private String protocolType;
     private boolean isSandbox;
 
