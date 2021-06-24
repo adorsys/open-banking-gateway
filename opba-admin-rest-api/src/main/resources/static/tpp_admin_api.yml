@@ -247,6 +247,8 @@ components:
           type: string
         externalId:
           type: string
+        protocolType:
+          type: string
     BankSubAction:
       type: object
       properties:

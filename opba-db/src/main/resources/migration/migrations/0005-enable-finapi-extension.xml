@@ -2,12 +2,12 @@
                    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
                    xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.8.xsd">
 
-    <changeSet author="vbeex@adorsys.com.ua" id="2021-06-07-18" context="finapi-extension">
+    <changeSet author="vbeex@adorsys.com.ua" id="2021-06-07-18">
         <comment>Adds FinAPI accessor binding</comment>
         <sql>
             <!--  FinAPI accessor  -->
             insert into ${table-prefix}bank (uuid, name, bic, bank_code) values ('223f8daa-767c-43f8-851b-26c8ee6193db', 'FinAPI Sandbox', 'FINAPI SBX', '');
-            insert into ${table-prefix}bank_profile (bank_uuid, adapter_id) values ('223f8daa-767c-43f8-851b-26c8ee6193db', 'finapi-adapter');
+            insert into ${table-prefix}bank_profile (bank_uuid, adapter_id,protocol_type) values ('223f8daa-767c-43f8-851b-26c8ee6193db', 'finapi-adapter', 'FINAPI_WEBFORM');
 
             insert into ${table-prefix}bank_action (id, bank_uuid, protocol_action, protocol_bean_name) values (1000, '223f8daa-767c-43f8-851b-26c8ee6193db', 'LIST_ACCOUNTS', 'finapiWebFormListAccounts');
             insert into ${table-prefix}bank_action (id, bank_uuid, protocol_action, protocol_bean_name) values (1001, '223f8daa-767c-43f8-851b-26c8ee6193db', 'LIST_TRANSACTIONS', 'finapiWebFormListTransactions');

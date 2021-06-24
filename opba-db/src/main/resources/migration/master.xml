@@ -5,8 +5,8 @@
 
     <include relativeToChangelogFile="true" file="migrations/0000-create-table-banks.xml"/>
     <include relativeToChangelogFile="true" file="migrations/0001-init-protocol-facade.xml"/>
-    <include relativeToChangelogFile="true" file="migrations/0002-mock-data.xml"/>
+    <include relativeToChangelogFile="true" file="migrations/0002-mock-data.xml" context="mock-banks"/>
     <include relativeToChangelogFile="true" file="migrations/0003-add-staging-bank-configuration.xml"/>
     <include relativeToChangelogFile="true" file="migrations/0004-add-skip-auth-for-deutsche-bank.xml"/>
-    <include relativeToChangelogFile="true" file="migrations/0005-enable-finapi-extension.xml" context="finapi-extension"/>
+    <include relativeToChangelogFile="true" file="migrations/0005-enable-finapi-extension.xml" context="finapi-sandbox-banks"/>
 </databaseChangeLog>

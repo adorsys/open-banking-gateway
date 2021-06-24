@@ -1,5 +1,11 @@
 # Database population with production data
 
+## Available Liquibase contexts
+ - mock-banks
+ - hbci-banks
+ - xs2a-banks
+ - finapi-sandbox
+
 ## Populate database with data from CSV file
 
 To facilitate database population with bank data, `BankProtocolActionsSqlGeneratorTest.java` class contains a script that 

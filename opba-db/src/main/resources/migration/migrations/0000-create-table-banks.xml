@@ -49,6 +49,7 @@
                 <constraints nullable="false"/>
             </column>
             <column name="external_id" type="VARCHAR(64)"/>
+            <column name="protocol_type" type="VARCHAR(32)"/>
         </createTable>
         <addNotNullConstraint tableName="${table-prefix}bank_profile" columnName="bank_uuid" columnDataType="VARCHAR(255)"/>
     </changeSet>
@@ -61,11 +62,11 @@
                                  referencedColumnNames="uuid"/>
     </changeSet>
 
-    <changeSet id="load_csv_bank" author="mhr">
+    <changeSet id="load_csv_bank_xs2a" author="mhr" context="xs2a-banks">
         <loadData
                 encoding="utf8"
                 relativeToChangelogFile="true"
-                file="banks.csv"
+                file="csv/v0/0-xs2a-bank_bank-profile.csv"
                 catalogName=""
                 tableName="${table-prefix}bank">
             <column header="uuid"       name="uuid"         type="STRING"/>
@@ -76,15 +77,16 @@
             <column header="bank_code"  name="bank_code"    type="STRING"/>
             <column header="idp_url"                        type="skip"/>
             <column header="aspsp_sca_approaches"           type="skip"/>
+            <column header="protocol_type"                  type="skip"/>
         </loadData>
         <rollback />
     </changeSet>
 
-    <changeSet id="load_csv_bank_profile" author="mhr">
+    <changeSet id="load_csv_bank_profile_xs2a" author="mhr" context="xs2a-banks">
         <loadData
                 encoding="utf8"
                 relativeToChangelogFile="true"
-                file="banks.csv"
+                file="csv/v0/0-xs2a-bank_bank-profile.csv"
                 catalogName=""
                 tableName="${table-prefix}bank_profile">
             <column header="uuid"       name="bank_uuid"                type="STRING"/>
@@ -95,6 +97,7 @@
             <column header="bank_code"  name="bank_code"                type="skip"/>
             <column header="idp_url"    name="idp_url"                  type="STRING"/>
             <column header="aspsp_sca_approaches" name="sca_approaches" type="STRING"/>
+            <column header="protocol_type" name="protocol_type"         type="STRING"/>
         </loadData>
         <rollback />
     </changeSet>

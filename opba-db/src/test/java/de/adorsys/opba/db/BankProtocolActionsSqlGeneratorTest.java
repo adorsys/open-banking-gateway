@@ -28,10 +28,14 @@ import static java.nio.charset.StandardCharsets.UTF_8;
 public class BankProtocolActionsSqlGeneratorTest {
     public static final String ENABLE_BANK_PROTOCOL_ACTIONS_SQL_GENERATION = "ENABLE_BANK_PROTOCOL_ACTIONS_SQL_GENERATION";
 
-    private static final String BANK_DATA_SOURCE_PATH = "migration/migrations/banks.csv";
+    private static final String BANK_DATA_SOURCE_PATH = "migration/migrations/csv/v0/0-xs2a-bank_bank-profile.csv";
 
-    private static final String BANK_ACTION_DESTINATION_PATH = "src/main/resources/migration/migrations/bank_action_data.csv";
-    private static final String BANK_SUB_ACTION_DESTINATION_PATH = "src/main/resources/migration/migrations/bank_sub_action_data.csv";
+    private static final String BANK_XS2A_ACTION_DESTINATION_PATH = "src/main/resources/migration/migrations/bank_xs2a_action_data.csv";
+    private static final String BANK_XS2A_SUB_ACTION_DESTINATION_PATH = "src/main/resources/migration/migrations/bank_xs2a_sub_action_data.csv";
+
+    private static final String BANK_HBCI_ACTION_DESTINATION_PATH = "src/main/resources/migration/migrations/bank_hbci_action_data.csv";
+    private static final String BANK_HBCI_SUB_ACTION_DESTINATION_PATH = "src/main/resources/migration/migrations/bank_hbci_sub_action_data.csv";
+    
     private static final String BANK_PROFILE_DESTINATION_PATH = "src/main/resources/migration/migrations/bank_profile_data.csv";
 
     private static final String BANK_ACTION_CSV_HEADER = "id,bank_uuid,protocol_action,protocol_bean_name,consent_supported";
@@ -70,20 +74,20 @@ public class BankProtocolActionsSqlGeneratorTest {
         String bankUUID = bankRecord.substring(0, bankRecord.indexOf(','));
         int authorizationId;
 
-        writelnToFile(BANK_ACTION_DESTINATION_PATH, String.format("%d,%s,LIST_ACCOUNTS,xs2aListAccounts,true", bankActionId++, bankUUID));
-        writelnToFile(BANK_ACTION_DESTINATION_PATH, String.format("%d,%s,LIST_TRANSACTIONS,xs2aListTransactions,true", bankActionId++, bankUUID));
-        writelnToFile(BANK_ACTION_DESTINATION_PATH, String.format("%d,%s,AUTHORIZATION,,true", authorizationId = bankActionId++, bankUUID));
-        writelnToFile(BANK_ACTION_DESTINATION_PATH, String.format("%d,%s,SINGLE_PAYMENT,xs2aInitiateSinglePayment,true", bankActionId++, bankUUID));
-        writelnToFile(BANK_ACTION_DESTINATION_PATH, String.format("%d,%s,GET_PAYMENT_INFORMATION,xs2aGetPaymentInfoState,true", bankActionId++, bankUUID));
-        writelnToFile(BANK_ACTION_DESTINATION_PATH, String.format("%d,%s,GET_PAYMENT_STATUS,xs2aGetPaymentStatusState,true", bankActionId++, bankUUID));
+        writelnToFile(BANK_XS2A_ACTION_DESTINATION_PATH, String.format("%d,%s,LIST_ACCOUNTS,xs2aListAccounts,true", bankActionId++, bankUUID));
+        writelnToFile(BANK_XS2A_ACTION_DESTINATION_PATH, String.format("%d,%s,LIST_TRANSACTIONS,xs2aListTransactions,true", bankActionId++, bankUUID));
+        writelnToFile(BANK_XS2A_ACTION_DESTINATION_PATH, String.format("%d,%s,AUTHORIZATION,,true", authorizationId = bankActionId++, bankUUID));
+        writelnToFile(BANK_XS2A_ACTION_DESTINATION_PATH, String.format("%d,%s,SINGLE_PAYMENT,xs2aInitiateSinglePayment,true", bankActionId++, bankUUID));
+        writelnToFile(BANK_XS2A_ACTION_DESTINATION_PATH, String.format("%d,%s,GET_PAYMENT_INFORMATION,xs2aGetPaymentInfoState,true", bankActionId++, bankUUID));
+        writelnToFile(BANK_XS2A_ACTION_DESTINATION_PATH, String.format("%d,%s,GET_PAYMENT_STATUS,xs2aGetPaymentStatusState,true", bankActionId++, bankUUID));
 
-        writelnToFile(BANK_SUB_ACTION_DESTINATION_PATH, String.format("%d,%d,GET_AUTHORIZATION_STATE,xs2aGetAuthorizationState", bankSubActionId++, authorizationId));
-        writelnToFile(BANK_SUB_ACTION_DESTINATION_PATH, String.format("%d,%d,UPDATE_AUTHORIZATION,xs2aUpdateAuthorization", bankSubActionId++, authorizationId));
-        writelnToFile(BANK_SUB_ACTION_DESTINATION_PATH, String.format("%d,%d,FROM_ASPSP_REDIRECT,xs2aFromAspspRedirect", bankSubActionId++, authorizationId));
-        writelnToFile(BANK_SUB_ACTION_DESTINATION_PATH, String.format("%d,%d,DENY_AUTHORIZATION,xs2aDenyAuthorization", bankSubActionId++, authorizationId));
+        writelnToFile(BANK_XS2A_SUB_ACTION_DESTINATION_PATH, String.format("%d,%d,GET_AUTHORIZATION_STATE,xs2aGetAuthorizationState", bankSubActionId++, authorizationId));
+        writelnToFile(BANK_XS2A_SUB_ACTION_DESTINATION_PATH, String.format("%d,%d,UPDATE_AUTHORIZATION,xs2aUpdateAuthorization", bankSubActionId++, authorizationId));
+        writelnToFile(BANK_XS2A_SUB_ACTION_DESTINATION_PATH, String.format("%d,%d,FROM_ASPSP_REDIRECT,xs2aFromAspspRedirect", bankSubActionId++, authorizationId));
+        writelnToFile(BANK_XS2A_SUB_ACTION_DESTINATION_PATH, String.format("%d,%d,DENY_AUTHORIZATION,xs2aDenyAuthorization", bankSubActionId++, authorizationId));
 
-        writelnToFile(BANK_ACTION_DESTINATION_PATH, String.format("%d,%s,DELETE_CONSENT,xs2aDeleteConsent,true", bankActionId++, bankUUID));
-        writelnToFile(BANK_ACTION_DESTINATION_PATH, String.format("%d,%s,GET_CONSENT_STATUS,xs2aGetConsentStatus,true", bankActionId++, bankUUID));
+        writelnToFile(BANK_XS2A_ACTION_DESTINATION_PATH, String.format("%d,%s,DELETE_CONSENT,xs2aDeleteConsent,true", bankActionId++, bankUUID));
+        writelnToFile(BANK_XS2A_ACTION_DESTINATION_PATH, String.format("%d,%s,GET_CONSENT_STATUS,xs2aGetConsentStatus,true", bankActionId++, bankUUID));
     }
 
     private void writeHbciBankData(String bankRecord) {
@@ -96,25 +100,27 @@ public class BankProtocolActionsSqlGeneratorTest {
         String bankUUID = bankRecord.substring(0, bankRecord.indexOf(','));
         int authorizationId;
 
-        writelnToFile(BANK_ACTION_DESTINATION_PATH, String.format("%d,%s,LIST_ACCOUNTS,hbciListAccounts,false", bankActionId++, bankUUID));
-        writelnToFile(BANK_ACTION_DESTINATION_PATH, String.format("%d,%s,LIST_TRANSACTIONS,hbciListTransactions,false", bankActionId++, bankUUID));
-        writelnToFile(BANK_ACTION_DESTINATION_PATH, String.format("%d,%s,AUTHORIZATION,,false", authorizationId = bankActionId++, bankUUID));
-        writelnToFile(BANK_ACTION_DESTINATION_PATH, String.format("%d,%s,SINGLE_PAYMENT,hbciInitiateSinglePayment,false", bankActionId++, bankUUID));
-        writelnToFile(BANK_ACTION_DESTINATION_PATH, String.format("%d,%s,GET_PAYMENT_INFORMATION,hbciGetPaymentInfoState,false", bankActionId++, bankUUID));
-        writelnToFile(BANK_ACTION_DESTINATION_PATH, String.format("%d,%s,GET_PAYMENT_STATUS,hbciGetPaymentStatusState,false", bankActionId++, bankUUID));
+        writelnToFile(BANK_HBCI_ACTION_DESTINATION_PATH, String.format("%d,%s,LIST_ACCOUNTS,hbciListAccounts,false", bankActionId++, bankUUID));
+        writelnToFile(BANK_HBCI_ACTION_DESTINATION_PATH, String.format("%d,%s,LIST_TRANSACTIONS,hbciListTransactions,false", bankActionId++, bankUUID));
+        writelnToFile(BANK_HBCI_ACTION_DESTINATION_PATH, String.format("%d,%s,AUTHORIZATION,,false", authorizationId = bankActionId++, bankUUID));
+        writelnToFile(BANK_HBCI_ACTION_DESTINATION_PATH, String.format("%d,%s,SINGLE_PAYMENT,hbciInitiateSinglePayment,false", bankActionId++, bankUUID));
+        writelnToFile(BANK_HBCI_ACTION_DESTINATION_PATH, String.format("%d,%s,GET_PAYMENT_INFORMATION,hbciGetPaymentInfoState,false", bankActionId++, bankUUID));
+        writelnToFile(BANK_HBCI_ACTION_DESTINATION_PATH, String.format("%d,%s,GET_PAYMENT_STATUS,hbciGetPaymentStatusState,false", bankActionId++, bankUUID));
 
-        writelnToFile(BANK_SUB_ACTION_DESTINATION_PATH, String.format("%d,%d,GET_AUTHORIZATION_STATE,hbciGetAuthorizationState", bankSubActionId++, authorizationId));
-        writelnToFile(BANK_SUB_ACTION_DESTINATION_PATH, String.format("%d,%d,UPDATE_AUTHORIZATION,hbciUpdateAuthorization", bankSubActionId++, authorizationId));
-        writelnToFile(BANK_SUB_ACTION_DESTINATION_PATH, String.format("%d,%d,FROM_ASPSP_REDIRECT,hbciFromAspspRedirect", bankSubActionId++, authorizationId));
-        writelnToFile(BANK_SUB_ACTION_DESTINATION_PATH, String.format("%d,%d,DENY_AUTHORIZATION,hbciDenyAuthorization", bankSubActionId++, authorizationId));
+        writelnToFile(BANK_HBCI_SUB_ACTION_DESTINATION_PATH, String.format("%d,%d,GET_AUTHORIZATION_STATE,hbciGetAuthorizationState", bankSubActionId++, authorizationId));
+        writelnToFile(BANK_HBCI_SUB_ACTION_DESTINATION_PATH, String.format("%d,%d,UPDATE_AUTHORIZATION,hbciUpdateAuthorization", bankSubActionId++, authorizationId));
+        writelnToFile(BANK_HBCI_SUB_ACTION_DESTINATION_PATH, String.format("%d,%d,FROM_ASPSP_REDIRECT,hbciFromAspspRedirect", bankSubActionId++, authorizationId));
+        writelnToFile(BANK_HBCI_SUB_ACTION_DESTINATION_PATH, String.format("%d,%d,DENY_AUTHORIZATION,hbciDenyAuthorization", bankSubActionId++, authorizationId));
 
-        writelnToFile(BANK_ACTION_DESTINATION_PATH, String.format("%d,%s,DELETE_CONSENT,hbciDeleteConsent,false", bankActionId++, bankUUID));
-        writelnToFile(BANK_ACTION_DESTINATION_PATH, String.format("%d,%s,GET_CONSENT_STATUS,hbciGetConsentStatus,false", bankActionId++, bankUUID));
+        writelnToFile(BANK_HBCI_ACTION_DESTINATION_PATH, String.format("%d,%s,DELETE_CONSENT,hbciDeleteConsent,false", bankActionId++, bankUUID));
+        writelnToFile(BANK_HBCI_ACTION_DESTINATION_PATH, String.format("%d,%s,GET_CONSENT_STATUS,hbciGetConsentStatus,false", bankActionId++, bankUUID));
     }
 
     private void prepareDestinationFiles() {
-        createOrClearFile(BANK_ACTION_DESTINATION_PATH);
-        createOrClearFile(BANK_SUB_ACTION_DESTINATION_PATH);
+        createOrClearFile(BANK_XS2A_ACTION_DESTINATION_PATH);
+        createOrClearFile(BANK_XS2A_SUB_ACTION_DESTINATION_PATH);
+        createOrClearFile(BANK_HBCI_ACTION_DESTINATION_PATH);
+        createOrClearFile(BANK_HBCI_SUB_ACTION_DESTINATION_PATH);
         createOrClearFile(BANK_PROFILE_DESTINATION_PATH);
         writeCsvHeaders();
     }
@@ -131,8 +137,10 @@ public class BankProtocolActionsSqlGeneratorTest {
     }
 
     private void writeCsvHeaders() {
-        writelnToFile(BANK_ACTION_DESTINATION_PATH, BANK_ACTION_CSV_HEADER);
-        writelnToFile(BANK_SUB_ACTION_DESTINATION_PATH, BANK_SUB_ACTION_CSV_HEADER);
+        writelnToFile(BANK_XS2A_ACTION_DESTINATION_PATH, BANK_ACTION_CSV_HEADER);
+        writelnToFile(BANK_XS2A_SUB_ACTION_DESTINATION_PATH, BANK_SUB_ACTION_CSV_HEADER);
+        writelnToFile(BANK_HBCI_ACTION_DESTINATION_PATH, BANK_ACTION_CSV_HEADER);
+        writelnToFile(BANK_HBCI_SUB_ACTION_DESTINATION_PATH, BANK_SUB_ACTION_CSV_HEADER);
         writelnToFile(BANK_PROFILE_DESTINATION_PATH, BANK_PROFILE_CSV_HEADER);
     }
 

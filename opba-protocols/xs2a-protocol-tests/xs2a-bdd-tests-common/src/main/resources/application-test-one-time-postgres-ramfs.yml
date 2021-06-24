@@ -26,7 +26,6 @@ spring:
       adorsys-sandbox-url: http://localhost:20014
       adorsys-sandbox-oauth-server-url: http://localhost:20015/oauth/authorization-server
       adorsys-hbci-sandbox-url: http://localhost:8090/hbci-mock/
-      fill-with-mock-data: true
 
 # Application configuration
 api:
