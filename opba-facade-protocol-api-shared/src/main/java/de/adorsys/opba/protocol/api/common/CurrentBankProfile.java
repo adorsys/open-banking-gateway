@@ -66,4 +66,14 @@ public interface CurrentBankProfile {
      * Bank name
      */
     String getName();
+
+    /**
+     * Bank external id (i.e. in system that is not OBG)
+     */
+    String getExternalId();
+
+    /**
+     * Bank external interfaces (i.e. in system that is not OBG)
+     */
+    String getExternalInterfaces();
 }
