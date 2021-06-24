@@ -50,6 +50,9 @@
             </column>
             <column name="external_id" type="VARCHAR(64)"/>
             <column name="protocol_type" type="VARCHAR(32)"/>
+            <column name="is_sandbox" type="BOOLEAN" defaultValue="false">
+                <constraints nullable="false"/>
+            </column>
         </createTable>
         <addNotNullConstraint tableName="${table-prefix}bank_profile" columnName="bank_uuid" columnDataType="VARCHAR(255)"/>
     </changeSet>

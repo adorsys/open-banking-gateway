@@ -1,9 +1,9 @@
-uuid,name,bic,url,adapter_id,bank_code,idp_url,aspsp_sca_approaches,protocol_type
-918d80fa-f7fd-4c9f-a6bd-7a9e12aeee76,adorsys HBCI no SCA,ADORSYS HA,http://localhost:8090/hbci-mock/,hbci-adapter,10000001,,,HBCI
-0a1a6417-4913-4238-ab56-058025c3b2b8,adorsys HBCI no SCA authenticated BPD,ADORSYS HB,http://localhost:8090/hbci-mock/,hbci-adapter,20000002,,,HBCI
-125ef2c6-f414-4a10-a865-e3cdddf9753d,adorsys HBCI transactions SCA,ADORSYS HS,http://localhost:8090/hbci-mock/,hbci-adapter,30000003,,,HBCI
-45e6cda0-69a7-4731-90fc-2b13a42fd3bd,adorsys oauth-prestep,ADORSYS OP,http://localhost:20014,adorsys-adapter,40000004,http://localhost:20015/oauth/authorization-server,,XS2A
-867a53d8-4cca-4365-a393-7febb0bbd38e,adorsys oauth-integrated,ADORSYS OI,http://localhost:20014,adorsys-adapter,50000005,http://localhost:20015/oauth/authorization-server,,XS2A
-2d8b3e75-9e3e-4fd2-b79c-063556ad9ecc,adorsys redirect,ADORSYS RE,http://localhost:20014,adorsys-adapter,,http://localhost:20015/oauth/authorization-server,,XS2A
-aa750320-2958-455e-9926-e9fca5ddfa92,adorsys embedded,ADORSYS EM,http://localhost:20014,adorsys-adapter,,http://localhost:20015/oauth/authorization-server,,XS2A
-53c47f54-b9a4-465a-8f77-bc6cd5f0cf46,adorsys xs2a,ADORSYS,http://localhost:20014,adorsys-adapter,,http://localhost:20015/oauth/authorization-server,,XS2A
+uuid,name,bic,url,adapter_id,bank_code,idp_url,aspsp_sca_approaches,protocol_type,is_sandbox
+918d80fa-f7fd-4c9f-a6bd-7a9e12aeee76,adorsys HBCI no SCA,ADORSYS HA,http://localhost:8090/hbci-mock/,hbci-adapter,10000001,,,HBCI,true
+0a1a6417-4913-4238-ab56-058025c3b2b8,adorsys HBCI no SCA authenticated BPD,ADORSYS HB,http://localhost:8090/hbci-mock/,hbci-adapter,20000002,,,HBCI,true
+125ef2c6-f414-4a10-a865-e3cdddf9753d,adorsys HBCI transactions SCA,ADORSYS HS,http://localhost:8090/hbci-mock/,hbci-adapter,30000003,,,HBCI,true
+45e6cda0-69a7-4731-90fc-2b13a42fd3bd,adorsys oauth-prestep,ADORSYS OP,http://localhost:20014,adorsys-adapter,40000004,http://localhost:20015/oauth/authorization-server,,XS2A,true
+867a53d8-4cca-4365-a393-7febb0bbd38e,adorsys oauth-integrated,ADORSYS OI,http://localhost:20014,adorsys-adapter,50000005,http://localhost:20015/oauth/authorization-server,,XS2A,true
+2d8b3e75-9e3e-4fd2-b79c-063556ad9ecc,adorsys redirect,ADORSYS RE,http://localhost:20014,adorsys-adapter,,http://localhost:20015/oauth/authorization-server,,XS2A,true
+aa750320-2958-455e-9926-e9fca5ddfa92,adorsys embedded,ADORSYS EM,http://localhost:20014,adorsys-adapter,,http://localhost:20015/oauth/authorization-server,,XS2A,true
+53c47f54-b9a4-465a-8f77-bc6cd5f0cf46,adorsys xs2a,ADORSYS,http://localhost:20014,adorsys-adapter,,http://localhost:20015/oauth/authorization-server,,XS2A,true

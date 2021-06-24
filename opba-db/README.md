@@ -4,7 +4,9 @@
  - mock-banks
  - hbci-banks
  - xs2a-banks
- - finapi-sandbox
+ - finapi-sandbox-test-bank
+ - finapi-sandbox-banks
+ - finapi-prod-banks
 
 ## Populate database with data from CSV file
 

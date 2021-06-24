@@ -18,6 +18,7 @@
             <column header="idp_url"                        type="skip"/>
             <column header="aspsp_sca_approaches"           type="skip"/>
             <column header="protocol_type"                  type="skip"/>
+            <column header="is_sandbox"                     type="skip"/>
         </loadData>
         <rollback />
     </changeSet>
@@ -38,6 +39,7 @@
             <column header="idp_url"    name="idp_url"                  type="STRING"/>
             <column header="aspsp_sca_approaches" name="sca_approaches" type="STRING"/>
             <column header="protocol_type" name="protocol_type"         type="STRING"/>
+            <column header="is_sandbox"                                 type="BOOLEAN"/>
         </loadData>
         <rollback />
     </changeSet>

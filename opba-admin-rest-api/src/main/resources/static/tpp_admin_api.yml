@@ -249,6 +249,8 @@ components:
           type: string
         protocolType:
           type: string
+        isSandbox:
+          type: boolean
     BankSubAction:
       type: object
       properties:
