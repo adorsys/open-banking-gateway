@@ -245,6 +245,8 @@ components:
           type: string
         name:
           type: string
+        externalId:
+          type: string
     BankSubAction:
       type: object
       properties:
