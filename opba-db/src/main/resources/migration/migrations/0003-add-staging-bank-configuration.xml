@@ -6,7 +6,7 @@
         <loadData
                 encoding="utf8"
                 relativeToChangelogFile="true"
-                file="csv/v0/0-hbci_bank-profile.csv"
+                file="csv/v0/0-hbci_bank_bank-profile.csv"
                 catalogName=""
                 tableName="${table-prefix}bank">
             <column header="uuid"       name="uuid"         type="STRING"/>
@@ -17,7 +17,7 @@
             <column header="bank_code"  name="bank_code"    type="STRING"/>
             <column header="idp_url"                        type="skip"/>
             <column header="aspsp_sca_approaches"           type="skip"/>
-            <column header="protocol_type"                  type="STRING"/>
+            <column header="protocol_type"                  type="skip"/>
         </loadData>
         <rollback />
     </changeSet>
@@ -26,7 +26,7 @@
         <loadData
                 encoding="utf8"
                 relativeToChangelogFile="true"
-                file="csv/v0/0-hbci_bank-profile.csv"
+                file="csv/v0/0-hbci_bank_bank-profile.csv"
                 catalogName=""
                 tableName="${table-prefix}bank_profile">
             <column header="uuid"       name="bank_uuid"                type="STRING"/>
@@ -46,7 +46,7 @@
         <loadData
                 encoding="utf8"
                 relativeToChangelogFile="true"
-                file="csv/v0/0-xs2a-and-hbci_bank-action.csv"
+                file="csv/v0/0-hbci_bank-action.csv"
                 catalogName=""
                 tableName="${table-prefix}bank_action">
             <column header="id"                 name="id"                   type="NUMERIC"/>
@@ -54,7 +54,6 @@
             <column header="protocol_action"    name="protocol_action"      type="STRING"/>
             <column header="protocol_bean_name" name="protocol_bean_name"   type="STRING"/>
             <column header="consent_supported"  name="consent_supported"    type="BOOLEAN"/>
-
         </loadData>
         <rollback />
     </changeSet>
@@ -63,7 +62,7 @@
         <loadData
                 encoding="utf8"
                 relativeToChangelogFile="true"
-                file="csv/v0/0-xs2a-and-hbci_bank-sub-action.csv"
+                file="csv/v0/0-hbci_bank-sub-action.csv"
                 catalogName=""
                 tableName="${table-prefix}bank_sub_action">
             <column header="id"                     name="id"                       type="NUMERIC"/>
@@ -74,11 +73,11 @@
         <rollback />
     </changeSet>
 
-    <changeSet author="iiuex@adorsys.com.ua" id="2020-08-21-3" context="xs2a-banks">
+    <changeSet author="iiuex@adorsys.com.ua" id="2020-08-21-5" context="xs2a-banks">
         <loadData
                 encoding="utf8"
                 relativeToChangelogFile="true"
-                file="csv/v0/0-xs2a-and-hbci_bank-action.csv"
+                file="csv/v0/0-xs2a_bank-action.csv"
                 catalogName=""
                 tableName="${table-prefix}bank_action">
             <column header="id"                 name="id"                   type="NUMERIC"/>
@@ -86,16 +85,15 @@
             <column header="protocol_action"    name="protocol_action"      type="STRING"/>
             <column header="protocol_bean_name" name="protocol_bean_name"   type="STRING"/>
             <column header="consent_supported"  name="consent_supported"    type="BOOLEAN"/>
-
         </loadData>
         <rollback />
     </changeSet>
 
-    <changeSet author="iiuex@adorsys.com.ua" id="2020-08-21-4" context="xs2a-banks">
+    <changeSet author="iiuex@adorsys.com.ua" id="2020-08-21-6" context="xs2a-banks">
         <loadData
                 encoding="utf8"
                 relativeToChangelogFile="true"
-                file="csv/v0/0-xs2a-and-hbci_bank-sub-action.csv"
+                file="csv/v0/0-xs2a_bank-sub-action.csv"
                 catalogName=""
                 tableName="${table-prefix}bank_sub_action">
             <column header="id"                     name="id"                       type="NUMERIC"/>
