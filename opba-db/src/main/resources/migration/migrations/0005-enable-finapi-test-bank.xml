@@ -7,7 +7,7 @@
         <sql>
             <!--  FinAPI accessor  -->
             insert into ${table-prefix}bank (uuid, name, bic, bank_code) values ('223f8daa-767c-43f8-851b-26c8ee6193db', 'FinAPI Sandbox test bank (XS2A)', 'FINAPI SBX', '');
-            insert into ${table-prefix}bank_profile (bank_uuid, adapter_id,protocol_type,external_id,external_interfaces,is_sandbox) values ('223f8daa-767c-43f8-851b-26c8ee6193db', 'finapi-adapter', 'FINAPI_WEBFORM',280001,XS2A,true);
+            insert into ${table-prefix}bank_profile (bank_uuid, adapter_id,protocol_type,external_id,external_interfaces,is_sandbox) values ('223f8daa-767c-43f8-851b-26c8ee6193db', 'finapi-adapter', 'FINAPI_WEBFORM','280001','XS2A',true);
 
             insert into ${table-prefix}bank_action (id, bank_uuid, protocol_action, protocol_bean_name) values (1000, '223f8daa-767c-43f8-851b-26c8ee6193db', 'LIST_ACCOUNTS', 'finapiWebFormListAccounts');
             insert into ${table-prefix}bank_action (id, bank_uuid, protocol_action, protocol_bean_name) values (1001, '223f8daa-767c-43f8-851b-26c8ee6193db', 'LIST_TRANSACTIONS', 'finapiWebFormListTransactions');
