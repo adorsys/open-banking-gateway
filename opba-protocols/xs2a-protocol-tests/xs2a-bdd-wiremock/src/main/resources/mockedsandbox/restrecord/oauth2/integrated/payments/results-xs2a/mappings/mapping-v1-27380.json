@@ -11,13 +11,13 @@
         "equalTo": "anton.brueckner"
       },
       "TPP-Nok-Redirect-URI": {
-        "matches": "http://localhost:\\d+/v1/consent/.+/fromAspsp/STUB_STATE/nok/.+"
+        "matches": "http://localhost:\\d+/v1/consent/.+/fromAspsp/nok/.+"
       },
       "PSU-IP-Address": {
         "matches": "\\b((25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)(\\.|$)){4}\\b"
       },
       "TPP-Redirect-URI": {
-        "matches": "http://localhost:\\d+/v1/consent/.+/fromAspsp/STUB_STATE/ok/.+"
+        "matches": "http://localhost:\\d+/v1/consent/.+/fromAspsp/ok/.+"
       },
       "Content-Type": {
         "equalTo": "application/json; charset=UTF-8"
