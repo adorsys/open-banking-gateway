@@ -24,7 +24,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @SpringBootTest
-@ActiveProfiles(ONE_TIME_POSTGRES_RAMFS)
+@ActiveProfiles({ONE_TIME_POSTGRES_RAMFS, "test-search"})
 @AutoConfigureMockMvc
 class TestTppBankSearchController extends BaseMockitoTest {
 

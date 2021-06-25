@@ -73,6 +73,10 @@ public class BankProfile implements Serializable, CurrentBankProfile {
     private boolean tryToUsePreferredApproach;
     private boolean uniquePaymentPurpose;
     private boolean xs2aSkipConsentAuthorization;
+    private String externalId;
+    private String externalInterfaces;
+    private String protocolType;
+    private boolean isSandbox;
 
     @OneToMany(mappedBy = "bankProfile", cascade = CascadeType.ALL, orphanRemoval = true)
     @MapKey(name = "protocolAction")

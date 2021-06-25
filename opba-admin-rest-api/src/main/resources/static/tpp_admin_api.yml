@@ -245,6 +245,15 @@ components:
           type: string
         name:
           type: string
+        externalId:
+          type: string
+        externalInterfaces:
+          type: string
+          description: Comma-separated external interfaces
+        protocolType:
+          type: string
+        isSandbox:
+          type: boolean
     BankSubAction:
       type: object
       properties:

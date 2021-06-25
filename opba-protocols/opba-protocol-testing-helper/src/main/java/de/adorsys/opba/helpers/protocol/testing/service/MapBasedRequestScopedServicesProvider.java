@@ -140,6 +140,8 @@ public class MapBasedRequestScopedServicesProvider implements RequestScopedServi
         private String bic;
         private String bankCode;
         private String name;
+        private String externalId;
+        private String externalInterfaces;
     }
 
     @Data
