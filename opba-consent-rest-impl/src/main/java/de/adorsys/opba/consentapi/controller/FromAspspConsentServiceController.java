@@ -21,7 +21,6 @@ public class FromAspspConsentServiceController implements FromAspspConsentAuthor
     @Override
     public CompletableFuture fromAspspOkUsingGET(
             String authId,
-            String redirectState,
             String fromAspspRedirectCode,
             String code) {
 
@@ -41,7 +40,6 @@ public class FromAspspConsentServiceController implements FromAspspConsentAuthor
     @Override
     public CompletableFuture fromAspspNokUsingGET(
             String authId,
-            String redirectState,
             String fromAspspRedirectCode) {
 
         return fromAspspRedirectHandler.execute(

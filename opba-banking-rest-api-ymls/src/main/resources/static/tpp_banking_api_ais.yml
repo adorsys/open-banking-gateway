@@ -43,8 +43,6 @@ paths:
         - $ref: "#/components/parameters/withBalance"
         - $ref: "#/components/parameters/online"
 
-      security:
-        - BearerAuthOAuth: []
       responses:
         "200":
           $ref: "#/components/responses/200_AccountList"
@@ -93,8 +91,6 @@ paths:
         - $ref: "#/components/parameters/page"
         - $ref: "#/components/parameters/pageSize"
 
-      security:
-        - BearerAuthOAuth: []
       responses:
         "200":
           $ref: "#/components/responses/200_AccountsTransactions"
@@ -133,8 +129,6 @@ paths:
         - $ref: "#/components/parameters/deltaList"
         - $ref: "#/components/parameters/page"
         - $ref: "#/components/parameters/pageSize"
-      security:
-        - BearerAuthOAuth: []
       responses:
         "200":
           $ref: "#/components/responses/200_AccountsTransactions"
@@ -165,8 +159,6 @@ paths:
         - $ref: "./tpp_banking_api_commons.yml#/components/parameters/ServiceSessionPassword"
         - $ref: "./tpp_banking_api_commons.yml#/components/parameters/X-Request-ID"
 
-      security:
-        - BearerAuthOAuth: [ ]
       responses:
         "200":
           $ref: "#/components/responses/204_NoContent"
@@ -1096,19 +1088,3 @@ components:
       type: string
       maxLength: 70
       example: "Ultimate Debtor"
-
-  securitySchemes:
-    BearerAuthOAuth:
-      description: |
-        Bearer Token.
-      type: http
-      scheme: bearer
-    accessCode:
-      type: oauth2
-      flows:
-        authorizationCode:
-          authorizationUrl: "http://example.com/oauth/auth"
-          tokenUrl: "http://example.com/oauth/token"
-          scopes:
-            write: allows modifying resources
-            read: allows reading resources

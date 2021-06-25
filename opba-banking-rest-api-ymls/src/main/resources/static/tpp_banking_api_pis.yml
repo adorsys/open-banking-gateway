@@ -34,9 +34,6 @@ paths:
       responses:
         202:
           $ref: "#/components/responses/202_PaymentInitiationResponse"
-      security:
-        - {}
-        - BearerAuthOAuth: []
       x-codegen-request-body-name: body
 
     get:
@@ -45,9 +42,6 @@ paths:
       operationId: getPaymentInformation
       tags:
         - TPP Banking API Payment Status (PIS)
-      security:
-        - {}
-        - BearerAuthOAuth: []
       parameters:
         #header
         - $ref: "./tpp_banking_api_commons.yml#/components/parameters/X-Timestamp-UTC"
@@ -71,9 +65,6 @@ paths:
       operationId: getPaymentStatus
       tags:
         - TPP Banking API Payment Status (PIS)
-      security:
-        - {}
-        - BearerAuthOAuth: []
       parameters:
         #header
         - $ref: "./tpp_banking_api_commons.yml#/components/parameters/X-Timestamp-UTC"
@@ -191,13 +182,6 @@ components:
         instantPayment:
           type: boolean
 
-    remittanceInformationUnstructured:
-      description: |
-        Unstructured remittance information.
-      type: string
-      maxLength: 140
-      example: "Ref Number Merchant"
-
     paymentInitiationResponse:
       description: Body of the response for a successful payment initiation request.
       type: object
@@ -262,19 +246,3 @@ components:
       description: Text to be displayed to the PSU.
       type: string
       maxLength: 500
-
-  securitySchemes:
-    BearerAuthOAuth:
-      description: |
-        Bearer Token.
-      type: http
-      scheme: bearer
-    accessCode:
-      type: oauth2
-      flows:
-        authorizationCode:
-          authorizationUrl: "http://example.com/oauth/auth"
-          tokenUrl: "http://example.com/oauth/token"
-          scopes:
-            write: allows modifying resources
-            read: allows reading resources
