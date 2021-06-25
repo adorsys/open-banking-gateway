@@ -28,7 +28,7 @@ spring:
       adorsys-sandbox-url: http://localhost:20014
       adorsys-sandbox-oauth-server-url: http://localhost:20015/oauth/authorization-server
       adorsys-hbci-sandbox-url: http://localhost:8090/hbci-mock/
-    contexts: dev,mock-banks,finapi-sandbox-bank
+    contexts: dev,mock-banks
 
 # Actuator:
 management:
