@@ -89,7 +89,7 @@
         <!-- Note that on Liquibase 4.4.0 relativeToChangelogFile (for loadData) does not work  when using PropertiesLauncher -->
         <loadData
                 encoding="utf8"
-                file="migrations/migration/csv/v0/banks_random_data.csv"
+                file="migration/migrations/csv/v0/banks_random_data.csv"
                 catalogName=""
                 tableName="${table-prefix}bank">
             <column header="name"       name="name"         type="STRING"/>

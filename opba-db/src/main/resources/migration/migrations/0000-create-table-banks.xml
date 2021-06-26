@@ -70,7 +70,7 @@
         <!-- Note that on Liquibase 4.4.0 relativeToChangelogFile (for loadData) does not work  when using PropertiesLauncher -->
         <loadData
                 encoding="utf8"
-                file="migrations/migration/csv/v0/0-xs2a-bank_bank-profile.csv"
+                file="migration/migrations/csv/v0/0-xs2a-bank_bank-profile.csv"
                 catalogName=""
                 tableName="${table-prefix}bank">
             <column header="uuid"       name="uuid"         type="STRING"/>
@@ -90,7 +90,7 @@
         <!-- Note that on Liquibase 4.4.0 relativeToChangelogFile (for loadData) does not work  when using PropertiesLauncher -->
         <loadData
                 encoding="utf8"
-                file="migrations/migration/csv/v0/0-xs2a-bank_bank-profile.csv"
+                file="migration/migrations/csv/v0/0-xs2a-bank_bank-profile.csv"
                 catalogName=""
                 tableName="${table-prefix}bank_profile">
             <column header="uuid"       name="bank_uuid"                type="STRING"/>
