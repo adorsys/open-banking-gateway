@@ -3,10 +3,10 @@
                    xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.8.xsd">
 
     <changeSet id="load_csv_bank_mock" author="vbeex@adorsys.com.ua">
+        <!-- Note that on Liquibase 4.4.0 relativeToChangelogFile (for loadData) does not work  when using PropertiesLauncher -->
         <loadData
                 encoding="utf8"
-                relativeToChangelogFile="true"
-                file="csv/v0/0-mock-bank_bank_bank_profile.csv"
+                file="migration/migrations/csv/v0/0-mock-bank_bank_bank_profile.csv"
                 catalogName=""
                 tableName="${table-prefix}bank">
             <column header="uuid"       name="uuid"         type="STRING"/>
@@ -24,10 +24,10 @@
     </changeSet>
 
     <changeSet id="load_csv_bank_profile_mock" author="vbeex@adorsys.com.ua">
+        <!-- Note that on Liquibase 4.4.0 relativeToChangelogFile (for loadData) does not work  when using PropertiesLauncher -->
         <loadData
                 encoding="utf8"
-                relativeToChangelogFile="true"
-                file="csv/v0/0-mock-bank_bank_bank_profile.csv"
+                file="migration/migrations/csv/v0/0-mock-bank_bank_bank_profile.csv"
                 catalogName=""
                 tableName="${table-prefix}bank_profile">
             <column header="uuid"       name="bank_uuid"                type="STRING"/>
@@ -86,10 +86,10 @@
 
     <changeSet id="load_csv_banks_random" author="mhr" context="search-performance-test">
         <comment>Loads randomized bank set to understand full-text search performance</comment>
+        <!-- Note that on Liquibase 4.4.0 relativeToChangelogFile (for loadData) does not work  when using PropertiesLauncher -->
         <loadData
                 encoding="utf8"
-                relativeToChangelogFile="true"
-                file="csv/v0/banks_random_data.csv"
+                file="migrations/migration/csv/v0/banks_random_data.csv"
                 catalogName=""
                 tableName="${table-prefix}bank">
             <column header="name"       name="name"         type="STRING"/>

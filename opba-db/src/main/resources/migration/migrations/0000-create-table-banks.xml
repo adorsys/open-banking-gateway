@@ -67,10 +67,10 @@
     </changeSet>
 
     <changeSet id="load_csv_bank_xs2a" author="mhr" context="xs2a-banks">
+        <!-- Note that on Liquibase 4.4.0 relativeToChangelogFile (for loadData) does not work  when using PropertiesLauncher -->
         <loadData
                 encoding="utf8"
-                relativeToChangelogFile="true"
-                file="csv/v0/0-xs2a-bank_bank-profile.csv"
+                file="migrations/migration/csv/v0/0-xs2a-bank_bank-profile.csv"
                 catalogName=""
                 tableName="${table-prefix}bank">
             <column header="uuid"       name="uuid"         type="STRING"/>
@@ -87,10 +87,10 @@
     </changeSet>
 
     <changeSet id="load_csv_bank_profile_xs2a" author="mhr" context="xs2a-banks">
+        <!-- Note that on Liquibase 4.4.0 relativeToChangelogFile (for loadData) does not work  when using PropertiesLauncher -->
         <loadData
                 encoding="utf8"
-                relativeToChangelogFile="true"
-                file="csv/v0/0-xs2a-bank_bank-profile.csv"
+                file="migrations/migration/csv/v0/0-xs2a-bank_bank-profile.csv"
                 catalogName=""
                 tableName="${table-prefix}bank_profile">
             <column header="uuid"       name="bank_uuid"                type="STRING"/>

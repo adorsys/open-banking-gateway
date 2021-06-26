@@ -3,10 +3,10 @@
                    xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.8.xsd">
 
     <changeSet author="iiuex@adorsys.com.ua" id="2020-08-21-1" context="hbci-banks">
+        <!-- Note that on Liquibase 4.4.0 relativeToChangelogFile (for loadData) does not work  when using PropertiesLauncher -->
         <loadData
                 encoding="utf8"
-                relativeToChangelogFile="true"
-                file="csv/v0/0-hbci_bank_bank-profile.csv"
+                file="migrations/migration/csv/v0/0-hbci_bank_bank-profile.csv"
                 catalogName=""
                 tableName="${table-prefix}bank">
             <column header="uuid"       name="uuid"         type="STRING"/>
@@ -23,10 +23,10 @@
     </changeSet>
 
     <changeSet author="iiuex@adorsys.com.ua" id="2020-08-21-2" context="hbci-banks">
+        <!-- Note that on Liquibase 4.4.0 relativeToChangelogFile (for loadData) does not work  when using PropertiesLauncher -->
         <loadData
                 encoding="utf8"
-                relativeToChangelogFile="true"
-                file="csv/v0/0-hbci_bank_bank-profile.csv"
+                file="migrations/migration/csv/v0/0-hbci_bank_bank-profile.csv"
                 catalogName=""
                 tableName="${table-prefix}bank_profile">
             <column header="uuid"       name="bank_uuid"                type="STRING"/>
@@ -43,10 +43,10 @@
     </changeSet>
 
     <changeSet author="iiuex@adorsys.com.ua" id="2020-08-21-3" context="hbci-banks">
+        <!-- Note that on Liquibase 4.4.0 relativeToChangelogFile (for loadData) does not work  when using PropertiesLauncher -->
         <loadData
                 encoding="utf8"
-                relativeToChangelogFile="true"
-                file="csv/v0/0-hbci_bank-action.csv"
+                file="migrations/migration/csv/v0/0-hbci_bank-action.csv"
                 catalogName=""
                 tableName="${table-prefix}bank_action">
             <column header="id"                 name="id"                   type="NUMERIC"/>
@@ -59,10 +59,10 @@
     </changeSet>
 
     <changeSet author="iiuex@adorsys.com.ua" id="2020-08-21-4" context="hbci-banks">
+        <!-- Note that on Liquibase 4.4.0 relativeToChangelogFile (for loadData) does not work  when using PropertiesLauncher -->
         <loadData
                 encoding="utf8"
-                relativeToChangelogFile="true"
-                file="csv/v0/0-hbci_bank-sub-action.csv"
+                file="migrations/migration/csv/v0/0-hbci_bank-sub-action.csv"
                 catalogName=""
                 tableName="${table-prefix}bank_sub_action">
             <column header="id"                     name="id"                       type="NUMERIC"/>
@@ -74,10 +74,10 @@
     </changeSet>
 
     <changeSet author="iiuex@adorsys.com.ua" id="2020-08-21-5" context="xs2a-banks">
+        <!-- Note that on Liquibase 4.4.0 relativeToChangelogFile (for loadData) does not work  when using PropertiesLauncher -->
         <loadData
                 encoding="utf8"
-                relativeToChangelogFile="true"
-                file="csv/v0/0-xs2a_bank-action.csv"
+                file="migrations/migration/csv/v0/0-xs2a_bank-action.csv"
                 catalogName=""
                 tableName="${table-prefix}bank_action">
             <column header="id"                 name="id"                   type="NUMERIC"/>
@@ -90,10 +90,10 @@
     </changeSet>
 
     <changeSet author="iiuex@adorsys.com.ua" id="2020-08-21-6" context="xs2a-banks">
+        <!-- Note that on Liquibase 4.4.0 relativeToChangelogFile (for loadData) does not work  when using PropertiesLauncher -->
         <loadData
                 encoding="utf8"
-                relativeToChangelogFile="true"
-                file="csv/v0/0-xs2a_bank-sub-action.csv"
+                file="migrations/migration/csv/v0/0-xs2a_bank-sub-action.csv"
                 catalogName=""
                 tableName="${table-prefix}bank_sub_action">
             <column header="id"                     name="id"                       type="NUMERIC"/>

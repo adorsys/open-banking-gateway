@@ -9,6 +9,6 @@
     <include relativeToChangelogFile="true" file="migrations/0003-add-staging-bank-configuration.xml"/>
     <include relativeToChangelogFile="true" file="migrations/0004-add-skip-auth-for-deutsche-bank.xml"/>
     <include relativeToChangelogFile="true" file="migrations/0005-enable-finapi-test-bank.xml" context="finapi-sandbox-test-bank"/>
-    <includeAll path="classpath*:/migration/migrations/0006-finapi-sandbox-banks" context="finapi-sandbox-banks"/>
-    <includeAll path="classpath*:/migration/migrations/0007-finapi-prod-banks" context="finapi-prod-banks"/>
+    <includeAll relativeToChangelogFile="true" path="migrations/0006-finapi-sandbox-banks" context="finapi-sandbox-banks"/>
+    <includeAll relativeToChangelogFile="true" path="migrations/0007-finapi-prod-banks" context="finapi-prod-banks"/>
 </databaseChangeLog>
