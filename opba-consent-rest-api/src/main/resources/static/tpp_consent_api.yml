@@ -147,7 +147,7 @@ paths:
       security:
         - sessionCookie: []
 
-  /v1/consent/{auth-id}/fromAspsp/ok/{redirectState}:
+  /v1/consent/{auth-id}/fromAspsp/{redirectState}/ok:
     get:
       operationId: fromAspspOkUsingGET
       tags:
@@ -187,7 +187,7 @@ paths:
       security:
         - redirectCookie: []
 
-  /v1/consent/{auth-id}/fromAspsp/nok/{redirectState}:
+  /v1/consent/{auth-id}/fromAspsp/{redirectState}/nok:
     get:
       operationId: fromAspspNokUsingGET
       tags:

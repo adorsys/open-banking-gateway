@@ -219,8 +219,8 @@ protocol:
       common:
         to-aspsp: /{authSessionId}/to-aspsp-redirection?redirectCode={redirectCode}
         web-hooks:
-          ok: ${facade.urls.embedded-ui-base-url}/embedded-server/v1/consent/{authSessionId}/fromAspsp/ok/{aspspRedirectCode}
-          nok: ${facade.urls.embedded-ui-base-url}/embedded-server/v1/consent/{authSessionId}/fromAspsp/nok/{aspspRedirectCode}
+          ok: ${facade.urls.embedded-ui-base-url}/embedded-server/v1/consent/{authSessionId}/fromAspsp/{aspspRedirectCode}/ok
+          nok: ${facade.urls.embedded-ui-base-url}/embedded-server/v1/consent/{authSessionId}/fromAspsp/{aspspRedirectCode}/nok
           result: /{authSessionId}/consent-result?redirectCode={redirectCode}
         parameters:
           provide-more: /{authSessionId}?redirectCode={redirectCode}
@@ -254,8 +254,8 @@ protocol:
         redirect:
           to-aspsp: ${facade.urls.embedded-ui-base-url}/ais/{authSessionId}/to-aspsp-redirection
           web-hooks:
-            ok: ${facade.urls.embedded-ui-base-url}/embedded-server/v1/consent/{authSessionId}/fromAspsp/ok/{aspspRedirectCode}
-            nok: ${facade.urls.embedded-ui-base-url}/embedded-server/v1/consent/{authSessionId}/fromAspsp/nok/{aspspRedirectCode}
+            ok: ${facade.urls.embedded-ui-base-url}/embedded-server/v1/consent/{authSessionId}/fromAspsp/{aspspRedirectCode}/ok
+            nok: ${facade.urls.embedded-ui-base-url}/embedded-server/v1/consent/{authSessionId}/fromAspsp/{aspspRedirectCode}/nok
             result: ${facade.urls.embedded-ui-base-url}/ais/{authSessionId}/consent-result?redirectCode={redirectCode}
           parameters:
             max-array-size: 32
@@ -268,8 +268,8 @@ protocol:
         redirect:
           to-aspsp: ${facade.urls.embedded-ui-base-url}/pis/{authSessionId}/to-aspsp-redirection
           web-hooks:
-            ok: ${facade.urls.embedded-ui-base-url}/embedded-server/v1/consent/{authSessionId}/fromAspsp/ok/{aspspRedirectCode}
-            nok: ${facade.urls.embedded-ui-base-url}/embedded-server/v1/consent/{authSessionId}/fromAspsp/nok/{aspspRedirectCode}
+            ok: ${facade.urls.embedded-ui-base-url}/embedded-server/v1/consent/{authSessionId}/fromAspsp/{aspspRedirectCode}/ok
+            nok: ${facade.urls.embedded-ui-base-url}/embedded-server/v1/consent/{authSessionId}/fromAspsp/{aspspRedirectCode}/nok
             result: ${facade.urls.embedded-ui-base-url}/pis/{authSessionId}/consent-result?redirectCode={redirectCode}
           parameters:
             max-array-size: 32
@@ -295,7 +295,7 @@ protocol:
     client-secret: dummy
     client-api-cache-size: 100
     client-api-expire-after-access: PT30M
-    from-aspsp-url: ${facade.urls.embedded-ui-base-url}/embedded-server/v1/consent/{authSessionId}/fromAspsp/ok/{aspspRedirectCode}
+    from-aspsp-url: ${facade.urls.embedded-ui-base-url}/embedded-server/v1/consent/{authSessionId}/fromAspsp/{aspspRedirectCode}/ok
 
 # Flowable comes for all protocols shared
 bpmnshared:

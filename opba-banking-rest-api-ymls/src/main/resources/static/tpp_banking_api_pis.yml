@@ -182,6 +182,13 @@ components:
         instantPayment:
           type: boolean
 
+    remittanceInformationUnstructured:
+      description: |
+        Unstructured remittance information.
+      type: string
+      maxLength: 140
+      example: "Ref Number Merchant"
+
     paymentInitiationResponse:
       description: Body of the response for a successful payment initiation request.
       type: object

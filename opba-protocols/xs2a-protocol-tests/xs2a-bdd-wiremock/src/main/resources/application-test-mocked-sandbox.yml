@@ -17,9 +17,9 @@ protocol:
     urls:
       ais:
         web-hooks:
-          ok: ${protocol.gateway-base-url}/v1/consent/{authSessionId}/fromAspsp/ok/{aspspRedirectCode}
-          nok: ${protocol.gateway-base-url}/v1/consent/{authSessionId}/fromAspsp/nok/{aspspRedirectCode}
+          ok: ${protocol.gateway-base-url}/v1/consent/{authSessionId}/fromAspsp/{aspspRedirectCode}/ok
+          nok: ${protocol.gateway-base-url}/v1/consent/{authSessionId}/fromAspsp/{aspspRedirectCode}/nok
       pis:
         web-hooks:
-          ok: ${protocol.gateway-base-url}/v1/consent/{authSessionId}/fromAspsp/ok/{aspspRedirectCode}
-          nok: ${protocol.gateway-base-url}/v1/consent/{authSessionId}/fromAspsp/nok/{aspspRedirectCode}
+          ok: ${protocol.gateway-base-url}/v1/consent/{authSessionId}/fromAspsp/{aspspRedirectCode}/ok
+          nok: ${protocol.gateway-base-url}/v1/consent/{authSessionId}/fromAspsp/{aspspRedirectCode}/nok
