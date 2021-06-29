@@ -29,5 +29,5 @@ public abstract class TransactionAnalyzer implements ResultBodyPostProcessor {
         return request.isWithAnalytics() && requestMappedResult instanceof TransactionsResponseBody;
     }
 
-    abstract AnalyticsResult analyze(AnalyticsRequest request);
+    public abstract AnalyticsResult analyze(AnalyticsRequest request);
 }
