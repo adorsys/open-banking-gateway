@@ -6,7 +6,6 @@ import de.adorsys.opba.db.config.EnableBankingPersistence;
 import de.adorsys.opba.protocol.hbci.EnableHbciProtocol;
 import de.adorsys.opba.protocol.xs2a.EnableXs2aProtocol;
 import de.adorsys.opba.protocol.xs2a.EnableXs2aSandboxProtocol;
-import de.adorsys.opba.smartanalytics.EnableAnalyticsSmartAnalytics;
 import de.adorsys.opba.tppauthapi.config.EnableTppAuthApi;
 import de.adorsys.opba.tppbankingapi.config.EnableBankingApi;
 import org.springframework.boot.SpringApplication;
@@ -22,7 +21,6 @@ import org.springframework.transaction.annotation.EnableTransactionManagement;
 @EnableXs2aProtocol
 @EnableXs2aSandboxProtocol
 @EnableBankingPersistence
-@EnableAnalyticsSmartAnalytics
 @SpringBootApplication
 @EnableTransactionManagement
 @EnableConfigurationProperties

@@ -1,10 +1,10 @@
-package de.adorsys.opba.smartanalytics;
+package de.adorsys.opba.analytics;
 
 import de.adorsys.opba.protocol.api.dto.request.FacadeServiceableRequest;
 import de.adorsys.opba.protocol.api.dto.result.body.AnalyticsResult;
 import de.adorsys.opba.protocol.api.dto.result.body.TransactionsResponseBody;
 import de.adorsys.opba.protocol.api.services.ResultBodyPostProcessor;
-import de.adorsys.opba.smartanalytics.dto.AnalyticsRequest;
+import de.adorsys.opba.analytics.dto.AnalyticsRequest;
 
 public abstract class TransactionAnalyzer implements ResultBodyPostProcessor {
 
