@@ -73,14 +73,14 @@ paths:
         This is the <b>entry point</b> for processing a consent redirected
         by the TppBankingApi to this ConsentAuthorisationApi.
 
-        At this entry point, the ConsentAuthorisationApi will use the redirectCode to retrieve the RedirectSession from the TppServer.
+        At this entry point, the ConsentAuthorisationApi will use the xXsrfToken to retrieve the RedirectSession from the TppServer.
         An analysis of the RedirectSession will help decide if the ConsentAuthorisationApi will proceed with an embedded approach (E<sub>1</sub>) or a redirect approach (R<sub>1</sub>).
 
       parameters:
         #path
         - $ref: "#/components/parameters/auth-id"
         #query
-        - $ref: "#/components/parameters/X-XSRF-TOKEN"
+        - $ref: "#/components/parameters/xXsrfToken"
       responses:
         "200":
           $ref: "#/components/responses/200_AuthorizeResponse"
@@ -104,7 +104,7 @@ paths:
         #path
         - $ref: "#/components/parameters/auth-id"
         #query
-        - $ref: "#/components/parameters/X-XSRF-TOKEN"
+        - $ref: "#/components/parameters/xXsrfToken"
         #headers
         - $ref: "#/components/parameters/X-Request-ID"
       requestBody:
@@ -169,9 +169,9 @@ paths:
 
         ##### Back-Redirecting PSU to the FinTechApi (4<sub>b</sub>)
         Prior to redirecting the PSU back to the FinTechApi, consent information will be stored by the ConsentAuthorisationApi in a RedirectSession as well.
-        * The one time resulting redirectCode will be attached as a query parameter to the location URL leading back to the FinTechApi.
-        * After verifying the FinTechRedirectSessionCookie (4<sub>b</sub>), the FinTechApi must forward this redirectCode to the token endpoint of the TppBankingAPi (4<sub>c</sub>).
-        * The TppBankingApi will then retrieve the RedirectSession using the redirectCode and proceed forward with the authorization process.
+        * The one time resulting xXsrfToken will be attached as a query parameter to the location URL leading back to the FinTechApi.
+        * After verifying the FinTechRedirectSessionCookie (4<sub>b</sub>), the FinTechApi must forward this xXsrfToken to the token endpoint of the TppBankingAPi (4<sub>c</sub>).
+        * The TppBankingApi will then retrieve the RedirectSession using the xXsrfToken and proceed forward with the authorization process.
 
       parameters:
         #path
@@ -232,7 +232,7 @@ components:
         format: uuid
 
     X-XSRF-TOKEN:
-      name: Redirect-Code
+      name: X-XSRF-TOKEN
       required: true
       description: XSRF parameter used to retrieve a redirect session.
       example: abc123.faadsf93nlas32wx
@@ -243,7 +243,7 @@ components:
       name: Set-Cookie
       description: |
         SessionCookie used to maintain the authorization session between the ConsentAuthorisationApi
-        and the ConsentAuthorisationUI. This cookie is validated using an X-XSRF-TOKEN sent with the request header.
+        and the ConsentAuthorisationUI. This cookie is validated using an xXsrfToken sent as query with the request.
         Notice :
         * The cookie path contains the auth-id so cookie is only sent when auth instance is active.
         * Request consuming this cookie must present a consentAuthState from their authorization header.
@@ -307,8 +307,8 @@ components:
       schema:
         type: string
 
-    X-XSRF-TOKEN:
-      name: redirectCode
+    xXsrfToken:
+      name: xXsrfToken
       in: query
       description: XSRF parameter used to retrieve a redirect session. This is
         generaly transported as a query parameter.
@@ -333,7 +333,6 @@ components:
       example: "faadsf93nlas32wx"
       schema:
         type: string
-
 
     X-Request-ID:
       name: X-Request-ID

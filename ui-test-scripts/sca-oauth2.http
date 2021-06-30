@@ -45,13 +45,13 @@ Content-Type: application/json
 > {%
 client.assert(response.status === 202, "Response status is not 202");
 
-client.global.set("redirect-code", response.headers.valueOf("Location").split("redirectCode=")[1]);
+client.global.set("redirect-code", response.headers.valueOf("Location").split("xXsrfToken=")[1]);
 client.global.set("authorization-cookie", response.headers.valuesOf("Set-Cookie")[0])
 %}
 
 
 ### Filling the consent object
-POST http://localhost:8085/v1/consent/{{authorization-id}}/embedded?redirectCode={{redirect-code}}
+POST http://localhost:8085/v1/consent/{{authorization-id}}/embedded?xXsrfToken={{redirect-code}}
 accept: application/json
 X-Request-ID: 163f947a-b6af-42a6-b356-32c32b68e557
 Content-Type: application/json
@@ -76,12 +76,12 @@ X-XSRF-TOKEN: 163f947a-b6af-42a6-b356-32c32b68e557
 
 > {%
 client.assert(response.status === 202, "Response status is not 202");
-client.global.set("redirect-code", response.headers.valueOf("Location").split("redirectCode=")[1]);
+client.global.set("redirect-code", response.headers.valueOf("Location").split("xXsrfToken=")[1]);
 %}
 
 
 ### Get URL to redirect to
-GET http://localhost:8085/v1/consent/{{authorization-id}}/embedded?redirectCode={{redirect-code}}
+GET http://localhost:8085/v1/consent/{{authorization-id}}/embedded?xXsrfToken={{redirect-code}}
 accept: application/json
 X-Request-ID: 163f947a-b6af-42a6-b356-32c32b68e557
 Content-Type: application/json

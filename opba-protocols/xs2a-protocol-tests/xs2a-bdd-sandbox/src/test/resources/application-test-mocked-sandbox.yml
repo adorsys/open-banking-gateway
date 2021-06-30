@@ -15,12 +15,12 @@ protocol:
     urls:
       ais:
         web-hooks:
-          ok: ${protocol.gateway-base-url}/v1/consent/{authSessionId}/fromAspsp/STUB_STATE/ok/{aspspRedirectCode}
-          nok: ${protocol.gateway-base-url}/v1/consent/{authSessionId}/fromAspsp/STUB_STATE/nok/{aspspRedirectCode}
+          ok: ${protocol.gateway-base-url}/v1/consent/{authSessionId}/fromAspsp/{aspspRedirectCode}/ok
+          nok: ${protocol.gateway-base-url}/v1/consent/{authSessionId}/fromAspsp/{aspspRedirectCode}/nok
       pis:
         web-hooks:
-          ok:  ${protocol.gateway-base-url}/v1/consent/{authSessionId}/fromAspsp/STUB_STATE/ok/{aspspRedirectCode}
-          nok: ${protocol.gateway-base-url}/v1/consent/{authSessionId}/fromAspsp/STUB_STATE/nok/{aspspRedirectCode}
+          ok:  ${protocol.gateway-base-url}/v1/consent/{authSessionId}/fromAspsp/{aspspRedirectCode}/ok
+          nok: ${protocol.gateway-base-url}/v1/consent/{authSessionId}/fromAspsp/{aspspRedirectCode}/nok
 
 # FinTech request signing section:
 security:

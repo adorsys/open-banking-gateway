@@ -79,7 +79,7 @@ export class AccountsConsentReviewComponent implements OnInit {
         'response'
       )
       .subscribe((res) => {
-        this.sessionService.setRedirectCode(this.authorizationId, res.headers.get(ApiHeaders.REDIRECT_CODE));
+        this.sessionService.setRedirectCode(this.authorizationId, res.headers.get(ApiHeaders.X_XSRF_TOKEN));
         window.location.href = res.headers.get(ApiHeaders.LOCATION);
       });
   }

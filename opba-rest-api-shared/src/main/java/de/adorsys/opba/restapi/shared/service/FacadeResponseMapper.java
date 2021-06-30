@@ -27,6 +27,7 @@ import static de.adorsys.opba.restapi.shared.HttpHeaders.PSU_CONSENT_SESSION;
 import static de.adorsys.opba.restapi.shared.HttpHeaders.REDIRECT_CODE;
 import static de.adorsys.opba.restapi.shared.HttpHeaders.SERVICE_SESSION_ID;
 import static de.adorsys.opba.restapi.shared.HttpHeaders.X_REQUEST_ID;
+import static de.adorsys.opba.restapi.shared.HttpHeaders.X_XSRF_TOKEN;
 import static org.springframework.http.HttpHeaders.SET_COOKIE;
 import static org.springframework.http.HttpStatus.ACCEPTED;
 import static org.springframework.http.HttpStatus.INTERNAL_SERVER_ERROR;
@@ -88,6 +89,7 @@ public class FacadeResponseMapper {
         return setCookieHeaders(result, response)
                        .header(AUTHORIZATION_SESSION_ID, result.getAuthorizationSessionId())
                        .header(REDIRECT_CODE, result.getRedirectCode())
+                       .header(X_XSRF_TOKEN, result.getRedirectCode())
                        .header(PSU_CONSENT_SESSION, "BAR")
                        .location(result.getRedirectionTo())
                        .body(ImmutableMap.of("msg", "Please use redirect link in 'Location' header"));

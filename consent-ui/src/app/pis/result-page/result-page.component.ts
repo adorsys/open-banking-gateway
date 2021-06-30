@@ -94,7 +94,7 @@ export class ResultPageComponent implements OnInit {
   private loadRedirectUri(authId: string, redirectCode: string) {
     this.authStateConsentAuthorizationService.authUsingGET(authId, redirectCode, 'response').subscribe((res) => {
       console.log(res);
-      this.sessionService.setRedirectCode(authId, res.headers.get(ApiHeaders.REDIRECT_CODE));
+      this.sessionService.setRedirectCode(authId, res.headers.get(ApiHeaders.X_XSRF_TOKEN));
       this.redirectTo = res.headers.get(ApiHeaders.LOCATION);
     });
   }

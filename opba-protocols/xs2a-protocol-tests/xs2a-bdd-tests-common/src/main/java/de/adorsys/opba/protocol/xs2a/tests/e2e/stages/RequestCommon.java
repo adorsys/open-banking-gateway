@@ -38,7 +38,6 @@ import static de.adorsys.opba.protocol.xs2a.tests.e2e.stages.StagesCommonUtil.AU
 import static de.adorsys.opba.protocol.xs2a.tests.e2e.stages.StagesCommonUtil.GET_CONSENT_AUTH_STATE;
 import static de.adorsys.opba.protocol.xs2a.tests.e2e.stages.StagesCommonUtil.LOGIN;
 import static de.adorsys.opba.protocol.xs2a.tests.e2e.stages.StagesCommonUtil.PASSWORD;
-import static de.adorsys.opba.restapi.shared.HttpHeaders.REDIRECT_CODE;
 import static de.adorsys.opba.restapi.shared.HttpHeaders.SERVICE_SESSION_ID;
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -53,6 +52,7 @@ public abstract class RequestCommon<SELF extends RequestCommon<SELF>> extends St
                .enable(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES);
 
     public static final String REDIRECT_CODE_QUERY = "redirectCode";
+    public static final String X_XSRF_TOKEN_QUERY = "xXsrfToken";
 
     @ProvidedScenarioState
     protected String authSessionCookie;
@@ -138,6 +138,7 @@ public abstract class RequestCommon<SELF extends RequestCommon<SELF>> extends St
                 .header(X_XSRF_TOKEN, UUID.randomUUID().toString())
                 .cookie(AUTHORIZATION_SESSION_KEY, authSessionCookie)
                 .queryParam(REDIRECT_CODE_QUERY, redirectCode)
+                .queryParam(X_XSRF_TOKEN_QUERY, redirectCode)
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
                 .body(body)
             .when()
@@ -179,7 +180,7 @@ public abstract class RequestCommon<SELF extends RequestCommon<SELF>> extends St
     }
 
     protected void updateRedirectCode(ExtractableResponse<Response> response) {
-        this.redirectCode = response.header(REDIRECT_CODE);
+        this.redirectCode = response.header(X_XSRF_TOKEN);
     }
 
     protected ExtractableResponse<Response> max_musterman_provides_password() {
