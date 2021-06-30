@@ -1,4 +1,4 @@
-package de.adorsys.opba.smartanalytics;
+package de.adorsys.opba.analytics;
 
 import lombok.experimental.UtilityClass;
 

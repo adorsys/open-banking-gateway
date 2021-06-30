@@ -1,9 +1,6 @@
 server:
   port: 8085
 spring:
-  profiles:
-    # Profile 'smartanalytics' is for smartanalytics transaction analyzer
-    include: smartanalytics
   datasource:
     url: jdbc:postgresql://localhost:5432/open_banking?currentSchema=banking_protocol
     username: postgres

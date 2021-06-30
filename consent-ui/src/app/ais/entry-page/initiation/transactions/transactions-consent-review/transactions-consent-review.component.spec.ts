@@ -58,8 +58,9 @@ describe('TransactionsConsentReviewComponent', () => {
 
   it('should confirm transaction when confirm button is pressed', () => {
     consentAuthorizationServiceSpy = spyOn(consentAuthorizationService, 'embeddedUsingPOST').and.returnValue(of());
-    component.onConfirm();
+    component.consentReviewForm.markAllAsTouched();
     fixture.detectChanges();
+    component.onConfirm();
     expect(consentAuthorizationServiceSpy).toHaveBeenCalled();
   });
 });

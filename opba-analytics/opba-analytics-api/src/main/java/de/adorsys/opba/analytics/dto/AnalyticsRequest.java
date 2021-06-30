@@ -1,4 +1,4 @@
-package de.adorsys.opba.smartanalytics.dto;
+package de.adorsys.opba.analytics.dto;
 
 import de.adorsys.opba.protocol.api.dto.result.body.TransactionDetailsBody;
 import lombok.AllArgsConstructor;
