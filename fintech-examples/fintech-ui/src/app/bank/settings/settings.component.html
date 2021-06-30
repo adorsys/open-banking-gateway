@@ -74,8 +74,9 @@
                 value="{{ settingsForm.get('enableConsent') }}"
                 formControlName="enableConsent"
                 id="enableConsent"
+                (change)="onChangeEnableConsent()"
               />
-              <label for="requrringIndicator">enable consent</label>
+              <label for="enableConsent">enable consent</label>
             </div>
             <div class="form-check">
               <label for="frequencyPerDay">frequency per day</label>
@@ -84,7 +85,6 @@
                 value="{{ settingsForm.get('frequencyPerDay') }}"
                 formControlName="frequencyPerDay"
                 id="frequencyPerDay"
-                [readonly]="!settingsForm.get('enableConsent')"
               />
             </div>
             <div class="form-check">
@@ -93,7 +93,6 @@
                 value="{{ settingsForm.get('recurringIndicator') }}"
                 formControlName="recurringIndicator"
                 id="requrringIndicator"
-                [readonly]="!settingsForm.get('enableConsent')"
               />
               <label for="requrringIndicator">requrring indicator</label>
             </div>
@@ -104,7 +103,6 @@
                 value="{{ settingsForm.get('validUntil') }}"
                 formControlName="validUntil"
                 id="validUntil"
-                [readonly]="!settingsForm.get('enableConsent')"
               />
             </div>
             <div class="form-check">
@@ -113,7 +111,6 @@
                 value="{{ settingsForm.get('combinedServiceIndicator') }}"
                 formControlName="combinedServiceIndicator"
                 id="combinedServiceIndicator"
-                [readonly]="!settingsForm.get('enableConsent')"
               />
               <label for="combinedServiceIndicator">combined service indicator</label>
             </div>

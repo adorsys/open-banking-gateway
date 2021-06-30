@@ -46,6 +46,7 @@ export class SettingsComponent implements OnInit {
       combinedServiceIndicator: settingsData.consent.combinedServiceIndicator,
       enableConsent: settingsData.enableConsent
     });
+    this.onChangeEnableConsent();
   }
 
   onConfirm() {
@@ -76,6 +77,20 @@ export class SettingsComponent implements OnInit {
 
   onNavigateBack() {
     this.location.back();
+  }
+
+  onChangeEnableConsent() {
+    if (this.settingsForm.controls.enableConsent.value) {
+      this.settingsForm.controls.combinedServiceIndicator.enable();
+      this.settingsForm.controls.frequencyPerDay.enable();
+      this.settingsForm.controls.recurringIndicator.enable();
+      this.settingsForm.controls.validUntil.enable();
+    } else {
+      this.settingsForm.controls.combinedServiceIndicator.disable();
+      this.settingsForm.controls.frequencyPerDay.disable();
+      this.settingsForm.controls.recurringIndicator.disable();
+      this.settingsForm.controls.validUntil.disable();
+    }
   }
 }
 
