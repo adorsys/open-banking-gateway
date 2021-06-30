@@ -225,7 +225,7 @@ public abstract class RequestCommon<SELF extends RequestCommon<SELF>> extends St
                 .header(X_REQUEST_ID, UUID.randomUUID().toString())
                 .header(X_XSRF_TOKEN, UUID.randomUUID().toString())
                 .cookie(AUTHORIZATION_SESSION_KEY, authSessionCookie)
-                .queryParam(REDIRECT_CODE_QUERY, redirectCode)
+                .queryParam(X_XSRF_TOKEN_QUERY, redirectCode)
             .when()
                 .get(GET_CONSENT_AUTH_STATE, serviceSessionId)
                 .then()
