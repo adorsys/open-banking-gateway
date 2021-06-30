@@ -64,7 +64,7 @@ describe('DedicatedAccessComponent', () => {
         },
         frequencyPerDay: 24,
         recurringIndicator: true,
-        validUntil: '2021-06-24'
+        validUntil: '2022-06-24'
       }
     };
     consentUtilSpy = spyOn(ConsentUtil, 'getOrDefault').and.returnValue(mockData);
