@@ -42,6 +42,7 @@ describe('TransactionsConsentReviewComponent', () => {
   beforeEach(() => {
     fixture = TestBed.createComponent(TransactionsConsentReviewComponent);
     component = fixture.componentInstance;
+    component.ngOnInit();
     fixture.detectChanges();
     consentAuthorizationService = TestBed.inject(UpdateConsentAuthorizationService);
   });
@@ -58,8 +59,6 @@ describe('TransactionsConsentReviewComponent', () => {
 
   it('should confirm transaction when confirm button is pressed', () => {
     consentAuthorizationServiceSpy = spyOn(consentAuthorizationService, 'embeddedUsingPOST').and.returnValue(of());
-    component.ngOnInit();
-    component.consentReviewForm.markAllAsTouched();
     fixture.detectChanges();
     component.onConfirm();
     expect(consentAuthorizationServiceSpy).toHaveBeenCalled();
