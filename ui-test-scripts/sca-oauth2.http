@@ -45,7 +45,7 @@ Content-Type: application/json
 > {%
 client.assert(response.status === 202, "Response status is not 202");
 
-client.global.set("redirect-code", response.headers.valueOf("Location").split("xXsrfToken=")[1]);
+client.global.set("redirect-code", response.headers.valueOf("Location").split("redirectCode=")[1]);
 client.global.set("authorization-cookie", response.headers.valuesOf("Set-Cookie")[0])
 %}
 
@@ -76,7 +76,7 @@ X-XSRF-TOKEN: 163f947a-b6af-42a6-b356-32c32b68e557
 
 > {%
 client.assert(response.status === 202, "Response status is not 202");
-client.global.set("redirect-code", response.headers.valueOf("Location").split("xXsrfToken=")[1]);
+client.global.set("redirect-code", response.headers.valueOf("Location").split("redirectCode=")[1]);
 %}
 
 
