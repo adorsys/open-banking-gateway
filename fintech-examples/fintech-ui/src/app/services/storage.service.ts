@@ -153,6 +153,7 @@ export class StorageService {
 
   public getSettings(): SettingsData {
     const setting = localStorage.getItem(Consts.LOCAL_STORAGE_SETTINGS);
+
     if (setting == null) {
       return {
         loa: LoARetrievalInformation.FROM_TPP_WITH_AVAILABLE_CONSENT,
@@ -162,10 +163,14 @@ export class StorageService {
         cacheLot: false,
         consentRequiresAuthentication: true,
         paymentRequiresAuthentication: false,
-        combinedServiceIndicator: false,
-        frequencyPerDay: 4,
-        recurringIndicator: true,
-        validUntil: new Date().toISOString().split('T')[0]
+        enableConsent: false,
+        consent: {
+          access: {},
+          combinedServiceIndicator: false,
+          frequencyPerDay: 4,
+          recurringIndicator: true,
+          validUntil: new Date().toISOString().split('T')[0]
+        }
       };
     }
     return JSON.parse(setting);

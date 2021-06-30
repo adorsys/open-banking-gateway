@@ -1,11 +1,10 @@
 import { Component, OnInit } from '@angular/core';
-import { AccountDetails, AisAccountAccessInfo, AisConsentRequest } from '../../api';
+import { AccountDetails } from '../../api';
 import { ActivatedRoute, Router } from '@angular/router';
 import { AisService } from '../services/ais.service';
 import { AccountStruct, RedirectStruct, RedirectType } from '../redirect-page/redirect-struct';
 import { Consts, HeaderConfig } from '../../models/consts';
 import { StorageService } from '../../services/storage.service';
-import AllPsd2Enum = AisAccountAccessInfo.AllPsd2Enum;
 
 @Component({
   selector: 'app-list-accounts',
@@ -37,21 +36,11 @@ export class ListAccountsComponent implements OnInit {
     const online = !this.storageService.isAfterRedirect() && !settings.cacheLoa;
     this.storageService.setAfterRedirect(false);
 
-    const consent: AisConsentRequest = {
-      access: {
-        allPsd2: AllPsd2Enum.ACCOUNTSWITHBALANCES
-      },
-      frequencyPerDay: settings.frequencyPerDay,
-      validUntil: settings.validUntil,
-      recurringIndicator: settings.recurringIndicator,
-      combinedServiceIndicator: settings.combinedServiceIndicator
-    };
-
     this.aisService
       .getAccounts(
         this.bankId,
         settings.loa,
-        JSON.stringify(consent),
+        settings.enableConsent ? JSON.stringify(settings.consent) : null,
         settings.withBalance,
         online,
         settings.consentRequiresAuthentication

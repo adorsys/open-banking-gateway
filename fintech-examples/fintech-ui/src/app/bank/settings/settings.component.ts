@@ -4,7 +4,7 @@ import { Location } from '@angular/common';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { LoARetrievalInformation, LoTRetrievalInformation } from '../../models/consts';
 import { StorageService } from '../../services/storage.service';
-import { FinTechAccountInformationService } from '../../api';
+import { AisConsentRequest, FinTechAccountInformationService } from '../../api';
 
 @Component({
   selector: 'app-settings',
@@ -40,15 +40,33 @@ export class SettingsComponent implements OnInit {
       cacheLot: settingsData.cacheLot,
       consentRequiresAuthentication: settingsData.consentRequiresAuthentication,
       paymentRequiresAuthentication: settingsData.paymentRequiresAuthentication,
-      frequencyPerDay: settingsData.frequencyPerDay,
-      recurringIndicator: settingsData.recurringIndicator,
-      validUntil: settingsData.validUntil,
-      combinedServiceIndicator: settingsData.combinedServiceIndicator
+      frequencyPerDay: settingsData.consent.frequencyPerDay,
+      recurringIndicator: settingsData.consent.recurringIndicator,
+      validUntil: settingsData.consent.validUntil,
+      combinedServiceIndicator: settingsData.consent.combinedServiceIndicator,
+      enableConsent: settingsData.enableConsent
     });
   }
 
   onConfirm() {
-    this.storageService.setSettings({ ...this.settingsForm.getRawValue() });
+    const data = { ...this.settingsForm.getRawValue() };
+    this.storageService.setSettings({
+      loa: data.loa,
+      lot: data.lot,
+      withBalance: data.withBalance,
+      cacheLoa: data.cacheLoa,
+      cacheLot: data.cacheLot,
+      consentRequiresAuthentication: data.consentRequiresAuthentication,
+      paymentRequiresAuthentication: data.paymentRequiresAuthentication,
+      enableConsent: data.enableConsent,
+      consent: {
+        access: {},
+        combinedServiceIndicator: data.combinedServiceIndicator,
+        frequencyPerDay: data.frequencyPerDay,
+        recurringIndicator: data.recurringIndicator,
+        validUntil: data.validUntil
+      }
+    });
     this.onNavigateBack();
   }
 
@@ -69,8 +87,6 @@ export class SettingsData {
   cacheLot: boolean;
   consentRequiresAuthentication: boolean;
   paymentRequiresAuthentication: boolean;
-  frequencyPerDay: number;
-  recurringIndicator: boolean;
-  validUntil: string;
-  combinedServiceIndicator: boolean;
+  enableConsent: boolean;
+  consent: AisConsentRequest;
 }
