@@ -58,7 +58,7 @@ describe('TransactionsConsentReviewComponent', () => {
   });
 
   // FIXME Disabled as DateUtil.isDateNotInThePastValidator seem to cause 'undefined' error in control validation
-  xit('should confirm transaction when confirm button is pressed', () => {
+  it('should confirm transaction when confirm button is pressed', () => {
     consentAuthorizationServiceSpy = spyOn(consentAuthorizationService, 'embeddedUsingPOST').and.returnValue(of());
     component.onConfirm();
     fixture.detectChanges();
