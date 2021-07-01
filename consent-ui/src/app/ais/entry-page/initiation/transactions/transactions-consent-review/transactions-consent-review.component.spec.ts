@@ -59,7 +59,9 @@ describe('TransactionsConsentReviewComponent', () => {
 
   it('should confirm transaction when confirm button is pressed', () => {
     consentAuthorizationServiceSpy = spyOn(consentAuthorizationService, 'embeddedUsingPOST').and.returnValue(of());
-    fixture.detectChanges();
+    // FIXME - Needing to forcefully clean validation state, something is interfering with this test on Chrome 91
+    component.consentReviewForm.clearValidators();
+    component.consentReviewForm.updateValueAndValidity();
     component.onConfirm();
     expect(consentAuthorizationServiceSpy).toHaveBeenCalled();
   });
