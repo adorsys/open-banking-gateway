@@ -280,7 +280,7 @@
 							"    pm.response.to.have.status(202)",
 							"})",
 							"",
-							"pm.environment.set(\"redirect-code\", pm.response.headers.get('Redirect-Code'))"
+							"pm.environment.set(\"redirect-code\", pm.response.headers.get('X-XSRF-TOKEN'))"
 						],
 						"type": "text/javascript"
 					}
@@ -305,7 +305,7 @@
 					}
 				],
 				"url": {
-					"raw": "{{opba-base}}/v1/consent/{{authorization-session-id}}?redirectCode={{redirect-code}}",
+					"raw": "{{opba-base}}/v1/consent/{{authorization-session-id}}?xXsrfToken={{redirect-code}}",
 					"host": [
 						"{{opba-base}}"
 					],
@@ -316,7 +316,7 @@
 					],
 					"query": [
 						{
-							"key": "redirectCode",
+							"key": "xXsrfToken",
 							"value": "{{redirect-code}}"
 						}
 					]
@@ -335,7 +335,7 @@
 							"    pm.response.to.have.status(202)",
 							"})",
 							"",
-							"pm.environment.set(\"redirect-code\", pm.response.headers.get('Redirect-Code'))"
+							"pm.environment.set(\"redirect-code\", pm.response.headers.get('X-XSRF-TOKEN'))"
 						],
 						"type": "text/javascript"
 					}
@@ -380,7 +380,7 @@
 					}
 				},
 				"url": {
-					"raw": "{{opba-base}}/v1/consent/{{authorization-session-id}}/embedded?redirectCode={{redirect-code}}",
+					"raw": "{{opba-base}}/v1/consent/{{authorization-session-id}}/embedded?xXsrfToken={{redirect-code}}",
 					"host": [
 						"{{opba-base}}"
 					],
@@ -392,7 +392,7 @@
 					],
 					"query": [
 						{
-							"key": "redirectCode",
+							"key": "xXsrfToken",
 							"value": "{{redirect-code}}"
 						}
 					]
@@ -411,7 +411,7 @@
 							"    pm.response.to.have.status(202)",
 							"})",
 							"",
-							"pm.environment.set(\"redirect-code\", pm.response.headers.get('Redirect-Code'))"
+							"pm.environment.set(\"redirect-code\", pm.response.headers.get('X-XSRF-TOKEN'))"
 						],
 						"type": "text/javascript"
 					}
@@ -456,7 +456,7 @@
 					}
 				},
 				"url": {
-					"raw": "{{opba-base}}/v1/consent/{{authorization-session-id}}/embedded?redirectCode={{redirect-code}}",
+					"raw": "{{opba-base}}/v1/consent/{{authorization-session-id}}/embedded?xXsrfToken={{redirect-code}}",
 					"host": [
 						"{{opba-base}}"
 					],
@@ -468,7 +468,7 @@
 					],
 					"query": [
 						{
-							"key": "redirectCode",
+							"key": "xXsrfToken",
 							"value": "{{redirect-code}}"
 						}
 					]
@@ -487,7 +487,7 @@
 							"    pm.response.to.have.status(202)",
 							"})",
 							"",
-							"pm.environment.set(\"redirect-code\", pm.response.headers.get('Redirect-Code'))"
+							"pm.environment.set(\"redirect-code\", pm.response.headers.get('X-XSRF-TOKEN'))"
 						],
 						"type": "text/javascript"
 					}
@@ -532,7 +532,7 @@
 					}
 				},
 				"url": {
-					"raw": "{{opba-base}}/v1/consent/{{authorization-session-id}}/embedded?redirectCode={{redirect-code}}",
+					"raw": "{{opba-base}}/v1/consent/{{authorization-session-id}}/embedded?xXsrfToken={{redirect-code}}",
 					"host": [
 						"{{opba-base}}"
 					],
@@ -544,7 +544,7 @@
 					],
 					"query": [
 						{
-							"key": "redirectCode",
+							"key": "xXsrfToken",
 							"value": "{{redirect-code}}"
 						}
 					]
@@ -564,7 +564,7 @@
 							"})",
 							"",
 							"pm.environment.set(\"sca-challenge-id\", pm.response.json().scaMethods[0].id)",
-							"pm.environment.set(\"redirect-code\", pm.response.headers.get('Redirect-Code'))"
+							"pm.environment.set(\"redirect-code\", pm.response.headers.get('X-XSRF-TOKEN'))"
 						],
 						"type": "text/javascript"
 					}
@@ -589,7 +589,7 @@
 					}
 				],
 				"url": {
-					"raw": "{{opba-base}}/v1/consent/{{authorization-session-id}}?redirectCode={{redirect-code}}",
+					"raw": "{{opba-base}}/v1/consent/{{authorization-session-id}}?xXsrfToken={{redirect-code}}",
 					"host": [
 						"{{opba-base}}"
 					],
@@ -600,7 +600,7 @@
 					],
 					"query": [
 						{
-							"key": "redirectCode",
+							"key": "xXsrfToken",
 							"value": "{{redirect-code}}"
 						}
 					]
@@ -619,7 +619,7 @@
 							"    pm.response.to.have.status(202)",
 							"})",
 							"",
-							"pm.environment.set(\"redirect-code\", pm.response.headers.get('Redirect-Code'))"
+							"pm.environment.set(\"redirect-code\", pm.response.headers.get('X-XSRF-TOKEN'))"
 						],
 						"type": "text/javascript"
 					}
@@ -664,7 +664,7 @@
 					}
 				},
 				"url": {
-					"raw": "{{opba-base}}/v1/consent/{{authorization-session-id}}/embedded?redirectCode={{redirect-code}}",
+					"raw": "{{opba-base}}/v1/consent/{{authorization-session-id}}/embedded?xXsrfToken={{redirect-code}}",
 					"host": [
 						"{{opba-base}}"
 					],
@@ -676,7 +676,7 @@
 					],
 					"query": [
 						{
-							"key": "redirectCode",
+							"key": "xXsrfToken",
 							"value": "{{redirect-code}}"
 						}
 					]
@@ -695,7 +695,7 @@
 							"    pm.response.to.have.status(202)",
 							"})",
 							"",
-							"pm.environment.set(\"redirect-code\", pm.response.headers.get('Redirect-Code'))"
+							"pm.environment.set(\"redirect-code\", pm.response.headers.get('X-XSRF-TOKEN'))"
 						],
 						"type": "text/javascript"
 					}
@@ -740,7 +740,7 @@
 					}
 				},
 				"url": {
-					"raw": "{{opba-base}}/v1/consent/{{authorization-session-id}}/embedded?redirectCode={{redirect-code}}",
+					"raw": "{{opba-base}}/v1/consent/{{authorization-session-id}}/embedded?xXsrfToken={{redirect-code}}",
 					"host": [
 						"{{opba-base}}"
 					],
@@ -752,7 +752,7 @@
 					],
 					"query": [
 						{
-							"key": "redirectCode",
+							"key": "xXsrfToken",
 							"value": "{{redirect-code}}"
 						}
 					]
@@ -771,7 +771,7 @@
 							"    pm.response.to.have.status(202)",
 							"})",
 							"",
-							"pm.environment.set(\"redirect-code\", pm.response.headers.get('Redirect-Code'))"
+							"pm.environment.set(\"redirect-code\", pm.response.headers.get('X-XSRF-TOKEN'))"
 						],
 						"type": "text/javascript"
 					}
@@ -796,7 +796,7 @@
 					}
 				],
 				"url": {
-					"raw": "{{opba-base}}/v1/consent/{{authorization-session-id}}?redirectCode={{redirect-code}}",
+					"raw": "{{opba-base}}/v1/consent/{{authorization-session-id}}?xXsrfToken={{redirect-code}}",
 					"host": [
 						"{{opba-base}}"
 					],
@@ -807,7 +807,7 @@
 					],
 					"query": [
 						{
-							"key": "redirectCode",
+							"key": "xXsrfToken",
 							"value": "{{redirect-code}}"
 						}
 					]

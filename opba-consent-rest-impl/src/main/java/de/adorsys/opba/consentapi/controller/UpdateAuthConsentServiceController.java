@@ -1,6 +1,5 @@
 package de.adorsys.opba.consentapi.controller;
 
-import de.adorsys.opba.consentapi.model.generated.DenyRequest;
 import de.adorsys.opba.consentapi.model.generated.PsuAuthRequest;
 import de.adorsys.opba.consentapi.resource.generated.UpdateConsentAuthorizationApi;
 import de.adorsys.opba.consentapi.service.mapper.AisConsentMapper;
@@ -37,7 +36,6 @@ public class UpdateAuthConsentServiceController implements UpdateConsentAuthoriz
     @Override
     public CompletableFuture embeddedUsingPOST(
             UUID xRequestID,
-            String xXsrfToken,
             String authId,
             PsuAuthRequest body,
             String redirectCode) {
@@ -61,10 +59,8 @@ public class UpdateAuthConsentServiceController implements UpdateConsentAuthoriz
 
     @Override
     public CompletableFuture denyUsingPOST(
-            DenyRequest body,
-            UUID xRequestID,
-            String xXsrfToken,
-            String authId) {
+            String authId,
+            UUID xRequestID) {
 
         return denyAuthorizationService.execute(DenyAuthorizationRequest.builder()
                 .facadeServiceable(serviceableTemplate.toBuilder()

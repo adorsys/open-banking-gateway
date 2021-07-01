@@ -10,7 +10,7 @@ import java.util.UUID;
 import static de.adorsys.opba.api.security.external.domain.HttpHeaders.AUTHORIZATION_SESSION_KEY;
 import static de.adorsys.opba.protocol.xs2a.tests.HeaderNames.X_REQUEST_ID;
 import static de.adorsys.opba.protocol.xs2a.tests.HeaderNames.X_XSRF_TOKEN;
-import static de.adorsys.opba.protocol.xs2a.tests.e2e.stages.RequestCommon.REDIRECT_CODE_QUERY;
+import static de.adorsys.opba.protocol.xs2a.tests.e2e.stages.RequestCommon.X_XSRF_TOKEN_QUERY;
 import static de.adorsys.opba.protocol.xs2a.tests.e2e.stages.StagesCommonUtil.DENY_CONSENT_AUTH_ENDPOINT;
 import static org.hamcrest.Matchers.is;
 import static org.springframework.http.HttpHeaders.LOCATION;
@@ -39,7 +39,7 @@ public class NonHappyPaymentResult<SELF extends NonHappyPaymentResult<SELF>> ext
                 .header(X_XSRF_TOKEN, UUID.randomUUID().toString())
                 .header(X_REQUEST_ID, UUID.randomUUID().toString())
                 .cookie(AUTHORIZATION_SESSION_KEY, authSessionCookie)
-                .queryParam(REDIRECT_CODE_QUERY, redirectCode)
+                .queryParam(X_XSRF_TOKEN_QUERY, redirectCode)
                 .contentType(APPLICATION_JSON_VALUE)
                 .body("{}")
             .when()
@@ -57,7 +57,7 @@ public class NonHappyPaymentResult<SELF extends NonHappyPaymentResult<SELF>> ext
                 .header(X_XSRF_TOKEN, UUID.randomUUID().toString())
                 .header(X_REQUEST_ID, UUID.randomUUID().toString())
                 .cookie(AUTHORIZATION_SESSION_KEY, authSessionCookie)
-                .queryParam(REDIRECT_CODE_QUERY, redirectCode)
+                .queryParam(X_XSRF_TOKEN_QUERY, redirectCode)
                 .contentType(APPLICATION_JSON_VALUE)
                 .body("{}")
             .when()

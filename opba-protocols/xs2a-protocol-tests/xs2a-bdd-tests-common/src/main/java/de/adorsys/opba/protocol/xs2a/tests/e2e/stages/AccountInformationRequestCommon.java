@@ -286,7 +286,7 @@ public class AccountInformationRequestCommon<SELF extends AccountInformationRequ
                 .header(X_REQUEST_ID, UUID.randomUUID().toString())
                 .header(X_XSRF_TOKEN, UUID.randomUUID().toString())
                 .cookie(AUTHORIZATION_SESSION_KEY, authSessionCookie)
-                .queryParam(REDIRECT_CODE_QUERY, redirectCode)
+                .queryParam(X_XSRF_TOKEN_QUERY, redirectCode)
                 .contentType(APPLICATION_JSON_VALUE)
                 .body("{}")
             .when()
@@ -306,7 +306,7 @@ public class AccountInformationRequestCommon<SELF extends AccountInformationRequ
     public SELF user_sees_that_he_needs_to_be_redirected_to_aspsp_and_redirects_to_aspsp(String user) {
         ExtractableResponse<Response> response = withDefaultHeaders(user)
                 .cookie(AUTHORIZATION_SESSION_KEY, authSessionCookie)
-                .queryParam(REDIRECT_CODE_QUERY, redirectCode)
+                .queryParam(X_XSRF_TOKEN_QUERY, redirectCode)
             .when()
                 .get(GET_CONSENT_AUTH_STATE, serviceSessionId)
             .then()
@@ -502,7 +502,7 @@ public class AccountInformationRequestCommon<SELF extends AccountInformationRequ
     public SELF ui_can_read_image_data_from_obg(String user) {
         ExtractableResponse<Response> response = withDefaultHeaders(user)
                 .cookie(AUTHORIZATION_SESSION_KEY, authSessionCookie)
-                .queryParam(REDIRECT_CODE_QUERY, redirectCode)
+                .queryParam(X_XSRF_TOKEN_QUERY, redirectCode)
             .when()
                 .get(GET_CONSENT_AUTH_STATE, serviceSessionId)
             .then()
@@ -635,7 +635,7 @@ public class AccountInformationRequestCommon<SELF extends AccountInformationRequ
                 .given()
                     .header(X_REQUEST_ID, UUID.randomUUID().toString())
                     .header(X_XSRF_TOKEN, UUID.randomUUID().toString())
-                    .queryParam(REDIRECT_CODE_QUERY, redirectCode)
+                    .queryParam(X_XSRF_TOKEN_QUERY, redirectCode)
                     .contentType(APPLICATION_JSON_VALUE)
                     .body(readResource("restrecord/tpp-ui-input/params/anton-brueckner-account-all-accounts-consent.json"))
                 .when()
@@ -649,7 +649,7 @@ public class AccountInformationRequestCommon<SELF extends AccountInformationRequ
 
     public SELF user_anton_brueckner_sees_that_he_needs_to_be_redirected_to_aspsp_and_redirects_to_aspsp_without_cookie_unauthorized() {
                 withDefaultHeaders(ANTON_BRUECKNER)
-                    .queryParam(REDIRECT_CODE_QUERY, redirectCode)
+                    .queryParam(X_XSRF_TOKEN_QUERY, redirectCode)
                 .when()
                     .get(GET_CONSENT_AUTH_STATE, serviceSessionId)
                 .then()

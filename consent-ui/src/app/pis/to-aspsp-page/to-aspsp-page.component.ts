@@ -69,7 +69,7 @@ export class ToAspspPageComponent implements OnInit {
     this.authStateConsentAuthorizationService
       .authUsingGET(this.authorizationId, this.sessionService.getRedirectCode(this.authorizationId), 'response')
       .subscribe((res) => {
-        this.sessionService.setRedirectCode(this.authorizationId, res.headers.get(ApiHeaders.REDIRECT_CODE));
+        this.sessionService.setRedirectCode(this.authorizationId, res.headers.get(ApiHeaders.X_XSRF_TOKEN));
         this.redirectTo = res.headers.get(ApiHeaders.LOCATION);
       });
   }

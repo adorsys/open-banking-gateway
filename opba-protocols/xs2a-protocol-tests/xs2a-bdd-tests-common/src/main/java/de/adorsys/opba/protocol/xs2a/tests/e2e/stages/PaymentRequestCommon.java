@@ -36,7 +36,6 @@ import static de.adorsys.opba.protocol.xs2a.tests.e2e.stages.StagesCommonUtil.GE
 import static de.adorsys.opba.protocol.xs2a.tests.e2e.stages.StagesCommonUtil.MAX_MUSTERMAN;
 import static de.adorsys.opba.protocol.xs2a.tests.e2e.stages.StagesCommonUtil.PIS_SINGLE_PAYMENT_ENDPOINT;
 import static de.adorsys.opba.protocol.xs2a.tests.e2e.stages.StagesCommonUtil.withDefaultHeaders;
-import static de.adorsys.opba.restapi.shared.HttpHeaders.REDIRECT_CODE;
 import static de.adorsys.opba.restapi.shared.HttpHeaders.SERVICE_SESSION_ID;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.springframework.http.HttpHeaders.LOCATION;
@@ -184,7 +183,7 @@ public class PaymentRequestCommon<SELF extends PaymentRequestCommon<SELF>> exten
                  .header(X_XSRF_TOKEN, UUID.randomUUID().toString())
                  .header(X_REQUEST_ID, UUID.randomUUID().toString())
                  .cookie(AUTHORIZATION_SESSION_KEY, authSessionCookie)
-                 .queryParam(REDIRECT_CODE_QUERY, redirectCode)
+                 .queryParam(X_XSRF_TOKEN_QUERY, redirectCode)
                  .contentType(APPLICATION_JSON_VALUE)
                  .body(readResource("restrecord/tpp-ui-input/params/anton-brueckner-payments-authorize.json"))
              .when()
@@ -204,7 +203,7 @@ public class PaymentRequestCommon<SELF extends PaymentRequestCommon<SELF>> exten
     public SELF user_anton_brueckner_sees_that_he_needs_to_be_redirected_to_aspsp_and_redirects_to_aspsp() {
         ExtractableResponse<Response> response = withPaymentInfoHeaders(ANTON_BRUECKNER)
                  .cookie(AUTHORIZATION_SESSION_KEY, authSessionCookie)
-                 .queryParam(REDIRECT_CODE_QUERY, redirectCode)
+                 .queryParam(X_XSRF_TOKEN_QUERY, redirectCode)
              .when()
                 .get(GET_PAYMENT_AUTH_STATE, paymentServiceSessionId)
              .then()
@@ -268,7 +267,7 @@ public class PaymentRequestCommon<SELF extends PaymentRequestCommon<SELF>> exten
     public SELF ui_can_read_image_data_from_obg(String user) {
         ExtractableResponse<Response> response = withDefaultHeaders(user)
                                                             .cookie(AUTHORIZATION_SESSION_KEY, authSessionCookie)
-                                                            .queryParam(REDIRECT_CODE_QUERY, redirectCode)
+                                                            .queryParam(X_XSRF_TOKEN_QUERY, redirectCode)
                                                          .when()
                                                             .get(GET_CONSENT_AUTH_STATE, paymentServiceSessionId)
                                                          .then()
@@ -286,7 +285,7 @@ public class PaymentRequestCommon<SELF extends PaymentRequestCommon<SELF>> exten
             .given()
                     .header(X_XSRF_TOKEN, UUID.randomUUID().toString())
                     .header(X_REQUEST_ID, UUID.randomUUID().toString())
-                    .queryParam(REDIRECT_CODE_QUERY, redirectCode)
+                    .queryParam(X_XSRF_TOKEN_QUERY, redirectCode)
                     .contentType(APPLICATION_JSON_VALUE)
                     .body(readResource("restrecord/tpp-ui-input/params/anton-brueckner-psu-id-parameter.json"))
             .when()
@@ -300,7 +299,7 @@ public class PaymentRequestCommon<SELF extends PaymentRequestCommon<SELF>> exten
 
     public SELF user_anton_brueckner_sees_that_he_needs_to_be_redirected_to_aspsp_and_redirects_to_aspsp_without_cookie_unauthorized() {
         withPaymentInfoHeaders(ANTON_BRUECKNER)
-                .queryParam(REDIRECT_CODE_QUERY, redirectCode)
+                .queryParam(X_XSRF_TOKEN_QUERY, redirectCode)
             .when()
                 .get(GET_PAYMENT_AUTH_STATE, paymentServiceSessionId)
             .then()
@@ -315,7 +314,7 @@ public class PaymentRequestCommon<SELF extends PaymentRequestCommon<SELF>> exten
     }
 
     protected void updateRedirectCode(ExtractableResponse<Response> response) {
-        this.redirectCode = response.header(REDIRECT_CODE);
+        this.redirectCode = response.header(X_XSRF_TOKEN);
     }
 
     protected void updateNextPaymentAuthorizationUrl(ExtractableResponse<Response> response) {

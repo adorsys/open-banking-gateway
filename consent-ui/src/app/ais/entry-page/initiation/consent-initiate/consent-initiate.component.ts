@@ -55,7 +55,7 @@ export class ConsentInitiateComponent implements OnInit {
         this.sessionService.setBankName(authorizationId, (res.body as ConsentAuth).bankName);
         this.sessionService.setFintechName(authorizationId, (res.body as ConsentAuth).fintechName);
 
-        this.sessionService.setRedirectCode(authorizationId, res.headers.get(ApiHeaders.REDIRECT_CODE));
+        this.sessionService.setRedirectCode(authorizationId, res.headers.get(ApiHeaders.X_XSRF_TOKEN));
         this.navigate(authorizationId, res.body);
       });
   }
