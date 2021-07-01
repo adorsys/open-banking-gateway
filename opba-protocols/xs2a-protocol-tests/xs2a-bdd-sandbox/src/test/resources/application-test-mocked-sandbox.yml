@@ -6,7 +6,7 @@ test:
   retry:
     max: 10
   webdriver:
-    timeout: PT10S
+    timeout: PT15S
 
 # As there is no consent UI running - we need to call server directly
 protocol:
