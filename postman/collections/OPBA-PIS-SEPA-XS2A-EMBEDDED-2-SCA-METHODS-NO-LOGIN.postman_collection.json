@@ -1,0 +1,872 @@
+{
+	"info": {
+		"_postman_id": "b2122a02-2131-40f5-960a-1c04a36831d9",
+		"name": "OPBA-PIS-SEPA-XS2A-EMBEDDED-2-SCA-METHODS-NO-LOGIN",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "01. [FINTECH] Search bank by name",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test('Success', function() {",
+							"    pm.response.to.have.status(200)",
+							"})",
+							"",
+							"pm.environment.set(\"bank-id\", pm.response.json().bankDescriptor[0].uuid)"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "X-Request-ID",
+						"value": "{{x-request-id}}",
+						"type": "text"
+					},
+					{
+						"key": "X-Request-Signature",
+						"value": "{{x-request-signature}}",
+						"type": "text"
+					},
+					{
+						"key": "Fintech-ID",
+						"value": "{{fintech-id}}",
+						"type": "text"
+					}
+				],
+				"url": {
+					"raw": "{{opba-base}}/v1/banking/search/bank-search?keyword=adorsys%20embedded",
+					"host": [
+						"{{opba-base}}"
+					],
+					"path": [
+						"v1",
+						"banking",
+						"search",
+						"bank-search"
+					],
+					"query": [
+						{
+							"key": "keyword",
+							"value": "adorsys%20embedded"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "02. [FINTECH] Initiate payment",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test('Success', function() {",
+							"    pm.response.to.have.status(202)",
+							"})",
+							"",
+							"pm.environment.set(\"service-session-id\", pm.response.headers.get('Service-Session-ID'))",
+							"pm.environment.set(\"authorization-session-id\", pm.response.headers.get('Authorization-Session-ID'))",
+							"pm.environment.set(\"redirect-code\", pm.response.headers.get('Redirect-Code'))",
+							"pm.environment.set(\"fintech-user-temp-password\", pm.response.headers.get(\"Location\").split(\"redirectCode=\")[1])"
+						],
+						"type": "text/javascript"
+					}
+				},
+				{
+					"listen": "prerequest",
+					"script": {
+						"exec": [
+							"var uuid = require('uuid')",
+							"pm.environment.set(\"fintech-user-id\", uuid.v4())"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "X-Request-ID",
+						"type": "text",
+						"value": "{{x-request-id}}"
+					},
+					{
+						"key": "X-Request-Signature",
+						"type": "text",
+						"value": "{{x-request-signature}}"
+					},
+					{
+						"key": "Fintech-ID",
+						"type": "text",
+						"value": "{{fintech-id}}"
+					},
+					{
+						"key": "Fintech-Redirect-URL-OK",
+						"value": "https://google.com?q=OK",
+						"type": "text"
+					},
+					{
+						"key": "Fintech-Redirect-URL-NOK",
+						"value": "https://google.com?q=NOK",
+						"type": "text"
+					},
+					{
+						"key": "Fintech-User-ID",
+						"value": "{{fintech-user-id}}",
+						"type": "text"
+					},
+					{
+						"key": "Service-Session-Password",
+						"value": "{{service-session-password}}",
+						"type": "text"
+					},
+					{
+						"key": "Bank-ID",
+						"value": "{{bank-id}}",
+						"type": "text"
+					},
+					{
+						"key": "PSU-IP-Address",
+						"value": "1.1.1.1",
+						"type": "text"
+					},
+					{
+						"key": "X-Psu-Authentication-Required",
+						"value": "false",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"endToEndIdentification\": null,\r\n    \"debtorAccount\": {\r\n        \"iban\": \"DE38760700240320465700\",\r\n        \"bban\": null,\r\n        \"pan\": null,\r\n        \"maskedPan\": null,\r\n        \"msisdn\": null,\r\n        \"currency\": null\r\n    },\r\n    \"instructedAmount\": {\r\n        \"currency\": \"EUR\",\r\n        \"amount\": \"12.34\"\r\n    },\r\n    \"creditorAccount\": {\r\n        \"iban\": \"AL90208110080000001039531801\",\r\n        \"bban\": null,\r\n        \"pan\": null,\r\n        \"maskedPan\": null,\r\n        \"msisdn\": null,\r\n        \"currency\": null\r\n    },\r\n    \"creditorAgent\": null,\r\n    \"creditorAgentName\": null,\r\n    \"creditorName\": \"Apple\",\r\n    \"creditorAddress\": null,\r\n    \"remittanceInformationUnstructured\": \"Apple ITunes payment (demo)\",\r\n    \"requestedExecutionDate\": null,\r\n    \"requestedExecutionTime\": null\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{opba-base}}/v1/banking/pis/payments/instant-sepa-credit-transfers",
+					"host": [
+						"{{opba-base}}"
+					],
+					"path": [
+						"v1",
+						"banking",
+						"pis",
+						"payments",
+						"instant-sepa-credit-transfers"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "04.  [CONSENT-UI] PSU executes anonymous login in  OpenBanking",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test('Success', function() {",
+							"    pm.response.to.have.status(202)",
+							"})",
+							"",
+							"pm.environment.set(\"session-cookie\", pm.response.headers.get('Set-Cookie'))"
+						],
+						"type": "text/javascript"
+					}
+				},
+				{
+					"listen": "prerequest",
+					"script": {
+						"exec": [
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "X-Request-ID",
+						"value": "{{x-request-id}}",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{opba-base}}/v1/psu/{{authorization-session-id}}/for-approval/anonymous?redirectCode={{fintech-user-temp-password}}",
+					"host": [
+						"{{opba-base}}"
+					],
+					"path": [
+						"v1",
+						"psu",
+						"{{authorization-session-id}}",
+						"for-approval",
+						"anonymous"
+					],
+					"query": [
+						{
+							"key": "redirectCode",
+							"value": "{{fintech-user-temp-password}}"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "05. [CONSENT-UI] Get current payment authorization state",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test('Success', function() {",
+							"    pm.response.to.have.status(200)",
+							"})",
+							"",
+							"pm.environment.set(\"redirect-code\", pm.response.headers.get('X-XSRF-TOKEN'))"
+						],
+						"type": "text/javascript"
+					}
+				},
+				{
+					"listen": "prerequest",
+					"script": {
+						"exec": [
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "Cookie",
+						"value": "{{session-cookie}}",
+						"type": "text"
+					}
+				],
+				"url": {
+					"raw": "{{opba-base}}/v1/consent/{{authorization-session-id}}?xXsrfToken={{redirect-code}}",
+					"host": [
+						"{{opba-base}}"
+					],
+					"path": [
+						"v1",
+						"consent",
+						"{{authorization-session-id}}"
+					],
+					"query": [
+						{
+							"key": "xXsrfToken",
+							"value": "{{redirect-code}}"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "07. [CONSENT-UI]  Provide PSU ID as was required on step #05",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test('Success', function() {",
+							"    pm.response.to.have.status(202)",
+							"})",
+							"",
+							"pm.environment.set(\"redirect-code\", pm.response.headers.get('X-XSRF-TOKEN'))"
+						],
+						"type": "text/javascript"
+					}
+				},
+				{
+					"listen": "prerequest",
+					"script": {
+						"exec": [
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Cookie",
+						"type": "text",
+						"value": "{{session-cookie}}"
+					},
+					{
+						"key": "X-Request-ID",
+						"value": "{{x-request-id}}",
+						"type": "text"
+					},
+					{
+						"key": "X-Xsrf-Token",
+						"value": "a8b24683-242a-428b-8295-2f4805bb0a30",
+						"description": "Deprecated field",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\"extras\":{\"PSU_ID\":\"max.musterman\"}}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{opba-base}}/v1/consent/{{authorization-session-id}}/embedded?xXsrfToken={{redirect-code}}",
+					"host": [
+						"{{opba-base}}"
+					],
+					"path": [
+						"v1",
+						"consent",
+						"{{authorization-session-id}}",
+						"embedded"
+					],
+					"query": [
+						{
+							"key": "xXsrfToken",
+							"value": "{{redirect-code}}"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "08. [CONSENT-UI] Provide PSU pin",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test('Success', function() {",
+							"    pm.response.to.have.status(202)",
+							"})",
+							"",
+							"pm.environment.set(\"redirect-code\", pm.response.headers.get('X-XSRF-TOKEN'))"
+						],
+						"type": "text/javascript"
+					}
+				},
+				{
+					"listen": "prerequest",
+					"script": {
+						"exec": [
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Cookie",
+						"type": "text",
+						"value": "{{session-cookie}}"
+					},
+					{
+						"key": "X-Request-ID",
+						"value": "{{x-request-id}}",
+						"type": "text"
+					},
+					{
+						"key": "X-Xsrf-Token",
+						"value": "a8b24683-242a-428b-8295-2f4805bb0a30",
+						"description": "Deprecated field",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\"scaAuthenticationData\":{\"PSU_PASSWORD\":\"12345\"}}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{opba-base}}/v1/consent/{{authorization-session-id}}/embedded?xXsrfToken={{redirect-code}}",
+					"host": [
+						"{{opba-base}}"
+					],
+					"path": [
+						"v1",
+						"consent",
+						"{{authorization-session-id}}",
+						"embedded"
+					],
+					"query": [
+						{
+							"key": "xXsrfToken",
+							"value": "{{redirect-code}}"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "09. [CONSENT-UI] List available SCA challenges",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test('Success', function() {",
+							"    pm.response.to.have.status(202)",
+							"})",
+							"",
+							"pm.environment.set(\"sca-challenge-id\", pm.response.json().scaMethods[0].id)",
+							"pm.environment.set(\"redirect-code\", pm.response.headers.get('X-XSRF-TOKEN'))"
+						],
+						"type": "text/javascript"
+					}
+				},
+				{
+					"listen": "prerequest",
+					"script": {
+						"exec": [
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "Cookie",
+						"value": "{{session-cookie}}",
+						"type": "text"
+					}
+				],
+				"url": {
+					"raw": "{{opba-base}}/v1/consent/{{authorization-session-id}}?xXsrfToken={{redirect-code}}",
+					"host": [
+						"{{opba-base}}"
+					],
+					"path": [
+						"v1",
+						"consent",
+						"{{authorization-session-id}}"
+					],
+					"query": [
+						{
+							"key": "xXsrfToken",
+							"value": "{{redirect-code}}"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "09. [CONSENT-UI] Select SCA challenge",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test('Success', function() {",
+							"    pm.response.to.have.status(202)",
+							"})",
+							"",
+							"pm.environment.set(\"redirect-code\", pm.response.headers.get('X-XSRF-TOKEN'))"
+						],
+						"type": "text/javascript"
+					}
+				},
+				{
+					"listen": "prerequest",
+					"script": {
+						"exec": [
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Cookie",
+						"type": "text",
+						"value": "{{session-cookie}}"
+					},
+					{
+						"key": "X-Request-iD",
+						"value": "{{x-request-id}}",
+						"type": "text"
+					},
+					{
+						"key": "X-Xsrf-Token",
+						"value": "a8b24683-242a-428b-8295-2f4805bb0a30",
+						"description": "Deprecated field",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\"scaAuthenticationData\":{\"SCA_CHALLENGE_ID\":\"{{sca-challenge-id}}\"}}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{opba-base}}/v1/consent/{{authorization-session-id}}/embedded?xXsrfToken={{redirect-code}}",
+					"host": [
+						"{{opba-base}}"
+					],
+					"path": [
+						"v1",
+						"consent",
+						"{{authorization-session-id}}",
+						"embedded"
+					],
+					"query": [
+						{
+							"key": "xXsrfToken",
+							"value": "{{redirect-code}}"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "10. [CONSENT-UI] Provide PSU TAN",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test('Success', function() {",
+							"    pm.response.to.have.status(202)",
+							"})",
+							"",
+							"pm.environment.set(\"redirect-code\", pm.response.headers.get('X-XSRF-TOKEN'))"
+						],
+						"type": "text/javascript"
+					}
+				},
+				{
+					"listen": "prerequest",
+					"script": {
+						"exec": [
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Cookie",
+						"type": "text",
+						"value": "{{session-cookie}}"
+					},
+					{
+						"key": "X-Request-ID",
+						"value": "{{x-request-id}}",
+						"type": "text"
+					},
+					{
+						"key": "X-Xsrf-Token",
+						"value": "a8b24683-242a-428b-8295-2f4805bb0a30",
+						"description": "Deprecated field",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\"scaAuthenticationData\":{\"SCA_CHALLENGE_DATA\":\"123456\"}}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{opba-base}}/v1/consent/{{authorization-session-id}}/embedded?xXsrfToken={{redirect-code}}",
+					"host": [
+						"{{opba-base}}"
+					],
+					"path": [
+						"v1",
+						"consent",
+						"{{authorization-session-id}}",
+						"embedded"
+					],
+					"query": [
+						{
+							"key": "xXsrfToken",
+							"value": "{{redirect-code}}"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "11. [CONSENT-UI] Get current consent state (finished)",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test('Success', function() {",
+							"    pm.response.to.have.status(202)",
+							"})",
+							"",
+							"pm.environment.set(\"redirect-code\", pm.response.headers.get('X-XSRF-TOKEN'))"
+						],
+						"type": "text/javascript"
+					}
+				},
+				{
+					"listen": "prerequest",
+					"script": {
+						"exec": [
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "Cookie",
+						"value": "{{session-cookie}}",
+						"type": "text"
+					}
+				],
+				"url": {
+					"raw": "{{opba-base}}/v1/consent/{{authorization-session-id}}?xXsrfToken={{redirect-code}}",
+					"host": [
+						"{{opba-base}}"
+					],
+					"path": [
+						"v1",
+						"consent",
+						"{{authorization-session-id}}"
+					],
+					"query": [
+						{
+							"key": "xXsrfToken",
+							"value": "{{redirect-code}}"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "12. [FINTECH] Confirm PSU payment (redirect back to FinTech confirmation)",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test('Success', function() {",
+							"    pm.response.to.have.status(200)",
+							"})"
+						],
+						"type": "text/javascript"
+					}
+				},
+				{
+					"listen": "prerequest",
+					"script": {
+						"exec": [
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "X-Request-ID",
+						"type": "text",
+						"value": "{{x-request-id}}"
+					},
+					{
+						"key": "X-Request-Signature",
+						"type": "text",
+						"value": "{{x-request-signature}}"
+					},
+					{
+						"key": "Service-Session-Password",
+						"type": "text",
+						"value": "{{service-session-password}}"
+					}
+				],
+				"url": {
+					"raw": "{{opba-base}}/v1/banking/payments/{{authorization-session-id}}/confirm",
+					"host": [
+						"{{opba-base}}"
+					],
+					"path": [
+						"v1",
+						"banking",
+						"payments",
+						"{{authorization-session-id}}",
+						"confirm"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "13. [FINTECH] Get payment status",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test('Success', function() {",
+							"    pm.response.to.have.status(200)",
+							"    pm.expect(pm.response.json().transactionStatus).to.not.empty();",
+							"})"
+						],
+						"type": "text/javascript"
+					}
+				},
+				{
+					"listen": "prerequest",
+					"script": {
+						"exec": [
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "X-Request-ID",
+						"type": "text",
+						"value": "{{x-request-id}}"
+					},
+					{
+						"key": "X-Request-Signature",
+						"type": "text",
+						"value": "{{x-request-signature}}"
+					},
+					{
+						"key": "Fintech-ID",
+						"type": "text",
+						"value": "{{fintech-id}}"
+					},
+					{
+						"key": "Fintech-User-ID",
+						"type": "text",
+						"value": "{{fintech-user-id}}"
+					},
+					{
+						"key": "Service-Session-Password",
+						"type": "text",
+						"value": "{{service-session-password}}"
+					},
+					{
+						"key": "Service-Session-ID",
+						"value": "{{service-session-id}}",
+						"description": "Actually is a consent ID",
+						"type": "text"
+					},
+					{
+						"key": "Bank-ID",
+						"value": "{{bank-id}}",
+						"type": "text"
+					}
+				],
+				"url": {
+					"raw": "{{opba-base}}/v1/banking/pis/payments/sepa-credit-transfers/status",
+					"host": [
+						"{{opba-base}}"
+					],
+					"path": [
+						"v1",
+						"banking",
+						"pis",
+						"payments",
+						"sepa-credit-transfers",
+						"status"
+					]
+				}
+			},
+			"response": []
+		}
+	],
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		}
+	]
+}
