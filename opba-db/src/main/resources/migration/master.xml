@@ -11,4 +11,5 @@
     <include relativeToChangelogFile="true" file="migrations/0005-enable-finapi-test-bank.xml" context="finapi-sandbox-test-bank"/>
     <includeAll relativeToChangelogFile="true" path="migrations/0006-finapi-sandbox-banks" context="finapi-sandbox-banks"/>
     <includeAll relativeToChangelogFile="true" path="migrations/0007-finapi-prod-banks" context="finapi-prod-banks"/>
+    <includeAll relativeToChangelogFile="true" path="migrations/0008-smartanalytics-rdbms-persistence" context="smartanalytics-rdbms-persistence"/>
 </databaseChangeLog>
