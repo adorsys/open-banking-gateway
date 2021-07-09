@@ -40,7 +40,7 @@ export class ListAccountsComponent implements OnInit {
       .getAccounts(
         this.bankId,
         settings.loa,
-        settings.enableConsent ? JSON.stringify(settings.consent) : null,
+        JSON.stringify(settings.consent),
         settings.withBalance,
         online,
         settings.consentRequiresAuthentication

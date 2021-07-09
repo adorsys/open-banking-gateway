@@ -42,7 +42,7 @@ export class ListTransactionsComponent implements OnInit {
         this.bankId,
         this.accountId,
         settings.lot,
-        settings.enableConsent ? JSON.stringify(settings.consent) : null,
+        JSON.stringify(settings.consent),
         online,
         settings.consentRequiresAuthentication
       )

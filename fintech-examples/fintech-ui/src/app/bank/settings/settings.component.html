@@ -59,7 +59,7 @@
               type="checkbox"
               value="{{ settingsForm.get('consentRequiresAuthentication') }}"
               formControlName="consentRequiresAuthentication"
-              id="consent"
+              id="consentRequiresAuthentication"
             />
             <label for="consent">Consent requires authentication</label>
           </div>
@@ -69,50 +69,75 @@
           <h4 class="text-secondary">Consent Request</h4>
           <div>
             <div class="form-check">
-              <input
-                type="checkbox"
-                value="{{ settingsForm.get('enableConsent') }}"
-                formControlName="enableConsent"
-                id="enableConsent"
-                (change)="onChangeEnableConsent()"
-              />
-              <label for="enableConsent">enable consent</label>
+              <label>
+                <input
+                  type="radio"
+                  value="{{ consentTypeNone }}"
+                  formControlName="consentSettingType"
+                  id="consentType0"
+                />None
+              </label>
+              <label style="margin-right: 15px; margin-left: 15px">
+                <input
+                  type="radio"
+                  value="{{ consentTypeDefault }}"
+                  formControlName="consentSettingType"
+                  id="consentType1"
+                />Default
+              </label>
+              <label>
+                <input
+                  type="radio"
+                  value="{{ consentTypeCustom }}"
+                  formControlName="consentSettingType"
+                  id="consentType2"
+                />Custom
+              </label>
             </div>
-            <div class="form-check">
-              <label for="frequencyPerDay">frequency per day</label>
-              <input
-                type="number"
-                value="{{ settingsForm.get('frequencyPerDay') }}"
-                formControlName="frequencyPerDay"
-                id="frequencyPerDay"
-              />
+
+            <div *ngIf="settingsForm.controls.consentSettingType.value === consentTypeDefault">
+              <div class="form-check">
+                <label for="frequencyPerDay">frequency per day</label>
+                <input
+                  type="number"
+                  value="{{ settingsForm.get('frequencyPerDay') }}"
+                  formControlName="frequencyPerDay"
+                  id="frequencyPerDay"
+                />
+              </div>
+              <div class="form-check">
+                <input
+                  type="checkbox"
+                  value="{{ settingsForm.get('recurringIndicator') }}"
+                  formControlName="recurringIndicator"
+                  id="requrringIndicator"
+                />
+                <label for="requrringIndicator">requrring indicator</label>
+              </div>
+              <div class="form-check">
+                <label for="validUntil">valid until</label>
+                <input
+                  type="date"
+                  value="{{ settingsForm.get('validUntil') }}"
+                  formControlName="validUntil"
+                  id="validUntil"
+                />
+              </div>
+              <div class="form-check">
+                <input
+                  type="checkbox"
+                  value="{{ settingsForm.get('combinedServiceIndicator') }}"
+                  formControlName="combinedServiceIndicator"
+                  id="combinedServiceIndicator"
+                />
+                <label for="combinedServiceIndicator">combined service indicator</label>
+              </div>
             </div>
-            <div class="form-check">
-              <input
-                type="checkbox"
-                value="{{ settingsForm.get('recurringIndicator') }}"
-                formControlName="recurringIndicator"
-                id="requrringIndicator"
-              />
-              <label for="requrringIndicator">requrring indicator</label>
-            </div>
-            <div class="form-check">
-              <label for="validUntil">valid until</label>
-              <input
-                type="date"
-                value="{{ settingsForm.get('validUntil') }}"
-                formControlName="validUntil"
-                id="validUntil"
-              />
-            </div>
-            <div class="form-check">
-              <input
-                type="checkbox"
-                value="{{ settingsForm.get('combinedServiceIndicator') }}"
-                formControlName="combinedServiceIndicator"
-                id="combinedServiceIndicator"
-              />
-              <label for="combinedServiceIndicator">combined service indicator</label>
+
+            <div *ngIf="settingsForm.controls.consentSettingType.value === consentTypeCustom" class="form-check">
+              <textarea rows="7" cols="50" formControlName="consent" id="consent">{{
+                settingsForm.get('consent')
+              }}</textarea>
             </div>
           </div>
         </div>

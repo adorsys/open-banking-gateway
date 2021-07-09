@@ -1,5 +1,11 @@
 import { Injectable } from '@angular/core';
-import { Consts, LoARetrievalInformation, LoTRetrievalInformation, toLocaleString } from '../models/consts';
+import {
+  ConsentSettingType,
+  Consts,
+  LoARetrievalInformation,
+  LoTRetrievalInformation,
+  toLocaleString
+} from '../models/consts';
 import { AccountStruct, RedirectTupelForMap, RedirectType } from '../bank/redirect-page/redirect-struct';
 import { SettingsData } from '../bank/settings/settings.component';
 
@@ -163,14 +169,8 @@ export class StorageService {
         cacheLot: false,
         consentRequiresAuthentication: true,
         paymentRequiresAuthentication: false,
-        enableConsent: false,
-        consent: {
-          access: {},
-          combinedServiceIndicator: false,
-          frequencyPerDay: 4,
-          recurringIndicator: true,
-          validUntil: new Date().toISOString().split('T')[0]
-        }
+        consentSettingType: ConsentSettingType.NONE,
+        consent: null
       };
     }
     return JSON.parse(setting);

@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { Location } from '@angular/common';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { LoARetrievalInformation, LoTRetrievalInformation } from '../../models/consts';
+import { ConsentSettingType, LoARetrievalInformation, LoTRetrievalInformation } from '../../models/consts';
 import { StorageService } from '../../services/storage.service';
 import { AisConsentRequest, FinTechAccountInformationService } from '../../api';
 
@@ -18,6 +18,10 @@ export class SettingsComponent implements OnInit {
 
   lotFromTppWithNewConsent = LoTRetrievalInformation.FROM_TPP_WITH_NEW_CONSENT;
   lotFromTppWithAvailableConsent = LoTRetrievalInformation.FROM_TPP_WITH_AVAILABLE_CONSENT;
+
+  consentTypeNone = ConsentSettingType.NONE;
+  consentTypeDefault = ConsentSettingType.DEFAULT;
+  consentTypeCustom = ConsentSettingType.CUSTOM;
 
   settingsForm: FormGroup;
 
@@ -40,13 +44,13 @@ export class SettingsComponent implements OnInit {
       cacheLot: settingsData.cacheLot,
       consentRequiresAuthentication: settingsData.consentRequiresAuthentication,
       paymentRequiresAuthentication: settingsData.paymentRequiresAuthentication,
-      frequencyPerDay: settingsData.consent.frequencyPerDay,
-      recurringIndicator: settingsData.consent.recurringIndicator,
-      validUntil: settingsData.consent.validUntil,
-      combinedServiceIndicator: settingsData.consent.combinedServiceIndicator,
-      enableConsent: settingsData.enableConsent
+      consentSettingType: [settingsData.consentSettingType, Validators.required],
+      consent: JSON.stringify(settingsData.consent),
+      frequencyPerDay: settingsData.consent === null ? null : settingsData.consent.frequencyPerDay,
+      recurringIndicator: settingsData.consent === null ? null : settingsData.consent.recurringIndicator,
+      validUntil: settingsData.consent === null ? null : settingsData.consent.validUntil,
+      combinedServiceIndicator: settingsData.consent === null ? null : settingsData.consent.combinedServiceIndicator
     });
-    this.onChangeEnableConsent();
   }
 
   onConfirm() {
@@ -59,14 +63,17 @@ export class SettingsComponent implements OnInit {
       cacheLot: data.cacheLot,
       consentRequiresAuthentication: data.consentRequiresAuthentication,
       paymentRequiresAuthentication: data.paymentRequiresAuthentication,
-      enableConsent: data.enableConsent,
-      consent: {
-        access: {},
-        combinedServiceIndicator: data.combinedServiceIndicator,
-        frequencyPerDay: data.frequencyPerDay,
-        recurringIndicator: data.recurringIndicator,
-        validUntil: data.validUntil
-      }
+      consentSettingType: data.consentSettingType,
+      consent: JSON.parse(data.consent),
+      ...(data.consentSettingType === this.consentTypeDefault && {
+        consent: {
+          access: {},
+          combinedServiceIndicator: data.combinedServiceIndicator,
+          frequencyPerDay: data.frequencyPerDay,
+          recurringIndicator: data.recurringIndicator,
+          validUntil: data.validUntil
+        }
+      })
     });
     this.onNavigateBack();
   }
@@ -78,20 +85,6 @@ export class SettingsComponent implements OnInit {
   onNavigateBack() {
     this.location.back();
   }
-
-  onChangeEnableConsent() {
-    if (this.settingsForm.controls.enableConsent.value) {
-      this.settingsForm.controls.combinedServiceIndicator.enable();
-      this.settingsForm.controls.frequencyPerDay.enable();
-      this.settingsForm.controls.recurringIndicator.enable();
-      this.settingsForm.controls.validUntil.enable();
-    } else {
-      this.settingsForm.controls.combinedServiceIndicator.disable();
-      this.settingsForm.controls.frequencyPerDay.disable();
-      this.settingsForm.controls.recurringIndicator.disable();
-      this.settingsForm.controls.validUntil.disable();
-    }
-  }
 }
 
 export class SettingsData {
@@ -102,6 +95,6 @@ export class SettingsData {
   cacheLot: boolean;
   consentRequiresAuthentication: boolean;
   paymentRequiresAuthentication: boolean;
-  enableConsent: boolean;
+  consentSettingType: ConsentSettingType;
   consent: AisConsentRequest;
 }
