@@ -32,7 +32,7 @@ import static org.springframework.http.HttpHeaders.AUTHORIZATION;
 @SpringBootTest(classes = {OpenBankingEmbeddedApplication.class, FintechRequestSigningTestConfig.class}, webEnvironment = RANDOM_PORT)
 class AdminApiModyfingTest {
 
-    private static final String ADMIN_API = "/admin/";
+    private static final String ADMIN_API = "/admin/v1/";
     private static final String BASIC_AUTH = "Basic QWxhZGRpbjpPcGVuU2VzYW1l";
 
     @LocalServerPort
