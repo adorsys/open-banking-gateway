@@ -12,7 +12,7 @@ security:
   - basicAuth: []
 
 paths:
-  /admin/banks:
+  /admin/v1/banks:
     get:
       security:
         - basicAuth: []
@@ -39,7 +39,7 @@ paths:
             'application/json':
               schema:
                 $ref: '#/components/schemas/PageBankData'
-  /admin/banks/{bankId}:
+  /admin/v1/banks/{bankId}:
     get:
       security:
         - basicAuth: []
