@@ -4,7 +4,8 @@ import { Location } from '@angular/common';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { ConsentSettingType, LoARetrievalInformation, LoTRetrievalInformation } from '../../models/consts';
 import { StorageService } from '../../services/storage.service';
-import { AisConsentRequest, FinTechAccountInformationService } from '../../api';
+import { AisAccountAccessInfo, AisConsentRequest, FinTechAccountInformationService } from '../../api';
+import AllPsd2Enum = AisAccountAccessInfo.AllPsd2Enum;
 
 @Component({
   selector: 'app-settings',
@@ -67,7 +68,7 @@ export class SettingsComponent implements OnInit {
       consent: JSON.parse(data.consent),
       ...(data.consentSettingType === this.consentTypeDefault && {
         consent: {
-          access: {},
+          access: { allPsd2: AllPsd2Enum.ACCOUNTSWITHBALANCES },
           combinedServiceIndicator: data.combinedServiceIndicator,
           frequencyPerDay: data.frequencyPerDay,
           recurringIndicator: data.recurringIndicator,

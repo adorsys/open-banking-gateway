@@ -40,6 +40,7 @@ import static de.adorsys.opba.protocol.xs2a.tests.e2e.stages.StagesCommonUtil.wi
 import static de.adorsys.opba.protocol.xs2a.tests.e2e.stages.StagesCommonUtil.withDefaultHeaders;
 import static de.adorsys.opba.protocol.xs2a.tests.e2e.stages.StagesCommonUtil.withTransactionsHeaders;
 import static de.adorsys.opba.restapi.shared.HttpHeaders.SERVICE_SESSION_ID;
+import static de.adorsys.opba.restapi.shared.HttpHeaders.X_CREATE_CONSENT_IF_NONE;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.springframework.http.HttpStatus.ACCEPTED;
 import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
@@ -163,6 +164,23 @@ public class AccountInformationRequestCommon<SELF extends AccountInformationRequ
             .then()
                 .statusCode(ACCEPTED.value())
                 .extract();
+
+        updateServiceSessionId(response);
+        updateRedirectCode(response);
+        updateNextConsentAuthorizationUrl(response);
+        return self();
+    }
+
+    public SELF fintech_calls_list_transactions_for_anton_brueckner_with_consent_header() {
+        ExtractableResponse<Response> response = withTransactionsHeaders(ANTON_BRUECKNER)
+            .header(SERVICE_SESSION_ID, UUID.randomUUID().toString())
+            .header(X_CREATE_CONSENT_IF_NONE, "{\"recurringIndicator\": true, \"combinedServiceIndicator\": false, "
+                + "\"access\": {\"transactions\": [{\"iban\": \"DE80760700240271232400\", \"currency\": \"EUR\"}]}, \"frequencyPerDay\": 12, \"validUntil\": \"2030-01-31\"}")
+            .when()
+            .get(AIS_TRANSACTIONS_WITHOUT_RESOURCE_ID_ENDPOINT)
+            .then()
+            .statusCode(ACCEPTED.value())
+            .extract();
 
         updateServiceSessionId(response);
         updateRedirectCode(response);
@@ -323,6 +341,15 @@ public class AccountInformationRequestCommon<SELF extends AccountInformationRequ
         startInitialInternalConsentAuthorization(
                 AUTHORIZE_CONSENT_ENDPOINT,
                 readResource("restrecord/tpp-ui-input/params/anton-brueckner-transactions-single-account-consent.json")
+        );
+
+        return self();
+    }
+
+    public SELF user_anton_brueckner_provided_initial_parameters_to_list_transactions_no_consent() {
+        startInitialInternalConsentAuthorization(
+            AUTHORIZE_CONSENT_ENDPOINT,
+            readResource("restrecord/tpp-ui-input/params/anton-brueckner-transactions-no-consent.json")
         );
 
         return self();

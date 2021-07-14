@@ -141,6 +141,48 @@ class SandboxE2EProtocolAisTest extends SandboxCommonTest<
 
     @ParameterizedTest
     @EnumSource(Approach.class)
+    public void testTransactionListWithConsentUsingRedirectUsingFintechConsentHeader(Approach expectedApproach, FirefoxDriver firefoxDriver) {
+
+        given()
+            .enabled_redirect_sandbox_mode()
+            .preferred_sca_approach_selected_for_all_banks_in_opba(expectedApproach)
+            .rest_assured_points_to_opba_server_with_fintech_signer_on_banking_api()
+            .user_registered_in_opba_with_credentials(OPBA_LOGIN, OPBA_PASSWORD);
+
+        when()
+            .fintech_calls_list_transactions_for_anton_brueckner_with_consent_header()
+            .and()
+            .user_logged_in_into_opba_as_opba_user_with_credentials_using_fintech_supplied_url(OPBA_LOGIN, OPBA_PASSWORD)
+            .and()
+            .user_anton_brueckner_provided_initial_parameters_to_list_transactions_no_consent()
+            .and()
+            .user_anton_brueckner_sees_that_he_needs_to_be_redirected_to_aspsp_and_redirects_to_aspsp()
+            .and()
+            .sandbox_anton_brueckner_navigates_to_bank_auth_page(firefoxDriver)
+            .and()
+            .sandbox_anton_brueckner_inputs_username_and_password(firefoxDriver)
+            .and()
+            .sandbox_anton_brueckner_confirms_consent_information(firefoxDriver)
+            .and()
+            .sandbox_anton_brueckner_selects_sca_method(firefoxDriver)
+            .and()
+            .sandbox_anton_brueckner_provides_sca_challenge_result(firefoxDriver)
+            .and()
+            .sandbox_anton_brueckner_clicks_redirect_back_to_tpp_button_api_localhost_cookie_only(firefoxDriver);
+
+        AccountInformationResult<? extends AccountInformationResult<?>> accountsResult = then()
+            .open_banking_has_consent_for_anton_brueckner_transaction_list()
+            .fintech_calls_consent_activation_for_current_authorization_id()
+            .open_banking_can_read_anton_brueckner_account_data_using_consent_bound_to_service_session(false);
+        String accountResourceId = JsonPath.parse(accountsResult.getResponseContent()).read("$.accounts[0].resourceId");
+        then()
+            .open_banking_reads_anton_brueckner_transactions_using_consent_bound_to_service_session_data_validated_by_iban(
+                accountResourceId, DATE_FROM, DATE_TO, BOTH_BOOKING
+            );
+    }
+
+    @ParameterizedTest
+    @EnumSource(Approach.class)
     void testAccountsListWithConsentUsingEmbedded(Approach expectedApproach) {
         embeddedListMaxMustermanAccounts(expectedApproach);
     }
