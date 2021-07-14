@@ -1,5 +1,6 @@
 package de.adorsys.opba.fintech.impl.service;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import de.adorsys.opba.fintech.impl.config.FintechUiConfig;
 import de.adorsys.opba.fintech.impl.controller.utils.LoTRetrievalInformation;
 import de.adorsys.opba.fintech.impl.controller.utils.RestRequestContext;
@@ -13,6 +14,7 @@ import de.adorsys.opba.fintech.impl.tppclients.ConsentType;
 import de.adorsys.opba.fintech.impl.tppclients.TppAisClient;
 import de.adorsys.opba.tpp.ais.api.model.generated.TransactionsResponse;
 import lombok.RequiredArgsConstructor;
+import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -39,10 +41,12 @@ public class TransactionService {
     private final RedirectHandlerService redirectHandlerService;
     private final ConsentRepository consentRepository;
     private final HandleAcceptedService handleAcceptedService;
+    private final ObjectMapper mapper;
 
     @SuppressWarnings("checkstyle:MethodLength") //  FIXME - It is just too many lines of text
+    @SneakyThrows
     public ResponseEntity listTransactions(SessionEntity sessionEntity, String fintechOkUrl, String fintechNOkUrl, String bankId,
-                                           String accountId, LocalDate dateFrom, LocalDate dateTo, String entryReferenceFrom,
+                                           String accountId, String createConsentIfNone, LocalDate dateFrom, LocalDate dateTo, String entryReferenceFrom,
                                            String bookingStatus, Boolean deltaList, LoTRetrievalInformation loTRetrievalInformation,
                                            Boolean psuAuthenticationRequired, Boolean online) {
         log.info("LoT {}", loTRetrievalInformation);
@@ -71,6 +75,7 @@ public class TransactionService {
             bankId,
             psuAuthenticationRequired,
             optionalConsent.map(ConsentEntity::getTppServiceSessionId).orElse(null),
+            createConsentIfNone,
             dateFrom,
             dateTo,
             entryReferenceFrom,

@@ -11,7 +11,6 @@ import de.adorsys.opba.tpp.ais.api.model.generated.TransactionsResponse;
 import de.adorsys.opba.tpp.ais.api.resource.generated.TppBankingApiAccountInformationServiceAisApi;
 import de.adorsys.opba.tpp.token.api.model.generated.PsuConsentSessionResponse;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -48,6 +47,7 @@ public class ConsentService {
                 bankId,
                 null,
                 serviceSessionId,
+                "",
                 null,
                 null,
                 null,

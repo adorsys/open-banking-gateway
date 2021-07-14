@@ -39,6 +39,7 @@ paths:
         - $ref: "./tpp_banking_api_commons.yml#/components/parameters/Fintech-Redirect-URL-NOK"
         - $ref: "./tpp_banking_api_commons.yml#/components/parameters/Service-Session-ID"
         - $ref: "./tpp_banking_api_commons.yml#/components/parameters/X-Request-ID"
+        - $ref: "./tpp_banking_api_commons.yml#/components/parameters/X-Create-Consent-If-None"
           # query
         - $ref: "#/components/parameters/withBalance"
         - $ref: "#/components/parameters/online"
@@ -80,6 +81,7 @@ paths:
         - $ref: "./tpp_banking_api_commons.yml#/components/parameters/Fintech-Redirect-URL-NOK"
         - $ref: "./tpp_banking_api_commons.yml#/components/parameters/Service-Session-ID"
         - $ref: "./tpp_banking_api_commons.yml#/components/parameters/X-Request-ID"
+        - $ref: "./tpp_banking_api_commons.yml#/components/parameters/X-Create-Consent-If-None"
         #query
         - $ref: "#/components/parameters/dateFrom"
         - $ref: "#/components/parameters/dateTo"
@@ -121,6 +123,7 @@ paths:
         - $ref: "./tpp_banking_api_commons.yml#/components/parameters/Fintech-Redirect-URL-NOK"
         - $ref: "./tpp_banking_api_commons.yml#/components/parameters/Service-Session-ID"
         - $ref: "./tpp_banking_api_commons.yml#/components/parameters/X-Request-ID"
+        - $ref: "./tpp_banking_api_commons.yml#/components/parameters/X-Create-Consent-If-None"
         #query
         - $ref: "#/components/parameters/dateFrom"
         - $ref: "#/components/parameters/dateTo"

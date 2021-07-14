@@ -20,6 +20,10 @@ export class ConsentUtil {
     sessionService.setConsentObject(authorizationId, consentObj);
   }
 
+  public static isEmptyObject(obj: Object) {
+    return (obj && (Object.keys(obj).length === 0));
+  }
+
   private static initializeConsentObject(): AisConsentToGrant {
     const aisConsent = new AisConsentToGrant();
     // FIXME: These fields MUST be initialized by FinTech through API and user can only adjust it.
