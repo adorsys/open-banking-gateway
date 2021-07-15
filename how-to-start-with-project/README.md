@@ -1,9 +1,9 @@
 # How to start with project
 
-# Open Banking Frontend 
+# OpenBankingGateway Frontend 
 TBD
 
-# Open Banking Backend
+# OpenBankingGateway Backend
 
 ## Prerequisites
 
@@ -19,11 +19,11 @@ Ensure you have:
 
 ### Application components:
 
- 1. Open banking backend - 
+ 1. OpenBankingGateway backend - 
  [OpenBankingEmbeddedApplication](../opba-embedded-starter/src/main/java/de/adorsys/opba/starter/OpenBankingEmbeddedApplication.java) 
  Spring-boot application.
  1. [XS2A Sandbox (XS2A-Dynamic-Sandbox)](../how-to-start-with-project/xs2a-sandbox-only/docker-compose.yml) that mocks ASPSP (bank).
- 1. Postgres database (for Sandbox and Open banking backend). 
+ 1. Postgres database (for Sandbox and OpenBankingGateway backend). 
  **Note that open-banking database data will be persisted across runs in '$HOME/docker/volumes/postgres' if you use scripts below**
 
 ### Running backend:
@@ -52,7 +52,7 @@ which consumes less resources and has advantage of using single JVM for Sandbox.
  1. Start Postgres: `docker run --rm --name opba-pg-docker -e POSTGRES_PASSWORD=docker -e POSTGRES_DB=open_banking -d -p 5432:5432 -v $HOME/docker/volumes/postgres:/var/lib/postgresql/data postgres`
  This database will have admin user postgres/docker when started using aforementioned command and it will be available at `localhost:5432`.
  1. Prepare Postgres (should be done only once) - execute: [open-banking-init.sql](../opba-db/src/main/resources/init.sql) 
- 1. Run OpenBanking backend (Spring-boot application) [OpenBankingEmbeddedApplication](../opba-embedded-starter/src/main/java/de/adorsys/opba/starter/OpenBankingEmbeddedApplication.java) 
+ 1. Run OpenBankingGateway backend (Spring-boot application) [OpenBankingEmbeddedApplication](../opba-embedded-starter/src/main/java/de/adorsys/opba/starter/OpenBankingEmbeddedApplication.java) 
  with profiles `dev,no-encryption`
  
 ### Run from terminal
