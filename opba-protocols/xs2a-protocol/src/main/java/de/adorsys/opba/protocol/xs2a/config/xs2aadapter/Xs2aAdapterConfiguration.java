@@ -101,12 +101,13 @@ public class Xs2aAdapterConfiguration {
             @Value("${" + XS2A_PROTOCOL_CONFIG_PREFIX + "pkcs12.keystore}") String keystorePath,
             @Value("${" + XS2A_PROTOCOL_CONFIG_PREFIX + "pkcs12.password}") char[] keystorePassword
     ) {
-        return new Pkcs12KeyStore(
-                Paths.get(keystorePath).toFile().exists()
-                        ? Paths.get(keystorePath).toAbsolutePath().toString()
-                        : Paths.get(Resources.getResource(keystorePath).toURI()).toAbsolutePath().toString(),
-                keystorePassword
-        );
+        if (Paths.get(keystorePath).toFile().exists()) {
+            return new Pkcs12KeyStore(Paths.get(keystorePath).toAbsolutePath().toString(), keystorePassword);
+        }
+
+        try (var is = Resources.getResource(keystorePath).openStream()) {
+            return new Pkcs12KeyStore(is, keystorePassword, "default_qwac", "default_qseal");
+        }
     }
 
     /**
