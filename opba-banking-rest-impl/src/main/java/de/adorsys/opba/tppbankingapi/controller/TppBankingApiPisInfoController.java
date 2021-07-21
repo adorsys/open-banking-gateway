@@ -37,7 +37,6 @@ public class TppBankingApiPisInfoController implements TppBankingApiPaymentStatu
 
     @Override
     public CompletableFuture getPaymentInformation(String serviceSessionPassword,
-                                                   String fintechUserID,
                                                    UUID xRequestID,
                                                    String paymentProduct,
                                                    String xTimestampUTC,
@@ -51,7 +50,6 @@ public class TppBankingApiPisInfoController implements TppBankingApiPaymentStatu
                                 .requestId(xRequestID)
                                 .bankId(bankID)
                                 .sessionPassword(serviceSessionPassword)
-                                .fintechUserId(fintechUserID)
                                 .authorization(fintechID)
                                 .serviceSessionId(serviceSessionID)
                                 .anonymousPsu(true)
@@ -64,7 +62,6 @@ public class TppBankingApiPisInfoController implements TppBankingApiPaymentStatu
 
     @Override
     public CompletableFuture getPaymentStatus(String serviceSessionPassword,
-                                                        String fintechUserID,
                                                         UUID xRequestID,
                                                         String paymentProduct,
                                                         String xTimestampUTC,
@@ -78,7 +75,6 @@ public class TppBankingApiPisInfoController implements TppBankingApiPaymentStatu
                                 .requestId(xRequestID)
                                 .bankId(bankID)
                                 .sessionPassword(serviceSessionPassword)
-                                .fintechUserId(fintechUserID)
                                 .authorization(fintechID)
                                 .serviceSessionId(serviceSessionID)
                                 .anonymousPsu(true)

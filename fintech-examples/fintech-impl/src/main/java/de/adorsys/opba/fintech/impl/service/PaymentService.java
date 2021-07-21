@@ -98,7 +98,6 @@ public class PaymentService {
 
         for (PaymentEntity payment : payments) {
             PaymentInformationResponse body = tppPisPaymentStatusClient.getPaymentInformation(tppProperties.getServiceSessionPassword(),
-                    sessionEntity.getUserEntity().getFintechUserId(),
                     UUID.fromString(restRequestContext.getRequestId()),
                     paymentProduct,
                     COMPUTE_X_TIMESTAMP_UTC,
