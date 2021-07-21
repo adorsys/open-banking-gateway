@@ -69,7 +69,7 @@ public class Xs2aAdapterConfiguration {
 
     @Bean
     HttpClientConfig httpClientConfig(Pkcs12KeyStore keyStore) {
-        return new BaseHttpClientConfig(new Xs2aHttpLogSanitizer(), keyStore);
+        return new BaseHttpClientConfig(new Xs2aHttpLogSanitizer(), keyStore, null);
     }
 
     @Bean
