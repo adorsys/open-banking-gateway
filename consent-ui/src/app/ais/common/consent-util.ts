@@ -21,7 +21,7 @@ export class ConsentUtil {
   }
 
   public static isEmptyObject(obj: Object) {
-    return (obj && (Object.keys(obj).length === 0));
+    return null === obj || !obj || (Object.keys(obj).length === 0);
   }
 
   private static initializeConsentObject(): AisConsentToGrant {
