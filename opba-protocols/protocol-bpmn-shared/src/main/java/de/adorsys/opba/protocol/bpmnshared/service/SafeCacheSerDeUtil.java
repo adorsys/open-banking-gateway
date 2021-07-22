@@ -1,4 +1,4 @@
-package de.adorsys.opba.protocol.hbci.service;
+package de.adorsys.opba.protocol.bpmnshared.service;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;

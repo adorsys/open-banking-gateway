@@ -2,7 +2,7 @@ package de.adorsys.opba.protocol.hbci.service.consent;
 
 import de.adorsys.opba.protocol.bpmnshared.service.exec.ValidatedExecution;
 import de.adorsys.opba.protocol.hbci.context.TransactionListHbciContext;
-import de.adorsys.opba.protocol.hbci.service.protocol.ais.dto.HbciResultCache;
+import de.adorsys.opba.protocol.bpmnshared.dto.context.ProtocolResultCache;
 import de.adorsys.opba.protocol.hbci.util.logresolver.HbciLogResolver;
 import lombok.RequiredArgsConstructor;
 import lombok.SneakyThrows;
@@ -23,7 +23,7 @@ public class HbciStoreTransactionListToCache extends ValidatedExecution<Transact
     protected void doRealExecution(DelegateExecution execution, TransactionListHbciContext context) {
         logResolver.log("doRealExecution: execution ({}) with context ({})", execution, context);
 
-        HbciResultCache cached = null != context.getCachedResult() ? context.getCachedResult() : new HbciResultCache();
+        ProtocolResultCache cached = null != context.getCachedResult() ? context.getCachedResult() : new ProtocolResultCache();
 
         logResolver.log("transactionsByIban is empty: {}", null == cached.getTransactionsByIban());
         if (null == cached.getTransactionsByIban()) {

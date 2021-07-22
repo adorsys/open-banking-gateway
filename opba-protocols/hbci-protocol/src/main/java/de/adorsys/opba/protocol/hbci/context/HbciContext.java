@@ -10,7 +10,7 @@ import de.adorsys.opba.protocol.api.common.ProtocolAction;
 import de.adorsys.opba.protocol.api.dto.result.body.ScaMethod;
 import de.adorsys.opba.protocol.bpmnshared.dto.context.BaseContext;
 import de.adorsys.opba.protocol.hbci.config.HbciProtocolConfiguration;
-import de.adorsys.opba.protocol.hbci.service.protocol.ais.dto.HbciResultCache;
+import de.adorsys.opba.protocol.bpmnshared.dto.context.ProtocolResultCache;
 import de.adorsys.opba.protocol.hbci.service.storage.TransientDataEntry;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
@@ -102,7 +102,7 @@ public class HbciContext extends BaseContext {
 
     private String hbciPassportState;
 
-    private HbciResultCache cachedResult;
+    private ProtocolResultCache cachedResult;
 
     private Boolean online;
 

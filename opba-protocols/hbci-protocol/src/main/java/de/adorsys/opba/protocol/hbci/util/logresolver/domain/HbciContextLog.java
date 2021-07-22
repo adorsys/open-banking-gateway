@@ -5,7 +5,7 @@ import de.adorsys.multibanking.domain.ChallengeData;
 import de.adorsys.multibanking.hbci.model.HbciConsent;
 import de.adorsys.multibanking.hbci.model.HbciTanSubmit;
 import de.adorsys.opba.protocol.api.dto.result.body.ScaMethod;
-import de.adorsys.opba.protocol.hbci.service.protocol.ais.dto.HbciResultCache;
+import de.adorsys.opba.protocol.bpmnshared.dto.context.ProtocolResultCache;
 import lombok.Data;
 import lombok.ToString;
 
@@ -29,7 +29,7 @@ public class HbciContextLog extends BaseContextLog {
     private boolean consentIncompatible;
     private String psuTan;
     private String hbciPassportState;
-    private HbciResultCache cachedResult;
+    private ProtocolResultCache cachedResult;
     private Boolean online;
 
     @Override
