@@ -5,7 +5,9 @@ import de.adorsys.opba.protocol.api.ais.ListAccounts;
 import de.adorsys.opba.protocol.api.common.ProtocolAction;
 import de.adorsys.opba.protocol.api.dto.ValidationIssue;
 import de.adorsys.opba.protocol.api.dto.context.ServiceContext;
+import de.adorsys.opba.protocol.api.dto.parameters.ExtraRequestParam;
 import de.adorsys.opba.protocol.api.dto.request.accounts.ListAccountsRequest;
+import de.adorsys.opba.protocol.api.dto.request.authorization.AisConsent;
 import de.adorsys.opba.protocol.api.dto.result.body.AccountListBody;
 import de.adorsys.opba.protocol.api.dto.result.body.ValidationError;
 import de.adorsys.opba.protocol.api.dto.result.fromprotocol.Result;
@@ -16,6 +18,7 @@ import de.adorsys.opba.protocol.xs2a.entrypoint.ExtendWithServiceContext;
 import de.adorsys.opba.protocol.xs2a.entrypoint.Xs2aOutcomeMapper;
 import de.adorsys.opba.protocol.xs2a.entrypoint.Xs2aResultBodyExtractor;
 import de.adorsys.opba.protocol.xs2a.entrypoint.helpers.Xs2aUuidMapper;
+import de.adorsys.opba.protocol.xs2a.service.xs2a.dto.consent.AisConsentInitiateBody;
 import lombok.RequiredArgsConstructor;
 import org.flowable.engine.RuntimeService;
 import org.flowable.engine.runtime.ProcessInstance;
@@ -23,6 +26,7 @@ import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.springframework.stereotype.Service;
 
+import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ConcurrentHashMap;
@@ -83,6 +87,16 @@ public class Xs2aListAccountsEntrypoint implements ListAccounts {
         @Mapping(source = "facadeServiceable.fintechRedirectUrlOk", target = "fintechRedirectUriOk")
         @Mapping(source = "facadeServiceable.fintechRedirectUrlNok", target = "fintechRedirectUriNok")
         @Mapping(source = "facadeServiceable.uaContext.psuAccept", target = "contentType", nullValuePropertyMappingStrategy = IGNORE)
+        @Mapping(source = "extras", target = "aisConsent")
         AccountListXs2aContext map(ListAccountsRequest ctx);
+
+        default AisConsentInitiateBody map(Map<ExtraRequestParam, Object> extras) {
+            if (extras == null || !extras.containsKey(ExtraRequestParam.CONSENT)) {
+                return new AisConsentInitiateBody();
+            }
+            return map((AisConsent) extras.get(ExtraRequestParam.CONSENT));
+        }
+
+        AisConsentInitiateBody map(AisConsent consent);
     }
 }

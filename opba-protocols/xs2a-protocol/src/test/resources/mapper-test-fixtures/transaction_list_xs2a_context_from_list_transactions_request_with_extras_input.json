@@ -1,0 +1,33 @@
+{
+  "facadeServiceable": {
+    "uaContext": {
+      "psuIpAddress": "1.1.1.1",
+      "psuIpPort": "5555",
+      "psuAccept": "application/json",
+      "psuAcceptCharset": null,
+      "psuAcceptEncoding": null,
+      "psuAcceptLanguage": null,
+      "psuDeviceId": null,
+      "psuUserAgent": null,
+      "psuGeoLocation": null,
+      "psuHttpMethod": null
+    },
+    "requestId": "cef0cbf3-6458-4f13-a418-ee4d7e750511",
+    "serviceSessionId": "cef0cbf3-6458-4f13-a418-ee4d7e7505dd",
+    "authorizationSessionId": "11111-11111",
+    "redirectCode": "123",
+    "authorization": "22222-22222",
+    "bankId": "53c47f54-b9a4-465a-8f77-bc6cd5f0cf46",
+    "fintechUserId": "localhost:2222",
+    "fintechRedirectUrlOk": "http://localhost:5500/from-aspsp/v1/consent/c86feb1e-9ba8-4407-918f-8183143df295/fromAspsp/STUB_STATE/ok?redirectCode=a5001521-edd8-4d99-b72d-30670b839d06",
+    "fintechRedirectUrlNok": "http://localhost:5500/from-aspsp/v1/consent/c86feb1e-9ba8-4407-918f-8183143df295/fromAspsp/STUB_STATE/nok?redirectCode=a5001521-edd8-4d99-b72d-30670b839d06",
+    "sessionPassword": "1234"
+  },
+  "accountId": "1111-1111",
+  "dateFrom": "2020-07-01",
+  "dateTo": "2021-03-01",
+  "entryReferenceFrom": "test entry reference",
+  "bookingStatus": "PENDING",
+  "deltaList": false,
+  "extras": {"CONSENT": "{\"access\":{\"allPsd2\":\"ALL_ACCOUNTS_WITH_BALANCES\"},\"frequencyPerDay\":4,\"validUntil\":\"2021-06-18\",\"recurringIndicator\":true,\"combinedServiceIndicator\":false}"}
+}

@@ -26,13 +26,20 @@ describe('AisService', () => {
 
   it('should get accounts', () => {
     const getAccountsSpy = spyOn(aisService, 'getAccounts');
-    aisService.getAccounts('1234', LoARetrievalInformation.FROM_TPP_WITH_AVAILABLE_CONSENT, true, false, true);
+    aisService.getAccounts('1234', LoARetrievalInformation.FROM_TPP_WITH_AVAILABLE_CONSENT, '', true, false, true);
     expect(getAccountsSpy).toHaveBeenCalled();
   });
 
   it('should get transactions', () => {
     const getTransactionsSpy = spyOn(aisService, 'getTransactions');
-    aisService.getTransactions('1234', 'xxxxxxxxxx', LoTRetrievalInformation.FROM_TPP_WITH_AVAILABLE_CONSENT, false, true);
+    aisService.getTransactions(
+      '1234',
+      'xxxxxxxxxx',
+      LoTRetrievalInformation.FROM_TPP_WITH_AVAILABLE_CONSENT,
+      '',
+      false,
+      true
+    );
     expect(getTransactionsSpy).toHaveBeenCalled();
   });
 });

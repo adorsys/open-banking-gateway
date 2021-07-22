@@ -260,6 +260,7 @@ paths:
         - $ref: "#/components/parameters/Fintech-Redirect-URL-OK"
         - $ref: "#/components/parameters/Fintech-Redirect-URL-NOK"
         - $ref: "#/components/parameters/LoARetrievalInformation"
+        - $ref: "#/components/parameters/X-Create-Consent-If-None"
         #query
         - $ref: "#/components/parameters/withBalance"
         - $ref: "#/components/parameters/online"
@@ -287,14 +288,6 @@ paths:
         #path
         - $ref: "#/components/parameters/bank-id"
         - $ref: "#/components/parameters/account-id"
-        #query
-        - $ref: "#/components/parameters/dateFrom"
-        - $ref: "#/components/parameters/dateTo"
-        - $ref: "#/components/parameters/entryReferenceFrom"
-        - $ref: "#/components/parameters/bookingStatus"
-        - $ref: "#/components/parameters/deltaList"
-        - $ref: "#/components/parameters/online"
-
         #header
         - $ref: "#/components/parameters/X-Request-ID"
         - $ref: "#/components/parameters/X-XSRF-TOKEN"
@@ -302,6 +295,14 @@ paths:
         - $ref: "#/components/parameters/Fintech-Redirect-URL-OK"
         - $ref: "#/components/parameters/Fintech-Redirect-URL-NOK"
         - $ref: "#/components/parameters/LoTRetrievalInformation"
+        - $ref: "#/components/parameters/X-Create-Consent-If-None"
+        #query
+        - $ref: "#/components/parameters/dateFrom"
+        - $ref: "#/components/parameters/dateTo"
+        - $ref: "#/components/parameters/entryReferenceFrom"
+        - $ref: "#/components/parameters/bookingStatus"
+        - $ref: "#/components/parameters/deltaList"
+        - $ref: "#/components/parameters/online"
 
       security:
         - sessionCookie: []
@@ -605,6 +606,15 @@ components:
         enum:
           - "FROM_TPP_WITH_AVAILABLE_CONSENT"
           - "FROM_TPP_WITH_NEW_CONSENT"
+
+    X-Create-Consent-If-None:
+      name: X-Create-Consent-If-None
+      required: false
+      in: header
+      schema:
+        type: string
+        description: json representation of AisConsentRequest object
+        example: {"access":{"allPsd2":"ALL_ACCOUNTS_WITH_BALANCES"},"frequencyPerDay":4,"validUntil":"2021-06-18","recurringIndicator":true,"combinedServiceIndicator":false}
 
     X-Request-ID:
       name: X-Request-ID

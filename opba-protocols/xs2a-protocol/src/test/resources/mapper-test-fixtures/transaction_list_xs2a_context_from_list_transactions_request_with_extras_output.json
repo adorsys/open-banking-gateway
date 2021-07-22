@@ -1,0 +1,40 @@
+{
+  "iban": null,
+  "requestId": "cef0cbf3-6458-4f13-a418-ee4d7e750511",
+  "resourceId": "1111-1111",
+  "currency": null,
+  "bookingStatus": "PENDING",
+  "dateFrom": "2020-07-01",
+  "dateTo": "2021-03-01",
+  "aisConsent": {
+    "access": {
+      "allPsd2" : "ALL_ACCOUNTS_WITH_BALANCES"
+    },
+    "recurringIndicator": true,
+    "validUntil": "2021-06-18",
+    "frequencyPerDay": 4,
+    "combinedServiceIndicator": false
+  },
+  "contentType": "application/json",
+  "psuIpAddress": "1.1.1.1",
+  "startScaProcessResponse": null,
+  "psuPassword": null,
+  "fintechRedirectUriOk": "http://localhost:5500/from-aspsp/v1/consent/c86feb1e-9ba8-4407-918f-8183143df295/fromAspsp/STUB_STATE/ok?redirectCode=a5001521-edd8-4d99-b72d-30670b839d06",
+  "fintechRedirectUriNok": "http://localhost:5500/from-aspsp/v1/consent/c86feb1e-9ba8-4407-918f-8183143df295/fromAspsp/STUB_STATE/nok?redirectCode=a5001521-edd8-4d99-b72d-30670b839d06",
+  "redirectConsentOk": false,
+  "mode": null,
+  "aspspId": "53c47f54-b9a4-465a-8f77-bc6cd5f0cf46",
+  "action": null,
+  "flowByAction": {
+    "LIST_ACCOUNTS": "xs2a-list-accounts",
+    "LIST_TRANSACTIONS": "xs2a-list-transactions",
+    "SINGLE_PAYMENT": "xs2a-single-payments"
+  },
+  "sagaId": null,
+  "serviceSessionId": null,
+  "authorizationSessionIdIfOpened": null,
+  "redirectCodeIfAuthContinued": null,
+  "aspspRedirectCode": null,
+  "violations": [],
+  "lastRedirection": null
+}

@@ -1,5 +1,11 @@
 import { Injectable } from '@angular/core';
-import { Consts, LoARetrievalInformation, LoTRetrievalInformation, toLocaleString } from '../models/consts';
+import {
+  ConsentSettingType,
+  Consts,
+  LoARetrievalInformation,
+  LoTRetrievalInformation,
+  toLocaleString
+} from '../models/consts';
 import { AccountStruct, RedirectTupelForMap, RedirectType } from '../bank/redirect-page/redirect-struct';
 import { SettingsData } from '../bank/settings/settings.component';
 
@@ -153,6 +159,7 @@ export class StorageService {
 
   public getSettings(): SettingsData {
     const setting = localStorage.getItem(Consts.LOCAL_STORAGE_SETTINGS);
+
     if (setting == null) {
       return {
         loa: LoARetrievalInformation.FROM_TPP_WITH_AVAILABLE_CONSENT,
@@ -161,7 +168,9 @@ export class StorageService {
         cacheLoa: false,
         cacheLot: false,
         consentRequiresAuthentication: true,
-        paymentRequiresAuthentication: false
+        paymentRequiresAuthentication: false,
+        consentSettingType: ConsentSettingType.NONE,
+        consent: null
       };
     }
     return JSON.parse(setting);
