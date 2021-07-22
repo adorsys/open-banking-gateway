@@ -99,6 +99,10 @@ public class Consent {
     }
 
     public String getCache(EncryptionService encryption) {
+        if (null == encCache) {
+            return null;
+        }
+
         return new String(encryption.decrypt(encCache), StandardCharsets.UTF_8);
     }
 
