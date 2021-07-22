@@ -63,8 +63,8 @@ export class AisService {
       null,
       'both',
       null,
-      authenticatePsu,
       online,
+      authenticatePsu,
       'response'
     );
   }
