@@ -30,6 +30,10 @@ public class SafeCacheSerDeUtil {
 
     @SneakyThrows
     public Object safeDeserialize(String context) {
+        if (null == context) {
+            return null;
+        }
+
         // Support for versioning using class name
         JsonNode value = mapper.readTree(context);
         Map.Entry<String, JsonNode> classNameAndValue = value.fields().next();

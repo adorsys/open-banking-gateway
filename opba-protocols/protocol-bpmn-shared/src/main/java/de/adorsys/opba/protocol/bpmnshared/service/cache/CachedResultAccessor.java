@@ -14,26 +14,29 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 
 @RequiredArgsConstructor
-public abstract class CachedResultAccessor<CONTEXT extends BaseContext, CONSENT, ACCOUNTS, TRANSACTIONS> {
+public abstract class CachedResultAccessor<CONSENT, ACCOUNTS, TRANSACTIONS, CACHE extends ProtocolResultCache<CONSENT, ACCOUNTS, TRANSACTIONS>, CONTEXT extends BaseContext> {
 
     private final SafeCacheSerDeUtil safeCacheSerDe;
 
     @SneakyThrows
     @Transactional
-    public Optional<ProtocolResultCache<CONSENT, ACCOUNTS, TRANSACTIONS>> resultFromCache(CONTEXT context) {
-        List<ProtocolResultCache<CONSENT, ACCOUNTS, TRANSACTIONS>> consents = context.consentAccess().findByCurrentServiceSessionOrderByModifiedDesc()
+    public Optional<CACHE> resultFromCache(CONTEXT context) {
+        List<CACHE> consents = context.consentAccess().findByCurrentServiceSessionOrderByModifiedDesc()
                 .stream()
-                .map(target -> (ProtocolResultCache<CONSENT, ACCOUNTS, TRANSACTIONS>) safeCacheSerDe.safeDeserialize(target.getConsentCache()))
+                .map(target -> (CACHE) safeCacheSerDe.safeDeserialize(target.getConsentCache()))
                 .collect(Collectors.toList());
 
         if (consents.isEmpty()) {
             return Optional.empty();
         }
 
-        ProtocolResultCache<CONSENT, ACCOUNTS, TRANSACTIONS> result = null;
+        CACHE result = null;
         for (var consent : consents) {
             if (null == result) {
                 result = consent;
+            }
+            if (null == consent) {
+                continue;
             }
 
             mergeAccounts(result, consent);
@@ -45,14 +48,14 @@ public abstract class CachedResultAccessor<CONTEXT extends BaseContext, CONSENT,
 
     @SneakyThrows
     @Transactional
-    public void resultToCache(CONTEXT context, ProtocolResultCache<CONSENT, ACCOUNTS, TRANSACTIONS> result) {
+    public void resultToCache(CONTEXT context, CACHE result) {
         ProtocolFacingConsent newConsent = context.getRequestScoped().consentAccess().createDoNotPersist();
         newConsent.setConsentId(context.getSagaId());
-        newConsent.setConsentContext(safeCacheSerDe.safeSerialize(result));
+        newConsent.setConsentCache(safeCacheSerDe.safeSerialize(result));
         context.getRequestScoped().consentAccess().save(newConsent);
     }
 
-    private boolean consentIsNewer(ProtocolResultCache<CONSENT, ACCOUNTS, TRANSACTIONS> result, ProtocolResultCache<CONSENT, ACCOUNTS, TRANSACTIONS> consent) {
+    private boolean consentIsNewer(CACHE result, CACHE consent) {
         if (null == result.getCachedAt()) {
             return true;
         }
@@ -64,7 +67,7 @@ public abstract class CachedResultAccessor<CONTEXT extends BaseContext, CONSENT,
         return consent.getCachedAt().isAfter(result.getCachedAt());
     }
 
-    private void mergeAccounts(ProtocolResultCache<CONSENT, ACCOUNTS, TRANSACTIONS> result, ProtocolResultCache<CONSENT, ACCOUNTS, TRANSACTIONS> consent) {
+    private void mergeAccounts(CACHE result, CACHE consent) {
         if (null == result.getAccounts()) {
             result.setAccounts(consent.getAccounts());
             return;
@@ -75,7 +78,7 @@ public abstract class CachedResultAccessor<CONTEXT extends BaseContext, CONSENT,
         }
     }
 
-    private void mergeTransactions(ProtocolResultCache<CONSENT, ACCOUNTS, TRANSACTIONS> result, ProtocolResultCache<CONSENT, ACCOUNTS, TRANSACTIONS> consent) {
+    private void mergeTransactions(CACHE result, CACHE consent) {
         if (null == consent.getTransactionsById()) {
             return;
         }
@@ -85,8 +88,9 @@ public abstract class CachedResultAccessor<CONTEXT extends BaseContext, CONSENT,
             return;
         }
 
+        var computedTransactions = new HashMap<>(result.getTransactionsById());
         for (var newEntry : consent.getTransactionsById().entrySet()) {
-            result.getTransactionsById().compute(newEntry.getKey(), (id, existing) -> {
+            computedTransactions.compute(newEntry.getKey(), (id, existing) -> {
                 if (null == existing) {
                     return newEntry.getValue();
                 }
@@ -98,5 +102,6 @@ public abstract class CachedResultAccessor<CONTEXT extends BaseContext, CONSENT,
                 return existing;
             });
         }
+        result.setTransactionsById(computedTransactions);
     }
 }

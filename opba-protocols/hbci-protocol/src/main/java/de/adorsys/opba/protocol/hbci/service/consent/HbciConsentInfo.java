@@ -5,7 +5,7 @@ import de.adorsys.multibanking.hbci.model.HbciConsent;
 import de.adorsys.opba.protocol.hbci.context.AccountListHbciContext;
 import de.adorsys.opba.protocol.hbci.context.HbciContext;
 import de.adorsys.opba.protocol.hbci.context.TransactionListHbciContext;
-import de.adorsys.opba.protocol.bpmnshared.dto.context.ProtocolResultCache;
+import de.adorsys.opba.protocol.hbci.service.protocol.ais.dto.HbciResultCache;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -80,7 +80,7 @@ public class HbciConsentInfo {
             return true;
         }
 
-        Optional<ProtocolResultCache> cached = cachedResultAccessor.resultFromCache(ctx);
+        Optional<HbciResultCache> cached = cachedResultAccessor.resultFromCache(ctx);
         return cached.map(hbciResultCache -> null == hbciResultCache.getAccounts()).orElse(true);
     }
 
@@ -92,10 +92,10 @@ public class HbciConsentInfo {
             return true;
         }
 
-        Optional<ProtocolResultCache> cached = cachedResultAccessor.resultFromCache(ctx);
+        Optional<HbciResultCache> cached = cachedResultAccessor.resultFromCache(ctx);
         return cached.map(
-                hbciResultCache -> null == hbciResultCache.getTransactionsByIban()
-                        || null == hbciResultCache.getTransactionsByIban().get(ctx.getAccountIban())
+                hbciResultCache -> null == hbciResultCache.getTransactionsById()
+                        || null == hbciResultCache.getTransactionsById().get(ctx.getAccountIban())
         ).orElse(true);
     }
 

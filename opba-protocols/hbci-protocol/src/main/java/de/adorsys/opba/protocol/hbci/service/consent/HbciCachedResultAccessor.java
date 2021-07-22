@@ -6,10 +6,11 @@ import de.adorsys.opba.protocol.bpmnshared.service.cache.CachedResultAccessor;
 import de.adorsys.opba.protocol.hbci.context.HbciContext;
 import de.adorsys.opba.protocol.hbci.service.protocol.ais.dto.AisListAccountsResult;
 import de.adorsys.opba.protocol.hbci.service.protocol.ais.dto.AisListTransactionsResult;
+import de.adorsys.opba.protocol.hbci.service.protocol.ais.dto.HbciResultCache;
 import org.springframework.stereotype.Service;
 
 @Service
-public class HbciCachedResultAccessor extends CachedResultAccessor<HbciContext, HbciConsent, AisListAccountsResult, AisListTransactionsResult> {
+public class HbciCachedResultAccessor extends CachedResultAccessor<HbciConsent, AisListAccountsResult, AisListTransactionsResult, HbciResultCache, HbciContext> {
 
     public HbciCachedResultAccessor(SafeCacheSerDeUtil safeCacheSerDe) {
         super(safeCacheSerDe);

@@ -9,9 +9,14 @@ import java.util.Map;
 public interface ProtocolResultCache<CONSENT, ACCOUNTS, TRANSACTIONS> {
 
     CONSENT getConsent();
+    void setConsent(CONSENT consent);
+
     ACCOUNTS getAccounts();
     void setAccounts(ACCOUNTS accounts);
+
     Map<String, TRANSACTIONS> getTransactionsById();
     void setTransactionsById(Map<String, TRANSACTIONS> transactions);
+
     Instant getCachedAt();
+    void setCachedAt(Instant cachedAt);
 }
