@@ -24,6 +24,15 @@ public class CmsEncryptionOper {
 
     private final CmsEncSpec cmsEncSpec;
 
+    public EncryptionService encryptionService(String keyId, PrivateKey privateKey, PublicKey publicKey) {
+        return new CmsEncryption(
+                keyId,
+                cmsEncSpec.getCipherAlgo(),
+                publicKey,
+                privateKey
+        );
+    }
+
     public EncryptionService encryptionService(String keyId, PrivateKey privateKey) {
         return new CmsEncryption(
                 keyId,

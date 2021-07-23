@@ -2,6 +2,7 @@ package de.adorsys.opba.protocol.facade.services;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import de.adorsys.opba.protocol.facade.config.encryption.SecretKeyWithIv;
+import de.adorsys.opba.protocol.facade.dto.PubAndPrivKey;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -14,13 +15,16 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.security.KeyFactory;
 import java.security.PrivateKey;
+import java.security.PublicKey;
 import java.security.spec.PKCS8EncodedKeySpec;
+import java.security.spec.X509EncodedKeySpec;
 
 @Service
 @RequiredArgsConstructor
 public class EncryptionKeySerde {
 
     private static final String PKCS_8 = "PKCS#8";
+    private static final String X509 = "X.509";
 
     private final ObjectMapper mapper;
 
@@ -55,20 +59,26 @@ public class EncryptionKeySerde {
     }
 
     @SneakyThrows
-    public void writePrivateKey(PrivateKey value, OutputStream os) {
+    public void writeKey(PublicKey publicKey, PrivateKey privKey, OutputStream os) {
         // Mapper may choose to close the stream if using stream interface, we don't want this
         // as objects are small - this is ok.
-        os.write(mapper.writeValueAsBytes(new PrivateKeyContainer(value)));
+        os.write(mapper.writeValueAsBytes(new PubAndPrivKeyContainer(publicKey, privKey)));
     }
 
     @SneakyThrows
-    public PrivateKey readPrivateKey(InputStream is) {
-        PrivateKeyContainer container = mapper.readValue(is, PrivateKeyContainer.class);
-        if (!PKCS_8.equals(container.getFormat())) {
+    public PubAndPrivKey readKey(InputStream is) {
+        PubAndPrivKeyContainer container = mapper.readValue(is, PubAndPrivKeyContainer.class);
+        if (!PKCS_8.equals(container.getPrivFormat())) {
             throw new IllegalArgumentException("Bad key format");
         }
+        if (!X509.equals(container.getPubFormat())) {
+            throw new IllegalArgumentException("Bad key format");
+        }
+
         KeyFactory factory = KeyFactory.getInstance(container.getAlgo());
-        return factory.generatePrivate(new PKCS8EncodedKeySpec(container.getEncoded()));
+        var privKey = factory.generatePrivate(new PKCS8EncodedKeySpec(container.getEncoded()));
+        var pubKey = factory.generatePublic(new X509EncodedKeySpec(container.getPubEncoded()));
+        return new PubAndPrivKey(pubKey, privKey);
     }
 
     @Data
@@ -97,20 +107,27 @@ public class EncryptionKeySerde {
     @Data
     @NoArgsConstructor
     @AllArgsConstructor
-    public static class PrivateKeyContainer {
+    public static class PubAndPrivKeyContainer {
 
         private String algo;
-        private String format;
+        private String privFormat;
+        private String pubFormat;
         private byte[] encoded;
+        private byte[] pubEncoded;
 
-        public PrivateKeyContainer(PrivateKey key) {
-            if (!PKCS_8.equals(key.getFormat())) {
+        public PubAndPrivKeyContainer(PublicKey publicKey, PrivateKey privateKey) {
+            if (!PKCS_8.equals(privateKey.getFormat())) {
+                throw new IllegalArgumentException("Bad key format");
+            }
+            if (!X509.equals(publicKey.getFormat())) {
                 throw new IllegalArgumentException("Bad key format");
             }
 
-            this.algo = key.getAlgorithm();
-            this.format = key.getFormat();
-            this.encoded = key.getEncoded();
+            this.algo = privateKey.getAlgorithm();
+            this.privFormat = privateKey.getFormat();
+            this.encoded = privateKey.getEncoded();
+            this.pubFormat = publicKey.getFormat();
+            this.pubEncoded = publicKey.getEncoded();
         }
     }
 }

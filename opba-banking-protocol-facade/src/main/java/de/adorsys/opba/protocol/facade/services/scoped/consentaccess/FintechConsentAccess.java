@@ -3,9 +3,12 @@ package de.adorsys.opba.protocol.facade.services.scoped.consentaccess;
 import de.adorsys.opba.db.domain.entity.Consent;
 import de.adorsys.opba.db.domain.entity.fintech.Fintech;
 import de.adorsys.opba.db.domain.entity.fintech.FintechPsuAspspPrvKey;
+import de.adorsys.opba.db.domain.entity.psu.PsuAspspPubKey;
 import de.adorsys.opba.db.domain.entity.sessions.ServiceSession;
 import de.adorsys.opba.db.repository.jpa.ConsentRepository;
 import de.adorsys.opba.db.repository.jpa.fintech.FintechPsuAspspPrvKeyRepository;
+import de.adorsys.opba.db.repository.jpa.psu.PsuAspspPrvKeyRepository;
+import de.adorsys.opba.db.repository.jpa.psu.PsuAspspPubKeyRepository;
 import de.adorsys.opba.protocol.api.services.EncryptionService;
 import de.adorsys.opba.protocol.api.services.scoped.consent.ConsentAccess;
 import de.adorsys.opba.protocol.api.services.scoped.consent.ProtocolFacingConsent;
@@ -85,8 +88,8 @@ public class FintechConsentAccess implements ConsentAccess {
             return Collections.emptyList();
         }
 
-        PrivateKey psuAspspKey = fintechVault.psuAspspKeyFromPrivate(serviceSession, fintech, fintechPassword);
-        EncryptionService enc = encryptionService.forPrivateKey(psuAspspPrivateKey.get().getId(), psuAspspKey);
+        var psuAspspKey = fintechVault.psuAspspKeyFromPrivate(serviceSession, fintech, fintechPassword);
+        EncryptionService enc = encryptionService.forPublicAndPrivateKey(psuAspspPrivateKey.get().getId(), psuAspspKey);
         return consent.stream().map(it -> new ProtocolFacingConsentImpl(it, enc)).collect(Collectors.toList());
     }
 
@@ -100,7 +103,7 @@ public class FintechConsentAccess implements ConsentAccess {
         return consent.stream()
                 .map(it -> new ProtocolFacingConsentImpl(
                         it,
-                        encryptionService.forPrivateKey(
+                        encryptionService.forPublicAndPrivateKey(
                                 it.getFintechPubKey().getId(),
                                 fintechVault.fintechOnlyPrvKeyFromPrivate(
                                         it.getFintechPubKey().getPrvKey(),

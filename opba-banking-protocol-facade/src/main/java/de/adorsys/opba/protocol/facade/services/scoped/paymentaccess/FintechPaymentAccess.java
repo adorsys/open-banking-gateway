@@ -110,12 +110,12 @@ public class FintechPaymentAccess implements PaymentAccess {
             return null;
         }
 
-        PrivateKey psuAspspKey = fintechVault.psuAspspKeyFromPrivate(session, fintech, fintechPassword);
-        return encryptionService.forPrivateKey(psuAspspPrivateKey.get().getId(), psuAspspKey);
+        var psuAspspKey = fintechVault.psuAspspKeyFromPrivate(session, fintech, fintechPassword);
+        return encryptionService.forPrivateKey(psuAspspPrivateKey.get().getId(), psuAspspKey.getPrivateKey());
     }
 
     private EncryptionService anonymousEncryptionService(FintechPrvKey prvKey) {
-        PrivateKey psuAspspKey = fintechVault.fintechOnlyPrvKeyFromPrivate(prvKey, fintech, fintechPassword);
-        return encryptionService.forPrivateKey(prvKey.getId(), psuAspspKey);
+        var psuAspspKey = fintechVault.fintechOnlyPrvKeyFromPrivate(prvKey, fintech, fintechPassword);
+        return encryptionService.forPrivateKey(prvKey.getId(), psuAspspKey.getPrivateKey());
     }
 }

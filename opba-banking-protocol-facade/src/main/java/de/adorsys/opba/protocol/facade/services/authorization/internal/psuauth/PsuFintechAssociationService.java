@@ -28,7 +28,7 @@ public class PsuFintechAssociationService {
 
     @Transactional
     public void sharePsuAspspSecretKeyWithFintech(String psuPassword, AuthSession session) {
-        PrivateKey psuAspspKey = psuVault.getOrCreateKeyFromPrivateForAspsp(
+        var psuAspspKey = psuVault.getOrCreateKeyFromPrivateForAspsp(
                 psuPassword::toCharArray,
                 session,
                 this::storePublicKey
@@ -39,7 +39,7 @@ public class PsuFintechAssociationService {
 
     @Transactional
     public void shareAnonymousUserSecretKeyWithFintech(String psuPassword, AuthSession session) {
-        PrivateKey psuAspspKey = psuVault.getOrCreateKeyFromPrivateForAspsp(
+        var psuAspspKey = psuVault.getOrCreateKeyFromPrivateForAspsp(
                 psuPassword::toCharArray,
                 session,
                 this::storePublicKey
