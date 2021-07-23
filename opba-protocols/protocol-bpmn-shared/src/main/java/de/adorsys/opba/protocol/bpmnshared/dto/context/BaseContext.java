@@ -99,6 +99,11 @@ public class BaseContext implements RequestScoped, UsesRequestScoped {
     private String selectedScaType;
 
     /**
+     * Indicates if OBG must read response directly from the bank or to read it from OBG-cache.
+     */
+    private Boolean online;
+
+    /**
      * Request-scoped services and data.
      */
     @Delegate

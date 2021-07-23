@@ -50,7 +50,7 @@ public class FintechConsentAccess implements ConsentAccess {
 
     @Override
     public void save(ProtocolFacingConsent consent) {
-        throw new IllegalStateException("No PSU present - can't save consent");
+        consents.save(((ProtocolFacingConsentImpl) consent).getConsent());
     }
 
     @Override

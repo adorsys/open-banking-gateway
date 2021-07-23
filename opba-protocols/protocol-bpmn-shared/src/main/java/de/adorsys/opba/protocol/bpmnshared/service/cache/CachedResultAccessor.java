@@ -49,10 +49,17 @@ public abstract class CachedResultAccessor<CONSENT, ACCOUNTS, TRANSACTIONS, CACH
     @SneakyThrows
     @Transactional
     public void resultToCache(CONTEXT context, CACHE result) {
-        ProtocolFacingConsent newConsent = context.getRequestScoped().consentAccess().createDoNotPersist();
-        newConsent.setConsentId(context.getSagaId());
-        newConsent.setConsentCache(safeCacheSerDe.safeSerialize(result));
-        context.getRequestScoped().consentAccess().save(newConsent);
+        ProtocolFacingConsent targetConsent = context.getRequestScoped().consentAccess().createDoNotPersist();
+        targetConsent.setConsentId(context.getSagaId());
+        targetConsent.setConsentCache(safeCacheSerDe.safeSerialize(result));
+        context.getRequestScoped().consentAccess().save(targetConsent);
+    }
+
+    @SneakyThrows
+    @Transactional
+    public void resultToCache(CONTEXT context, CACHE result, ProtocolFacingConsent consent) {
+        consent.setConsentCache(safeCacheSerDe.safeSerialize(result));
+        context.getRequestScoped().consentAccess().save(consent);
     }
 
     private boolean consentIsNewer(CACHE result, CACHE consent) {

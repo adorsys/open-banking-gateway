@@ -180,11 +180,19 @@ public class AccountInformationResult<SELF extends AccountInformationResult<SELF
 
     @SneakyThrows
     public SELF open_banking_can_read_max_musterman_account_data_using_consent_bound_to_service_session(
-        boolean validateResourceId, int expectedBalances
+            boolean validateResourceId, int expectedBalances
+    ) {
+        return open_banking_can_read_max_musterman_account_data_using_consent_bound_to_service_session(validateResourceId, expectedBalances, true);
+    }
+
+    @SneakyThrows
+    public SELF open_banking_can_read_max_musterman_account_data_using_consent_bound_to_service_session(
+        boolean validateResourceId, int expectedBalances, boolean online
     ) {
         ValidatableResponse body = withAccountsHeaders(ANTON_BRUECKNER)
                 .header(SERVICE_SESSION_ID, serviceSessionId)
             .when()
+                .queryParam("online", online)
                 .get(AIS_ACCOUNTS_ENDPOINT)
             .then()
                 .statusCode(HttpStatus.OK.value())
@@ -200,6 +208,7 @@ public class AccountInformationResult<SELF extends AccountInformationResult<SELF
         this.responseContent = response.body().asString();
         return self();
     }
+
 
     @SneakyThrows
     public SELF open_banking_reads_anton_brueckner_transactions_using_consent_bound_to_service_session_data_validated_by_iban(
@@ -319,13 +328,23 @@ public class AccountInformationResult<SELF extends AccountInformationResult<SELF
 
     @SneakyThrows
     public SELF open_banking_can_read_max_musterman_transactions_data_using_consent_bound_to_service_session(
-        String resourceId, LocalDate dateFrom, LocalDate dateTo, String bookingStatus
+            String resourceId, LocalDate dateFrom, LocalDate dateTo, String bookingStatus
+    ) {
+        return open_banking_can_read_max_musterman_transactions_data_using_consent_bound_to_service_session(
+                resourceId, dateFrom, dateTo, bookingStatus, true
+        );
+    }
+
+    @SneakyThrows
+    public SELF open_banking_can_read_max_musterman_transactions_data_using_consent_bound_to_service_session(
+        String resourceId, LocalDate dateFrom, LocalDate dateTo, String bookingStatus, boolean online
     ) {
         withTransactionsHeaders(MAX_MUSTERMAN)
                 .header(SERVICE_SESSION_ID, serviceSessionId)
                 .queryParam("dateFrom", dateFrom.format(ISO_DATE))
                 .queryParam("dateTo", dateTo.format(ISO_DATE))
                 .queryParam("bookingStatus", bookingStatus)
+                .queryParam("online", online)
             .when()
                 .get(AIS_TRANSACTIONS_ENDPOINT, resourceId)
             .then()
