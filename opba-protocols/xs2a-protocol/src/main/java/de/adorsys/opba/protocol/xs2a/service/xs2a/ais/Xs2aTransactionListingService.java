@@ -117,9 +117,7 @@ public class Xs2aTransactionListingService extends ValidatedExecution<Transactio
             transactions.getTransactions().setBooked(filterTransactionsByDate(transactions.getTransactions().getBooked(), context));
             transactions.getTransactions().setPending(filterTransactionsByDate(transactions.getTransactions().getPending(), context));
         }
-        eventPublisher.publishEvent(
-                new ProcessResponse(execution.getRootProcessInstanceId(), execution.getId(), result.get().getTransactionsById().get(context.getResourceId()))
-        );
+        eventPublisher.publishEvent(new ProcessResponse(execution.getRootProcessInstanceId(), execution.getId(), transactions));
 
         return true;
     }

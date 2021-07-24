@@ -420,7 +420,7 @@ class WiremockConsentE2EXs2aProtocolTest extends SpringScenarioTest<MockServers,
                         MAX_MUSTERMAN_RESOURCE_ID, DATE_FROM, DATE_TO, BOTH_BOOKING, false
                 )
                 .open_banking_can_read_max_musterman_account_data_using_consent_bound_to_service_session(true, 0, false)
-                .open_banking_can_read_max_musterman_transactions_data_using_consent_bound_to_service_session(
+                .open_banking_can_read_none_due_to_filter_max_musterman_transactions_data_using_consent_bound_to_service_session(
                         MAX_MUSTERMAN_RESOURCE_ID, DATE_FROM, DATE_FROM, BOTH_BOOKING, false
                 );
     }

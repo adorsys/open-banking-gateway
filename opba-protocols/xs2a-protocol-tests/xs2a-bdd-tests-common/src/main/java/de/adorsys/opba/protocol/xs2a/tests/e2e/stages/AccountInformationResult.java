@@ -46,6 +46,7 @@ import static java.time.format.DateTimeFormatter.ISO_DATE;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.util.BigDecimalComparator.BIG_DECIMAL_COMPARATOR;
 import static org.hamcrest.Matchers.containsInAnyOrder;
+import static org.hamcrest.Matchers.empty;
 import static org.hamcrest.Matchers.equalTo;
 import static org.hamcrest.Matchers.hasSize;
 import static org.hamcrest.Matchers.instanceOf;
@@ -359,6 +360,24 @@ public class AccountInformationResult<SELF extends AccountInformationResult<SELF
                     )
                 )
                 .body("transactions.booked", hasSize(MAX_MUSTERMAN_BOOKED_TRANSACTIONS_COUNT));
+        return self();
+    }
+
+    @SneakyThrows
+    public SELF open_banking_can_read_none_due_to_filter_max_musterman_transactions_data_using_consent_bound_to_service_session(
+            String resourceId, LocalDate dateFrom, LocalDate dateTo, String bookingStatus, boolean online
+    ) {
+        withTransactionsHeaders(MAX_MUSTERMAN)
+                .header(SERVICE_SESSION_ID, serviceSessionId)
+                .queryParam("dateFrom", dateFrom.format(ISO_DATE))
+                .queryParam("dateTo", dateTo.format(ISO_DATE))
+                .queryParam("bookingStatus", bookingStatus)
+                .queryParam("online", online)
+                .when()
+                .get(AIS_TRANSACTIONS_ENDPOINT, resourceId)
+                .then()
+                .statusCode(HttpStatus.OK.value())
+                .body("transactions.booked", empty());
         return self();
     }
 
