@@ -42,7 +42,7 @@ public class ConsentConfirmationService {
             return true;
         }
 
-        PrivateKey psuAspspKey = vault.psuAspspKeyFromInbox(
+        var psuAspspKey = vault.psuAspspKeyFromInbox(
                 session.get(),
                 finTechPassword::toCharArray
         );

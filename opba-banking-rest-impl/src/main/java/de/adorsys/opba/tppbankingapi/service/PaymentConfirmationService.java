@@ -45,7 +45,7 @@ public class PaymentConfirmationService {
     }
 
     private boolean sendPsuKeyFromInboxToFintech(String finTechPassword, AuthSession session) {
-        PrivateKey psuAspspKey = vault.psuAspspKeyFromInbox(
+        var psuAspspKey = vault.psuAspspKeyFromInbox(
                 session,
                 finTechPassword::toCharArray
         );
