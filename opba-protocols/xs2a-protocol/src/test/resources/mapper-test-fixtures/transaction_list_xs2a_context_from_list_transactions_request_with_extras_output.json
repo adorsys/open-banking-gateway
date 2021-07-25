@@ -36,5 +36,6 @@
   "redirectCodeIfAuthContinued": null,
   "aspspRedirectCode": null,
   "violations": [],
-  "lastRedirection": null
+  "lastRedirection": null,
+  "online": false
 }

@@ -21,7 +21,8 @@
     "fintechUserId": "localhost:2222",
     "fintechRedirectUrlOk": "localhost:2222",
     "fintechRedirectUrlNok": "localhost:3333",
-    "sessionPassword": "1234"
+    "sessionPassword": "1234",
+    "online": false
   },
   "extras": null
 }

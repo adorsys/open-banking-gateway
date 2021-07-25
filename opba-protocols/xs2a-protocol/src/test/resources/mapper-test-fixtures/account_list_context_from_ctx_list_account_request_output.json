@@ -12,5 +12,6 @@
   "psuIpAddress": "1.1.1.1",
   "fintechRedirectUriOk": "localhost:2222",
   "fintechRedirectUriNok": "localhost:3333",
-  "redirectConsentOk": false
+  "redirectConsentOk": false,
+  "online": false
 }
