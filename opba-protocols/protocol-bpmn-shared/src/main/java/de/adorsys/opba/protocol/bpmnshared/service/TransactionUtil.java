@@ -15,6 +15,6 @@ public class TransactionUtil {
         from = null == from ? LocalDate.MIN : from;
         to = null == to ? LocalDate.MAX : to;
 
-        return transactionDate.isAfter(from) && transactionDate.isBefore(to);
+        return (transactionDate.isAfter(from) || transactionDate.isEqual(from)) && (transactionDate.isBefore(to) || transactionDate.isEqual(to));
     }
 }

@@ -29,6 +29,7 @@ import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigDecimal;
+import java.time.LocalDate;
 import java.util.Set;
 import java.util.UUID;
 
@@ -172,6 +173,10 @@ class HbciSandboxPaymentAndTransactionsAfterE2EHbciProtocolTest extends SpringSc
     }
 
     void getTransactions(BigDecimal[] extraTransactions, boolean online) {
+        getTransactions(extraTransactions, online, DATE_TO);
+    }
+
+    void getTransactions(BigDecimal[] extraTransactions, boolean online, LocalDate dateTo) {
         given()
             .rest_assured_points_to_opba_server_with_fintech_signer_on_banking_api()
             .user_registered_in_opba_with_credentials(OPBA_LOGIN, OPBA_PASSWORD);
@@ -191,7 +196,7 @@ class HbciSandboxPaymentAndTransactionsAfterE2EHbciProtocolTest extends SpringSc
             .open_banking_has_consent_for_max_musterman_account_list()
             .fintech_calls_consent_activation_for_current_authorization_id()
             .open_banking_can_read_max_musterman_hbci_transaction_data_using_consent_bound_to_service_session_with_extra_transactions(
-                    MAX_MUSTERMAN_BANK_BLZ_30000003_ACCOUNT_ID, BANK_BLZ_30000003_ID, DATE_FROM, DATE_TO, BOTH_BOOKING, extraTransactions
+                    MAX_MUSTERMAN_BANK_BLZ_30000003_ACCOUNT_ID, BANK_BLZ_30000003_ID, DATE_FROM, dateTo, BOTH_BOOKING, extraTransactions
             );
     }
 
@@ -200,12 +205,12 @@ class HbciSandboxPaymentAndTransactionsAfterE2EHbciProtocolTest extends SpringSc
     }
 
     private void getTransactionsAndCheckThatPaymentAppearsInTransactions() {
-        getTransactions(new BigDecimal[]{new BigDecimal("-1.03")}, false);
+        getTransactions(new BigDecimal[]{new BigDecimal("-1.03")}, false, LocalDate.now());
     }
 
     void getTransactionsWithCacheUpdate() {
         BigDecimal[] extraTransactions = {new BigDecimal("-1.03"), new BigDecimal("-1.03")};
-        getTransactions(extraTransactions, true);
+        getTransactions(extraTransactions, true, LocalDate.now());
     }
 
     private void checkPaymentsAreNotInTransactions() {
