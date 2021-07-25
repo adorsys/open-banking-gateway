@@ -1,6 +1,7 @@
 package de.adorsys.opba.protocol.xs2a.service.xs2a.ais.sandbox;
 
 import de.adorsys.opba.protocol.xs2a.context.ais.TransactionListXs2aContext;
+import de.adorsys.opba.protocol.xs2a.service.Xs2aCachedResultAccessor;
 import de.adorsys.opba.protocol.xs2a.service.xs2a.ais.Xs2aAccountListingService;
 import de.adorsys.opba.protocol.xs2a.service.xs2a.ais.Xs2aConsentErrorHandler;
 import de.adorsys.opba.protocol.xs2a.service.xs2a.ais.Xs2aTransactionListingService;
@@ -16,14 +17,15 @@ public class SandboxXs2aTransactionListingService extends Xs2aTransactionListing
     private final NoResponseXs2aAccountListingService accountListingService;
 
     public SandboxXs2aTransactionListingService(
-        ApplicationEventPublisher eventPublisher,
-        Xs2aTransactionListingService.Extractor extractor,
-        Xs2aAccountListingService.Extractor accountListExtractor,
-        Xs2aValidator validator,
-        AccountInformationService ais,
-        Xs2aConsentErrorHandler consentErrorHandler) {
-        super(eventPublisher, extractor, validator, ais, consentErrorHandler);
-        this.accountListingService = new NoResponseXs2aAccountListingService(accountListExtractor, validator, ais, consentErrorHandler);
+            ApplicationEventPublisher eventPublisher,
+            Xs2aTransactionListingService.Extractor extractor,
+            Xs2aAccountListingService.Extractor accountListExtractor,
+            Xs2aValidator validator,
+            AccountInformationService ais,
+            Xs2aConsentErrorHandler consentErrorHandler,
+            Xs2aCachedResultAccessor accessor) {
+        super(eventPublisher, extractor, validator, ais, consentErrorHandler, accessor);
+        this.accountListingService = new NoResponseXs2aAccountListingService(accountListExtractor, validator, ais, consentErrorHandler, accessor);
     }
 
     @Override

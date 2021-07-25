@@ -15,7 +15,6 @@ import de.adorsys.opba.protocol.facade.config.encryption.impl.fintech.FintechSec
 import lombok.RequiredArgsConstructor;
 
 import javax.persistence.EntityManager;
-import java.security.PrivateKey;
 import java.util.Collections;
 import java.util.List;
 import java.util.Optional;

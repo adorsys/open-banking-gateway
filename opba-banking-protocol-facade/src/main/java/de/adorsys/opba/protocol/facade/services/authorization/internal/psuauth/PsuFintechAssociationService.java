@@ -12,7 +12,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.EntityManager;
-import java.security.PrivateKey;
 import java.security.PublicKey;
 import java.util.UUID;
 
