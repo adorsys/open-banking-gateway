@@ -161,6 +161,8 @@ paths:
         - $ref: "./tpp_banking_api_commons.yml#/components/parameters/Fintech-ID"
         - $ref: "./tpp_banking_api_commons.yml#/components/parameters/ServiceSessionPassword"
         - $ref: "./tpp_banking_api_commons.yml#/components/parameters/X-Request-ID"
+        #query
+        - $ref: "#/components/parameters/deleteAll"
 
       responses:
         "200":
@@ -317,6 +319,17 @@ components:
       required: false
       schema:
         type: string
+
+    deleteAll:
+      name: deleteAll
+      in: query
+      required: false
+      description: |
+        Delete FinAPI user when deleting consent.
+      example: "false"
+      schema:
+        type: boolean
+        default: "false"
 
   responses:
     200_AccountsTransactions:
