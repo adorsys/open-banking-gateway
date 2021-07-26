@@ -3,7 +3,7 @@ package de.adorsys.opba.protocol.hbci.service.protocol.pis;
 import de.adorsys.opba.protocol.api.services.scoped.consent.ProtocolFacingPayment;
 import de.adorsys.opba.protocol.bpmnshared.service.exec.ValidatedExecution;
 import de.adorsys.opba.protocol.hbci.context.PaymentHbciContext;
-import de.adorsys.opba.protocol.hbci.service.SafeCacheSerDeUtil;
+import de.adorsys.opba.protocol.bpmnshared.service.SafeCacheSerDeUtil;
 import de.adorsys.opba.protocol.hbci.util.logresolver.HbciLogResolver;
 import lombok.RequiredArgsConstructor;
 import lombok.SneakyThrows;

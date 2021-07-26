@@ -21,7 +21,8 @@
     "fintechUserId": "localhost:2222",
     "fintechRedirectUrlOk": "localhost:2222",
     "fintechRedirectUrlNok": "localhost:3333",
-    "sessionPassword": "1234"
+    "sessionPassword": "1234",
+    "online": false
   },
   "extras": {"CONSENT": "{\"access\":{\"allPsd2\":\"ALL_ACCOUNTS_WITH_BALANCES\"},\"frequencyPerDay\":4,\"validUntil\":\"2021-06-18\",\"recurringIndicator\":true,\"combinedServiceIndicator\":false}"}
 }

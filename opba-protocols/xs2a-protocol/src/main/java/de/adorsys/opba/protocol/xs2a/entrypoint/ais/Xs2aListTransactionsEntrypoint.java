@@ -89,6 +89,7 @@ public class Xs2aListTransactionsEntrypoint implements ListTransactions {
         @Mapping(source = "facadeServiceable.fintechRedirectUrlOk", target = "fintechRedirectUriOk")
         @Mapping(source = "facadeServiceable.fintechRedirectUrlNok", target = "fintechRedirectUriNok")
         @Mapping(source = "facadeServiceable.uaContext.psuAccept", target = "contentType", nullValuePropertyMappingStrategy = IGNORE)
+        @Mapping(source = "facadeServiceable.online", target = "online")
         @Mapping(source = "extras", target = "aisConsent")
         TransactionListXs2aContext map(ListTransactionsRequest ctx);
 

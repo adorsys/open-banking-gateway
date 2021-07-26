@@ -16,7 +16,6 @@ import lombok.RequiredArgsConstructor;
 import org.jetbrains.annotations.NotNull;
 
 import javax.persistence.EntityManager;
-import java.security.PrivateKey;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
@@ -50,7 +49,7 @@ public class FintechConsentAccess implements ConsentAccess {
 
     @Override
     public void save(ProtocolFacingConsent consent) {
-        throw new IllegalStateException("No PSU present - can't save consent");
+        consents.save(((ProtocolFacingConsentImpl) consent).getConsent());
     }
 
     @Override
@@ -85,8 +84,8 @@ public class FintechConsentAccess implements ConsentAccess {
             return Collections.emptyList();
         }
 
-        PrivateKey psuAspspKey = fintechVault.psuAspspKeyFromPrivate(serviceSession, fintech, fintechPassword);
-        EncryptionService enc = encryptionService.forPrivateKey(psuAspspPrivateKey.get().getId(), psuAspspKey);
+        var psuAspspKey = fintechVault.psuAspspKeyFromPrivate(serviceSession, fintech, fintechPassword);
+        EncryptionService enc = encryptionService.forPublicAndPrivateKey(psuAspspPrivateKey.get().getId(), psuAspspKey);
         return consent.stream().map(it -> new ProtocolFacingConsentImpl(it, enc)).collect(Collectors.toList());
     }
 
@@ -100,7 +99,7 @@ public class FintechConsentAccess implements ConsentAccess {
         return consent.stream()
                 .map(it -> new ProtocolFacingConsentImpl(
                         it,
-                        encryptionService.forPrivateKey(
+                        encryptionService.forPublicAndPrivateKey(
                                 it.getFintechPubKey().getId(),
                                 fintechVault.fintechOnlyPrvKeyFromPrivate(
                                         it.getFintechPubKey().getPrvKey(),

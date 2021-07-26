@@ -9,6 +9,8 @@ import lombok.SneakyThrows;
 import org.flowable.engine.delegate.DelegateExecution;
 import org.springframework.stereotype.Service;
 
+import java.time.Instant;
+
 @Service("hbciStoreAccountListToCache")
 @RequiredArgsConstructor
 public class HbciStoreAccountListToCache extends ValidatedExecution<AccountListHbciContext> {
@@ -21,7 +23,10 @@ public class HbciStoreAccountListToCache extends ValidatedExecution<AccountListH
     protected void doRealExecution(DelegateExecution execution, AccountListHbciContext context) {
         logResolver.log("doRealExecution: execution ({}) with context ({})", execution, context);
 
-        HbciResultCache cached = null != context.getCachedResult() ? context.getCachedResult() : new HbciResultCache();
+        HbciResultCache  cached = null != context.getCachedResult() ? context.getCachedResult() : new HbciResultCache();
+        if (null != cached.getCachedAt()) {
+            cached.setCachedAt(Instant.now());
+        }
         cached.setAccounts(context.getResponse());
         cached.setConsent(context.getHbciDialogConsent());
         hbciCachedResultAccessor.resultToCache(context, cached);

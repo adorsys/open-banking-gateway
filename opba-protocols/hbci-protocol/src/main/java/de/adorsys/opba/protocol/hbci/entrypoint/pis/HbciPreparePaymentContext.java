@@ -8,7 +8,7 @@ import de.adorsys.opba.protocol.api.dto.request.payments.InitiateSinglePaymentRe
 import de.adorsys.opba.protocol.api.services.scoped.consent.ProtocolFacingPayment;
 import de.adorsys.opba.protocol.bpmnshared.dto.DtoMapper;
 import de.adorsys.opba.protocol.hbci.HbciUuidMapper;
-import de.adorsys.opba.protocol.hbci.service.SafeCacheSerDeUtil;
+import de.adorsys.opba.protocol.bpmnshared.service.SafeCacheSerDeUtil;
 import de.adorsys.opba.protocol.hbci.context.PaymentHbciContext;
 import de.adorsys.opba.protocol.hbci.entrypoint.HbciExtendWithServiceContext;
 import lombok.RequiredArgsConstructor;

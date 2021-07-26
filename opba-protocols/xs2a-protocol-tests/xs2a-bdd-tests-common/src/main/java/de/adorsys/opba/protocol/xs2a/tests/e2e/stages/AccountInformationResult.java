@@ -46,6 +46,7 @@ import static java.time.format.DateTimeFormatter.ISO_DATE;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.util.BigDecimalComparator.BIG_DECIMAL_COMPARATOR;
 import static org.hamcrest.Matchers.containsInAnyOrder;
+import static org.hamcrest.Matchers.empty;
 import static org.hamcrest.Matchers.equalTo;
 import static org.hamcrest.Matchers.hasSize;
 import static org.hamcrest.Matchers.instanceOf;
@@ -180,11 +181,19 @@ public class AccountInformationResult<SELF extends AccountInformationResult<SELF
 
     @SneakyThrows
     public SELF open_banking_can_read_max_musterman_account_data_using_consent_bound_to_service_session(
-        boolean validateResourceId, int expectedBalances
+            boolean validateResourceId, int expectedBalances
+    ) {
+        return open_banking_can_read_max_musterman_account_data_using_consent_bound_to_service_session(validateResourceId, expectedBalances, true);
+    }
+
+    @SneakyThrows
+    public SELF open_banking_can_read_max_musterman_account_data_using_consent_bound_to_service_session(
+        boolean validateResourceId, int expectedBalances, boolean online
     ) {
         ValidatableResponse body = withAccountsHeaders(ANTON_BRUECKNER)
                 .header(SERVICE_SESSION_ID, serviceSessionId)
             .when()
+                .queryParam("online", online)
                 .get(AIS_ACCOUNTS_ENDPOINT)
             .then()
                 .statusCode(HttpStatus.OK.value())
@@ -200,6 +209,7 @@ public class AccountInformationResult<SELF extends AccountInformationResult<SELF
         this.responseContent = response.body().asString();
         return self();
     }
+
 
     @SneakyThrows
     public SELF open_banking_reads_anton_brueckner_transactions_using_consent_bound_to_service_session_data_validated_by_iban(
@@ -319,13 +329,23 @@ public class AccountInformationResult<SELF extends AccountInformationResult<SELF
 
     @SneakyThrows
     public SELF open_banking_can_read_max_musterman_transactions_data_using_consent_bound_to_service_session(
-        String resourceId, LocalDate dateFrom, LocalDate dateTo, String bookingStatus
+            String resourceId, LocalDate dateFrom, LocalDate dateTo, String bookingStatus
+    ) {
+        return open_banking_can_read_max_musterman_transactions_data_using_consent_bound_to_service_session(
+                resourceId, dateFrom, dateTo, bookingStatus, true
+        );
+    }
+
+    @SneakyThrows
+    public SELF open_banking_can_read_max_musterman_transactions_data_using_consent_bound_to_service_session(
+        String resourceId, LocalDate dateFrom, LocalDate dateTo, String bookingStatus, boolean online
     ) {
         withTransactionsHeaders(MAX_MUSTERMAN)
                 .header(SERVICE_SESSION_ID, serviceSessionId)
                 .queryParam("dateFrom", dateFrom.format(ISO_DATE))
                 .queryParam("dateTo", dateTo.format(ISO_DATE))
                 .queryParam("bookingStatus", bookingStatus)
+                .queryParam("online", online)
             .when()
                 .get(AIS_TRANSACTIONS_ENDPOINT, resourceId)
             .then()
@@ -340,6 +360,24 @@ public class AccountInformationResult<SELF extends AccountInformationResult<SELF
                     )
                 )
                 .body("transactions.booked", hasSize(MAX_MUSTERMAN_BOOKED_TRANSACTIONS_COUNT));
+        return self();
+    }
+
+    @SneakyThrows
+    public SELF open_banking_can_read_none_due_to_filter_max_musterman_transactions_data_using_consent_bound_to_service_session(
+            String resourceId, LocalDate dateFrom, LocalDate dateTo, String bookingStatus, boolean online
+    ) {
+        withTransactionsHeaders(MAX_MUSTERMAN)
+                .header(SERVICE_SESSION_ID, serviceSessionId)
+                .queryParam("dateFrom", dateFrom.format(ISO_DATE))
+                .queryParam("dateTo", dateTo.format(ISO_DATE))
+                .queryParam("bookingStatus", bookingStatus)
+                .queryParam("online", online)
+                .when()
+                .get(AIS_TRANSACTIONS_ENDPOINT, resourceId)
+                .then()
+                .statusCode(HttpStatus.OK.value())
+                .body("transactions.booked", empty());
         return self();
     }
 
@@ -487,6 +525,20 @@ public class AccountInformationResult<SELF extends AccountInformationResult<SELF
                 );
         assertThat(body).extracting(it -> it.read("$.transactions.booked[*].remittanceInformationUnstructured"))
                 .asList().containsOnly("Payment For Account Insurance");
+        return self();
+    }
+
+    @SneakyThrows
+    public SELF open_banking_can_read_empty_due_to_range_max_musterman_hbci_transaction_data_using_consent_bound_to_service_session(
+            String resourceId, String bankId, LocalDate dateFrom, LocalDate dateTo, String bookingStatus
+    ) {
+        ExtractableResponse<Response> response = getTransactionListFor(MAX_MUSTERMAN, bankId, resourceId, dateFrom, dateTo, bookingStatus);
+
+        this.responseContent = response.body().asString();
+        DocumentContext body = JsonPath.parse(responseContent);
+
+        // TODO: Currently no IBANs as mapping is not yet completed
+        assertThat(body).extracting(it -> it.read("$.transactions.booked[*]")).asList().hasSize(0);
         return self();
     }
 }

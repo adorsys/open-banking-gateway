@@ -44,7 +44,7 @@ public class SerializerUtil {
     }
 
     @SneakyThrows
-    public Object deserialize(@NotNull byte[] bytes, @NotNull ObjectMapper mapper, @NotNull List<String> allowOnlyClassesWithPrefix,
+    public Object deserialize(byte[] bytes, @NotNull ObjectMapper mapper, @NotNull List<String> allowOnlyClassesWithPrefix,
                               @NotNull RequestScopedServicesProvider requestScoped) {
         JsonNode value = mapper.readTree(bytes);
         Map.Entry<String, JsonNode> classNameAndValue = value.fields().next();

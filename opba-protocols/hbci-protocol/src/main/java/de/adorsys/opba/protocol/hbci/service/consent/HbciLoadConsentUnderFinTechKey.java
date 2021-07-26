@@ -24,12 +24,10 @@ public class HbciLoadConsentUnderFinTechKey extends ValidatedExecution<HbciConte
 
         Optional<HbciResultCache> result = resultAccessor.resultFromCache(context);
 
-        result.ifPresent(cached -> {
-            ContextUtil.getAndUpdateContext(execution, (HbciContext ctx) -> {
-                ctx.setHbciDialogConsent(cached.getConsent());
-                ctx.setCachedResult(cached);
-            });
-        });
+        result.ifPresent(cached -> ContextUtil.getAndUpdateContext(execution, (HbciContext ctx) -> {
+            ctx.setHbciDialogConsent(cached.getConsent());
+            ctx.setCachedResult(cached);
+        }));
     }
 
     @Override

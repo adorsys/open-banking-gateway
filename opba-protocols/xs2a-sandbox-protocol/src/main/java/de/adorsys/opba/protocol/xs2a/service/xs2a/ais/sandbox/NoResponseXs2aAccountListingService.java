@@ -1,6 +1,7 @@
 package de.adorsys.opba.protocol.xs2a.service.xs2a.ais.sandbox;
 
 import de.adorsys.opba.protocol.xs2a.context.ais.Xs2aAisContext;
+import de.adorsys.opba.protocol.xs2a.service.Xs2aCachedResultAccessor;
 import de.adorsys.opba.protocol.xs2a.service.xs2a.ais.Xs2aAccountListingService;
 import de.adorsys.opba.protocol.xs2a.service.xs2a.ais.Xs2aConsentErrorHandler;
 import de.adorsys.opba.protocol.xs2a.service.xs2a.validation.Xs2aValidator;
@@ -16,9 +17,9 @@ class NoResponseXs2aAccountListingService extends Xs2aAccountListingService {
 
     NoResponseXs2aAccountListingService(
             Extractor extractor, Xs2aValidator validator, AccountInformationService ais,
-            Xs2aConsentErrorHandler consentErrorHandler
+            Xs2aConsentErrorHandler consentErrorHandler, Xs2aCachedResultAccessor accessor
     ) {
-        super(new BlackHoleEventPublisher(), extractor, validator, ais, consentErrorHandler);
+        super(new BlackHoleEventPublisher(), extractor, validator, ais, consentErrorHandler, accessor);
     }
 
     @Override

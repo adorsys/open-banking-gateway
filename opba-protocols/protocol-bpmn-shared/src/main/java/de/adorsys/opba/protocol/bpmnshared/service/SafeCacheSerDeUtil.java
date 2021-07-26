@@ -1,4 +1,4 @@
-package de.adorsys.opba.protocol.hbci.service;
+package de.adorsys.opba.protocol.bpmnshared.service;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
@@ -30,6 +30,10 @@ public class SafeCacheSerDeUtil {
 
     @SneakyThrows
     public Object safeDeserialize(String context) {
+        if (null == context) {
+            return null;
+        }
+
         // Support for versioning using class name
         JsonNode value = mapper.readTree(context);
         Map.Entry<String, JsonNode> classNameAndValue = value.fields().next();

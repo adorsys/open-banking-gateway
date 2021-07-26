@@ -9,6 +9,7 @@ import lombok.SneakyThrows;
 import org.flowable.engine.delegate.DelegateExecution;
 import org.springframework.stereotype.Service;
 
+import java.time.Instant;
 import java.util.HashMap;
 
 @Service("hbciStoreTransactionListToCache")
@@ -24,14 +25,17 @@ public class HbciStoreTransactionListToCache extends ValidatedExecution<Transact
         logResolver.log("doRealExecution: execution ({}) with context ({})", execution, context);
 
         HbciResultCache cached = null != context.getCachedResult() ? context.getCachedResult() : new HbciResultCache();
+        if (null != cached.getCachedAt()) {
+            cached.setCachedAt(Instant.now());
+        }
 
-        logResolver.log("transactionsByIban is empty: {}", null == cached.getTransactionsByIban());
-        if (null == cached.getTransactionsByIban()) {
-            cached.setTransactionsByIban(new HashMap<>());
+        logResolver.log("transactionsById is empty: {}", null == cached.getTransactionsById());
+        if (null == cached.getTransactionsById()) {
+            cached.setTransactionsById(new HashMap<>());
         }
 
         cached.setConsent(context.getHbciDialogConsent());
-        cached.getTransactionsByIban().put(context.getAccountIban(), context.getResponse());
+        cached.getTransactionsById().put(context.getAccountIban(), context.getResponse());
         hbciCachedResultAccessor.resultToCache(context, cached);
     }
 }

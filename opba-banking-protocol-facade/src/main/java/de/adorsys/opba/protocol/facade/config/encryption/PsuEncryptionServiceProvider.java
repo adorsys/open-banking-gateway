@@ -1,6 +1,7 @@
 package de.adorsys.opba.protocol.facade.config.encryption;
 
 import de.adorsys.opba.protocol.api.services.EncryptionService;
+import de.adorsys.opba.protocol.facade.dto.PubAndPrivKey;
 import lombok.RequiredArgsConstructor;
 
 import java.security.KeyPair;
@@ -19,6 +20,10 @@ public class PsuEncryptionServiceProvider {
 
     public EncryptionService forPrivateKey(UUID keyId, PrivateKey key) {
         return oper.encryptionService(keyId.toString(), key);
+    }
+
+    public EncryptionService forPublicAndPrivateKey(UUID keyId, PubAndPrivKey key) {
+        return oper.encryptionService(keyId.toString(), key.getPrivateKey(), key.getPublicKey());
     }
 
     public KeyPair generateKeyPair() {
