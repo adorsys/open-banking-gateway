@@ -22,4 +22,9 @@ public class DeleteConsentRequest implements FacadeServiceableGetter {
      * The request representation that is being serviced by facade.
      */
     private FacadeServiceableRequest facadeServiceable;
+
+    /**
+     * If true FinAPI user will be deleted when deleting consent.
+     */
+    private boolean deleteAll;
 }
