@@ -23,6 +23,15 @@
       <conditionExpression xsi:type="tFormalExpression">#{xs2aConsentInfo.isOauth2TokenAvailableAndReadyToUse(CONTEXT)}</conditionExpression>
     </sequenceFlow>
     <sequenceFlow id="sid-cf198380-6fed-408b-8641-0a918a74a2db" sourceRef="oauth2ExchangeCodeToToken" targetRef="sid-e0dbf285-c6c2-4571-ac5e-9038fcbf8448"/>
+    <sequenceFlow id="sid-39bca444-9c5a-4432-9662-e41c0b2e1231" name="Embedded pre Auth required" sourceRef="checkThatOauth2TokenIsPresentAndNotExpired" targetRef="xs2aAskForPassword">
+      <conditionExpression xsi:type="tFormalExpression">#{xs2aConsentInfo.isEmbeddedPreAuthNeeded(CONTEXT)}</conditionExpression>
+    </sequenceFlow>
+    <serviceTask id="embeddedOauth2ExchangeCodeToToken" name="Get Embedded Access Token" flowable:async="true" flowable:exclusive="true" flowable:delegateExpression="${xs2aEmbeddedPreAuthorization}" flowable:triggerable="false" isForCompensation="false"/>
+    <sequenceFlow id="sid-1b0f3e86-4b13-450c-9f6f-e0975dddedc8" sourceRef="embeddedOauth2ExchangeCodeToToken" targetRef="sid-e0dbf285-c6c2-4571-ac5e-9038fcbf8448"/>
+    <serviceTask id="xs2aAskForPassword" name="Get Embedded Access Token" isForCompensation="false" flowable:async="true" flowable:exclusive="true" flowable:delegateExpression="${xs2aAskForPassword}" flowable:triggerable="true"/>
+    <sequenceFlow id="sid-fade0cee-6d65-4917-9d19-2fe70dddae1a" targetRef="embeddedOauth2ExchangeCodeToToken" sourceRef="xs2aAskForPassword">
+      <conditionExpression/>
+    </sequenceFlow>
   </process>
   <bpmndi:BPMNDiagram id="BPMNDiagram_xs2a-oauth2-step">
     <bpmndi:BPMNPlane bpmnElement="if-needed-xs2a-oauth2-step" id="BPMNPlane_xs2a-oauth2-step">
@@ -49,33 +58,56 @@
         <omgdi:waypoint x="1051.144" y="279.00003"/>
       </bpmdi:BPMNEdge>
       <bpmdi:BPMNShape xmlns:bpmdi="http://www.omg.org/spec/BPMN/20100524/DI" id="shape-d4d0bf3e-d657-467e-a4eb-d729d72845c9" bpmnElement="oauth2ExchangeCodeToToken">
-        <omgdc:Bounds x="805.88794" y="97.5704" width="100.0" height="80.0"/>
+        <omgdc:Bounds x="875.34607" y="97.57038" width="100.0" height="80.0"/>
       </bpmdi:BPMNShape>
       <bpmdi:BPMNEdge xmlns:bpmdi="http://www.omg.org/spec/BPMN/20100524/DI" id="edge-02115c9e-2da8-4d5c-981a-63aa8021f356" bpmnElement="sid-64007d67-937b-4d29-9404-e47c84b3c5cd">
         <omgdi:waypoint x="715.4425" y="137.57039"/>
-        <omgdi:waypoint x="805.88794" y="137.57039"/>
+        <omgdi:waypoint x="875.34607" y="137.57037"/>
       </bpmdi:BPMNEdge>
       <bpmdi:BPMNEdge xmlns:bpmdi="http://www.omg.org/spec/BPMN/20100524/DI" id="edge-1c3a0e08-d400-4b2b-b871-02f172e924c1" bpmnElement="oauth2Required">
         <omgdi:waypoint x="257.36002" y="244.0"/>
         <omgdi:waypoint x="256.16" y="137.57037"/>
-        <omgdi:waypoint x="473.74454" y="137.57037"/>
+        <omgdi:waypoint x="472.6612" y="137.57042"/>
       </bpmdi:BPMNEdge>
       <bpmdi:BPMNShape xmlns:bpmdi="http://www.omg.org/spec/BPMN/20100524/DI" id="shape-9b6b01b2-01cf-4c8c-927f-28e3251ac980" bpmnElement="checkThatOauth2TokenIsPresentAndNotExpired">
-        <omgdc:Bounds x="473.74454" y="117.570366" width="40.0" height="40.0"/>
+        <omgdc:Bounds x="472.6612" y="117.57041" width="40.0" height="40.0"/>
       </bpmdi:BPMNShape>
       <bpmdi:BPMNEdge xmlns:bpmdi="http://www.omg.org/spec/BPMN/20100524/DI" id="edge-43f6518a-a48f-468e-b14c-4e4cd267c864" bpmnElement="oauth2TokenNeedsRefresh">
-        <omgdi:waypoint x="513.7445" y="137.57037"/>
+        <omgdi:waypoint x="512.66113" y="137.57042"/>
         <omgdi:waypoint x="615.4425" y="137.57039"/>
       </bpmdi:BPMNEdge>
       <bpmdi:BPMNEdge xmlns:bpmdi="http://www.omg.org/spec/BPMN/20100524/DI" id="edge-c47f8ca2-d02f-42e4-91d2-ec33aaf7f073" bpmnElement="oauth2TokenExistsAndIsFresh">
-        <omgdi:waypoint x="493.74454" y="157.57037"/>
+        <omgdi:waypoint x="492.6612" y="157.57042"/>
         <omgdi:waypoint x="494.94452" y="264.0"/>
         <omgdi:waypoint x="1036.144" y="264.0"/>
       </bpmdi:BPMNEdge>
       <bpmdi:BPMNEdge xmlns:bpmdi="http://www.omg.org/spec/BPMN/20100524/DI" id="edge-16ab0e4e-d865-4ff4-b2cc-480baef9a0ed" bpmnElement="sid-cf198380-6fed-408b-8641-0a918a74a2db">
-        <omgdi:waypoint x="905.888" y="137.57039"/>
+        <omgdi:waypoint x="975.3461" y="137.57037"/>
         <omgdi:waypoint x="1049.9441" y="137.57037"/>
         <omgdi:waypoint x="1051.144" y="249.0"/>
+      </bpmdi:BPMNEdge>
+      <bpmdi:BPMNEdge xmlns:bpmdi="http://www.omg.org/spec/BPMN/20100524/DI" id="sid-5163a08e-e85e-4431-bc2a-b68ae5af72d4" bpmnElement="sid-39bca444-9c5a-4432-9662-e41c0b2e1231">
+        <omgdi:waypoint x="492.66116" y="128.08986"/>
+        <omgdi:waypoint x="493.74457" y="-1.1731453"/>
+        <omgdi:waypoint x="621.6202" y="-1.1731453"/>
+      </bpmdi:BPMNEdge>
+      <bpmdi:BPMNShape xmlns:bpmdi="http://www.omg.org/spec/BPMN/20100524/DI" id="sid-72f3dbbf-d40b-4f12-a954-5869b46e0261" bpmnElement="embeddedOauth2ExchangeCodeToToken">
+        <omgdc:Bounds x="875.346" y="-35.517727" width="100.0" height="80.0"/>
+      </bpmdi:BPMNShape>
+      <bpmdi:BPMNEdge xmlns:bpmdi="http://www.omg.org/spec/BPMN/20100524/DI" id="sid-ec004bdd-0956-4d0a-867e-9384b40b2523" bpmnElement="sid-1b0f3e86-4b13-450c-9f6f-e0975dddedc8">
+        <omgdi:waypoint x="975.34595" y="4.4822693"/>
+        <omgdi:waypoint x="1223.1333" y="1.0940704"/>
+        <omgdi:waypoint x="1223.1332" y="264.0"/>
+        <omgdi:waypoint x="1066.144" y="264.0"/>
+      </bpmdi:BPMNEdge>
+      <bpmdi:BPMNShape xmlns:bpmdi="http://www.omg.org/spec/BPMN/20100524/DI" id="sid-7b71102c-0f98-4980-aa2d-2e53ab1d1939" bpmnElement="xs2aAskForPassword">
+        <omgdc:Bounds x="621.6202" y="-30.435429" width="100.0" height="80.0"/>
+      </bpmdi:BPMNShape>
+      <bpmdi:BPMNEdge xmlns:bpmdi="http://www.omg.org/spec/BPMN/20100524/DI" id="sid-c15eb4d1-30bc-458e-832a-a3a1bd405739" bpmnElement="sid-fade0cee-6d65-4917-9d19-2fe70dddae1a">
+        <omgdi:waypoint x="721.62024" y="9.564571"/>
+        <omgdi:waypoint x="734.8436" y="9.564571"/>
+        <omgdi:waypoint x="751.4552" y="9.564571"/>
+        <omgdi:waypoint x="875.34595" y="9.56457"/>
       </bpmdi:BPMNEdge>
     </bpmndi:BPMNPlane>
   </bpmndi:BPMNDiagram>
