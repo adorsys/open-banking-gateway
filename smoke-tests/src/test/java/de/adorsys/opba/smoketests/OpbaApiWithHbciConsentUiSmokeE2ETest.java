@@ -19,6 +19,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.ActiveProfiles;
 
+import java.time.LocalDate;
 import java.util.UUID;
 
 import static de.adorsys.opba.protocol.xs2a.tests.Const.ENABLE_SMOKE_TESTS;
@@ -28,7 +29,6 @@ import static de.adorsys.opba.protocol.xs2a.tests.e2e.stages.StagesCommonUtil.AN
 import static de.adorsys.opba.protocol.xs2a.tests.e2e.stages.StagesCommonUtil.HBCI_SANDBOX_BANK_SCA_ID;
 import static de.adorsys.opba.protocol.xs2a.tests.e2e.stages.StagesCommonUtil.MAX_MUSTERMAN;
 import static de.adorsys.opba.smoketests.config.SmokeConfig.BOTH_BOOKING;
-import static de.adorsys.opba.smoketests.config.SmokeConfig.DATE_FROM;
 import static de.adorsys.opba.smoketests.config.SmokeConfig.DATE_TO;
 import static org.springframework.boot.test.context.SpringBootTest.WebEnvironment.NONE;
 
@@ -113,7 +113,7 @@ class OpbaApiWithHbciConsentUiSmokeE2ETest extends SpringScenarioTest<SmokeSandb
         then()
                 .fintech_calls_consent_activation_for_current_authorization_id()
                 .open_banking_can_read_max_musterman_hbci_transaction_data_using_consent_bound_to_service_session(
-                        MAX_MUSTERMAN_IBAN, HBCI_SANDBOX_BANK_SCA_ID, DATE_FROM, DATE_TO, BOTH_BOOKING
+                        MAX_MUSTERMAN_IBAN, HBCI_SANDBOX_BANK_SCA_ID, LocalDate.EPOCH, DATE_TO, BOTH_BOOKING
                 );
     }
 }
