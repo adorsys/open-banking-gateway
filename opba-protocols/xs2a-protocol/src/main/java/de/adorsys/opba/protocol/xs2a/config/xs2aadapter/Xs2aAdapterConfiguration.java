@@ -18,6 +18,7 @@ import de.adorsys.xs2a.adapter.serviceloader.AccountInformationServiceImpl;
 import de.adorsys.xs2a.adapter.serviceloader.AdapterDelegatingOauth2Service;
 import de.adorsys.xs2a.adapter.serviceloader.AdapterServiceLoader;
 import de.adorsys.xs2a.adapter.serviceloader.DownloadServiceImpl;
+import de.adorsys.xs2a.adapter.serviceloader.EmbeddedPreAuthorisationServiceImpl;
 import de.adorsys.xs2a.adapter.serviceloader.PaymentInitiationServiceImpl;
 import lombok.SneakyThrows;
 import org.apache.http.impl.client.HttpClientBuilder;
@@ -69,7 +70,7 @@ public class Xs2aAdapterConfiguration {
 
     @Bean
     HttpClientConfig httpClientConfig(Pkcs12KeyStore keyStore) {
-        return new BaseHttpClientConfig(new Xs2aHttpLogSanitizer(), keyStore);
+        return new BaseHttpClientConfig(new Xs2aHttpLogSanitizer(), keyStore, null);
     }
 
     @Bean
@@ -88,6 +89,10 @@ public class Xs2aAdapterConfiguration {
     @Bean
     Oauth2Service xs2aOauth2Service(AdapterServiceLoader adapterServiceLoader) {
         return new AdapterDelegatingOauth2Service(adapterServiceLoader);
+    }
+    @Bean
+    EmbeddedPreAuthorisationServiceImpl embeddedPreAuthorisationServiceImpl(AdapterServiceLoader adapterServiceLoader) {
+        return new EmbeddedPreAuthorisationServiceImpl(adapterServiceLoader);
     }
 
     /**
