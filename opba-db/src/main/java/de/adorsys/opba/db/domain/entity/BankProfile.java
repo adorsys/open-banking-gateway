@@ -25,6 +25,7 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
 import javax.persistence.MapKey;
 import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
@@ -57,7 +58,7 @@ public class BankProfile implements Serializable, CurrentBankProfile {
     @SequenceGenerator(name = "bank_profile_id_generator", sequenceName = "bank_profile_id_sequence")
     private Long id;
 
-    @OneToOne(cascade = CascadeType.ALL)
+    @ManyToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "bank_uuid", referencedColumnName = "uuid")
     private Bank bank;
 
