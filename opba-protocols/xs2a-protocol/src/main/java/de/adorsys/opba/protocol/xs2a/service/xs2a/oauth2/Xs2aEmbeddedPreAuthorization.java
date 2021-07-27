@@ -14,9 +14,11 @@ import de.adorsys.xs2a.adapter.api.model.EmbeddedPreAuthorisationRequest;
 import de.adorsys.xs2a.adapter.api.model.TokenResponse;
 import lombok.RequiredArgsConstructor;
 import lombok.SneakyThrows;
+import lombok.extern.slf4j.Slf4j;
 import org.flowable.engine.delegate.DelegateExecution;
 import org.springframework.stereotype.Service;
 
+@Slf4j
 @Service("xs2aEmbeddedPreAuthorization")
 @RequiredArgsConstructor
 public class Xs2aEmbeddedPreAuthorization extends ValidatedExecution<Xs2aContext> {
@@ -37,7 +39,10 @@ public class Xs2aEmbeddedPreAuthorization extends ValidatedExecution<Xs2aContext
         embeddedPreAuthorisationRequest.setPassword(context.getPsuPassword());
         embeddedPreAuthorisationRequest.setUsername(context.getPsuId());
         TokenResponse response = this.embeddedPreAuthorisationService.getToken(embeddedPreAuthorisationRequest, validated.getHeaders().toHeaders());
-        logResolver.log("getToken response: {}", response);
+        if (response.getTokenType() == null) {
+            response.setTokenType("Bearer");
+        }
+        log.info("getToken response: {}", response);
             ContextUtil.getAndUpdateContext(
                     execution,
                     (Xs2aContext ctx) -> {
