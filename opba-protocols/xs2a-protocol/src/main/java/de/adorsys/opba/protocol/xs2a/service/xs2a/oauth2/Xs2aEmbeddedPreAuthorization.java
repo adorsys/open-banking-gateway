@@ -47,7 +47,7 @@ public class Xs2aEmbeddedPreAuthorization extends ValidatedExecution<Xs2aContext
                     execution,
                     (Xs2aContext ctx) -> {
                         ctx.setOauth2Token(response);
-                        ctx.setOauth2PreStepNeeded(false);
+                        ctx.setEmbeddedPreAuthNeeded(false);
                     }
             );
 
