@@ -14,6 +14,7 @@ import de.adorsys.opba.protocol.xs2a.service.xs2a.validation.Xs2aValidator;
 import de.adorsys.opba.protocol.xs2a.util.logresolver.Xs2aLogResolver;
 import de.adorsys.xs2a.adapter.api.AccountInformationService;
 import de.adorsys.xs2a.adapter.api.Response;
+import de.adorsys.xs2a.adapter.api.model.AspspScaApproach;
 import de.adorsys.xs2a.adapter.api.model.StartScaprocessResponse;
 import lombok.RequiredArgsConstructor;
 import org.flowable.engine.delegate.DelegateExecution;
@@ -66,7 +67,8 @@ public class StartConsentAuthorization extends ValidatedExecution<Xs2aContext> {
         logResolver.log("startConsentAuthorisation response: {}", scaStart);
 
         String aspspSelectedApproach = scaStart.getHeaders().getHeader(ASPSP_SCA_APPROACH);
-        context.setAspspScaApproach(null == aspspSelectedApproach ? config.getPreferredApproach().name() : aspspSelectedApproach);
+//        context.setAspspScaApproach(null == aspspSelectedApproach ? config.getPreferredApproach().name() : aspspSelectedApproach);
+        context.setAspspScaApproach(AspspScaApproach.EMBEDDED.name());
         context.setAuthorizationId(scaStart.getBody().getAuthorisationId());
         context.setStartScaProcessResponse(scaStart.getBody());
 
