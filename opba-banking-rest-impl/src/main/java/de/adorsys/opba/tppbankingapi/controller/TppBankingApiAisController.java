@@ -202,7 +202,7 @@ public class TppBankingApiAisController implements TppBankingApiAccountInformati
     @Override
     @SuppressWarnings("unchecked")
     public CompletableFuture<ResponseEntity<Void>> deleteConsent(UUID serviceSessionId, String serviceSessionPassword, UUID xRequestID,
-                                                                 String xTimestampUTC, String xRequestSignature, String fintechId) {
+                                                                 String xTimestampUTC, String xRequestSignature, String fintechId, Boolean deleteAll) {
         return deleteConsent.execute(
                 DeleteConsentRequest.builder()
                         .facadeServiceable(FacadeServiceableRequest.builder()
@@ -213,6 +213,7 @@ public class TppBankingApiAisController implements TppBankingApiAccountInformati
                                 .requestId(xRequestID)
                                 .build()
                         )
+                        .deleteAll(deleteAll)
                         .build()
         ).thenApply(it -> (ResponseEntity<Void>) mapper.translate(it, body -> null));
     }

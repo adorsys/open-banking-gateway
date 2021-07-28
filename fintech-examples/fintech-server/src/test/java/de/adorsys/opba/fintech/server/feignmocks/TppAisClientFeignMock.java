@@ -89,7 +89,7 @@ public class TppAisClientFeignMock implements TppAisClient {
 
     @Override
     public ResponseEntity<Void> deleteConsent(UUID serviceSessionID, String serviceSessionPassword, UUID xRequestID,
-                                              String xTimestampUTC, String xRequestSignature, String fintechID) {
+                                              String xTimestampUTC, String xRequestSignature, String fintechID, Boolean deleteAll) {
         return null;
     }
 
