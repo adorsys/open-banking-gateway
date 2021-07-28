@@ -9,7 +9,6 @@ import de.adorsys.opba.protocol.xs2a.domain.dto.forms.ScaMethod;
 import de.adorsys.opba.protocol.xs2a.service.xs2a.Xs2aRedirectExecutor;
 import de.adorsys.opba.protocol.xs2a.util.logresolver.Xs2aLogResolver;
 import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
 import org.flowable.engine.RuntimeService;
 import org.flowable.engine.delegate.DelegateExecution;
 import org.springframework.stereotype.Service;
@@ -19,7 +18,6 @@ import static de.adorsys.opba.protocol.xs2a.service.xs2a.consent.ConsentConst.CO
 /**
  * Asks PSU for his SCA challenge result by redirect him to password input page. Suspends process to wait for users' input.
  */
-@Slf4j
 @Service("xs2aAskForScaChallenge")
 @RequiredArgsConstructor
 public class Xs2aAskForScaChallenge extends ValidatedExecution<Xs2aContext> {
@@ -53,7 +51,6 @@ public class Xs2aAskForScaChallenge extends ValidatedExecution<Xs2aContext> {
         runtimeService.trigger(execution.getId());
     }
     private String getSelectedAuthenticationType(Xs2aContext context) {
-        log.info("Current context : {} ", context);
         return context.getAvailableSca().stream()
                 .filter(it -> context.getUserSelectScaId().equals(it.getKey()))
                 .map(ScaMethod::getType)
