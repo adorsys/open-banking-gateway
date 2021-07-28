@@ -89,6 +89,7 @@ public class CreateConsentOrPaymentPossibleErrorHandler {
                 (Xs2aContext ctx) -> {
                     checkAndHandleIrrecoverableOAuth2State(ctx);
                     ctx.setEmbeddedPreAuthNeeded(true);
+                    ctx.setEmbeddedPreAuthDone(false);
                 }
         );
     }

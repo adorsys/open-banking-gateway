@@ -49,10 +49,14 @@ public class Xs2aEmbeddedPreAuthorization extends ValidatedExecution<Xs2aContext
                     (Xs2aContext ctx) -> {
                         ctx.setOauth2Token(response);
                         ctx.setEmbeddedPreAuthNeeded(false);
+                        ctx.setEmbeddedPreAuthDone(true);
+
                         log.info("aspsp sca approach: {}", ctx.getAspspScaApproach());
                         ctx.setAspspScaApproach(AspspScaApproach.EMBEDDED.name());
                     }
             );
+
+
     }
 
     @Override
