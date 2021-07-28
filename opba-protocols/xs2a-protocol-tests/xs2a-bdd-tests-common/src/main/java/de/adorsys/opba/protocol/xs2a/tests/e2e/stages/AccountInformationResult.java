@@ -284,9 +284,9 @@ public class AccountInformationResult<SELF extends AccountInformationResult<SELF
     }
 
     protected ExtractableResponse<Response> getTransactionListFor(
-        String psuId, String bankId, String resourceId, LocalDate dateFrom, LocalDate dateTo, String bookingStatus
+        String psuId, String bankProfileId, String resourceId, LocalDate dateFrom, LocalDate dateTo, String bookingStatus
     ) {
-        return withTransactionsHeaders(psuId, bankId)
+        return withTransactionsHeaders(psuId, bankProfileId)
                 .header(SERVICE_SESSION_ID, serviceSessionId)
                 .queryParam("dateFrom", dateFrom.format(ISO_DATE))
                 .queryParam("dateTo", dateTo.format(ISO_DATE))
@@ -456,8 +456,8 @@ public class AccountInformationResult<SELF extends AccountInformationResult<SELF
     }
 
     @SneakyThrows
-    public SELF open_banking_can_read_max_musterman_hbci_account_data_using_consent_bound_to_service_session(String bankId) {
-        ExtractableResponse<Response> response = withAccountsHeaders(MAX_MUSTERMAN, bankId)
+    public SELF open_banking_can_read_max_musterman_hbci_account_data_using_consent_bound_to_service_session(String bankProfileId) {
+        ExtractableResponse<Response> response = withAccountsHeaders(MAX_MUSTERMAN, bankProfileId)
                 .header(SERVICE_SESSION_ID, serviceSessionId)
                 .queryParam(ONLINE, false)
                 .when()
@@ -480,8 +480,8 @@ public class AccountInformationResult<SELF extends AccountInformationResult<SELF
     }
 
     @SneakyThrows
-    public SELF open_banking_can_read_anton_brueckner_hbci_account_data_using_consent_bound_to_service_session(String bankId) {
-        ExtractableResponse<Response> response = withAccountsHeaders(ANTON_BRUECKNER, bankId)
+    public SELF open_banking_can_read_anton_brueckner_hbci_account_data_using_consent_bound_to_service_session(String bankProfileId) {
+        ExtractableResponse<Response> response = withAccountsHeaders(ANTON_BRUECKNER, bankProfileId)
                 .header(SERVICE_SESSION_ID, serviceSessionId)
                 .queryParam(ONLINE, false)
                 .when()
@@ -505,9 +505,9 @@ public class AccountInformationResult<SELF extends AccountInformationResult<SELF
 
     @SneakyThrows
     public SELF open_banking_can_read_max_musterman_hbci_transaction_data_using_consent_bound_to_service_session(
-            String resourceId, String bankId, LocalDate dateFrom, LocalDate dateTo, String bookingStatus
+            String resourceId, String bankProfileId, LocalDate dateFrom, LocalDate dateTo, String bookingStatus
     ) {
-        ExtractableResponse<Response> response = getTransactionListFor(MAX_MUSTERMAN, bankId, resourceId, dateFrom, dateTo, bookingStatus);
+        ExtractableResponse<Response> response = getTransactionListFor(MAX_MUSTERMAN, bankProfileId, resourceId, dateFrom, dateTo, bookingStatus);
 
         this.responseContent = response.body().asString();
         DocumentContext body = JsonPath.parse(responseContent);
@@ -530,9 +530,9 @@ public class AccountInformationResult<SELF extends AccountInformationResult<SELF
 
     @SneakyThrows
     public SELF open_banking_can_read_empty_due_to_range_max_musterman_hbci_transaction_data_using_consent_bound_to_service_session(
-            String resourceId, String bankId, LocalDate dateFrom, LocalDate dateTo, String bookingStatus
+            String resourceId, String bankProfileId, LocalDate dateFrom, LocalDate dateTo, String bookingStatus
     ) {
-        ExtractableResponse<Response> response = getTransactionListFor(MAX_MUSTERMAN, bankId, resourceId, dateFrom, dateTo, bookingStatus);
+        ExtractableResponse<Response> response = getTransactionListFor(MAX_MUSTERMAN, bankProfileId, resourceId, dateFrom, dateTo, bookingStatus);
 
         this.responseContent = response.body().asString();
         DocumentContext body = JsonPath.parse(responseContent);

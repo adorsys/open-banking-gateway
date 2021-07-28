@@ -7,7 +7,7 @@ import lombok.experimental.UtilityClass;
 import java.time.Instant;
 import java.util.UUID;
 
-import static de.adorsys.opba.protocol.xs2a.tests.HeaderNames.BANK_ID;
+import static de.adorsys.opba.protocol.xs2a.tests.HeaderNames.BANK_PROFILE_ID;
 import static de.adorsys.opba.protocol.xs2a.tests.HeaderNames.FINTECH_ID;
 import static de.adorsys.opba.protocol.xs2a.tests.HeaderNames.FINTECH_REDIRECT_URL_NOK;
 import static de.adorsys.opba.protocol.xs2a.tests.HeaderNames.FINTECH_REDIRECT_URL_OK;
@@ -56,7 +56,7 @@ public class PaymentStagesCommonUtil {
 
     public static RequestSpecification withPaymentHeaders(
             String fintechUserId,
-            String bankId,
+            String bankProfileId,
             boolean psuAuthenticationRequired
     ) {
         UUID xRequestId = UUID.randomUUID();
@@ -64,7 +64,7 @@ public class PaymentStagesCommonUtil {
 
         return RestAssured
             .given()
-                .header(BANK_ID, bankId)
+                .header(BANK_PROFILE_ID, bankProfileId)
                 .header(FINTECH_REDIRECT_URL_OK, FINTECH_REDIR_OK)
                 .header(FINTECH_REDIRECT_URL_NOK, FINTECH_REDIR_NOK)
                 .header(SERVICE_SESSION_PASSWORD, SESSION_PASSWORD)
@@ -81,13 +81,13 @@ public class PaymentStagesCommonUtil {
         return withPaymentInfoHeaders(fintechUserId, SANDBOX_BANK_ID);
     }
 
-    public static RequestSpecification withPaymentInfoHeaders(String fintechUserId, String bankId) {
+    public static RequestSpecification withPaymentInfoHeaders(String fintechUserId, String bankProfileId) {
         UUID xRequestId = UUID.randomUUID();
         Instant xTimestampUtc = Instant.now();
 
         return RestAssured
             .given()
-                .header(BANK_ID, bankId)
+                .header(BANK_PROFILE_ID, bankProfileId)
                 .header(SERVICE_SESSION_PASSWORD, SESSION_PASSWORD)
                 .header(FINTECH_USER_ID, fintechUserId)
                 .header(FINTECH_ID, DEFAULT_FINTECH_ID)

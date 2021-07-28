@@ -7,7 +7,7 @@ import lombok.experimental.UtilityClass;
 import java.time.Instant;
 import java.util.UUID;
 
-import static de.adorsys.opba.protocol.xs2a.tests.HeaderNames.BANK_ID;
+import static de.adorsys.opba.protocol.xs2a.tests.HeaderNames.BANK_PROFILE_ID;
 import static de.adorsys.opba.protocol.xs2a.tests.HeaderNames.FINTECH_ID;
 import static de.adorsys.opba.protocol.xs2a.tests.HeaderNames.FINTECH_REDIRECT_URL_NOK;
 import static de.adorsys.opba.protocol.xs2a.tests.HeaderNames.FINTECH_REDIRECT_URL_OK;
@@ -74,11 +74,11 @@ public class StagesCommonUtil {
                        .header(PSU_IP_ADDRESS, IP_ADDRESS);
     }
 
-    public static RequestSpecification withAccountsHeaders(String fintechUserId, String bankId) {
+    public static RequestSpecification withAccountsHeaders(String fintechUserId, String bankProfileId) {
         UUID xRequestId = UUID.randomUUID();
         Instant xTimestampUtc = Instant.now();
 
-        return headersWithoutIpAddress(fintechUserId, bankId, xRequestId, xTimestampUtc)
+        return headersWithoutIpAddress(fintechUserId, bankProfileId, xRequestId, xTimestampUtc)
                 .header(COMPUTE_PSU_IP_ADDRESS, COMPUTE_IP_ADDRESS)
                 .header(PSU_IP_ADDRESS, IP_ADDRESS);
     }
@@ -97,12 +97,12 @@ public class StagesCommonUtil {
 
     public static RequestSpecification withTransactionsHeaders(
             String fintechUserId,
-            String bankId
+            String bankProfileId
     ) {
         UUID xRequestId = UUID.randomUUID();
         Instant xTimestampUtc = Instant.now();
 
-        return headersWithoutIpAddress(fintechUserId, bankId, xRequestId, xTimestampUtc)
+        return headersWithoutIpAddress(fintechUserId, bankProfileId, xRequestId, xTimestampUtc)
                        .header(COMPUTE_PSU_IP_ADDRESS, COMPUTE_IP_ADDRESS)
                        .header(PSU_IP_ADDRESS, IP_ADDRESS);
     }
@@ -130,10 +130,10 @@ public class StagesCommonUtil {
         return headersWithoutIpAddress(fintechUserId, SANDBOX_BANK_ID, xRequestId, xTimestampUtc);
     }
 
-    private static RequestSpecification headersWithoutIpAddress(String fintechUserId, String bankId, UUID xRequestId, Instant xTimestampUtc) {
+    private static RequestSpecification headersWithoutIpAddress(String fintechUserId, String bankProfileId, UUID xRequestId, Instant xTimestampUtc) {
         return RestAssured
             .given()
-                .header(BANK_ID, bankId)
+                .header(BANK_PROFILE_ID, bankProfileId)
                 .header(FINTECH_REDIRECT_URL_OK, FINTECH_REDIR_OK)
                 .header(FINTECH_REDIRECT_URL_NOK, FINTECH_REDIR_NOK)
                 .header(SERVICE_SESSION_PASSWORD, SESSION_PASSWORD)

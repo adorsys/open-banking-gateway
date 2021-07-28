@@ -152,8 +152,8 @@ public class PaymentResult<SELF extends PaymentResult<SELF>> extends Stage<SELF>
         return self();
     }
 
-    public SELF fintech_calls_payment_information_hbci(String iban, String bankId, String expectedStatus) {
-        ExtractableResponse<Response> response = withPaymentInfoHeaders(UUID.randomUUID().toString(), bankId)
+    public SELF fintech_calls_payment_information_hbci(String iban, String bankProfileId, String expectedStatus) {
+        ExtractableResponse<Response> response = withPaymentInfoHeaders(UUID.randomUUID().toString(), bankProfileId)
                 .header(SERVICE_SESSION_ID, paymentServiceSessionId)
             .when()
                 .get(PIS_PAYMENT_INFORMATION_ENDPOINT, PaymentProduct.SEPA_CREDIT_TRANSFERS.toString())
@@ -185,8 +185,8 @@ public class PaymentResult<SELF extends PaymentResult<SELF>> extends Stage<SELF>
         return fintech_calls_payment_status(SANDBOX_BANK_ID, TransactionStatus.ACSP.name());
     }
 
-    public SELF fintech_calls_payment_status(String bankId, String expectedStatus, String serviceSessionId) {
-        ExtractableResponse<Response> response = withPaymentInfoHeaders(UUID.randomUUID().toString(), bankId)
+    public SELF fintech_calls_payment_status(String bankProfileId, String expectedStatus, String serviceSessionId) {
+        ExtractableResponse<Response> response = withPaymentInfoHeaders(UUID.randomUUID().toString(), bankProfileId)
                 .header(SERVICE_SESSION_ID, serviceSessionId)
             .when()
                 .get(PIS_PAYMENT_STATUS_ENDPOINT, PaymentProduct.SEPA_CREDIT_TRANSFERS.toString())
@@ -198,8 +198,8 @@ public class PaymentResult<SELF extends PaymentResult<SELF>> extends Stage<SELF>
         return self();
     }
 
-    public SELF fintech_calls_payment_status(String bankId, String expectedStatus) {
-        return fintech_calls_payment_status(bankId, expectedStatus, paymentServiceSessionId);
+    public SELF fintech_calls_payment_status(String bankProfileId, String expectedStatus) {
+        return fintech_calls_payment_status(bankProfileId, expectedStatus, paymentServiceSessionId);
     }
 
     public SELF fintech_calls_payment_activation_for_current_authorization_id(String serviceSessionId) {
