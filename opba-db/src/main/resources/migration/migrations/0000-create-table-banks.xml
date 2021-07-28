@@ -120,4 +120,10 @@
         </sql>
     </changeSet>
 
+    <changeSet id="set_preffered_approach_dkb" author="mhr" context="xs2a-banks">
+        <sql dbms="postgresql" stripComments="true">
+            UPDATE opb_bank_profile SET preferred_approach = 'EMBEDDED', try_to_use_preferred_approach = true WHERE adapter_id = 'dkb-adapter';
+        </sql>
+    </changeSet>
+
 </databaseChangeLog>
