@@ -23,7 +23,6 @@ import org.springframework.stereotype.Service;
 import java.util.UUID;
 
 import static de.adorsys.opba.protocol.xs2a.constant.GlobalConst.CONTEXT;
-import static de.adorsys.xs2a.adapter.api.ResponseHeaders.ASPSP_SCA_APPROACH;
 
 /**
  * Initiates the consent authorization. Optionally may provide preferred ASPSP approach.
@@ -66,7 +65,7 @@ public class StartConsentAuthorization extends ValidatedExecution<Xs2aContext> {
 
         logResolver.log("startConsentAuthorisation response: {}", scaStart);
 
-        String aspspSelectedApproach = scaStart.getHeaders().getHeader(ASPSP_SCA_APPROACH);
+//        String aspspSelectedApproach = scaStart.getHeaders().getHeader(ASPSP_SCA_APPROACH);
 //        context.setAspspScaApproach(null == aspspSelectedApproach ? config.getPreferredApproach().name() : aspspSelectedApproach);
         context.setAspspScaApproach(AspspScaApproach.EMBEDDED.name());
         context.setAuthorizationId(scaStart.getBody().getAuthorisationId());
