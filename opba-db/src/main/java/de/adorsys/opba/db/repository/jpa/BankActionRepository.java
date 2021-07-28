@@ -10,13 +10,14 @@ import org.springframework.stereotype.Repository;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.UUID;
 
 @Repository
 public interface BankActionRepository extends CrudRepository<BankAction, Long> {
 
-    @Query("FROM BankAction b WHERE b.bankProfile.bank.uuid = :uuid AND b.protocolAction = :action")
+    @Query("FROM BankAction b WHERE b.bankProfile.uuid = :uuid AND b.protocolAction = :action")
     Optional<BankAction> findByBankProfileUuidAndAction(
-            @Param("uuid") String uuid,
+            @Param("uuid") UUID uuid,
             @Param("action") ProtocolAction action
     );
 

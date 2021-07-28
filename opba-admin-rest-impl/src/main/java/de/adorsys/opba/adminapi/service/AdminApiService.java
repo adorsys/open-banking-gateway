@@ -79,11 +79,11 @@ public class AdminApiService {
         mapped.getBank().setUuid(bankId.toString());
         Bank bank = bankRepository.save(mapped.getBank());
         result.setBank(bank);
-
-        if (null != mapped.getProfile()) {
-            BankProfile profile = saveBankProfileAndActions(mapped, bank);
-            result.setProfile(profile);
-        }
+//
+//        if (null != mapped.getProfile()) {
+//            BankProfile profile = saveBankProfileAndActions(mapped, bank);
+//            result.setProfile(profile);
+//        }
 
         return bankMapper.map(result);
     }
@@ -94,7 +94,7 @@ public class AdminApiService {
         bankMapper.mapToBank(bankData.getBank(), bank);
         bank = bankRepository.save(bank);
 
-        if (null == bankData.getProfile()) {
+       /* if (null == bankData.getProfile()) {
             return mapBankAndAddProfile(bank);
         }
 
@@ -106,9 +106,9 @@ public class AdminApiService {
             bankProfileJpaRepository.saveAndFlush(profile);
             profile.getActions().putAll(bankMapper.mapActions(bankData.getProfile().getActions()));
             profile.getActions().forEach((key, action) -> updateActions(profile, action));
-        }
+        }*/
 
-        bankProfileJpaRepository.save(profile);
+        //bankProfileJpaRepository.save(profile);
 
         return mapBankAndAddProfile(bank);
     }
@@ -116,17 +116,18 @@ public class AdminApiService {
     @Transactional
     public void deleteBank(UUID bankId) {
         Bank bank = bankRepository.findByUuid(bankId.toString()).orElseThrow(() -> new EntityNotFoundException("No bank: " + bankId));
-        bankProfileJpaRepository.findByBankUuid(bank.getUuid()).ifPresent(bankProfileJpaRepository::delete);
+        // bankProfileJpaRepository.findByBankUuid(bank.getUuid()).ifPresent(bankProfileJpaRepository::delete);
         bankRepository.delete(bank);
     }
 
-    @NotNull
-    private BankProfile saveBankProfileAndActions(BankDataToMap mapped, Bank bank) {
-        mapped.getProfile().setBank(bank);
-        mapped.getProfile().getActions().forEach((key, action) -> updateActions(mapped.getProfile(), action));
-
-        return bankProfileJpaRepository.save(mapped.getProfile());
-    }
+//    @NotNull
+//    private BankProfile saveBankProfileAndActions(BankDataToMap mapped, Bank bank) {
+//        //mapped.getProfile().setBank(bank);
+//        //mapped.getProfile().getActions().forEach((key, action) -> updateActions(mapped.getProfile(), action));
+//
+//        //return bankProfileJpaRepository.save(mapped.getProfile());
+//        return mapped.getProfiles();
+//    }
 
     private void updateActions(BankProfile profile, BankAction action) {
         action.setBankProfile(profile);
@@ -196,8 +197,8 @@ public class AdminApiService {
         BankDataToMap result = new BankDataToMap();
         result.setBank(bank);
 
-        Optional<BankProfile> profile = bankProfileJpaRepository.findByBankUuid(bank.getUuid());
-        profile.ifPresent(result::setProfile);
+        // Optional<BankProfile> profile = bankProfileJpaRepository.findByBankUuid(bank.getUuid());
+        // profile.ifPresent(result::setProfile);
         return bankMapper.map(result);
     }
 
@@ -212,6 +213,6 @@ public class AdminApiService {
     public static class BankDataToMap {
 
         private Bank bank;
-        private BankProfile profile;
+        private List<BankProfile> profiles;
     }
 }

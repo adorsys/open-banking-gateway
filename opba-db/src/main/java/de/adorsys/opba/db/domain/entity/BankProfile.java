@@ -28,7 +28,6 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.MapKey;
 import javax.persistence.OneToMany;
-import javax.persistence.OneToOne;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 import javax.persistence.UniqueConstraint;
@@ -37,6 +36,7 @@ import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.UUID;
 import java.util.stream.Collectors;
 
 @Entity
@@ -65,6 +65,7 @@ public class BankProfile implements Serializable, CurrentBankProfile {
     private String url;
     private String adapterId;
     private String idpUrl;
+    private UUID uuid;
 
     @Convert(converter = ScaApproachConverter.class)
     private List<Approach> scaApproaches;

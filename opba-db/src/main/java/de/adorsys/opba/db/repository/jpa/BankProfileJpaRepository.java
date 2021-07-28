@@ -6,13 +6,16 @@ import org.springframework.stereotype.Repository;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.UUID;
 
 @Repository
 public interface BankProfileJpaRepository extends JpaRepository<BankProfile, Long> {
 
-    Optional<BankProfile> findByBankUuid(String bankId);
+    Optional<BankProfile> findByUuid(UUID uuid);
 
-    List<BankProfile> findByBankBic(String bankId);
+    List<BankProfile> findByBankUuid(String bankUuid);
+
+    List<BankProfile> findByBankBic(String bankBic);
 
     List<BankProfile> findByBankBankCode(String bankId);
 

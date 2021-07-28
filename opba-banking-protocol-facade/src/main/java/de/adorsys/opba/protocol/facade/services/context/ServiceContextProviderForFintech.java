@@ -56,7 +56,7 @@ public class ServiceContextProviderForFintech implements ServiceContextProvider 
                 .serviceCtx(Context.<REQUEST>builder()
                         .serviceSessionId(session.getId())
                         .authorizationBankProtocolId(null == authSession ? null : authSession.getAction().getId())
-                        .bankId(null != request.getFacadeServiceable().getBankId() ? request.getFacadeServiceable().getBankId() : session.getBankProfile().getBank().getUuid())
+                        .bankProfileId(null != request.getFacadeServiceable().getBankProfileId() ? request.getFacadeServiceable().getBankProfileId() : session.getBankProfile().getUuid())
                         .authSessionId(null == authSession ? null : authSession.getId())
                         .authContext(null == authSession ? null : authSession.getAuthSessionContext())
                         // Currently 1-1 auth-session to service session
@@ -199,7 +199,7 @@ public class ServiceContextProviderForFintech implements ServiceContextProvider 
     }
 
     private BankProfile getBankProfileFromRequest(FacadeServiceableRequest request) {
-        return profileJpaRepository.findByBankUuid(request.getBankId())
-                    .orElseThrow(() -> new IllegalArgumentException("No bank profile for bank: " + request.getBankId()));
+        return profileJpaRepository.findByUuid(request.getBankProfileId())
+                    .orElseThrow(() -> new IllegalArgumentException("No bank profile for bank: " + request.getBankProfileId()));
     }
 }

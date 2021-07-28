@@ -8,7 +8,6 @@ import com.tngtech.jgiven.annotation.AfterScenario;
 import com.tngtech.jgiven.annotation.ProvidedScenarioState;
 import com.tngtech.jgiven.integration.spring.JGivenStage;
 import de.adorsys.opba.db.domain.entity.BankAction;
-import de.adorsys.opba.db.domain.entity.BankProfile;
 import de.adorsys.opba.db.domain.entity.IgnoreValidationRule;
 import de.adorsys.opba.db.repository.jpa.BankProfileJpaRepository;
 import de.adorsys.opba.db.repository.jpa.IgnoreValidationRuleRepository;
@@ -29,6 +28,7 @@ import java.io.IOException;
 import java.net.URL;
 import java.nio.file.Path;
 import java.util.Arrays;
+import java.util.UUID;
 
 /**
  * Runs Sandbox as json-backed mock.
@@ -266,10 +266,12 @@ public class MockServers<SELF extends MockServers<SELF>> extends CommonGivenStag
     private void startWireMock(WireMockConfiguration config) {
         sandbox = new WireMockServer(config);
         sandbox.start();
-        BankProfile bankProfile = bankProfileJpaRepository.findByBankUuid("53c47f54-b9a4-465a-8f77-bc6cd5f0cf46").get();
-        bankProfile.setUrl("http://localhost:" + sandbox.port());
-        bankProfile.setIdpUrl("http://localhost:" + sandbox.port() + "/oauth/authorization-server");
-        bankProfileJpaRepository.save(bankProfile);
+        var bankProfiles = bankProfileJpaRepository.findByBankUuid("53c47f54-b9a4-465a-8f77-bc6cd5f0cf46");
+        bankProfiles.forEach(it -> {
+            it.setUrl("http://localhost:" + sandbox.port());
+            it.setIdpUrl("http://localhost:" + sandbox.port() + "/oauth/authorization-server");
+        });
+        bankProfileJpaRepository.saveAll(bankProfiles);
 
         Assertions.assertThat(sandbox).isNotNull();
         Assertions.assertThat(sandbox.isRunning()).isTrue();

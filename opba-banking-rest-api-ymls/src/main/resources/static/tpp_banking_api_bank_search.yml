@@ -63,12 +63,13 @@ paths:
         - $ref: "./tpp_banking_api_commons.yml#/components/parameters/X-Request-Signature"
         - $ref: "./tpp_banking_api_commons.yml#/components/parameters/Fintech-ID"
         - $ref: "./tpp_banking_api_commons.yml#/components/parameters/X-Request-ID"
-        - name: bankId
+        - name: bankProfileId
           in: query
-          description: Identifier of the bank to be loaded.
+          description: Identifier of the bank profile to be loaded.
           required: true
           schema:
             type: string
+            format: uuid
       security:
         - cookieAuth: []
       responses:
@@ -154,6 +155,9 @@ components:
           type: string
         bic:
           type: string
+        uuid:
+          type: string
+          format: uuid
         bankUuid:
           type: string
         serviceList:
