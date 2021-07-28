@@ -10,6 +10,7 @@ import de.adorsys.opba.protocol.xs2a.service.xs2a.dto.oauth2.Xs2aOauth2Headers;
 import de.adorsys.opba.protocol.xs2a.service.xs2a.dto.oauth2.Xs2aOauth2WithCodeParameters;
 import de.adorsys.opba.protocol.xs2a.util.logresolver.Xs2aLogResolver;
 import de.adorsys.xs2a.adapter.api.EmbeddedPreAuthorisationService;
+import de.adorsys.xs2a.adapter.api.model.AspspScaApproach;
 import de.adorsys.xs2a.adapter.api.model.EmbeddedPreAuthorisationRequest;
 import de.adorsys.xs2a.adapter.api.model.TokenResponse;
 import lombok.RequiredArgsConstructor;
@@ -42,16 +43,16 @@ public class Xs2aEmbeddedPreAuthorization extends ValidatedExecution<Xs2aContext
         if (response.getTokenType() == null) {
             response.setTokenType("Bearer");
         }
-        log.info("getToken response: {}", response);
+        logResolver.log("getToken response: {}", response);
             ContextUtil.getAndUpdateContext(
                     execution,
                     (Xs2aContext ctx) -> {
                         ctx.setOauth2Token(response);
                         ctx.setEmbeddedPreAuthNeeded(false);
+                        log.info("aspsp sca approach: {}", ctx.getAspspScaApproach());
+                        ctx.setAspspScaApproach(AspspScaApproach.EMBEDDED.name());
                     }
             );
-
-
     }
 
     @Override
