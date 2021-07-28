@@ -50,7 +50,9 @@ public class Xs2aAisAuthenticateUserConsentWithPin extends ValidatedExecution<Xs
     @Override
     protected void doRealExecution(DelegateExecution execution, Xs2aContext context) {
         logResolver.log("doRealExecution: execution ({}) with context ({})", execution, context);
-        if(context.isEmbeddedPreAuthDone()) return;
+        if (context.isEmbeddedPreAuthDone()) {
+            return;
+        }
         ValidatedPathHeadersBody<Xs2aAuthorizedConsentParameters, Xs2aStandardHeaders, UpdatePsuAuthentication> params =
                 extractor.forExecution(context);
 
