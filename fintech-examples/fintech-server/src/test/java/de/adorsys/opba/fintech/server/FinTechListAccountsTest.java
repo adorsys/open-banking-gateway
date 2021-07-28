@@ -51,7 +51,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.
 public class FinTechListAccountsTest extends FinTechBankSearchApiTest {
     private static final String FIN_TECH_LIST_ACCOUNTS_URL = "/v1/ais/banks/{bank-id}/accounts";
 
-    private static final String NO_CONSENT_BANK_ID = "aaaaaaaaa-ee6e-45f9-9163-b97320c6881a";
+    private static final UUID NO_CONSENT_BANK_ID = UUID.fromString("aaaaaaaaa-ee6e-45f9-9163-b97320c6881a");
     private static final String USERNAME = "peter";
     private static final String PASSWORD = "1234";
 
@@ -140,10 +140,10 @@ public class FinTechListAccountsTest extends FinTechBankSearchApiTest {
 
 
     @SneakyThrows
-    MvcResult plainListAccounts(String bankUUID) {
-        log.info("bankUUID {}", bankUUID);
+    MvcResult plainListAccounts(UUID bankProfileUUID) {
+        log.info("bankProfileUUID {}", bankProfileUUID);
         return this.mvc
-                .perform(get(FIN_TECH_LIST_ACCOUNTS_URL, bankUUID)
+                .perform(get(FIN_TECH_LIST_ACCOUNTS_URL, bankProfileUUID)
                         .header(Consts.HEADER_X_REQUEST_ID, restRequestContext.getRequestId())
                         .header(Consts.HEADER_XSRF_TOKEN, restRequestContext.getXsrfTokenHeaderField())
                         .header("Fintech-Redirect-URL-OK", "ok")

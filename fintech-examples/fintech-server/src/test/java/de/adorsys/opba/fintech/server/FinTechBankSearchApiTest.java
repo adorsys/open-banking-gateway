@@ -156,7 +156,7 @@ class FinTechBankSearchApiTest extends FinTechApiBaseTest {
     @NoArgsConstructor
     static class BankProfileTestResult {
         String sessionCookieValue = null;
-        String bankUUID = null;
+        UUID bankUUID = null;
         List<String> services = null;
 
     }
@@ -200,12 +200,12 @@ class FinTechBankSearchApiTest extends FinTechApiBaseTest {
      * @return List of Services of Bank
      */
     @SneakyThrows
-    List<String> bankProfile(String bankUUID) {
+    List<String> bankProfile(UUID bankUUID) {
         MvcResult mvcResult = this.mvc
                 .perform(get(FIN_TECH_BANK_PROFILE_URL)
                         .header(Consts.HEADER_X_REQUEST_ID, UUID.randomUUID().toString())
                         .header(Consts.HEADER_XSRF_TOKEN, restRequestContext.getXsrfTokenHeaderField())
-                        .param("bankId", bankUUID))
+                        .param("bankProfileId", bankUUID.toString()))
                 .andDo(print())
                 .andExpect(status().isOk())
                 .andReturn();
@@ -276,10 +276,10 @@ class FinTechBankSearchApiTest extends FinTechApiBaseTest {
      * @return first BankUUID of found list
      */
     @SneakyThrows
-    String bankSearchOk(String keyword, Integer start, Integer max) {
+    UUID bankSearchOk(String keyword, Integer start, Integer max) {
         MvcResult result = plainBankSearch(keyword, start, max);
         assertEquals(HttpStatus.OK.value(), result.getResponse().getStatus());
-        return new JSONObject(result.getResponse().getContentAsString()).getJSONArray("bankDescriptor").getJSONObject(0).get("uuid").toString();
+        return UUID.fromString(new JSONObject(result.getResponse().getContentAsString()).getJSONArray("bankDescriptor").getJSONObject(0).get("uuid").toString());
     }
 
     @SneakyThrows

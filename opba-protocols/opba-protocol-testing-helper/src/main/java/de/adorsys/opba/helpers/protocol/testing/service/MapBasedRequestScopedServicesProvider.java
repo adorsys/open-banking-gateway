@@ -25,6 +25,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 import java.util.Optional;
+import java.util.UUID;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.atomic.AtomicReference;
 import java.util.stream.Collectors;
@@ -131,7 +132,7 @@ public class MapBasedRequestScopedServicesProvider implements RequestScopedServi
         private String url;
         private String adapterId;
         private String idpUrl;
-        private String uuid;
+        private UUID uuid;
         private List<Approach> scaApproaches;
         private Approach preferredApproach;
         private boolean tryToUsePreferredApproach;

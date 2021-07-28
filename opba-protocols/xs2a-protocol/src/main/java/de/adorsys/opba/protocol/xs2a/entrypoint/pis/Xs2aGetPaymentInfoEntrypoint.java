@@ -82,7 +82,7 @@ public class Xs2aGetPaymentInfoEntrypoint implements GetPaymentInfoState {
     @Mapper(componentModel = SPRING_KEYWORD, uses = Xs2aUuidMapper.class, implementationPackage = XS2A_MAPPERS_PACKAGE)
     public interface FromRequest extends DtoMapper<PaymentInfoRequest, Xs2aPisContext> {
 
-        @Mapping(source = "facadeServiceable.bankId", target = "aspspId")
+        @Mapping(source = "facadeServiceable.bankProfileId", target = "aspspId")
         @Mapping(source = "facadeServiceable.requestId", target = "requestId")
         Xs2aPisContext map(PaymentInfoRequest ctx);
     }
