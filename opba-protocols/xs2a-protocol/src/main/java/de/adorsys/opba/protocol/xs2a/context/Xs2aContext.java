@@ -177,9 +177,14 @@ public class Xs2aContext extends BaseContext {
     private boolean oauth2ConsentNeeded;
 
     /**
-     * Indicates that ASPSP requires Oauth2-Consent of special type (ING bank).
+     * Indicates that ASPSP requires Oauth2-Consent of special type (DKB bank).
      */
     private boolean  embeddedPreAuthNeeded;
+
+    /**
+     * Indicates that ASPSP requires Oauth2-Consent is done of special type (DKB bank).
+     */
+    private boolean  embeddedPreAuthDone;
 
     /**
      * SCA Oauth2 link to follow.
