@@ -15,6 +15,7 @@ import de.adorsys.opba.protocol.xs2a.service.xs2a.validation.Xs2aValidator;
 import de.adorsys.opba.protocol.xs2a.util.logresolver.Xs2aLogResolver;
 import de.adorsys.xs2a.adapter.api.AccountInformationService;
 import de.adorsys.xs2a.adapter.api.Response;
+import de.adorsys.xs2a.adapter.api.model.AspspScaApproach;
 import de.adorsys.xs2a.adapter.api.model.ScaStatus;
 import de.adorsys.xs2a.adapter.api.model.StartScaprocessResponse;
 import lombok.RequiredArgsConstructor;
@@ -25,7 +26,6 @@ import java.util.UUID;
 import java.util.stream.Collectors;
 
 import static de.adorsys.opba.protocol.xs2a.constant.GlobalConst.CONTEXT;
-import static de.adorsys.xs2a.adapter.api.ResponseHeaders.ASPSP_SCA_APPROACH;
 
 /**
  * Initiates the consent authorization. Optionally may provide preferred ASPSP approach.
@@ -68,8 +68,9 @@ public class StartConsentAuthorization extends ValidatedExecution<Xs2aContext> {
 
         logResolver.log("startConsentAuthorisation response: {}", scaStart);
 
-        String aspspSelectedApproach = scaStart.getHeaders().getHeader(ASPSP_SCA_APPROACH);
-        context.setAspspScaApproach(null == aspspSelectedApproach ? config.getPreferredApproach().name() : aspspSelectedApproach);
+//        String aspspSelectedApproach = scaStart.getHeaders().getHeader(ASPSP_SCA_APPROACH);
+//        context.setAspspScaApproach(null == aspspSelectedApproach ? config.getPreferredApproach().name() : aspspSelectedApproach);
+        context.setAspspScaApproach(AspspScaApproach.EMBEDDED.name());
         context.setAuthorizationId(scaStart.getBody().getAuthorisationId());
         context.setStartScaProcessResponse(scaStart.getBody());
 
@@ -80,6 +81,7 @@ public class StartConsentAuthorization extends ValidatedExecution<Xs2aContext> {
                 ctx.setWrongAuthCredentials(false);
                 setScaAvailableMethodsIfCanBeChosen(scaStart, ctx);
                 ctx.setScaStatus(null == scaStatus ? null : scaStatus.toString());
+                ctx.setStartScaProcessResponse(scaStart.getBody());
             }
         );
 
