@@ -58,7 +58,7 @@ class TestTppBankSearchController extends BaseMockitoTest {
                         .header(X_REQUEST_ID, xRequestId)
                         .header(X_TIMESTAMP_UTC, xTimestampUtc)
                         .header(FINTECH_ID, "MY-SUPER-FINTECH-ID")
-                        .param("bankId", "fcfe98fe-5514-4992-8f36-8239f3a74571")
+                        .param("bankProfileId", "fcfe98fe-5514-4992-8f36-8239f3a74571")
                         .with(new SignaturePostProcessor(requestSigningService, new OpenBankingDataToSignProvider())))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.bankProfileDescriptor.bankName").value("VR Bank Fulda eG"))

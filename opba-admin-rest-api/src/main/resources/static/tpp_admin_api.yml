@@ -188,7 +188,7 @@ components:
             - get-authorization-state
             - update-authorization
             - deny-authorization
-            - from-aspsp
+            - from-aspsp-redirect
             - single-payment
             - get-payment-status
             - get-payment-information
@@ -274,7 +274,7 @@ components:
             - get-authorization-state
             - update-authorization
             - deny-authorization
-            - from-aspsp
+            - from-aspsp-redirect
             - single-payment
             - get-payment-status
             - get-payment-information

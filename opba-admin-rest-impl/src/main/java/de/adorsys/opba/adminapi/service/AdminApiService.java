@@ -18,7 +18,6 @@ import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.MappingTarget;
 import org.mapstruct.NullValuePropertyMappingStrategy;
-import org.mapstruct.ValueMapping;
 import org.springframework.context.annotation.Profile;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -172,10 +171,10 @@ public class AdminApiService {
     @Mapper(componentModel = SPRING_KEYWORD, implementationPackage = ADMIN_MAPPERS_PACKAGE)
     public interface ActionEnumMapping {
 
-        @ValueMapping(source = "FROM_ASPSP_REDIRECT", target = "FROM_ASPSP")
+       // @ValueMapping(source = "FROM_ASPSP_REDIRECT", target = "FROM_ASPSP")
         de.adorsys.opba.adminapi.model.generated.BankAction.ProtocolActionEnum mapAction(ProtocolAction action);
 
-        @ValueMapping(source = "FROM_ASPSP_REDIRECT", target = "FROM_ASPSP")
+     //   @ValueMapping(source = "FROM_ASPSP_REDIRECT", target = "FROM_ASPSP")
         de.adorsys.opba.adminapi.model.generated.BankSubAction.ProtocolActionEnum mapSubAction(ProtocolAction action);
 
         @InheritInverseConfiguration
