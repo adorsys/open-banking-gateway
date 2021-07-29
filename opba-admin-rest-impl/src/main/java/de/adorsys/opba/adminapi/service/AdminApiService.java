@@ -174,8 +174,11 @@ public class AdminApiService {
         void mapAction(BankAction action, @MappingTarget BankAction targetAction);
     }
 
-    @Mapper(componentModel = SPRING_KEYWORD, implementationPackage = ADMIN_MAPPERS_PACKAGE)
+    @Mapper(componentModel = SPRING_KEYWORD, implementationPackage = ADMIN_MAPPERS_PACKAGE, uses = BankMapper.class)
     public interface PageMapper {
+
+        @Mapping(target = "bank", source = ".")
+        BankData map(Bank bank);
 
         @Mapping(target = "content", ignore = true)
         PageBankDataMappable map(Page<Bank> page);
@@ -185,9 +188,7 @@ public class AdminApiService {
     private BankData mapBankAndAddProfile(Bank bank) {
         BankDataToMap result = new BankDataToMap();
         result.setBank(bank);
-
-        var profiles = bankProfileJpaRepository.findByBankUuid(bank.getUuid());
-        profiles.forEach(it -> it.setBank(bank));
+        result.setProfiles(bank.getProfiles());
         return bankMapper.map(result);
     }
 

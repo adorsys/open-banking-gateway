@@ -39,10 +39,10 @@ public class Bank implements Serializable {
     @SequenceGenerator(name = "bank_id_generator", sequenceName = "bank_id_sequence")
     private Long id;
 
-    String uuid;
-    String name;
-    String bic;
-    String bankCode;
+    private String uuid;
+    private String name;
+    private String bic;
+    private String bankCode;
 
     @OneToMany(mappedBy = "bank", cascade = CascadeType.ALL, orphanRemoval = true)
     private Collection<BankProfile> profiles;

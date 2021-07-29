@@ -6,7 +6,7 @@
     "bic": "ADORSYS HA",
     "bankCode": "10000001"
   },
-  "profile": {
+  "profiles": [{
     "id": 1,
     "url": "http://localhost:8090/hbci-mock/",
     "adapterId": "hbci-adapter",
@@ -57,7 +57,7 @@
             "subProtocolBeanName": "hbciDenyAuthorization"
           },
           {
-            "protocolAction": "from-aspsp",
+            "protocolAction": "from-aspsp-redirect",
             "subProtocolBeanName": "hbciFromAspspRedirect"
           },
           {
@@ -74,5 +74,5 @@
     "bankCode": "10000001",
     "bic": "ADORSYS HA",
     "name": "adorsys HBCI no SCA"
-  }
+  }]
 }
