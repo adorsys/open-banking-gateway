@@ -12,7 +12,7 @@
             <column autoIncrement="true" name="id" type="BIGINT">
                 <constraints primaryKey="true" primaryKeyName="${table-prefix}bankPK"/>
             </column>
-            <column name="uuid" type="VARCHAR(36)">
+            <column name="uuid" type="UUID">
                 <constraints unique="true"/>
             </column>
             <column name="name" type="VARCHAR(255)"/>
@@ -35,8 +35,9 @@
             <column name="adapter_id" type="VARCHAR(255)"/>
             <column name="idp_url" type="VARCHAR(255)"/>
             <column name="sca_approaches" type="VARCHAR(255)"/>
-            <column name="bank_uuid" type="VARCHAR(36)">
-                <constraints unique="true"/>
+            <column name="bank_uuid" type="UUID"/>
+            <column name="uuid" type="UUID">
+                <constraints unique="true" nullable="false"/>
             </column>
             <column name="preferred_approach" type="VARCHAR(32)"/>
             <column name="try_to_use_preferred_approach" type="BOOLEAN" defaultValue="false">
@@ -73,7 +74,7 @@
                 file="migration/migrations/csv/v0/0-xs2a-bank_bank-profile.csv"
                 catalogName=""
                 tableName="${table-prefix}bank">
-            <column header="uuid"       name="uuid"         type="STRING"/>
+            <column header="uuid"       name="uuid"         type="UUID"/>
             <column header="name"       name="name"         type="STRING"/>
             <column header="bic"        name="bic"          type="STRING"/>
             <column header="url"                            type="skip"/>
@@ -93,7 +94,8 @@
                 file="migration/migrations/csv/v0/0-xs2a-bank_bank-profile.csv"
                 catalogName=""
                 tableName="${table-prefix}bank_profile">
-            <column header="uuid"       name="bank_uuid"                type="STRING"/>
+            <column header="bank_uuid"  name="bank_uuid"                type="UUID"/>
+            <column header="uuid"       name="uuid"                     type="UUID"/>
             <column header="name"       name="name"                     type="skip"/>
             <column header="bic"        name="bic"                      type="skip"/>
             <column header="url"        name="url"                      type="STRING"/>
@@ -108,15 +110,15 @@
     
     <changeSet id="create_index" author="mhr">
         <sql dbms="postgresql" stripComments="true">
-            CREATE INDEX bank_trgm_idx1 ON opb_bank USING gin (name gin_trgm_ops);
-            CREATE INDEX bank_trgm_idx2 ON opb_bank USING gin (bic gin_trgm_ops);
-            CREATE INDEX bank_trgm_idx3 ON opb_bank USING gin (bank_code gin_trgm_ops);
+            CREATE INDEX bank_trgm_idx1 ON ${table-prefix}bank USING gin (name gin_trgm_ops);
+            CREATE INDEX bank_trgm_idx2 ON ${table-prefix}bank USING gin (bic gin_trgm_ops);
+            CREATE INDEX bank_trgm_idx3 ON ${table-prefix}bank USING gin (bank_code gin_trgm_ops);
         </sql>
     </changeSet>
 
     <changeSet id="fill_services" author="mhr">
         <sql dbms="postgresql" stripComments="true">
-            UPDATE opb_bank_profile SET preferred_approach = 'REDIRECT' WHERE true ;
+            UPDATE ${table-prefix}bank_profile SET preferred_approach = 'REDIRECT' WHERE true ;
         </sql>
     </changeSet>
 

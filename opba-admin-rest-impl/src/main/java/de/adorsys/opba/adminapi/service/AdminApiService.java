@@ -98,10 +98,10 @@ public class AdminApiService {
             return mapBankAndAddProfile(bank);
         }
 
-        var profiles = bankProfileJpaRepository.findByBankUuid(bankId.toString()).stream()
-                .collect(Collectors.toMap(BankProfile::getId, identity()));
+        var profiles = bank.getProfiles().stream().collect(Collectors.toMap(BankProfile::getId, identity()));
         bankData.getProfiles().stream().filter(it -> profiles.containsKey(it.getId()))
                 .forEach(profile -> bankMapper.mapToProfile(profile, profiles.get(profile.getId())));
+        bankProfileJpaRepository.deleteAll(bank.getProfiles());
         bank.getProfiles().clear();
 
         for (var profile : bankData.getProfiles()) {
@@ -114,6 +114,7 @@ public class AdminApiService {
                 dbProfile.getActions().forEach((key, action) -> updateActions(dbProfile, action));
             }
             bankProfileJpaRepository.save(dbProfile);
+            bank.getProfiles().add(dbProfile);
         }
 
         return mapBankAndAddProfile(bank);

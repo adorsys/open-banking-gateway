@@ -29,7 +29,6 @@ import javax.persistence.ManyToOne;
 import javax.persistence.MapKey;
 import javax.persistence.OneToMany;
 import javax.persistence.SequenceGenerator;
-import javax.persistence.Table;
 import java.io.Serializable;
 import java.util.Collection;
 import java.util.HashMap;
@@ -44,7 +43,6 @@ import java.util.stream.Collectors;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-@Table(name = "bank_profile")
 public class BankProfile implements Serializable, CurrentBankProfile {
     private static final long serialVersionUID = 1L;
 
@@ -57,7 +55,7 @@ public class BankProfile implements Serializable, CurrentBankProfile {
     @SequenceGenerator(name = "bank_profile_id_generator", sequenceName = "bank_profile_id_sequence")
     private Long id;
 
-    @ManyToOne(cascade = CascadeType.ALL)
+    @ManyToOne
     @JoinColumn(name = "bank_uuid", referencedColumnName = "uuid")
     private Bank bank;
 

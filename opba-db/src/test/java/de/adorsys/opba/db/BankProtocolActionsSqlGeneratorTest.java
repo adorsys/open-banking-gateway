@@ -40,7 +40,7 @@ public class BankProtocolActionsSqlGeneratorTest {
 
     private static final String BANK_ACTION_CSV_HEADER = "id,bank_uuid,protocol_action,protocol_bean_name,consent_supported";
     private static final String BANK_SUB_ACTION_CSV_HEADER = "id,action_id,protocol_action,sub_protocol_bean_name";
-    private static final String BANK_PROFILE_CSV_HEADER = "uuid,name,bic,url,adapter_id,bank_code,idp_url,aspsp_sca_approaches";
+    private static final String BANK_PROFILE_CSV_HEADER = "bank_uuid,uuid,name,bic,url,adapter_id,bank_code,idp_url,aspsp_sca_approaches";
 
     private static final String HBCI_NAME_PREFIX = ",HBCI ";
     private static final String HBCI_ADAPTER_ID_PREFIX = ",hbci-";

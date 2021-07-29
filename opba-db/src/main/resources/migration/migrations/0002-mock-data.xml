@@ -9,7 +9,7 @@
                 file="migration/migrations/csv/v0/0-mock-bank_bank_bank_profile.csv"
                 catalogName=""
                 tableName="${table-prefix}bank">
-            <column header="uuid"       name="uuid"         type="STRING"/>
+            <column header="uuid"       name="uuid"         type="UUID"/>
             <column header="name"       name="name"         type="STRING"/>
             <column header="bic"        name="bic"          type="STRING"/>
             <column header="url"                            type="skip"/>
@@ -30,7 +30,8 @@
                 file="migration/migrations/csv/v0/0-mock-bank_bank_bank_profile.csv"
                 catalogName=""
                 tableName="${table-prefix}bank_profile">
-            <column header="uuid"       name="bank_uuid"                type="STRING"/>
+            <column header="bank_uuid"  name="bank_uuid"               type="UUID"/>
+            <column header="uuid"       name="uuid"                     type="UUID"/>
             <column header="name"       name="name"                     type="skip"/>
             <column header="bic"        name="bic"                      type="skip"/>
             <column header="url"        name="url"                      type="STRING"/>
