@@ -30,7 +30,6 @@ import javax.persistence.MapKey;
 import javax.persistence.OneToMany;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
-import javax.persistence.UniqueConstraint;
 import java.io.Serializable;
 import java.util.Collection;
 import java.util.HashMap;
@@ -45,7 +44,7 @@ import java.util.stream.Collectors;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-@Table(name = "bank_profile", uniqueConstraints = {@UniqueConstraint(columnNames = "bank_uuid", name = "opb_bank_profile_bank_uuid_key")})
+@Table(name = "bank_profile")
 public class BankProfile implements Serializable, CurrentBankProfile {
     private static final long serialVersionUID = 1L;
 

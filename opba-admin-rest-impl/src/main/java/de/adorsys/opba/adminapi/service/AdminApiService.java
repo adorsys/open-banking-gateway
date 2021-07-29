@@ -102,20 +102,19 @@ public class AdminApiService {
                 .collect(Collectors.toMap(BankProfile::getId, identity()));
         bankData.getProfiles().stream().filter(it -> profiles.containsKey(it.getId()))
                 .forEach(profile -> bankMapper.mapToProfile(profile, profiles.get(profile.getId())));
-        bankProfileJpaRepository.deleteAll(profiles.values());
+        bank.getProfiles().clear();
 
-        bankData.getProfiles().forEach(profile -> {
+        for (var profile : bankData.getProfiles()) {
             var dbProfile = null != profiles.get(profile.getId()) ? profiles.get(profile.getId()) : new BankProfile();
             bankMapper.mapToProfile(profile, dbProfile);
+            dbProfile.setBank(bank);
             if (null != profile.getActions()) {
                 dbProfile.getActions().clear();
-                dbProfile = bankProfileJpaRepository.saveAndFlush(dbProfile);
                 dbProfile.getActions().putAll(bankMapper.mapActions(profile.getActions()));
-                BankProfile finalDbProfile = dbProfile;
-                dbProfile.getActions().forEach((key, action) -> updateActions(finalDbProfile, action));
+                dbProfile.getActions().forEach((key, action) -> updateActions(dbProfile, action));
             }
             bankProfileJpaRepository.save(dbProfile);
-        });
+        }
 
         return mapBankAndAddProfile(bank);
     }
