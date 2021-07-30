@@ -5,6 +5,7 @@ import de.adorsys.opba.adminapi.model.generated.PageBankData;
 import de.adorsys.opba.db.domain.entity.Bank;
 import de.adorsys.opba.db.domain.entity.BankAction;
 import de.adorsys.opba.db.domain.entity.BankProfile;
+import de.adorsys.opba.db.repository.jpa.BankActionRepository;
 import de.adorsys.opba.db.repository.jpa.BankProfileJpaRepository;
 import de.adorsys.opba.db.repository.jpa.BankRepository;
 import de.adorsys.opba.protocol.api.common.ProtocolAction;
@@ -44,6 +45,7 @@ public class AdminApiService {
 
     private static final String ADMIN_MAPPERS_PACKAGE = "de.adorsys.opba.adminapi.service.mappers";
 
+    private final BankActionRepository actionRepository;
     private final BankRepository bankRepository;
     private final BankProfileJpaRepository bankProfileJpaRepository;
 
@@ -98,24 +100,29 @@ public class AdminApiService {
             return mapBankAndAddProfile(bank);
         }
 
-        var profiles = bank.getProfiles().stream().collect(Collectors.toMap(BankProfile::getId, identity()));
-        bankData.getProfiles().stream().filter(it -> profiles.containsKey(it.getId()))
-                .forEach(profile -> bankMapper.mapToProfile(profile, profiles.get(profile.getId())));
-        bankProfileJpaRepository.deleteAll(bank.getProfiles());
+        var profilesByUuid = bank.getProfiles().stream().collect(Collectors.toMap(BankProfile::getUuid, identity()));
+        bankData.getProfiles().stream().filter(it -> profilesByUuid.containsKey(it.getUuid()))
+                .forEach(profile -> bankMapper.mapToProfile(profile, profilesByUuid.get(profile.getUuid())));
         bank.getProfiles().clear();
 
         for (var profile : bankData.getProfiles()) {
-            var dbProfile = null != profiles.get(profile.getId()) ? profiles.get(profile.getId()) : new BankProfile();
+            var dbProfile = profilesByUuid.remove(profile.getUuid());
+            if (null == dbProfile) {
+                dbProfile = new BankProfile();
+            }
             bankMapper.mapToProfile(profile, dbProfile);
             dbProfile.setBank(bank);
             if (null != profile.getActions()) {
                 dbProfile.getActions().clear();
+                bankProfileJpaRepository.saveAndFlush(dbProfile);
                 dbProfile.getActions().putAll(bankMapper.mapActions(profile.getActions()));
-                dbProfile.getActions().forEach((key, action) -> updateActions(dbProfile, action));
+                BankProfile finalDbProfile = dbProfile;
+                dbProfile.getActions().forEach((key, action) -> updateActions(finalDbProfile, action));
             }
+
             bankProfileJpaRepository.save(dbProfile);
-            bank.getProfiles().add(dbProfile);
         }
+        bankProfileJpaRepository.deleteAll(profilesByUuid.values());
 
         return mapBankAndAddProfile(bank);
     }

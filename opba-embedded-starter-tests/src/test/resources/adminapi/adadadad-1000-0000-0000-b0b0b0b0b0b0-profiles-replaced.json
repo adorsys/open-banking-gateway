@@ -7,42 +7,6 @@
   },
   "profiles": [
     {
-      "url": "http://localhost:8090/hbci-mock/2",
-      "uuid": "918d80fa-f7fd-4c9f-a6bd-7a9e12aeee76",
-      "adapterId": "hbci-adapter",
-      "preferredApproach": "REDIRECT",
-      "tryToUsePreferredApproach": false,
-      "uniquePaymentPurpose": true,
-      "actions": {
-        "LIST_TRANSACTIONS": {
-          "protocolAction": "list-transactions",
-          "protocolBeanName": "hbciListTransactions-1222",
-          "consentSupported": false
-        },
-        "AUTHORIZATION": {
-          "protocolAction": "authorization",
-          "consentSupported": false,
-          "subProtocols": [
-            {
-              "protocolAction": "get-authorization-state",
-              "subProtocolBeanName": "hbciGetAuthorizationState"
-            },
-            {
-              "protocolAction": "update-authorization",
-              "subProtocolBeanName": "hbciUpdateAuthorization-1345"
-            },
-            {
-              "protocolAction": "from-aspsp-redirect",
-              "subProtocolBeanName": "hbciFromAspspRedirect-888"
-            }
-          ]
-        }
-      },
-      "bankCode": "10000001",
-      "bic": "ADORSYS+HA",
-      "name": "adorsys HBCI no SCA-222"
-    },
-    {
       "url": "http://localhost:8090/hbci-mock/2-new-upd",
       "uuid": "2548ef6a-e2af-4fc9-8803-fc2ddc52ef2e",
       "adapterId": "hbci-adapter",

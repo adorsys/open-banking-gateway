@@ -13,9 +13,8 @@ import org.skyscreamer.jsonassert.JSONCompareMode;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.web.server.LocalServerPort;
 import org.springframework.http.HttpStatus;
+import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.context.ActiveProfiles;
-import org.springframework.transaction.annotation.Propagation;
-import org.springframework.transaction.annotation.Transactional;
 
 import java.nio.charset.StandardCharsets;
 
@@ -27,8 +26,8 @@ import static org.springframework.http.HttpHeaders.AUTHORIZATION;
 /**
  * This is a very basic test to ensure that Admin API functions properly.
  */
+@DirtiesContext(classMode = DirtiesContext.ClassMode.AFTER_EACH_TEST_METHOD)
 @ActiveProfiles(profiles = {"test", "test-separate-db"})  // Use clean DB as may collide
-@Transactional(propagation = Propagation.NOT_SUPPORTED)
 @SpringBootTest(classes = {OpenBankingEmbeddedApplication.class, FintechRequestSigningTestConfig.class}, webEnvironment = RANDOM_PORT)
 class AdminApiModyfingTest {
 
@@ -72,8 +71,8 @@ class AdminApiModyfingTest {
     }
 
     @Test
-    void patchAdminBanksByIdProtected() throws Exception {
-        String updated = fixture("adadadad-1000-0000-0000-b0b0b0b0b0b0-updated");
+    void patchAdminBanksByIdProfilesRemoved() throws Exception {
+        String updated = fixture("adadadad-1000-0000-0000-b0b0b0b0b0b0-profiles-removed");
 
         withBasic
                     .contentType(ContentType.JSON)
@@ -89,6 +88,50 @@ class AdminApiModyfingTest {
                     .extract()
                     .body()
                     .asString();
+
+        JSONAssert.assertEquals(updated.replaceAll("\"profiles\": \\[],", ""), body, JSONCompareMode.LENIENT);
+    }
+
+    @Test
+    void patchAdminBanksByIdProfileReplaced() throws Exception {
+        String updated = fixture("adadadad-1000-0000-0000-b0b0b0b0b0b0-profiles-replaced");
+
+        withBasic
+                .contentType(ContentType.JSON)
+                .body(updated)
+                .patch(ADMIN_API + "banks/adadadad-1000-0000-0000-b0b0b0b0b0b0")
+                .then()
+                .statusCode(HttpStatus.OK.value());
+
+        String body = withBasic
+                .get(ADMIN_API + "banks/adadadad-1000-0000-0000-b0b0b0b0b0b0")
+                .then()
+                .statusCode(HttpStatus.OK.value())
+                .extract()
+                .body()
+                .asString();
+
+        JSONAssert.assertEquals(updated, body, JSONCompareMode.LENIENT);
+    }
+
+    @Test
+    void patchAdminBanksByIdProtected() throws Exception {
+        String updated = fixture("adadadad-1000-0000-0000-b0b0b0b0b0b0-updated");
+
+        withBasic
+                .contentType(ContentType.JSON)
+                .body(updated)
+                .patch(ADMIN_API + "banks/adadadad-1000-0000-0000-b0b0b0b0b0b0")
+                .then()
+                .statusCode(HttpStatus.OK.value());
+
+        String body = withBasic
+                .get(ADMIN_API + "banks/adadadad-1000-0000-0000-b0b0b0b0b0b0")
+                .then()
+                .statusCode(HttpStatus.OK.value())
+                .extract()
+                .body()
+                .asString();
 
         JSONAssert.assertEquals(updated, body, JSONCompareMode.LENIENT);
     }
