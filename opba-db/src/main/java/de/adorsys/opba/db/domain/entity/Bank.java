@@ -21,6 +21,7 @@ import javax.persistence.Table;
 import javax.persistence.UniqueConstraint;
 import java.io.Serializable;
 import java.util.Collection;
+import java.util.UUID;
 
 @Entity
 @Getter
@@ -39,7 +40,7 @@ public class Bank implements Serializable {
     @SequenceGenerator(name = "bank_id_generator", sequenceName = "bank_id_sequence")
     private Long id;
 
-    private String uuid;
+    private UUID uuid;
     private String name;
     private String bic;
     private String bankCode;

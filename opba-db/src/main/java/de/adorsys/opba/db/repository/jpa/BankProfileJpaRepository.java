@@ -13,7 +13,7 @@ public interface BankProfileJpaRepository extends JpaRepository<BankProfile, Lon
 
     Optional<BankProfile> findByUuid(UUID uuid);
 
-    List<BankProfile> findByBankUuid(String bankUuid);
+    List<BankProfile> findByBankUuid(UUID bankUuid);
 
     List<BankProfile> findByBankBic(String bankBic);
 

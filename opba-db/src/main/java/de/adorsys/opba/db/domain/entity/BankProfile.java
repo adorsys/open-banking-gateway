@@ -1,6 +1,7 @@
 package de.adorsys.opba.db.domain.entity;
 
 import de.adorsys.opba.db.domain.converter.ScaApproachConverter;
+import de.adorsys.opba.db.domain.entity.helpers.UuidMapper;
 import de.adorsys.opba.db.domain.entity.sessions.ServiceSession;
 import de.adorsys.opba.protocol.api.common.Approach;
 import de.adorsys.opba.protocol.api.common.CurrentBankProfile;
@@ -84,7 +85,7 @@ public class BankProfile implements Serializable, CurrentBankProfile {
     @OneToMany(mappedBy = "bankProfile", cascade = CascadeType.ALL, orphanRemoval = true)
     private Collection<ServiceSession> servicesSessions;
 
-    @Mapper(uses = ToConsentSupported.class)
+    @Mapper(uses = {ToConsentSupported.class, UuidMapper.class})
     public interface ToBankProfileDescriptor {
         @Mapping(source = "bank.name", target = "bankName")
         @Mapping(source = "bank.bic", target = "bic")
@@ -97,7 +98,7 @@ public class BankProfile implements Serializable, CurrentBankProfile {
         BankProfileDescriptor map(BankProfile bankProfile);
     }
 
-    @Mapper
+    @Mapper(uses = UuidMapper.class)
     public interface ToAspsp {
         @Mapping(source = "bank.name", target = "name")
         @Mapping(source = "bank.bic", target = "bic")
@@ -110,7 +111,7 @@ public class BankProfile implements Serializable, CurrentBankProfile {
         Aspsp map(BankProfile bankProfile);
     }
 
-    @Mapper
+    @Mapper(uses = UuidMapper.class)
     public interface ToConsentSupported {
 
         default Map<String, String> map(Map<ProtocolAction, BankAction> actions) {

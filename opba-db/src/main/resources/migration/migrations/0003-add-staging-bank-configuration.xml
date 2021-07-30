@@ -2,26 +2,6 @@
                    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
                    xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.8.xsd">
 
-    <changeSet author="iiuex@adorsys.com.ua" id="2020-08-21-1" context="hbci-banks">
-        <!-- Note that on Liquibase 4.4.0 relativeToChangelogFile (for loadData) does not work  when using PropertiesLauncher -->
-        <loadData
-                encoding="utf8"
-                file="migration/migrations/csv/v0/0-hbci_bank_bank-profile.csv"
-                catalogName=""
-                tableName="${table-prefix}bank">
-            <column header="uuid"       name="uuid"         type="UUID"/>
-            <column header="name"       name="name"         type="STRING"/>
-            <column header="bic"        name="bic"          type="STRING"/>
-            <column header="url"                            type="skip"/>
-            <column header="adapter_id"                     type="skip"/>
-            <column header="bank_code"  name="bank_code"    type="STRING"/>
-            <column header="idp_url"                        type="skip"/>
-            <column header="aspsp_sca_approaches"           type="skip"/>
-            <column header="protocol_type"                  type="skip"/>
-        </loadData>
-        <rollback />
-    </changeSet>
-
     <changeSet author="iiuex@adorsys.com.ua" id="2020-08-21-2" context="hbci-banks">
         <!-- Note that on Liquibase 4.4.0 relativeToChangelogFile (for loadData) does not work  when using PropertiesLauncher -->
         <loadData
@@ -30,7 +10,7 @@
                 catalogName=""
                 tableName="${table-prefix}bank_profile">
             <column header="bank_uuid"       name="bank_uuid"           type="UUID"/>
-            <column header="uuid"            name="uuid"                type="UUID"/>
+            <column header="profile_uuid"    name="uuid"                type="UUID"/>
             <column header="name"                                       type="skip"/>
             <column header="bic"                                        type="skip"/>
             <column header="url"        name="url"                      type="STRING"/>
@@ -39,6 +19,7 @@
             <column header="idp_url"    name="idp_url"                  type="STRING"/>
             <column header="aspsp_sca_approaches" name="sca_approaches" type="STRING"/>
             <column header="protocol_type"                              type="STRING"/>
+            <column header="is_sandbox"                                 type="BOOL"/>
         </loadData>
         <rollback />
     </changeSet>
@@ -51,7 +32,7 @@
                 catalogName=""
                 tableName="${table-prefix}bank_action">
             <column header="id"                 name="id"                   type="NUMERIC"/>
-            <column header="bank_uuid"          name="bank_uuid"            type="STRING"/>
+            <column header="profile_uuid"       name="profile_uuid"         type="UUID"/>
             <column header="protocol_action"    name="protocol_action"      type="STRING"/>
             <column header="protocol_bean_name" name="protocol_bean_name"   type="STRING"/>
             <column header="consent_supported"  name="consent_supported"    type="BOOLEAN"/>

@@ -5,6 +5,7 @@ import de.adorsys.opba.adminapi.model.generated.PageBankData;
 import de.adorsys.opba.db.domain.entity.Bank;
 import de.adorsys.opba.db.domain.entity.BankAction;
 import de.adorsys.opba.db.domain.entity.BankProfile;
+import de.adorsys.opba.db.domain.entity.helpers.UuidMapper;
 import de.adorsys.opba.db.repository.jpa.BankProfileJpaRepository;
 import de.adorsys.opba.db.repository.jpa.BankRepository;
 import de.adorsys.opba.protocol.api.common.ProtocolAction;
@@ -76,7 +77,7 @@ public class AdminApiService {
         }
 
         BankDataToMap result = new BankDataToMap();
-        mapped.getBank().setUuid(bankId.toString());
+        mapped.getBank().setUuid(bankId);
         Bank bank = bankRepository.save(mapped.getBank());
         result.setBank(bank);
 

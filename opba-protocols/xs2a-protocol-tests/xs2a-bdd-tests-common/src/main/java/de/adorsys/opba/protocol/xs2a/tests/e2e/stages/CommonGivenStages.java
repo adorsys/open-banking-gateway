@@ -69,7 +69,7 @@ public class CommonGivenStages<SELF extends CommonGivenStages<SELF>> extends Sta
 
     @Transactional
     public SELF set_tpp_redirect_preferred_true() {
-        profiles.findByBankUuid(BANK_UUID_ID).stream()
+        profiles.findByBankUuid(UUID.fromString(BANK_UUID_ID)).stream()
                 .map(it -> {
                     it.setPreferredApproach(Approach.REDIRECT);
                     it.setTryToUsePreferredApproach(true);
@@ -82,7 +82,7 @@ public class CommonGivenStages<SELF extends CommonGivenStages<SELF>> extends Sta
 
     @Transactional
     public SELF set_tpp_redirect_preferred_false() {
-        profiles.findByBankUuid(BANK_UUID_ID).stream()
+        profiles.findByBankUuid(UUID.fromString(BANK_UUID_ID)).stream()
                 .map(it -> {
                     it.setPreferredApproach(Approach.EMBEDDED);
                     it.setTryToUsePreferredApproach(true);
@@ -95,7 +95,7 @@ public class CommonGivenStages<SELF extends CommonGivenStages<SELF>> extends Sta
 
     @Transactional
     public SELF set_default_preferred_approach() {
-        profiles.findByBankUuid(BANK_UUID_ID).stream()
+        profiles.findByBankUuid(UUID.fromString(BANK_UUID_ID)).stream()
                 .map(it -> {
                     it.setPreferredApproach(Approach.REDIRECT);
                     it.setTryToUsePreferredApproach(false);

@@ -167,6 +167,7 @@ components:
           format: int64
         uuid:
           type: string
+          format: uuid
         name:
           type: string
         bic:

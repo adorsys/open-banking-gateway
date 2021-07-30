@@ -1,0 +1,5 @@
+bank_uuid,name,bic,bank_code
+adadadad-1000-0000-0000-b0b0b0b0b0b0,adorsys HBCI no SCA,ADORSYS HA,10000001
+adadadad-2000-0000-0000-b0b0b0b0b0b0,adorsys HBCI no SCA authenticated BPD,ADORSYS HB,20000002
+adadadad-3000-0000-0000-b0b0b0b0b0b0,adorsys HBCI transactions SCA,ADORSYS HS,30000003
+adadadad-4000-0000-0000-b0b0b0b0b0b0,adorsys XS2A,ADORSYS XS,""

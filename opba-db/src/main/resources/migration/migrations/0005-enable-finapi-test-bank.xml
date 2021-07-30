@@ -9,14 +9,14 @@
             insert into ${table-prefix}bank (uuid, name, bic, bank_code) values ('223f8daa-767c-43f8-851b-26c8ee6193db', 'FinAPI Sandbox test bank (XS2A)', 'FINAPI SBX', '');
             insert into ${table-prefix}bank_profile (bank_uuid, uuid, adapter_id,protocol_type,external_id,external_interfaces,is_sandbox) values ('223f8daa-767c-43f8-851b-26c8ee6193db', '223f8daa-767c-43f8-851b-26c8ee6193db', 'finapi-adapter', 'FINAPI_WEBFORM','280001','XS2A',true);
 
-            insert into ${table-prefix}bank_action (id, bank_uuid, protocol_action, protocol_bean_name) values (1000, '223f8daa-767c-43f8-851b-26c8ee6193db', 'LIST_ACCOUNTS', 'finapiWebFormListAccounts');
-            insert into ${table-prefix}bank_action (id, bank_uuid, protocol_action, protocol_bean_name) values (1001, '223f8daa-767c-43f8-851b-26c8ee6193db', 'LIST_TRANSACTIONS', 'finapiWebFormListTransactions');
-            insert into ${table-prefix}bank_action (id, bank_uuid, protocol_action, protocol_bean_name) values (1002, '223f8daa-767c-43f8-851b-26c8ee6193db', 'AUTHORIZATION', '');
-            insert into ${table-prefix}bank_action (id, bank_uuid, protocol_action, protocol_bean_name) values (1003, '223f8daa-767c-43f8-851b-26c8ee6193db', 'SINGLE_PAYMENT', 'finapiWebFormGetPaymentInfoState');
-            insert into ${table-prefix}bank_action (id, bank_uuid, protocol_action, protocol_bean_name) values (1004, '223f8daa-767c-43f8-851b-26c8ee6193db', 'GET_PAYMENT_INFORMATION', 'finapiWebFormGetPaymentInfoState');
-            insert into ${table-prefix}bank_action (id, bank_uuid, protocol_action, protocol_bean_name) values (1005, '223f8daa-767c-43f8-851b-26c8ee6193db', 'GET_PAYMENT_STATUS', 'finapiWebFormGetPaymentStatusState');
-            insert into ${table-prefix}bank_action (id, bank_uuid, protocol_action, protocol_bean_name) values (1006, '223f8daa-767c-43f8-851b-26c8ee6193db', 'DELETE_CONSENT', 'finapiWebFormDeleteConsent');
-            insert into ${table-prefix}bank_action (id, bank_uuid, protocol_action, protocol_bean_name) values (1007, '223f8daa-767c-43f8-851b-26c8ee6193db', 'GET_CONSENT_STATUS', 'finapiWebFormGetConsentStatus');
+            insert into ${table-prefix}bank_action (id, profile_uuid, protocol_action, protocol_bean_name) values (1000, '223f8daa-767c-43f8-851b-26c8ee6193db', 'LIST_ACCOUNTS', 'finapiWebFormListAccounts');
+            insert into ${table-prefix}bank_action (id, profile_uuid, protocol_action, protocol_bean_name) values (1001, '223f8daa-767c-43f8-851b-26c8ee6193db', 'LIST_TRANSACTIONS', 'finapiWebFormListTransactions');
+            insert into ${table-prefix}bank_action (id, profile_uuid, protocol_action, protocol_bean_name) values (1002, '223f8daa-767c-43f8-851b-26c8ee6193db', 'AUTHORIZATION', '');
+            insert into ${table-prefix}bank_action (id, profile_uuid, protocol_action, protocol_bean_name) values (1003, '223f8daa-767c-43f8-851b-26c8ee6193db', 'SINGLE_PAYMENT', 'finapiWebFormGetPaymentInfoState');
+            insert into ${table-prefix}bank_action (id, profile_uuid, protocol_action, protocol_bean_name) values (1004, '223f8daa-767c-43f8-851b-26c8ee6193db', 'GET_PAYMENT_INFORMATION', 'finapiWebFormGetPaymentInfoState');
+            insert into ${table-prefix}bank_action (id, profile_uuid, protocol_action, protocol_bean_name) values (1005, '223f8daa-767c-43f8-851b-26c8ee6193db', 'GET_PAYMENT_STATUS', 'finapiWebFormGetPaymentStatusState');
+            insert into ${table-prefix}bank_action (id, profile_uuid, protocol_action, protocol_bean_name) values (1006, '223f8daa-767c-43f8-851b-26c8ee6193db', 'DELETE_CONSENT', 'finapiWebFormDeleteConsent');
+            insert into ${table-prefix}bank_action (id, profile_uuid, protocol_action, protocol_bean_name) values (1007, '223f8daa-767c-43f8-851b-26c8ee6193db', 'GET_CONSENT_STATUS', 'finapiWebFormGetConsentStatus');
 
             insert into ${table-prefix}bank_sub_action (id, action_id, protocol_action, sub_protocol_bean_name) values (1000, 1002, 'ON_LOGIN', 'finapiWebFormOnLogin');
             insert into ${table-prefix}bank_sub_action (id, action_id, protocol_action, sub_protocol_bean_name) values (1001, 1002, 'GET_AUTHORIZATION_STATE', 'finapiWebFormGetAuthorizationState');
