@@ -266,7 +266,7 @@ public class MockServers<SELF extends MockServers<SELF>> extends CommonGivenStag
     private void startWireMock(WireMockConfiguration config) {
         sandbox = new WireMockServer(config);
         sandbox.start();
-        var bankProfiles = bankProfileJpaRepository.findByBankUuid(UUID.fromString("53c47f54-b9a4-465a-8f77-bc6cd5f0cf46"));
+        var bankProfiles = bankProfileJpaRepository.findByBankUuid(UUID.fromString("adadadad-4000-0000-0000-b0b0b0b0b0b0"));
         bankProfiles.forEach(it -> {
             it.setUrl("http://localhost:" + sandbox.port());
             it.setIdpUrl("http://localhost:" + sandbox.port() + "/oauth/authorization-server");

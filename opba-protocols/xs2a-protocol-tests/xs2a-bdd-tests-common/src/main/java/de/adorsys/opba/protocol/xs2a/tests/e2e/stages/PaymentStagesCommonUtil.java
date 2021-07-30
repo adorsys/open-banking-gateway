@@ -17,7 +17,7 @@ import static de.adorsys.opba.protocol.xs2a.tests.HeaderNames.X_PSU_AUTHENTICATI
 import static de.adorsys.opba.protocol.xs2a.tests.HeaderNames.X_REQUEST_ID;
 import static de.adorsys.opba.protocol.xs2a.tests.HeaderNames.X_TIMESTAMP_UTC;
 import static de.adorsys.opba.protocol.xs2a.tests.HeaderNames.X_XSRF_TOKEN;
-import static de.adorsys.opba.protocol.xs2a.tests.e2e.stages.StagesCommonUtil.SANDBOX_BANK_ID;
+import static de.adorsys.opba.protocol.xs2a.tests.e2e.stages.StagesCommonUtil.SANDBOX_BANK_PROFILE_ID;
 import static de.adorsys.opba.restapi.shared.HttpHeaders.UserAgentContext.PSU_IP_ADDRESS;
 
 @UtilityClass
@@ -44,14 +44,14 @@ public class PaymentStagesCommonUtil {
     public static final String IP_ADDRESS = "1.1.1.1";
 
     public static RequestSpecification withPaymentHeaders(String fintechUserId) {
-        return withPaymentHeaders(fintechUserId, SANDBOX_BANK_ID, true);
+        return withPaymentHeaders(fintechUserId, SANDBOX_BANK_PROFILE_ID, true);
     }
 
     public static RequestSpecification withPaymentHeaders(
             String fintechUserId,
             boolean psuAuthenticationRequired
     ) {
-        return withPaymentHeaders(fintechUserId, SANDBOX_BANK_ID, psuAuthenticationRequired);
+        return withPaymentHeaders(fintechUserId, SANDBOX_BANK_PROFILE_ID, psuAuthenticationRequired);
     }
 
     public static RequestSpecification withPaymentHeaders(
@@ -78,7 +78,7 @@ public class PaymentStagesCommonUtil {
     }
 
     public static RequestSpecification withPaymentInfoHeaders(String fintechUserId) {
-        return withPaymentInfoHeaders(fintechUserId, SANDBOX_BANK_ID);
+        return withPaymentInfoHeaders(fintechUserId, SANDBOX_BANK_PROFILE_ID);
     }
 
     public static RequestSpecification withPaymentInfoHeaders(String fintechUserId, String bankProfileId) {

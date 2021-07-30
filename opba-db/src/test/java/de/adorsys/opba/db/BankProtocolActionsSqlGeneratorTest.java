@@ -54,9 +54,6 @@ public class BankProtocolActionsSqlGeneratorTest {
     private static final String BANK_CSV_HEADER = "bank_uuid,name,bic,bank_code";
     private static final String BANK_PROFILE_CSV_HEADER = "profile_uuid,bank_uuid,name,bic,url,adapter_id,bank_code,idp_url,aspsp_sca_approaches,protocol_type,is_sandbox";
 
-    private static final String HBCI_NAME_PREFIX = ",HBCI ";
-    private static final String HBCI_ADAPTER_ID_PREFIX = ",hbci-";
-
     @Value("${bank-action-generator.action.start-id}")
     private Integer bankActionId;
 
@@ -179,40 +176,6 @@ public class BankProtocolActionsSqlGeneratorTest {
         writelnToFile(HBCI_BANK_PROFILE_DESTINATION_PATH, BANK_PROFILE_CSV_HEADER);
         writelnToFile(XS2A_BANK_PROFILE_DESTINATION_PATH, BANK_PROFILE_CSV_HEADER);
         writelnToFile(BANK_DESTINATION_PATH, BANK_CSV_HEADER);
-    }
-
-    private String replaceWithHbciData(String bankRecord) {
-        return String.format("%s%s", UUID.randomUUID(), removeUrls(insertHbciPrefixes(bankRecord)));
-    }
-
-    /**
-     * Adds 'HBCI ' prefix to the name and 'hbci-' prefix to the adapter_id of the bank
-     */
-    private String insertHbciPrefixes(String input) {
-        StringBuilder result = new StringBuilder(HBCI_NAME_PREFIX);
-        int skipCommas = 3;
-        char[] chars = input.substring(input.indexOf(',') + 1).toCharArray();
-
-        for (char aChar : chars) {
-            if (aChar == ',') {
-                skipCommas--;
-                if (skipCommas == 0) {
-                    result.append(HBCI_ADAPTER_ID_PREFIX);
-                    continue;
-                }
-            }
-
-            result.append(aChar);
-        }
-
-        return result.toString();
-    }
-
-    private String removeUrls(String input) {
-        String[] segments = input.split(",", -1);
-        segments[3] = "";
-        segments[6] = "";
-        return String.join(",", segments);
     }
 
     @SneakyThrows

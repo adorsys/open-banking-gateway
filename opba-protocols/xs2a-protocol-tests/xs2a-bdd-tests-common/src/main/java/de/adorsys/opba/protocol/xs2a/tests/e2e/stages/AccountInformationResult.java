@@ -36,7 +36,7 @@ import static de.adorsys.opba.protocol.xs2a.tests.e2e.stages.StagesCommonUtil.AN
 import static de.adorsys.opba.protocol.xs2a.tests.e2e.stages.StagesCommonUtil.AUTHORIZE_CONSENT_ENDPOINT;
 import static de.adorsys.opba.protocol.xs2a.tests.e2e.stages.StagesCommonUtil.CONFIRM_CONSENT_ENDPOINT;
 import static de.adorsys.opba.protocol.xs2a.tests.e2e.stages.StagesCommonUtil.MAX_MUSTERMAN;
-import static de.adorsys.opba.protocol.xs2a.tests.e2e.stages.StagesCommonUtil.SANDBOX_BANK_ID;
+import static de.adorsys.opba.protocol.xs2a.tests.e2e.stages.StagesCommonUtil.SANDBOX_BANK_PROFILE_ID;
 import static de.adorsys.opba.protocol.xs2a.tests.e2e.stages.StagesCommonUtil.SESSION_PASSWORD;
 import static de.adorsys.opba.protocol.xs2a.tests.e2e.stages.StagesCommonUtil.withAccountsHeaders;
 import static de.adorsys.opba.protocol.xs2a.tests.e2e.stages.StagesCommonUtil.withSignatureHeaders;
@@ -280,7 +280,7 @@ public class AccountInformationResult<SELF extends AccountInformationResult<SELF
     }
 
     protected ExtractableResponse<Response> getTransactionListFor(String psuId, String resourceId, LocalDate dateFrom, LocalDate dateTo, String bookingStatus) {
-        return getTransactionListFor(psuId, SANDBOX_BANK_ID, resourceId, dateFrom, dateTo, bookingStatus);
+        return getTransactionListFor(psuId, SANDBOX_BANK_PROFILE_ID, resourceId, dateFrom, dateTo, bookingStatus);
     }
 
     protected ExtractableResponse<Response> getTransactionListFor(

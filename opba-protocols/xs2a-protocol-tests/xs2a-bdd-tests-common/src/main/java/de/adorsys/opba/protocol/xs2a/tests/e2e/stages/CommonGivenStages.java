@@ -34,7 +34,7 @@ import static de.adorsys.opba.protocol.xs2a.tests.HeaderNames.X_REQUEST_SIGNATUR
 import static de.adorsys.opba.protocol.xs2a.tests.e2e.stages.StagesCommonUtil.LOGIN;
 import static de.adorsys.opba.protocol.xs2a.tests.e2e.stages.StagesCommonUtil.PASSWORD;
 import static de.adorsys.opba.protocol.xs2a.tests.e2e.stages.StagesCommonUtil.REGISTER_USER_ENDPOINT;
-import static de.adorsys.opba.protocol.xs2a.tests.e2e.stages.StagesCommonUtil.SANDBOX_BANK_ID;
+import static de.adorsys.opba.protocol.xs2a.tests.e2e.stages.StagesCommonUtil.SANDBOX_BANK_PROFILE_ID;
 import static io.restassured.RestAssured.config;
 import static io.restassured.config.RedirectConfig.redirectConfig;
 
@@ -42,7 +42,7 @@ import static io.restassured.config.RedirectConfig.redirectConfig;
 @SuppressWarnings("checkstyle:MethodName") // Jgiven prettifies snake-case names not camelCase
 public class CommonGivenStages<SELF extends CommonGivenStages<SELF>> extends Stage<SELF> {
 
-    private static final String BANK_UUID_ID = SANDBOX_BANK_ID; //Define whether ais or pis
+    private static final String BANK_UUID_ID = SANDBOX_BANK_PROFILE_ID; //Define whether ais or pis
 
     @LocalServerPort
     private int serverPort;

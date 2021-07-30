@@ -28,7 +28,7 @@ import static de.adorsys.opba.protocol.xs2a.tests.Const.ENABLE_HEAVY_TESTS;
 import static de.adorsys.opba.protocol.xs2a.tests.Const.TRUE_BOOL;
 import static de.adorsys.opba.protocol.xs2a.tests.TestProfiles.MOCKED_SANDBOX;
 import static de.adorsys.opba.protocol.xs2a.tests.TestProfiles.ONE_TIME_POSTGRES_RAMFS;
-import static de.adorsys.opba.protocol.xs2a.tests.e2e.stages.StagesCommonUtil.SANDBOX_OAUTH2_INTEGRATED_BANK_ID;
+import static de.adorsys.opba.protocol.xs2a.tests.e2e.stages.StagesCommonUtil.SANDBOX_OAUTH2_INTEGRATED_BANK_PROFILE_ID;
 import static org.springframework.boot.test.context.SpringBootTest.WebEnvironment.RANDOM_PORT;
 
 /**
@@ -269,7 +269,7 @@ class SandboxE2EProtocolAisTest extends SandboxCommonTest<
                 /*
                  * FIXME: Using custom bank id because of https://github.com/adorsys/xs2a/issues/73
                  */
-                .fintech_calls_list_accounts_for_anton_brueckner(SANDBOX_OAUTH2_INTEGRATED_BANK_ID)
+                .fintech_calls_list_accounts_for_anton_brueckner(SANDBOX_OAUTH2_INTEGRATED_BANK_PROFILE_ID)
                 .and()
                 .user_logged_in_into_opba_as_opba_user_with_credentials_using_fintech_supplied_url(OPBA_LOGIN, OPBA_PASSWORD)
                 .and()
