@@ -243,9 +243,9 @@
         <update tableName="${table-prefix}bank_profile">
             <column name="unique_payment_purpose" value="true"/>
             <where>
-                bank_uuid='918d80fa-f7fd-4c9f-a6bd-7a9e12aeee76' OR
-                bank_uuid='0a1a6417-4913-4238-ab56-058025c3b2b8' OR
-                bank_uuid='125ef2c6-f414-4a10-a865-e3cdddf9753d'
+                bank_uuid='adadadad-1000-0000-0000-b0b0b0b0b0b0' OR
+                bank_uuid='adadadad-2000-0000-0000-b0b0b0b0b0b0' OR
+                bank_uuid='adadadad-3000-0000-0000-b0b0b0b0b0b0'
             </where>
         </update>
     </changeSet>

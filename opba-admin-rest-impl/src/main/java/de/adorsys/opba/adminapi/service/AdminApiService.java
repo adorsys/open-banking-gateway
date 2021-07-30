@@ -64,7 +64,7 @@ public class AdminApiService {
 
     @Transactional(readOnly = true)
     public BankData getBankDataByBankId(UUID bankId) {
-        Optional<Bank> bank = bankRepository.findByUuid(bankId.toString());
+        Optional<Bank> bank = bankRepository.findByUuid(bankId);
         return bank.map(this::mapBankAndAddProfile).orElse(null);
     }
 
@@ -90,7 +90,7 @@ public class AdminApiService {
 
     @Transactional
     public BankData updateBank(UUID bankId, BankData bankData) {
-        Bank bank = bankRepository.findByUuid(bankId.toString()).orElseThrow(() -> new EntityNotFoundException("No bank: " + bankId));
+        Bank bank = bankRepository.findByUuid(bankId).orElseThrow(() -> new EntityNotFoundException("No bank: " + bankId));
         bankMapper.mapToBank(bankData.getBank(), bank);
         bank = bankRepository.save(bank);
 
@@ -122,7 +122,7 @@ public class AdminApiService {
 
     @Transactional
     public void deleteBank(UUID bankId) {
-        Bank bank = bankRepository.findByUuid(bankId.toString()).orElseThrow(() -> new EntityNotFoundException("No bank: " + bankId));
+        Bank bank = bankRepository.findByUuid(bankId).orElseThrow(() -> new EntityNotFoundException("No bank: " + bankId));
         bankProfileJpaRepository.deleteAll(bankProfileJpaRepository.findByBankUuid(bank.getUuid()));
         bankRepository.delete(bank);
     }

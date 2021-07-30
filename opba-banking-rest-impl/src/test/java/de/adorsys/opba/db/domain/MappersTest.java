@@ -54,7 +54,7 @@ class MappersTest {
 
         assertEquals(bankProfileDescriptor.getBankName(), bankProfile.getBank().getName());
         assertEquals(bankProfileDescriptor.getBic(), bankProfile.getBank().getBic());
-        assertEquals(bankProfileDescriptor.getBankUuid(), bankProfile.getBank().getUuid());
+        assertEquals(bankProfileDescriptor.getBankUuid(), bankProfile.getBank().getUuid().toString());
         List<String> services = bankProfile.getActions().keySet().stream().map(Enum::name).collect(Collectors.toList());
         assertEquals(bankProfileDescriptor.getServiceList(), services);
     }

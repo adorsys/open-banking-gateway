@@ -73,17 +73,17 @@ class AdminApiModyfingTest {
 
     @Test
     void patchAdminBanksByIdProtected() throws Exception {
-        String updated = fixture("918d80fa-f7fd-4c9f-a6bd-7a9e12aeee76-updated");
+        String updated = fixture("adadadad-1000-0000-0000-b0b0b0b0b0b0-updated");
 
         withBasic
                     .contentType(ContentType.JSON)
                     .body(updated)
-                    .patch(ADMIN_API + "banks/918d80fa-f7fd-4c9f-a6bd-7a9e12aeee76")
+                    .patch(ADMIN_API + "banks/adadadad-1000-0000-0000-b0b0b0b0b0b0")
                 .then()
                     .statusCode(HttpStatus.OK.value());
 
         String body = withBasic
-                    .get(ADMIN_API + "banks/918d80fa-f7fd-4c9f-a6bd-7a9e12aeee76")
+                    .get(ADMIN_API + "banks/adadadad-1000-0000-0000-b0b0b0b0b0b0")
                 .then()
                     .statusCode(HttpStatus.OK.value())
                     .extract()
@@ -96,12 +96,12 @@ class AdminApiModyfingTest {
     @Test
     void deleteAdminBanksByIdProtected() {
         withBasic
-                    .delete(ADMIN_API + "banks/125ef2c6-f414-4a10-a865-e3cdddf9753d")
+                    .delete(ADMIN_API + "banks/adadadad-3000-0000-0000-b0b0b0b0b0b0")
                 .then()
                     .statusCode(HttpStatus.OK.value());
 
         withBasic
-                    .get(ADMIN_API + "banks/125ef2c6-f414-4a10-a865-e3cdddf9753d")
+                    .get(ADMIN_API + "banks/adadadad-3000-0000-0000-b0b0b0b0b0b0")
                 .then()
                     .statusCode(HttpStatus.NOT_FOUND.value());
     }

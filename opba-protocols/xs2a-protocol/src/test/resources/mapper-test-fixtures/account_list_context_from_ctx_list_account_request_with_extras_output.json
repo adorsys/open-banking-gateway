@@ -10,7 +10,7 @@
     "combinedServiceIndicator": false
   },
   "withBalance": null,
-  "aspspId": "33333-33333",
+  "aspspId":"adadadad-4000-0000-0000-b0b0b0b0b0b0",
   "psuIpAddress": "1.1.1.1",
   "fintechRedirectUriOk": "localhost:2222",
   "fintechRedirectUriNok": "localhost:3333",

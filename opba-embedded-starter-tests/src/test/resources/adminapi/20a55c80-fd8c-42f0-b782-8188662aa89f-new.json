@@ -5,7 +5,7 @@
     "bic": "ADORSYS+HA",
     "bankCode": "10000001"
   },
-  "profile": {
+  "profiles": [{
     "url": "http://localhost:8090/hbci-mock/2",
     "adapterId": "hbci-adapter",
     "preferredApproach": "REDIRECT",
@@ -39,5 +39,5 @@
     "bankCode": "10000001",
     "bic": "ADORSYS+HA",
     "name": "adorsys HBCI no SCA-222"
-  }
+  }]
 }
