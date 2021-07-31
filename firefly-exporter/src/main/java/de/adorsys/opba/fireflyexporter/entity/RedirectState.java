@@ -23,7 +23,7 @@ public class RedirectState {
 
     private UUID serviceSessionId;
 
-    private String bankId;
+    private UUID bankProfileId;
 
     @CreatedDate
     private Instant createdAt;
