@@ -51,7 +51,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.
 public class FinTechListAccountsTest extends FinTechBankSearchApiTest {
     private static final String FIN_TECH_LIST_ACCOUNTS_URL = "/v1/ais/banks/{bank-id}/accounts";
 
-    private static final UUID NO_CONSENT_BANK_ID = UUID.fromString("aaaaaaaaa-ee6e-45f9-9163-b97320c6881a");
+    private static final UUID NO_CONSENT_BANK_ID = UUID.fromString("356938ab-9561-408f-ac7a-a9089c1623b7");
     private static final String USERNAME = "peter";
     private static final String PASSWORD = "1234";
 

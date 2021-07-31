@@ -196,16 +196,16 @@ class FinTechBankSearchApiTest extends FinTechApiBaseTest {
     }
 
     /**
-     * @param bankUUID
+     * @param bankProfileUUID
      * @return List of Services of Bank
      */
     @SneakyThrows
-    List<String> bankProfile(UUID bankUUID) {
+    List<String> bankProfile(UUID bankProfileUUID) {
         MvcResult mvcResult = this.mvc
                 .perform(get(FIN_TECH_BANK_PROFILE_URL)
                         .header(Consts.HEADER_X_REQUEST_ID, UUID.randomUUID().toString())
                         .header(Consts.HEADER_XSRF_TOKEN, restRequestContext.getXsrfTokenHeaderField())
-                        .param("bankProfileId", bankUUID.toString()))
+                        .param("bankProfileId", bankProfileUUID.toString()))
                 .andDo(print())
                 .andExpect(status().isOk())
                 .andReturn();

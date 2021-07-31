@@ -211,14 +211,14 @@ paths:
     get:
       tags:
         - FinTechBankSearch
-      summary: Request the profile of the bank identified with id (bankId).
-      description: Request the profile of the bank identified with id (bankId).
+      summary: Request the profile of the bank identified with id (bankProfileId).
+      description: Request the profile of the bank identified with id (bankProfileId).
       operationId: bankProfileGET
       parameters:
         #header
         - $ref: "#/components/parameters/X-Request-ID"
         - $ref: "#/components/parameters/X-XSRF-TOKEN"
-        - name: bankId
+        - name: bankProfileId
           in: query
           description: Identifier of the bank to be loaded.
           required: true
