@@ -22,5 +22,6 @@ public interface BankProfileJpaRepository extends JpaRepository<BankProfile, Lon
 
     List<BankProfile> findByBankBankCode(String bankCode);
 
+    @SuppressWarnings("checkstyle:MethodName") // ambiguity due to getBankName()
     List<BankProfile> findByBank_Name(String bankName);
 }
