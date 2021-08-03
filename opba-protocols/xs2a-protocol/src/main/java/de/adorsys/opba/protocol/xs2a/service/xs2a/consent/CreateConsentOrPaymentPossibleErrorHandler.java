@@ -49,7 +49,7 @@ public class CreateConsentOrPaymentPossibleErrorHandler {
             return null;
         } catch (PreAuthorisationException ex) {
             log.debug("Trying to handle PreAuthorisationException", ex);
-            tryHandleEmbeddedException(execution);
+            tryHandlePreAuthorisationException(execution);
             return null;
         }
     }
@@ -83,7 +83,7 @@ public class CreateConsentOrPaymentPossibleErrorHandler {
         );
     }
 
-    private void tryHandleEmbeddedException(DelegateExecution execution) {
+    private void tryHandlePreAuthorisationException(DelegateExecution execution) {
         ContextUtil.getAndUpdateContext(
                 execution,
                 (Xs2aContext ctx) -> {

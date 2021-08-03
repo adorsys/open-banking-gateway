@@ -1,0 +1,44 @@
+{
+  "scenarioName": "DKB - AIS",
+  "priority": 5,
+  "request" : {
+    "urlPathPattern" : "/v1/consents/.+/status",
+    "method" : "GET",
+    "headers" : {
+      "X-GTW-ASPSP-ID" : {
+        "equalTo": "335562a2-26e2-4105-b31e-08de285234e0"
+      },
+      "PSD2-AUTHORIZATION": {
+        "equalTo": "VALID_TOKEN"
+      },
+      "X-Request-ID" : {
+        "matches" : ".+"
+      },
+      "Accept" : {
+        "matches" : ".+"
+      }
+    }
+  },
+  "response" : {
+    "status" : 200,
+    "body" : "{\n  \"consentStatus\" : \"valid\"\n}",
+    "headers" : {
+      "Server" : "nginx",
+      "Date" : "Mon, 05 Jul 2021 11:59:59 GMT",
+      "Content-Type" : "application/json;charset=UTF-8",
+      "X-Request-ID" : "994e752d-770d-4c32-898f-45cebccee06d",
+      "Strict-Transport-Security" : [ "max-age=31536000 ; includeSubDomains", "max-age=15768000; includeSubDomains" ],
+      "X-Content-Type-Options" : "nosniff",
+      "X-XSS-Protection" : "1; mode=block",
+      "Pragma" : "no-cache",
+      "Expires" : "0",
+      "X-Frame-Options" : "DENY",
+      "Cache-Control" : "no-store, no-cache",
+      "Content-Security-Policy" : "default-src 'self'; script-src 'self' 'unsafe-eval'; img-src 'self'; style-src 'self' 'unsafe-inline' https://*.googleapis.com; font-src 'self' https://*.gstatic.com; object-src 'none'",
+      "Referrer-Policy" : "strict-origin"
+    }
+  },
+  "uuid" : "fbf60c56-afdb-45ca-bb6f-36b4413feb7b",
+  "persistent" : true,
+  "insertionIndex" : 36
+}

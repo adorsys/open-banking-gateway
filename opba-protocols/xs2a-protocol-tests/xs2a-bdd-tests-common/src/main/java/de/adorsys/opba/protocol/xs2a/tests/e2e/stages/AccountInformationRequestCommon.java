@@ -517,6 +517,17 @@ public class AccountInformationRequestCommon<SELF extends AccountInformationRequ
         return self();
     }
 
+    public SELF user_max_musterman_selected_sca_challenge_type_push_opt_to_embedded_authorization() {
+        provideParametersToBankingProtocolWithBody(
+                AUTHORIZE_CONSENT_ENDPOINT,
+                selectedScaBody("PUSH_OTP:TAN2go"),
+                ACCEPTED
+        );
+        return self();
+    }
+
+
+
     public SELF user_max_musterman_selected_sca_challenge_type_photo_otp_to_embedded_authorization() {
         provideParametersToBankingProtocolWithBody(
                 AUTHORIZE_CONSENT_ENDPOINT,
@@ -571,6 +582,9 @@ public class AccountInformationRequestCommon<SELF extends AccountInformationRequ
 
     public SELF user_max_musterman_provided_sca_challenge_result_to_embedded_authorization_and_sees_redirect_to_fintech_ok() {
         return user_max_musterman_provided_sca_challenge_result_to_embedded_authorization_and_sees_redirect_to_fintech_ok("/EMAIL");
+    }
+    public SELF user_max_musterman_provided_sca_challenge_result_to_embedded_pre_step_authorization_and_sees_redirect_to_fintech_ok() {
+        return user_max_musterman_provided_sca_challenge_result_to_embedded_authorization_and_sees_redirect_to_fintech_ok("/PUSH_OTP");
     }
 
     public void user_provided_sca_challenge_result_to_embedded_authorization_and_sees_redirect_to_fintech_ok() {

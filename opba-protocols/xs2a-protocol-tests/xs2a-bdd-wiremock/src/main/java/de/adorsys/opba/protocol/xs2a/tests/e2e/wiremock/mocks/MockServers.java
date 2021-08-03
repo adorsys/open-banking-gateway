@@ -187,6 +187,14 @@ public class MockServers<SELF extends MockServers<SELF>> extends CommonGivenStag
         return self();
     }
 
+    public SELF embedded_pre_step_mock_of_sandbox_for_max_musterman_accounts_running() {
+        WireMockConfiguration config = WireMockConfiguration.options().dynamicPort()
+                .usingFilesUnderClasspath("mockedsandbox/restrecord/embedded/pre-step/accounts/");
+        startWireMock(config);
+
+        return self();
+    }
+
     public SELF embedded_mock_of_sandbox_for_max_musterman_zero_sca_accounts_running() {
         WireMockConfiguration config = WireMockConfiguration.options().dynamicPort()
                                                .usingFilesUnderClasspath("mockedsandbox/restrecord/embedded/zero-sca/accounts/sandbox/");
@@ -263,7 +271,7 @@ public class MockServers<SELF extends MockServers<SELF>> extends CommonGivenStag
 
 
     @SneakyThrows
-    private void startWireMock(WireMockConfiguration config) {
+    private  void startWireMock(WireMockConfiguration config) {
         sandbox = new WireMockServer(config);
         sandbox.start();
         BankProfile bankProfile = bankProfileJpaRepository.findByBankUuid("53c47f54-b9a4-465a-8f77-bc6cd5f0cf46").get();
@@ -271,10 +279,15 @@ public class MockServers<SELF extends MockServers<SELF>> extends CommonGivenStag
         bankProfile.setIdpUrl("http://localhost:" + sandbox.port() + "/oauth/authorization-server");
         bankProfileJpaRepository.save(bankProfile);
 
+        BankProfile dkbBankProfile = bankProfileJpaRepository.findByBankUuid("335562a2-26e2-4105-b31e-08de285234e0").get();
+        dkbBankProfile.setUrl("http://localhost:" + sandbox.port());
+        dkbBankProfile.setIdpUrl("http://localhost:" + sandbox.port());
+        bankProfileJpaRepository.save(dkbBankProfile);
+
         Assertions.assertThat(sandbox).isNotNull();
         Assertions.assertThat(sandbox.isRunning()).isTrue();
-    }
 
+    }
     public SELF ignore_validation_rules_table_contains_field_psu_id() {
         IgnoreValidationRule bankValidationRule = IgnoreValidationRule.builder()
                 .action(BankAction.builder().id(ACTION_ID).build())
