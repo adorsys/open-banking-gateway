@@ -59,6 +59,6 @@ describe('BankSearchComponent', () => {
     spyOn(component, 'onBankSelect').withArgs(mockBank).and.callThrough();
     component.onBankSelect(mockBank);
     expect(routerSpy).toHaveBeenCalledWith([RoutingPath.BANK, mockBank.uuid]);
-    expect(component.selectedBank).toEqual(mockBank.uuid);
+    expect(component.selectedBankProfile).toEqual(mockBank.uuid);
   });
 });

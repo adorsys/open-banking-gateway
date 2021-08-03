@@ -143,6 +143,7 @@ public class MapBasedRequestScopedServicesProvider implements RequestScopedServi
         private String name;
         private String externalId;
         private String externalInterfaces;
+        private String bankName;
     }
 
     @Data

@@ -31,6 +31,7 @@
             <column autoIncrement="true" name="id" type="BIGINT">
                 <constraints primaryKey="true" primaryKeyName="${table-prefix}bank_profilePK"/>
             </column>
+            <column name="name" type="VARCHAR(255)"/>
             <column name="url" type="VARCHAR(255)"/>
             <column name="adapter_id" type="VARCHAR(255)"/>
             <column name="idp_url" type="VARCHAR(255)"/>

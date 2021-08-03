@@ -1145,6 +1145,10 @@ components:
         uuid:
           type: string
           format: uuid
+        profiles:
+          type: array
+          items:
+            $ref: "#/components/schemas/bankProfile"
 
     bankProfile:
       title: Bank Profile
@@ -1154,13 +1158,26 @@ components:
           type: string
         bankName:
           type: string
+        name:
+          type: string
         bic:
           type: string
+        uuid:
+          type: string
+          format: uuid
         services:
           type: array
           items:
             # can be an enum
             type: string
+        externalId:
+          type: string
+        externalInterfaces:
+          type: string
+        protocolType:
+          type: string
+        isSandbox:
+          type: boolean
 
     # Account and transaction information
     accountDetails:

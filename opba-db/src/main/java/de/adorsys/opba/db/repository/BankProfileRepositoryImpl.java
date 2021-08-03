@@ -39,7 +39,7 @@ public class BankProfileRepositoryImpl implements AspspReadOnlyRepository {
 
     @Override
     public List<Aspsp> findByName(String bankName, String s1, int i) {
-        return bankProfileJpaRepository.findByBankName(bankName).stream()
+        return bankProfileJpaRepository.findByBank_Name(bankName).stream()
                 .map(BankProfile.TO_ASPSP::map)
                 .collect(Collectors.toList());
     }

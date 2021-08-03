@@ -26,7 +26,7 @@
                 tableName="${table-prefix}bank_profile">
             <column header="bank_uuid"  name="bank_uuid"               type="UUID"/>
             <column header="profile_uuid" name="uuid"                  type="UUID"/>
-            <column header="name"       name="name"                     type="skip"/>
+            <column header="name"       name="name"                     type="STRING"/>
             <column header="bic"        name="bic"                      type="skip"/>
             <column header="url"        name="url"                      type="STRING"/>
             <column header="adapter_id" name="adapter_id"               type="STRING"/>

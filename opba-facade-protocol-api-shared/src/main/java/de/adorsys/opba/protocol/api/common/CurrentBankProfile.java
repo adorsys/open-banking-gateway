@@ -65,7 +65,7 @@ public interface CurrentBankProfile {
     /**
      * Bank name
      */
-    String getName();
+    String getBankName();
 
     /**
      * Bank external id (i.e. in system that is not OBG)

@@ -14,7 +14,13 @@
 export interface BankProfile { 
     bankId?: string;
     bankName?: string;
+    name?: string;
     bic?: string;
+    uuid?: string;
     services?: Array<string>;
+    externalId?: string;
+    externalInterfaces?: string;
+    protocolType?: string;
+    isSandbox?: boolean;
 }
 

@@ -148,11 +148,18 @@ components:
         uuid:
           type: string
           format: uuid
+        profiles:
+          type: array
+          items:
+            $ref: '#/components/schemas/bankProfileDescriptor'
+
     bankProfileDescriptor:
       title: Bank Profile
       type: object
       properties:
         bankName:
+          type: string
+        name:
           type: string
         bic:
           type: string
@@ -170,3 +177,11 @@ components:
           type: object
           additionalProperties:
             type: string
+        externalId:
+          type: string
+        externalInterfaces:
+          type: string
+        protocolType:
+          type: string
+        isSandbox:
+          type: boolean

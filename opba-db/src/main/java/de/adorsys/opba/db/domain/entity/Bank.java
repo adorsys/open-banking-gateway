@@ -51,7 +51,7 @@ public class Bank implements Serializable {
     @OneToMany(mappedBy = "aspsp", cascade = CascadeType.ALL, orphanRemoval = true)
     private Collection<Consent> consents;
 
-    @Mapper
+    @Mapper(uses = BankProfile.ToBankProfileDescriptor.class)
     public interface ToBankDescriptor {
         @Mapping(source = "name", target = "bankName")
         BankDescriptor map(Bank bank);

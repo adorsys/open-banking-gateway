@@ -64,6 +64,7 @@ public class BankProfile implements Serializable, CurrentBankProfile {
     private String adapterId;
     private String idpUrl;
     private UUID uuid;
+    private String name;
 
     @Convert(converter = ScaApproachConverter.class)
     private List<Approach> scaApproaches;
@@ -95,6 +96,7 @@ public class BankProfile implements Serializable, CurrentBankProfile {
                 + ".collect(java.util.stream.Collectors.toList()))",
                 target = "serviceList")
         @Mapping(source = "actions", target = "consentSupportByService")
+        @Mapping(source = "sandbox", target = "isSandbox")
         BankProfileDescriptor map(BankProfile bankProfile);
     }
 
@@ -141,7 +143,7 @@ public class BankProfile implements Serializable, CurrentBankProfile {
     }
 
     @Override
-    public String getName() {
+    public String getBankName() {
         Bank bank = getBank();
         if (null == bank) {
             return null;

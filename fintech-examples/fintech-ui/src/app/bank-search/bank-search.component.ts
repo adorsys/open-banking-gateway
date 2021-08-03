@@ -1,10 +1,9 @@
-import { Component } from '@angular/core';
-import { BankSearchService } from './services/bank-search.service';
-import { ActivatedRoute, Router } from '@angular/router';
-import { BankDescriptor } from '../api';
-import { StorageService } from '../services/storage.service';
-import { TimerService } from '../services/timer.service';
-import { RoutingPath } from '../models/routing-path.model';
+import {Component} from '@angular/core';
+import {BankSearchService} from './services/bank-search.service';
+import {ActivatedRoute, Router} from '@angular/router';
+import {StorageService} from '../services/storage.service';
+import {TimerService} from '../services/timer.service';
+import {RoutingPath} from '../models/routing-path.model';
 
 @Component({
   selector: 'app-bank-search',
@@ -12,8 +11,8 @@ import { RoutingPath } from '../models/routing-path.model';
   styleUrls: ['./bank-search.component.scss']
 })
 export class BankSearchComponent {
-  searchedBanks: BankDescriptor[] = [];
-  selectedBank: string;
+  searchedBanks: BankSearchInfo[] = [];
+  selectedBankProfile: string;
 
   constructor(
     private bankSearchService: BankSearchService,
@@ -28,21 +27,34 @@ export class BankSearchComponent {
   onSearch(keyword: string): void {
     if (keyword && keyword.trim()) {
       this.bankSearchService.searchBanks(keyword).subscribe((bankDescriptor) => {
-        this.searchedBanks = bankDescriptor.bankDescriptor;
+        this.searchedBanks = [];
+        for (const descriptor of bankDescriptor.bankDescriptor) {
+          this.searchedBanks.push(...descriptor.profiles.map(it => new BankSearchInfo(`[${it.protocolType}${null === it.name ? '' : ',' + it.name}] ${it.bankName}`, it.uuid)))
+        }
       });
     } else {
       this.bankUnselect();
     }
   }
 
-  onBankSelect(bank: BankDescriptor): void {
-    this.selectedBank = bank.uuid;
-    this.storageService.setBankName(bank.bankName);
-    this.router.navigate([RoutingPath.BANK, bank.uuid]);
+  onBankSelect(profile: BankSearchInfo): void {
+    this.selectedBankProfile = profile.uuid;
+    this.storageService.setBankName(profile.name);
+    this.router.navigate([RoutingPath.BANK, profile.uuid]);
   }
 
   private bankUnselect(): void {
     this.searchedBanks = [];
-    this.selectedBank = null;
+    this.selectedBankProfile = null;
+  }
+}
+
+export class BankSearchInfo {
+  name: string
+  uuid: string
+
+  constructor(name: string, profileId: string) {
+    this.name = name;
+    this.uuid = profileId;
   }
 }
