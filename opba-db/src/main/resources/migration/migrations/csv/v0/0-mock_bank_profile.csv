@@ -1,9 +1,9 @@
-bank_uuid,profile_uuid,name,bic,url,adapter_id,bank_code,idp_url,aspsp_sca_approaches,protocol_type,is_sandbox
-adadadad-1000-0000-0000-b0b0b0b0b0b0,918d80fa-f7fd-4c9f-a6bd-7a9e12aeee76,HBCI no SCA,ADORSYS HA,http://localhost:8090/hbci-mock/,hbci-adapter,10000001,,,HBCI,true
-adadadad-2000-0000-0000-b0b0b0b0b0b0,0a1a6417-4913-4238-ab56-058025c3b2b8,HBCI no SCA authenticated BPD,ADORSYS HB,http://localhost:8090/hbci-mock/,hbci-adapter,20000002,,,HBCI,true
-adadadad-3000-0000-0000-b0b0b0b0b0b0,125ef2c6-f414-4a10-a865-e3cdddf9753d,HBCI transactions SCA,ADORSYS HS,http://localhost:8090/hbci-mock/,hbci-adapter,30000003,,,HBCI,true
-adadadad-4000-0000-0000-b0b0b0b0b0b0,45e6cda0-69a7-4731-90fc-2b13a42fd3bd,oauth-prestep,ADORSYS OP,http://localhost:20014,adorsys-adapter,40000004,http://localhost:20015/oauth/authorization-server,,XS2A,true
-adadadad-4000-0000-0000-b0b0b0b0b0b0,867a53d8-4cca-4365-a393-7febb0bbd38e,oauth-integrated,ADORSYS OI,http://localhost:20014,adorsys-adapter,50000005,http://localhost:20015/oauth/authorization-server,,XS2A,true
-adadadad-4000-0000-0000-b0b0b0b0b0b0,2d8b3e75-9e3e-4fd2-b79c-063556ad9ecc,redirect,ADORSYS RE,http://localhost:20014,adorsys-adapter,,http://localhost:20015/oauth/authorization-server,,XS2A,true
-adadadad-4000-0000-0000-b0b0b0b0b0b0,aa750320-2958-455e-9926-e9fca5ddfa92,embedded,ADORSYS EM,http://localhost:20014,adorsys-adapter,,http://localhost:20015/oauth/authorization-server,,XS2A,true
-adadadad-4000-0000-0000-b0b0b0b0b0b0,53c47f54-b9a4-465a-8f77-bc6cd5f0cf46,no-preference xs2a,ADORSYS,http://localhost:20014,adorsys-adapter,,http://localhost:20015/oauth/authorization-server,,XS2A,true
+bank_uuid,profile_uuid,name,bic,url,adapter_id,bank_code,idp_url,aspsp_sca_approaches,protocol_type,is_sandbox,preferred_approach,try_to_use_preferred_approach
+adadadad-1000-0000-0000-b0b0b0b0b0b0,918d80fa-f7fd-4c9f-a6bd-7a9e12aeee76,HBCI no SCA,ADORSYS HA,http://localhost:8090/hbci-mock/,hbci-adapter,10000001,,,HBCI,true,NULL,false
+adadadad-2000-0000-0000-b0b0b0b0b0b0,0a1a6417-4913-4238-ab56-058025c3b2b8,HBCI no SCA authenticated BPD,ADORSYS HB,http://localhost:8090/hbci-mock/,hbci-adapter,20000002,,,HBCI,true,NULL,false
+adadadad-3000-0000-0000-b0b0b0b0b0b0,125ef2c6-f414-4a10-a865-e3cdddf9753d,HBCI transactions SCA,ADORSYS HS,http://localhost:8090/hbci-mock/,hbci-adapter,30000003,,,HBCI,true,NULL,false
+adadadad-4000-0000-0000-b0b0b0b0b0b0,45e6cda0-69a7-4731-90fc-2b13a42fd3bd,oauth-prestep,ADORSYS OP,http://localhost:20014,adorsys-adapter,40000004,http://localhost:20015/oauth/authorization-server,,XS2A,true,NULL,false
+adadadad-4000-0000-0000-b0b0b0b0b0b0,867a53d8-4cca-4365-a393-7febb0bbd38e,oauth-integrated,ADORSYS OI,http://localhost:20014,adorsys-adapter,50000005,http://localhost:20015/oauth/authorization-server,,XS2A,true,NULL,false
+adadadad-4000-0000-0000-b0b0b0b0b0b0,2d8b3e75-9e3e-4fd2-b79c-063556ad9ecc,redirect,ADORSYS RE,http://localhost:20014,adorsys-adapter,,http://localhost:20015/oauth/authorization-server,,XS2A,true,REDIRECT,true
+adadadad-4000-0000-0000-b0b0b0b0b0b0,aa750320-2958-455e-9926-e9fca5ddfa92,embedded,ADORSYS EM,http://localhost:20014,adorsys-adapter,,http://localhost:20015/oauth/authorization-server,,XS2A,true,EMBEDDED,true
+adadadad-4000-0000-0000-b0b0b0b0b0b0,53c47f54-b9a4-465a-8f77-bc6cd5f0cf46,no-preference xs2a,ADORSYS,http://localhost:20014,adorsys-adapter,,http://localhost:20015/oauth/authorization-server,,XS2A,true,NULL,false
