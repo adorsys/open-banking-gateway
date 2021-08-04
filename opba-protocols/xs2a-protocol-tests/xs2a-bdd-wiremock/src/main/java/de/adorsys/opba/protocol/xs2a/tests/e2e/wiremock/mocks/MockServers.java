@@ -187,10 +187,10 @@ public class MockServers<SELF extends MockServers<SELF>> extends CommonGivenStag
         return self();
     }
 
-    public SELF embedded_pre_step_mock_of_sandbox_for_max_musterman_accounts_running() {
+    public SELF embedded_pre_step_mock_of_dkb_sandbox_for_max_musterman_accounts_running() {
         WireMockConfiguration config = WireMockConfiguration.options().dynamicPort()
                 .usingFilesUnderClasspath("mockedsandbox/restrecord/embedded/pre-step/accounts/");
-        startWireMock(config);
+        startWireMockForDkb(config);
 
         return self();
     }
@@ -278,7 +278,16 @@ public class MockServers<SELF extends MockServers<SELF>> extends CommonGivenStag
         bankProfile.setUrl("http://localhost:" + sandbox.port());
         bankProfile.setIdpUrl("http://localhost:" + sandbox.port() + "/oauth/authorization-server");
         bankProfileJpaRepository.save(bankProfile);
+        Assertions.assertThat(sandbox).isNotNull();
+        Assertions.assertThat(sandbox.isRunning()).isTrue();
 
+    }
+
+
+    @SneakyThrows
+    private  void startWireMockForDkb(WireMockConfiguration config) {
+        sandbox = new WireMockServer(config);
+        sandbox.start();
         BankProfile dkbBankProfile = bankProfileJpaRepository.findByBankUuid("335562a2-26e2-4105-b31e-08de285234e0").get();
         dkbBankProfile.setUrl("http://localhost:" + sandbox.port());
         dkbBankProfile.setIdpUrl("http://localhost:" + sandbox.port());

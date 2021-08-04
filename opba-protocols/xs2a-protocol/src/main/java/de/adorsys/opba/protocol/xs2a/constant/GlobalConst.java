@@ -53,4 +53,10 @@ public class GlobalConst {
      * ING-specific xs2a Adapter peculiarity.
      */
     public static final String OAUTH_CONSENT = "oauthConsent";
+
+    /**
+     * Bearer Token type.
+     */
+    public static final String BEARER_TOKEN_TYPE = "Bearer";
+
 }

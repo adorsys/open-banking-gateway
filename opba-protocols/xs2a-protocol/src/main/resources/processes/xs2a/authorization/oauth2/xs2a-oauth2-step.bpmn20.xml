@@ -23,13 +23,13 @@
       <conditionExpression xsi:type="tFormalExpression">#{xs2aConsentInfo.isOauth2TokenAvailableAndReadyToUse(CONTEXT)}</conditionExpression>
     </sequenceFlow>
     <sequenceFlow id="sid-cf198380-6fed-408b-8641-0a918a74a2db" sourceRef="oauth2ExchangeCodeToToken" targetRef="sid-e0dbf285-c6c2-4571-ac5e-9038fcbf8448"/>
-    <sequenceFlow id="sid-39bca444-9c5a-4432-9662-e41c0b2e1231" name="Embedded pre Auth required" sourceRef="checkThatOauth2TokenIsPresentAndNotExpired" targetRef="xs2aAskForPassword">
+    <sequenceFlow id="sid-39bca444-9c5a-4432-9662-e41c0b2e1231" name="PSU password required for embedded OAuth2 token" sourceRef="checkThatOauth2TokenIsPresentAndNotExpired" targetRef="xs2aAskForPasswordForEmbeddedToken">
       <conditionExpression xsi:type="tFormalExpression">#{xs2aConsentInfo.isEmbeddedPreAuthNeeded(CONTEXT)}</conditionExpression>
     </sequenceFlow>
     <serviceTask id="embeddedOauth2ExchangeCodeToToken" name="Get Embedded Access Token" flowable:async="true" flowable:exclusive="true" flowable:delegateExpression="${xs2aEmbeddedPreAuthorization}" flowable:triggerable="false" isForCompensation="false"/>
     <sequenceFlow id="sid-1b0f3e86-4b13-450c-9f6f-e0975dddedc8" sourceRef="embeddedOauth2ExchangeCodeToToken" targetRef="sid-e0dbf285-c6c2-4571-ac5e-9038fcbf8448"/>
-    <serviceTask id="xs2aAskForPassword" name="Get Embedded Access Token" isForCompensation="false" flowable:async="true" flowable:exclusive="true" flowable:delegateExpression="${xs2aAskForPassword}" flowable:triggerable="true"/>
-    <sequenceFlow id="sid-fade0cee-6d65-4917-9d19-2fe70dddae1a" targetRef="embeddedOauth2ExchangeCodeToToken" sourceRef="xs2aAskForPassword">
+    <serviceTask id="xs2aAskForPasswordForEmbeddedToken" name="Ask PSU for password for embedded token" isForCompensation="false" flowable:async="true" flowable:exclusive="true" flowable:delegateExpression="${xs2aAskForPassword}" flowable:triggerable="true"/>
+    <sequenceFlow id="sid-fade0cee-6d65-4917-9d19-2fe70dddae1a" targetRef="embeddedOauth2ExchangeCodeToToken" sourceRef="xs2aAskForPasswordForEmbeddedToken">
       <conditionExpression/>
     </sequenceFlow>
   </process>
@@ -100,7 +100,7 @@
         <omgdi:waypoint x="1223.1332" y="264.0"/>
         <omgdi:waypoint x="1066.144" y="264.0"/>
       </bpmdi:BPMNEdge>
-      <bpmdi:BPMNShape xmlns:bpmdi="http://www.omg.org/spec/BPMN/20100524/DI" id="sid-7b71102c-0f98-4980-aa2d-2e53ab1d1939" bpmnElement="xs2aAskForPassword">
+      <bpmdi:BPMNShape xmlns:bpmdi="http://www.omg.org/spec/BPMN/20100524/DI" id="sid-7b71102c-0f98-4980-aa2d-2e53ab1d1939" bpmnElement="xs2aAskForPasswordForEmbeddedToken">
         <omgdc:Bounds x="621.6202" y="-30.435429" width="100.0" height="80.0"/>
       </bpmdi:BPMNShape>
       <bpmdi:BPMNEdge xmlns:bpmdi="http://www.omg.org/spec/BPMN/20100524/DI" id="sid-c15eb4d1-30bc-458e-832a-a3a1bd405739" bpmnElement="sid-fade0cee-6d65-4917-9d19-2fe70dddae1a">

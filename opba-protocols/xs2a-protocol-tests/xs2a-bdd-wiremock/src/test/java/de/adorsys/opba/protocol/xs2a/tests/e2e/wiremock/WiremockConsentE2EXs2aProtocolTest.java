@@ -335,9 +335,9 @@ class WiremockConsentE2EXs2aProtocolTest extends SpringScenarioTest<MockServers,
 
 
     @Test
-    void testAccountsListWithConsentUsingEmbeddedPreStep() {
+    void testDkbAccountsListWithConsentUsingEmbeddedPreStep() {
         given()
-                .embedded_pre_step_mock_of_sandbox_for_max_musterman_accounts_running()
+                .embedded_pre_step_mock_of_dkb_sandbox_for_max_musterman_accounts_running()
                 .rest_assured_points_to_opba_server_with_fintech_signer_on_banking_api()
                 .user_registered_in_opba_with_credentials(OPBA_LOGIN, OPBA_PASSWORD);
 

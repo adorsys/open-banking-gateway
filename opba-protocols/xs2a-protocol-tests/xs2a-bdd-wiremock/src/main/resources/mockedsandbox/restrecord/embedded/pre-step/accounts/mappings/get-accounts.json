@@ -1,5 +1,5 @@
 {
-  "scenarioName": "DKB - AIS",
+  "scenarioName": "AccountsListUsingDkbEmbeddedPreStep",
   "newScenarioState": "get_account",
   "request" : {
     "urlPathPattern": "/v1/accounts",
@@ -15,7 +15,7 @@
         "equalTo" : "VALID_CONSENT_ID"
       },
       "PSU-ID" : {
-        "matches" : ".+"
+        "matches" : "max.musterman"
       },
       "PSD2-AUTHORIZATION": {
         "equalTo": "Bearer VALID_TOKEN"

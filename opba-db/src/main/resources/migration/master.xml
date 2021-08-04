@@ -13,4 +13,5 @@
     <includeAll relativeToChangelogFile="true" path="migrations/0007-finapi-prod-banks" context="finapi-prod-banks"/>
     <includeAll relativeToChangelogFile="true" path="migrations/0008-smartanalytics-rdbms-persistence" context="smartanalytics-rdbms-persistence"/>
     <include relativeToChangelogFile="true" file="migrations/0009-add-consent-cache.xml"/>
+    <include relativeToChangelogFile="true" file="migrations/0010-update-dkb-adapter.xml" context="mock-banks"/>
 </databaseChangeLog>

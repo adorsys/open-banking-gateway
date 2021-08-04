@@ -93,6 +93,9 @@
     </sequenceFlow>
     <serviceTask id="notifyUserWithRedirectAfterCreate" name="Notify user with redirect url for challenge. Suspends to wait" flowable:async="true" flowable:exclusive="true" flowable:delegateExpression="${xs2aDoScaRedirectToAspspForScaChallengeAfterCreate}" flowable:triggerable="true"/>
     <sequenceFlow id="sid-593f127d-f36b-4250-a9a3-6d6097587ec9" sourceRef="notifyUserWithRedirectAfterCreate" targetRef="wasRedirectConsentGrantSuccessful"/>
+    <sequenceFlow id="oauthEmbeddedPreStepDone" name="Oauth Embedded Pre step Done " sourceRef="isPasswordPresent" targetRef="isMultipleScaAvailable">
+      <conditionExpression xsi:type="tFormalExpression">#{xs2aConsentInfo.isOauthEmbeddedPreStepDone(CONTEXT)}</conditionExpression>
+    </sequenceFlow>
   </process>
   <bpmndi:BPMNDiagram id="BPMNDiagram_xs2a-authorize-consent">
     <bpmndi:BPMNPlane bpmnElement="xs2a-authorize-consent" id="BPMNPlane_xs2a-authorize-consent">
@@ -188,7 +191,8 @@
         <omgdi:waypoint x="499.9999999998886" y="344.0"/>
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNEdge bpmnElement="sid-54FE7BD4-78A9-4391-8A37-1D323F32A029" id="BPMNEdge_sid-54FE7BD4-78A9-4391-8A37-1D323F32A029">
-        <omgdi:waypoint x="694.9499999999756" y="235.0"/>
+        <omgdi:waypoint x="694.95" y="235.0"/>
+        <omgdi:waypoint x="730.5579" y="235.0"/>
         <omgdi:waypoint x="745.0" y="235.0"/>
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNEdge bpmnElement="moreScaChallenges" id="BPMNEdge_moreScaChallenges">
@@ -276,9 +280,8 @@
       </bpmdi:BPMNEdge>
       <bpmdi:BPMNEdge xmlns:bpmdi="http://www.omg.org/spec/BPMN/20100524/DI" id="sid-855482c3-b46b-4a89-85d2-fffc1e840127" bpmnElement="sid-f4fce3e6-8152-44a1-bfa2-5d7569f8032b">
         <omgdi:waypoint x="355.0" y="320.0"/>
-        <omgdi:waypoint x="355.0" y="135.9444"/>
-        <omgdi:waypoint x="713.8999" y="135.9444"/>
-        <omgdi:waypoint x="713.8999" y="235.0"/>
+        <omgdi:waypoint x="355.00003" y="46.084442"/>
+        <omgdi:waypoint x="739.8484" y="46.084442"/>
         <omgdi:waypoint x="745.0" y="235.0"/>
       </bpmdi:BPMNEdge>
       <bpmdi:BPMNEdge xmlns:bpmdi="http://www.omg.org/spec/BPMN/20100524/DI" id="edge-3acdbc1f-3eba-4dfb-8814-f6449ba1c211" bpmnElement="proceedToAuthentication">
@@ -311,6 +314,12 @@
         <omgdi:waypoint x="935.24445" y="534.7471"/>
         <omgdi:waypoint x="935.24445" y="475.0"/>
         <omgdi:waypoint x="975.0" y="475.0"/>
+      </bpmdi:BPMNEdge>
+      <bpmdi:BPMNEdge xmlns:bpmdi="http://www.omg.org/spec/BPMN/20100524/DI" id="sid-7227311c-41c0-4d10-a710-3cc945fccc70" bpmnElement="oauthEmbeddedPreStepDone">
+        <omgdi:waypoint x="409.99997" y="215.0"/>
+        <omgdi:waypoint x="409.99994" y="115.8088"/>
+        <omgdi:waypoint x="695.00006" y="115.80881"/>
+        <omgdi:waypoint x="739.84845" y="229.41203"/>
       </bpmdi:BPMNEdge>
     </bpmndi:BPMNPlane>
   </bpmndi:BPMNDiagram>

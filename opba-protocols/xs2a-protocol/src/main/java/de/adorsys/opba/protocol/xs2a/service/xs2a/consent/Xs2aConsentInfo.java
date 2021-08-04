@@ -90,7 +90,14 @@ public class Xs2aConsentInfo {
      * Is the PSU password present in the context.
      */
     public boolean isPasswordPresent(Xs2aContext ctx) {
-        return null != ctx.getPsuPassword();
+        return null != ctx.getPsuPassword() && !isOauthEmbeddedPreStepDone(ctx);
+    }
+
+    /**
+     * Is Oauth Embedded pre step already Done.
+     */
+    public boolean isOauthEmbeddedPreStepDone(Xs2aContext ctx) {
+        return ctx.isEmbeddedPreAuthDone();
     }
 
     /**

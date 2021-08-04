@@ -1,5 +1,5 @@
 {
-  "scenarioName": "DKB - AIS",
+  "scenarioName": "AccountsListUsingDkbEmbeddedPreStep",
   "priority": 5,
   "requiredScenarioState": "Started",
   "newScenarioState": "authenticated",

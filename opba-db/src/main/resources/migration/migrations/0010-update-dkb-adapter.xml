@@ -1,0 +1,11 @@
+<databaseChangeLog logicalFilePath="db.changelog-1.0.xml" xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+                   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                   xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.8.xsd">
+
+    <changeSet id="set_preffered_approach_dkb" author="mhr">
+        <sql dbms="postgresql" stripComments="true">
+            UPDATE opb_bank_profile SET preferred_approach = 'EMBEDDED', try_to_use_preferred_approach = true WHERE adapter_id = 'dkb-adapter';
+        </sql>
+    </changeSet>
+
+</databaseChangeLog>

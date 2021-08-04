@@ -1,5 +1,5 @@
 {
-  "scenarioName": "DKB - AIS",
+  "scenarioName": "AccountsListUsingDkbEmbeddedPreStep",
   "requiredScenarioState": "sca_method_selected",
   "newScenarioState": "otp_sent",
   "priority": 6,
@@ -14,7 +14,7 @@
         "matches" : ".+"
       },
       "PSU-ID" : {
-        "matches" : ".+"
+        "matches" : "max.musterman"
       },
       "PSD2-AUTHORIZATION": {
         "equalTo": "Bearer VALID_TOKEN"

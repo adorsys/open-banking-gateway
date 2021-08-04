@@ -1,5 +1,5 @@
 {
-  "scenarioName": "DKB - AIS",
+  "scenarioName": "AccountsListUsingDkbEmbeddedPreStep",
   "requiredScenarioState": "Started",
   "newScenarioState": "create_consent",
   "request": {
