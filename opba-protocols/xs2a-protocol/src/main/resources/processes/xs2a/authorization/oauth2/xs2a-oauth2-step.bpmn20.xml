@@ -23,14 +23,28 @@
       <conditionExpression xsi:type="tFormalExpression">#{xs2aConsentInfo.isOauth2TokenAvailableAndReadyToUse(CONTEXT)}</conditionExpression>
     </sequenceFlow>
     <sequenceFlow id="sid-cf198380-6fed-408b-8641-0a918a74a2db" sourceRef="oauth2ExchangeCodeToToken" targetRef="sid-e0dbf285-c6c2-4571-ac5e-9038fcbf8448"/>
-    <sequenceFlow id="sid-39bca444-9c5a-4432-9662-e41c0b2e1231" name="PSU password required for embedded OAuth2 token" sourceRef="checkThatOauth2TokenIsPresentAndNotExpired" targetRef="xs2aAskForPasswordForEmbeddedToken">
+    <sequenceFlow id="sid-39bca444-9c5a-4432-9662-e41c0b2e1231" name="PSU password required for embedded OAuth2 token" sourceRef="checkThatOauth2TokenIsPresentAndNotExpired" targetRef="isPsuPasswordPresent">
       <conditionExpression xsi:type="tFormalExpression">#{xs2aConsentInfo.isEmbeddedPreAuthNeeded(CONTEXT)}</conditionExpression>
     </sequenceFlow>
     <serviceTask id="embeddedOauth2ExchangeCodeToToken" name="Get Embedded Access Token" flowable:async="true" flowable:exclusive="true" flowable:delegateExpression="${xs2aEmbeddedPreAuthorization}" flowable:triggerable="false" isForCompensation="false"/>
-    <sequenceFlow id="sid-1b0f3e86-4b13-450c-9f6f-e0975dddedc8" sourceRef="embeddedOauth2ExchangeCodeToToken" targetRef="sid-e0dbf285-c6c2-4571-ac5e-9038fcbf8448"/>
+    <sequenceFlow id="sid-1b0f3e86-4b13-450c-9f6f-e0975dddedc8" sourceRef="sid-49888494-cd28-4bc7-9070-40c3dfda930f" targetRef="sid-e0dbf285-c6c2-4571-ac5e-9038fcbf8448"/>
     <serviceTask id="xs2aAskForPasswordForEmbeddedToken" name="Ask PSU for password for embedded token" isForCompensation="false" flowable:async="true" flowable:exclusive="true" flowable:delegateExpression="${xs2aAskForPassword}" flowable:triggerable="true"/>
     <sequenceFlow id="sid-fade0cee-6d65-4917-9d19-2fe70dddae1a" targetRef="embeddedOauth2ExchangeCodeToToken" sourceRef="xs2aAskForPasswordForEmbeddedToken">
       <conditionExpression/>
+    </sequenceFlow>
+    <exclusiveGateway id="isPsuPasswordPresent" name="Is Psu Password Present"/>
+    <sequenceFlow id="sid-038b069b-36a7-4026-b06e-c37ea7b56a93" name="Password not Present" targetRef="xs2aAskForPasswordForEmbeddedToken" sourceRef="isPsuPasswordPresent">
+      <conditionExpression xsi:type="tFormalExpression"/>
+    </sequenceFlow>
+    <sequenceFlow id="sid-2ebbdf1e-a24f-442f-b844-025061e166ef" name="Password present" sourceRef="isPsuPasswordPresent" targetRef="embeddedOauth2ExchangeCodeToToken">
+      <conditionExpression xsi:type="tFormalExpression">#{xs2aConsentInfo.isPasswordPresent(CONTEXT)}</conditionExpression>
+    </sequenceFlow>
+    <exclusiveGateway id="sid-49888494-cd28-4bc7-9070-40c3dfda930f" name="Is Psu Password Present"/>
+    <sequenceFlow id="sid-4c13bb27-6cc1-4d56-b6eb-fed6ccea80f6" sourceRef="embeddedOauth2ExchangeCodeToToken" targetRef="sid-49888494-cd28-4bc7-9070-40c3dfda930f">
+      <conditionExpression xsi:type="tFormalExpression"/>
+    </sequenceFlow>
+    <sequenceFlow id="sid-76a559cd-e3cc-4d2a-b8e8-c0f832bb5a52" name="Wrong password " sourceRef="sid-49888494-cd28-4bc7-9070-40c3dfda930f" targetRef="xs2aAskForPasswordForEmbeddedToken">
+      <conditionExpression xsi:type="tFormalExpression">#{xs2aConsentInfo.isWrongPassword(CONTEXT)}</conditionExpression>
     </sequenceFlow>
   </process>
   <bpmndi:BPMNDiagram id="BPMNDiagram_xs2a-oauth2-step">
@@ -89,25 +103,50 @@
       <bpmdi:BPMNEdge xmlns:bpmdi="http://www.omg.org/spec/BPMN/20100524/DI" id="sid-5163a08e-e85e-4431-bc2a-b68ae5af72d4" bpmnElement="sid-39bca444-9c5a-4432-9662-e41c0b2e1231">
         <omgdi:waypoint x="492.66116" y="128.08986"/>
         <omgdi:waypoint x="493.74457" y="-1.1731453"/>
-        <omgdi:waypoint x="621.6202" y="-1.1731453"/>
+        <omgdi:waypoint x="535.6045" y="-1.4754734"/>
       </bpmdi:BPMNEdge>
       <bpmdi:BPMNShape xmlns:bpmdi="http://www.omg.org/spec/BPMN/20100524/DI" id="sid-72f3dbbf-d40b-4f12-a954-5869b46e0261" bpmnElement="embeddedOauth2ExchangeCodeToToken">
-        <omgdc:Bounds x="875.346" y="-35.517727" width="100.0" height="80.0"/>
+        <omgdc:Bounds x="715.2567" y="-41.47547" width="100.0" height="80.0"/>
       </bpmdi:BPMNShape>
       <bpmdi:BPMNEdge xmlns:bpmdi="http://www.omg.org/spec/BPMN/20100524/DI" id="sid-ec004bdd-0956-4d0a-867e-9384b40b2523" bpmnElement="sid-1b0f3e86-4b13-450c-9f6f-e0975dddedc8">
-        <omgdi:waypoint x="975.34595" y="4.4822693"/>
-        <omgdi:waypoint x="1223.1333" y="1.0940704"/>
-        <omgdi:waypoint x="1223.1332" y="264.0"/>
+        <omgdi:waypoint x="974.2068" y="-1.4754715"/>
+        <omgdi:waypoint x="1115.0565" y="-1.475472"/>
+        <omgdi:waypoint x="1115.0565" y="264.00003"/>
         <omgdi:waypoint x="1066.144" y="264.0"/>
       </bpmdi:BPMNEdge>
       <bpmdi:BPMNShape xmlns:bpmdi="http://www.omg.org/spec/BPMN/20100524/DI" id="sid-7b71102c-0f98-4980-aa2d-2e53ab1d1939" bpmnElement="xs2aAskForPasswordForEmbeddedToken">
-        <omgdc:Bounds x="621.6202" y="-30.435429" width="100.0" height="80.0"/>
+        <omgdc:Bounds x="494.28473" y="-183.71521" width="122.639404" height="78.80845"/>
       </bpmdi:BPMNShape>
       <bpmdi:BPMNEdge xmlns:bpmdi="http://www.omg.org/spec/BPMN/20100524/DI" id="sid-c15eb4d1-30bc-458e-832a-a3a1bd405739" bpmnElement="sid-fade0cee-6d65-4917-9d19-2fe70dddae1a">
-        <omgdi:waypoint x="721.62024" y="9.564571"/>
-        <omgdi:waypoint x="734.8436" y="9.564571"/>
-        <omgdi:waypoint x="751.4552" y="9.564571"/>
-        <omgdi:waypoint x="875.34595" y="9.56457"/>
+        <omgdi:waypoint x="616.92413" y="-144.31097"/>
+        <omgdi:waypoint x="766.26556" y="-144.31097"/>
+        <omgdi:waypoint x="766.2655" y="-124.60887"/>
+        <omgdi:waypoint x="765.2568" y="-41.475468"/>
+      </bpmdi:BPMNEdge>
+      <bpmdi:BPMNShape xmlns:bpmdi="http://www.omg.org/spec/BPMN/20100524/DI" id="sid-4c022da2-6572-4115-9206-55e689a52765" bpmnElement="isPsuPasswordPresent">
+        <omgdc:Bounds x="535.60443" y="-21.475471" width="40.0" height="40.0"/>
+      </bpmdi:BPMNShape>
+      <bpmdi:BPMNEdge xmlns:bpmdi="http://www.omg.org/spec/BPMN/20100524/DI" id="sid-f6ae0628-fb47-4b36-bc40-93359e832bca" bpmnElement="sid-038b069b-36a7-4026-b06e-c37ea7b56a93">
+        <omgdi:waypoint x="555.60443" y="-21.475473"/>
+        <omgdi:waypoint x="555.60443" y="-104.90677"/>
+      </bpmdi:BPMNEdge>
+      <bpmdi:BPMNEdge xmlns:bpmdi="http://www.omg.org/spec/BPMN/20100524/DI" id="sid-a97be8b5-d6d9-4a66-b8a1-a6c70f061f35" bpmnElement="sid-2ebbdf1e-a24f-442f-b844-025061e166ef">
+        <omgdi:waypoint x="575.60443" y="-1.4754715"/>
+        <omgdi:waypoint x="684.47705" y="-1.4754715"/>
+        <omgdi:waypoint x="715.2567" y="-1.4754715"/>
+      </bpmdi:BPMNEdge>
+      <bpmdi:BPMNShape xmlns:bpmdi="http://www.omg.org/spec/BPMN/20100524/DI" id="sid-7083f372-047a-423d-8eab-2704a9f6b1f4" bpmnElement="sid-49888494-cd28-4bc7-9070-40c3dfda930f">
+        <omgdc:Bounds x="934.2067" y="-21.475471" width="40.0" height="40.0"/>
+      </bpmdi:BPMNShape>
+      <bpmdi:BPMNEdge xmlns:bpmdi="http://www.omg.org/spec/BPMN/20100524/DI" id="sid-4b5cc9a9-eabc-4e41-a553-d8e9793d586d" bpmnElement="sid-4c13bb27-6cc1-4d56-b6eb-fed6ccea80f6">
+        <omgdi:waypoint x="815.25665" y="-1.4754715"/>
+        <omgdi:waypoint x="912.94836" y="-1.4754714"/>
+        <omgdi:waypoint x="934.2067" y="-1.4754714"/>
+      </bpmdi:BPMNEdge>
+      <bpmdi:BPMNEdge xmlns:bpmdi="http://www.omg.org/spec/BPMN/20100524/DI" id="sid-8bb0a724-fb68-4f8e-9421-ba2ef0b390ff" bpmnElement="sid-76a559cd-e3cc-4d2a-b8e8-c0f832bb5a52">
+        <omgdi:waypoint x="954.2068" y="-21.47548"/>
+        <omgdi:waypoint x="954.2068" y="-164.0131"/>
+        <omgdi:waypoint x="616.92413" y="-164.01309"/>
       </bpmdi:BPMNEdge>
     </bpmndi:BPMNPlane>
   </bpmndi:BPMNDiagram>

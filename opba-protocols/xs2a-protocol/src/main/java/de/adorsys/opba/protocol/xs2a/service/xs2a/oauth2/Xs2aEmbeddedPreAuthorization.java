@@ -1,17 +1,19 @@
 package de.adorsys.opba.protocol.xs2a.service.xs2a.oauth2;
 
+import de.adorsys.opba.protocol.api.common.Approach;
+import de.adorsys.opba.protocol.api.common.CurrentBankProfile;
 import de.adorsys.opba.protocol.bpmnshared.dto.DtoMapper;
 import de.adorsys.opba.protocol.bpmnshared.service.context.ContextUtil;
 import de.adorsys.opba.protocol.bpmnshared.service.exec.ValidatedExecution;
 import de.adorsys.opba.protocol.xs2a.constant.GlobalConst;
 import de.adorsys.opba.protocol.xs2a.context.Xs2aContext;
 import de.adorsys.opba.protocol.xs2a.service.dto.ValidatedHeadersBody;
+import de.adorsys.opba.protocol.xs2a.service.xs2a.authenticate.embedded.AuthorizationPossibleErrorHandler;
 import de.adorsys.opba.protocol.xs2a.service.xs2a.dto.authenticate.embedded.ProvidePsuIdAndPsuPasswordBody;
 import de.adorsys.opba.protocol.xs2a.service.xs2a.dto.oauth2.Xs2aOauth2Headers;
 import de.adorsys.opba.protocol.xs2a.service.xs2a.validation.Xs2aValidator;
 import de.adorsys.opba.protocol.xs2a.util.logresolver.Xs2aLogResolver;
 import de.adorsys.xs2a.adapter.api.EmbeddedPreAuthorisationService;
-import de.adorsys.xs2a.adapter.api.model.AspspScaApproach;
 import de.adorsys.xs2a.adapter.api.model.EmbeddedPreAuthorisationRequest;
 import de.adorsys.xs2a.adapter.api.model.TokenResponse;
 import lombok.RequiredArgsConstructor;
@@ -32,6 +34,7 @@ public class Xs2aEmbeddedPreAuthorization extends ValidatedExecution<Xs2aContext
 
     private final Extractor extractor;
     private final Xs2aValidator validator;
+    private final AuthorizationPossibleErrorHandler errorSink;
     private final EmbeddedPreAuthorisationService embeddedPreAuthorisationService;
     private final Xs2aLogResolver logResolver = new Xs2aLogResolver(getClass());
 
@@ -41,24 +44,41 @@ public class Xs2aEmbeddedPreAuthorization extends ValidatedExecution<Xs2aContext
         logResolver.log("doRealExecution: execution ({}) with context ({})", execution, context);
 
         ValidatedHeadersBody<Xs2aOauth2Headers, EmbeddedPreAuthorisationRequest> validated = extractor.forExecution(context);
+        errorSink.handlePossibleAuthorizationError(
+                () -> getOauthEmbeddedTokenWithPassword(execution, context.aspspProfile(), validated),
+                ex -> onWrongPassword(execution)
+        );
+
+    }
+
+    private void onWrongPassword(DelegateExecution execution) {
+        ContextUtil.getAndUpdateContext(
+                execution,
+                (Xs2aContext ctx) -> {
+                    log.warn("Request {} of {} has provided incorrect password", ctx.getRequestId(), ctx.getSagaId());
+                    ctx.setWrongAuthCredentials(true);
+                }
+        );
+    }
+
+    private void getOauthEmbeddedTokenWithPassword(DelegateExecution execution, CurrentBankProfile config, ValidatedHeadersBody<Xs2aOauth2Headers, EmbeddedPreAuthorisationRequest> validated) {
 
         TokenResponse response = this.embeddedPreAuthorisationService.getToken(validated.getBody(), validated.getHeaders().toHeaders());
         if (response.getTokenType() == null) {
             response.setTokenType(GlobalConst.BEARER_TOKEN_TYPE);
         }
         logResolver.log("getToken response: {}", response);
-            ContextUtil.getAndUpdateContext(
-                    execution,
-                    (Xs2aContext ctx) -> {
-                        ctx.setOauth2Token(response);
-                        ctx.setEmbeddedPreAuthNeeded(false);
-                        ctx.setEmbeddedPreAuthDone(true);
-
-                        log.info("aspsp sca approach: {}", ctx.getAspspScaApproach());
-                        ctx.setAspspScaApproach(AspspScaApproach.EMBEDDED.name());
-                    }
-            );
-
+        ContextUtil.getAndUpdateContext(
+                execution,
+                (Xs2aContext ctx) -> {
+                    ctx.setWrongAuthCredentials(false);
+                    ctx.setOauth2Token(response);
+                    ctx.setEmbeddedPreAuthNeeded(false);
+                    ctx.setEmbeddedPreAuthDone(true);
+                    ctx.setAspspScaApproach(null != config.getPreferredApproach() ? config.getPreferredApproach().name() : Approach.EMBEDDED.name());
+                    log.info("aspsp sca approach: {}", ctx.getAspspScaApproach());
+                }
+        );
 
     }
 
