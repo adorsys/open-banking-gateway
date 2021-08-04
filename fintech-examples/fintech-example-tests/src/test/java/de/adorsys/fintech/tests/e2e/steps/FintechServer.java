@@ -62,8 +62,8 @@ public class FintechServer<SELF extends FintechServer<SELF>> extends SandboxServ
         RestAssured.enableLoggingOfRequestAndResponseIfValidationFails();
         RestAssured.config = RestAssured.config().redirect(RedirectConfig.redirectConfig().followRedirects(false));    }
 
-    public SELF fintech_points_to_fintechui_login_page(String fintechUri) {
-        RestAssured.baseURI = fintechUri;
+    public SELF fintech_points_to_fintech_server(String fintechServerUri) {
+        RestAssured.baseURI = fintechServerUri;
         RestAssured.enableLoggingOfRequestAndResponseIfValidationFails();
         return self();
     }
