@@ -81,7 +81,7 @@ public class HbciListAccountsEntrypoint implements ListAccounts {
     @Mapper(componentModel = SPRING_KEYWORD, uses = HbciUuidMapper.class, implementationPackage = HBCI_MAPPERS_PACKAGE)
     public interface FromRequest extends DtoMapper<ListAccountsRequest, AccountListHbciContext> {
 
-        @Mapping(source = "facadeServiceable.bankId", target = "aspspId")
+        @Mapping(source = "facadeServiceable.bankProfileId", target = "aspspId")
         @Mapping(source = "facadeServiceable.requestId", target = "requestId")
         @Mapping(source = "facadeServiceable.fintechRedirectUrlOk", target = "fintechRedirectUriOk")
         @Mapping(source = "facadeServiceable.fintechRedirectUrlNok", target = "fintechRedirectUriNok")

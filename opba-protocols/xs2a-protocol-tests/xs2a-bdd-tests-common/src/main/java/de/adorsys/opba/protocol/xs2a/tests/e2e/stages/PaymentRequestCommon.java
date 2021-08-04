@@ -48,9 +48,9 @@ import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
 @SuppressWarnings("checkstyle:MethodName") // Jgiven prettifies snake-case names not camelCase
 public class PaymentRequestCommon<SELF extends PaymentRequestCommon<SELF>> extends RequestCommon<SELF> {
 
-    public SELF fintech_calls_initiate_payment_for_anton_brueckner(String bankId) {
+    public SELF fintech_calls_initiate_payment_for_anton_brueckner(String bankProfileId) {
         String body = readResource("restrecord/tpp-ui-input/params/anton-brueckner-single-sepa-payment.json");
-        ExtractableResponse<Response> response = withPaymentHeaders(ANTON_BRUECKNER, bankId, true)
+        ExtractableResponse<Response> response = withPaymentHeaders(ANTON_BRUECKNER, bankProfileId, true)
                 .contentType(APPLICATION_JSON_VALUE)
                 .body(body)
             .when()

@@ -72,15 +72,16 @@ components:
       schema:
         type: string
 
-    Bank-ID:
-      name: Bank-ID
+    Bank-Profile-ID:
+      name: Bank-Profile-ID
       in: header
       required: false
       description: |
-        A bank identifier, provided by TPP Bank Search API. To be provided by FinTech only if PsuConsentSession is missing.
-      example: "1234-0XGJK"
+        A bank profile UUID identifier, provided by TPP Bank Search API. To be provided by FinTech only if PsuConsentSession is missing.
+      example: "bcc52c4f-5523-4477-aef5-84c3ae7cc468"
       schema:
         type: string
+        format: uuid
 
     Fintech-User-ID:
       name: Fintech-User-ID

@@ -5,7 +5,7 @@
       <app-search (keyword)="onSearch($event)"></app-search>
       <div class="scrollable">
         <button (click)="onBankSelect(bank)" *ngFor="let bank of searchedBanks" class="bank-list" type="button">
-          {{ bank.bankName }}
+          {{ bank.name }}
         </button>
       </div>
     </div>

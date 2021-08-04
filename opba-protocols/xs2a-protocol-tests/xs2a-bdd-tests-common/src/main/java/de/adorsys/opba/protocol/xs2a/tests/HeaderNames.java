@@ -10,7 +10,7 @@ import lombok.experimental.UtilityClass;
 public class HeaderNames {
 
     public static final String FINTECH_ID = "Fintech-ID";
-    public static final String BANK_ID = "Bank-ID";
+    public static final String BANK_PROFILE_ID = "Bank-Profile-ID";
     public static final String FINTECH_REDIRECT_URL_OK = "Fintech-Redirect-URL-OK";
     public static final String FINTECH_REDIRECT_URL_NOK = "Fintech-Redirect-URL-NOK";
     public static final String FINTECH_USER_ID = "Fintech-User-ID";

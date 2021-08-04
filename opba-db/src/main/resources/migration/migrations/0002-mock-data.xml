@@ -6,19 +6,13 @@
         <!-- Note that on Liquibase 4.4.0 relativeToChangelogFile (for loadData) does not work  when using PropertiesLauncher -->
         <loadData
                 encoding="utf8"
-                file="migration/migrations/csv/v0/0-mock-bank_bank_bank_profile.csv"
+                file="migration/migrations/csv/v0/0-mock-banks.csv"
                 catalogName=""
                 tableName="${table-prefix}bank">
-            <column header="uuid"       name="uuid"         type="STRING"/>
+            <column header="bank_uuid"  name="uuid"         type="UUID"/>
             <column header="name"       name="name"         type="STRING"/>
             <column header="bic"        name="bic"          type="STRING"/>
-            <column header="url"                            type="skip"/>
-            <column header="adapter_id"                     type="skip"/>
             <column header="bank_code"  name="bank_code"    type="STRING"/>
-            <column header="idp_url"                        type="skip"/>
-            <column header="aspsp_sca_approaches"           type="skip"/>
-            <column header="protocol_type"                  type="skip"/>
-            <column header="is_sandbox"                     type="skip"/>
         </loadData>
         <rollback />
     </changeSet>
@@ -27,11 +21,12 @@
         <!-- Note that on Liquibase 4.4.0 relativeToChangelogFile (for loadData) does not work  when using PropertiesLauncher -->
         <loadData
                 encoding="utf8"
-                file="migration/migrations/csv/v0/0-mock-bank_bank_bank_profile.csv"
+                file="migration/migrations/csv/v0/0-mock_bank_profile.csv"
                 catalogName=""
                 tableName="${table-prefix}bank_profile">
-            <column header="uuid"       name="bank_uuid"                type="STRING"/>
-            <column header="name"       name="name"                     type="skip"/>
+            <column header="bank_uuid"  name="bank_uuid"                type="UUID"/>
+            <column header="profile_uuid" name="uuid"                   type="UUID"/>
+            <column header="name"       name="name"                     type="STRING"/>
             <column header="bic"        name="bic"                      type="skip"/>
             <column header="url"        name="url"                      type="STRING"/>
             <column header="adapter_id" name="adapter_id"               type="STRING"/>
@@ -40,6 +35,8 @@
             <column header="aspsp_sca_approaches" name="sca_approaches" type="STRING"/>
             <column header="protocol_type" name="protocol_type"         type="STRING"/>
             <column header="is_sandbox"                                 type="BOOLEAN"/>
+            <column header="preferred_approach"                         type="STRING"/>
+            <column header="try_to_use_preferred_approach"              type="BOOLEAN"/>
         </loadData>
         <rollback />
     </changeSet>
@@ -48,7 +45,7 @@
         <comment>Updates Xs2a Adorsys Sandbox adapter URL to match defined in application.yml</comment>
         <update tableName="${table-prefix}bank_profile">
             <column name="url" value="${adorsys-sandbox-url}"/>
-            <where>bank_uuid IN (
+            <where>uuid IN (
                 '53c47f54-b9a4-465a-8f77-bc6cd5f0cf46',
                 'aa750320-2958-455e-9926-e9fca5ddfa92',
                 '2d8b3e75-9e3e-4fd2-b79c-063556ad9ecc',
@@ -62,7 +59,7 @@
         <comment>Updates Xs2a Adorsys Sandbox adapter URL to match defined in application.yml</comment>
         <update tableName="${table-prefix}bank_profile">
             <column name="idp_url" value="${adorsys-sandbox-oauth-server-url}"/>
-            <where>bank_uuid IN (
+            <where>uuid IN (
                 '53c47f54-b9a4-465a-8f77-bc6cd5f0cf46',
                 'aa750320-2958-455e-9926-e9fca5ddfa92',
                 '2d8b3e75-9e3e-4fd2-b79c-063556ad9ecc',
@@ -76,7 +73,7 @@
         <comment>Updates HBCI Adorsys Sandbox adapter URL to match defined in application.yml</comment>
         <update tableName="${table-prefix}bank_profile">
             <column name="url" value="${adorsys-hbci-sandbox-url}"/>
-            <where>bank_uuid IN (
+            <where>uuid IN (
                 '918d80fa-f7fd-4c9f-a6bd-7a9e12aeee76',
                 '0a1a6417-4913-4238-ab56-058025c3b2b8',
                 '125ef2c6-f414-4a10-a865-e3cdddf9753d')
@@ -104,14 +101,14 @@
         <sql>
             <!-- XS2A MOCK banks -->
             <!--  ADORSYS ASPSP  -->
-            insert into ${table-prefix}bank_action (id, bank_uuid, protocol_action, protocol_bean_name) values (1, '53c47f54-b9a4-465a-8f77-bc6cd5f0cf46', 'LIST_ACCOUNTS', 'xs2aListAccounts');
-            insert into ${table-prefix}bank_action (id, bank_uuid, protocol_action, protocol_bean_name) values (2, '53c47f54-b9a4-465a-8f77-bc6cd5f0cf46', 'LIST_TRANSACTIONS', 'xs2aSandboxListTransactions');
-            insert into ${table-prefix}bank_action (id, bank_uuid, protocol_action, protocol_bean_name) values (3, '53c47f54-b9a4-465a-8f77-bc6cd5f0cf46', 'AUTHORIZATION', '');
-            insert into ${table-prefix}bank_action (id, bank_uuid, protocol_action, protocol_bean_name) values (4, '53c47f54-b9a4-465a-8f77-bc6cd5f0cf46', 'SINGLE_PAYMENT', 'xs2aInitiateSinglePayment');
-            insert into ${table-prefix}bank_action (id, bank_uuid, protocol_action, protocol_bean_name) values (5, '53c47f54-b9a4-465a-8f77-bc6cd5f0cf46', 'GET_PAYMENT_INFORMATION', 'xs2aGetPaymentInfoState');
-            insert into ${table-prefix}bank_action (id, bank_uuid, protocol_action, protocol_bean_name) values (6, '53c47f54-b9a4-465a-8f77-bc6cd5f0cf46', 'GET_PAYMENT_STATUS', 'xs2aGetPaymentStatusState');
-            insert into ${table-prefix}bank_action (id, bank_uuid, protocol_action, protocol_bean_name) values (7, '53c47f54-b9a4-465a-8f77-bc6cd5f0cf46', 'DELETE_CONSENT', 'xs2aDeleteConsent');
-            insert into ${table-prefix}bank_action (id, bank_uuid, protocol_action, protocol_bean_name) values (8, '53c47f54-b9a4-465a-8f77-bc6cd5f0cf46', 'GET_CONSENT_STATUS', 'xs2aGetConsentStatus');
+            insert into ${table-prefix}bank_action (id, profile_uuid, protocol_action, protocol_bean_name) values (1, '53c47f54-b9a4-465a-8f77-bc6cd5f0cf46', 'LIST_ACCOUNTS', 'xs2aListAccounts');
+            insert into ${table-prefix}bank_action (id, profile_uuid, protocol_action, protocol_bean_name) values (2, '53c47f54-b9a4-465a-8f77-bc6cd5f0cf46', 'LIST_TRANSACTIONS', 'xs2aSandboxListTransactions');
+            insert into ${table-prefix}bank_action (id, profile_uuid, protocol_action, protocol_bean_name) values (3, '53c47f54-b9a4-465a-8f77-bc6cd5f0cf46', 'AUTHORIZATION', '');
+            insert into ${table-prefix}bank_action (id, profile_uuid, protocol_action, protocol_bean_name) values (4, '53c47f54-b9a4-465a-8f77-bc6cd5f0cf46', 'SINGLE_PAYMENT', 'xs2aInitiateSinglePayment');
+            insert into ${table-prefix}bank_action (id, profile_uuid, protocol_action, protocol_bean_name) values (5, '53c47f54-b9a4-465a-8f77-bc6cd5f0cf46', 'GET_PAYMENT_INFORMATION', 'xs2aGetPaymentInfoState');
+            insert into ${table-prefix}bank_action (id, profile_uuid, protocol_action, protocol_bean_name) values (6, '53c47f54-b9a4-465a-8f77-bc6cd5f0cf46', 'GET_PAYMENT_STATUS', 'xs2aGetPaymentStatusState');
+            insert into ${table-prefix}bank_action (id, profile_uuid, protocol_action, protocol_bean_name) values (7, '53c47f54-b9a4-465a-8f77-bc6cd5f0cf46', 'DELETE_CONSENT', 'xs2aDeleteConsent');
+            insert into ${table-prefix}bank_action (id, profile_uuid, protocol_action, protocol_bean_name) values (8, '53c47f54-b9a4-465a-8f77-bc6cd5f0cf46', 'GET_CONSENT_STATUS', 'xs2aGetConsentStatus');
 
             insert into ${table-prefix}bank_sub_action (id, action_id, protocol_action, sub_protocol_bean_name) values (1, 3, 'GET_AUTHORIZATION_STATE', 'xs2aGetAuthorizationState');
             insert into ${table-prefix}bank_sub_action (id, action_id, protocol_action, sub_protocol_bean_name) values (2, 3, 'UPDATE_AUTHORIZATION', 'xs2aUpdateAuthorization');
@@ -119,14 +116,14 @@
             insert into ${table-prefix}bank_sub_action (id, action_id, protocol_action, sub_protocol_bean_name) values (4, 3, 'DENY_AUTHORIZATION', 'xs2aDenyAuthorization');
 
             <!--  ADORSYS REDIRECT ASPSP  -->
-            insert into ${table-prefix}bank_action (id, bank_uuid, protocol_action, protocol_bean_name) values (9, '2d8b3e75-9e3e-4fd2-b79c-063556ad9ecc', 'LIST_ACCOUNTS', 'xs2aListAccounts');
-            insert into ${table-prefix}bank_action (id, bank_uuid, protocol_action, protocol_bean_name) values (10, '2d8b3e75-9e3e-4fd2-b79c-063556ad9ecc', 'LIST_TRANSACTIONS', 'xs2aSandboxListTransactions');
-            insert into ${table-prefix}bank_action (id, bank_uuid, protocol_action, protocol_bean_name) values (11, '2d8b3e75-9e3e-4fd2-b79c-063556ad9ecc', 'AUTHORIZATION', '');
-            insert into ${table-prefix}bank_action (id, bank_uuid, protocol_action, protocol_bean_name) values (12, '2d8b3e75-9e3e-4fd2-b79c-063556ad9ecc', 'SINGLE_PAYMENT', 'xs2aInitiateSinglePayment');
-            insert into ${table-prefix}bank_action (id, bank_uuid, protocol_action, protocol_bean_name) values (13, '2d8b3e75-9e3e-4fd2-b79c-063556ad9ecc', 'GET_PAYMENT_INFORMATION', 'xs2aGetPaymentInfoState');
-            insert into ${table-prefix}bank_action (id, bank_uuid, protocol_action, protocol_bean_name) values (14, '2d8b3e75-9e3e-4fd2-b79c-063556ad9ecc', 'GET_PAYMENT_STATUS', 'xs2aGetPaymentStatusState');
-            insert into ${table-prefix}bank_action (id, bank_uuid, protocol_action, protocol_bean_name) values (15, '2d8b3e75-9e3e-4fd2-b79c-063556ad9ecc', 'DELETE_CONSENT', 'xs2aDeleteConsent');
-            insert into ${table-prefix}bank_action (id, bank_uuid, protocol_action, protocol_bean_name) values (16, '2d8b3e75-9e3e-4fd2-b79c-063556ad9ecc', 'GET_CONSENT_STATUS', 'xs2aGetConsentStatus');
+            insert into ${table-prefix}bank_action (id, profile_uuid, protocol_action, protocol_bean_name) values (9, '2d8b3e75-9e3e-4fd2-b79c-063556ad9ecc', 'LIST_ACCOUNTS', 'xs2aListAccounts');
+            insert into ${table-prefix}bank_action (id, profile_uuid, protocol_action, protocol_bean_name) values (10, '2d8b3e75-9e3e-4fd2-b79c-063556ad9ecc', 'LIST_TRANSACTIONS', 'xs2aSandboxListTransactions');
+            insert into ${table-prefix}bank_action (id, profile_uuid, protocol_action, protocol_bean_name) values (11, '2d8b3e75-9e3e-4fd2-b79c-063556ad9ecc', 'AUTHORIZATION', '');
+            insert into ${table-prefix}bank_action (id, profile_uuid, protocol_action, protocol_bean_name) values (12, '2d8b3e75-9e3e-4fd2-b79c-063556ad9ecc', 'SINGLE_PAYMENT', 'xs2aInitiateSinglePayment');
+            insert into ${table-prefix}bank_action (id, profile_uuid, protocol_action, protocol_bean_name) values (13, '2d8b3e75-9e3e-4fd2-b79c-063556ad9ecc', 'GET_PAYMENT_INFORMATION', 'xs2aGetPaymentInfoState');
+            insert into ${table-prefix}bank_action (id, profile_uuid, protocol_action, protocol_bean_name) values (14, '2d8b3e75-9e3e-4fd2-b79c-063556ad9ecc', 'GET_PAYMENT_STATUS', 'xs2aGetPaymentStatusState');
+            insert into ${table-prefix}bank_action (id, profile_uuid, protocol_action, protocol_bean_name) values (15, '2d8b3e75-9e3e-4fd2-b79c-063556ad9ecc', 'DELETE_CONSENT', 'xs2aDeleteConsent');
+            insert into ${table-prefix}bank_action (id, profile_uuid, protocol_action, protocol_bean_name) values (16, '2d8b3e75-9e3e-4fd2-b79c-063556ad9ecc', 'GET_CONSENT_STATUS', 'xs2aGetConsentStatus');
 
             insert into ${table-prefix}bank_sub_action (id, action_id, protocol_action, sub_protocol_bean_name) values (5, 11, 'GET_AUTHORIZATION_STATE', 'xs2aGetAuthorizationState');
             insert into ${table-prefix}bank_sub_action (id, action_id, protocol_action, sub_protocol_bean_name) values (6, 11, 'UPDATE_AUTHORIZATION', 'xs2aUpdateAuthorization');
@@ -134,14 +131,14 @@
             insert into ${table-prefix}bank_sub_action (id, action_id, protocol_action, sub_protocol_bean_name) values (8, 11, 'DENY_AUTHORIZATION', 'xs2aDenyAuthorization');
 
             <!--  ADORSYS EMBEDDED ASPSP  -->
-            insert into ${table-prefix}bank_action (id, bank_uuid, protocol_action, protocol_bean_name) values (17, 'aa750320-2958-455e-9926-e9fca5ddfa92', 'LIST_ACCOUNTS', 'xs2aListAccounts');
-            insert into ${table-prefix}bank_action (id, bank_uuid, protocol_action, protocol_bean_name) values (18, 'aa750320-2958-455e-9926-e9fca5ddfa92', 'LIST_TRANSACTIONS', 'xs2aSandboxListTransactions');
-            insert into ${table-prefix}bank_action (id, bank_uuid, protocol_action, protocol_bean_name) values (19, 'aa750320-2958-455e-9926-e9fca5ddfa92', 'AUTHORIZATION', '');
-            insert into ${table-prefix}bank_action (id, bank_uuid, protocol_action, protocol_bean_name) values (20, 'aa750320-2958-455e-9926-e9fca5ddfa92', 'SINGLE_PAYMENT', 'xs2aInitiateSinglePayment');
-            insert into ${table-prefix}bank_action (id, bank_uuid, protocol_action, protocol_bean_name) values (21, 'aa750320-2958-455e-9926-e9fca5ddfa92', 'GET_PAYMENT_INFORMATION', 'xs2aGetPaymentInfoState');
-            insert into ${table-prefix}bank_action (id, bank_uuid, protocol_action, protocol_bean_name) values (22, 'aa750320-2958-455e-9926-e9fca5ddfa92', 'GET_PAYMENT_STATUS', 'xs2aGetPaymentStatusState');
-            insert into ${table-prefix}bank_action (id, bank_uuid, protocol_action, protocol_bean_name) values (23, 'aa750320-2958-455e-9926-e9fca5ddfa92', 'DELETE_CONSENT', 'xs2aDeleteConsent');
-            insert into ${table-prefix}bank_action (id, bank_uuid, protocol_action, protocol_bean_name) values (24, 'aa750320-2958-455e-9926-e9fca5ddfa92', 'GET_CONSENT_STATUS', 'xs2aGetConsentStatus');
+            insert into ${table-prefix}bank_action (id, profile_uuid, protocol_action, protocol_bean_name) values (17, 'aa750320-2958-455e-9926-e9fca5ddfa92', 'LIST_ACCOUNTS', 'xs2aListAccounts');
+            insert into ${table-prefix}bank_action (id, profile_uuid, protocol_action, protocol_bean_name) values (18, 'aa750320-2958-455e-9926-e9fca5ddfa92', 'LIST_TRANSACTIONS', 'xs2aSandboxListTransactions');
+            insert into ${table-prefix}bank_action (id, profile_uuid, protocol_action, protocol_bean_name) values (19, 'aa750320-2958-455e-9926-e9fca5ddfa92', 'AUTHORIZATION', '');
+            insert into ${table-prefix}bank_action (id, profile_uuid, protocol_action, protocol_bean_name) values (20, 'aa750320-2958-455e-9926-e9fca5ddfa92', 'SINGLE_PAYMENT', 'xs2aInitiateSinglePayment');
+            insert into ${table-prefix}bank_action (id, profile_uuid, protocol_action, protocol_bean_name) values (21, 'aa750320-2958-455e-9926-e9fca5ddfa92', 'GET_PAYMENT_INFORMATION', 'xs2aGetPaymentInfoState');
+            insert into ${table-prefix}bank_action (id, profile_uuid, protocol_action, protocol_bean_name) values (22, 'aa750320-2958-455e-9926-e9fca5ddfa92', 'GET_PAYMENT_STATUS', 'xs2aGetPaymentStatusState');
+            insert into ${table-prefix}bank_action (id, profile_uuid, protocol_action, protocol_bean_name) values (23, 'aa750320-2958-455e-9926-e9fca5ddfa92', 'DELETE_CONSENT', 'xs2aDeleteConsent');
+            insert into ${table-prefix}bank_action (id, profile_uuid, protocol_action, protocol_bean_name) values (24, 'aa750320-2958-455e-9926-e9fca5ddfa92', 'GET_CONSENT_STATUS', 'xs2aGetConsentStatus');
 
             insert into ${table-prefix}bank_sub_action (id, action_id, protocol_action, sub_protocol_bean_name) values (9, 19, 'GET_AUTHORIZATION_STATE', 'xs2aGetAuthorizationState');
             insert into ${table-prefix}bank_sub_action (id, action_id, protocol_action, sub_protocol_bean_name) values (10, 19, 'UPDATE_AUTHORIZATION', 'xs2aUpdateAuthorization');
@@ -149,14 +146,14 @@
             insert into ${table-prefix}bank_sub_action (id, action_id, protocol_action, sub_protocol_bean_name) values (12, 19, 'DENY_AUTHORIZATION', 'xs2aDenyAuthorization');
 
             <!--  ADORSYS OAUTH-PRE-STEP ASPSP  -->
-            insert into ${table-prefix}bank_action (id, bank_uuid, protocol_action, protocol_bean_name) values (25, '45e6cda0-69a7-4731-90fc-2b13a42fd3bd', 'LIST_ACCOUNTS', 'xs2aListAccounts');
-            insert into ${table-prefix}bank_action (id, bank_uuid, protocol_action, protocol_bean_name) values (26, '45e6cda0-69a7-4731-90fc-2b13a42fd3bd', 'LIST_TRANSACTIONS', 'xs2aSandboxListTransactions');
-            insert into ${table-prefix}bank_action (id, bank_uuid, protocol_action, protocol_bean_name) values (27, '45e6cda0-69a7-4731-90fc-2b13a42fd3bd', 'AUTHORIZATION', '');
-            insert into ${table-prefix}bank_action (id, bank_uuid, protocol_action, protocol_bean_name) values (28, '45e6cda0-69a7-4731-90fc-2b13a42fd3bd', 'SINGLE_PAYMENT', 'xs2aInitiateSinglePayment');
-            insert into ${table-prefix}bank_action (id, bank_uuid, protocol_action, protocol_bean_name) values (29, '45e6cda0-69a7-4731-90fc-2b13a42fd3bd', 'GET_PAYMENT_INFORMATION', 'xs2aGetPaymentInfoState');
-            insert into ${table-prefix}bank_action (id, bank_uuid, protocol_action, protocol_bean_name) values (30, '45e6cda0-69a7-4731-90fc-2b13a42fd3bd', 'GET_PAYMENT_STATUS', 'xs2aGetPaymentStatusState');
-            insert into ${table-prefix}bank_action (id, bank_uuid, protocol_action, protocol_bean_name) values (31, '45e6cda0-69a7-4731-90fc-2b13a42fd3bd', 'DELETE_CONSENT', 'xs2aDeleteConsent');
-            insert into ${table-prefix}bank_action (id, bank_uuid, protocol_action, protocol_bean_name) values (32, '45e6cda0-69a7-4731-90fc-2b13a42fd3bd', 'GET_CONSENT_STATUS', 'xs2aGetConsentStatus');
+            insert into ${table-prefix}bank_action (id, profile_uuid, protocol_action, protocol_bean_name) values (25, '45e6cda0-69a7-4731-90fc-2b13a42fd3bd', 'LIST_ACCOUNTS', 'xs2aListAccounts');
+            insert into ${table-prefix}bank_action (id, profile_uuid, protocol_action, protocol_bean_name) values (26, '45e6cda0-69a7-4731-90fc-2b13a42fd3bd', 'LIST_TRANSACTIONS', 'xs2aSandboxListTransactions');
+            insert into ${table-prefix}bank_action (id, profile_uuid, protocol_action, protocol_bean_name) values (27, '45e6cda0-69a7-4731-90fc-2b13a42fd3bd', 'AUTHORIZATION', '');
+            insert into ${table-prefix}bank_action (id, profile_uuid, protocol_action, protocol_bean_name) values (28, '45e6cda0-69a7-4731-90fc-2b13a42fd3bd', 'SINGLE_PAYMENT', 'xs2aInitiateSinglePayment');
+            insert into ${table-prefix}bank_action (id, profile_uuid, protocol_action, protocol_bean_name) values (29, '45e6cda0-69a7-4731-90fc-2b13a42fd3bd', 'GET_PAYMENT_INFORMATION', 'xs2aGetPaymentInfoState');
+            insert into ${table-prefix}bank_action (id, profile_uuid, protocol_action, protocol_bean_name) values (30, '45e6cda0-69a7-4731-90fc-2b13a42fd3bd', 'GET_PAYMENT_STATUS', 'xs2aGetPaymentStatusState');
+            insert into ${table-prefix}bank_action (id, profile_uuid, protocol_action, protocol_bean_name) values (31, '45e6cda0-69a7-4731-90fc-2b13a42fd3bd', 'DELETE_CONSENT', 'xs2aDeleteConsent');
+            insert into ${table-prefix}bank_action (id, profile_uuid, protocol_action, protocol_bean_name) values (32, '45e6cda0-69a7-4731-90fc-2b13a42fd3bd', 'GET_CONSENT_STATUS', 'xs2aGetConsentStatus');
 
             insert into ${table-prefix}bank_sub_action (id, action_id, protocol_action, sub_protocol_bean_name) values (13, 27, 'GET_AUTHORIZATION_STATE', 'xs2aGetAuthorizationState');
             insert into ${table-prefix}bank_sub_action (id, action_id, protocol_action, sub_protocol_bean_name) values (14, 27, 'UPDATE_AUTHORIZATION', 'xs2aUpdateAuthorization');
@@ -164,14 +161,14 @@
             insert into ${table-prefix}bank_sub_action (id, action_id, protocol_action, sub_protocol_bean_name) values (16, 27, 'DENY_AUTHORIZATION', 'xs2aDenyAuthorization');
 
             <!--  ADORSYS OAUTH-INTEGRATED ASPSP  -->
-            insert into ${table-prefix}bank_action (id, bank_uuid, protocol_action, protocol_bean_name) values (33, '867a53d8-4cca-4365-a393-7febb0bbd38e', 'LIST_ACCOUNTS', 'xs2aListAccounts');
-            insert into ${table-prefix}bank_action (id, bank_uuid, protocol_action, protocol_bean_name) values (34, '867a53d8-4cca-4365-a393-7febb0bbd38e', 'LIST_TRANSACTIONS', 'xs2aSandboxListTransactions');
-            insert into ${table-prefix}bank_action (id, bank_uuid, protocol_action, protocol_bean_name) values (35, '867a53d8-4cca-4365-a393-7febb0bbd38e', 'AUTHORIZATION', '');
-            insert into ${table-prefix}bank_action (id, bank_uuid, protocol_action, protocol_bean_name) values (36, '867a53d8-4cca-4365-a393-7febb0bbd38e', 'SINGLE_PAYMENT', 'xs2aInitiateSinglePayment');
-            insert into ${table-prefix}bank_action (id, bank_uuid, protocol_action, protocol_bean_name) values (37, '867a53d8-4cca-4365-a393-7febb0bbd38e', 'GET_PAYMENT_INFORMATION', 'xs2aGetPaymentInfoState');
-            insert into ${table-prefix}bank_action (id, bank_uuid, protocol_action, protocol_bean_name) values (38, '867a53d8-4cca-4365-a393-7febb0bbd38e', 'GET_PAYMENT_STATUS', 'xs2aGetPaymentStatusState');
-            insert into ${table-prefix}bank_action (id, bank_uuid, protocol_action, protocol_bean_name) values (39, '867a53d8-4cca-4365-a393-7febb0bbd38e', 'DELETE_CONSENT', 'xs2aDeleteConsent');
-            insert into ${table-prefix}bank_action (id, bank_uuid, protocol_action, protocol_bean_name) values (40, '867a53d8-4cca-4365-a393-7febb0bbd38e', 'GET_CONSENT_STATUS', 'xs2aGetConsentStatus');
+            insert into ${table-prefix}bank_action (id, profile_uuid, protocol_action, protocol_bean_name) values (33, '867a53d8-4cca-4365-a393-7febb0bbd38e', 'LIST_ACCOUNTS', 'xs2aListAccounts');
+            insert into ${table-prefix}bank_action (id, profile_uuid, protocol_action, protocol_bean_name) values (34, '867a53d8-4cca-4365-a393-7febb0bbd38e', 'LIST_TRANSACTIONS', 'xs2aSandboxListTransactions');
+            insert into ${table-prefix}bank_action (id, profile_uuid, protocol_action, protocol_bean_name) values (35, '867a53d8-4cca-4365-a393-7febb0bbd38e', 'AUTHORIZATION', '');
+            insert into ${table-prefix}bank_action (id, profile_uuid, protocol_action, protocol_bean_name) values (36, '867a53d8-4cca-4365-a393-7febb0bbd38e', 'SINGLE_PAYMENT', 'xs2aInitiateSinglePayment');
+            insert into ${table-prefix}bank_action (id, profile_uuid, protocol_action, protocol_bean_name) values (37, '867a53d8-4cca-4365-a393-7febb0bbd38e', 'GET_PAYMENT_INFORMATION', 'xs2aGetPaymentInfoState');
+            insert into ${table-prefix}bank_action (id, profile_uuid, protocol_action, protocol_bean_name) values (38, '867a53d8-4cca-4365-a393-7febb0bbd38e', 'GET_PAYMENT_STATUS', 'xs2aGetPaymentStatusState');
+            insert into ${table-prefix}bank_action (id, profile_uuid, protocol_action, protocol_bean_name) values (39, '867a53d8-4cca-4365-a393-7febb0bbd38e', 'DELETE_CONSENT', 'xs2aDeleteConsent');
+            insert into ${table-prefix}bank_action (id, profile_uuid, protocol_action, protocol_bean_name) values (40, '867a53d8-4cca-4365-a393-7febb0bbd38e', 'GET_CONSENT_STATUS', 'xs2aGetConsentStatus');
 
             insert into ${table-prefix}bank_sub_action (id, action_id, protocol_action, sub_protocol_bean_name) values (17, 35, 'GET_AUTHORIZATION_STATE', 'xs2aGetAuthorizationState');
             insert into ${table-prefix}bank_sub_action (id, action_id, protocol_action, sub_protocol_bean_name) values (18, 35, 'UPDATE_AUTHORIZATION', 'xs2aUpdateAuthorization');
@@ -183,14 +180,14 @@
 
 
             <!--  HBCI BLZ 10000001  -->
-            insert into ${table-prefix}bank_action (id, bank_uuid, protocol_action, protocol_bean_name, consent_supported) values (41, '918d80fa-f7fd-4c9f-a6bd-7a9e12aeee76', 'LIST_ACCOUNTS', 'hbciListAccounts', false);
-            insert into ${table-prefix}bank_action (id, bank_uuid, protocol_action, protocol_bean_name, consent_supported) values (42, '918d80fa-f7fd-4c9f-a6bd-7a9e12aeee76', 'LIST_TRANSACTIONS', 'hbciListTransactions', false);
-            insert into ${table-prefix}bank_action (id, bank_uuid, protocol_action, protocol_bean_name, consent_supported) values (43, '918d80fa-f7fd-4c9f-a6bd-7a9e12aeee76', 'AUTHORIZATION', '', false);
-            insert into ${table-prefix}bank_action (id, bank_uuid, protocol_action, protocol_bean_name, consent_supported) values (44, '918d80fa-f7fd-4c9f-a6bd-7a9e12aeee76', 'SINGLE_PAYMENT', 'hbciInitiateSinglePayment', false);
-            insert into ${table-prefix}bank_action (id, bank_uuid, protocol_action, protocol_bean_name, consent_supported) values (45, '918d80fa-f7fd-4c9f-a6bd-7a9e12aeee76', 'GET_PAYMENT_INFORMATION', 'hbciGetPaymentInfoState', false);
-            insert into ${table-prefix}bank_action (id, bank_uuid, protocol_action, protocol_bean_name, consent_supported) values (46, '918d80fa-f7fd-4c9f-a6bd-7a9e12aeee76', 'GET_PAYMENT_STATUS', 'hbciGetPaymentStatusState', false);
-            insert into ${table-prefix}bank_action (id, bank_uuid, protocol_action, protocol_bean_name, consent_supported) values (47, '918d80fa-f7fd-4c9f-a6bd-7a9e12aeee76', 'DELETE_CONSENT', 'hbciDeleteConsent', false);
-            insert into ${table-prefix}bank_action (id, bank_uuid, protocol_action, protocol_bean_name, consent_supported) values (48, '918d80fa-f7fd-4c9f-a6bd-7a9e12aeee76', 'GET_CONSENT_STATUS', 'hbciGetConsentStatus', false);
+            insert into ${table-prefix}bank_action (id, profile_uuid, protocol_action, protocol_bean_name, consent_supported) values (41, '918d80fa-f7fd-4c9f-a6bd-7a9e12aeee76', 'LIST_ACCOUNTS', 'hbciListAccounts', false);
+            insert into ${table-prefix}bank_action (id, profile_uuid, protocol_action, protocol_bean_name, consent_supported) values (42, '918d80fa-f7fd-4c9f-a6bd-7a9e12aeee76', 'LIST_TRANSACTIONS', 'hbciListTransactions', false);
+            insert into ${table-prefix}bank_action (id, profile_uuid, protocol_action, protocol_bean_name, consent_supported) values (43, '918d80fa-f7fd-4c9f-a6bd-7a9e12aeee76', 'AUTHORIZATION', '', false);
+            insert into ${table-prefix}bank_action (id, profile_uuid, protocol_action, protocol_bean_name, consent_supported) values (44, '918d80fa-f7fd-4c9f-a6bd-7a9e12aeee76', 'SINGLE_PAYMENT', 'hbciInitiateSinglePayment', false);
+            insert into ${table-prefix}bank_action (id, profile_uuid, protocol_action, protocol_bean_name, consent_supported) values (45, '918d80fa-f7fd-4c9f-a6bd-7a9e12aeee76', 'GET_PAYMENT_INFORMATION', 'hbciGetPaymentInfoState', false);
+            insert into ${table-prefix}bank_action (id, profile_uuid, protocol_action, protocol_bean_name, consent_supported) values (46, '918d80fa-f7fd-4c9f-a6bd-7a9e12aeee76', 'GET_PAYMENT_STATUS', 'hbciGetPaymentStatusState', false);
+            insert into ${table-prefix}bank_action (id, profile_uuid, protocol_action, protocol_bean_name, consent_supported) values (47, '918d80fa-f7fd-4c9f-a6bd-7a9e12aeee76', 'DELETE_CONSENT', 'hbciDeleteConsent', false);
+            insert into ${table-prefix}bank_action (id, profile_uuid, protocol_action, protocol_bean_name, consent_supported) values (48, '918d80fa-f7fd-4c9f-a6bd-7a9e12aeee76', 'GET_CONSENT_STATUS', 'hbciGetConsentStatus', false);
 
             insert into ${table-prefix}bank_sub_action (id, action_id, protocol_action, sub_protocol_bean_name) values (21, 43, 'GET_AUTHORIZATION_STATE', 'hbciGetAuthorizationState');
             insert into ${table-prefix}bank_sub_action (id, action_id, protocol_action, sub_protocol_bean_name) values (22, 43, 'UPDATE_AUTHORIZATION', 'hbciUpdateAuthorization');
@@ -198,14 +195,14 @@
             insert into ${table-prefix}bank_sub_action (id, action_id, protocol_action, sub_protocol_bean_name) values (24, 43, 'DENY_AUTHORIZATION', 'hbciDenyAuthorization');
 
             <!--  HBCI BLZ 20000002  -->
-            insert into ${table-prefix}bank_action (id, bank_uuid, protocol_action, protocol_bean_name, consent_supported) values (49, '0a1a6417-4913-4238-ab56-058025c3b2b8', 'LIST_ACCOUNTS', 'hbciListAccounts', false);
-            insert into ${table-prefix}bank_action (id, bank_uuid, protocol_action, protocol_bean_name, consent_supported) values (50, '0a1a6417-4913-4238-ab56-058025c3b2b8', 'LIST_TRANSACTIONS', 'hbciListTransactions', false);
-            insert into ${table-prefix}bank_action (id, bank_uuid, protocol_action, protocol_bean_name, consent_supported) values (51, '0a1a6417-4913-4238-ab56-058025c3b2b8', 'AUTHORIZATION', '', false);
-            insert into ${table-prefix}bank_action (id, bank_uuid, protocol_action, protocol_bean_name, consent_supported) values (52, '0a1a6417-4913-4238-ab56-058025c3b2b8', 'SINGLE_PAYMENT', 'hbciInitiateSinglePayment', false);
-            insert into ${table-prefix}bank_action (id, bank_uuid, protocol_action, protocol_bean_name, consent_supported) values (53, '0a1a6417-4913-4238-ab56-058025c3b2b8', 'GET_PAYMENT_INFORMATION', 'hbciGetPaymentInfoState', false);
-            insert into ${table-prefix}bank_action (id, bank_uuid, protocol_action, protocol_bean_name, consent_supported) values (54, '0a1a6417-4913-4238-ab56-058025c3b2b8', 'GET_PAYMENT_STATUS', 'hbciGetPaymentStatusState', false);
-            insert into ${table-prefix}bank_action (id, bank_uuid, protocol_action, protocol_bean_name, consent_supported) values (55, '0a1a6417-4913-4238-ab56-058025c3b2b8', 'DELETE_CONSENT', 'hbciDeleteConsent', false);
-            insert into ${table-prefix}bank_action (id, bank_uuid, protocol_action, protocol_bean_name, consent_supported) values (56, '0a1a6417-4913-4238-ab56-058025c3b2b8', 'GET_CONSENT_STATUS', 'hbciGetConsentStatus', false);
+            insert into ${table-prefix}bank_action (id, profile_uuid, protocol_action, protocol_bean_name, consent_supported) values (49, '0a1a6417-4913-4238-ab56-058025c3b2b8', 'LIST_ACCOUNTS', 'hbciListAccounts', false);
+            insert into ${table-prefix}bank_action (id, profile_uuid, protocol_action, protocol_bean_name, consent_supported) values (50, '0a1a6417-4913-4238-ab56-058025c3b2b8', 'LIST_TRANSACTIONS', 'hbciListTransactions', false);
+            insert into ${table-prefix}bank_action (id, profile_uuid, protocol_action, protocol_bean_name, consent_supported) values (51, '0a1a6417-4913-4238-ab56-058025c3b2b8', 'AUTHORIZATION', '', false);
+            insert into ${table-prefix}bank_action (id, profile_uuid, protocol_action, protocol_bean_name, consent_supported) values (52, '0a1a6417-4913-4238-ab56-058025c3b2b8', 'SINGLE_PAYMENT', 'hbciInitiateSinglePayment', false);
+            insert into ${table-prefix}bank_action (id, profile_uuid, protocol_action, protocol_bean_name, consent_supported) values (53, '0a1a6417-4913-4238-ab56-058025c3b2b8', 'GET_PAYMENT_INFORMATION', 'hbciGetPaymentInfoState', false);
+            insert into ${table-prefix}bank_action (id, profile_uuid, protocol_action, protocol_bean_name, consent_supported) values (54, '0a1a6417-4913-4238-ab56-058025c3b2b8', 'GET_PAYMENT_STATUS', 'hbciGetPaymentStatusState', false);
+            insert into ${table-prefix}bank_action (id, profile_uuid, protocol_action, protocol_bean_name, consent_supported) values (55, '0a1a6417-4913-4238-ab56-058025c3b2b8', 'DELETE_CONSENT', 'hbciDeleteConsent', false);
+            insert into ${table-prefix}bank_action (id, profile_uuid, protocol_action, protocol_bean_name, consent_supported) values (56, '0a1a6417-4913-4238-ab56-058025c3b2b8', 'GET_CONSENT_STATUS', 'hbciGetConsentStatus', false);
 
             insert into ${table-prefix}bank_sub_action (id, action_id, protocol_action, sub_protocol_bean_name) values (25, 51, 'GET_AUTHORIZATION_STATE', 'hbciGetAuthorizationState');
             insert into ${table-prefix}bank_sub_action (id, action_id, protocol_action, sub_protocol_bean_name) values (26, 51, 'UPDATE_AUTHORIZATION', 'hbciUpdateAuthorization');
@@ -213,14 +210,14 @@
             insert into ${table-prefix}bank_sub_action (id, action_id, protocol_action, sub_protocol_bean_name) values (28, 51, 'DENY_AUTHORIZATION', 'hbciDenyAuthorization');
 
             <!--  HBCI BLZ 30000003  -->
-            insert into ${table-prefix}bank_action (id, bank_uuid, protocol_action, protocol_bean_name, consent_supported) values (57, '125ef2c6-f414-4a10-a865-e3cdddf9753d', 'LIST_ACCOUNTS', 'hbciListAccounts', false);
-            insert into ${table-prefix}bank_action (id, bank_uuid, protocol_action, protocol_bean_name, consent_supported) values (58, '125ef2c6-f414-4a10-a865-e3cdddf9753d', 'LIST_TRANSACTIONS', 'hbciListTransactions', false);
-            insert into ${table-prefix}bank_action (id, bank_uuid, protocol_action, protocol_bean_name, consent_supported) values (59, '125ef2c6-f414-4a10-a865-e3cdddf9753d', 'AUTHORIZATION', '', false);
-            insert into ${table-prefix}bank_action (id, bank_uuid, protocol_action, protocol_bean_name, consent_supported) values (60, '125ef2c6-f414-4a10-a865-e3cdddf9753d', 'SINGLE_PAYMENT', 'hbciInitiateSinglePayment', false);
-            insert into ${table-prefix}bank_action (id, bank_uuid, protocol_action, protocol_bean_name, consent_supported) values (61, '125ef2c6-f414-4a10-a865-e3cdddf9753d', 'GET_PAYMENT_INFORMATION', 'hbciGetPaymentInfoState', false);
-            insert into ${table-prefix}bank_action (id, bank_uuid, protocol_action, protocol_bean_name, consent_supported) values (62, '125ef2c6-f414-4a10-a865-e3cdddf9753d', 'GET_PAYMENT_STATUS', 'hbciGetPaymentStatusState', false);
-            insert into ${table-prefix}bank_action (id, bank_uuid, protocol_action, protocol_bean_name, consent_supported) values (63, '125ef2c6-f414-4a10-a865-e3cdddf9753d', 'DELETE_CONSENT', 'hbciDeleteConsent', false);
-            insert into ${table-prefix}bank_action (id, bank_uuid, protocol_action, protocol_bean_name, consent_supported) values (64, '125ef2c6-f414-4a10-a865-e3cdddf9753d', 'GET_CONSENT_STATUS', 'hbciGetConsentStatus', false);
+            insert into ${table-prefix}bank_action (id, profile_uuid, protocol_action, protocol_bean_name, consent_supported) values (57, '125ef2c6-f414-4a10-a865-e3cdddf9753d', 'LIST_ACCOUNTS', 'hbciListAccounts', false);
+            insert into ${table-prefix}bank_action (id, profile_uuid, protocol_action, protocol_bean_name, consent_supported) values (58, '125ef2c6-f414-4a10-a865-e3cdddf9753d', 'LIST_TRANSACTIONS', 'hbciListTransactions', false);
+            insert into ${table-prefix}bank_action (id, profile_uuid, protocol_action, protocol_bean_name, consent_supported) values (59, '125ef2c6-f414-4a10-a865-e3cdddf9753d', 'AUTHORIZATION', '', false);
+            insert into ${table-prefix}bank_action (id, profile_uuid, protocol_action, protocol_bean_name, consent_supported) values (60, '125ef2c6-f414-4a10-a865-e3cdddf9753d', 'SINGLE_PAYMENT', 'hbciInitiateSinglePayment', false);
+            insert into ${table-prefix}bank_action (id, profile_uuid, protocol_action, protocol_bean_name, consent_supported) values (61, '125ef2c6-f414-4a10-a865-e3cdddf9753d', 'GET_PAYMENT_INFORMATION', 'hbciGetPaymentInfoState', false);
+            insert into ${table-prefix}bank_action (id, profile_uuid, protocol_action, protocol_bean_name, consent_supported) values (62, '125ef2c6-f414-4a10-a865-e3cdddf9753d', 'GET_PAYMENT_STATUS', 'hbciGetPaymentStatusState', false);
+            insert into ${table-prefix}bank_action (id, profile_uuid, protocol_action, protocol_bean_name, consent_supported) values (63, '125ef2c6-f414-4a10-a865-e3cdddf9753d', 'DELETE_CONSENT', 'hbciDeleteConsent', false);
+            insert into ${table-prefix}bank_action (id, profile_uuid, protocol_action, protocol_bean_name, consent_supported) values (64, '125ef2c6-f414-4a10-a865-e3cdddf9753d', 'GET_CONSENT_STATUS', 'hbciGetConsentStatus', false);
 
             insert into ${table-prefix}bank_sub_action (id, action_id, protocol_action, sub_protocol_bean_name) values (29, 59, 'GET_AUTHORIZATION_STATE', 'hbciGetAuthorizationState');
             insert into ${table-prefix}bank_sub_action (id, action_id, protocol_action, sub_protocol_bean_name) values (30, 59, 'UPDATE_AUTHORIZATION', 'hbciUpdateAuthorization');
@@ -229,28 +226,13 @@
         </sql>
     </changeSet>
 
-    <changeSet author="rye@golden-dimension.com" id="2020-06-10-01">
-        <comment>Updates ASPSPs in order to force preferred approaches</comment>
-        <update tableName="${table-prefix}bank_profile">
-            <column name="preferred_approach" value="REDIRECT"/>
-            <column name="try_to_use_preferred_approach" value="true"/>
-            <where>bank_uuid='2d8b3e75-9e3e-4fd2-b79c-063556ad9ecc'</where>
-        </update>
-
-        <update tableName="${table-prefix}bank_profile">
-            <column name="preferred_approach" value="EMBEDDED"/>
-            <column name="try_to_use_preferred_approach" value="true"/>
-            <where>bank_uuid='aa750320-2958-455e-9926-e9fca5ddfa92'</where>
-        </update>
-    </changeSet>
-
     <changeSet id="2020-07-18-01" author="mhr">
         <update tableName="${table-prefix}bank_profile">
             <column name="unique_payment_purpose" value="true"/>
             <where>
-                bank_uuid='918d80fa-f7fd-4c9f-a6bd-7a9e12aeee76' OR
-                bank_uuid='0a1a6417-4913-4238-ab56-058025c3b2b8' OR
-                bank_uuid='125ef2c6-f414-4a10-a865-e3cdddf9753d'
+                bank_uuid='adadadad-1000-0000-0000-b0b0b0b0b0b0' OR
+                bank_uuid='adadadad-2000-0000-0000-b0b0b0b0b0b0' OR
+                bank_uuid='adadadad-3000-0000-0000-b0b0b0b0b0b0'
             </where>
         </update>
     </changeSet>

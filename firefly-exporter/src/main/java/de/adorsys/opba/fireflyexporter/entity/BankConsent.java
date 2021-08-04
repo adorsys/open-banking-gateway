@@ -24,7 +24,7 @@ public class BankConsent {
     @SequenceGenerator(name = "consent_id_generator", sequenceName = "consent_id_seq")
     private long id;
 
-    private String bankId;
+    private UUID bankProfileUuid;
 
     private UUID consentId;
 

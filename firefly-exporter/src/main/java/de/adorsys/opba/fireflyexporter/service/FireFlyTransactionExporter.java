@@ -19,7 +19,6 @@ import de.adorsys.opba.tpp.ais.api.model.generated.TransactionsResponse;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.logging.log4j.util.Strings;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.scheduling.annotation.Async;
@@ -53,9 +52,9 @@ public class FireFlyTransactionExporter {
 
     @Async
     @SuppressWarnings("checkstyle:MethodLength") // Method length is mostly from long argument list to API call
-    public void exportToFirefly(String fireFlyToken, long exportJobId, String bankId, List<String> accountsTransactionsToExport, LocalDate from, LocalDate to) {
+    public void exportToFirefly(String fireFlyToken, long exportJobId, UUID bankProfileId, List<String> accountsTransactionsToExport, LocalDate from, LocalDate to) {
         tokenProvider.setToken(fireFlyToken);
-        Set<String> availableAccountsInFireFlyByIban = exportableAccounts.exportableAccounts(fireFlyToken, bankId).getBody().stream()
+        Set<String> availableAccountsInFireFlyByIban = exportableAccounts.exportableAccounts(fireFlyToken, bankProfileId).getBody().stream()
                 .map(ExportableAccount::getIban)
                 .collect(Collectors.toSet());
 
@@ -68,7 +67,7 @@ public class FireFlyTransactionExporter {
             try {
                 exportAccountsTransactionsToFireFly(
                         exportJobId,
-                        bankId,
+                        bankProfileId,
                         accountIdToExport,
                         from,
                         to,
@@ -105,7 +104,7 @@ public class FireFlyTransactionExporter {
     @SuppressWarnings("checkstyle:MethodLength") // Method length is mostly from long argument list to API call
     private void exportAccountsTransactionsToFireFly(
             long exportJobId,
-            String bankId,
+            UUID bankProfileId,
             String accountIdToExport,
             LocalDate from,
             LocalDate to,
@@ -123,9 +122,9 @@ public class FireFlyTransactionExporter {
                 null,
                 null,
                 null,
-                bankId,
+                bankProfileId,
                 null,
-                consentRepository.findFirstByBankIdOrderByModifiedAtDesc(bankId).map(BankConsent::getConsentId).orElse(null),
+                consentRepository.findFirstByBankProfileUuidOrderByModifiedAtDesc(bankProfileId).map(BankConsent::getConsentId).orElse(null),
                 "",
                 from,
                 to,

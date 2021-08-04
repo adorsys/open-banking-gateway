@@ -4,18 +4,24 @@ import de.adorsys.opba.db.domain.entity.BankProfile;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
+import java.util.Collection;
 import java.util.List;
 import java.util.Optional;
+import java.util.UUID;
 
 @Repository
 public interface BankProfileJpaRepository extends JpaRepository<BankProfile, Long> {
 
-    Optional<BankProfile> findByBankUuid(String bankId);
+    Optional<BankProfile> findByUuid(UUID uuid);
 
-    List<BankProfile> findByBankBic(String bankId);
+    List<BankProfile> findByBankUuid(UUID bankUuid);
 
-    List<BankProfile> findByBankBankCode(String bankId);
+    List<BankProfile> findByBankIdIn(Collection<Long> bankIds);
 
-    List<BankProfile> findByBankName(String bankId);
+    List<BankProfile> findByBankBic(String bankBic);
 
+    List<BankProfile> findByBankBankCode(String bankCode);
+
+    @SuppressWarnings("checkstyle:MethodName") // ambiguity due to getBankName()
+    List<BankProfile> findByBank_Name(String bankName);
 }

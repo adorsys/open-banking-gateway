@@ -57,6 +57,7 @@ export class AisService {
       okurl,
       notOkUrl,
       loTRetrievalInformation,
+      authenticatePsu,
       createConsentIfNone,
       '1970-01-01',
       AisService.isoDate(new Date()),
@@ -64,7 +65,6 @@ export class AisService {
       'both',
       null,
       online,
-      authenticatePsu,
       'response'
     );
   }

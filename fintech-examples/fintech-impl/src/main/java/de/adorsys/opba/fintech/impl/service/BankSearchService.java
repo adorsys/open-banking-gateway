@@ -59,11 +59,11 @@ public class BankSearchService {
         return new InlineResponse2002().bankProfile(ManualMapper.fromTppToFintech(getBankProfileById(bankId).getBody().getBankProfileDescriptor()));
     }
 
-    public ResponseEntity<BankProfileResponse> getBankProfileById(String bankId) {
+    public ResponseEntity<BankProfileResponse> getBankProfileById(String bankProfileId) {
         UUID xRequestId = UUID.fromString(restRequestContext.getRequestId());
         return tppBankSearchClient.bankProfileGET(
                 xRequestId,
-                bankId,
+                UUID.fromString(bankProfileId),
                 COMPUTE_X_TIMESTAMP_UTC,
                 COMPUTE_X_REQUEST_SIGNATURE,
                 COMPUTE_FINTECH_ID);

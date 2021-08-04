@@ -2,7 +2,11 @@ package de.adorsys.fintech.tests.e2e.steps;
 
 import com.tngtech.jgiven.integration.spring.JGivenStage;
 import de.adorsys.opba.protocol.xs2a.tests.e2e.sandbox.servers.WebDriverBasedAccountInformation;
-import org.openqa.selenium.*;
+import org.openqa.selenium.By;
+import org.openqa.selenium.JavascriptExecutor;
+import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.WebDriverException;
+import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,7 +17,7 @@ import org.springframework.retry.RetryOperations;
 import java.net.URI;
 import java.time.Duration;
 
-import static de.adorsys.fintech.tests.e2e.steps.FintechStagesUtils.FINTECH_UI_URI;
+import static de.adorsys.fintech.tests.e2e.steps.FintechStagesUtils.ADORSYS_XS2A;
 import static de.adorsys.fintech.tests.e2e.steps.FintechStagesUtils.PIN;
 import static de.adorsys.opba.protocol.xs2a.tests.e2e.sandbox.servers.config.RetryableConfig.TEST_RETRY_OPS;
 
@@ -30,8 +34,11 @@ public class WebDriverBasedUserInfoFintech<SELF extends WebDriverBasedUserInfoFi
     @Value("${test.webdriver.timeout}")
     private Duration timeout;
 
+    @Value("${test.fintech.uri}")
+    private String fintechUiUri;
+
     public SELF user_opens_fintechui_login_page(WebDriver driver) {
-        driver.get(FINTECH_UI_URI);
+        driver.get(fintechUiUri);
         return self();
     }
 
@@ -151,9 +158,9 @@ public class WebDriverBasedUserInfoFintech<SELF extends WebDriverBasedUserInfoFi
         return self();
     }
 
-    public SELF user_wait_for_the_result_in_bank_search(WebDriver webDriver) {
+    public SELF user_wait_for_the_result_in_bank_search_and_select(WebDriver webDriver, String profile) {
         wait(webDriver);
-        clickOnButton(webDriver, By.className("bank-list"), false);
+        clickOnButton(webDriver, By.xpath(String.format("//button[contains(text(), '%s') and @class='bank-list']", profile)), false);
         return self();
     }
 
@@ -190,9 +197,9 @@ public class WebDriverBasedUserInfoFintech<SELF extends WebDriverBasedUserInfoFi
                 .and()
                 .user_login_with_its_credentials(driver, username)
                 .and()
-                .user_looks_for_a_bank_in_the_bank_search_input_place(driver, profile)
+                .user_looks_for_a_bank_in_the_bank_search_input_place(driver, ADORSYS_XS2A)
                 .and()
-                .user_wait_for_the_result_in_bank_search(driver)
+                .user_wait_for_the_result_in_bank_search_and_select(driver, profile)
                 .and()
                 .user_navigates_to_page(driver)
                 .and()
@@ -297,9 +304,9 @@ public class WebDriverBasedUserInfoFintech<SELF extends WebDriverBasedUserInfoFi
         return self();
     }
 
-    public SELF user_looks_for_a_bank_in_the_bank_search_input_place(WebDriver driver, String profile) {
+    public SELF user_looks_for_a_bank_in_the_bank_search_input_place(WebDriver driver, String genericBankName) {
         waitPlusTimer(driver, timeout.getSeconds());
-        sendTestInSearchInput(driver, By.name("searchValue"), profile);
+        sendTestInSearchInput(driver, By.name("searchValue"), genericBankName);
         return self();
     }
 

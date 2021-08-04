@@ -102,10 +102,10 @@ public class AccountService {
         return consentAvailable(bankID, sessionEntity, redirectCode, xRequestId, optionalConsent, createConsentIfNone, withBalance, psuAuthenticationRequired, online);
     }
 
-    private ResponseEntity consentAvailable(String bankID, SessionEntity sessionEntity, String redirectCode,
+    private ResponseEntity consentAvailable(String bankProfileID, SessionEntity sessionEntity, String redirectCode,
                                             UUID xRequestId, Optional<ConsentEntity> optionalConsent, String createConsentIfNone, boolean withBalance,
                                             Boolean psuAuthenticationRequired, Boolean online) {
-        log.info("do LOA for bank {} {} consent", bankID, optionalConsent.isPresent() ? "with" : "without");
+        log.info("do LOA for bank {} {} consent", bankProfileID, optionalConsent.isPresent() ? "with" : "without");
         UUID serviceSessionID = optionalConsent.map(ConsentEntity::getTppServiceSessionId).orElse(null);
         return tppAisClient.getAccounts(
             tppProperties.getServiceSessionPassword(),
@@ -116,7 +116,7 @@ public class AccountService {
             COMPUTE_X_TIMESTAMP_UTC,
             COMPUTE_X_REQUEST_SIGNATURE,
             COMPUTE_FINTECH_ID,
-            bankID,
+            UUID.fromString(bankProfileID),
             psuAuthenticationRequired,
             serviceSessionID,
             createConsentIfNone,
@@ -124,10 +124,10 @@ public class AccountService {
             online);
     }
 
-    private ResponseEntity consentNotYetAvailable(String bankID, SessionEntity sessionEntity, String redirectCode, UUID xRequestId,
+    private ResponseEntity consentNotYetAvailable(String bankProfileID, SessionEntity sessionEntity, String redirectCode, UUID xRequestId,
                                                   Boolean psuAuthenticationRequired, Optional<ConsentEntity> optionalConsent,
                                                   boolean withBalance, Boolean online, String createConsentIfNone) {
-        log.info("do LOT (instead of loa) for bank {} {} consent", bankID, optionalConsent.isPresent() ? "with" : "without");
+        log.info("do LOT (instead of loa) for bank {} {} consent", bankProfileID, optionalConsent.isPresent() ? "with" : "without");
         UUID serviceSessionID = optionalConsent.map(ConsentEntity::getTppServiceSessionId).orElse(null);
         var response = tppAisClient.getTransactionsWithoutAccountId(
             tppProperties.getServiceSessionPassword(),
@@ -138,7 +138,7 @@ public class AccountService {
             COMPUTE_X_TIMESTAMP_UTC,
             COMPUTE_X_REQUEST_SIGNATURE,
             COMPUTE_FINTECH_ID,
-            bankID,
+            UUID.fromString(bankProfileID),
             psuAuthenticationRequired,
             serviceSessionID,
             createConsentIfNone,
@@ -155,7 +155,7 @@ public class AccountService {
         }
 
         return consentAvailable(
-                bankID,
+                bankProfileID,
                 sessionEntity,
                 redirectCode,
                 UUID.randomUUID(),

@@ -48,10 +48,10 @@ public class FacadeServiceableRequest {
     private final String authorization;
 
     /**
-     * ASPSP ID for this request.
-     * Is {@code de.adorsys.opba.db.domain.entity.Bank} entity ID.
+     * ASPSP profile ID for this request that clearly specifies which protocol is used.
+     * Is {@code de.adorsys.opba.db.domain.entity.BankProfile} entity uuid.
      */
-    private final String bankId;
+    private final UUID bankProfileId;
 
     /**
      * User login within Fintech.

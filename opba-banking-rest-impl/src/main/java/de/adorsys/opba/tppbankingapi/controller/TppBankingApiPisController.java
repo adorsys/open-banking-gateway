@@ -43,7 +43,7 @@ public class TppBankingApiPisController implements TppBankingApiSinglePaymentPis
                                              String xTimestampUTC,
                                              String xRequestSignature,
                                              String fintechID,
-                                             String bankID,
+                                             UUID bankProfileID,
                                              Boolean xPsuAuthenticationRequired
     ) {
         return payments.execute(
@@ -57,7 +57,7 @@ public class TppBankingApiPisController implements TppBankingApiSinglePaymentPis
                                                    .fintechRedirectUrlOk(fintechRedirectURLOK)
                                                    .fintechRedirectUrlNok(fintechRedirectURLNOK)
                                                    .requestId(xRequestID)
-                                                   .bankId(bankID)
+                                                   .bankProfileId(bankProfileID)
                                                    .anonymousPsu(null != xPsuAuthenticationRequired && !xPsuAuthenticationRequired)
                                                    .build()
                         )

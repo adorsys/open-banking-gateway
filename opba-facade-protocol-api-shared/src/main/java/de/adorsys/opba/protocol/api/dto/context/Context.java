@@ -25,9 +25,10 @@ public class Context<REQUEST> {
     private final Long authorizationBankProtocolId;
 
     /**
-     * Bank ID for this request {@code de.adorsys.opba.db.domain.entity.Bank}.
+     * Bank Profile ID for this request {@code de.adorsys.opba.db.domain.entity.BankProfile} (uuid field). Uniquely identifies
+     * available actions for current protocol.
      */
-    private final String bankId;
+    private final UUID bankProfileId;
 
     /**
      * The ID of this session.
@@ -72,9 +73,9 @@ public class Context<REQUEST> {
 
     public String loggableBankId() {
         return String.format(
-                "[protocol id: %s / bank uuid: %s]",
+                "[protocol id: %s / bank profile id: %s]",
                 getServiceBankProtocolId(),
-                getBankId()
+                getBankProfileId()
         );
     }
 }

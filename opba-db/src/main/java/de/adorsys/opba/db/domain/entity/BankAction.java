@@ -36,7 +36,7 @@ public class BankAction {
     private Long id;
 
     @ManyToOne
-    @JoinColumn(name = "bank_uuid", referencedColumnName = "bank_uuid", nullable = false)
+    @JoinColumn(name = "profile_uuid", referencedColumnName = "uuid", nullable = false)
     private BankProfile bankProfile;
 
     @Enumerated(EnumType.STRING)

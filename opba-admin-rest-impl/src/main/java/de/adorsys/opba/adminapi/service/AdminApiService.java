@@ -5,6 +5,7 @@ import de.adorsys.opba.adminapi.model.generated.PageBankData;
 import de.adorsys.opba.db.domain.entity.Bank;
 import de.adorsys.opba.db.domain.entity.BankAction;
 import de.adorsys.opba.db.domain.entity.BankProfile;
+import de.adorsys.opba.db.repository.jpa.BankActionRepository;
 import de.adorsys.opba.db.repository.jpa.BankProfileJpaRepository;
 import de.adorsys.opba.db.repository.jpa.BankRepository;
 import de.adorsys.opba.protocol.api.common.ProtocolAction;
@@ -13,12 +14,10 @@ import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.Delegate;
 import org.jetbrains.annotations.NotNull;
-import org.mapstruct.InheritInverseConfiguration;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.MappingTarget;
 import org.mapstruct.NullValuePropertyMappingStrategy;
-import org.mapstruct.ValueMapping;
 import org.springframework.context.annotation.Profile;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -28,6 +27,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.EntityNotFoundException;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -36,6 +36,7 @@ import java.util.stream.Collectors;
 
 import static de.adorsys.opba.adminapi.config.Const.DISABLED_ON_NO_ADMIN_API;
 import static de.adorsys.opba.restapi.shared.GlobalConst.SPRING_KEYWORD;
+import static java.util.function.Function.identity;
 
 @Profile(DISABLED_ON_NO_ADMIN_API)
 @Service
@@ -44,6 +45,7 @@ public class AdminApiService {
 
     private static final String ADMIN_MAPPERS_PACKAGE = "de.adorsys.opba.adminapi.service.mappers";
 
+    private final BankActionRepository actionRepository;
     private final BankRepository bankRepository;
     private final BankProfileJpaRepository bankProfileJpaRepository;
 
@@ -64,7 +66,7 @@ public class AdminApiService {
 
     @Transactional(readOnly = true)
     public BankData getBankDataByBankId(UUID bankId) {
-        Optional<Bank> bank = bankRepository.findByUuid(bankId.toString());
+        Optional<Bank> bank = bankRepository.findByUuid(bankId);
         return bank.map(this::mapBankAndAddProfile).orElse(null);
     }
 
@@ -76,13 +78,13 @@ public class AdminApiService {
         }
 
         BankDataToMap result = new BankDataToMap();
-        mapped.getBank().setUuid(bankId.toString());
+        mapped.getBank().setUuid(bankId);
         Bank bank = bankRepository.save(mapped.getBank());
         result.setBank(bank);
 
-        if (null != mapped.getProfile()) {
-            BankProfile profile = saveBankProfileAndActions(mapped, bank);
-            result.setProfile(profile);
+        if (null != mapped.getProfiles()) {
+            var profiles = saveBankProfileAndActions(mapped, bank);
+            result.setProfiles(profiles);
         }
 
         return bankMapper.map(result);
@@ -90,42 +92,54 @@ public class AdminApiService {
 
     @Transactional
     public BankData updateBank(UUID bankId, BankData bankData) {
-        Bank bank = bankRepository.findByUuid(bankId.toString()).orElseThrow(() -> new EntityNotFoundException("No bank: " + bankId));
+        Bank bank = bankRepository.findByUuid(bankId).orElseThrow(() -> new EntityNotFoundException("No bank: " + bankId));
         bankMapper.mapToBank(bankData.getBank(), bank);
         bank = bankRepository.save(bank);
 
-        if (null == bankData.getProfile()) {
+        if (null == bankData.getProfiles()) {
             return mapBankAndAddProfile(bank);
         }
 
-        BankProfile profile = bankProfileJpaRepository.findByBankUuid(bankId.toString()).orElseThrow(() -> new EntityNotFoundException("No bank profile: " + bankId));
-        bankMapper.mapToProfile(bankData.getProfile(), profile);
+        var profilesByUuid = bank.getProfiles().stream().collect(Collectors.toMap(BankProfile::getUuid, identity()));
+        bankData.getProfiles().stream().filter(it -> profilesByUuid.containsKey(it.getUuid()))
+                .forEach(profile -> bankMapper.mapToProfile(profile, profilesByUuid.get(profile.getUuid())));
+        bank.getProfiles().clear();
 
-        if (null != bankData.getProfile().getActions()) {
-            profile.getActions().clear();
-            bankProfileJpaRepository.saveAndFlush(profile);
-            profile.getActions().putAll(bankMapper.mapActions(bankData.getProfile().getActions()));
-            profile.getActions().forEach((key, action) -> updateActions(profile, action));
+        for (var profile : bankData.getProfiles()) {
+            var dbProfile = profilesByUuid.remove(profile.getUuid());
+            if (null == dbProfile) {
+                dbProfile = new BankProfile();
+            }
+            bankMapper.mapToProfile(profile, dbProfile);
+            dbProfile.setBank(bank);
+            if (null != profile.getActions()) {
+                dbProfile.getActions().clear();
+                bankProfileJpaRepository.saveAndFlush(dbProfile);
+                dbProfile.getActions().putAll(bankMapper.mapActions(profile.getActions()));
+                BankProfile finalDbProfile = dbProfile;
+                dbProfile.getActions().forEach((key, action) -> updateActions(finalDbProfile, action));
+            }
+
+            bankProfileJpaRepository.save(dbProfile);
         }
-
-        bankProfileJpaRepository.save(profile);
+        bankProfileJpaRepository.deleteAll(profilesByUuid.values());
 
         return mapBankAndAddProfile(bank);
     }
 
     @Transactional
     public void deleteBank(UUID bankId) {
-        Bank bank = bankRepository.findByUuid(bankId.toString()).orElseThrow(() -> new EntityNotFoundException("No bank: " + bankId));
-        bankProfileJpaRepository.findByBankUuid(bank.getUuid()).ifPresent(bankProfileJpaRepository::delete);
+        Bank bank = bankRepository.findByUuid(bankId).orElseThrow(() -> new EntityNotFoundException("No bank: " + bankId));
+        bankProfileJpaRepository.deleteAll(bankProfileJpaRepository.findByBankUuid(bank.getUuid()));
         bankRepository.delete(bank);
     }
 
     @NotNull
-    private BankProfile saveBankProfileAndActions(BankDataToMap mapped, Bank bank) {
-        mapped.getProfile().setBank(bank);
-        mapped.getProfile().getActions().forEach((key, action) -> updateActions(mapped.getProfile(), action));
+    private Collection<BankProfile> saveBankProfileAndActions(BankDataToMap mapped, Bank bank) {
+        mapped.getProfiles().forEach(it -> it.setBank(bank));
+        mapped.getProfiles().forEach(it -> it.getActions().forEach((key, action) -> updateActions(it, action)));
 
-        return bankProfileJpaRepository.save(mapped.getProfile());
+        return bankProfileJpaRepository.saveAll(mapped.getProfiles());
     }
 
     private void updateActions(BankProfile profile, BankAction action) {
@@ -142,8 +156,7 @@ public class AdminApiService {
     @Mapper(
             componentModel = SPRING_KEYWORD,
             nullValuePropertyMappingStrategy = NullValuePropertyMappingStrategy.IGNORE,
-            implementationPackage = ADMIN_MAPPERS_PACKAGE,
-            uses = { ActionEnumMapping.class }
+            implementationPackage = ADMIN_MAPPERS_PACKAGE
     )
     public interface BankMapper {
 
@@ -168,24 +181,11 @@ public class AdminApiService {
         void mapAction(BankAction action, @MappingTarget BankAction targetAction);
     }
 
-    @Mapper(componentModel = SPRING_KEYWORD, implementationPackage = ADMIN_MAPPERS_PACKAGE)
-    public interface ActionEnumMapping {
-
-        @ValueMapping(source = "FROM_ASPSP_REDIRECT", target = "FROM_ASPSP")
-        de.adorsys.opba.adminapi.model.generated.BankAction.ProtocolActionEnum mapAction(ProtocolAction action);
-
-        @ValueMapping(source = "FROM_ASPSP_REDIRECT", target = "FROM_ASPSP")
-        de.adorsys.opba.adminapi.model.generated.BankSubAction.ProtocolActionEnum mapSubAction(ProtocolAction action);
-
-        @InheritInverseConfiguration
-        ProtocolAction mapAction(de.adorsys.opba.adminapi.model.generated.BankAction.ProtocolActionEnum action);
-
-        @InheritInverseConfiguration
-        ProtocolAction mapSubAction(de.adorsys.opba.adminapi.model.generated.BankSubAction.ProtocolActionEnum action);
-    }
-
-    @Mapper(componentModel = SPRING_KEYWORD, implementationPackage = ADMIN_MAPPERS_PACKAGE)
+    @Mapper(componentModel = SPRING_KEYWORD, implementationPackage = ADMIN_MAPPERS_PACKAGE, uses = BankMapper.class)
     public interface PageMapper {
+
+        @Mapping(target = "bank", source = ".")
+        BankData map(Bank bank);
 
         @Mapping(target = "content", ignore = true)
         PageBankDataMappable map(Page<Bank> page);
@@ -195,9 +195,7 @@ public class AdminApiService {
     private BankData mapBankAndAddProfile(Bank bank) {
         BankDataToMap result = new BankDataToMap();
         result.setBank(bank);
-
-        Optional<BankProfile> profile = bankProfileJpaRepository.findByBankUuid(bank.getUuid());
-        profile.ifPresent(result::setProfile);
+        result.setProfiles(bank.getProfiles());
         return bankMapper.map(result);
     }
 
@@ -212,6 +210,6 @@ public class AdminApiService {
     public static class BankDataToMap {
 
         private Bank bank;
-        private BankProfile profile;
+        private Collection<BankProfile> profiles;
     }
 }

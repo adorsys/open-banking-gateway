@@ -32,7 +32,7 @@ public class BaseContext implements RequestScoped, UsesRequestScoped {
     private ContextMode mode;
 
     /**
-     * ASPSP ID (same as XS2A-adapter uses) that define the called bank in xs2a-adapter world.
+     * ASPSP ID (same as XS2A-adapter uses) that define the called <b>bank profile</b> in xs2a-adapter world.
      */
     private String aspspId;
 

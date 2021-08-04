@@ -21,7 +21,7 @@ paths:
         - $ref: "./tpp_banking_api_commons.yml#/components/parameters/X-Request-Signature"
         - $ref: "./tpp_banking_api_commons.yml#/components/parameters/Fintech-ID"
         - $ref: "./tpp_banking_api_commons.yml#/components/parameters/ServiceSessionPassword"
-        - $ref: "./tpp_banking_api_commons.yml#/components/parameters/Bank-ID"
+        - $ref: "./tpp_banking_api_commons.yml#/components/parameters/Bank-Profile-ID"
         - $ref: "./tpp_banking_api_commons.yml#/components/parameters/X-Psu-Authentication-Required"
         - $ref: "./tpp_banking_api_commons.yml#/components/parameters/Fintech-User-ID"
         - $ref: "./tpp_banking_api_commons.yml#/components/parameters/Fintech-Redirect-URL-OK"
@@ -48,7 +48,7 @@ paths:
         - $ref: "./tpp_banking_api_commons.yml#/components/parameters/X-Request-Signature"
         - $ref: "./tpp_banking_api_commons.yml#/components/parameters/Fintech-ID"
         - $ref: "./tpp_banking_api_commons.yml#/components/parameters/ServiceSessionPassword"
-        - $ref: "./tpp_banking_api_commons.yml#/components/parameters/Bank-ID"
+        - $ref: "./tpp_banking_api_commons.yml#/components/parameters/Bank-Profile-ID"
         - $ref: "./tpp_banking_api_commons.yml#/components/parameters/Service-Session-ID"
         - $ref: "./tpp_banking_api_commons.yml#/components/parameters/X-Request-ID"
         #path
@@ -70,7 +70,7 @@ paths:
         - $ref: "./tpp_banking_api_commons.yml#/components/parameters/X-Request-Signature"
         - $ref: "./tpp_banking_api_commons.yml#/components/parameters/Fintech-ID"
         - $ref: "./tpp_banking_api_commons.yml#/components/parameters/ServiceSessionPassword"
-        - $ref: "./tpp_banking_api_commons.yml#/components/parameters/Bank-ID"
+        - $ref: "./tpp_banking_api_commons.yml#/components/parameters/Bank-Profile-ID"
         - $ref: "./tpp_banking_api_commons.yml#/components/parameters/Service-Session-ID"
         - $ref: "./tpp_banking_api_commons.yml#/components/parameters/X-Request-ID"
         #path

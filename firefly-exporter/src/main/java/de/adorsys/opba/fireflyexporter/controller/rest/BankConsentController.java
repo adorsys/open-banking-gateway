@@ -8,6 +8,8 @@ import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.util.UUID;
+
 @RestController
 @RequiredArgsConstructor
 public class BankConsentController {
@@ -15,9 +17,9 @@ public class BankConsentController {
     private final BankConsentRepository bankConsentRepository;
 
     @Transactional
-    @DeleteMapping("/consents/{bankId}")
-    public ResponseEntity<Void> exportableAccounts(@PathVariable String bankId) {
-        bankConsentRepository.deleteAllByBankId(bankId);
+    @DeleteMapping("/consents/{bankProfileId}")
+    public ResponseEntity<Void> exportableAccounts(@PathVariable UUID bankProfileId) {
+        bankConsentRepository.deleteByBankProfileUuid(bankProfileId);
         return ResponseEntity.ok().build();
     }
 }

@@ -5,8 +5,6 @@ export * from './accountReference';
 export * from './accountReport';
 export * from './accountStatus';
 export * from './address';
-export * from './aisAccountAccessInfo';
-export * from './aisConsentRequest';
 export * from './amount';
 export * from './analyticsReportDetails';
 export * from './bankDescriptor';

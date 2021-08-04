@@ -32,7 +32,7 @@ public class AccountExportService {
 
     @Transactional
     @SuppressWarnings("CPD-START") // This is mostly example code how to use an application
-    public ResponseEntity<Long> exportAccounts(String fireFlyToken, String bankId) {
+    public ResponseEntity<Long> exportAccounts(String fireFlyToken, UUID bankProfileId) {
         ResponseEntity<AccountList> accounts = aisApi.getAccounts(
                 bankingConfig.getDataProtectionPassword(),
                 bankingConfig.getUserId(),
@@ -42,16 +42,16 @@ public class AccountExportService {
                 null,
                 null,
                 null,
-                bankId,
+                bankProfileId,
                 null,
-                consentRepository.findFirstByBankIdOrderByModifiedAtDesc(bankId).map(BankConsent::getConsentId).orElse(null),
+                consentRepository.findFirstByBankProfileUuidOrderByModifiedAtDesc(bankProfileId).map(BankConsent::getConsentId).orElse(null),
                 "",
                 true,
                 null
         );
 
         if (accounts.getStatusCode() == HttpStatus.ACCEPTED) {
-            String redirectTo = consentService.createConsentForAccountsAndTransactions(bankId);
+            String redirectTo = consentService.createConsentForAccountsAndTransactions(bankProfileId);
             return ResponseEntity.accepted().header(LOCATION, redirectTo).build();
         }
 

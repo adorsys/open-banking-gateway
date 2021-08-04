@@ -7,7 +7,7 @@ import lombok.experimental.UtilityClass;
 import java.time.Instant;
 import java.util.UUID;
 
-import static de.adorsys.opba.protocol.xs2a.tests.HeaderNames.BANK_ID;
+import static de.adorsys.opba.protocol.xs2a.tests.HeaderNames.BANK_PROFILE_ID;
 import static de.adorsys.opba.protocol.xs2a.tests.HeaderNames.FINTECH_ID;
 import static de.adorsys.opba.protocol.xs2a.tests.HeaderNames.FINTECH_REDIRECT_URL_NOK;
 import static de.adorsys.opba.protocol.xs2a.tests.HeaderNames.FINTECH_REDIRECT_URL_OK;
@@ -53,9 +53,9 @@ public class StagesCommonUtil {
     public static final String PASSWORD = "password";
 
     public static final String DEFAULT_FINTECH_ID = "MY-SUPER-FINTECH-ID";
-    public static final String SANDBOX_BANK_ID = "53c47f54-b9a4-465a-8f77-bc6cd5f0cf46";
-    public static final String HBCI_SANDBOX_BANK_SCA_ID = "125ef2c6-f414-4a10-a865-e3cdddf9753d";
-    public static final String SANDBOX_OAUTH2_INTEGRATED_BANK_ID = "867a53d8-4cca-4365-a393-7febb0bbd38e";
+    public static final String SANDBOX_BANK_PROFILE_ID = "53c47f54-b9a4-465a-8f77-bc6cd5f0cf46";
+    public static final String HBCI_SANDBOX_BANK_PROFILE_SCA_ID = "125ef2c6-f414-4a10-a865-e3cdddf9753d";
+    public static final String SANDBOX_OAUTH2_INTEGRATED_BANK_PROFILE_ID = "867a53d8-4cca-4365-a393-7febb0bbd38e";
     public static final String FINTECH_REDIR_OK = "http://localhost:4444/redirect-after-consent";
     public static final String FINTECH_REDIR_NOK = "http://localhost:4444/redirect-after-consent-denied";
 
@@ -75,11 +75,11 @@ public class StagesCommonUtil {
                        .header(PSU_IP_ADDRESS, IP_ADDRESS);
     }
 
-    public static RequestSpecification withAccountsHeaders(String fintechUserId, String bankId) {
+    public static RequestSpecification withAccountsHeaders(String fintechUserId, String bankProfileId) {
         UUID xRequestId = UUID.randomUUID();
         Instant xTimestampUtc = Instant.now();
 
-        return headersWithoutIpAddress(fintechUserId, bankId, xRequestId, xTimestampUtc)
+        return headersWithoutIpAddress(fintechUserId, bankProfileId, xRequestId, xTimestampUtc)
                 .header(COMPUTE_PSU_IP_ADDRESS, COMPUTE_IP_ADDRESS)
                 .header(PSU_IP_ADDRESS, IP_ADDRESS);
     }
@@ -93,17 +93,17 @@ public class StagesCommonUtil {
     }
 
     public static RequestSpecification withTransactionsHeaders(String fintechUserId) {
-        return withTransactionsHeaders(fintechUserId, SANDBOX_BANK_ID);
+        return withTransactionsHeaders(fintechUserId, SANDBOX_BANK_PROFILE_ID);
     }
 
     public static RequestSpecification withTransactionsHeaders(
             String fintechUserId,
-            String bankId
+            String bankProfileId
     ) {
         UUID xRequestId = UUID.randomUUID();
         Instant xTimestampUtc = Instant.now();
 
-        return headersWithoutIpAddress(fintechUserId, bankId, xRequestId, xTimestampUtc)
+        return headersWithoutIpAddress(fintechUserId, bankProfileId, xRequestId, xTimestampUtc)
                        .header(COMPUTE_PSU_IP_ADDRESS, COMPUTE_IP_ADDRESS)
                        .header(PSU_IP_ADDRESS, IP_ADDRESS);
     }
@@ -128,13 +128,13 @@ public class StagesCommonUtil {
     }
 
     private static RequestSpecification headersWithoutIpAddress(String fintechUserId, UUID xRequestId, Instant xTimestampUtc) {
-        return headersWithoutIpAddress(fintechUserId, SANDBOX_BANK_ID, xRequestId, xTimestampUtc);
+        return headersWithoutIpAddress(fintechUserId, SANDBOX_BANK_PROFILE_ID, xRequestId, xTimestampUtc);
     }
 
-    private static RequestSpecification headersWithoutIpAddress(String fintechUserId, String bankId, UUID xRequestId, Instant xTimestampUtc) {
+    private static RequestSpecification headersWithoutIpAddress(String fintechUserId, String bankProfileId, UUID xRequestId, Instant xTimestampUtc) {
         return RestAssured
             .given()
-                .header(BANK_ID, bankId)
+                .header(BANK_PROFILE_ID, bankProfileId)
                 .header(FINTECH_REDIRECT_URL_OK, FINTECH_REDIR_OK)
                 .header(FINTECH_REDIRECT_URL_NOK, FINTECH_REDIR_NOK)
                 .header(SERVICE_SESSION_PASSWORD, SESSION_PASSWORD)

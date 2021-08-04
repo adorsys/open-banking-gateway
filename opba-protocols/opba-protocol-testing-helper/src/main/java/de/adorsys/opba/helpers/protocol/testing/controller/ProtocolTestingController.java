@@ -77,11 +77,11 @@ public class ProtocolTestingController {
         return bean.execute(supplyServiceContext(sessionId, ctx));
     }
 
-    private <T> Context<T> supplyContext(String bankId, UUID sessionId, T request, String authCtx) {
+    private <T> Context<T> supplyContext(UUID bankProfileId, UUID sessionId, T request, String authCtx) {
         return new Context<>(
                 0L,
                 0L,
-                bankId,
+                bankProfileId,
                 sessionId,
                 sessionId,
                 UUID.randomUUID(),

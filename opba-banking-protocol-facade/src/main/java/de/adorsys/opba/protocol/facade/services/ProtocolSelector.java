@@ -27,7 +27,7 @@ public class ProtocolSelector {
 
         if (null == ctx.getAuthSession()) {
             bankAction = bankActionRepository.findByBankProfileUuidAndAction(
-                    ctx.getServiceCtx().getBankId(),
+                    ctx.getServiceCtx().getBankProfileId(),
                     protocolAction
             );
         } else {

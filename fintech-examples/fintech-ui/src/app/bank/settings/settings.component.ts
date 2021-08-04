@@ -4,8 +4,11 @@ import { Location } from '@angular/common';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { ConsentSettingType, LoARetrievalInformation, LoTRetrievalInformation } from '../../models/consts';
 import { StorageService } from '../../services/storage.service';
-import { AisAccountAccessInfo, AisConsentRequest, FinTechAccountInformationService } from '../../api';
+
 import AllPsd2Enum = AisAccountAccessInfo.AllPsd2Enum;
+import {FinTechAccountInformationService} from "../../api";
+import {AisConsentRequest} from "../../api/model/aisConsentRequest";
+import {AisAccountAccessInfo} from "../../api/model/aisAccountAccessInfo";
 
 @Component({
   selector: 'app-settings',
