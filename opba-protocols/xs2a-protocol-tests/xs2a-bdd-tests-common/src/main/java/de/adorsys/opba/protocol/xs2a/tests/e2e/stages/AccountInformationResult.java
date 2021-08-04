@@ -183,7 +183,7 @@ public class AccountInformationResult<SELF extends AccountInformationResult<SELF
     public SELF open_banking_can_read_max_musterman_account_data_using_consent_bound_to_service_session(
             boolean validateResourceId, int expectedBalances
     ) {
-        return open_banking_can_read_max_musterman_account_data_using_consent_bound_to_service_session(validateResourceId, expectedBalances, true, SANDBOX_BANK_ID);
+        return open_banking_can_read_max_musterman_account_data_using_consent_bound_to_service_session(validateResourceId, expectedBalances, true, SANDBOX_BANK_PROFILE_ID);
     }
 
     @SneakyThrows

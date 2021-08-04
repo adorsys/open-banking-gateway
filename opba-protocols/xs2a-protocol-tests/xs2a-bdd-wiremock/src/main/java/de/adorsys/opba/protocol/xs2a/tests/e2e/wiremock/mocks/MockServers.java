@@ -29,6 +29,7 @@ import java.io.IOException;
 import java.net.URL;
 import java.nio.file.Path;
 import java.util.Arrays;
+import java.util.List;
 import java.util.UUID;
 
 /**
@@ -192,7 +193,6 @@ public class MockServers<SELF extends MockServers<SELF>> extends CommonGivenStag
         WireMockConfiguration config = WireMockConfiguration.options().dynamicPort()
                 .usingFilesUnderClasspath("mockedsandbox/restrecord/embedded/pre-step/accounts/");
         startWireMockForDkb(config);
-
         return self();
     }
 
@@ -290,11 +290,12 @@ public class MockServers<SELF extends MockServers<SELF>> extends CommonGivenStag
     private  void startWireMockForDkb(WireMockConfiguration config) {
         sandbox = new WireMockServer(config);
         sandbox.start();
-        BankProfile dkbBankProfile = bankProfileJpaRepository.findByBankUuid("335562a2-26e2-4105-b31e-08de285234e0").get();
-        dkbBankProfile.setUrl("http://localhost:" + sandbox.port());
-        dkbBankProfile.setIdpUrl("http://localhost:" + sandbox.port());
-        bankProfileJpaRepository.save(dkbBankProfile);
-
+        List<BankProfile> dkbBankProfiles = bankProfileJpaRepository.findByBankUuid(UUID.fromString("335562a2-26e2-4105-b31e-08de285234e0"));
+        dkbBankProfiles.forEach(it -> {
+            it.setUrl("http://localhost:" + sandbox.port());
+            it.setIdpUrl("http://localhost:" + sandbox.port());
+        });
+        bankProfileJpaRepository.saveAll(dkbBankProfiles);
         Assertions.assertThat(sandbox).isNotNull();
         Assertions.assertThat(sandbox.isRunning()).isTrue();
 

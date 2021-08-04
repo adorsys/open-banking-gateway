@@ -64,7 +64,7 @@ public class StagesCommonUtil {
     public static final String MAX_MUSTERMAN = "max.musterman";
     public static final String COMPUTE_IP_ADDRESS = "false";
     public static final String IP_ADDRESS = "1.1.1.1";
-    public static final String DKB_BANK_ID = "335562a2-26e2-4105-b31e-08de285234e0";
+    public static final String DKB_BANK_PROFILE_ID = "83c24dcf-2cfb-4c43-9812-013e32ab53b1";
 
     public static RequestSpecification withAccountsHeaders(String fintechUserId) {
         UUID xRequestId = UUID.randomUUID();
