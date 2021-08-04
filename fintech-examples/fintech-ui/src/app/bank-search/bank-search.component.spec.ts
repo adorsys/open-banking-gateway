@@ -1,15 +1,14 @@
-import { async, ComponentFixture, TestBed } from '@angular/core/testing';
-import { ReactiveFormsModule } from '@angular/forms';
-import { HttpClientTestingModule } from '@angular/common/http/testing';
-import { RouterTestingModule } from '@angular/router/testing';
+import {async, ComponentFixture, TestBed} from '@angular/core/testing';
+import {ReactiveFormsModule} from '@angular/forms';
+import {HttpClientTestingModule} from '@angular/common/http/testing';
+import {RouterTestingModule} from '@angular/router/testing';
 
-import { BankSearchComponent } from './bank-search.component';
-import { SearchComponent } from '../common/search/search.component';
-import { BankDescriptor } from '../api';
-import { BankSearchService } from './services/bank-search.service';
-import { StorageService } from '../services/storage.service';
-import { Router } from '@angular/router';
-import { RoutingPath } from '../models/routing-path.model';
+import {BankSearchComponent, BankSearchInfo} from './bank-search.component';
+import {SearchComponent} from '../common/search/search.component';
+import {BankSearchService} from './services/bank-search.service';
+import {StorageService} from '../services/storage.service';
+import {Router} from '@angular/router';
+import {RoutingPath} from '../models/routing-path.model';
 
 describe('BankSearchComponent', () => {
   let component: BankSearchComponent;
@@ -48,12 +47,7 @@ describe('BankSearchComponent', () => {
   });
 
   it('should call onBankSelect', () => {
-    const mockBank: BankDescriptor = {
-      bankName: 'adorsys',
-      bic: 'DE230334244232322323',
-      bankCode: '12345',
-      uuid: 'xxxxxxxxxx',
-    };
+    const mockBank: BankSearchInfo = new BankSearchInfo("bank1", "123");
 
     const routerSpy = spyOn(router, 'navigate');
     spyOn(component, 'onBankSelect').withArgs(mockBank).and.callThrough();
