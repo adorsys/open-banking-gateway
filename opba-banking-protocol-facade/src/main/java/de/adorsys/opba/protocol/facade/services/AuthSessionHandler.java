@@ -78,9 +78,9 @@ public class AuthSessionHandler {
             FacadeResultRedirectable<O, ?> result
     ) {
         BankAction authAction = bankActionRepository
-                .findByBankProfileUuidAndAction(context.getBankId(), AUTHORIZATION)
+                .findByBankProfileUuidAndAction(context.getBankProfileId(), AUTHORIZATION)
                 .orElseThrow(
-                        () -> new IllegalStateException("Missing update authorization handler for " + context.getBankId())
+                        () -> new IllegalStateException("Missing update authorization handler for " + context.getBankProfileId())
                 );
         Fintech fintech = fintechs.findByGlobalId(request.getAuthorization())
                 .orElseThrow(() -> new IllegalStateException("No registered FinTech: " + request.getAuthorization()));

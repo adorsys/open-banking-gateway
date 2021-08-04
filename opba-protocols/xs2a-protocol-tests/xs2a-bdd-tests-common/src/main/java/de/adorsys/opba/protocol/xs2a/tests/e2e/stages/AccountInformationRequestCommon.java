@@ -34,7 +34,7 @@ import static de.adorsys.opba.protocol.xs2a.tests.e2e.stages.StagesCommonUtil.GE
 import static de.adorsys.opba.protocol.xs2a.tests.e2e.stages.StagesCommonUtil.LOGIN;
 import static de.adorsys.opba.protocol.xs2a.tests.e2e.stages.StagesCommonUtil.MAX_MUSTERMAN;
 import static de.adorsys.opba.protocol.xs2a.tests.e2e.stages.StagesCommonUtil.PASSWORD;
-import static de.adorsys.opba.protocol.xs2a.tests.e2e.stages.StagesCommonUtil.SANDBOX_BANK_ID;
+import static de.adorsys.opba.protocol.xs2a.tests.e2e.stages.StagesCommonUtil.SANDBOX_BANK_PROFILE_ID;
 import static de.adorsys.opba.protocol.xs2a.tests.e2e.stages.StagesCommonUtil.withAccountsHeaders;
 import static de.adorsys.opba.protocol.xs2a.tests.e2e.stages.StagesCommonUtil.withAccountsHeadersMissingIpAddress;
 import static de.adorsys.opba.protocol.xs2a.tests.e2e.stages.StagesCommonUtil.withDefaultHeaders;
@@ -56,24 +56,24 @@ public class AccountInformationRequestCommon<SELF extends AccountInformationRequ
     protected String iban;
 
     public SELF fintech_calls_list_accounts_for_anton_brueckner() {
-        return fintech_calls_list_accounts_for_anton_brueckner(SANDBOX_BANK_ID);
+        return fintech_calls_list_accounts_for_anton_brueckner(SANDBOX_BANK_PROFILE_ID);
     }
 
     public SELF fintech_calls_list_accounts_for_anonymous() {
-        return fintech_calls_list_accounts_for_anton_brueckner(SANDBOX_BANK_ID, false, true);
+        return fintech_calls_list_accounts_for_anton_brueckner(SANDBOX_BANK_PROFILE_ID, false, true);
     }
 
     // Note that anton.brueckner is typically used for REDIRECT (real REDIRECT that is returned by bank, and not REDIRECT approach in table)
-    public SELF fintech_calls_list_accounts_for_anton_brueckner(String bankId) {
-        return fintech_calls_list_accounts_for_anton_brueckner(bankId, false);
+    public SELF fintech_calls_list_accounts_for_anton_brueckner(String bankProfileId) {
+        return fintech_calls_list_accounts_for_anton_brueckner(bankProfileId, false);
     }
 
-    public SELF fintech_calls_list_accounts_for_anton_brueckner(String bankId, boolean online) {
-        return fintech_calls_list_accounts_for_anton_brueckner(bankId, online, false);
+    public SELF fintech_calls_list_accounts_for_anton_brueckner(String bankProfileId, boolean online) {
+        return fintech_calls_list_accounts_for_anton_brueckner(bankProfileId, online, false);
     }
 
-    public SELF fintech_calls_list_accounts_for_anton_brueckner(String bankId, boolean online, boolean anonymous) {
-        ExtractableResponse<Response> response = withAccountsHeaders(ANTON_BRUECKNER, bankId)
+    public SELF fintech_calls_list_accounts_for_anton_brueckner(String bankProfileId, boolean online, boolean anonymous) {
+        ExtractableResponse<Response> response = withAccountsHeaders(ANTON_BRUECKNER, bankProfileId)
                 .header(SERVICE_SESSION_ID, UUID.randomUUID().toString())
                 .header(X_PSU_AUTHENTICATION_REQUIRED, !anonymous)
                 .queryParam(ONLINE, online)
@@ -105,12 +105,12 @@ public class AccountInformationRequestCommon<SELF extends AccountInformationRequ
 
     // Note that max.musterman is typically used for EMBEDDED (real EMBEDDED that is returned by bank, and not EMBEDDED approach in table)
     public SELF fintech_calls_list_accounts_for_max_musterman() {
-        return fintech_calls_list_accounts_for_max_musterman(SANDBOX_BANK_ID);
+        return fintech_calls_list_accounts_for_max_musterman(SANDBOX_BANK_PROFILE_ID);
     }
 
     // Note that max.musterman is typically used for EMBEDDED (real EMBEDDED that is returned by bank, and not EMBEDDED approach in table)
-    public SELF fintech_calls_list_accounts_for_max_musterman(String bankId) {
-        ExtractableResponse<Response> response = withAccountsHeaders(MAX_MUSTERMAN, bankId)
+    public SELF fintech_calls_list_accounts_for_max_musterman(String bankProfileId) {
+        ExtractableResponse<Response> response = withAccountsHeaders(MAX_MUSTERMAN, bankProfileId)
                 .header(SERVICE_SESSION_ID, UUID.randomUUID().toString())
             .when()
                 .get(AIS_ACCOUNTS_ENDPOINT)
@@ -212,15 +212,15 @@ public class AccountInformationRequestCommon<SELF extends AccountInformationRequ
     }
 
     public SELF fintech_calls_list_transactions_for_max_musterman(String resourceId) {
-        return fintech_calls_list_transactions_for_max_musterman(resourceId, SANDBOX_BANK_ID);
+        return fintech_calls_list_transactions_for_max_musterman(resourceId, SANDBOX_BANK_PROFILE_ID);
     }
 
-    public SELF fintech_calls_list_transactions_for_max_musterman(String resourceId, String bankId) {
-        return fintech_calls_list_transactions_for_max_musterman(resourceId, bankId, false);
+    public SELF fintech_calls_list_transactions_for_max_musterman(String resourceId, String bankProfileId) {
+        return fintech_calls_list_transactions_for_max_musterman(resourceId, bankProfileId, false);
     }
 
-    public SELF fintech_calls_list_transactions_for_max_musterman(String resourceId, String bankId, boolean online) {
-        ExtractableResponse<Response> response = withTransactionsHeaders(MAX_MUSTERMAN, bankId)
+    public SELF fintech_calls_list_transactions_for_max_musterman(String resourceId, String bankProfileId, boolean online) {
+        ExtractableResponse<Response> response = withTransactionsHeaders(MAX_MUSTERMAN, bankProfileId)
                 .header(SERVICE_SESSION_ID, UUID.randomUUID().toString())
                 .queryParam(ONLINE, online)
             .when()

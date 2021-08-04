@@ -9,6 +9,7 @@
  * https://openapi-generator.tech
  * Do not edit the class manually.
  */
+import { BankProfile } from './bankProfile';
 
 
 export interface BankDescriptor { 
@@ -16,5 +17,6 @@ export interface BankDescriptor {
     bic?: string;
     bankCode?: string;
     uuid?: string;
+    profiles?: Array<BankProfile>;
 }
 

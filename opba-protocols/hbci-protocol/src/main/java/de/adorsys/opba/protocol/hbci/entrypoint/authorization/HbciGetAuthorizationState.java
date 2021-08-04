@@ -119,7 +119,7 @@ public class HbciGetAuthorizationState implements GetAuthorizationState {
         AuthRequestData authRequestData = AuthRequestData.builder()
                 .aisConsent(ctx instanceof AccountListHbciContext || ctx instanceof TransactionListHbciContext ? aisBodyMapper.map(ctx.getHbciDialogConsent()) : null)
                 .singlePaymentBody(ctx instanceof PaymentHbciContext ? pisBodyMapper.map(((PaymentHbciContext) ctx).getPayment()) : null)
-                .bankName(ctx.getRequestScoped().aspspProfile().getName())
+                .bankName(ctx.getRequestScoped().aspspProfile().getBankName())
                 .fintechName(ctx.getRequestScoped().fintechProfile().getName())
                 .build();
 

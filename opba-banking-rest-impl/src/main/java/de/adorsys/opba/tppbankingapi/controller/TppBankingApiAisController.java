@@ -61,7 +61,7 @@ public class TppBankingApiAisController implements TppBankingApiAccountInformati
         String xTimestampUTC,
         String xRequestSignature,
         String fintechId,
-        String bankID,
+        UUID bankProfileID,
         Boolean xPsuAuthenticationRequired,
         UUID serviceSessionId,
         String createConsentIfNone,
@@ -80,7 +80,7 @@ public class TppBankingApiAisController implements TppBankingApiAccountInformati
                     .fintechRedirectUrlNok(fintechRedirectURLNOK)
                     .serviceSessionId(serviceSessionId)
                     .requestId(xRequestID)
-                    .bankId(bankID)
+                    .bankProfileId(bankProfileID)
                     .anonymousPsu(null != xPsuAuthenticationRequired && !xPsuAuthenticationRequired)
                     .online(online)
                     .build()
@@ -103,7 +103,7 @@ public class TppBankingApiAisController implements TppBankingApiAccountInformati
         String xTimestampUTC,
         String xRequestSignature,
         String fintechId,
-        String bankID,
+        UUID bankProfileID,
         Boolean xPsuAuthenticationRequired,
         UUID serviceSessionId,
         String createConsentIfNone,
@@ -129,7 +129,7 @@ public class TppBankingApiAisController implements TppBankingApiAccountInformati
                     .fintechRedirectUrlNok(fintechRedirectURLNOK)
                     .serviceSessionId(serviceSessionId)
                     .requestId(xRequestID)
-                    .bankId(bankID)
+                    .bankProfileId(bankProfileID)
                     .anonymousPsu(null != xPsuAuthenticationRequired && !xPsuAuthenticationRequired)
                     .online(online)
                     .withAnalytics(analytics)
@@ -159,7 +159,7 @@ public class TppBankingApiAisController implements TppBankingApiAccountInformati
         String xTimestampUTC,
         String xRequestSignature,
         String fintechId,
-        String bankId,
+        UUID bankProfileID,
         Boolean xPsuAuthenticationRequired,
         UUID serviceSessionId,
         String createConsentIfNone,
@@ -183,7 +183,7 @@ public class TppBankingApiAisController implements TppBankingApiAccountInformati
                     .fintechRedirectUrlNok(fintechRedirectURLNOK)
                     .serviceSessionId(serviceSessionId)
                     .requestId(xRequestID)
-                    .bankId(bankId)
+                    .bankProfileId(bankProfileID)
                     .anonymousPsu(null != xPsuAuthenticationRequired && !xPsuAuthenticationRequired)
                     .build()
                 )

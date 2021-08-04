@@ -60,8 +60,8 @@ public class FinTechListTransactionsTest extends FinTechListAccountsTest {
     }
 
     @SneakyThrows
-    List<String> listAmounts(String bankUUID, String accountID) {
-        MvcResult mvcResult = plainListAmounts(bankUUID, accountID);
+    List<String> listAmounts(UUID bankProfileUUID, String accountID) {
+        MvcResult mvcResult = plainListAmounts(bankProfileUUID, accountID);
         assertEquals(HttpStatus.OK.value(), mvcResult.getResponse().getStatus());
 
         List<String> amountList = new ArrayList<>();
@@ -74,9 +74,9 @@ public class FinTechListTransactionsTest extends FinTechListAccountsTest {
         return amountList;
     }
 
-    private MvcResult plainListAmounts(String bankUUID, String accountID) throws Exception {
+    private MvcResult plainListAmounts(UUID bankProfileUUID, String accountID) throws Exception {
         return this.mvc
-                .perform(get(FIN_TECH_LIST_TRANSACTIONS_URL, bankUUID, accountID)
+                .perform(get(FIN_TECH_LIST_TRANSACTIONS_URL, bankProfileUUID, accountID)
                         .header(Consts.HEADER_X_REQUEST_ID, restRequestContext.getRequestId())
                         .header(Consts.HEADER_XSRF_TOKEN, restRequestContext.getXsrfTokenHeaderField())
                         .header("Fintech-Redirect-URL-OK", "ok")

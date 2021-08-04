@@ -68,7 +68,7 @@ public class FintechConsentUiSmokeE2ETest extends SpringScenarioTest<FintechServ
     void testRedirectUserWantsToSeeItsAccountsFromFintech(FirefoxDriver firefoxDriver) {
         given().create_new_user_in_sandbox_tpp_management(username, PIN)
                 .enabled_redirect_sandbox_mode(smokeConfig.getAspspProfileServerUri())
-                .fintech_points_to_fintechui_login_page(smokeConfig.getFintechServerUri());
+                .fintech_points_to_fintech_server(smokeConfig.getFintechServerUri());
 
         when().user_already_login_in_bank_profile(firefoxDriver, username, fintech_login, REDIRECT_MODE, username)
                 .and()
@@ -110,7 +110,7 @@ public class FintechConsentUiSmokeE2ETest extends SpringScenarioTest<FintechServ
     public void testEmbeddedUserWantsItsAccountsFromFintech(FirefoxDriver firefoxDriver) {
         given().create_new_user_in_sandbox_tpp_management(username, PIN)
                 .enabled_embedded_sandbox_mode(smokeConfig.getAspspProfileServerUri())
-                .fintech_points_to_fintechui_login_page(smokeConfig.getFintechServerUri());
+                .fintech_points_to_fintech_server(smokeConfig.getFintechServerUri());
 
         when().user_consent_authorization_in_embedded_mode(firefoxDriver, username, fintech_login, EMBEDDED_MODE, username);
 
@@ -122,7 +122,7 @@ public class FintechConsentUiSmokeE2ETest extends SpringScenarioTest<FintechServ
     void testEmbeddedUserWantsToSeeItsAccountsFromFintech(FirefoxDriver firefoxDriver) {
         given().create_new_user_in_sandbox_tpp_management(username, PIN)
                 .enabled_embedded_sandbox_mode(smokeConfig.getAspspProfileServerUri())
-                .fintech_points_to_fintechui_login_page(smokeConfig.getFintechServerUri());
+                .fintech_points_to_fintech_server(smokeConfig.getFintechServerUri());
         when().user_already_login_in_bank_profile(firefoxDriver, username, fintech_login, EMBEDDED_MODE, username)
                 .and()
                 .user_for_embeeded_provided_to_consent_ui_initial_parameters_to_list_transactions_with_all_accounts_consent(firefoxDriver, username)
@@ -150,7 +150,7 @@ public class FintechConsentUiSmokeE2ETest extends SpringScenarioTest<FintechServ
     public void testUserAfterLoginWantsToLogout(FirefoxDriver firefoxDriver) {
         given().create_new_user_in_sandbox_tpp_management(username, PIN)
                 .enabled_embedded_sandbox_mode(smokeConfig.getAspspProfileServerUri())
-                .fintech_points_to_fintechui_login_page(smokeConfig.getFintechServerUri());
+                .fintech_points_to_fintech_server(smokeConfig.getFintechServerUri());
 
         when().user_opens_fintechui_login_page(firefoxDriver)
                 .and()
@@ -160,7 +160,7 @@ public class FintechConsentUiSmokeE2ETest extends SpringScenarioTest<FintechServ
                 .and()
                 .user_looks_for_a_bank_in_the_bank_search_input_place(firefoxDriver, ADORSYS_XS2A)
                 .and()
-                .user_wait_for_the_result_in_bank_search(firefoxDriver)
+                .user_wait_for_the_result_in_bank_search_and_select(firefoxDriver, REDIRECT_MODE)
                 .and()
                 .user_navigates_to_page(firefoxDriver)
                 .and()
@@ -178,9 +178,9 @@ public class FintechConsentUiSmokeE2ETest extends SpringScenarioTest<FintechServ
     public void testRedirectUserToSeeItsAccountsFromFintech(FirefoxDriver firefoxDriver) {
         given().create_new_user_in_sandbox_tpp_management(username, PIN)
                 .enabled_embedded_sandbox_mode(smokeConfig.getAspspProfileServerUri())
-                .fintech_points_to_fintechui_login_page(smokeConfig.getFintechServerUri());
+                .fintech_points_to_fintech_server(smokeConfig.getFintechServerUri());
 
-        when().user_authorizes_payment_in_redirect_mode(firefoxDriver, username, fintech_login, REDIRECT_MODE, username);
+        when().user_authorizes_payment_in_redirect_mode(firefoxDriver, username, fintech_login, ADORSYS_XS2A, username);
 
         then().fintech_can_read_user_accounts();
     }

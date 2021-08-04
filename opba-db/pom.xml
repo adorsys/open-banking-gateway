@@ -13,6 +13,8 @@
 
     <properties>
         <main.basedir>${project.parent.basedir}</main.basedir>
+
+        <super-csv.version>2.4.0</super-csv.version>
     </properties>
 
     <dependencies>
@@ -92,6 +94,13 @@
             <groupId>org.jetbrains</groupId>
             <artifactId>annotations</artifactId>
             <version>${jetbrains.annotations.version}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>net.sf.supercsv</groupId>
+            <artifactId>super-csv</artifactId>
+            <version>${super-csv.version}</version>
+            <scope>test</scope>
         </dependency>
     </dependencies>
 

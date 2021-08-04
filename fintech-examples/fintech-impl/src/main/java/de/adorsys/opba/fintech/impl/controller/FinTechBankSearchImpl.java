@@ -32,11 +32,11 @@ public class FinTechBankSearchImpl implements FinTechBankSearchApi {
     }
 
     @Override
-    public ResponseEntity<InlineResponse2002> bankProfileGET(UUID xRequestID, String fintechToken, String bankId) {
+    public ResponseEntity<InlineResponse2002> bankProfileGET(UUID xRequestID, String fintechToken, String bankProfileId) {
         if (!sessionLogicService.isSessionAuthorized()) {
             log.warn("bankProfileGET failed: user is not authorized!");
             return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
         }
-        return sessionLogicService.addSessionMaxAgeToHeader(new ResponseEntity<>(bankSearchService.searchBankProfile(bankId), HttpStatus.OK));
+        return sessionLogicService.addSessionMaxAgeToHeader(new ResponseEntity<>(bankSearchService.searchBankProfile(bankProfileId), HttpStatus.OK));
     }
 }

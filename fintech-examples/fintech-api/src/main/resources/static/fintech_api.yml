@@ -211,14 +211,14 @@ paths:
     get:
       tags:
         - FinTechBankSearch
-      summary: Request the profile of the bank identified with id (bankId).
-      description: Request the profile of the bank identified with id (bankId).
+      summary: Request the profile of the bank identified with id (bankProfileId).
+      description: Request the profile of the bank identified with id (bankProfileId).
       operationId: bankProfileGET
       parameters:
         #header
         - $ref: "#/components/parameters/X-Request-ID"
         - $ref: "#/components/parameters/X-XSRF-TOKEN"
-        - name: bankId
+        - name: bankProfileId
           in: query
           description: Identifier of the bank to be loaded.
           required: true
@@ -1144,6 +1144,11 @@ components:
           type: string
         uuid:
           type: string
+          format: uuid
+        profiles:
+          type: array
+          items:
+            $ref: "#/components/schemas/bankProfile"
 
     bankProfile:
       title: Bank Profile
@@ -1153,13 +1158,26 @@ components:
           type: string
         bankName:
           type: string
+        name:
+          type: string
         bic:
           type: string
+        uuid:
+          type: string
+          format: uuid
         services:
           type: array
           items:
             # can be an enum
             type: string
+        externalId:
+          type: string
+        externalInterfaces:
+          type: string
+        protocolType:
+          type: string
+        isSandbox:
+          type: boolean
 
     # Account and transaction information
     accountDetails:

@@ -89,32 +89,32 @@ export class FinTechBankSearchService {
     }
 
     /**
-     * Request the profile of the bank identified with id (bankId).
-     * Request the profile of the bank identified with id (bankId).
+     * Request the profile of the bank identified with id (bankProfileId).
+     * Request the profile of the bank identified with id (bankProfileId).
      * @param xRequestID Unique ID that identifies this request through common workflow. Must be contained in HTTP Response as well. 
      * @param xXSRFTOKEN XSRF parameter used to validate a SessionCookie or RedirectCookie. 
-     * @param bankId Identifier of the bank to be loaded.
+     * @param bankProfileId Identifier of the bank to be loaded.
      * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
      * @param reportProgress flag to report request and response progress.
      */
-    public bankProfileGET(xRequestID: string, xXSRFTOKEN: string, bankId: string, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<InlineResponse2002>;
-    public bankProfileGET(xRequestID: string, xXSRFTOKEN: string, bankId: string, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<HttpResponse<InlineResponse2002>>;
-    public bankProfileGET(xRequestID: string, xXSRFTOKEN: string, bankId: string, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<HttpEvent<InlineResponse2002>>;
-    public bankProfileGET(xRequestID: string, xXSRFTOKEN: string, bankId: string, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: 'application/json'}): Observable<any> {
+    public bankProfileGET(xRequestID: string, xXSRFTOKEN: string, bankProfileId: string, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<InlineResponse2002>;
+    public bankProfileGET(xRequestID: string, xXSRFTOKEN: string, bankProfileId: string, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<HttpResponse<InlineResponse2002>>;
+    public bankProfileGET(xRequestID: string, xXSRFTOKEN: string, bankProfileId: string, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<HttpEvent<InlineResponse2002>>;
+    public bankProfileGET(xRequestID: string, xXSRFTOKEN: string, bankProfileId: string, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: 'application/json'}): Observable<any> {
         if (xRequestID === null || xRequestID === undefined) {
             throw new Error('Required parameter xRequestID was null or undefined when calling bankProfileGET.');
         }
         if (xXSRFTOKEN === null || xXSRFTOKEN === undefined) {
             throw new Error('Required parameter xXSRFTOKEN was null or undefined when calling bankProfileGET.');
         }
-        if (bankId === null || bankId === undefined) {
-            throw new Error('Required parameter bankId was null or undefined when calling bankProfileGET.');
+        if (bankProfileId === null || bankProfileId === undefined) {
+            throw new Error('Required parameter bankProfileId was null or undefined when calling bankProfileGET.');
         }
 
         let queryParameters = new HttpParams({encoder: this.encoder});
-        if (bankId !== undefined && bankId !== null) {
+        if (bankProfileId !== undefined && bankProfileId !== null) {
           queryParameters = this.addToHttpParams(queryParameters,
-            <any>bankId, 'bankId');
+            <any>bankProfileId, 'bankProfileId');
         }
 
         let headers = this.defaultHeaders;

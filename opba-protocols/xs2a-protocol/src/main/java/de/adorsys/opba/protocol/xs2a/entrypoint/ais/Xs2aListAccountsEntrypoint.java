@@ -81,7 +81,7 @@ public class Xs2aListAccountsEntrypoint implements ListAccounts {
     @Mapper(componentModel = SPRING_KEYWORD, uses = Xs2aUuidMapper.class, implementationPackage = XS2A_MAPPERS_PACKAGE)
     public interface FromRequest extends DtoMapper<ListAccountsRequest, AccountListXs2aContext> {
 
-        @Mapping(source = "facadeServiceable.bankId", target = "aspspId")
+        @Mapping(source = "facadeServiceable.bankProfileId", target = "aspspId")
         @Mapping(source = "facadeServiceable.requestId", target = "requestId")
         @Mapping(source = "facadeServiceable.uaContext.psuIpAddress", target = "psuIpAddress")
         @Mapping(source = "facadeServiceable.fintechRedirectUrlOk", target = "fintechRedirectUriOk")

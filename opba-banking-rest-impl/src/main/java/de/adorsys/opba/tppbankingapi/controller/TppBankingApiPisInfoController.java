@@ -42,13 +42,13 @@ public class TppBankingApiPisInfoController implements TppBankingApiPaymentStatu
                                                    String xTimestampUTC,
                                                    String xRequestSignature,
                                                    String fintechID,
-                                                   String bankID,
+                                                   UUID bankProfileID,
                                                    UUID serviceSessionID) {
         return paymentInfoService.execute(
                 PaymentInfoRequest.builder()
                         .facadeServiceable(FacadeServiceableRequest.builder()
                                 .requestId(xRequestID)
-                                .bankId(bankID)
+                                .bankProfileId(bankProfileID)
                                 .sessionPassword(serviceSessionPassword)
                                 .authorization(fintechID)
                                 .serviceSessionId(serviceSessionID)
@@ -67,13 +67,13 @@ public class TppBankingApiPisInfoController implements TppBankingApiPaymentStatu
                                                         String xTimestampUTC,
                                                         String xRequestSignature,
                                                         String fintechID,
-                                                        String bankID,
+                                                        UUID bankProfileID,
                                                         UUID serviceSessionID) {
         return paymentStatusService.execute(
                 PaymentStatusRequest.builder()
                         .facadeServiceable(FacadeServiceableRequest.builder()
                                 .requestId(xRequestID)
-                                .bankId(bankID)
+                                .bankProfileId(bankProfileID)
                                 .sessionPassword(serviceSessionPassword)
                                 .authorization(fintechID)
                                 .serviceSessionId(serviceSessionID)

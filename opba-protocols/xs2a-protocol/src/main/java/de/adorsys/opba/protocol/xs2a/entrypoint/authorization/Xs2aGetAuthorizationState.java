@@ -118,7 +118,7 @@ public class Xs2aGetAuthorizationState implements GetAuthorizationState {
         AuthRequestData authRequestData = AuthRequestData.builder()
                 .aisConsent(ctx instanceof Xs2aAisContext ? aisBodyMapper.map(((Xs2aAisContext) ctx).getAisConsent()) : null)
                 .singlePaymentBody(ctx instanceof Xs2aPisContext ? pisBodyMapper.map(((Xs2aPisContext) ctx).getPayment()) : null)
-                .bankName(ctx.getRequestScoped().aspspProfile().getName())
+                .bankName(ctx.getRequestScoped().aspspProfile().getBankName())
                 .fintechName(ctx.getRequestScoped().fintechProfile().getName())
                 .build();
 

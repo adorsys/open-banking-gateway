@@ -1,0 +1,9 @@
+{
+  "profiles": [],
+  "bank": {
+    "uuid": "adadadad-1000-0000-0000-b0b0b0b0b0b0",
+    "name": "adorsys HBCI no SCA-222",
+    "bic": "ADORSYS+HA",
+    "bankCode": "10000001"
+  }
+}

@@ -26,7 +26,7 @@ import static de.adorsys.opba.protocol.xs2a.tests.e2e.stages.RequestCommon.REDIR
 import static de.adorsys.opba.protocol.xs2a.tests.e2e.stages.StagesCommonUtil.CONFIRM_PAYMENT_ENDPOINT;
 import static de.adorsys.opba.protocol.xs2a.tests.e2e.stages.StagesCommonUtil.PIS_PAYMENT_INFORMATION_ENDPOINT;
 import static de.adorsys.opba.protocol.xs2a.tests.e2e.stages.StagesCommonUtil.PIS_PAYMENT_STATUS_ENDPOINT;
-import static de.adorsys.opba.protocol.xs2a.tests.e2e.stages.StagesCommonUtil.SANDBOX_BANK_ID;
+import static de.adorsys.opba.protocol.xs2a.tests.e2e.stages.StagesCommonUtil.SANDBOX_BANK_PROFILE_ID;
 import static de.adorsys.opba.protocol.xs2a.tests.e2e.stages.StagesCommonUtil.SESSION_PASSWORD;
 import static de.adorsys.opba.protocol.xs2a.tests.e2e.stages.StagesCommonUtil.withSignatureHeaders;
 import static de.adorsys.opba.restapi.shared.HttpHeaders.SERVICE_SESSION_ID;
@@ -152,8 +152,8 @@ public class PaymentResult<SELF extends PaymentResult<SELF>> extends Stage<SELF>
         return self();
     }
 
-    public SELF fintech_calls_payment_information_hbci(String iban, String bankId, String expectedStatus) {
-        ExtractableResponse<Response> response = withPaymentInfoHeaders(UUID.randomUUID().toString(), bankId)
+    public SELF fintech_calls_payment_information_hbci(String iban, String bankProfileId, String expectedStatus) {
+        ExtractableResponse<Response> response = withPaymentInfoHeaders(UUID.randomUUID().toString(), bankProfileId)
                 .header(SERVICE_SESSION_ID, paymentServiceSessionId)
             .when()
                 .get(PIS_PAYMENT_INFORMATION_ENDPOINT, PaymentProduct.SEPA_CREDIT_TRANSFERS.toString())
@@ -182,11 +182,11 @@ public class PaymentResult<SELF extends PaymentResult<SELF>> extends Stage<SELF>
     }
 
     public SELF fintech_calls_payment_status() {
-        return fintech_calls_payment_status(SANDBOX_BANK_ID, TransactionStatus.ACSP.name());
+        return fintech_calls_payment_status(SANDBOX_BANK_PROFILE_ID, TransactionStatus.ACSP.name());
     }
 
-    public SELF fintech_calls_payment_status(String bankId, String expectedStatus, String serviceSessionId) {
-        ExtractableResponse<Response> response = withPaymentInfoHeaders(UUID.randomUUID().toString(), bankId)
+    public SELF fintech_calls_payment_status(String bankProfileId, String expectedStatus, String serviceSessionId) {
+        ExtractableResponse<Response> response = withPaymentInfoHeaders(UUID.randomUUID().toString(), bankProfileId)
                 .header(SERVICE_SESSION_ID, serviceSessionId)
             .when()
                 .get(PIS_PAYMENT_STATUS_ENDPOINT, PaymentProduct.SEPA_CREDIT_TRANSFERS.toString())
@@ -198,8 +198,8 @@ public class PaymentResult<SELF extends PaymentResult<SELF>> extends Stage<SELF>
         return self();
     }
 
-    public SELF fintech_calls_payment_status(String bankId, String expectedStatus) {
-        return fintech_calls_payment_status(bankId, expectedStatus, paymentServiceSessionId);
+    public SELF fintech_calls_payment_status(String bankProfileId, String expectedStatus) {
+        return fintech_calls_payment_status(bankProfileId, expectedStatus, paymentServiceSessionId);
     }
 
     public SELF fintech_calls_payment_activation_for_current_authorization_id(String serviceSessionId) {

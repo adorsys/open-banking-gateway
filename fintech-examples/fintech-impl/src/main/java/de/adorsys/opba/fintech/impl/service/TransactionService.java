@@ -45,7 +45,7 @@ public class TransactionService {
 
     @SuppressWarnings("checkstyle:MethodLength") //  FIXME - It is just too many lines of text
     @SneakyThrows
-    public ResponseEntity listTransactions(SessionEntity sessionEntity, String fintechOkUrl, String fintechNOkUrl, String bankId,
+    public ResponseEntity listTransactions(SessionEntity sessionEntity, String fintechOkUrl, String fintechNOkUrl, String bankProfileID,
                                            String accountId, String createConsentIfNone, LocalDate dateFrom, LocalDate dateTo, String entryReferenceFrom,
                                            String bookingStatus, Boolean deltaList, LoTRetrievalInformation loTRetrievalInformation,
                                            Boolean psuAuthenticationRequired, Boolean online) {
@@ -54,14 +54,14 @@ public class TransactionService {
         Optional<ConsentEntity> optionalConsent = Optional.empty();
         if (loTRetrievalInformation.equals(LoTRetrievalInformation.FROM_TPP_WITH_AVAILABLE_CONSENT)) {
             optionalConsent = consentRepository.findFirstByUserEntityAndBankIdAndConsentTypeAndConsentConfirmedOrderByCreationTimeDesc(sessionEntity.getUserEntity(),
-                bankId, ConsentType.AIS, Boolean.TRUE);
+                bankProfileID, ConsentType.AIS, Boolean.TRUE);
         }
         if (optionalConsent.isPresent()) {
             log.info("LoT found valid {} consent for user {} bank {} from {}",
                 optionalConsent.get().getConsentType(), optionalConsent.get().getUserEntity().getLoginUserName(),
                 optionalConsent.get().getBankId(), optionalConsent.get().getCreationTime());
         } else {
-            log.info("LoT no valid ais consent for user {} bank {} available", sessionEntity.getUserEntity().getLoginUserName(), bankId);
+            log.info("LoT no valid ais consent for user {} bank {} available", sessionEntity.getUserEntity().getLoginUserName(), bankProfileID);
         }
         ResponseEntity<TransactionsResponse> transactions = tppAisClient.getTransactions(
             accountId, tppProperties.getServiceSessionPassword(),
@@ -72,7 +72,7 @@ public class TransactionService {
             COMPUTE_X_TIMESTAMP_UTC,
             COMPUTE_X_REQUEST_SIGNATURE,
             COMPUTE_FINTECH_ID,
-            bankId,
+            UUID.fromString(bankProfileID),
             psuAuthenticationRequired,
             optionalConsent.map(ConsentEntity::getTppServiceSessionId).orElse(null),
             createConsentIfNone,
@@ -92,7 +92,7 @@ public class TransactionService {
             case ACCEPTED:
                 log.info("create redirect entity for lot for redirectcode {}", fintechRedirectCode);
                 redirectHandlerService.registerRedirectStateForSession(fintechRedirectCode, fintechOkUrl, fintechNOkUrl);
-                return handleAcceptedService.handleAccepted(consentRepository, ConsentType.AIS, bankId, fintechRedirectCode, sessionEntity, transactions.getHeaders());
+                return handleAcceptedService.handleAccepted(consentRepository, ConsentType.AIS, bankProfileID, fintechRedirectCode, sessionEntity, transactions.getHeaders());
             case UNAUTHORIZED:
                 return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
             default:

@@ -84,7 +84,7 @@ public class Xs2aListTransactionsEntrypoint implements ListTransactions {
 
         @Mapping(source = "accountId", target = "resourceId")
         @Mapping(source = "facadeServiceable.requestId", target = "requestId")
-        @Mapping(source = "facadeServiceable.bankId", target = "aspspId")
+        @Mapping(source = "facadeServiceable.bankProfileId", target = "aspspId")
         @Mapping(source = "facadeServiceable.uaContext.psuIpAddress", target = "psuIpAddress")
         @Mapping(source = "facadeServiceable.fintechRedirectUrlOk", target = "fintechRedirectUriOk")
         @Mapping(source = "facadeServiceable.fintechRedirectUrlNok", target = "fintechRedirectUriNok")

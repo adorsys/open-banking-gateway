@@ -167,6 +167,7 @@ components:
           format: int64
         uuid:
           type: string
+          format: uuid
         name:
           type: string
         bic:
@@ -188,7 +189,7 @@ components:
             - get-authorization-state
             - update-authorization
             - deny-authorization
-            - from-aspsp
+            - from-aspsp-redirect
             - single-payment
             - get-payment-status
             - get-payment-information
@@ -205,8 +206,10 @@ components:
       properties:
         bank:
           $ref: '#/components/schemas/Bank'
-        profile:
-          $ref: '#/components/schemas/BankProfile'
+        profiles:
+          type: array
+          items:
+            $ref: '#/components/schemas/BankProfile'
     BankProfile:
       type: object
       properties:
@@ -215,6 +218,9 @@ components:
           format: int64
         url:
           type: string
+        uuid:
+          type: string
+          format: uuid
         adapterId:
           type: string
         idpUrl:
@@ -269,7 +275,7 @@ components:
             - get-authorization-state
             - update-authorization
             - deny-authorization
-            - from-aspsp
+            - from-aspsp-redirect
             - single-payment
             - get-payment-status
             - get-payment-information
