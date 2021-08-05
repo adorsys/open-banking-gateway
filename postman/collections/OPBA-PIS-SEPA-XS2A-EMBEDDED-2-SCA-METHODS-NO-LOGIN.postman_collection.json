@@ -1,6 +1,6 @@
 {
 	"info": {
-		"_postman_id": "b2122a02-2131-40f5-960a-1c04a36831d9",
+		"_postman_id": "b9c37c5f-d906-4984-befd-10a7eb6559f2",
 		"name": "OPBA-PIS-SEPA-XS2A-EMBEDDED-2-SCA-METHODS-NO-LOGIN",
 		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
 	},
@@ -16,7 +16,7 @@
 							"    pm.response.to.have.status(200)",
 							"})",
 							"",
-							"pm.environment.set(\"bank-id\", pm.response.json().bankDescriptor[0].uuid)"
+							"pm.environment.set(\"bank-profile-id\", pm.response.json().bankDescriptor[0].profiles.filter(it => it.name == 'embedded')[0].uuid)"
 						],
 						"type": "text/javascript"
 					}
@@ -42,7 +42,7 @@
 					}
 				],
 				"url": {
-					"raw": "{{opba-base}}/v1/banking/search/bank-search?keyword=adorsys%20embedded",
+					"raw": "{{opba-base}}/v1/banking/search/bank-search?keyword=adorsys%20xs2a",
 					"host": [
 						"{{opba-base}}"
 					],
@@ -55,7 +55,7 @@
 					"query": [
 						{
 							"key": "keyword",
-							"value": "adorsys%20embedded"
+							"value": "adorsys%20xs2a"
 						}
 					]
 				}
@@ -131,8 +131,8 @@
 						"type": "text"
 					},
 					{
-						"key": "Bank-ID",
-						"value": "{{bank-id}}",
+						"key": "Bank-Profile-ID",
+						"value": "{{bank-profile-id}}",
 						"type": "text"
 					},
 					{
@@ -156,7 +156,7 @@
 					}
 				},
 				"url": {
-					"raw": "{{opba-base}}/v1/banking/pis/payments/instant-sepa-credit-transfers",
+					"raw": "{{opba-base}}/v1/banking/pis/payments/sepa-credit-transfers",
 					"host": [
 						"{{opba-base}}"
 					],
@@ -165,7 +165,7 @@
 						"banking",
 						"pis",
 						"payments",
-						"instant-sepa-credit-transfers"
+						"sepa-credit-transfers"
 					]
 				}
 			},
@@ -182,7 +182,10 @@
 							"    pm.response.to.have.status(202)",
 							"})",
 							"",
-							"pm.environment.set(\"session-cookie\", pm.response.headers.get('Set-Cookie'))"
+							"// Unfortunately pm.response.cookies is empty, so parsing manually - getting 'Authorization-Session-Key cookie' value",
+							"var cookie = pm.response.headers.filter(it => it.key == 'set-cookie' && it.value.startsWith('Authorization-Session-Key'))[0].value.split(';')[0];",
+							"",
+							"pm.environment.set(\"session-cookie\", cookie)"
 						],
 						"type": "text/javascript"
 					}
@@ -452,7 +455,7 @@
 					"script": {
 						"exec": [
 							"pm.test('Success', function() {",
-							"    pm.response.to.have.status(202)",
+							"    pm.response.to.have.status(200)",
 							"})",
 							"",
 							"pm.environment.set(\"sca-challenge-id\", pm.response.json().scaMethods[0].id)",
@@ -660,7 +663,7 @@
 					"script": {
 						"exec": [
 							"pm.test('Success', function() {",
-							"    pm.response.to.have.status(202)",
+							"    pm.response.to.have.status(200)",
 							"})",
 							"",
 							"pm.environment.set(\"redirect-code\", pm.response.headers.get('X-XSRF-TOKEN'))"
@@ -775,7 +778,7 @@
 						"exec": [
 							"pm.test('Success', function() {",
 							"    pm.response.to.have.status(200)",
-							"    pm.expect(pm.response.json().transactionStatus).to.not.empty();",
+							"    pm.expect(pm.response.json().transactionStatus).to.eql('ACSP');",
 							"})"
 						],
 						"type": "text/javascript"
@@ -826,8 +829,8 @@
 						"type": "text"
 					},
 					{
-						"key": "Bank-ID",
-						"value": "{{bank-id}}",
+						"key": "Bank-Profile-ID",
+						"value": "{{bank-profile-id}}",
 						"type": "text"
 					}
 				],

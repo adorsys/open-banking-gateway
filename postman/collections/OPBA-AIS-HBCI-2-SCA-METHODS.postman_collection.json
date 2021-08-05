@@ -1,6 +1,6 @@
 {
 	"info": {
-		"_postman_id": "99b1f578-953f-4d12-b527-f0059509a77c",
+		"_postman_id": "5d332e32-f05e-4031-98e2-dfee040349d7",
 		"name": "OPBA-AIS-HBCI-2-SCA-METHODS",
 		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
 	},
@@ -16,7 +16,7 @@
 							"    pm.response.to.have.status(200)",
 							"})",
 							"",
-							"pm.environment.set(\"bank-id\", pm.response.json().bankDescriptor[0].uuid)"
+							"pm.environment.set(\"bank-profile-id\", pm.response.json().bankDescriptor[0].profiles[0].uuid)"
 						],
 						"type": "text/javascript"
 					}
@@ -131,8 +131,8 @@
 						"type": "text"
 					},
 					{
-						"key": "Bank-ID",
-						"value": "{{bank-id}}",
+						"key": "Bank-Profile-ID",
+						"value": "{{bank-profile-id}}",
 						"type": "text"
 					},
 					{
@@ -214,7 +214,10 @@
 							"    pm.response.to.have.status(202)",
 							"})",
 							"",
-							"pm.environment.set(\"session-cookie\", pm.response.headers.get('Set-Cookie'))"
+							"// Unfortunately pm.response.cookies is empty, so parsing manually - getting 'Authorization-Session-Key cookie' value",
+							"var cookie = pm.response.headers.filter(it => it.key == 'set-cookie' && it.value.startsWith('Authorization-Session-Key'))[0].value.split(';')[0];",
+							"",
+							"pm.environment.set(\"session-cookie\", cookie)"
 						],
 						"type": "text/javascript"
 					}
@@ -277,7 +280,7 @@
 					"script": {
 						"exec": [
 							"pm.test('Success', function() {",
-							"    pm.response.to.have.status(202)",
+							"    pm.response.to.have.status(200)",
 							"})",
 							"",
 							"pm.environment.set(\"redirect-code\", pm.response.headers.get('X-XSRF-TOKEN'))"
@@ -484,7 +487,7 @@
 					"script": {
 						"exec": [
 							"pm.test('Success', function() {",
-							"    pm.response.to.have.status(202)",
+							"    pm.response.to.have.status(200)",
 							"})",
 							"",
 							"pm.environment.set(\"sca-challenge-id\", pm.response.json().scaMethods[0].id)",
@@ -616,7 +619,7 @@
 					"script": {
 						"exec": [
 							"pm.test('Success', function() {",
-							"    pm.response.to.have.status(202)",
+							"    pm.response.to.have.status(200)",
 							"})",
 							"",
 							"pm.environment.set(\"redirect-code\", pm.response.headers.get('X-XSRF-TOKEN'))"
@@ -731,7 +734,7 @@
 						"exec": [
 							"pm.test('Success', function() {",
 							"    pm.response.to.have.status(200)",
-							"    pm.expect(pm.response.json().accounts[0].iban).to.eql(DE38760700240320465700);",
+							"    pm.expect(pm.response.json().accounts[0].iban).to.eql('DE59300000033466865655');",
 							"})",
 							"",
 							"pm.environment.set(\"resource-id\", pm.response.json().accounts[0].resourceId)"
@@ -945,7 +948,10 @@
 							"    pm.response.to.have.status(202)",
 							"})",
 							"",
-							"pm.environment.set(\"session-cookie\", pm.response.headers.get('Set-Cookie'))"
+							"// Unfortunately pm.response.cookies is empty, so parsing manually",
+							"var cookie = pm.response.headers.filter(it => it.key == 'set-cookie' && it.value.startsWith('Authorization-Session-Key'))[0].value.split(';')[0];",
+							"",
+							"pm.environment.set(\"session-cookie\", cookie)"
 						],
 						"type": "text/javascript"
 					}
@@ -1008,7 +1014,7 @@
 					"script": {
 						"exec": [
 							"pm.test('Success', function() {",
-							"    pm.response.to.have.status(202)",
+							"    pm.response.to.have.status(200)",
 							"})",
 							"",
 							"pm.environment.set(\"redirect-code\", pm.response.headers.get('X-XSRF-TOKEN'))"
@@ -1215,7 +1221,7 @@
 					"script": {
 						"exec": [
 							"pm.test('Success', function() {",
-							"    pm.response.to.have.status(202)",
+							"    pm.response.to.have.status(200)",
 							"})",
 							"",
 							"pm.environment.set(\"sca-challenge-id\", pm.response.json().scaMethods[0].id)",
@@ -1423,7 +1429,7 @@
 					"script": {
 						"exec": [
 							"pm.test('Success', function() {",
-							"    pm.response.to.have.status(202)",
+							"    pm.response.to.have.status(200)",
 							"})",
 							"",
 							"pm.environment.set(\"redirect-code\", pm.response.headers.get('X-XSRF-TOKEN'))"
