@@ -63,7 +63,7 @@
                 catalogName=""
                 tableName="${table-prefix}bank_action">
             <column header="id"                 name="id"                   type="NUMERIC"/>
-            <column header="bank_uuid"          name="bank_uuid"            type="STRING"/>
+            <column header="profile_uuid"       name="profile_uuid"         type="UUID"/>
             <column header="protocol_action"    name="protocol_action"      type="STRING"/>
             <column header="protocol_bean_name" name="protocol_bean_name"   type="STRING"/>
             <column header="consent_supported"  name="consent_supported"    type="BOOLEAN"/>
