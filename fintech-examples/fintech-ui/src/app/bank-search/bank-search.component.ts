@@ -29,7 +29,7 @@ export class BankSearchComponent {
       this.bankSearchService.searchBanks(keyword).subscribe((bankDescriptor) => {
         this.searchedBanks = [];
         for (const descriptor of bankDescriptor.bankDescriptor) {
-          this.searchedBanks.push(...descriptor.profiles.map(it => new BankSearchInfo(`[${it.protocolType}${null === it.name ? '' : ',' + it.name}] ${it.bankName}`, it.uuid)))
+          this.searchedBanks.push(...descriptor.profiles?.map(it => new BankSearchInfo(`[${it.protocolType}${null === it.name ? '' : ',' + it.name}] ${it.bankName}`, it.uuid)))
         }
       });
     } else {
