@@ -45,7 +45,7 @@ public class Xs2aConsentInfo {
      * Is the current consent in OAUTH-Pre-step (authentication) mode.
      */
     public boolean isOauth2AuthenticationPreStep(Xs2aContext ctx) {
-        return ctx.isOauth2PreStepNeeded() || ctx.isEmbeddedPreAuthNeeded();
+        return ctx.isOauth2PreStepNeeded() || ctx.isEmbeddedPreAuthNeeded() || isOauth2TokenAvailableAndReadyToUse(ctx);
     }
 
     /**

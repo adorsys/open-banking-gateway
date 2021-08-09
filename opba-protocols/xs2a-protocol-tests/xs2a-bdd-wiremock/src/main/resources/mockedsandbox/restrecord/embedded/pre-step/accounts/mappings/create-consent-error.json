@@ -1,7 +1,7 @@
 {
   "scenarioName": "AccountsListUsingDkbEmbeddedPreStep",
   "requiredScenarioState": "Started",
-  "newScenarioState": "create_consent",
+  "newScenarioState": "CreateConsent",
   "request": {
     "url": "/v1/consents",
     "method": "POST",

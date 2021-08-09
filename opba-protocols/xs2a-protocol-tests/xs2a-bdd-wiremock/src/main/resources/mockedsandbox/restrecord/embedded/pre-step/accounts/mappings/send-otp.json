@@ -1,7 +1,7 @@
 {
   "scenarioName": "AccountsListUsingDkbEmbeddedPreStep",
-  "requiredScenarioState": "sca_method_selected",
-  "newScenarioState": "otp_sent",
+  "requiredScenarioState": "ScaMethodSelected",
+  "newScenarioState": "OtpSent",
   "priority": 6,
   "request" : {
     "urlPattern" : ".*/v1/consents/VALID_CONSENT_ID/authorisations/.+",

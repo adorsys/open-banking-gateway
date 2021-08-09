@@ -287,7 +287,7 @@ public class MockServers<SELF extends MockServers<SELF>> extends CommonGivenStag
 
     }
     @SneakyThrows
-    private  void startWireMockForDkb(WireMockConfiguration config) {
+    private void startWireMockForDkb(WireMockConfiguration config) {
         sandbox = new WireMockServer(config);
         sandbox.start();
         List<BankProfile> dkbBankProfiles = bankProfileJpaRepository.findByBankUuid(UUID.fromString("335562a2-26e2-4105-b31e-08de285234e0"));
@@ -298,8 +298,8 @@ public class MockServers<SELF extends MockServers<SELF>> extends CommonGivenStag
         bankProfileJpaRepository.saveAll(dkbBankProfiles);
         Assertions.assertThat(sandbox).isNotNull();
         Assertions.assertThat(sandbox.isRunning()).isTrue();
-
     }
+
     public SELF ignore_validation_rules_table_contains_field_psu_id() {
         IgnoreValidationRule bankValidationRule = IgnoreValidationRule.builder()
                 .action(BankAction.builder().id(ACTION_ID).build())

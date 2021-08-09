@@ -1,7 +1,7 @@
 {
   "scenarioName": "AccountsListUsingDkbEmbeddedPreStep",
-  "requiredScenarioState": "create_consent",
-  "newScenarioState": "psu_authorisation_started",
+  "requiredScenarioState": "CreateConsent",
+  "newScenarioState": "PsuAuthorisationStarted",
   "priority": 5,
   "request" : {
     "url": "/v1/consents/VALID_CONSENT_ID/authorisations",

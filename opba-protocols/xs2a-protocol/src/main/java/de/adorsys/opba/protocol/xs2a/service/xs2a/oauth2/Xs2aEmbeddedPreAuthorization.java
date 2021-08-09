@@ -28,7 +28,7 @@ import de.adorsys.opba.protocol.xs2a.service.mapper.HeadersBodyMapperTemplate;
 import static de.adorsys.opba.protocol.xs2a.constant.GlobalConst.SPRING_KEYWORD;
 
 @Slf4j
-@Service("xs2aEmbeddedPreAuthorization")
+@Service("xs2aEmbeddedExchangePasswordToToken")
 @RequiredArgsConstructor
 public class Xs2aEmbeddedPreAuthorization extends ValidatedExecution<Xs2aContext> {
 
@@ -62,7 +62,6 @@ public class Xs2aEmbeddedPreAuthorization extends ValidatedExecution<Xs2aContext
     }
 
     private void getOauthEmbeddedTokenWithPassword(DelegateExecution execution, CurrentBankProfile config, ValidatedHeadersBody<Xs2aOauth2Headers, EmbeddedPreAuthorisationRequest> validated) {
-
         TokenResponse response = this.embeddedPreAuthorisationService.getToken(validated.getBody(), validated.getHeaders().toHeaders());
         if (response.getTokenType() == null) {
             response.setTokenType(GlobalConst.BEARER_TOKEN_TYPE);

@@ -93,9 +93,6 @@
     </sequenceFlow>
     <serviceTask id="notifyUserWithRedirectAfterCreate" name="Notify user with redirect url for challenge. Suspends to wait" flowable:async="true" flowable:exclusive="true" flowable:delegateExpression="${xs2aDoScaRedirectToAspspForScaChallengeAfterCreate}" flowable:triggerable="true"/>
     <sequenceFlow id="sid-48bcf86b-005c-4040-b488-687437c96a38" sourceRef="notifyUserWithRedirectAfterCreate" targetRef="sid-7E036180-B980-4A2D-8B6C-7407E2C90C2A"/>
-    <sequenceFlow id="oauthEmbeddedPreStepDone" name="Oauth Embedded Pre step Done " sourceRef="isPasswordPresent" targetRef="isMultipleScaAvailable">
-      <conditionExpression xsi:type="tFormalExpression">#{xs2aConsentInfo.isOauthEmbeddedPreStepDone(CONTEXT)}</conditionExpression>
-    </sequenceFlow>
   </process>
   <bpmndi:BPMNDiagram id="BPMNDiagram_xs2a-authorize-singlePaymentBody">
     <bpmndi:BPMNPlane bpmnElement="xs2a-authorize-payment" id="BPMNPlane_xs2a-authorize-singlePaymentBody">
@@ -281,7 +278,7 @@
       <bpmdi:BPMNEdge xmlns:bpmdi="http://www.omg.org/spec/BPMN/20100524/DI" id="edge-ce0f93ed-5a2b-420f-942c-933ef83fa862" bpmnElement="sid-8ac00f14-32e0-4473-83c9-439724d6b92a">
         <omgdi:waypoint x="410.0" y="215.0"/>
         <omgdi:waypoint x="409.99997" y="9.372208"/>
-        <omgdi:waypoint x="709.1525" y="9.372204"/>
+        <omgdi:waypoint x="717.89996" y="9.372208"/>
         <omgdi:waypoint x="717.89996" y="235.0"/>
         <omgdi:waypoint x="745.0" y="235.0"/>
       </bpmdi:BPMNEdge>
@@ -315,12 +312,6 @@
         <omgdi:waypoint x="935.6505" y="556.70856"/>
         <omgdi:waypoint x="935.6506" y="474.99997"/>
         <omgdi:waypoint x="975.0" y="475.0"/>
-      </bpmdi:BPMNEdge>
-      <bpmdi:BPMNEdge xmlns:bpmdi="http://www.omg.org/spec/BPMN/20100524/DI" id="sid-7227311c-41c0-4d10-a710-3cc945fccc70" bpmnElement="oauthEmbeddedPreStepDone">
-        <omgdi:waypoint x="409.99997" y="215.0"/>
-        <omgdi:waypoint x="409.99994" y="115.8088"/>
-        <omgdi:waypoint x="695.00006" y="115.80881"/>
-        <omgdi:waypoint x="739.84845" y="229.41203"/>
       </bpmdi:BPMNEdge>
     </bpmndi:BPMNPlane>
   </bpmndi:BPMNDiagram>
