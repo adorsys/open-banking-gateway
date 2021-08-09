@@ -78,7 +78,7 @@
     </sequenceFlow>
     <sequenceFlow id="sid-6bd3dc18-27ee-4022-950c-5ff4e2505b97" sourceRef="sid-09316664-e311-425c-bd6a-fa214a377692" targetRef="wasRedirectConsentGrantSuccessful"/>
     <sequenceFlow id="sid-f4fce3e6-8152-44a1-bfa2-5d7569f8032b" name="Authenticated with Oauth2 pre-step (pre-Authenticated)" sourceRef="isPasswordPresent" targetRef="isMultipleScaAvailable">
-      <conditionExpression xsi:type="tFormalExpression">#{xs2aConsentInfo.isOauth2AuthenticationPreStep(CONTEXT)}</conditionExpression>
+      <conditionExpression xsi:type="tFormalExpression">#{xs2aConsentInfo.isOauth2TokenAvailableAndReadyToUse(CONTEXT)}</conditionExpression>
     </sequenceFlow>
     <sequenceFlow id="proceedToAuthentication" sourceRef="startAuthorization" targetRef="scaChallengeSelector">
       <conditionExpression xsi:type="tFormalExpression"/>

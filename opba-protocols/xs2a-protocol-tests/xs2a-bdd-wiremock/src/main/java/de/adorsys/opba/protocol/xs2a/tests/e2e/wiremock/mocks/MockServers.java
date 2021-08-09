@@ -1,6 +1,7 @@
 package de.adorsys.opba.protocol.xs2a.tests.e2e.wiremock.mocks;
 
 import com.github.tomakehurst.wiremock.WireMockServer;
+import com.github.tomakehurst.wiremock.common.Slf4jNotifier;
 import com.github.tomakehurst.wiremock.core.WireMockConfiguration;
 import com.github.tomakehurst.wiremock.extension.responsetemplating.ResponseTemplateTransformer;
 import com.google.common.io.Resources;
@@ -192,6 +193,7 @@ public class MockServers<SELF extends MockServers<SELF>> extends CommonGivenStag
     public SELF embedded_pre_step_mock_of_dkb_sandbox_for_max_musterman_accounts_running() {
         WireMockConfiguration config = WireMockConfiguration.options().dynamicPort()
                 .usingFilesUnderClasspath("mockedsandbox/restrecord/embedded/pre-step/accounts/");
+        config.notifier(new Slf4jNotifier(true));
         startWireMockForDkb(config);
         return self();
     }
