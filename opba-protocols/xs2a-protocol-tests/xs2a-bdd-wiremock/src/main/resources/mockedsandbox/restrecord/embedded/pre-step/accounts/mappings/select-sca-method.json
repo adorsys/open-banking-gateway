@@ -1,7 +1,7 @@
 {
   "scenarioName": "AccountsListUsingDkbEmbeddedPreStep",
-  "requiredScenarioState": "psu_authorisation_started",
-  "newScenarioState": "sca_method_selected",
+  "requiredScenarioState": "PsuAuthorisationStarted",
+  "newScenarioState": "ScaMethodSelected",
   "priority": 5,
   "request" : {
     "urlPattern": ".*/v1/consents/VALID_CONSENT_ID/authorisations/.+",

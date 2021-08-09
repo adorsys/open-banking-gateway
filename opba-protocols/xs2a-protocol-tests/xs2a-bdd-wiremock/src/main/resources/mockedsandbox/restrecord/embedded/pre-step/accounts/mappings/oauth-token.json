@@ -2,7 +2,7 @@
   "scenarioName": "AccountsListUsingDkbEmbeddedPreStep",
   "priority": 5,
   "requiredScenarioState": "Started",
-  "newScenarioState": "authenticated",
+  "newScenarioState": "Authenticated",
   "request" : {
     "url" : "/pre-auth/psd2-auth/v1/auth/token",
     "method" : "POST",

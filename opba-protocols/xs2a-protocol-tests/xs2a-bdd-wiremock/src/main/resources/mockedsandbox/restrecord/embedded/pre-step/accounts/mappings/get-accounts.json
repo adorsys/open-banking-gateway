@@ -1,6 +1,6 @@
 {
   "scenarioName": "AccountsListUsingDkbEmbeddedPreStep",
-  "newScenarioState": "get_account",
+  "newScenarioState": "GetAccount",
   "request" : {
     "urlPathPattern": "/v1/accounts",
     "method" : "GET",

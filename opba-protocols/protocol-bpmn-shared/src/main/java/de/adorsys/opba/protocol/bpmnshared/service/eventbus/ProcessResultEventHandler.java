@@ -82,11 +82,10 @@ class ProcessResultEventHandler {
             return error;
         }
 
-        String rootProcessId = runtimeService.createProcessInstanceQuery()
-            .processInstanceId(error.getProcessId())
-            .singleResult()
-            .getRootProcessInstanceId();
-
+        var rootProcess = runtimeService.createProcessInstanceQuery()
+                .processInstanceId(error.getProcessId())
+                .singleResult();
+        var rootProcessId = null != rootProcess ? rootProcess.getRootProcessInstanceId() : error.getProcessId();
         return error.toBuilder().processId(rootProcessId).build();
     }
 }
