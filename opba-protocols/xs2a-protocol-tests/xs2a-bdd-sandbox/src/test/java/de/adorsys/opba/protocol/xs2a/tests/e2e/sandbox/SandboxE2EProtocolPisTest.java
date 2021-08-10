@@ -29,7 +29,7 @@ import static de.adorsys.opba.protocol.xs2a.tests.Const.ENABLE_HEAVY_TESTS;
 import static de.adorsys.opba.protocol.xs2a.tests.Const.TRUE_BOOL;
 import static de.adorsys.opba.protocol.xs2a.tests.TestProfiles.MOCKED_SANDBOX;
 import static de.adorsys.opba.protocol.xs2a.tests.TestProfiles.ONE_TIME_POSTGRES_RAMFS;
-import static de.adorsys.opba.protocol.xs2a.tests.e2e.stages.StagesCommonUtil.SANDBOX_OAUTH2_INTEGRATED_BANK_ID;
+import static de.adorsys.opba.protocol.xs2a.tests.e2e.stages.StagesCommonUtil.SANDBOX_OAUTH2_INTEGRATED_BANK_PROFILE_ID;
 import static org.springframework.boot.test.context.SpringBootTest.WebEnvironment.RANDOM_PORT;
 
 /**
@@ -66,7 +66,7 @@ public class SandboxE2EProtocolPisTest extends SandboxCommonTest<
         when()
                 .fintech_calls_initiate_payment_for_max_musterman()
                 .and()
-                .user_logged_in_into_opba_as_opba_user_with_credentials_using_fintech_supplied_url(OPBA_LOGIN, OPBA_PASSWORD)
+                .user_logged_in_into_opba_pis_as_opba_user_with_credentials_using_fintech_supplied_url(OPBA_LOGIN, OPBA_PASSWORD)
                 .and()
                 .user_max_musterman_provided_initial_parameters_to_make_payment()
                 .and()
@@ -95,7 +95,7 @@ public class SandboxE2EProtocolPisTest extends SandboxCommonTest<
         when()
                 .fintech_calls_initiate_payment_for_anton_brueckner()
                 .and()
-                .user_logged_in_into_opba_as_opba_user_with_credentials_using_fintech_supplied_url(OPBA_LOGIN, OPBA_PASSWORD)
+                .user_logged_in_into_opba_pis_as_opba_user_with_credentials_using_fintech_supplied_url(OPBA_LOGIN, OPBA_PASSWORD)
                 .and()
                 .user_anton_brueckner_provided_initial_parameters_to_authorize_initiation_payment()
                 .and()
@@ -132,7 +132,7 @@ public class SandboxE2EProtocolPisTest extends SandboxCommonTest<
         when()
                 .fintech_calls_initiate_payment_for_anton_brueckner()
                 .and()
-                .user_logged_in_into_opba_as_opba_user_with_credentials_using_fintech_supplied_url(OPBA_LOGIN, OPBA_PASSWORD)
+                .user_logged_in_into_opba_pis_as_opba_user_with_credentials_using_fintech_supplied_url(OPBA_LOGIN, OPBA_PASSWORD)
                 .and()
                 .user_anton_brueckner_provided_initial_parameters_to_authorize_initiation_payment()
                 .and()
@@ -149,8 +149,6 @@ public class SandboxE2EProtocolPisTest extends SandboxCommonTest<
                 .user_anton_brueckner_sees_that_he_needs_to_be_redirected_to_aspsp_and_redirects_to_aspsp()
                 .and()
                 .sandbox_anton_brueckner_navigates_to_bank_auth_page(firefoxDriver)
-                .and()
-                .sandbox_anton_brueckner_inputs_username_and_password(firefoxDriver)
                 .and()
                 .sandbox_anton_brueckner_confirms_consent_information(firefoxDriver)
                 .and()
@@ -181,9 +179,9 @@ public class SandboxE2EProtocolPisTest extends SandboxCommonTest<
                 /*
                  * FIXME: Using custom bank id because of https://github.com/adorsys/xs2a/issues/73
                  */
-                .fintech_calls_initiate_payment_for_anton_brueckner(SANDBOX_OAUTH2_INTEGRATED_BANK_ID)
+                .fintech_calls_initiate_payment_for_anton_brueckner(SANDBOX_OAUTH2_INTEGRATED_BANK_PROFILE_ID)
                 .and()
-                .user_logged_in_into_opba_as_opba_user_with_credentials_using_fintech_supplied_url(OPBA_LOGIN, OPBA_PASSWORD)
+                .user_logged_in_into_opba_pis_as_opba_user_with_credentials_using_fintech_supplied_url(OPBA_LOGIN, OPBA_PASSWORD)
                 .and()
                 .user_anton_brueckner_provided_initial_parameters_to_authorize_initiation_payment()
                 .and()

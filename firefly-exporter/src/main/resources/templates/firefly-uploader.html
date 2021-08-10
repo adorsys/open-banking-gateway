@@ -23,12 +23,15 @@
             <div class="form-group">
                 <label for="bank-name-id">Search for your bank</label>
                 <input class="form-control" type="text" id="bank-name-id" th:value="${bankName}"
-                       onkeyup="callSearch('bank-name-id', 'bank-list', 'bank-id', API_URL)"
+                       onkeyup="callSearch('bank-name-id', 'bank-list', 'bank-id', 'request-new-consent', API_URL)"
                        placeholder="Deutsche bank"/>
                 <input class="form-control" type="hidden" id="bank-id" th:value="${bankId}"/>
                 <div class="scrollable">
                     <ul class="list-group" id="bank-list"></ul>
                 </div>
+
+                <input class="form-control" id="request-new-consent" type="button" value="Force consent renewal"
+                       onclick="callRequestNewConsent('request-new-consent', 'bank-id', API_URL)"/>
             </div>
 
             <div class="form-group">

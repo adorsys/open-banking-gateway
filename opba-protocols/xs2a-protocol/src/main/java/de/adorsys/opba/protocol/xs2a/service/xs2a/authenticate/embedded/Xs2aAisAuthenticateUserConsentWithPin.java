@@ -11,11 +11,12 @@ import de.adorsys.opba.protocol.xs2a.service.xs2a.dto.Xs2aAuthorizedConsentParam
 import de.adorsys.opba.protocol.xs2a.service.xs2a.dto.Xs2aStandardHeaders;
 import de.adorsys.opba.protocol.xs2a.service.xs2a.dto.authenticate.embedded.ProvidePsuPasswordBody;
 import de.adorsys.opba.protocol.xs2a.service.xs2a.validation.Xs2aValidator;
-import de.adorsys.xs2a.adapter.service.AccountInformationService;
-import de.adorsys.xs2a.adapter.service.Response;
-import de.adorsys.xs2a.adapter.service.model.ScaStatus;
-import de.adorsys.xs2a.adapter.service.model.UpdatePsuAuthentication;
-import de.adorsys.xs2a.adapter.service.model.UpdatePsuAuthenticationResponse;
+import de.adorsys.opba.protocol.xs2a.util.logresolver.Xs2aLogResolver;
+import de.adorsys.xs2a.adapter.api.AccountInformationService;
+import de.adorsys.xs2a.adapter.api.Response;
+import de.adorsys.xs2a.adapter.api.model.ScaStatus;
+import de.adorsys.xs2a.adapter.api.model.UpdatePsuAuthentication;
+import de.adorsys.xs2a.adapter.api.model.UpdatePsuAuthenticationResponse;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.flowable.engine.delegate.DelegateExecution;
@@ -33,20 +34,23 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 public class Xs2aAisAuthenticateUserConsentWithPin extends ValidatedExecution<Xs2aContext> {
 
-    private static final String DECOUPLED_AUTHENTICATION_PSU_MESSAGE = "Please check your app to continue";
-
     private final Extractor extractor;
     private final Xs2aValidator validator;
     private final AccountInformationService ais;
     private final AuthorizationPossibleErrorHandler errorSink;
+    private final Xs2aLogResolver logResolver = new Xs2aLogResolver(getClass());
 
     @Override
     protected void doValidate(DelegateExecution execution, Xs2aContext context) {
+        logResolver.log("doValidate: execution ({}) with context ({})", execution, context);
+
         validator.validate(execution, context, this.getClass(), extractor.forValidation(context));
     }
 
     @Override
     protected void doRealExecution(DelegateExecution execution, Xs2aContext context) {
+        logResolver.log("doRealExecution: execution ({}) with context ({})", execution, context);
+
         ValidatedPathHeadersBody<Xs2aAuthorizedConsentParameters, Xs2aStandardHeaders, UpdatePsuAuthentication> params =
                 extractor.forExecution(context);
 
@@ -59,12 +63,18 @@ public class Xs2aAisAuthenticateUserConsentWithPin extends ValidatedExecution<Xs
     private void aisAuthorizeWithPassword(
             DelegateExecution execution,
             ValidatedPathHeadersBody<Xs2aAuthorizedConsentParameters, Xs2aStandardHeaders, UpdatePsuAuthentication> params) {
+
+        logResolver.log("updateConsentsPsuData with parameters: {}", params.getPath(), params.getHeaders(), params.getBody());
+
         Response<UpdatePsuAuthenticationResponse> authResponse = ais.updateConsentsPsuData(
                 params.getPath().getConsentId(),
                 params.getPath().getAuthorizationId(),
                 params.getHeaders().toHeaders(),
+                params.getPath().toParameters(),
                 params.getBody()
         );
+
+        logResolver.log("updateConsentsPsuData response: {}", authResponse);
 
         ScaStatus scaStatus = authResponse.getBody().getScaStatus();
 
@@ -76,8 +86,7 @@ public class Xs2aAisAuthenticateUserConsentWithPin extends ValidatedExecution<Xs
                     setScaAvailableMethodsIfCanBeChosen(authResponse, ctx);
                     ctx.setScaSelected(authResponse.getBody().getChosenScaMethod());
                     ctx.setChallengeData(authResponse.getBody().getChallengeData());
-                    ctx.setScaStatus(null == scaStatus ? null : scaStatus.getValue());
-                    setSelectedScaDecoupledIfCanBeChosen(authResponse, ctx);
+                    ctx.setScaStatus(null == scaStatus ? null : scaStatus.toString());
                 }
         );
     }
@@ -93,36 +102,26 @@ public class Xs2aAisAuthenticateUserConsentWithPin extends ValidatedExecution<Xs
     }
 
     private void setScaAvailableMethodsIfCanBeChosen(
-            Response<UpdatePsuAuthenticationResponse> authResponse, Xs2aContext ctx
+        Response<UpdatePsuAuthenticationResponse> authResponse, Xs2aContext ctx
     ) {
         if (null == authResponse.getBody().getScaMethods()) {
-            return;
+           return;
         }
 
         ctx.setAvailableSca(
-                authResponse.getBody().getScaMethods().stream()
-                        .map(ScaMethod.FROM_AUTH::map)
-                        .collect(Collectors.toList())
+            authResponse.getBody().getScaMethods().stream()
+                .map(ScaMethod.FROM_AUTH::map)
+                .collect(Collectors.toList())
         );
-    }
-
-    private void setSelectedScaDecoupledIfCanBeChosen(
-            Response<UpdatePsuAuthenticationResponse> authResponse, Xs2aContext ctx
-    ) {
-        if (null == authResponse.getBody().getChosenScaMethod() || null == authResponse.getBody().getPsuMessage()) {
-            return;
-        }
-
-        ctx.setSelectedScaDecoupled(authResponse.getBody().getPsuMessage().startsWith(DECOUPLED_AUTHENTICATION_PSU_MESSAGE));
     }
 
     @Service
     public static class Extractor extends PathHeadersBodyMapperTemplate<
-                                                                               Xs2aContext,
-                                                                               Xs2aAuthorizedConsentParameters,
-                                                                               Xs2aStandardHeaders,
-                                                                               ProvidePsuPasswordBody,
-                                                                               UpdatePsuAuthentication> {
+                        Xs2aContext,
+                        Xs2aAuthorizedConsentParameters,
+                        Xs2aStandardHeaders,
+                        ProvidePsuPasswordBody,
+                        UpdatePsuAuthentication> {
 
         public Extractor(
                 DtoMapper<Xs2aContext, ProvidePsuPasswordBody> toValidatableBody,

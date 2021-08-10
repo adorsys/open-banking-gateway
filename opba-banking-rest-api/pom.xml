@@ -5,7 +5,7 @@
     <parent>
         <groupId>de.adorsys.opba</groupId>
         <artifactId>open-banking-gateway</artifactId>
-        <version>0.20.1-SNAPSHOT</version>
+        <version>0.31.0-SNAPSHOT</version>
     </parent>
 
     <artifactId>opba-banking-rest-api</artifactId>
@@ -17,10 +17,11 @@
     <main.basedir>${project.parent.basedir}</main.basedir>
       <ymldir>${project.parent.basedir}/opba-banking-rest-api-ymls/src/main/resources/static</ymldir>
 
-    <openapi-spec-file-location-banking_api_ais>${ymldir}/tpp_banking_api_ais.yml</openapi-spec-file-location-banking_api_ais>
-    <openapi-spec-file-location-banking_api_pis>${ymldir}/tpp_banking_api_pis.yml</openapi-spec-file-location-banking_api_pis>
-    <openapi-spec-file-location-tpp_bank_search_api>${ymldir}/tpp_banking_api_bank_search.yml</openapi-spec-file-location-tpp_bank_search_api>
-    <openapi-spec-file-location-tpp_token_api>${ymldir}/tpp_banking_api_token.yml</openapi-spec-file-location-tpp_token_api>
+      <openapi-spec-file-location-banking_api_ais>${ymldir}/tpp_banking_api_ais.yml</openapi-spec-file-location-banking_api_ais>
+      <openapi-spec-file-location-banking_api_pis>${ymldir}/tpp_banking_api_pis.yml</openapi-spec-file-location-banking_api_pis>
+      <openapi-spec-file-location-tpp_bank_search_api>${ymldir}/tpp_banking_api_bank_search.yml</openapi-spec-file-location-tpp_bank_search_api>
+      <openapi-spec-file-location-tpp_token_api>${ymldir}/tpp_banking_api_token.yml</openapi-spec-file-location-tpp_token_api>
+      <openapi-spec-file-location-admin_api>${ymldir}/tpp_admin_api.yml</openapi-spec-file-location-admin_api>
   </properties>
 
     <dependencies>

@@ -2,8 +2,13 @@ import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { Location } from '@angular/common';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { LoARetrievalInformation, LoTRetrievalInformation } from '../../models/consts';
+import { ConsentSettingType, LoARetrievalInformation, LoTRetrievalInformation } from '../../models/consts';
 import { StorageService } from '../../services/storage.service';
+
+import AllPsd2Enum = AisAccountAccessInfo.AllPsd2Enum;
+import {FinTechAccountInformationService} from "../../api";
+import {AisConsentRequest} from "../../api/model/aisConsentRequest";
+import {AisAccountAccessInfo} from "../../api/model/aisAccountAccessInfo";
 
 @Component({
   selector: 'app-settings',
@@ -18,13 +23,18 @@ export class SettingsComponent implements OnInit {
   lotFromTppWithNewConsent = LoTRetrievalInformation.FROM_TPP_WITH_NEW_CONSENT;
   lotFromTppWithAvailableConsent = LoTRetrievalInformation.FROM_TPP_WITH_AVAILABLE_CONSENT;
 
+  consentTypeNone = ConsentSettingType.NONE;
+  consentTypeDefault = ConsentSettingType.DEFAULT;
+  consentTypeCustom = ConsentSettingType.CUSTOM;
+
   settingsForm: FormGroup;
 
   constructor(
     private location: Location,
     private route: ActivatedRoute,
     private formBuilder: FormBuilder,
-    private storageService: StorageService
+    private storageService: StorageService,
+    private accountService: FinTechAccountInformationService
   ) {}
 
   ngOnInit() {
@@ -36,13 +46,44 @@ export class SettingsComponent implements OnInit {
       withBalance: settingsData.withBalance,
       cacheLoa: settingsData.cacheLoa,
       cacheLot: settingsData.cacheLot,
-      paymentRequiresAuthentication: settingsData.paymentRequiresAuthentication
+      consentRequiresAuthentication: settingsData.consentRequiresAuthentication,
+      paymentRequiresAuthentication: settingsData.paymentRequiresAuthentication,
+      consentSettingType: [settingsData.consentSettingType, Validators.required],
+      consent: JSON.stringify(settingsData.consent),
+      frequencyPerDay: settingsData.consent === null ? null : settingsData.consent.frequencyPerDay,
+      recurringIndicator: settingsData.consent === null ? null : settingsData.consent.recurringIndicator,
+      validUntil: settingsData.consent === null ? null : settingsData.consent.validUntil,
+      combinedServiceIndicator: settingsData.consent === null ? null : settingsData.consent.combinedServiceIndicator
     });
   }
 
   onConfirm() {
-    this.storageService.setSettings({ ...this.settingsForm.getRawValue() });
+    const data = { ...this.settingsForm.getRawValue() };
+    this.storageService.setSettings({
+      loa: data.loa,
+      lot: data.lot,
+      withBalance: data.withBalance,
+      cacheLoa: data.cacheLoa,
+      cacheLot: data.cacheLot,
+      consentRequiresAuthentication: data.consentRequiresAuthentication,
+      paymentRequiresAuthentication: data.paymentRequiresAuthentication,
+      consentSettingType: data.consentSettingType,
+      consent: JSON.parse(data.consent),
+      ...(data.consentSettingType === this.consentTypeDefault && {
+        consent: {
+          access: { allPsd2: AllPsd2Enum.ACCOUNTSWITHBALANCES },
+          combinedServiceIndicator: data.combinedServiceIndicator,
+          frequencyPerDay: data.frequencyPerDay,
+          recurringIndicator: data.recurringIndicator,
+          validUntil: data.validUntil
+        }
+      })
+    });
     this.onNavigateBack();
+  }
+
+  onDelete() {
+    this.accountService.aisConsentsDELETE(this.bankId, '', '').subscribe();
   }
 
   onNavigateBack() {
@@ -56,5 +97,8 @@ export class SettingsData {
   withBalance: boolean;
   cacheLoa: boolean;
   cacheLot: boolean;
+  consentRequiresAuthentication: boolean;
   paymentRequiresAuthentication: boolean;
+  consentSettingType: ConsentSettingType;
+  consent: AisConsentRequest;
 }

@@ -4,16 +4,19 @@ import com.google.common.collect.Sets;
 import de.adorsys.opba.protocol.bpmnshared.service.context.ContextUtil;
 import de.adorsys.opba.protocol.xs2a.config.aspspmessages.AspspMessages;
 import de.adorsys.opba.protocol.xs2a.context.Xs2aContext;
-import de.adorsys.xs2a.adapter.service.exception.ErrorResponseException;
-import de.adorsys.xs2a.adapter.service.exception.OAuthException;
-import de.adorsys.xs2a.adapter.service.model.TppMessage;
+import de.adorsys.xs2a.adapter.api.exception.ErrorResponseException;
+import de.adorsys.xs2a.adapter.api.exception.OAuthException;
+import de.adorsys.xs2a.adapter.api.model.MessageCode;
+import de.adorsys.xs2a.adapter.api.model.TppMessage;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.flowable.engine.delegate.DelegateExecution;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
+import java.util.Objects;
 import java.util.Set;
+import java.util.function.Supplier;
 import java.util.stream.Collectors;
 
 /**
@@ -32,13 +35,17 @@ public class CreateConsentOrPaymentPossibleErrorHandler {
      * Swallows retryable (like wrong IBAN) consent initiation exceptions.
      * @param tryCreate Consent/payment creation function to call
      */
-    public void tryCreateAndHandleErrors(DelegateExecution execution, Runnable tryCreate) {
+    public <T> T tryCreateAndHandleErrors(DelegateExecution execution, Supplier<T> tryCreate) {
         try {
-            tryCreate.run();
+            return tryCreate.get();
         } catch (ErrorResponseException ex) {
+            log.debug("Trying to handle ErrorResponseException", ex);
             tryHandleWrongIbanOrCredentialsExceptionOrOauth2(execution, ex);
+            return null;
         } catch (OAuthException ex) {
+            log.debug("Trying to handle OAuthException", ex);
             tryHandleOauth2Exception(execution);
+            return null;
         }
     }
 
@@ -72,15 +79,21 @@ public class CreateConsentOrPaymentPossibleErrorHandler {
     }
 
     private boolean isPossiblyOauth2Error(ErrorResponseException ex) {
-        Set<String> tppMessageCodes = ex.getErrorResponse().get().getTppMessages().stream()
+        Set<MessageCode> tppMessageCodes = ex.getErrorResponse().get().getTppMessages().stream()
                 .map(TppMessage::getCode)
                 .collect(Collectors.toSet());
+        Set<String> messages = ex.getErrorResponse().get().getTppMessages().stream()
+                .map(TppMessage::getText)
+                .filter(Objects::nonNull)
+                .collect(Collectors.toSet());
 
-        return !Sets.intersection(messageConfig.getMissingOauth2Token(), tppMessageCodes).isEmpty();
+        return !Sets.intersection(messageConfig.getMissingOauth2Token(), tppMessageCodes).isEmpty()
+                // this part of condition is FIXME https://github.com/adorsys/xs2a-adapter/issues/576
+                || messages.stream().anyMatch(it -> messageConfig.getMissingOauth2TokenMessage().stream().anyMatch(it::startsWith));
     }
 
     private boolean isWrongIban(ErrorResponseException ex) {
-        Set<String> tppMessageCodes = ex.getErrorResponse().get().getTppMessages().stream()
+        Set<MessageCode> tppMessageCodes = ex.getErrorResponse().get().getTppMessages().stream()
                 .map(TppMessage::getCode)
                 .collect(Collectors.toSet());
 

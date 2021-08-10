@@ -6,6 +6,7 @@ import de.adorsys.opba.protocol.bpmnshared.service.context.ContextUtil;
 import de.adorsys.opba.protocol.hbci.config.HbciProtocolConfiguration;
 import de.adorsys.opba.protocol.hbci.context.HbciContext;
 import de.adorsys.opba.protocol.hbci.context.LastViolations;
+import de.adorsys.opba.protocol.hbci.util.logresolver.HbciLogResolver;
 import lombok.RequiredArgsConstructor;
 import org.flowable.engine.delegate.DelegateExecution;
 import org.flowable.engine.delegate.JavaDelegate;
@@ -25,11 +26,15 @@ public class HbciReportValidationError implements JavaDelegate {
 
     private final HbciProtocolConfiguration configuration;
     private final ApplicationEventPublisher eventPublisher;
+    private final HbciLogResolver logResolver = new HbciLogResolver(getClass());
 
     @Override
     public void execute(DelegateExecution execution) {
         // Make transient context with all violations for clear mapping
         HbciContext current = ContextUtil.getContext(execution, HbciContext.class);
+
+        logResolver.log("execute: execution ({}) with context ({})", execution, current);
+
         LastViolations violations = execution.getVariable(LAST_VALIDATION_ISSUES, LastViolations.class);
         LastRedirectionTarget redirectionTarget = execution.getVariable(LAST_REDIRECTION_TARGET, LastRedirectionTarget.class);
         current.setLastRedirection(redirectionTarget);
@@ -41,10 +46,12 @@ public class HbciReportValidationError implements JavaDelegate {
                         .executionId(execution.getId())
                         .consentIncompatible(violations.isConsentIncompatible())
                         .provideMoreParamsDialog(
-                                ContextUtil.buildAndExpandQueryParameters(configuration.getAis().getRedirect().getParameters().getProvideMore(), current)
+                                ContextUtil.buildAndExpandQueryParameters(current.getActiveUrlSet(configuration).getRedirect().getParameters().getProvideMore(), current)
                         )
                         .issues(current.getViolations())
                         .build()
         );
+
+        logResolver.log("done execution ({}) with context ({})", execution, current);
     }
 }

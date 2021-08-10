@@ -43,7 +43,7 @@ class FinTechApiBaseTest {
                 + POSTFIX;
     }
 
-    protected String getFilenameBankProfile(String bankUUID) {
+    protected String getFilenameBankProfile(UUID bankUUID) {
         return BANK_PROFILE_RESPONSE_PREFIX
                 + "-" + bankUUID
                 + POSTFIX;

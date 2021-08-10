@@ -58,7 +58,7 @@ public class Transaction {
     }
 
     public String getShortEntryDate() {
-        return getShortDate();
+        return LocalDateTime.parse(date).format(DateTimeFormatter.ofPattern("MMdd"));
     }
 
     public String getAmountWithComma() {

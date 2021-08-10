@@ -9,7 +9,6 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.security.PrivateKey;
 import java.util.Collection;
 import java.util.Optional;
 import java.util.UUID;
@@ -45,7 +44,7 @@ public class PaymentConfirmationService {
     }
 
     private boolean sendPsuKeyFromInboxToFintech(String finTechPassword, AuthSession session) {
-        PrivateKey psuAspspKey = vault.psuAspspKeyFromInbox(
+        var psuAspspKey = vault.psuAspspKeyFromInbox(
                 session,
                 finTechPassword::toCharArray
         );

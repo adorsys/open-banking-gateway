@@ -12,11 +12,17 @@ spring:
     parameters:
       table-prefix: opb_
       adorsys-sandbox-url: http://localhost:20014
-      fill-with-mock-data: true
+    contexts: none
 
 # Application configuration
 api:
   banking:
+    admin-api:
+      security:
+        login: Aladdin
+        password: OpenSesame
+        url-patterns-to-protect:
+          - /admin/*
     # Bank-search API properties
     bank-search:
       start: 0
@@ -85,7 +91,7 @@ facade:
         page:
           for-ais: ${facade.urls.embedded-ui-base-url}/ais/{authorizationSessionId}/login?redirectCode={fintechUserTempPassword}
           for-pis: ${facade.urls.embedded-ui-base-url}/pis/{authorizationSessionId}/login?redirectCode={fintechUserTempPassword}
-          # PIS allows anonymous users in OPBA
+          for-ais-anonymous: ${facade.urls.embedded-ui-base-url}/ais/{authorizationSessionId}/anonymous?redirectCode={fintechUserTempPassword}
           for-pis-anonymous: ${facade.urls.embedded-ui-base-url}/pis/{authorizationSessionId}/anonymous?redirectCode={fintechUserTempPassword}
         password:
           byte-size: 8

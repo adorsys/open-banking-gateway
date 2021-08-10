@@ -8,13 +8,21 @@ on:
 
 jobs:
   build:
-    runs-on: ubuntu-18.04
+    runs-on: ubuntu-20.04
     steps:
       - uses: actions/checkout@v2
-      - name: Set up JDK 1.8
+      - name: Set up JDK 11
         uses: actions/setup-java@v1
         with:
-          java-version: 1.8
+          java-version: 11
+
+      - name: Free disk space
+        run: |
+          sudo apt clean
+          docker rmi $(docker image ls -aq)
+          docker system prune -af
+          echo "Available space"
+          df -h
 
       - name: Promote artifacts from OpenShift to DockerHub
         run: ./scripts/promote_oc_image_to_dockerhub.sh scripts/service.list

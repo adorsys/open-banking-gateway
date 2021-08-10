@@ -38,7 +38,7 @@ export class AnonymousComponent implements OnInit {
 
   private doLoginAsAnonymous() {
     localStorage.setItem(ApiHeaders.COOKIE_TTL, '0');
-    this.authService.userLoginForAnonymousPayment(this.authId, this.redirectCode).subscribe((res) => {
+    this.authService.userLoginForAnonymous(this.authId, this.redirectCode).subscribe((res) => {
       this.sessionService.setTTL(this.authId, res.headers.get(ApiHeaders.COOKIE_TTL));
       window.location.href = res.headers.get(ApiHeaders.LOCATION);
     });

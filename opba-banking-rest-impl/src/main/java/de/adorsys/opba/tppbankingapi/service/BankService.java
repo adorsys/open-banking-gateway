@@ -12,6 +12,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.UUID;
 import java.util.stream.Collectors;
 
 @Service
@@ -22,8 +23,8 @@ public class BankService {
     private final BankSearchRepositoryImpl bankRepository;
 
     @Transactional(readOnly = true)
-    public Optional<BankProfileDescriptor> getBankProfile(String bankId) {
-        return bankProfileJpaRepository.findByBankUuid(bankId)
+    public Optional<BankProfileDescriptor> getBankProfile(UUID profileUuid) {
+        return bankProfileJpaRepository.findByUuid(profileUuid)
                 .map(BankProfile.TO_BANK_PROFILE_DESCRIPTOR::map);
     }
 

@@ -5,6 +5,8 @@ import de.adorsys.opba.protocol.api.authorization.GetAuthorizationState;
 import de.adorsys.opba.protocol.api.common.ProtocolAction;
 import de.adorsys.opba.protocol.api.dto.ValidationIssue;
 import de.adorsys.opba.protocol.api.dto.context.ServiceContext;
+import de.adorsys.opba.protocol.api.dto.request.ChallengeData;
+import de.adorsys.opba.protocol.api.dto.request.OtpFormat;
 import de.adorsys.opba.protocol.api.dto.request.authorization.AisConsent;
 import de.adorsys.opba.protocol.api.dto.request.authorization.AuthorizationRequest;
 import de.adorsys.opba.protocol.api.dto.request.payments.SinglePaymentBody;
@@ -30,6 +32,7 @@ import org.mapstruct.Mapper;
 import org.springframework.stereotype.Service;
 
 import java.net.URI;
+import java.util.Base64;
 import java.util.List;
 import java.util.Set;
 import java.util.concurrent.CompletableFuture;
@@ -54,6 +57,7 @@ public class HbciGetAuthorizationState implements GetAuthorizationState {
     private final HbciScaMethodsMapper scaMethodsMapper;
     private final PaymentBodyMapper pisBodyMapper;
     private final AisConsentBodyMapper aisBodyMapper;
+    private final ChallengeDataMapper challengeDataMapper;
 
     @Override
     public CompletableFuture<Result<AuthStateBody>> execute(ServiceContext<AuthorizationRequest> serviceContext) {
@@ -115,7 +119,7 @@ public class HbciGetAuthorizationState implements GetAuthorizationState {
         AuthRequestData authRequestData = AuthRequestData.builder()
                 .aisConsent(ctx instanceof AccountListHbciContext || ctx instanceof TransactionListHbciContext ? aisBodyMapper.map(ctx.getHbciDialogConsent()) : null)
                 .singlePaymentBody(ctx instanceof PaymentHbciContext ? pisBodyMapper.map(((PaymentHbciContext) ctx).getPayment()) : null)
-                .bankName(ctx.getRequestScoped().aspspProfile().getName())
+                .bankName(ctx.getRequestScoped().aspspProfile().getBankName())
                 .fintechName(ctx.getRequestScoped().fintechProfile().getName())
                 .build();
 
@@ -125,7 +129,7 @@ public class HbciGetAuthorizationState implements GetAuthorizationState {
                 scaMethodsMapper.map(scaMethods),
                 redirectTo,
                 authRequestData,
-                null
+                challengeDataMapper.map(ctx.getChallengeData())
         );
     }
 
@@ -147,5 +151,21 @@ public class HbciGetAuthorizationState implements GetAuthorizationState {
     @Mapper(componentModel = SPRING_KEYWORD, implementationPackage = HBCI_MAPPERS_PACKAGE)
     public interface AisConsentBodyMapper extends DtoMapper<HbciConsent, AisConsent> {
         AisConsent map(HbciConsent hbciConsent);
+    }
+
+    @Mapper(componentModel = SPRING_KEYWORD, implementationPackage = HBCI_MAPPERS_PACKAGE)
+    public interface ChallengeDataMapper extends DtoMapper<de.adorsys.multibanking.domain.ChallengeData, ChallengeData> {
+        default byte[] toBytes(String string) {
+            return string != null ? Base64.getDecoder().decode(string) : null;
+        }
+
+        default OtpFormat toEnum(String code) {
+            for (OtpFormat otpFormat : OtpFormat.values()) {
+                if (otpFormat.name().equals(code)) {
+                    return otpFormat;
+                }
+            }
+            return null;
+        }
     }
 }

@@ -4,14 +4,15 @@ import de.adorsys.opba.api.security.external.service.RequestSigningService;
 import de.adorsys.opba.api.security.generator.api.DataToSignProvider;
 import de.adorsys.opba.api.security.generator.api.RequestToSign;
 import de.adorsys.opba.api.security.requestsigner.OpenBankingDataToSignProvider;
-import de.adorsys.opba.protocol.api.dto.result.fromprotocol.dialog.AuthorizationRequiredResult;
+import de.adorsys.opba.protocol.api.dto.request.payments.PaymentStatusBody;
+import de.adorsys.opba.protocol.api.dto.result.fromprotocol.ok.SuccessResult;
 import de.adorsys.opba.protocol.xs2a.entrypoint.ais.Xs2aListAccountsEntrypoint;
 import de.adorsys.opba.protocol.xs2a.entrypoint.ais.Xs2aSandboxListTransactionsEntrypoint;
 import de.adorsys.opba.protocol.xs2a.entrypoint.pis.Xs2aGetPaymentStatusEntrypoint;
 import de.adorsys.opba.protocol.xs2a.entrypoint.pis.Xs2aInitiateSinglePaymentEntrypoint;
 import de.adorsys.opba.protocol.xs2a.tests.e2e.stages.CommonGivenStages;
 import de.adorsys.opba.starter.config.FintechRequestSigningTestConfig;
-import de.adorsys.xs2a.adapter.adapter.StandardPaymentProduct;
+import de.adorsys.xs2a.adapter.api.model.PaymentProduct;
 import io.restassured.RestAssured;
 import io.restassured.filter.Filter;
 import io.restassured.filter.FilterContext;
@@ -35,8 +36,8 @@ import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 import org.testcontainers.shaded.com.google.common.io.Resources;
 
-import java.net.URI;
 import java.nio.charset.StandardCharsets;
+import java.time.OffsetDateTime;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
@@ -56,9 +57,9 @@ import static de.adorsys.opba.restapi.shared.HttpHeaders.SERVICE_SESSION_ID;
 import static io.restassured.RestAssured.config;
 import static io.restassured.config.RedirectConfig.redirectConfig;
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.doReturn;
 import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
 import static org.springframework.boot.test.context.SpringBootTest.WebEnvironment.RANDOM_PORT;
 
 /**
@@ -117,7 +118,7 @@ class BasicOpenBankingStartupTest {
 
     @Test
     void testXs2aProtocolIsWiredForPaymentsGetStatus() {
-        xs2aPaymentStatusGet(HttpStatus.ACCEPTED);
+        xs2aPaymentStatusGet(HttpStatus.OK);
 
         verify(xs2aGetPaymentStatusEntrypoint).execute(any());
     }
@@ -192,14 +193,14 @@ class BasicOpenBankingStartupTest {
     }
 
     private void xs2aPaymentStatusGet(HttpStatus expected) {
-        when(xs2aGetPaymentStatusEntrypoint.execute(any()))
-                .thenReturn(CompletableFuture.completedFuture(new AuthorizationRequiredResult<>(URI.create(""), null)));
+        doReturn(CompletableFuture.completedFuture(new SuccessResult<>(getPaymentStatusBody())))
+                .when(xs2aGetPaymentStatusEntrypoint).execute(any());
 
         withPaymentHeaders(ANTON_BRUECKNER)
                     .header(SERVICE_SESSION_ID, UUID.randomUUID().toString())
                 .when()
                     .contentType(ContentType.JSON.withCharset(StandardCharsets.UTF_8))
-                    .get(PIS_PAYMENT_STATUS_ENDPOINT, StandardPaymentProduct.SEPA_CREDIT_TRANSFERS.getSlug())
+                    .get(PIS_PAYMENT_STATUS_ENDPOINT, PaymentProduct.SEPA_CREDIT_TRANSFERS.toString())
                 .then()
                     .statusCode(expected.value());
     }
@@ -210,7 +211,7 @@ class BasicOpenBankingStartupTest {
                 .when()
                     .contentType(ContentType.JSON.withCharset(StandardCharsets.UTF_8))
                     .body(getPaymentBodyStub())
-                    .post(PIS_SINGLE_PAYMENT_ENDPOINT, StandardPaymentProduct.SEPA_CREDIT_TRANSFERS.getSlug())
+                    .post(PIS_SINGLE_PAYMENT_ENDPOINT, PaymentProduct.SEPA_CREDIT_TRANSFERS.toString())
                 .then()
                     .statusCode(expected.value());
     }
@@ -219,6 +220,13 @@ class BasicOpenBankingStartupTest {
     @SneakyThrows
     private String getPaymentBodyStub() {
         return Resources.asCharSource(Resources.getResource("anton-brueckner-single-sepa-payment.json"), StandardCharsets.UTF_8).read();
+    }
+
+    private PaymentStatusBody getPaymentStatusBody() {
+        var paymentStatusBody = new PaymentStatusBody();
+        paymentStatusBody.setTransactionStatus("ACSP");
+        paymentStatusBody.setCreatedAt(OffsetDateTime.now());
+        return paymentStatusBody;
     }
 
     @RequiredArgsConstructor

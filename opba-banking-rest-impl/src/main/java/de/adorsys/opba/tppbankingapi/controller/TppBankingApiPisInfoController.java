@@ -37,24 +37,22 @@ public class TppBankingApiPisInfoController implements TppBankingApiPaymentStatu
 
     @Override
     public CompletableFuture getPaymentInformation(String serviceSessionPassword,
-                                                   String fintechUserID,
                                                    UUID xRequestID,
                                                    String paymentProduct,
                                                    String xTimestampUTC,
                                                    String xRequestSignature,
                                                    String fintechID,
-                                                   String bankID,
+                                                   UUID bankProfileID,
                                                    UUID serviceSessionID) {
         return paymentInfoService.execute(
                 PaymentInfoRequest.builder()
                         .facadeServiceable(FacadeServiceableRequest.builder()
                                 .requestId(xRequestID)
-                                .bankId(bankID)
+                                .bankProfileId(bankProfileID)
                                 .sessionPassword(serviceSessionPassword)
-                                .fintechUserId(fintechUserID)
                                 .authorization(fintechID)
                                 .serviceSessionId(serviceSessionID)
-                                .anonymousPsuAllowed(true)
+                                .anonymousPsu(true)
                                 .build()
                         )
                         .paymentProduct(PaymentProductDetails.fromValue(paymentProduct))
@@ -64,24 +62,22 @@ public class TppBankingApiPisInfoController implements TppBankingApiPaymentStatu
 
     @Override
     public CompletableFuture getPaymentStatus(String serviceSessionPassword,
-                                                        String fintechUserID,
                                                         UUID xRequestID,
                                                         String paymentProduct,
                                                         String xTimestampUTC,
                                                         String xRequestSignature,
                                                         String fintechID,
-                                                        String bankID,
+                                                        UUID bankProfileID,
                                                         UUID serviceSessionID) {
         return paymentStatusService.execute(
                 PaymentStatusRequest.builder()
                         .facadeServiceable(FacadeServiceableRequest.builder()
                                 .requestId(xRequestID)
-                                .bankId(bankID)
+                                .bankProfileId(bankProfileID)
                                 .sessionPassword(serviceSessionPassword)
-                                .fintechUserId(fintechUserID)
                                 .authorization(fintechID)
                                 .serviceSessionId(serviceSessionID)
-                                .anonymousPsuAllowed(true)
+                                .anonymousPsu(true)
                                 .build()
                         )
                         .paymentProduct(PaymentProductDetails.fromValue(paymentProduct))

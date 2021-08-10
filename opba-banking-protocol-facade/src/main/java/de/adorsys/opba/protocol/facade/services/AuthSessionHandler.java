@@ -11,6 +11,7 @@ import de.adorsys.opba.db.repository.jpa.BankActionRepository;
 import de.adorsys.opba.db.repository.jpa.fintech.FintechRepository;
 import de.adorsys.opba.db.repository.jpa.fintech.FintechUserRepository;
 import de.adorsys.opba.protocol.api.dto.context.ServiceContext;
+import de.adorsys.opba.protocol.api.dto.request.FacadeServiceableGetter;
 import de.adorsys.opba.protocol.api.dto.request.FacadeServiceableRequest;
 import de.adorsys.opba.protocol.api.dto.request.payments.InitiateSinglePaymentRequest;
 import de.adorsys.opba.protocol.facade.config.auth.FacadeAuthConfig;
@@ -77,9 +78,9 @@ public class AuthSessionHandler {
             FacadeResultRedirectable<O, ?> result
     ) {
         BankAction authAction = bankActionRepository
-                .findByBankProfileUuidAndAction(context.getBankId(), AUTHORIZATION)
+                .findByBankProfileUuidAndAction(context.getBankProfileId(), AUTHORIZATION)
                 .orElseThrow(
-                        () -> new IllegalStateException("Missing update authorization handler for " + context.getBankId())
+                        () -> new IllegalStateException("Missing update authorization handler for " + context.getBankProfileId())
                 );
         Fintech fintech = fintechs.findByGlobalId(request.getAuthorization())
                 .orElseThrow(() -> new IllegalStateException("No registered FinTech: " + request.getAuthorization()));
@@ -99,7 +100,7 @@ public class AuthSessionHandler {
                         .parent(entityManager.find(ServiceSession.class, context.getServiceSessionId()))
                         .action(authAction)
                         .fintechUser(user)
-                        .psuAnonymous(request.isAnonymousPsuAllowed())
+                        .psuAnonymous(request.isAnonymousPsu())
                         .redirectCode(context.getFutureRedirectCode().toString())
                         .build()
         );
@@ -151,11 +152,17 @@ public class AuthSessionHandler {
                 )
         );
 
-        String url = facadeAuthConfig.getRedirect().getConsentLogin().getPage().getForAis();
+        if (!(context.getRequest() instanceof FacadeServiceableGetter)) {
+            throw new IllegalStateException("Wrong request type: " + context.getRequest());
+        }
+        FacadeServiceableRequest request = ((FacadeServiceableGetter) context.getRequest()).getFacadeServiceable();
+
+        String url = request.isAnonymousPsu()
+                ? facadeAuthConfig.getRedirect().getConsentLogin().getPage().getForAisAnonymous()
+                : facadeAuthConfig.getRedirect().getConsentLogin().getPage().getForAis();
 
         if (context.getRequest() instanceof InitiateSinglePaymentRequest) {
-            InitiateSinglePaymentRequest request = (InitiateSinglePaymentRequest) context.getRequest();
-            url = request.getFacadeServiceable().isAnonymousPsuAllowed()
+            url = request.isAnonymousPsu()
                     ? facadeAuthConfig.getRedirect().getConsentLogin().getPage().getForPisAnonymous()
                     : facadeAuthConfig.getRedirect().getConsentLogin().getPage().getForPis();
         }

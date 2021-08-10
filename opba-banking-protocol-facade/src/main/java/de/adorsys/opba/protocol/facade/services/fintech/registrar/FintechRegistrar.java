@@ -8,6 +8,7 @@ import de.adorsys.opba.db.repository.jpa.fintech.FintechRepository;
 import de.adorsys.opba.protocol.facade.config.encryption.FintechOnlyEncryptionServiceProvider;
 import de.adorsys.opba.protocol.facade.config.encryption.FintechOnlyKeyPairConfig;
 import de.adorsys.opba.protocol.facade.config.encryption.impl.fintech.FintechSecureStorage;
+import de.adorsys.opba.protocol.facade.dto.PubAndPrivKey;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -35,7 +36,7 @@ public class FintechRegistrar {
         for (int i = 0; i <  fintechOnlyKeyPairConfig.getPairCount(); ++i) {
             UUID id = UUID.randomUUID();
             KeyPair pair = fintechOnlyEncryptionServiceProvider.generateKeyPair();
-            fintechSecureStorage.fintechOnlyPrvKeyToPrivate(id, pair.getPrivate(), fintech, finTechPassword);
+            fintechSecureStorage.fintechOnlyPrvKeyToPrivate(id, new PubAndPrivKey(pair.getPublic(), pair.getPrivate()), fintech, finTechPassword);
             FintechPubKey pubKey = FintechPubKey.builder()
                     .prvKey(entityManager.find(FintechPrvKey.class, id))
                     .build();

@@ -24,8 +24,10 @@ public class TppAisClientFeignMock implements TppAisClient {
             String xTimestampUTC,
             String xRequestSignature,
             String fintechId,
-            String bankID,
+            UUID bankProfileID,
+            Boolean xPsuAuthenticationRequired,
             UUID serviceSessionID,
+            String createConsentIfNone,
             Boolean useObgCache,
             Boolean withBalance
     ) {
@@ -43,14 +45,19 @@ public class TppAisClientFeignMock implements TppAisClient {
             String xTimestampUTC,
             String xRequestSignature,
             String fintechId,
-            String bankID,
+            UUID bankProfileID,
+            Boolean xPsuAuthenticationRequired,
             UUID serviceSessionID,
+            String createConsentIfNone,
             LocalDate dateFrom,
             @Valid LocalDate dateTo,
             String entryReferenceFrom,
             @Valid String bookingStatus,
             @Valid Boolean deltaList,
-            Boolean online
+            Boolean online,
+            Boolean analytics,
+            Integer page,
+            Integer pageSize
     ) {
         return null;
     }
@@ -65,14 +72,24 @@ public class TppAisClientFeignMock implements TppAisClient {
             String xTimestampUTC,
             String xRequestSignature,
             String fintechID,
-            String bankID,
+            UUID bankProfileID,
+            Boolean xPsuAuthenticationRequired,
             UUID serviceSessionID,
+            String createConsentIfNone,
             LocalDate dateFrom,
             LocalDate dateTo,
             String entryReferenceFrom,
             String bookingStatus,
-            Boolean deltaList
+            Boolean deltaList,
+            Integer page,
+            Integer pageSize
     ) {
+        return null;
+    }
+
+    @Override
+    public ResponseEntity<Void> deleteConsent(UUID serviceSessionID, String serviceSessionPassword, UUID xRequestID,
+                                              String xTimestampUTC, String xRequestSignature, String fintechID, Boolean deleteAll) {
         return null;
     }
 

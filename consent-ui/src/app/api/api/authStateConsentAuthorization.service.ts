@@ -17,8 +17,8 @@ import { HttpClient, HttpHeaders, HttpParams,
 import { CustomHttpParameterCodec }                          from '../encoder';
 import { Observable }                                        from 'rxjs';
 
-import { ConsentAuth } from '../model/consentAuth';
-import { PsuMessage } from '../model/psuMessage';
+import { ConsentAuth } from '../model/models';
+import { PsuMessage } from '../model/models';
 
 import { BASE_PATH, COLLECTION_FORMATS }                     from '../variables';
 import { Configuration }                                     from '../configuration';
@@ -50,6 +50,42 @@ export class AuthStateConsentAuthorizationService {
 
 
 
+    private addToHttpParams(httpParams: HttpParams, value: any, key?: string): HttpParams {
+        if (typeof value === "object" && value instanceof Date === false) {
+            httpParams = this.addToHttpParamsRecursive(httpParams, value);
+        } else {
+            httpParams = this.addToHttpParamsRecursive(httpParams, value, key);
+        }
+        return httpParams;
+    }
+
+    private addToHttpParamsRecursive(httpParams: HttpParams, value?: any, key?: string): HttpParams {
+        if (value == null) {
+            return httpParams;
+        }
+
+        if (typeof value === "object") {
+            if (Array.isArray(value)) {
+                (value as any[]).forEach( elem => httpParams = this.addToHttpParamsRecursive(httpParams, elem, key));
+            } else if (value instanceof Date) {
+                if (key != null) {
+                    httpParams = httpParams.append(key,
+                        (value as Date).toISOString().substr(0, 10));
+                } else {
+                   throw Error("key may not be null if value is Date");
+                }
+            } else {
+                Object.keys(value).forEach( k => httpParams = this.addToHttpParamsRecursive(
+                    httpParams, value[k], key != null ? `${key}.${k}` : k));
+            }
+        } else if (key != null) {
+            httpParams = httpParams.append(key, value);
+        } else {
+            throw Error("key may not be null if value is not object or array");
+        }
+        return httpParams;
+    }
+
     /**
      * Redirect entry point for initiating a consent authorization process.
      * This is the &lt;b&gt;entry point&lt;/b&gt; for processing a consent redirected by the TppBankingApi to this ConsentAuthorisationApi.  At this entry point, the ConsentAuthorisationApi will use the redirectCode to retrieve the RedirectSession from the TppServer. An analysis of the RedirectSession will help decide if the ConsentAuthorisationApi will proceed with an embedded approach (E&lt;sub&gt;1&lt;/sub&gt;) or a redirect approach (R&lt;sub&gt;1&lt;/sub&gt;).
@@ -58,34 +94,44 @@ export class AuthStateConsentAuthorizationService {
      * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
      * @param reportProgress flag to report request and response progress.
      */
-    public authUsingGET(authId: string, redirectCode?: string, observe?: 'body', reportProgress?: boolean): Observable<ConsentAuth>;
-    public authUsingGET(authId: string, redirectCode?: string, observe?: 'response', reportProgress?: boolean): Observable<HttpResponse<ConsentAuth>>;
-    public authUsingGET(authId: string, redirectCode?: string, observe?: 'events', reportProgress?: boolean): Observable<HttpEvent<ConsentAuth>>;
-    public authUsingGET(authId: string, redirectCode?: string, observe: any = 'body', reportProgress: boolean = false ): Observable<any> {
+    public authUsingGET(authId: string, redirectCode?: string, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<ConsentAuth>;
+    public authUsingGET(authId: string, redirectCode?: string, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<HttpResponse<ConsentAuth>>;
+    public authUsingGET(authId: string, redirectCode?: string, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<HttpEvent<ConsentAuth>>;
+    public authUsingGET(authId: string, redirectCode?: string, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: 'application/json'}): Observable<any> {
         if (authId === null || authId === undefined) {
             throw new Error('Required parameter authId was null or undefined when calling authUsingGET.');
         }
 
         let queryParameters = new HttpParams({encoder: this.encoder});
         if (redirectCode !== undefined && redirectCode !== null) {
-            queryParameters = queryParameters.set('redirectCode', <any>redirectCode);
+          queryParameters = this.addToHttpParams(queryParameters,
+            <any>redirectCode, 'xXsrfToken');
         }
 
         let headers = this.defaultHeaders;
 
-        // to determine the Accept header
-        const httpHeaderAccepts: string[] = [
-            'application/json'
-        ];
-        const httpHeaderAcceptSelected: string | undefined = this.configuration.selectHeaderAccept(httpHeaderAccepts);
+        let httpHeaderAcceptSelected: string | undefined = options && options.httpHeaderAccept;
+        if (httpHeaderAcceptSelected === undefined) {
+            // to determine the Accept header
+            const httpHeaderAccepts: string[] = [
+                'application/json'
+            ];
+            httpHeaderAcceptSelected = this.configuration.selectHeaderAccept(httpHeaderAccepts);
+        }
         if (httpHeaderAcceptSelected !== undefined) {
             headers = headers.set('Accept', httpHeaderAcceptSelected);
         }
 
 
+        let responseType: 'text' | 'json' = 'json';
+        if(httpHeaderAcceptSelected && httpHeaderAcceptSelected.startsWith('text')) {
+            responseType = 'text';
+        }
+
         return this.httpClient.get<ConsentAuth>(`${this.configuration.basePath}/v1/consent/${encodeURIComponent(String(authId))}`,
             {
                 params: queryParameters,
+                responseType: <any>responseType,
                 withCredentials: this.configuration.withCredentials,
                 headers: headers,
                 observe: observe,

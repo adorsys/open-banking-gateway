@@ -51,7 +51,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.
 public class FinTechListAccountsTest extends FinTechBankSearchApiTest {
     private static final String FIN_TECH_LIST_ACCOUNTS_URL = "/v1/ais/banks/{bank-id}/accounts";
 
-    private static final String NO_CONSENT_BANK_ID = "aaaaaaaaa-ee6e-45f9-9163-b97320c6881a";
+    private static final UUID NO_CONSENT_BANK_ID = UUID.fromString("356938ab-9561-408f-ac7a-a9089c1623b7");
     private static final String USERNAME = "peter";
     private static final String PASSWORD = "1234";
 
@@ -79,7 +79,7 @@ public class FinTechListAccountsTest extends FinTechBankSearchApiTest {
 
     @SneakyThrows
     List<String> listAccountsForOk(BankProfileTestResult result) {
-        when(tppAisClientFeignMock.getAccounts(any(), any(), any(), any(), any(), any(), any(), any(), any(), any(), any(), any()))
+        when(tppAisClientFeignMock.getAccounts(any(), any(), any(), any(), any(), any(), any(), any(), any(), any(), any(), any(), any(), any()))
                 .thenReturn(ResponseEntity.ok(GSON.fromJson(readFile("TPP_LIST_ACCOUNTS.json"), AccountList.class)));
 
         MvcResult mvcResult = plainListAccounts(result.getBankUUID());
@@ -104,14 +104,14 @@ public class FinTechListAccountsTest extends FinTechBankSearchApiTest {
                 .build();
         BankProfileTestResult result = getBankProfileTestResult();
         createConsent(null, null);
-        when(tppAisClientFeignMock.getTransactionsWithoutAccountId(any(), any(), any(), any(), any(), any(), any(), any(), any(),
-                any(), any(), any(), any(), any(), any())).thenReturn(accepted);
+        when(tppAisClientFeignMock.getTransactionsWithoutAccountId(any(), any(), any(), any(), any(), any(), any(), any(), any(), any(),
+                any(), any(), any(), any(), any(), any(), any(), any(), any())).thenReturn(accepted);
 
         MvcResult mvcResult = plainListAccounts(result.getBankUUID());
         assertEquals(ACCEPTED.value(), mvcResult.getResponse().getStatus());
-        verify(tppAisClientFeignMock).getTransactionsWithoutAccountId(any(), any(), any(), any(), any(), any(), any(), any(),
-                any(), any(), any(), any(), any(), any(), any());
-        verify(tppAisClientFeignMock, never()).getAccounts(any(), any(), any(), any(), any(), any(), any(), any(), any(), any(), any(), any());
+        verify(tppAisClientFeignMock).getTransactionsWithoutAccountId(any(), any(), any(), any(), any(), any(), any(), any(), any(),
+                any(), any(), any(), any(), any(), any(), any(), any(), any(), any());
+        verify(tppAisClientFeignMock, never()).getAccounts(any(), any(), any(), any(), any(), any(), any(), any(), any(), any(), any(), any(), any(), any());
     }
 
     @Test
@@ -128,22 +128,22 @@ public class FinTechListAccountsTest extends FinTechBankSearchApiTest {
                 .location(new URI("affe"))
                 .build();
         createConsent(null, null);
-        when(tppAisClientFeignMock.getAccounts(any(), any(), any(), any(), any(), any(), any(), any(), any(),
-                any(), any(), any())).thenReturn(accepted);
+        when(tppAisClientFeignMock.getAccounts(any(), any(), any(), any(), any(), any(), any(), any(), any(), any(),
+                any(), any(), any(), any())).thenReturn(accepted);
 
         MvcResult mvcResult = plainListAccounts(NO_CONSENT_BANK_ID);
         assertEquals(ACCEPTED.value(), mvcResult.getResponse().getStatus());
-        verify(tppAisClientFeignMock, never()).getTransactions(any(), any(), any(), any(), any(), any(), any(), any(), any(),
-                any(), any(), any(), any(), any(), any(), any(), any());
-        verify(tppAisClientFeignMock).getAccounts(any(), any(), any(), any(), any(), any(), any(), any(), any(), any(), any(), any());
+        verify(tppAisClientFeignMock, never()).getTransactions(any(), any(), any(), any(), any(), any(), any(), any(), any(), any(),
+                any(), any(), any(), any(), any(), any(), any(), any(), any(), any(), any(), any());
+        verify(tppAisClientFeignMock).getAccounts(any(), any(), any(), any(), any(), any(), any(), any(), any(), any(), any(), any(), any(), any());
     }
 
 
     @SneakyThrows
-    MvcResult plainListAccounts(String bankUUID) {
-        log.info("bankUUID {}", bankUUID);
+    MvcResult plainListAccounts(UUID bankProfileUUID) {
+        log.info("bankProfileUUID {}", bankProfileUUID);
         return this.mvc
-                .perform(get(FIN_TECH_LIST_ACCOUNTS_URL, bankUUID)
+                .perform(get(FIN_TECH_LIST_ACCOUNTS_URL, bankProfileUUID)
                         .header(Consts.HEADER_X_REQUEST_ID, restRequestContext.getRequestId())
                         .header(Consts.HEADER_XSRF_TOKEN, restRequestContext.getXsrfTokenHeaderField())
                         .header("Fintech-Redirect-URL-OK", "ok")

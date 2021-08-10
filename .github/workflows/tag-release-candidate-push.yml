@@ -8,13 +8,22 @@ on:
 
 jobs:
   build:
-    runs-on: ubuntu-18.04
+    runs-on: ubuntu-20.04
     steps:
       - uses: actions/checkout@v2
-      - name: Set up JDK 1.8
+      - name: Set up JDK 11
         uses: actions/setup-java@v1
         with:
-          java-version: 1.8
+          java-version: 11
+
+      - name: Free disk space
+        run: |
+          sudo apt clean
+          docker rmi $(docker image ls -aq)
+          docker system prune -af
+          echo "Available space"
+          df -h
+
       - name: Build project and run test suite
         run: ./scripts/build_and_test.sh
         env:
@@ -39,6 +48,11 @@ jobs:
           STAGE_ARTIFACTORY_USERNAME: ${{ github.actor }}
           STAGE_ARTIFACTORY_PASSWORD: ${{ secrets.GITHUB_TOKEN }}
           GIT_BRANCH: release # Force branch to resolve to release (stage repo) if git resolution fails - otherwise gitflow-helper uses UNDEFINED branch
+
+      - name: Build FireFly improter
+        run: ./scripts/build_firefly_exporter_mvn.sh
+        env:
+          MAVEN_OPTS: "-Dhttp.keepAlive=false -Dmaven.wagon.http.pool=false -Dmaven.wagon.httpconnectionManager.ttlSeconds=120" # Github-on-Azure tweaks - https://github.com/actions/virtual-environments/issues/1499
 
       - name: Deploy FireFly Importer release-candidate artifacts to OpenShift
         run: ./scripts/deploy_openshift_release_candidate.sh scripts/firefly-service.list

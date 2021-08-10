@@ -17,10 +17,10 @@ import { HttpClient, HttpHeaders, HttpParams,
 import { CustomHttpParameterCodec }                          from '../encoder';
 import { Observable }                                        from 'rxjs';
 
-import { ErrorResponse } from '../model/errorResponse';
-import { InlineResponse2001 } from '../model/inlineResponse2001';
-import { InlineResponse2002 } from '../model/inlineResponse2002';
-import { PsuMessage } from '../model/psuMessage';
+import { ErrorResponse } from '../model/models';
+import { InlineResponse2001 } from '../model/models';
+import { InlineResponse2002 } from '../model/models';
+import { PsuMessage } from '../model/models';
 
 import { BASE_PATH, COLLECTION_FORMATS }                     from '../variables';
 import { Configuration }                                     from '../configuration';
@@ -52,56 +52,108 @@ export class FinTechBankSearchService {
 
 
 
+    private addToHttpParams(httpParams: HttpParams, value: any, key?: string): HttpParams {
+        if (typeof value === "object" && value instanceof Date === false) {
+            httpParams = this.addToHttpParamsRecursive(httpParams, value);
+        } else {
+            httpParams = this.addToHttpParamsRecursive(httpParams, value, key);
+        }
+        return httpParams;
+    }
+
+    private addToHttpParamsRecursive(httpParams: HttpParams, value?: any, key?: string): HttpParams {
+        if (value == null) {
+            return httpParams;
+        }
+
+        if (typeof value === "object") {
+            if (Array.isArray(value)) {
+                (value as any[]).forEach( elem => httpParams = this.addToHttpParamsRecursive(httpParams, elem, key));
+            } else if (value instanceof Date) {
+                if (key != null) {
+                    httpParams = httpParams.append(key,
+                        (value as Date).toISOString().substr(0, 10));
+                } else {
+                   throw Error("key may not be null if value is Date");
+                }
+            } else {
+                Object.keys(value).forEach( k => httpParams = this.addToHttpParamsRecursive(
+                    httpParams, value[k], key != null ? `${key}.${k}` : k));
+            }
+        } else if (key != null) {
+            httpParams = httpParams.append(key, value);
+        } else {
+            throw Error("key may not be null if value is not object or array");
+        }
+        return httpParams;
+    }
+
     /**
-     * Request the profile of the bank identified with id (bankId).
-     * Request the profile of the bank identified with id (bankId).
+     * Request the profile of the bank identified with id (bankProfileId).
+     * Request the profile of the bank identified with id (bankProfileId).
      * @param xRequestID Unique ID that identifies this request through common workflow. Must be contained in HTTP Response as well. 
-     * @param X_XSRF_TOKEN XSRF parameter used to validate a SessionCookie or RedirectCookie. 
-     * @param bankId Identifier of the bank to be loaded.
+     * @param xXSRFTOKEN XSRF parameter used to validate a SessionCookie or RedirectCookie. 
+     * @param bankProfileId Identifier of the bank to be loaded.
      * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
      * @param reportProgress flag to report request and response progress.
      */
-    public bankProfileGET(xRequestID: string, X_XSRF_TOKEN: string, bankId: string, observe?: 'body', reportProgress?: boolean): Observable<InlineResponse2002>;
-    public bankProfileGET(xRequestID: string, X_XSRF_TOKEN: string, bankId: string, observe?: 'response', reportProgress?: boolean): Observable<HttpResponse<InlineResponse2002>>;
-    public bankProfileGET(xRequestID: string, X_XSRF_TOKEN: string, bankId: string, observe?: 'events', reportProgress?: boolean): Observable<HttpEvent<InlineResponse2002>>;
-    public bankProfileGET(xRequestID: string, X_XSRF_TOKEN: string, bankId: string, observe: any = 'body', reportProgress: boolean = false ): Observable<any> {
+    public bankProfileGET(xRequestID: string, xXSRFTOKEN: string, bankProfileId: string, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<InlineResponse2002>;
+    public bankProfileGET(xRequestID: string, xXSRFTOKEN: string, bankProfileId: string, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<HttpResponse<InlineResponse2002>>;
+    public bankProfileGET(xRequestID: string, xXSRFTOKEN: string, bankProfileId: string, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<HttpEvent<InlineResponse2002>>;
+    public bankProfileGET(xRequestID: string, xXSRFTOKEN: string, bankProfileId: string, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: 'application/json'}): Observable<any> {
         if (xRequestID === null || xRequestID === undefined) {
             throw new Error('Required parameter xRequestID was null or undefined when calling bankProfileGET.');
         }
-        if (X_XSRF_TOKEN === null || X_XSRF_TOKEN === undefined) {
-            throw new Error('Required parameter X_XSRF_TOKEN was null or undefined when calling bankProfileGET.');
+        if (xXSRFTOKEN === null || xXSRFTOKEN === undefined) {
+            throw new Error('Required parameter xXSRFTOKEN was null or undefined when calling bankProfileGET.');
         }
-        if (bankId === null || bankId === undefined) {
-            throw new Error('Required parameter bankId was null or undefined when calling bankProfileGET.');
+        if (bankProfileId === null || bankProfileId === undefined) {
+            throw new Error('Required parameter bankProfileId was null or undefined when calling bankProfileGET.');
         }
 
         let queryParameters = new HttpParams({encoder: this.encoder});
-        if (bankId !== undefined && bankId !== null) {
-            queryParameters = queryParameters.set('bankId', <any>bankId);
+        if (bankProfileId !== undefined && bankProfileId !== null) {
+          queryParameters = this.addToHttpParams(queryParameters,
+            <any>bankProfileId, 'bankProfileId');
         }
 
         let headers = this.defaultHeaders;
         if (xRequestID !== undefined && xRequestID !== null) {
             headers = headers.set('X-Request-ID', String(xRequestID));
         }
-        if (X_XSRF_TOKEN !== undefined && X_XSRF_TOKEN !== null) {
-            headers = headers.set('X-XSRF-TOKEN', String(X_XSRF_TOKEN));
+        if (xXSRFTOKEN !== undefined && xXSRFTOKEN !== null) {
+            headers = headers.set('X-XSRF-TOKEN', String(xXSRFTOKEN));
         }
 
         // authentication (sessionCookie) required
-        // to determine the Accept header
-        const httpHeaderAccepts: string[] = [
-            'application/json'
-        ];
-        const httpHeaderAcceptSelected: string | undefined = this.configuration.selectHeaderAccept(httpHeaderAccepts);
+        if (this.configuration.apiKeys) {
+            const key: string | undefined = this.configuration.apiKeys["sessionCookie"] || this.configuration.apiKeys["sessionCookie"];
+            if (key) {
+            }
+        }
+
+        let httpHeaderAcceptSelected: string | undefined = options && options.httpHeaderAccept;
+        if (httpHeaderAcceptSelected === undefined) {
+            // to determine the Accept header
+            const httpHeaderAccepts: string[] = [
+                'application/json'
+            ];
+            httpHeaderAcceptSelected = this.configuration.selectHeaderAccept(httpHeaderAccepts);
+        }
         if (httpHeaderAcceptSelected !== undefined) {
             headers = headers.set('Accept', httpHeaderAcceptSelected);
         }
 
 
+        let responseType: 'text' | 'json' = 'json';
+        if(httpHeaderAcceptSelected && httpHeaderAcceptSelected.startsWith('text')) {
+            responseType = 'text';
+        }
+
         return this.httpClient.get<InlineResponse2002>(`${this.configuration.basePath}/v1/search/bankProfile`,
             {
                 params: queryParameters,
+                responseType: <any>responseType,
                 withCredentials: this.configuration.withCredentials,
                 headers: headers,
                 observe: observe,
@@ -114,22 +166,22 @@ export class FinTechBankSearchService {
      * Issues an incremental bank search request to the FinTechApi.
      * Issues an incremental bank search request to the FinTechApi.
      * @param xRequestID Unique ID that identifies this request through common workflow. Must be contained in HTTP Response as well. 
-     * @param X_XSRF_TOKEN XSRF parameter used to validate a SessionCookie or RedirectCookie. 
+     * @param xXSRFTOKEN XSRF parameter used to validate a SessionCookie or RedirectCookie. 
      * @param keyword 
      * @param start 
      * @param max 
      * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
      * @param reportProgress flag to report request and response progress.
      */
-    public bankSearchGET(xRequestID: string, X_XSRF_TOKEN: string, keyword: string, start?: number, max?: number, observe?: 'body', reportProgress?: boolean): Observable<InlineResponse2001>;
-    public bankSearchGET(xRequestID: string, X_XSRF_TOKEN: string, keyword: string, start?: number, max?: number, observe?: 'response', reportProgress?: boolean): Observable<HttpResponse<InlineResponse2001>>;
-    public bankSearchGET(xRequestID: string, X_XSRF_TOKEN: string, keyword: string, start?: number, max?: number, observe?: 'events', reportProgress?: boolean): Observable<HttpEvent<InlineResponse2001>>;
-    public bankSearchGET(xRequestID: string, X_XSRF_TOKEN: string, keyword: string, start?: number, max?: number, observe: any = 'body', reportProgress: boolean = false ): Observable<any> {
+    public bankSearchGET(xRequestID: string, xXSRFTOKEN: string, keyword: string, start?: number, max?: number, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<InlineResponse2001>;
+    public bankSearchGET(xRequestID: string, xXSRFTOKEN: string, keyword: string, start?: number, max?: number, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<HttpResponse<InlineResponse2001>>;
+    public bankSearchGET(xRequestID: string, xXSRFTOKEN: string, keyword: string, start?: number, max?: number, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<HttpEvent<InlineResponse2001>>;
+    public bankSearchGET(xRequestID: string, xXSRFTOKEN: string, keyword: string, start?: number, max?: number, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: 'application/json'}): Observable<any> {
         if (xRequestID === null || xRequestID === undefined) {
             throw new Error('Required parameter xRequestID was null or undefined when calling bankSearchGET.');
         }
-        if (X_XSRF_TOKEN === null || X_XSRF_TOKEN === undefined) {
-            throw new Error('Required parameter X_XSRF_TOKEN was null or undefined when calling bankSearchGET.');
+        if (xXSRFTOKEN === null || xXSRFTOKEN === undefined) {
+            throw new Error('Required parameter xXSRFTOKEN was null or undefined when calling bankSearchGET.');
         }
         if (keyword === null || keyword === undefined) {
             throw new Error('Required parameter keyword was null or undefined when calling bankSearchGET.');
@@ -137,37 +189,55 @@ export class FinTechBankSearchService {
 
         let queryParameters = new HttpParams({encoder: this.encoder});
         if (keyword !== undefined && keyword !== null) {
-            queryParameters = queryParameters.set('keyword', <any>keyword);
+          queryParameters = this.addToHttpParams(queryParameters,
+            <any>keyword, 'keyword');
         }
         if (start !== undefined && start !== null) {
-            queryParameters = queryParameters.set('start', <any>start);
+          queryParameters = this.addToHttpParams(queryParameters,
+            <any>start, 'start');
         }
         if (max !== undefined && max !== null) {
-            queryParameters = queryParameters.set('max', <any>max);
+          queryParameters = this.addToHttpParams(queryParameters,
+            <any>max, 'max');
         }
 
         let headers = this.defaultHeaders;
         if (xRequestID !== undefined && xRequestID !== null) {
             headers = headers.set('X-Request-ID', String(xRequestID));
         }
-        if (X_XSRF_TOKEN !== undefined && X_XSRF_TOKEN !== null) {
-            headers = headers.set('X-XSRF-TOKEN', String(X_XSRF_TOKEN));
+        if (xXSRFTOKEN !== undefined && xXSRFTOKEN !== null) {
+            headers = headers.set('X-XSRF-TOKEN', String(xXSRFTOKEN));
         }
 
         // authentication (sessionCookie) required
-        // to determine the Accept header
-        const httpHeaderAccepts: string[] = [
-            'application/json'
-        ];
-        const httpHeaderAcceptSelected: string | undefined = this.configuration.selectHeaderAccept(httpHeaderAccepts);
+        if (this.configuration.apiKeys) {
+            const key: string | undefined = this.configuration.apiKeys["sessionCookie"] || this.configuration.apiKeys["sessionCookie"];
+            if (key) {
+            }
+        }
+
+        let httpHeaderAcceptSelected: string | undefined = options && options.httpHeaderAccept;
+        if (httpHeaderAcceptSelected === undefined) {
+            // to determine the Accept header
+            const httpHeaderAccepts: string[] = [
+                'application/json'
+            ];
+            httpHeaderAcceptSelected = this.configuration.selectHeaderAccept(httpHeaderAccepts);
+        }
         if (httpHeaderAcceptSelected !== undefined) {
             headers = headers.set('Accept', httpHeaderAcceptSelected);
         }
 
 
+        let responseType: 'text' | 'json' = 'json';
+        if(httpHeaderAcceptSelected && httpHeaderAcceptSelected.startsWith('text')) {
+            responseType = 'text';
+        }
+
         return this.httpClient.get<InlineResponse2001>(`${this.configuration.basePath}/v1/search/bankSearch`,
             {
                 params: queryParameters,
+                responseType: <any>responseType,
                 withCredentials: this.configuration.withCredentials,
                 headers: headers,
                 observe: observe,

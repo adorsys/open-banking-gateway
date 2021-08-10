@@ -4,3 +4,11 @@
 echo "Building FireFly-exporter"
 cd firefly-exporter
 mvn verify --no-transfer-progress
+
+if [[ "$MVN_TESTS_DISABLED" == "true" ]]; then
+  echo "Maven tests are disabled, only building FireFly exporter"
+  mvn verify --no-transfer-progress -DskipTests
+else
+  echo "Building and testing FireFly exporter"
+  mvn verify --no-transfer-progress
+fi

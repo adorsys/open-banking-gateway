@@ -5,6 +5,7 @@ import de.adorsys.opba.protocol.bpmnshared.service.context.ContextUtil;
 import de.adorsys.opba.protocol.bpmnshared.service.exec.ValidatedExecution;
 import de.adorsys.opba.protocol.hbci.context.AccountListHbciContext;
 import de.adorsys.opba.protocol.hbci.context.HbciContext;
+import de.adorsys.opba.protocol.hbci.util.logresolver.HbciLogResolver;
 import lombok.RequiredArgsConstructor;
 import org.flowable.engine.delegate.DelegateExecution;
 import org.springframework.context.ApplicationEventPublisher;
@@ -15,9 +16,12 @@ import org.springframework.stereotype.Service;
 public class HbciPublishAccountListResult extends ValidatedExecution<AccountListHbciContext> {
 
     private final ApplicationEventPublisher eventPublisher;
+    private final HbciLogResolver logResolver = new HbciLogResolver(getClass());
 
     @Override
     protected void doRealExecution(DelegateExecution execution, AccountListHbciContext context) {
+        logResolver.log("doRealExecution: execution ({}) with context ({})", execution, context);
+
         eventPublisher.publishEvent(
                 new ProcessResponse(execution.getRootProcessInstanceId(), execution.getId(), context.getResponse())
         );

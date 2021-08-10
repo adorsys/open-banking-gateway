@@ -10,7 +10,7 @@ import de.adorsys.opba.protocol.hbci.tests.e2e.sandbox.hbcisteps.HbciPaymentInit
 import de.adorsys.opba.protocol.hbci.tests.e2e.sandbox.hbcisteps.HbciPaymentInitiationResult;
 import de.adorsys.opba.protocol.hbci.tests.e2e.sandbox.hbcisteps.HbciServers;
 import de.adorsys.opba.protocol.sandbox.hbci.HbciServerApplication;
-import de.adorsys.xs2a.adapter.service.model.TransactionStatus;
+import de.adorsys.xs2a.adapter.api.model.TransactionStatus;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -82,7 +82,7 @@ class HbciSandboxPaymentE2EHbciProtocolTest extends SpringScenarioTest<
         when()
             .fintech_calls_instant_payment_for_max_musterman_for_blz_30000003()
             .and()
-            .user_logged_in_into_opba_as_opba_user_with_credentials_using_fintech_supplied_url(OPBA_LOGIN, OPBA_PASSWORD)
+            .user_logged_in_into_opba_pis_as_opba_user_with_credentials_using_fintech_supplied_url(OPBA_LOGIN, OPBA_PASSWORD)
             .and()
             .user_max_musterman_provided_initial_parameters_to_make_payment()
             .and()
@@ -90,7 +90,7 @@ class HbciSandboxPaymentE2EHbciProtocolTest extends SpringScenarioTest<
             .and()
             .user_max_musterman_selected_sca_challenge_type_push_tan_to_embedded_authorization()
             .and()
-            .user_max_musterman_provided_sca_challenge_result_to_embedded_authorization_and_sees_redirect_to_fintech_ok("/pushTAN");
+            .user_max_musterman_provided_sca_challenge_result_to_embedded_authorization_and_sees_redirect_to_fintech_ok("/PUSH_OTP");
         then()
             .open_banking_has_stored_payment()
             .fintech_calls_payment_activation_for_current_authorization_id()
@@ -105,7 +105,7 @@ class HbciSandboxPaymentE2EHbciProtocolTest extends SpringScenarioTest<
         when()
             .fintech_calls_single_payment_for_max_musterman_for_blz_30000003()
             .and()
-            .user_logged_in_into_opba_as_opba_user_with_credentials_using_fintech_supplied_url(OPBA_LOGIN, OPBA_PASSWORD)
+            .user_logged_in_into_opba_pis_as_opba_user_with_credentials_using_fintech_supplied_url(OPBA_LOGIN, OPBA_PASSWORD)
             .and()
             .user_max_musterman_provided_initial_parameters_to_make_payment()
             .and()
@@ -113,7 +113,7 @@ class HbciSandboxPaymentE2EHbciProtocolTest extends SpringScenarioTest<
             .and()
             .user_max_musterman_selected_sca_challenge_type_push_tan_to_embedded_authorization()
             .and()
-            .user_max_musterman_provided_sca_challenge_result_to_embedded_authorization_and_sees_redirect_to_fintech_ok("/pushTAN");
+            .user_max_musterman_provided_sca_challenge_result_to_embedded_authorization_and_sees_redirect_to_fintech_ok("/PUSH_OTP");
         then()
             .open_banking_has_stored_payment()
             .fintech_calls_payment_activation_for_current_authorization_id()

@@ -7,6 +7,7 @@ import { ApiHeaders } from '../../../../api/api.headers';
 import { AuthConsentState } from '../../../common/dto/auth-state';
 import { ConsentAuth, AuthStateConsentAuthorizationService } from '../../../../api';
 import ActionEnum = ConsentAuth.ActionEnum;
+import { ConsentUtil } from "../../../common/consent-util";
 
 @Component({
   selector: 'consent-app-consent-initiate',
@@ -55,7 +56,10 @@ export class ConsentInitiateComponent implements OnInit {
         this.sessionService.setBankName(authorizationId, (res.body as ConsentAuth).bankName);
         this.sessionService.setFintechName(authorizationId, (res.body as ConsentAuth).fintechName);
 
-        this.sessionService.setRedirectCode(authorizationId, res.headers.get(ApiHeaders.REDIRECT_CODE));
+        this.sessionService.setRedirectCode(authorizationId, res.headers.get(ApiHeaders.X_XSRF_TOKEN));
+        if (!ConsentUtil.isEmptyObject(res.body.consent)) {
+          this.sessionService.setConsentObject(authorizationId, res.body);
+        }
         this.navigate(authorizationId, res.body);
       });
   }

@@ -17,7 +17,7 @@ import de.adorsys.opba.protocol.bpmnshared.dto.messages.ConsentAcquired;
 import de.adorsys.opba.protocol.bpmnshared.dto.messages.ProcessResponse;
 import de.adorsys.opba.protocol.bpmnshared.dto.messages.Redirect;
 import de.adorsys.opba.protocol.bpmnshared.dto.messages.RedirectToAspsp;
-import de.adorsys.opba.protocol.bpmnshared.dto.messages.InternalReturnableProcessError;
+import de.adorsys.opba.protocol.bpmnshared.dto.messages.InternalReturnableConsentGoneProcessError;
 import de.adorsys.opba.protocol.bpmnshared.dto.messages.ValidationProblem;
 import de.adorsys.opba.protocol.bpmnshared.outcome.OutcomeMapper;
 import lombok.RequiredArgsConstructor;
@@ -82,8 +82,8 @@ public class Xs2aOutcomeMapper<T> implements OutcomeMapper<T> {
     }
 
     @Override
-    public void onReturnableProcessError(InternalReturnableProcessError internalReturnableProcessError) {
-        channel.complete(new ReturnableProcessErrorResult<T>(internalReturnableProcessError.getProcessErrorString()));
+    public void onReturnableProcessError(InternalReturnableConsentGoneProcessError internalReturnableProcessError) {
+        channel.complete(new ReturnableProcessErrorResult<>(internalReturnableProcessError.getConsentGone().name()));
     }
 
     @Override
@@ -104,7 +104,7 @@ public class Xs2aOutcomeMapper<T> implements OutcomeMapper<T> {
         }
 
         @Override
-        public String authContext() {
+        public String getAuthContext() {
             return executionId;
         }
 

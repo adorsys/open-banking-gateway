@@ -4,8 +4,8 @@ import de.adorsys.opba.protocol.api.dto.result.body.AccountListBody;
 import de.adorsys.opba.protocol.api.dto.result.body.TransactionsResponseBody;
 import de.adorsys.opba.protocol.xs2a.config.MapperTestConfig;
 import de.adorsys.opba.protocol.xs2a.util.FixtureProvider;
-import de.adorsys.xs2a.adapter.service.model.AccountListHolder;
-import de.adorsys.xs2a.adapter.service.model.TransactionsReport;
+import de.adorsys.xs2a.adapter.api.model.AccountList;
+import de.adorsys.xs2a.adapter.api.model.TransactionsResponse200Json;
 import lombok.SneakyThrows;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -26,7 +26,7 @@ public class Xs2AToFacadeMapperTest {
     @Test
     @SneakyThrows
     void accountsMapperTest() {
-        AccountListHolder mappingInput = fixtureProvider.getFromFile(PATH_PREFIX + "accounts_input.json", AccountListHolder.class);
+        AccountList mappingInput = fixtureProvider.getFromFile(PATH_PREFIX + "accounts_input.json", AccountList.class);
         AccountListBody mappingResult = mapper.map(mappingInput);
 
         AccountListBody expected = fixtureProvider.getFromFile(PATH_PREFIX + "accounts_output.json", AccountListBody.class);
@@ -36,8 +36,9 @@ public class Xs2AToFacadeMapperTest {
     @Test
     @SneakyThrows
     void transactionsMapperTest() {
-        TransactionsReport mappingInput = fixtureProvider.getFromFile(PATH_PREFIX + "transactions_input.json",
-                                                                      TransactionsReport.class);
+        TransactionsResponse200Json mappingInput = fixtureProvider.getFromFile(PATH_PREFIX + "transactions_input.json",
+                TransactionsResponse200Json.class);
+
         TransactionsResponseBody mappingResult = mapper.map(mappingInput);
 
         TransactionsResponseBody expected = fixtureProvider.getFromFile(PATH_PREFIX + "transactions_output.json",

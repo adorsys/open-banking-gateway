@@ -48,6 +48,11 @@ public interface CurrentBankProfile {
     boolean isUniquePaymentPurpose();
 
     /**
+     * Whether to try to skip call to ConsentAuthorization action (startAuthorization)
+     */
+    boolean isXs2aSkipConsentAuthorization();
+
+    /**
      * Bank identification code.
      */
     String getBic();
@@ -60,5 +65,15 @@ public interface CurrentBankProfile {
     /**
      * Bank name
      */
-    String getName();
+    String getBankName();
+
+    /**
+     * Bank external id (i.e. in system that is not OBG)
+     */
+    String getExternalId();
+
+    /**
+     * Bank external interfaces (i.e. in system that is not OBG)
+     */
+    String getExternalInterfaces();
 }

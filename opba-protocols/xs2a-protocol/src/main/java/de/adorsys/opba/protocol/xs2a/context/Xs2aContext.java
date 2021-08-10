@@ -2,15 +2,16 @@ package de.adorsys.opba.protocol.xs2a.context;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.google.common.collect.ImmutableMap;
+import de.adorsys.opba.protocol.api.common.Approach;
 import de.adorsys.opba.protocol.api.common.ProtocolAction;
 import de.adorsys.opba.protocol.bpmnshared.dto.context.BaseContext;
-import de.adorsys.opba.protocol.api.common.Approach;
 import de.adorsys.opba.protocol.xs2a.domain.dto.forms.ScaMethod;
 import de.adorsys.opba.protocol.xs2a.service.storage.TransientDataEntry;
-import de.adorsys.xs2a.adapter.service.model.AuthenticationObject;
-import de.adorsys.xs2a.adapter.service.model.ChallengeData;
-import de.adorsys.xs2a.adapter.service.model.StartScaProcessResponse;
-import de.adorsys.xs2a.adapter.service.model.TokenResponse;
+import de.adorsys.xs2a.adapter.api.model.AuthenticationObject;
+import de.adorsys.xs2a.adapter.api.model.ChallengeData;
+import de.adorsys.xs2a.adapter.api.model.HrefType;
+import de.adorsys.xs2a.adapter.api.model.StartScaprocessResponse;
+import de.adorsys.xs2a.adapter.api.model.TokenResponse;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 
@@ -58,15 +59,26 @@ public class Xs2aContext extends BaseContext {
     private String aspspScaApproach;
 
     /**
+     * Consent/Payment create links response from ASPSP.
+     */
+    private Map<String, HrefType> consentOrPaymentCreateLinks;
+
+    /**
      * ASPSP response after consent authorization was initiated. Used to retrieve ASPSP redirection link for
      * consent authorization for REDIRECT consent authorization.
      */
-    private StartScaProcessResponse startScaProcessResponse;
+    private StartScaprocessResponse startScaProcessResponse;
 
     /**
      * Consent ID that uniquely identifies the consent within ASPSP. Highly sensitive field.
      */
     private String consentId;
+
+    /**
+     * For banks that do not support 'consentId' (ING), indicates that consent was acquired.
+     */
+    private boolean consentAcquired;
+
 
     /**
      * Authorization ID (ASPSP facing) to use for current authorization session.
@@ -158,6 +170,11 @@ public class Xs2aContext extends BaseContext {
      * Indicates that ASPSP requires Oauth2-integrated step for consent authorization.
      */
     private boolean oauth2IntegratedNeeded;
+
+    /**
+     * Indicates that ASPSP requires Oauth2-Consent of special type (ING bank).
+     */
+    private boolean oauth2ConsentNeeded;
 
     /**
      * SCA Oauth2 link to follow.

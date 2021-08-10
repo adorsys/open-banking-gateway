@@ -32,18 +32,18 @@ paths:
         - $ref: "./tpp_banking_api_commons.yml#/components/parameters/X-Request-Signature"
         - $ref: "./tpp_banking_api_commons.yml#/components/parameters/Fintech-ID"
         - $ref: "./tpp_banking_api_commons.yml#/components/parameters/ServiceSessionPassword"
-        - $ref: "./tpp_banking_api_commons.yml#/components/parameters/Bank-ID"
+        - $ref: "./tpp_banking_api_commons.yml#/components/parameters/Bank-Profile-ID"
+        - $ref: "./tpp_banking_api_commons.yml#/components/parameters/X-Psu-Authentication-Required"
         - $ref: "./tpp_banking_api_commons.yml#/components/parameters/Fintech-User-ID"
         - $ref: "./tpp_banking_api_commons.yml#/components/parameters/Fintech-Redirect-URL-OK"
         - $ref: "./tpp_banking_api_commons.yml#/components/parameters/Fintech-Redirect-URL-NOK"
         - $ref: "./tpp_banking_api_commons.yml#/components/parameters/Service-Session-ID"
         - $ref: "./tpp_banking_api_commons.yml#/components/parameters/X-Request-ID"
+        - $ref: "./tpp_banking_api_commons.yml#/components/parameters/X-Create-Consent-If-None"
           # query
         - $ref: "#/components/parameters/withBalance"
         - $ref: "#/components/parameters/online"
 
-      security:
-        - BearerAuthOAuth: []
       responses:
         "200":
           $ref: "#/components/responses/200_AccountList"
@@ -74,12 +74,14 @@ paths:
         - $ref: "./tpp_banking_api_commons.yml#/components/parameters/X-Request-Signature"
         - $ref: "./tpp_banking_api_commons.yml#/components/parameters/Fintech-ID"
         - $ref: "./tpp_banking_api_commons.yml#/components/parameters/ServiceSessionPassword"
-        - $ref: "./tpp_banking_api_commons.yml#/components/parameters/Bank-ID"
+        - $ref: "./tpp_banking_api_commons.yml#/components/parameters/Bank-Profile-ID"
+        - $ref: "./tpp_banking_api_commons.yml#/components/parameters/X-Psu-Authentication-Required"
         - $ref: "./tpp_banking_api_commons.yml#/components/parameters/Fintech-User-ID"
         - $ref: "./tpp_banking_api_commons.yml#/components/parameters/Fintech-Redirect-URL-OK"
         - $ref: "./tpp_banking_api_commons.yml#/components/parameters/Fintech-Redirect-URL-NOK"
         - $ref: "./tpp_banking_api_commons.yml#/components/parameters/Service-Session-ID"
         - $ref: "./tpp_banking_api_commons.yml#/components/parameters/X-Request-ID"
+        - $ref: "./tpp_banking_api_commons.yml#/components/parameters/X-Create-Consent-If-None"
         #query
         - $ref: "#/components/parameters/dateFrom"
         - $ref: "#/components/parameters/dateTo"
@@ -87,9 +89,10 @@ paths:
         - $ref: "#/components/parameters/bookingStatus"
         - $ref: "#/components/parameters/deltaList"
         - $ref: "#/components/parameters/online"
+        - $ref: "#/components/parameters/analytics"
+        - $ref: "#/components/parameters/page"
+        - $ref: "#/components/parameters/pageSize"
 
-      security:
-        - BearerAuthOAuth: []
       responses:
         "200":
           $ref: "#/components/responses/200_AccountsTransactions"
@@ -113,25 +116,57 @@ paths:
         - $ref: "./tpp_banking_api_commons.yml#/components/parameters/X-Request-Signature"
         - $ref: "./tpp_banking_api_commons.yml#/components/parameters/Fintech-ID"
         - $ref: "./tpp_banking_api_commons.yml#/components/parameters/ServiceSessionPassword"
-        - $ref: "./tpp_banking_api_commons.yml#/components/parameters/Bank-ID"
+        - $ref: "./tpp_banking_api_commons.yml#/components/parameters/Bank-Profile-ID"
+        - $ref: "./tpp_banking_api_commons.yml#/components/parameters/X-Psu-Authentication-Required"
         - $ref: "./tpp_banking_api_commons.yml#/components/parameters/Fintech-User-ID"
         - $ref: "./tpp_banking_api_commons.yml#/components/parameters/Fintech-Redirect-URL-OK"
         - $ref: "./tpp_banking_api_commons.yml#/components/parameters/Fintech-Redirect-URL-NOK"
         - $ref: "./tpp_banking_api_commons.yml#/components/parameters/Service-Session-ID"
         - $ref: "./tpp_banking_api_commons.yml#/components/parameters/X-Request-ID"
+        - $ref: "./tpp_banking_api_commons.yml#/components/parameters/X-Create-Consent-If-None"
         #query
         - $ref: "#/components/parameters/dateFrom"
         - $ref: "#/components/parameters/dateTo"
         - $ref: "#/components/parameters/entryReferenceFrom"
         - $ref: "#/components/parameters/bookingStatus"
         - $ref: "#/components/parameters/deltaList"
-      security:
-        - BearerAuthOAuth: []
+        - $ref: "#/components/parameters/page"
+        - $ref: "#/components/parameters/pageSize"
       responses:
         "200":
           $ref: "#/components/responses/200_AccountsTransactions"
         "202":
           $ref: "#/components/responses/202_AUTHORIZATION_REQUIRED"
+        "401":
+          $ref: "./tpp_banking_api_commons.yml#/components/responses/401_UNAUTHORIZED"
+
+
+  /v1/banking/ais/consents/{Service-Session-ID}:
+    delete:
+      operationId: deleteConsent
+      summary: Deletes consent associated with service session.
+      tags:
+        - TPP Banking API Account information service (AIS)
+      description: >-
+        Deletes consent(s) that is associated with service session, deletes them in ASPSP,
+        deletes data that is associated with the consent.
+
+      parameters:
+        #path
+        - $ref: "./tpp_banking_api_commons.yml#/components/parameters/Service-Session-ID-Path"
+        #header
+        #common header parameter
+        - $ref: "./tpp_banking_api_commons.yml#/components/parameters/X-Timestamp-UTC"
+        - $ref: "./tpp_banking_api_commons.yml#/components/parameters/X-Request-Signature"
+        - $ref: "./tpp_banking_api_commons.yml#/components/parameters/Fintech-ID"
+        - $ref: "./tpp_banking_api_commons.yml#/components/parameters/ServiceSessionPassword"
+        - $ref: "./tpp_banking_api_commons.yml#/components/parameters/X-Request-ID"
+        #query
+        - $ref: "#/components/parameters/deleteAll"
+
+      responses:
+        "200":
+          $ref: "#/components/responses/204_NoContent"
         "401":
           $ref: "./tpp_banking_api_commons.yml#/components/responses/401_UNAUTHORIZED"
 
@@ -196,6 +231,35 @@ components:
         type: string
         format: date
 
+    page:
+      name: page
+      in: query
+      description: |
+        Result page that you want to retrieve.
+
+        Minimum value is 0.
+
+      required: false
+      schema:
+        type: integer
+        format: int32
+        minimum: 0
+
+    pageSize:
+      name: pageSize
+      in: query
+      description: |
+        Maximum number of records per page.
+
+        Can be at most 500.
+
+      required: false
+      schema:
+        type: integer
+        format: int32
+        maximum: 500
+        minimum: 1
+
     withBalance:
       name: withBalance
       in: query
@@ -215,6 +279,17 @@ components:
       schema:
         type: boolean
         default: "true"
+
+    analytics:
+      name: analytics
+      in: query
+      required: false
+      description: |
+        Analyze transactions (bookings) for categorizations.
+      example: "false"
+      schema:
+        type: boolean
+        default: "false"
 
     deltaList:
       name: deltaList
@@ -244,6 +319,17 @@ components:
       required: false
       schema:
         type: string
+
+    deleteAll:
+      name: deleteAll
+      in: query
+      required: false
+      description: |
+        Delete FinAPI user when deleting consent.
+      example: "false"
+      schema:
+        type: boolean
+        default: "false"
 
   responses:
     200_AccountsTransactions:
@@ -287,6 +373,12 @@ components:
         application/json:
           schema:
             $ref: "#/components/schemas/accountList"
+
+    204_NoContent:
+      description: OK
+      headers:
+        X-Request-ID:
+          $ref: "./tpp_banking_api_commons.yml#/components/headers/X-Request-ID"
 
   schemas:
     accountDetails:
@@ -410,6 +502,64 @@ components:
         pending:
           $ref: "#/components/schemas/transactionList"
 
+    analyticsReportDetails:
+      description: |
+        JSON based analytics report.
+        This account report contains transaction categorization result.
+      type: object
+      properties:
+        transactionId:
+          description: The id of transaction this analytics result refers to.
+          type: string
+        mainCategory:
+          description: Main category of the booking.
+          type: string
+        subCategory:
+          description: Sub category of the booking.
+          type: string
+        specification:
+          description: Specification of the booking.
+          type: string
+        otherAccount:
+          description: Related account.
+          type: string
+        logo:
+          description: Logo.
+          type: string
+        homepage:
+          description: Homepage.
+          type: string
+        hotline:
+          description: Hotline.
+          type: string
+        email:
+          description: Email.
+          type: string
+        custom:
+          description: Custom information about analyzed transaction.
+          type: object
+          additionalProperties:
+            type: string
+        usedRules:
+          description: Rules that were used to analyze.
+          type: array
+          uniqueItems: true
+          items:
+            type: string
+        nextBookingDate:
+          description: Classification next booking date.
+          type: string
+          format: date
+        cycle:
+          description: Classification cycle result.
+          type: string
+
+    analyticsReport:
+      description: Array of transaction details.
+      type: array
+      items:
+        $ref: "#/components/schemas/analyticsReportDetails"
+
     accountStatus:
       description: |
         Account status. The value is one of the following:
@@ -477,6 +627,41 @@ components:
           $ref: "#/components/schemas/hrefType"
         transactions:
           $ref: "#/components/schemas/hrefType"
+
+    paging:
+      description: |
+        Container for pagination information
+      type: object
+      required:
+        - page
+        - pageCount
+        - pageSize
+        - totalCount
+      properties:
+        page:
+          description: Current page number
+          type: integer
+          format: int32
+          minimum: 0
+          example: 0
+        pageSize:
+          description: Current page size (number of entries in this page)
+          type: integer
+          format: int32
+          minimum: 1
+          example: 20
+        pageCount:
+          description: Total number of pages
+          type: integer
+          format: int32
+          minimum: 0
+          example: 10
+        totalCount:
+          description: Total number of entries across all pages
+          type: integer
+          format: int64
+          minimum: 0
+          example: 200
 
     proprietaryBankTransactionCode:
       description: |
@@ -903,6 +1088,10 @@ components:
           $ref: "./tpp_banking_api_commons.yml#/components/schemas/accountReference"
         transactions:
           $ref: "#/components/schemas/accountReport"
+        analytics:
+          $ref: "#/components/schemas/analyticsReport"
+        paging:
+          $ref: "#/components/schemas/paging"
 
     ultimateCreditor:
       description: Ultimate Creditor.
@@ -915,19 +1104,3 @@ components:
       type: string
       maxLength: 70
       example: "Ultimate Debtor"
-
-  securitySchemes:
-    BearerAuthOAuth:
-      description: |
-        Bearer Token.
-      type: http
-      scheme: bearer
-    accessCode:
-      type: oauth2
-      flows:
-        authorizationCode:
-          authorizationUrl: "http://example.com/oauth/auth"
-          tokenUrl: "http://example.com/oauth/token"
-          scopes:
-            write: allows modifying resources
-            read: allows reading resources

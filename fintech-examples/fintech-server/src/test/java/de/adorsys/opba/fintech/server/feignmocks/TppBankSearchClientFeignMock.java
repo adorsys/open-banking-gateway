@@ -16,7 +16,7 @@ public class TppBankSearchClientFeignMock implements TppBankSearchClient {
 
     @Override
     public ResponseEntity<BankProfileResponse> bankProfileGET(UUID xRequestID,
-                                                              @NotNull @Valid String bankId,
+                                                              @NotNull @Valid UUID bankProfileID,
                                                               String xTimestampUTC,
                                                               String xRequestSignature,
                                                               String fintechId) {

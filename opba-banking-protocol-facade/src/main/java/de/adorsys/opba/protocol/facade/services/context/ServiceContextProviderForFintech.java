@@ -56,9 +56,9 @@ public class ServiceContextProviderForFintech implements ServiceContextProvider 
                 .serviceCtx(Context.<REQUEST>builder()
                         .serviceSessionId(session.getId())
                         .authorizationBankProtocolId(null == authSession ? null : authSession.getAction().getId())
-                        .bankId(request.getFacadeServiceable().getBankId())
+                        .bankProfileId(null != request.getFacadeServiceable().getBankProfileId() ? request.getFacadeServiceable().getBankProfileId() : session.getBankProfile().getUuid())
                         .authSessionId(null == authSession ? null : authSession.getId())
-                        .authContext(null == authSession ? null : authSession.getContext())
+                        .authContext(null == authSession ? null : authSession.getAuthSessionContext())
                         // Currently 1-1 auth-session to service session
                         .futureAuthSessionId(session.getId())
                         .futureRedirectCode(UUID.randomUUID())
@@ -182,7 +182,7 @@ public class ServiceContextProviderForFintech implements ServiceContextProvider 
             ServiceSession session,
             long bankProtocolId
     ) {
-        BankProfile profile = getBankProfileFromRequest(request.getFacadeServiceable());
+        BankProfile profile = session.getBankProfile();
 
         // FinTech requests should be signed, so creating Fintech entity if it does not exist.
         Fintech fintech = authenticator.authenticateOrCreateFintech(request.getFacadeServiceable());
@@ -199,7 +199,7 @@ public class ServiceContextProviderForFintech implements ServiceContextProvider 
     }
 
     private BankProfile getBankProfileFromRequest(FacadeServiceableRequest request) {
-        return profileJpaRepository.findByBankUuid(request.getBankId())
-                    .orElseThrow(() -> new IllegalArgumentException("No bank profile for bank: " + request.getBankId()));
+        return profileJpaRepository.findByUuid(request.getBankProfileId())
+                    .orElseThrow(() -> new IllegalArgumentException("No bank profile for bank: " + request.getBankProfileId()));
     }
 }

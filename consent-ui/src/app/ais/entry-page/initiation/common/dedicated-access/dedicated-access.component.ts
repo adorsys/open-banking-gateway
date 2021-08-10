@@ -4,9 +4,10 @@ import { FormBuilder, FormGroup } from '@angular/forms';
 import { Location } from '@angular/common';
 
 import { SharedRoutes } from '../shared-routes';
-import { AccountReference } from '../accounts-reference/accounts-reference.component';
+import { InternalAccountReference } from '../accounts-reference/accounts-reference.component';
 import { SessionService } from '../../../../../common/session.service';
 import { ConsentUtil } from '../../../../common/consent-util';
+import {AccountReference} from "../../../../common/dto/ais-consent";
 
 @Component({
   selector: 'consent-app-limited-access',
@@ -29,7 +30,7 @@ export class DedicatedAccessComponent implements OnInit {
   public finTechName: string;
   public aspspName: string;
 
-  accounts = [new AccountReference()];
+  accounts = [new InternalAccountReference()];
   limitedAccountAccessForm: FormGroup;
   wrongIban: boolean;
 
@@ -51,31 +52,31 @@ export class DedicatedAccessComponent implements OnInit {
     consentObj.consent.access.availableAccounts = null;
     consentObj.consent.access.allPsd2 = null;
 
-    consentObj.consent.access.accounts = this.accounts.map((it) => it.iban);
-    consentObj.consent.access.balances = this.accounts.map((it) => it.iban);
-    consentObj.consent.access.transactions = this.accounts.map((it) => it.iban);
+    consentObj.consent.access.accounts = this.accounts.map((it) => DedicatedAccessComponent.toAccountReference(it));
+    consentObj.consent.access.balances = this.accounts.map((it) => DedicatedAccessComponent.toAccountReference(it));
+    consentObj.consent.access.transactions = this.accounts.map((it) => DedicatedAccessComponent.toAccountReference(it));
 
     this.sessionService.setConsentObject(this.authorizationId, consentObj);
     this.router.navigate([SharedRoutes.REVIEW], { relativeTo: this.activatedRoute.parent });
   }
 
   onBack() {
-    const consentObj = ConsentUtil.getOrDefault(this.authorizationId, this.sessionService);
-    consentObj.consent.access.availableAccounts = null;
-    consentObj.consent.access.allPsd2 = null;
-    consentObj.consent.access.accounts = null;
-    consentObj.consent.access.balances = null;
-    consentObj.consent.access.transactions = null;
-    this.sessionService.setConsentObject(this.authorizationId, consentObj);
-
+    ConsentUtil.rollbackConsent(this.authorizationId, this.sessionService);
     this.location.back();
+  }
+
+  private static toAccountReference(reference: InternalAccountReference): AccountReference {
+    const result = {} as AccountReference;
+    result.iban = reference.iban;
+    result.currency = reference.currency;
+    return result;
   }
 
   private loadDataFromExistingConsent() {
     const consentObj = ConsentUtil.getOrDefault(this.authorizationId, this.sessionService);
     if (consentObj.consent.access.accounts) {
       this.accounts = [];
-      consentObj.consent.access.accounts.forEach((it) => this.accounts.push(new AccountReference(it)));
+      consentObj.consent.access.accounts.forEach((it) => this.accounts.push(it as InternalAccountReference));
     }
   }
 }

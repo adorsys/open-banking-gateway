@@ -26,11 +26,17 @@ spring:
       adorsys-sandbox-url: http://localhost:20014
       adorsys-sandbox-oauth-server-url: http://localhost:20015/oauth/authorization-server
       adorsys-hbci-sandbox-url: http://localhost:8090/hbci-mock/
-      fill-with-mock-data: true
 
 # Application configuration
 api:
   banking:
+    admin-api:
+      security:
+        login: Aladdin
+        password: OpenSesame
+        url-patterns-to-protect:
+          - /admin/*
+
     # Bank-search API properties
     bank-search:
       start: 0
@@ -99,7 +105,7 @@ facade:
         page:
           for-ais: ${facade.urls.embedded-ui-base-url}/auth/ais/{authorizationSessionId}/login?redirectCode={fintechUserTempPassword}
           for-pis: ${facade.urls.embedded-ui-base-url}/auth/pis/{authorizationSessionId}/login?redirectCode={fintechUserTempPassword}
-          # PIS allows anonymous users in OPBA
+          for-ais-anonymous: ${facade.urls.embedded-ui-base-url}/auth/ais/{authorizationSessionId}/anonymous?redirectCode={fintechUserTempPassword}
           for-pis-anonymous: ${facade.urls.embedded-ui-base-url}/auth/pis/{authorizationSessionId}/anonymous?redirectCode={fintechUserTempPassword}
         password:
           byte-size: 8
@@ -108,6 +114,41 @@ facade:
       cookie:
         path-templates: /embedded-server/v1/consent/{authorizationSessionId}
         redirect-path-template: /embedded-server/v1/consent/{authorizationSessionId}/fromAspsp/{redirectState}/*
+    # Datasafe security configuration
+    datasafe:
+      # Which keystore to use and how to encrypt keys in it
+      key-store:
+        type: BCFKS
+        encryption-algo: AES256_KWP
+        pbkdf:
+          pbkdf2:
+            algo: PRF_SHA512
+            saltLength: 16
+            iterCount: 10240
+        mac-algo: HmacSHA3_512
+        password-keys-algo: PBEWithHmacSHA256AndAES_128
+      # Which keys to create in keystore
+      keys:
+        enc-key-number: 1
+        sign-key-number: 1
+        # Secret key creation
+        secret:
+          algo: AES
+          size: 128
+        # Encrypting key creation
+        encrypting:
+          algo: RSA
+          size: 2048
+          sig-algo: SHA256withRSA
+        # Signing key creation
+        signing:
+          algo: RSA
+          size: 2048
+          sig-algo: SHA256withRSA
+      # How to encrypt documents
+      cms:
+        algo: AES128_GCM
+
   expirable:
     expire-after-write: PT10M
   encryption:
@@ -120,7 +161,7 @@ facade:
     # PSU consent encryption
     psu:
       key-pair:
-        cipher-algo: AES256_CBC
+        cipher-algo: AES128_CBC
         key-algo: RSA
         len: 2048
     # Consent requirements encryption
@@ -170,8 +211,8 @@ protocol:
       common:
         to-aspsp: /{authSessionId}/to-aspsp-redirection?redirectCode={redirectCode}
         web-hooks:
-          ok: ${facade.urls.embedded-ui-base-url}/embedded-server/v1/consent/{authSessionId}/fromAspsp/STUB_STATE/ok?redirectCode={aspspRedirectCode}
-          nok: ${facade.urls.embedded-ui-base-url}/embedded-server/v1/consent/{authSessionId}/fromAspsp/STUB_STATE/nok?redirectCode={aspspRedirectCode}
+          ok: ${facade.urls.embedded-ui-base-url}/embedded-server/v1/consent/{authSessionId}/fromAspsp/STUB_STATE/ok/{aspspRedirectCode}
+          nok: ${facade.urls.embedded-ui-base-url}/embedded-server/v1/consent/{authSessionId}/fromAspsp/STUB_STATE/nok/{aspspRedirectCode}
           result: /{authSessionId}/consent-result?redirectCode={redirectCode}
         parameters:
           provide-more: /{authSessionId}?redirectCode={redirectCode}
@@ -183,7 +224,13 @@ protocol:
     aspspmessages:
       invalid-credentials: PSU_CREDENTIALS_INVALID
       invalid-consent: FORMAT_ERROR
-      missing-oauth2-token: UNAUTHORIZED
+      missing-oauth2-token: TOKEN_INVALID
+      missing-oauth2-token-message: Please retrieve token first
+      consent-gone:
+        ACCESS_EXCEEDED: CONSENT_ACCESS_EXCEEDED_LIMIT
+        CONSENT_UNKNOWN: CONSENT_UNKNOWN
+        CONSENT_EXPIRED: CONSENT_EXPIRED
+        CONSENT_INVALID: CONSENT_INVALID
     pkcs12:
       keystore: sample-qwac.keystore
       password: password
@@ -200,8 +247,8 @@ protocol:
         redirect:
           to-aspsp: ${facade.urls.embedded-ui-base-url}/ais/{authSessionId}/to-aspsp-redirection
           web-hooks:
-            ok: ${facade.urls.embedded-ui-base-url}/embedded-server/v1/consent/{authSessionId}/fromAspsp/STUB_STATE/ok?redirectCode={aspspRedirectCode}
-            nok: ${facade.urls.embedded-ui-base-url}/embedded-server/v1/consent/{authSessionId}/fromAspsp/STUB_STATE/nok?redirectCode={aspspRedirectCode}
+            ok: ${facade.urls.embedded-ui-base-url}/embedded-server/v1/consent/{authSessionId}/fromAspsp/STUB_STATE/ok/{aspspRedirectCode}
+            nok: ${facade.urls.embedded-ui-base-url}/embedded-server/v1/consent/{authSessionId}/fromAspsp/STUB_STATE/nok/{aspspRedirectCode}
             result: ${facade.urls.embedded-ui-base-url}/ais/{authSessionId}/consent-result?redirectCode={redirectCode}
           parameters:
             max-array-size: 32
@@ -214,8 +261,8 @@ protocol:
         redirect:
           to-aspsp: ${facade.urls.embedded-ui-base-url}/pis/{authSessionId}/to-aspsp-redirection
           web-hooks:
-            ok: ${facade.urls.embedded-ui-base-url}/embedded-server/v1/consent/{authSessionId}/fromAspsp/STUB_STATE/ok?redirectCode={aspspRedirectCode}
-            nok: ${facade.urls.embedded-ui-base-url}/embedded-server/v1/consent/{authSessionId}/fromAspsp/STUB_STATE/nok?redirectCode={aspspRedirectCode}
+            ok: ${facade.urls.embedded-ui-base-url}/embedded-server/v1/consent/{authSessionId}/fromAspsp/STUB_STATE/ok/{aspspRedirectCode}
+            nok: ${facade.urls.embedded-ui-base-url}/embedded-server/v1/consent/{authSessionId}/fromAspsp/STUB_STATE/nok/{aspspRedirectCode}
             result: ${facade.urls.embedded-ui-base-url}/pis/{authSessionId}/consent-result?redirectCode={redirectCode}
           parameters:
             max-array-size: 32
@@ -224,6 +271,14 @@ protocol:
             select-sca-method: ${facade.urls.embedded-ui-base-url}/pis/{authSessionId}/select-sca-method
             report-sca-result: ${facade.urls.embedded-ui-base-url}/pis/{authSessionId}/sca-result/{selectedScaType}?wrong={isWrongCreds}
             provide-psu-iban: ${facade.urls.embedded-ui-base-url}/pis/{authSessionId}/entry-consent-transactions/dedicated-account-access?wrong={isWrongCreds}
+    sca:
+      authentication-types:
+        SMS: "SMS_OTP"
+        MOBILE: "SMS_OTP"
+        CHIP: "CHIP_OTP"
+        PHOTO: "PHOTO_OTP"
+        PUSH: "PUSH_OTP"
+        EMAIL: "SMTP_OTP"
 
 # Flowable comes for all protocols shared
 bpmnshared:

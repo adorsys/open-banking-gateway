@@ -16,11 +16,23 @@ public enum ProtocolAction {
      * {@code de.adorsys.opba.protocol.api.ais.ListTransactions}
      */
     LIST_TRANSACTIONS("list-transactions"),
-    // Consent
+    /**
+     * {@code de.adorsys.opba.protocol.api.ais.DeleteConsent}
+     */
+    DELETE_CONSENT("delete-consent"),
+    /**
+     * {@code de.adorsys.opba.protocol.api.ais.GetConsentStatus}
+     */
+    GET_CONSENT_STATUS("get-consent-status"),
+    // Consent authorization
     /**
      * Root action for all authorizations
      */
     AUTHORIZATION("authorization"),
+    /**
+     * {@code de.adorsys.opba.protocol.api.authorization.OnLogin}
+     */
+    ON_LOGIN("on-login", AUTHORIZATION),
     /**
      * {@code de.adorsys.opba.protocol.api.authorization.GetAuthorizationState}
      */

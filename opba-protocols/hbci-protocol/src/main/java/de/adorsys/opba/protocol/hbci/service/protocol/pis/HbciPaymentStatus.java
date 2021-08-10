@@ -2,7 +2,6 @@ package de.adorsys.opba.protocol.hbci.service.protocol.pis;
 
 import de.adorsys.multibanking.domain.Bank;
 import de.adorsys.multibanking.domain.BankAccess;
-import de.adorsys.multibanking.domain.BankAccount;
 import de.adorsys.multibanking.domain.BankApiUser;
 import de.adorsys.multibanking.domain.request.TransactionRequest;
 import de.adorsys.multibanking.domain.response.PaymentStatusResponse;
@@ -15,6 +14,8 @@ import de.adorsys.opba.protocol.bpmnshared.service.exec.ValidatedExecution;
 import de.adorsys.opba.protocol.hbci.context.HbciContext;
 import de.adorsys.opba.protocol.hbci.context.PaymentHbciContext;
 import de.adorsys.opba.protocol.hbci.service.consent.HbciScaRequiredUtil;
+import de.adorsys.opba.protocol.hbci.service.protocol.HbciUtil;
+import de.adorsys.opba.protocol.hbci.util.logresolver.HbciLogResolver;
 import lombok.RequiredArgsConstructor;
 import org.flowable.engine.delegate.DelegateExecution;
 import org.springframework.stereotype.Service;
@@ -22,23 +23,27 @@ import org.springframework.stereotype.Service;
 @Service("hbciPaymentStatusExecutor")
 @RequiredArgsConstructor
 public class HbciPaymentStatus extends ValidatedExecution<PaymentHbciContext> {
+
     private final OnlineBankingService onlineBankingService;
+    private final HbciLogResolver logResolver = new HbciLogResolver(getClass());
 
     @Override
     protected void doRealExecution(DelegateExecution execution, PaymentHbciContext context) {
+        logResolver.log("doRealExecution: execution ({}) with context ({})", execution, context);
         HbciConsent consent = context.getHbciDialogConsent();
 
         PaymentStatusReqest paymentStatusReqest = new PaymentStatusReqest();
         paymentStatusReqest.setPaymentId(context.getPayment().getPaymentId());
-        BankAccount account = new BankAccount();
-        account.setIban(context.getAccountIban());
-        paymentStatusReqest.setPsuAccount(account);
+        paymentStatusReqest.setPsuAccount(HbciUtil.buildBankAccount(context.getAccountIban()));
 
         TransactionRequest<PaymentStatusReqest> request = create(paymentStatusReqest, new BankApiUser(),
                 new BankAccess(), context.getBank(), consent);
+        logResolver.log("getPaymentStatus request: {}", request);
         PaymentStatusResponse response = onlineBankingService.getStrongCustomerAuthorisation().getPaymentStatus(request);
-        boolean postScaRequired = HbciScaRequiredUtil.extraCheckIfScaRequired(response);
+        logResolver.log("getPaymentStatus response: {}", response);
 
+        boolean postScaRequired = HbciScaRequiredUtil.extraCheckIfScaRequired(response);
+        logResolver.log("AuthorisationCodeResponse is empty: {}, postScaRequired: {}", response.getAuthorisationCodeResponse() == null, postScaRequired);
         if (null == response.getAuthorisationCodeResponse() && !postScaRequired) {
             ContextUtil.getAndUpdateContext(
                     execution,

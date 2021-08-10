@@ -29,14 +29,14 @@ import static de.adorsys.opba.protocol.xs2a.tests.HeaderNames.SERVICE_SESSION_PA
 import static de.adorsys.opba.protocol.xs2a.tests.HeaderNames.X_REQUEST_ID;
 import static de.adorsys.opba.protocol.xs2a.tests.HeaderNames.X_XSRF_TOKEN;
 import static de.adorsys.opba.protocol.xs2a.tests.e2e.ResourceUtil.readResource;
-import static de.adorsys.opba.protocol.xs2a.tests.e2e.stages.AccountInformationRequestCommon.REDIRECT_CODE_QUERY;
+import static de.adorsys.opba.protocol.xs2a.tests.e2e.stages.RequestCommon.X_XSRF_TOKEN_QUERY;
 import static de.adorsys.opba.protocol.xs2a.tests.e2e.stages.StagesCommonUtil.AIS_ACCOUNTS_ENDPOINT;
 import static de.adorsys.opba.protocol.xs2a.tests.e2e.stages.StagesCommonUtil.AIS_TRANSACTIONS_ENDPOINT;
 import static de.adorsys.opba.protocol.xs2a.tests.e2e.stages.StagesCommonUtil.ANTON_BRUECKNER;
 import static de.adorsys.opba.protocol.xs2a.tests.e2e.stages.StagesCommonUtil.AUTHORIZE_CONSENT_ENDPOINT;
 import static de.adorsys.opba.protocol.xs2a.tests.e2e.stages.StagesCommonUtil.CONFIRM_CONSENT_ENDPOINT;
 import static de.adorsys.opba.protocol.xs2a.tests.e2e.stages.StagesCommonUtil.MAX_MUSTERMAN;
-import static de.adorsys.opba.protocol.xs2a.tests.e2e.stages.StagesCommonUtil.SANDBOX_BANK_ID;
+import static de.adorsys.opba.protocol.xs2a.tests.e2e.stages.StagesCommonUtil.SANDBOX_BANK_PROFILE_ID;
 import static de.adorsys.opba.protocol.xs2a.tests.e2e.stages.StagesCommonUtil.SESSION_PASSWORD;
 import static de.adorsys.opba.protocol.xs2a.tests.e2e.stages.StagesCommonUtil.withAccountsHeaders;
 import static de.adorsys.opba.protocol.xs2a.tests.e2e.stages.StagesCommonUtil.withSignatureHeaders;
@@ -46,6 +46,7 @@ import static java.time.format.DateTimeFormatter.ISO_DATE;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.util.BigDecimalComparator.BIG_DECIMAL_COMPARATOR;
 import static org.hamcrest.Matchers.containsInAnyOrder;
+import static org.hamcrest.Matchers.empty;
 import static org.hamcrest.Matchers.equalTo;
 import static org.hamcrest.Matchers.hasSize;
 import static org.hamcrest.Matchers.instanceOf;
@@ -180,11 +181,19 @@ public class AccountInformationResult<SELF extends AccountInformationResult<SELF
 
     @SneakyThrows
     public SELF open_banking_can_read_max_musterman_account_data_using_consent_bound_to_service_session(
-        boolean validateResourceId, int expectedBalances
+            boolean validateResourceId, int expectedBalances
+    ) {
+        return open_banking_can_read_max_musterman_account_data_using_consent_bound_to_service_session(validateResourceId, expectedBalances, true);
+    }
+
+    @SneakyThrows
+    public SELF open_banking_can_read_max_musterman_account_data_using_consent_bound_to_service_session(
+        boolean validateResourceId, int expectedBalances, boolean online
     ) {
         ValidatableResponse body = withAccountsHeaders(ANTON_BRUECKNER)
                 .header(SERVICE_SESSION_ID, serviceSessionId)
             .when()
+                .queryParam("online", online)
                 .get(AIS_ACCOUNTS_ENDPOINT)
             .then()
                 .statusCode(HttpStatus.OK.value())
@@ -201,6 +210,7 @@ public class AccountInformationResult<SELF extends AccountInformationResult<SELF
         return self();
     }
 
+
     @SneakyThrows
     public SELF open_banking_reads_anton_brueckner_transactions_using_consent_bound_to_service_session_data_validated_by_iban(
         String resourceId, LocalDate dateFrom, LocalDate dateTo, String bookingStatus
@@ -212,15 +222,16 @@ public class AccountInformationResult<SELF extends AccountInformationResult<SELF
 
         assertThat(body).extracting(it -> it.read("$.transactions.booked[*].creditorAccount.iban")).asList()
                 .containsOnly(
-                        "DE67760700240243265400",
-                        "DE23760700240234367800",
-                        "DE80760700240271232400",
-                        "DE84100100100568753108",
-                        "DE38760700240320465700"
+                        "DE80760700240271232400", "DE80760700240271232400", "DE80760700240271232400",
+                        "DE80760700240271232400", "DE80760700240271232400", "DE80760700240271232400",
+                        "DE80760700240271232400", "DE80760700240271232400"
                 );
 
         assertThat(body).extracting(it -> it.read("$.transactions.booked[*].debtorAccount.iban")).asList()
-                .containsOnly("DE80760700240271232400", "DE38760700240320465700");
+                .containsOnly(
+                        "DE23760700240234367800", "DE67760700240243265400", "DE38760700240320465700",
+                        "DE84100100100568753108", "DE38760700240320465700", "DE80760700240271232400"
+                );
 
         assertThat(body)
                 .extracting(it -> it.read("$.transactions.booked[*].transactionAmount.amount"))
@@ -269,13 +280,13 @@ public class AccountInformationResult<SELF extends AccountInformationResult<SELF
     }
 
     protected ExtractableResponse<Response> getTransactionListFor(String psuId, String resourceId, LocalDate dateFrom, LocalDate dateTo, String bookingStatus) {
-        return getTransactionListFor(psuId, SANDBOX_BANK_ID, resourceId, dateFrom, dateTo, bookingStatus);
+        return getTransactionListFor(psuId, SANDBOX_BANK_PROFILE_ID, resourceId, dateFrom, dateTo, bookingStatus);
     }
 
     protected ExtractableResponse<Response> getTransactionListFor(
-        String psuId, String bankId, String resourceId, LocalDate dateFrom, LocalDate dateTo, String bookingStatus
+        String psuId, String bankProfileId, String resourceId, LocalDate dateFrom, LocalDate dateTo, String bookingStatus
     ) {
-        return withTransactionsHeaders(psuId, bankId)
+        return withTransactionsHeaders(psuId, bankProfileId)
                 .header(SERVICE_SESSION_ID, serviceSessionId)
                 .queryParam("dateFrom", dateFrom.format(ISO_DATE))
                 .queryParam("dateTo", dateTo.format(ISO_DATE))
@@ -318,13 +329,23 @@ public class AccountInformationResult<SELF extends AccountInformationResult<SELF
 
     @SneakyThrows
     public SELF open_banking_can_read_max_musterman_transactions_data_using_consent_bound_to_service_session(
-        String resourceId, LocalDate dateFrom, LocalDate dateTo, String bookingStatus
+            String resourceId, LocalDate dateFrom, LocalDate dateTo, String bookingStatus
+    ) {
+        return open_banking_can_read_max_musterman_transactions_data_using_consent_bound_to_service_session(
+                resourceId, dateFrom, dateTo, bookingStatus, true
+        );
+    }
+
+    @SneakyThrows
+    public SELF open_banking_can_read_max_musterman_transactions_data_using_consent_bound_to_service_session(
+        String resourceId, LocalDate dateFrom, LocalDate dateTo, String bookingStatus, boolean online
     ) {
         withTransactionsHeaders(MAX_MUSTERMAN)
                 .header(SERVICE_SESSION_ID, serviceSessionId)
                 .queryParam("dateFrom", dateFrom.format(ISO_DATE))
                 .queryParam("dateTo", dateTo.format(ISO_DATE))
                 .queryParam("bookingStatus", bookingStatus)
+                .queryParam("online", online)
             .when()
                 .get(AIS_TRANSACTIONS_ENDPOINT, resourceId)
             .then()
@@ -343,6 +364,24 @@ public class AccountInformationResult<SELF extends AccountInformationResult<SELF
     }
 
     @SneakyThrows
+    public SELF open_banking_can_read_none_due_to_filter_max_musterman_transactions_data_using_consent_bound_to_service_session(
+            String resourceId, LocalDate dateFrom, LocalDate dateTo, String bookingStatus, boolean online
+    ) {
+        withTransactionsHeaders(MAX_MUSTERMAN)
+                .header(SERVICE_SESSION_ID, serviceSessionId)
+                .queryParam("dateFrom", dateFrom.format(ISO_DATE))
+                .queryParam("dateTo", dateTo.format(ISO_DATE))
+                .queryParam("bookingStatus", bookingStatus)
+                .queryParam("online", online)
+                .when()
+                .get(AIS_TRANSACTIONS_ENDPOINT, resourceId)
+                .then()
+                .statusCode(HttpStatus.OK.value())
+                .body("transactions.booked", empty());
+        return self();
+    }
+
+    @SneakyThrows
     public SELF open_banking_reads_max_musterman_transactions_using_consent_bound_to_service_session_data_validated_by_iban(
         String resourceId, LocalDate dateFrom, LocalDate dateTo, String bookingStatus
     ) {
@@ -353,8 +392,10 @@ public class AccountInformationResult<SELF extends AccountInformationResult<SELF
 
         assertThat(body).extracting(it -> it.read("$.transactions.booked[*].creditorAccount.iban")).asList()
                 .containsOnly(
-                        "DE69760700240340283600",
-                        "DE80760700240271232400",
+                        "DE38760700240320465700",
+                        "DE38760700240320465700",
+                        "DE38760700240320465700",
+                        "DE38760700240320465700",
                         "DE38760700240320465700"
                 );
 
@@ -384,7 +425,7 @@ public class AccountInformationResult<SELF extends AccountInformationResult<SELF
             .given()
                 .header(X_REQUEST_ID, UUID.randomUUID().toString())
                 .header(X_XSRF_TOKEN, UUID.randomUUID().toString())
-                .queryParam(REDIRECT_CODE_QUERY, redirectCode)
+                .queryParam(X_XSRF_TOKEN_QUERY, redirectCode)
                 .cookie(AUTHORIZATION_SESSION_KEY, authSessionCookie)
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
                 .body(body)
@@ -415,8 +456,8 @@ public class AccountInformationResult<SELF extends AccountInformationResult<SELF
     }
 
     @SneakyThrows
-    public SELF open_banking_can_read_max_musterman_hbci_account_data_using_consent_bound_to_service_session(String bankId) {
-        ExtractableResponse<Response> response = withAccountsHeaders(MAX_MUSTERMAN, bankId)
+    public SELF open_banking_can_read_max_musterman_hbci_account_data_using_consent_bound_to_service_session(String bankProfileId) {
+        ExtractableResponse<Response> response = withAccountsHeaders(MAX_MUSTERMAN, bankProfileId)
                 .header(SERVICE_SESSION_ID, serviceSessionId)
                 .queryParam(ONLINE, false)
                 .when()
@@ -439,8 +480,8 @@ public class AccountInformationResult<SELF extends AccountInformationResult<SELF
     }
 
     @SneakyThrows
-    public SELF open_banking_can_read_anton_brueckner_hbci_account_data_using_consent_bound_to_service_session(String bankId) {
-        ExtractableResponse<Response> response = withAccountsHeaders(ANTON_BRUECKNER, bankId)
+    public SELF open_banking_can_read_anton_brueckner_hbci_account_data_using_consent_bound_to_service_session(String bankProfileId) {
+        ExtractableResponse<Response> response = withAccountsHeaders(ANTON_BRUECKNER, bankProfileId)
                 .header(SERVICE_SESSION_ID, serviceSessionId)
                 .queryParam(ONLINE, false)
                 .when()
@@ -464,9 +505,9 @@ public class AccountInformationResult<SELF extends AccountInformationResult<SELF
 
     @SneakyThrows
     public SELF open_banking_can_read_max_musterman_hbci_transaction_data_using_consent_bound_to_service_session(
-            String resourceId, String bankId, LocalDate dateFrom, LocalDate dateTo, String bookingStatus
+            String resourceId, String bankProfileId, LocalDate dateFrom, LocalDate dateTo, String bookingStatus
     ) {
-        ExtractableResponse<Response> response = getTransactionListFor(MAX_MUSTERMAN, bankId, resourceId, dateFrom, dateTo, bookingStatus);
+        ExtractableResponse<Response> response = getTransactionListFor(MAX_MUSTERMAN, bankProfileId, resourceId, dateFrom, dateTo, bookingStatus);
 
         this.responseContent = response.body().asString();
         DocumentContext body = JsonPath.parse(responseContent);
@@ -484,6 +525,20 @@ public class AccountInformationResult<SELF extends AccountInformationResult<SELF
                 );
         assertThat(body).extracting(it -> it.read("$.transactions.booked[*].remittanceInformationUnstructured"))
                 .asList().containsOnly("Payment For Account Insurance");
+        return self();
+    }
+
+    @SneakyThrows
+    public SELF open_banking_can_read_empty_due_to_range_max_musterman_hbci_transaction_data_using_consent_bound_to_service_session(
+            String resourceId, String bankProfileId, LocalDate dateFrom, LocalDate dateTo, String bookingStatus
+    ) {
+        ExtractableResponse<Response> response = getTransactionListFor(MAX_MUSTERMAN, bankProfileId, resourceId, dateFrom, dateTo, bookingStatus);
+
+        this.responseContent = response.body().asString();
+        DocumentContext body = JsonPath.parse(responseContent);
+
+        // TODO: Currently no IBANs as mapping is not yet completed
+        assertThat(body).extracting(it -> it.read("$.transactions.booked[*]")).asList().hasSize(0);
         return self();
     }
 }

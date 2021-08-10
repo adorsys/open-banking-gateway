@@ -262,6 +262,63 @@ components:
         pending:
           $ref: "#/components/schemas/transactionList"
 
+    analyticsReport:
+      description: |
+        JSON based analytics report.
+        This account report contains transaction categorization result.
+      type: object
+      properties:
+        transactionId:
+          description: The id of transaction this analytics result refers to.
+          type: string
+        mainCategory:
+          description: Main category of the booking.
+          type: string
+        subCategory:
+          description: Sub category of the booking.
+          type: string
+        specification:
+          description: Specification of the booking.
+          type: string
+        otherAccount:
+          description: Related account.
+          type: string
+        logo:
+          description: Logo.
+          type: string
+        homepage:
+          description: Homepage.
+          type: string
+        hotline:
+          description: Hotline.
+          type: string
+        email:
+          description: Email.
+          type: string
+        custom:
+          description: Custom inforamtion about analyzed transaction.
+          type: object
+          additionalProperties:
+            type: object
+            properties:
+              code:
+                type: string
+              text:
+                type: string
+        usedRules:
+          description: Rules that were used to analyze.
+          type: array
+          uniqueItems: true
+          items:
+            type: string
+        nextBookingDate:
+          description: Classification next booking date.
+          type: string
+          format: date
+        cycle:
+          description: Classification cycle result.
+          type: string
+
     accountStatus:
       description: |
         Account status. The value is one of the following:
@@ -453,6 +510,8 @@ components:
           $ref: "#/components/schemas/accountReference"
         transactions:
           $ref: "#/components/schemas/accountReport"
+        analytics:
+          $ref: "#/components/schemas/analyticsReport"
 
     ultimateCreditor:
       description: Ultimate Creditor.

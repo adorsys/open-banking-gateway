@@ -17,7 +17,7 @@
     "authorizationSessionId": "11111-11111",
     "redirectCode": "123",
     "authorization": "22222-22222",
-    "bankId": "33333-33333",
+    "bankProfileId": "adadadad-4000-0000-0000-b0b0b0b0b0b0",
     "fintechUserId": "localhost:2222",
     "fintechRedirectUrlOk": "localhost:2222",
     "fintechRedirectUrlNok": "localhost:3333",

@@ -94,8 +94,22 @@ public class HbciConsentInfo {
 
         Optional<HbciResultCache> cached = cachedResultAccessor.resultFromCache(ctx);
         return cached.map(
-                hbciResultCache -> null == hbciResultCache.getTransactionsByIban()
-                        || null == hbciResultCache.getTransactionsByIban().get(ctx.getAccountIban())
+                hbciResultCache -> null == hbciResultCache.getTransactionsById()
+                        || null == hbciResultCache.getTransactionsById().get(ctx.getAccountIban())
         ).orElse(true);
+    }
+
+    /**
+     * Was the PSU password that was sent to ASPSP wrong.
+     */
+    public boolean isWrongPassword(HbciContext ctx) {
+        return null != ctx.getWrongAuthCredentials() && ctx.getWrongAuthCredentials();
+    }
+
+    /**
+     * Was the SCA challenge result that was sent to ASPSP wrong.
+     */
+    public boolean isWrongScaChallenge(HbciContext ctx) {
+        return null != ctx.getWrongAuthCredentials() && ctx.getWrongAuthCredentials();
     }
 }

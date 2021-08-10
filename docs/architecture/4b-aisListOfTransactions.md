@@ -62,7 +62,7 @@ Uses the given psu-id and service type to load a corresponding service session i
 
 
 ### LoT-040 : TppBankingApi.listOfTransactions
-Forwards the PSU request to TPP. See [TppBankingApi.listOfAccounts](https://github.com/adorsys/open-banking-gateway/blob/develop/opba-banking-rest-api/src/main/resources/static/tpp_banking_api_ais.yml#/v1/banking/ais/accounts/{account-id}/transactions:).
+Forwards the PSU request to TPP. See [TppBankingApi.listOfAccounts](https://github.com/adorsys/open-banking-gateway/blob/develop/opba-banking-rest-api-ymls/src/main/resources/static/tpp_banking_api_ais.yml#/v1/banking/ais/accounts/{account-id}/transactions:).
 
 ### LoT-041 TppBankingApi.checkAuthorization
 verifies the authenticity of the Authorization header "FinTechContext". Returns the extracted fintechId.

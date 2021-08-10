@@ -1,0 +1,19 @@
+{
+  "requestId": "cef0cbf3-6458-4f13-a418-ee4d7e750511",
+  "aisConsent": {
+    "access": {
+      "allPsd2" : "ALL_ACCOUNTS_WITH_BALANCES"
+    },
+    "recurringIndicator": true,
+    "validUntil": "2021-06-18",
+    "frequencyPerDay": 4,
+    "combinedServiceIndicator": false
+  },
+  "withBalance": null,
+  "aspspId":"adadadad-4000-0000-0000-b0b0b0b0b0b0",
+  "psuIpAddress": "1.1.1.1",
+  "fintechRedirectUriOk": "localhost:2222",
+  "fintechRedirectUriNok": "localhost:3333",
+  "redirectConsentOk": false,
+  "online": false
+}

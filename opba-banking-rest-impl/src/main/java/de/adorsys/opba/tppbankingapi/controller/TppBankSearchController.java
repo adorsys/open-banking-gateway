@@ -60,13 +60,13 @@ public class TppBankSearchController implements TppBankSearchApi {
     @Override
     public ResponseEntity<BankProfileResponse> bankProfileGET(
             UUID xRequestID,
-            String bankId,
+            UUID bankProfileId,
             String xTimestampUTC,
             String xRequestSignature,
             String fintechId) {
 
-        log.debug("Bank profile request. bankId:{}, xRequestID:{}", xRequestID, bankId);
-        Optional<BankProfileDescriptor> bankProfile = bankService.getBankProfile(bankId);
+        log.debug("Bank profile request. bankId:{}, xRequestID:{}", xRequestID, bankProfileId);
+        Optional<BankProfileDescriptor> bankProfile = bankService.getBankProfile(bankProfileId);
         if (!bankProfile.isPresent()) {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }

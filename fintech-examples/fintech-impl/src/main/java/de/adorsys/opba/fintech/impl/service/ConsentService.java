@@ -1,5 +1,6 @@
 package de.adorsys.opba.fintech.impl.service;
 
+import de.adorsys.opba.fintech.impl.database.entities.SessionEntity;
 import de.adorsys.opba.fintech.impl.database.repositories.ConsentRepository;
 import de.adorsys.opba.fintech.impl.properties.TppProperties;
 import de.adorsys.opba.fintech.impl.tppclients.TppConsentClient;
@@ -9,6 +10,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
+import javax.transaction.Transactional;
 import java.util.UUID;
 
 import static de.adorsys.opba.fintech.impl.tppclients.Consts.COMPUTE_FINTECH_ID;
@@ -49,5 +51,10 @@ public class ConsentService {
         ).getStatusCode();
         log.debug("consent confirmation response code: {}", statusCode);
         return statusCode.is2xxSuccessful();
+    }
+
+    @Transactional
+    public void deleteAllConsentsOfBank(SessionEntity sessionEntity, String bankId) {
+        consentRepository.deleteByUserEntityAndBankId(sessionEntity.getUserEntity(), bankId);
     }
 }

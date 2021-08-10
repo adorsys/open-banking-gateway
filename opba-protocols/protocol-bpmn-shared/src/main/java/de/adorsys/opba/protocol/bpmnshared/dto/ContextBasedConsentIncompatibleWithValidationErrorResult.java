@@ -19,7 +19,7 @@ public class ContextBasedConsentIncompatibleWithValidationErrorResult<T> extends
     }
 
     @Override
-    public String authContext() {
+    public String getAuthContext() {
         return executionId;
     }
 }

@@ -10,12 +10,10 @@ import { PsuAuthenticationAndConsentApprovalService } from './api/psuAuthenticat
   imports:      [],
   declarations: [],
   exports:      [],
-  providers: [
-    PsuAuthenticationService,
-    PsuAuthenticationAndConsentApprovalService ]
+  providers: []
 })
 export class ApiModule {
-    public static forRoot(configurationFactory: () => Configuration): ModuleWithProviders {
+    public static forRoot(configurationFactory: () => Configuration): ModuleWithProviders<ApiModule> {
         return {
             ngModule: ApiModule,
             providers: [ { provide: Configuration, useFactory: configurationFactory } ]

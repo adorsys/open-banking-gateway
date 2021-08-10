@@ -5,7 +5,7 @@
     <parent>
         <groupId>de.adorsys.opba</groupId>
         <artifactId>open-banking-gateway</artifactId>
-        <version>0.20.1-SNAPSHOT</version>
+        <version>0.31.0-SNAPSHOT</version>
     </parent>
 
     <artifactId>opba-banking-protocol-facade</artifactId>
@@ -41,6 +41,11 @@
         <dependency>
             <groupId>de.adorsys.opba</groupId>
             <artifactId>opba-api-security</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>de.adorsys.opba</groupId>
+            <artifactId>opba-analytics-api</artifactId>
             <version>${project.version}</version>
         </dependency>
 

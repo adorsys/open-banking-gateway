@@ -1,6 +1,6 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { AccountReference, AccountsReferenceComponent } from './accounts-reference.component';
+import { InternalAccountReference, AccountsReferenceComponent } from './accounts-reference.component';
 import { FormGroup, ReactiveFormsModule } from '@angular/forms';
 
 describe('AccountsReferenceComponent', () => {
@@ -32,9 +32,10 @@ describe('AccountsReferenceComponent', () => {
   });
 
   it('should call removeAccount', () => {
-    const account: AccountReference = {
+    const account: InternalAccountReference = {
       id: '12345',
-      iban: 'DE12344313232222'
+      iban: 'DE12344313232222',
+      currency: 'EUR'
     };
 
     const removeAccountSpy = spyOn(component, 'removeAccount');

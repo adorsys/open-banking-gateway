@@ -6,7 +6,7 @@ spring:
     url: jdbc:h2:mem:testdb
     driver-class-name: org.h2.Driver
     username: sa
-    data-password: password
+    password: password
   jpa:
     database-platform: org.hibernate.dialect.H2Dialect
     open-in-view: false
@@ -27,6 +27,7 @@ api:
 
 firefly:
   url: http://localhost:9999
+  #  Result transactions page that you want to retrieve.
 
 open-banking:
   url: https://obg-dev-openbankinggateway.cloud.adorsys.de/
@@ -41,3 +42,10 @@ security:
   signSubject: fintech@awesome-fintech.com
   algorithm: RSA
   claim-name-key: sign-data
+
+drools:
+  categorizer:
+    ruleset:
+      - categorization/rules-sandbox.drl
+      - categorization/rules-de.drl
+      - categorization/rules-en.drl

@@ -1,5 +1,6 @@
 package de.adorsys.opba.db.domain.entity;
 
+import de.adorsys.opba.db.domain.entity.fintech.FintechPubKey;
 import de.adorsys.opba.db.domain.entity.psu.Psu;
 import de.adorsys.opba.db.domain.entity.sessions.ServiceSession;
 import de.adorsys.opba.db.domain.generators.AssignedUuidGenerator;
@@ -54,6 +55,9 @@ public class Consent {
     @ManyToOne(fetch = FetchType.LAZY)
     private Bank aspsp;
 
+    /**
+     * If the consent encryption key can be identified by the PSU + ASPSP encryption key.
+     */
     @ManyToOne(fetch = FetchType.LAZY)
     private Psu psu;
 
@@ -66,6 +70,17 @@ public class Consent {
     @Basic(fetch = FetchType.LAZY)
     @Column(nullable = false)
     private byte[] encContext;
+
+    @Lob
+    @Basic(fetch = FetchType.LAZY)
+    @Column(nullable = false)
+    private byte[] encCache;
+
+    /**
+     * If the consent encryption key can be identified by Key ID stored in FinTech keystore (anonymous consent).
+     */
+    @ManyToOne(fetch = FetchType.LAZY)
+    private FintechPubKey fintechPubKey;
 
     private boolean confirmed;
 
@@ -83,12 +98,30 @@ public class Consent {
         this.encContext = encryption.encrypt(context.getBytes(StandardCharsets.UTF_8));
     }
 
+    public String getCache(EncryptionService encryption) {
+        if (null == encCache) {
+            return null;
+        }
+
+        return new String(encryption.decrypt(encCache), StandardCharsets.UTF_8);
+    }
+
+    public void setCache(EncryptionService encryption, String cache) {
+        this.encCache = encryption.encrypt(cache.getBytes(StandardCharsets.UTF_8));
+    }
+
     public String getConsentId(EncryptionService encryption) {
-        return new String(encryption.decrypt(encConsentId), StandardCharsets.UTF_8);
+        byte[] decryptedConsent = encryption.decrypt(encConsentId);
+        if (null == decryptedConsent) {
+            return null;
+        }
+
+        return new String(decryptedConsent, StandardCharsets.UTF_8);
     }
 
     public void setConsentId(EncryptionService encryption, String consent) {
-        this.encConsentId = encryption.encrypt(consent.getBytes(StandardCharsets.UTF_8));
+        byte[] consentToEncrypt = null == consent ? null : consent.getBytes(StandardCharsets.UTF_8);
+        this.encConsentId = encryption.encrypt(consentToEncrypt);
     }
 }
 

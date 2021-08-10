@@ -6,6 +6,7 @@ import de.adorsys.opba.protocol.bpmnshared.service.context.ContextUtil;
 import de.adorsys.opba.protocol.bpmnshared.service.exec.ValidatedExecution;
 import de.adorsys.opba.protocol.xs2a.config.protocol.ProtocolUrlsConfiguration;
 import de.adorsys.opba.protocol.xs2a.context.Xs2aContext;
+import de.adorsys.opba.protocol.xs2a.context.ais.Xs2aAisContext;
 import de.adorsys.opba.protocol.xs2a.context.pis.Xs2aPisContext;
 import de.adorsys.opba.protocol.xs2a.service.dto.QueryHeadersToValidate;
 import de.adorsys.opba.protocol.xs2a.service.dto.ValidatedQueryHeaders;
@@ -14,7 +15,9 @@ import de.adorsys.opba.protocol.xs2a.service.xs2a.Xs2aRedirectExecutor;
 import de.adorsys.opba.protocol.xs2a.service.xs2a.dto.oauth2.Xs2aOauth2Headers;
 import de.adorsys.opba.protocol.xs2a.service.xs2a.dto.oauth2.Xs2aOauth2Parameters;
 import de.adorsys.opba.protocol.xs2a.service.xs2a.validation.Xs2aValidator;
-import de.adorsys.xs2a.adapter.service.Oauth2Service;
+import de.adorsys.opba.protocol.xs2a.util.logresolver.Xs2aLogResolver;
+import de.adorsys.xs2a.adapter.api.Oauth2Service;
+import de.adorsys.xs2a.adapter.api.model.Scope;
 import lombok.RequiredArgsConstructor;
 import lombok.SneakyThrows;
 import org.flowable.engine.RuntimeService;
@@ -36,17 +39,24 @@ public class Xs2aRedirectUserToOauth2AuthorizationServer extends ValidatedExecut
     private final Extractor extractor;
     private final Oauth2Service oauth2Service;
     private final Xs2aRedirectExecutor redirectExecutor;
+    private final Xs2aLogResolver logResolver = new Xs2aLogResolver(getClass());
 
     @Override
     @SneakyThrows
     protected void doRealExecution(DelegateExecution execution, Xs2aContext context) {
+        logResolver.log("doRealExecution: execution ({}) with context ({})", execution, context);
+
         ValidatedQueryHeaders<Xs2aOauth2Parameters, Xs2aOauth2Headers> validated = extractor.forExecution(context);
         enrichParametersAndContext(execution, context, validated.getQuery());
+
+        logResolver.log("getAuthorizationRequestUri with parameters: {}", validated.getQuery(), validated.getHeaders());
 
         URI oauth2RedirectUserTo = oauth2Service.getAuthorizationRequestUri(
                 validated.getHeaders().toHeaders().toMap(),
                 validated.getQuery().toParameters()
         );
+
+        logResolver.log("getAuthorizationRequestUri response: {}", oauth2RedirectUserTo);
 
         redirectExecutor.redirect(
                 execution,
@@ -59,6 +69,8 @@ public class Xs2aRedirectUserToOauth2AuthorizationServer extends ValidatedExecut
 
     @Override
     protected void doValidate(DelegateExecution execution, Xs2aContext context) {
+        logResolver.log("doValidate: execution ({}) with context ({})", execution, context);
+
         QueryHeadersToValidate<Xs2aOauth2Parameters, Xs2aOauth2Headers> toValidate = extractor.forValidation(context);
         enrichParametersAndContext(execution, context, toValidate.getQuery());
 
@@ -67,6 +79,8 @@ public class Xs2aRedirectUserToOauth2AuthorizationServer extends ValidatedExecut
 
     @Override
     protected void doMockedExecution(DelegateExecution execution, Xs2aContext context) {
+        logResolver.log("doMockedExecution: execution ({}) with context ({})", execution, context);
+
         runtimeService.trigger(execution.getId());
     }
 
@@ -84,7 +98,23 @@ public class Xs2aRedirectUserToOauth2AuthorizationServer extends ValidatedExecut
             parameters.setPaymentId(((Xs2aPisContext) context).getPaymentId());
         }
 
+        handleOauth2Consent(context, parameters);
+
         ContextUtil.getAndUpdateContext(execution, (Xs2aContext ctx) -> ctx.setOauth2RedirectBackLink(redirectBack));
+    }
+
+    private void handleOauth2Consent(Xs2aContext context, Xs2aOauth2Parameters parameters) {
+        // ING special case
+        if (!context.isOauth2ConsentNeeded()) {
+            return;
+        }
+
+        if (context instanceof Xs2aAisContext) {
+            // TODO Better scope mapping
+            parameters.setScope(Scope.AIS.getValue());
+        } else {
+            parameters.setScope(Scope.PIS.getValue());
+        }
     }
 
     @Service

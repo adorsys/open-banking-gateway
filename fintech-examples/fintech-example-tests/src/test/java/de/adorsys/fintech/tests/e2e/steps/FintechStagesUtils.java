@@ -15,9 +15,8 @@ public class FintechStagesUtils {
     public static final String TRANSACTION = "/accounts";
     public static final String BANKSEARCH_LOGIN = "/login";
     public static final String ADORSYS_XS2A = "adorsys xs2a";
-    public static final String FINTECH_UI_URI = "https://obg-dev-fintechui.cloud.adorsys.de";
-    public static final String REDIRECT_MODE = "adorsys redirect";
-    public static final String EMBEDDED_MODE = "adorsys embedded";
+    public static final String REDIRECT_MODE = "redirect";
+    public static final String EMBEDDED_MODE = "embedded";
 
 
     public static RequestSpecification withDefaultHeaders() {

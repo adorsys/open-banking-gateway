@@ -1,8 +1,10 @@
 CREATE SCHEMA ledgers;
 CREATE SCHEMA consent;
+CREATE SCHEMA tpp;
 
 CREATE ROLE sandboxrole;
 GRANT ALL ON SCHEMA consent TO sandboxrole;
+GRANT ALL ON SCHEMA tpp TO sandboxrole;
 
 /* Ledgers is has its own database */
 CREATE USER testledgersapp WITH ENCRYPTED PASSWORD 'testledgersapp';

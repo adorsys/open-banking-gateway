@@ -60,7 +60,7 @@ The __[UserAgentContext](dictionary.md#UserAgentContext)__ describes details ass
 Load PsuUserData associated with psu-id@fintech.
 
 ### LoA-040 : TppBankingApi.listOfAccounts
-Forwards the PSU request to TPP. See [TppBankingApi.listOfAccounts](https://github.com/adorsys/open-banking-gateway/blob/develop/opba-banking-rest-api/src/main/resources/static/tpp_banking_api_ais.yml#/v1/banking/ais/accounts:).
+Forwards the PSU request to TPP. See [TppBankingApi.listOfAccounts](https://github.com/adorsys/open-banking-gateway/blob/develop/opba-banking-rest-api-ymls/src/main/resources/static/tpp_banking_api_ais.yml#/v1/banking/ais/accounts:).
 
 ### LoA-041 TppBankingApi.checkAuthorization
 verifies the authenticity of the Authorization header "FinTechContext". Returns the extracted fintechId.

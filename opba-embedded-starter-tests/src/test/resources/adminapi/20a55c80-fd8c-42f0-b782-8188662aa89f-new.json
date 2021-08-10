@@ -1,0 +1,44 @@
+{
+  "bank": {
+    "uuid": "20a55c80-fd8c-42f0-b782-8188662aa89f",
+    "name": "adorsys HBCI no SCA-222",
+    "bic": "ADORSYS+HA",
+    "bankCode": "10000001"
+  },
+  "profiles": [{
+    "uuid": "701bfd5d-f47a-460b-a038-2d440b2bc3ad",
+    "url": "http://localhost:8090/hbci-mock/2",
+    "adapterId": "hbci-adapter",
+    "preferredApproach": "REDIRECT",
+    "tryToUsePreferredApproach": false,
+    "uniquePaymentPurpose": true,
+    "actions": {
+      "LIST_TRANSACTIONS": {
+        "protocolAction": "list-transactions",
+        "protocolBeanName": "hbciListTransactions-1222",
+        "consentSupported": false
+      },
+      "AUTHORIZATION": {
+        "protocolAction": "authorization",
+        "consentSupported": false,
+        "subProtocols": [
+          {
+            "protocolAction": "get-authorization-state",
+            "subProtocolBeanName": "hbciGetAuthorizationState"
+          },
+          {
+            "protocolAction": "update-authorization",
+            "subProtocolBeanName": "hbciUpdateAuthorization-1345"
+          },
+          {
+            "protocolAction": "from-aspsp-redirect",
+            "subProtocolBeanName": "hbciFromAspspRedirect-888"
+          }
+        ]
+      }
+    },
+    "bankCode": "10000001",
+    "bic": "ADORSYS+HA",
+    "name": "adorsys HBCI no SCA-222"
+  }]
+}

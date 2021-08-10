@@ -73,14 +73,14 @@ paths:
         This is the <b>entry point</b> for processing a consent redirected
         by the TppBankingApi to this ConsentAuthorisationApi.
 
-        At this entry point, the ConsentAuthorisationApi will use the redirectCode to retrieve the RedirectSession from the TppServer.
+        At this entry point, the ConsentAuthorisationApi will use the xXsrfToken to retrieve the RedirectSession from the TppServer.
         An analysis of the RedirectSession will help decide if the ConsentAuthorisationApi will proceed with an embedded approach (E<sub>1</sub>) or a redirect approach (R<sub>1</sub>).
 
       parameters:
         #path
         - $ref: "#/components/parameters/auth-id"
         #query
-        - $ref: "#/components/parameters/redirectCode"
+        - $ref: "#/components/parameters/xXsrfToken"
       responses:
         "200":
           $ref: "#/components/responses/200_AuthorizeResponse"
@@ -104,50 +104,19 @@ paths:
         #path
         - $ref: "#/components/parameters/auth-id"
         #query
-        - $ref: "#/components/parameters/redirectCode"
+        - $ref: "#/components/parameters/xXsrfToken"
         #headers
         - $ref: "#/components/parameters/X-Request-ID"
-        - $ref: "#/components/parameters/X-XSRF-TOKEN"
       requestBody:
         content:
           application/json:
             schema:
               $ref: "#/components/schemas/PsuAuthRequest"
-
       responses:
         "200":
           $ref: "#/components/responses/200_AuthorizeResponse"
         "202":
           $ref: "#/components/responses/200_AuthorizeResponse"
-        "401":
-          $ref: "#/components/responses/401_Unauthorized"
-      security:
-        - sessionCookie: []
-
-  /v1/consent/{auth-id}/toAspsp/grant:
-    post:
-      operationId: toAspspGrantUsingPOST
-      tags:
-        - Update Consent Authorization
-      summary: |
-        Provides the ConsentAuthorisationApi with the opportunity to redirect the PSU to the ASPSP.
-      description: |
-        Provides the ConsentAuthorisationApi with the opportunity to redirect the PSU to the ASPSP.
-      parameters:
-        #path
-        - $ref: "#/components/parameters/auth-id"
-        #headers
-        - $ref: "#/components/parameters/X-Request-ID"
-        - $ref: "#/components/parameters/X-XSRF-TOKEN"
-      requestBody:
-        content:
-          application/json:
-            schema:
-              $ref: "#/components/schemas/AuthorizeRequest"
-        required: true
-      responses:
-        "302":
-          $ref: "#/components/responses/302_Redirect_to_ASPSP"
         "401":
           $ref: "#/components/responses/401_Unauthorized"
       security:
@@ -170,13 +139,6 @@ paths:
         - $ref: "#/components/parameters/auth-id"
         #headers
         - $ref: "#/components/parameters/X-Request-ID"
-        - $ref: "#/components/parameters/X-XSRF-TOKEN"
-      requestBody:
-        content:
-          application/json:
-            schema:
-              $ref: "#/components/schemas/DenyRequest"
-        required: true
       responses:
         "302":
           $ref: "#/components/responses/302_Redirect_to_FinTechApi"
@@ -207,16 +169,15 @@ paths:
 
         ##### Back-Redirecting PSU to the FinTechApi (4<sub>b</sub>)
         Prior to redirecting the PSU back to the FinTechApi, consent information will be stored by the ConsentAuthorisationApi in a RedirectSession as well.
-        * The one time resulting redirectCode will be attached as a query parameter to the location URL leading back to the FinTechApi.
-        * After verifying the FinTechRedirectSessionCookie (4<sub>b</sub>), the FinTechApi must forward this redirectCode to the token endpoint of the TppBankingAPi (4<sub>c</sub>). 
-        * The TppBankingApi will then retrieve the RedirectSession using the redirectCode and proceed forward with the authorization process.
+        * The one time resulting xXsrfToken will be attached as a query parameter to the location URL leading back to the FinTechApi.
+        * After verifying the FinTechRedirectSessionCookie (4<sub>b</sub>), the FinTechApi must forward this xXsrfToken to the token endpoint of the TppBankingAPi (4<sub>c</sub>).
+        * The TppBankingApi will then retrieve the RedirectSession using the xXsrfToken and proceed forward with the authorization process.
 
       parameters:
         #path
         - $ref: "#/components/parameters/auth-id"
         - $ref: "#/components/parameters/redirectState"
         #query
-        - $ref: "#/components/parameters/redirectCode"
         - $ref: "#/components/parameters/code"
       responses:
         "200":
@@ -239,8 +200,6 @@ paths:
         #path
         - $ref: "#/components/parameters/auth-id"
         - $ref: "#/components/parameters/redirectState"
-        #query
-        - $ref: "#/components/parameters/redirectCode"
       responses:
         "200":
           $ref: "#/components/responses/200_AuthorizeResponse"
@@ -273,10 +232,9 @@ components:
         format: uuid
 
     X-XSRF-TOKEN:
+      name: X-XSRF-TOKEN
       required: true
-      description: |
-        XSRF parameter used to validate a SessionCookie. The token matches the auth-id
-        included in the requestpath and prefixing the cookie.
+      description: XSRF parameter used to retrieve a redirect session.
       example: abc123.faadsf93nlas32wx
       schema:
         type: string
@@ -285,7 +243,7 @@ components:
       name: Set-Cookie
       description: |
         SessionCookie used to maintain the authorization session between the ConsentAuthorisationApi
-        and the ConsentAuthorisationUI. This cookie is validated using an X-XSRF-TOKEN sent with the request header.
+        and the ConsentAuthorisationUI. This cookie is validated using an xXsrfToken sent as query with the request.
         Notice :
         * The cookie path contains the auth-id so cookie is only sent when auth instance is active.
         * Request consuming this cookie must present a consentAuthState from their authorization header.
@@ -300,7 +258,7 @@ components:
       name: Set-Cookie
       description: |
         Cookie set before redirecting PSU to ASPSP. Assuming auth-id=abc123, cookie will look like
-        Redirect_abc123=ejts.adsfa.adfaj; Path=/consent/abc123/fromAspsp/. As a user can initiate more than one sca from the same browser instance. 
+        Redirect_abc123=ejts.adsfa.adfaj; Path=/consent/abc123/fromAspsp/. As a user can initiate more than one sca from the same browser instance.
         * The cookie path contains the auth-id so cookie is only sent when redirect url is active.
         * The callback link hast the structure /consent/{auth-id}/fromAspsp/{redirectState}/ok where the redirectState is the XSRF parameter used to validate the RedirectCookie.
         * The way the callback url is passed to the ASPSP is dependent on the OpenBankingApi of the ASPSP.
@@ -349,11 +307,21 @@ components:
       schema:
         type: string
 
-    redirectCode:
-      name: redirectCode
+    xXsrfToken:
+      name: xXsrfToken
       in: query
+      description: XSRF parameter used to retrieve a redirect session. This is
+        generaly transported as a query parameter.
+      example: "faadsf93nlas32wx"
+      schema:
+        type: string
+
+    redirectState:
+      name: redirectState
+      in: path
       description: Code used to retrieve a redirect session. This is
-        generaly transported as a query parameter
+        generaly transported as a path parameter due to some banks limitiations (ING ASPSP) instead of
+        being transported as query parameter
       example: "faadsf93nlas32wx"
       schema:
         type: string
@@ -363,17 +331,6 @@ components:
       in: query
       description: Oauth2 code to exchange for token.
       example: "faadsf93nlas32wx"
-      schema:
-        type: string
-
-    redirectState:
-      name: redirectState
-      in: path
-      description: |
-        XSRF parameter used to validate an RedirectCookie. This is
-        generaly transported as a path parameter.
-      required: true
-      example: faadsf93nlas32wx
       schema:
         type: string
 
@@ -388,28 +345,6 @@ components:
       schema:
         type: string
         format: uuid
-
-    X-Author:
-      name: X-XSRF-TOKEN
-      in: header
-      required: true
-      description: |
-        XSRF parameter used to validate a SessionCookie. The token matches the auth-id
-        included in the requestpath and prefixing the cookie.
-      example: abc123.faadsf93nlas32wx
-      schema:
-        type: string
-
-    X-XSRF-TOKEN:
-      name: X-XSRF-TOKEN
-      in: header
-      required: true
-      description: |
-        XSRF parameter used to validate a SessionCookie. The token matches the auth-id
-        included in the requestpath and prefixing the cookie.
-      example: abc123.faadsf93nlas32wx
-      schema:
-        type: string
 
   responses:
     200_AuthorizeResponse:
@@ -716,7 +651,7 @@ components:
           type: array
           description: Access to accounts
           items:
-            type: string
+            $ref: "#/components/schemas/AccountReference"
         allPsd2:
           type: string
           description: Consent on all accounts, balances and transactions of psu
@@ -735,12 +670,12 @@ components:
           type: array
           description: Access to balances
           items:
-            type: string
+            $ref: "#/components/schemas/AccountReference"
         transactions:
           type: array
           description: Access to transactions
           items:
-            type: string
+            $ref: "#/components/schemas/AccountReference"
       description: Ais account access information
 
     AisConsentRequest:
@@ -862,61 +797,6 @@ components:
           $ref: "#/components/schemas/SinglePayment"
         challengeData:
           $ref: "#/components/schemas/ChallengeData"
-
-    ConsentAuthRequirement:
-      title: ConsentAuth
-      type: object
-      description: Transport object for consent API request response
-      properties:
-        fields:
-          type: array
-          items:
-            $ref: "#/components/schemas/ConsentAuthRequiredField"
-
-    ConsentAuthRequiredField:
-      title: ConsentAuthRequiredField
-      type: object
-      description: Fields that are required to be filled in order to authorize consent
-      properties:
-        type:
-          type: string
-          description: Field data type - boolean, string, etc.
-        scope:
-          type: string
-          description: Scope of the field.
-        code:
-          type: string
-          description: Field code - what does the field mean.
-        captionMessage:
-          type: string
-          description: Custom message that describes field meaning
-
-    AuthorizeRequest:
-      title: AuthorizeRequest
-      type: object
-      description: Contains information used to legitimate a request.
-      properties:
-        consentAuth:
-          $ref: "#/components/schemas/ConsentAuthRequirement"
-
-    DenyRequest:
-      title: DenyRequest
-      type: object
-      description: Consent authorization denied descriptor
-      properties:
-        consentAuth:
-          $ref: "#/components/schemas/ConsentAuth"
-        backToFinTech:
-          type: boolean
-          description: Will indicate if PSU wants to be sent back to FinTechApi.
-        exitPage:
-          type: string
-          description:
-            In case there is no redirect back to TPP desired, exit page
-            can be specified by ConsentAuthorisationApi
-        forgetConsent:
-          type: boolean
-          description: Set to true if consent object shall be forgotten or frozen.
 
     PsuAuthRequest:
       title: PsuAuthRequest

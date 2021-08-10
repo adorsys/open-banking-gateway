@@ -46,7 +46,7 @@ export class EnterTanComponent implements OnInit {
       .subscribe((response) => {
         this.sessionService.setRedirectCode(
           this.authorizationSessionId,
-          response.headers.get(ApiHeaders.REDIRECT_CODE)
+          response.headers.get(ApiHeaders.X_XSRF_TOKEN)
         );
 
         const authStateResponseBody: any = response.body;
@@ -77,7 +77,7 @@ export class EnterTanComponent implements OnInit {
         'response'
       )
       .subscribe((res) => {
-        this.sessionService.setRedirectCode(this.authorizationSessionId, res.headers.get(ApiHeaders.REDIRECT_CODE));
+        this.sessionService.setRedirectCode(this.authorizationSessionId, res.headers.get(ApiHeaders.X_XSRF_TOKEN));
         this.enteredSca.emit(res);
       });
   }

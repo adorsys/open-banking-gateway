@@ -11,13 +11,13 @@ export class AuthService {
   constructor(
     private http: HttpClient,
     private psuAuthService: PsuAuthenticationService,
-    private psuAuthForConsentApproval: PsuAuthenticationAndConsentApprovalService,
+    private psuAuth: PsuAuthenticationAndConsentApprovalService,
     private sessionService: SessionService
   ) {}
 
-  public userLoginForConsent(authorizationId: string, redirectCode: string, credentials: PsuAuthBody) {
+  public userLogin(authorizationId: string, redirectCode: string, credentials: PsuAuthBody) {
     const xRequestID = uuid.v4();
-    return this.psuAuthForConsentApproval.loginForApproval(
+    return this.psuAuth.loginForApproval(
       xRequestID,
       authorizationId,
       redirectCode,
@@ -26,9 +26,9 @@ export class AuthService {
     );
   }
 
-  public userLoginForAnonymousPayment(authorizationId: string, redirectCode: string) {
+  public userLoginForAnonymous(authorizationId: string, redirectCode: string) {
     const xRequestID = uuid.v4();
-    return this.psuAuthForConsentApproval.loginForAnonymousPaymentApproval(
+    return this.psuAuth.loginForAnonymousApproval(
       xRequestID,
       authorizationId,
       redirectCode,
@@ -36,21 +36,6 @@ export class AuthService {
     );
   }
 
-  public userLoginForPayment(authorizationId: string, redirectCode: string, credentials: PsuAuthBody) {
-    const xRequestID = uuid.v4();
-    return this.psuAuthForConsentApproval.loginForPaymentApproval(
-      xRequestID,
-      authorizationId,
-      redirectCode,
-      credentials,
-      'response'
-    );
-  }
-
-  public userLogin(credentials: PsuAuthBody) {
-    const xRequestID = uuid.v4();
-    return this.psuAuthService.login(xRequestID, credentials, 'response');
-  }
   public userRegister(credentials: PsuAuthBody) {
     const xRequestID = uuid.v4();
     return this.psuAuthService.registration(xRequestID, credentials, 'response');

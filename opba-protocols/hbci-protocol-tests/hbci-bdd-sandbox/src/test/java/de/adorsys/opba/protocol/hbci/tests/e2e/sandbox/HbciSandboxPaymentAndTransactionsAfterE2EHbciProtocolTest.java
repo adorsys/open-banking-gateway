@@ -14,7 +14,7 @@ import de.adorsys.opba.protocol.hbci.tests.e2e.sandbox.hbcisteps.HbciPaymentInit
 import de.adorsys.opba.protocol.hbci.tests.e2e.sandbox.hbcisteps.HbciPaymentInitiationResult;
 import de.adorsys.opba.protocol.hbci.tests.e2e.sandbox.hbcisteps.HbciServers;
 import de.adorsys.opba.protocol.sandbox.hbci.HbciServerApplication;
-import de.adorsys.xs2a.adapter.service.model.TransactionStatus;
+import de.adorsys.xs2a.adapter.api.model.TransactionStatus;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -29,6 +29,7 @@ import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigDecimal;
+import java.time.LocalDate;
 import java.util.Set;
 import java.util.UUID;
 
@@ -133,7 +134,7 @@ class HbciSandboxPaymentAndTransactionsAfterE2EHbciProtocolTest extends SpringSc
         when()
             .fintech_calls_single_payment_for_max_musterman(MAX_MUSTERMAN_BANK_BLZ_30000003_ACCOUNT_ID, BANK_BLZ_30000003_ID, MAGIC_FLAG_TO_ACCEPT_PAYMENT_IMMEDIATELY)
             .and()
-            .user_logged_in_into_opba_as_opba_user_with_credentials_using_fintech_supplied_url(OPBA_LOGIN, OPBA_PASSWORD)
+            .user_logged_in_into_opba_pis_as_opba_user_with_credentials_using_fintech_supplied_url(OPBA_LOGIN, OPBA_PASSWORD)
             .and()
             .user_max_musterman_provided_initial_parameters_to_make_payment()
             .and()
@@ -141,7 +142,7 @@ class HbciSandboxPaymentAndTransactionsAfterE2EHbciProtocolTest extends SpringSc
             .and()
             .user_max_musterman_selected_sca_challenge_type_push_tan_to_embedded_authorization()
             .and()
-            .user_max_musterman_provided_sca_challenge_result_to_embedded_authorization_and_sees_redirect_to_fintech_ok("/pushTAN");
+            .user_max_musterman_provided_sca_challenge_result_to_embedded_authorization_and_sees_redirect_to_fintech_ok("/PUSH_OTP");
         then()
             .open_banking_has_stored_payment()
             .fintech_calls_payment_activation_for_current_authorization_id()
@@ -156,7 +157,7 @@ class HbciSandboxPaymentAndTransactionsAfterE2EHbciProtocolTest extends SpringSc
         when()
             .fintech_calls_instant_payment_for_max_musterman(MAX_MUSTERMAN_BANK_BLZ_30000003_ACCOUNT_ID, BANK_BLZ_30000003_ID, MAGIC_FLAG_TO_ACCEPT_PAYMENT_IMMEDIATELY)
             .and()
-            .user_logged_in_into_opba_as_opba_user_with_credentials_using_fintech_supplied_url(OPBA_LOGIN, OPBA_PASSWORD)
+            .user_logged_in_into_opba_pis_as_opba_user_with_credentials_using_fintech_supplied_url(OPBA_LOGIN, OPBA_PASSWORD)
             .and()
             .user_max_musterman_provided_initial_parameters_to_make_payment()
             .and()
@@ -164,7 +165,7 @@ class HbciSandboxPaymentAndTransactionsAfterE2EHbciProtocolTest extends SpringSc
             .and()
             .user_max_musterman_selected_sca_challenge_type_push_tan_to_embedded_authorization()
             .and()
-            .user_max_musterman_provided_sca_challenge_result_to_embedded_authorization_and_sees_redirect_to_fintech_ok("/pushTAN");
+            .user_max_musterman_provided_sca_challenge_result_to_embedded_authorization_and_sees_redirect_to_fintech_ok("/PUSH_OTP");
         then()
             .open_banking_has_stored_payment()
             .fintech_calls_payment_activation_for_current_authorization_id()
@@ -172,6 +173,10 @@ class HbciSandboxPaymentAndTransactionsAfterE2EHbciProtocolTest extends SpringSc
     }
 
     void getTransactions(BigDecimal[] extraTransactions, boolean online) {
+        getTransactions(extraTransactions, online, DATE_TO);
+    }
+
+    void getTransactions(BigDecimal[] extraTransactions, boolean online, LocalDate dateTo) {
         given()
             .rest_assured_points_to_opba_server_with_fintech_signer_on_banking_api()
             .user_registered_in_opba_with_credentials(OPBA_LOGIN, OPBA_PASSWORD);
@@ -186,12 +191,12 @@ class HbciSandboxPaymentAndTransactionsAfterE2EHbciProtocolTest extends SpringSc
             .and()
             .user_max_musterman_selected_sca_challenge_type_push_tan_to_embedded_authorization()
             .and()
-            .user_max_musterman_provided_sca_challenge_result_to_embedded_authorization_and_sees_redirect_to_fintech_ok("/pushTAN");
+            .user_max_musterman_provided_sca_challenge_result_to_embedded_authorization_and_sees_redirect_to_fintech_ok("/PUSH_OTP");
         accountInformationResult
             .open_banking_has_consent_for_max_musterman_account_list()
             .fintech_calls_consent_activation_for_current_authorization_id()
             .open_banking_can_read_max_musterman_hbci_transaction_data_using_consent_bound_to_service_session_with_extra_transactions(
-                    MAX_MUSTERMAN_BANK_BLZ_30000003_ACCOUNT_ID, BANK_BLZ_30000003_ID, DATE_FROM, DATE_TO, BOTH_BOOKING, extraTransactions
+                    MAX_MUSTERMAN_BANK_BLZ_30000003_ACCOUNT_ID, BANK_BLZ_30000003_ID, DATE_FROM, dateTo, BOTH_BOOKING, extraTransactions
             );
     }
 
@@ -200,12 +205,12 @@ class HbciSandboxPaymentAndTransactionsAfterE2EHbciProtocolTest extends SpringSc
     }
 
     private void getTransactionsAndCheckThatPaymentAppearsInTransactions() {
-        getTransactions(new BigDecimal[]{new BigDecimal("-1.03")}, false);
+        getTransactions(new BigDecimal[]{new BigDecimal("-1.03")}, false, LocalDate.now());
     }
 
     void getTransactionsWithCacheUpdate() {
         BigDecimal[] extraTransactions = {new BigDecimal("-1.03"), new BigDecimal("-1.03")};
-        getTransactions(extraTransactions, true);
+        getTransactions(extraTransactions, true, LocalDate.now());
     }
 
     private void checkPaymentsAreNotInTransactions() {

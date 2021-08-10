@@ -12,6 +12,8 @@ public class HttpHeaders {
     public static final String X_REQUEST_ID = "X-Request-ID";
     public static final String COOKIE_TTL = "Cookie-TTL";
     public static final String COMPUTE_PSU_IP_ADDRESS = "Compute-PSU-IP-Address";
+    public static final String X_XSRF_TOKEN = "X-XSRF-TOKEN";
+    public static final String X_CREATE_CONSENT_IF_NONE = "X-Create-Consent-If-None";
 
     @UtilityClass
     public class UserAgentContext {

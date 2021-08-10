@@ -9,7 +9,6 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.security.PrivateKey;
 import java.util.Collection;
 import java.util.Optional;
 import java.util.UUID;
@@ -36,7 +35,13 @@ public class ConsentConfirmationService {
         }
 
         consentRepository.setConfirmed(session.get().getParent().getId());
-        PrivateKey psuAspspKey = vault.psuAspspKeyFromInbox(
+
+        // Handling anonymous consent grant flow:
+        if (null == session.get().getPsu()) {
+            return true;
+        }
+
+        var psuAspspKey = vault.psuAspspKeyFromInbox(
                 session.get(),
                 finTechPassword::toCharArray
         );

@@ -47,13 +47,14 @@ public class FireFlyTransactionExporter {
     private final ExportableAccountService exportableAccounts;
     private final FireflyTransactionsApiClient transactionsApi;
     private final BankConsentRepository consentRepository;
+    private final TransactionCategorizer categorizer;
     private final TransactionExportJobRepository exportJobRepository;
 
     @Async
     @SuppressWarnings("checkstyle:MethodLength") // Method length is mostly from long argument list to API call
-    public void exportToFirefly(String fireFlyToken, long exportJobId, String bankId, List<String> accountsTransactionsToExport, LocalDate from, LocalDate to) {
+    public void exportToFirefly(String fireFlyToken, long exportJobId, UUID bankProfileId, List<String> accountsTransactionsToExport, LocalDate from, LocalDate to) {
         tokenProvider.setToken(fireFlyToken);
-        Set<String> availableAccountsInFireFlyByIban = exportableAccounts.exportableAccounts(fireFlyToken, bankId).getBody().stream()
+        Set<String> availableAccountsInFireFlyByIban = exportableAccounts.exportableAccounts(fireFlyToken, bankProfileId).getBody().stream()
                 .map(ExportableAccount::getIban)
                 .collect(Collectors.toSet());
 
@@ -66,7 +67,7 @@ public class FireFlyTransactionExporter {
             try {
                 exportAccountsTransactionsToFireFly(
                         exportJobId,
-                        bankId,
+                        bankProfileId,
                         accountIdToExport,
                         from,
                         to,
@@ -103,7 +104,7 @@ public class FireFlyTransactionExporter {
     @SuppressWarnings("checkstyle:MethodLength") // Method length is mostly from long argument list to API call
     private void exportAccountsTransactionsToFireFly(
             long exportJobId,
-            String bankId,
+            UUID bankProfileId,
             String accountIdToExport,
             LocalDate from,
             LocalDate to,
@@ -121,13 +122,18 @@ public class FireFlyTransactionExporter {
                 null,
                 null,
                 null,
-                bankId,
-                consentRepository.findFirstByBankIdOrderByModifiedAt(bankId).map(BankConsent::getConsentId).orElse(null),
+                bankProfileId,
+                null,
+                consentRepository.findFirstByBankProfileUuidOrderByModifiedAtDesc(bankProfileId).map(BankConsent::getConsentId).orElse(null),
+                "",
                 from,
                 to,
                 null,
                 "both",
                 false,
+                null,
+                null,
+                null,
                 null
         );
 
@@ -169,13 +175,20 @@ public class FireFlyTransactionExporter {
         }
 
         BigDecimal transactionAmount = new BigDecimal(transaction.getTransactionAmount().getAmount());
-        if (availableAccountsInFireFlyByIban.contains(transaction.getDebtorAccount().getIban())) {
+        if (null != transaction.getDebtorAccount() && availableAccountsInFireFlyByIban.contains(transaction.getDebtorAccount().getIban())) {
             parseTransactionAmount(transaction.getDebtorAccount(), transaction.getCreditorAccount(), transactionAmount, split);
         } else {
-            parseTransactionAmount(transaction.getCreditorAccount(), transaction.getDebtorAccount(), transactionAmount.negate(), split);
+            transactionAmount = transactionAmount.compareTo(BigDecimal.ZERO) < 0 ? transactionAmount : transactionAmount.negate();
+            parseTransactionAmount(transaction.getCreditorAccount(), transaction.getDebtorAccount(), transactionAmount, split);
         }
 
         split.setCurrencyCode(transaction.getTransactionAmount().getCurrency());
+        try {
+            split.setCategoryName(categorizer.categorizeTransaction(transaction));
+        } catch (RuntimeException ex) {
+            log.warn("Failed to categorize transaction {}", transaction.getTransactionId(), ex);
+        }
+
         fireflyTransaction.setTransactions(ImmutableList.of(split));
 
         transactionsApi.storeTransaction(fireflyTransaction);

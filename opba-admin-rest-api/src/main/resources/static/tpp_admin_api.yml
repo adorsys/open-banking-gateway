@@ -1,0 +1,318 @@
+openapi: 3.0.1
+info:
+  version: "1.0.0"
+  title: Open Banking Gateway Admin API (might be disabled)
+  description: >-
+    This API provides capability to manage bank configuration and protocol setup. It is enableable
+    using 'admin.api.enabled' property.
+externalDocs:
+  url: "https://adorsys.github.com/open-banking-gateway"
+
+security:
+  - basicAuth: []
+
+paths:
+  /admin/v1/banks:
+    get:
+      security:
+        - basicAuth: []
+      tags:
+        - admin-api-controller
+      operationId: getBanksData
+      parameters:
+        - name: page
+          in: query
+          required: true
+          schema:
+            type: integer
+            default: 0
+        - name: size
+          in: query
+          required: false
+          schema:
+            type: integer
+            default: 20
+      responses:
+        "200":
+          description: default response
+          content:
+            'application/json':
+              schema:
+                $ref: '#/components/schemas/PageBankData'
+  /admin/v1/banks/{bankId}:
+    get:
+      security:
+        - basicAuth: []
+      tags:
+        - admin-api-controller
+      operationId: getBankDataById
+      parameters:
+        - name: bankId
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+      responses:
+        "200":
+          description: default response
+          content:
+            'application/json':
+              schema:
+                $ref: '#/components/schemas/BankData'
+    put:
+      security:
+        - basicAuth: []
+      tags:
+        - admin-api-controller
+      operationId: createNewBankDataEntry
+      parameters:
+        - name: bankId
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/BankData'
+      responses:
+        "200":
+          description: default response
+          content:
+            'application/json':
+              schema:
+                $ref: '#/components/schemas/BankData'
+    delete:
+      security:
+        - basicAuth: []
+      tags:
+        - admin-api-controller
+      operationId: deleteBankDataEntry
+      parameters:
+        - name: bankId
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+      responses:
+        "200":
+          description: default response
+          content:
+            'application/json':
+              schema:
+                $ref: '#/components/schemas/BankData'
+    patch:
+      security:
+        - basicAuth: []
+      tags:
+        - admin-api-controller
+      operationId: updateBankDataEntry
+      parameters:
+        - name: bankId
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/BankData'
+      responses:
+        "200":
+          description: default response
+          content:
+            'application/json':
+              schema:
+                $ref: '#/components/schemas/BankData'
+components:
+  schemas:
+    Pageable:
+      type: object
+      properties:
+        pageNumber:
+          type: integer
+          format: int32
+        pageSize:
+          type: integer
+          format: int32
+        unpaged:
+          type: boolean
+        paged:
+          type: boolean
+        offset:
+          type: integer
+          format: int64
+        sort:
+          $ref: '#/components/schemas/Sort'
+    Sort:
+      type: object
+      properties:
+        sorted:
+          type: boolean
+        unsorted:
+          type: boolean
+        empty:
+          type: boolean
+    Bank:
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int64
+        uuid:
+          type: string
+          format: uuid
+        name:
+          type: string
+        bic:
+          type: string
+        bankCode:
+          type: string
+    BankAction:
+      type: object
+      properties:
+        protocolAction:
+          type: string
+          enum:
+            - list-accounts
+            - list-transactions
+            - delete-consent
+            - get-consent-status
+            - authorization
+            - on-login
+            - get-authorization-state
+            - update-authorization
+            - deny-authorization
+            - from-aspsp-redirect
+            - single-payment
+            - get-payment-status
+            - get-payment-information
+        protocolBeanName:
+          type: string
+        consentSupported:
+          type: boolean
+        subProtocols:
+          type: array
+          items:
+            $ref: '#/components/schemas/BankSubAction'
+    BankData:
+      type: object
+      properties:
+        bank:
+          $ref: '#/components/schemas/Bank'
+        profiles:
+          type: array
+          items:
+            $ref: '#/components/schemas/BankProfile'
+    BankProfile:
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int64
+        url:
+          type: string
+        uuid:
+          type: string
+          format: uuid
+        adapterId:
+          type: string
+        idpUrl:
+          type: string
+        scaApproaches:
+          type: array
+          items:
+            type: string
+            enum:
+              - REDIRECT
+              - EMBEDDED
+        preferredApproach:
+          type: string
+          enum:
+            - REDIRECT
+            - EMBEDDED
+        tryToUsePreferredApproach:
+          type: boolean
+        uniquePaymentPurpose:
+          type: boolean
+        actions:
+          type: object
+          additionalProperties:
+            $ref: '#/components/schemas/BankAction'
+        bankCode:
+          type: string
+        bic:
+          type: string
+        name:
+          type: string
+        externalId:
+          type: string
+        externalInterfaces:
+          type: string
+          description: Comma-separated external interfaces
+        protocolType:
+          type: string
+        isSandbox:
+          type: boolean
+    BankSubAction:
+      type: object
+      properties:
+        protocolAction:
+          type: string
+          enum:
+            - list-accounts
+            - list-transactions
+            - delete-consent
+            - get-consent-status
+            - authorization
+            - on-login
+            - get-authorization-state
+            - update-authorization
+            - deny-authorization
+            - from-aspsp-redirect
+            - single-payment
+            - get-payment-status
+            - get-payment-information
+        subProtocolBeanName:
+          type: string
+    PageBankData:
+      type: object
+      properties:
+        totalElements:
+          type: integer
+          format: int64
+        totalPages:
+          type: integer
+          format: int32
+        first:
+          type: boolean
+        pageable:
+          $ref: '#/components/schemas/Pageable'
+        last:
+          type: boolean
+        size:
+          type: integer
+          format: int32
+        content:
+          type: array
+          items:
+            $ref: '#/components/schemas/Bank'
+        number:
+          type: integer
+          format: int32
+        sort:
+          $ref: '#/components/schemas/Sort'
+        numberOfElements:
+          type: integer
+          format: int32
+
+  securitySchemes:
+    basicAuth:
+      type: http
+      scheme: basic

@@ -28,6 +28,13 @@ public class Xs2aConsentInfo {
     }
 
     /**
+     * If ASPSP needs startConsentAuthorization to be skipped.
+     */
+    public boolean isTrySkipStartConsentAuthorization(Xs2aContext ctx) {
+        return ctx.aspspProfile().isXs2aSkipConsentAuthorization();
+    }
+
+    /**
      * Is the current consent authorization in OAUTH (not OAUTH pre-step) mode.
      */
     public boolean isOauth2Authorization(Xs2aContext ctx) {

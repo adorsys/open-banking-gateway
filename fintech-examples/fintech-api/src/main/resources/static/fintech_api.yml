@@ -211,14 +211,14 @@ paths:
     get:
       tags:
         - FinTechBankSearch
-      summary: Request the profile of the bank identified with id (bankId).
-      description: Request the profile of the bank identified with id (bankId).
+      summary: Request the profile of the bank identified with id (bankProfileId).
+      description: Request the profile of the bank identified with id (bankProfileId).
       operationId: bankProfileGET
       parameters:
         #header
         - $ref: "#/components/parameters/X-Request-ID"
         - $ref: "#/components/parameters/X-XSRF-TOKEN"
-        - name: bankId
+        - name: bankProfileId
           in: query
           description: Identifier of the bank to be loaded.
           required: true
@@ -256,9 +256,11 @@ paths:
         #header
         - $ref: "#/components/parameters/X-Request-ID"
         - $ref: "#/components/parameters/X-XSRF-TOKEN"
+        - $ref: "#/components/parameters/X-Psu-Authentication-Required"
         - $ref: "#/components/parameters/Fintech-Redirect-URL-OK"
         - $ref: "#/components/parameters/Fintech-Redirect-URL-NOK"
         - $ref: "#/components/parameters/LoARetrievalInformation"
+        - $ref: "#/components/parameters/X-Create-Consent-If-None"
         #query
         - $ref: "#/components/parameters/withBalance"
         - $ref: "#/components/parameters/online"
@@ -286,6 +288,14 @@ paths:
         #path
         - $ref: "#/components/parameters/bank-id"
         - $ref: "#/components/parameters/account-id"
+        #header
+        - $ref: "#/components/parameters/X-Request-ID"
+        - $ref: "#/components/parameters/X-XSRF-TOKEN"
+        - $ref: "#/components/parameters/X-Psu-Authentication-Required"
+        - $ref: "#/components/parameters/Fintech-Redirect-URL-OK"
+        - $ref: "#/components/parameters/Fintech-Redirect-URL-NOK"
+        - $ref: "#/components/parameters/LoTRetrievalInformation"
+        - $ref: "#/components/parameters/X-Create-Consent-If-None"
         #query
         - $ref: "#/components/parameters/dateFrom"
         - $ref: "#/components/parameters/dateTo"
@@ -293,13 +303,6 @@ paths:
         - $ref: "#/components/parameters/bookingStatus"
         - $ref: "#/components/parameters/deltaList"
         - $ref: "#/components/parameters/online"
-
-        #header
-        - $ref: "#/components/parameters/X-Request-ID"
-        - $ref: "#/components/parameters/X-XSRF-TOKEN"
-        - $ref: "#/components/parameters/Fintech-Redirect-URL-OK"
-        - $ref: "#/components/parameters/Fintech-Redirect-URL-NOK"
-        - $ref: "#/components/parameters/LoTRetrievalInformation"
 
       security:
         - sessionCookie: []
@@ -401,7 +404,7 @@ paths:
         #header
         - $ref: "#/components/parameters/X-Request-ID"
         - $ref: "#/components/parameters/X-XSRF-TOKEN"
-        - $ref: "#/components/parameters/X-Pis-Psu-Authentication-Required"
+        - $ref: "#/components/parameters/X-Psu-Authentication-Required"
         - $ref: "#/components/parameters/Fintech-Redirect-URL-OK"
         - $ref: "#/components/parameters/Fintech-Redirect-URL-NOK"
 
@@ -417,6 +420,31 @@ paths:
           $ref: "#/components/responses/202_ToConsentAuthApi"
         "401":
           $ref: "#/components/responses/401_Unauthorized"
+
+  /v1/ais/banks/{bank-id}/consents:
+    delete:
+      tags:
+        - FinTechAccountInformation
+      operationId: aisConsentsDELETE
+      summary: Deletes all consents that are associated with bank
+      description: Deletes all consents that are associated with bank
+      parameters:
+        #path
+        - $ref: "#/components/parameters/bank-id"
+
+        #header
+        - $ref: "#/components/parameters/X-Request-ID"
+        - $ref: "#/components/parameters/X-XSRF-TOKEN"
+
+      security:
+        - sessionCookie: [ ]
+      responses:
+        "200":
+          $ref: "#/components/responses/200_ConsentRemovalResult"
+        "401":
+          $ref: "#/components/responses/401_Unauthorized"
+        "404":
+          $ref: "#/components/responses/404_NotFound"
 
   /v1/consent/{userid}/{password}:
     get:
@@ -579,6 +607,15 @@ components:
           - "FROM_TPP_WITH_AVAILABLE_CONSENT"
           - "FROM_TPP_WITH_NEW_CONSENT"
 
+    X-Create-Consent-If-None:
+      name: X-Create-Consent-If-None
+      required: false
+      in: header
+      schema:
+        type: string
+        description: json representation of AisConsentRequest object
+        example: {"access":{"allPsd2":"ALL_ACCOUNTS_WITH_BALANCES"},"frequencyPerDay":4,"validUntil":"2021-06-18","recurringIndicator":true,"combinedServiceIndicator":false}
+
     X-Request-ID:
       name: X-Request-ID
       in: header
@@ -591,8 +628,19 @@ components:
         type: string
         format: uuid
 
-    X-Pis-Psu-Authentication-Required:
-      name: X-Pis-Psu-Authentication-Required
+    X-Ais-Psu-Authentication-Required:
+      name: X-Ais-Psu-Authentication-Required
+      in: header
+      description: |
+        If false, login form to OPBA will not be displayed, so
+        that authentication is not necessary. If absent or true - login form for consents will be displayed.
+      example: "true"
+      schema:
+        type: boolean
+        default: "true"
+
+    X-Psu-Authentication-Required:
+      name: X-Psu-Authentication-Required
       in: header
       description: |
         If false, login form to OPBA will not be displayed as there might be nothing to share for payments, so
@@ -958,6 +1006,13 @@ components:
           schema:
             type: object
 
+    200_ConsentRemovalResult:
+      description: List of all removed consents
+      content:
+        application/json:
+          schema:
+            type: object
+
   schemas:
     paymentInitiationWithStatusResponse:
       description: response from open banking gateway
@@ -1089,6 +1144,11 @@ components:
           type: string
         uuid:
           type: string
+          format: uuid
+        profiles:
+          type: array
+          items:
+            $ref: "#/components/schemas/bankProfile"
 
     bankProfile:
       title: Bank Profile
@@ -1098,13 +1158,26 @@ components:
           type: string
         bankName:
           type: string
+        name:
+          type: string
         bic:
           type: string
+        uuid:
+          type: string
+          format: uuid
         services:
           type: array
           items:
             # can be an enum
             type: string
+        externalId:
+          type: string
+        externalInterfaces:
+          type: string
+        protocolType:
+          type: string
+        isSandbox:
+          type: boolean
 
     # Account and transaction information
     accountDetails:
@@ -1234,6 +1307,64 @@ components:
           $ref: "#/components/schemas/transactionList"
         pending:
           $ref: "#/components/schemas/transactionList"
+
+    analyticsReportDetails:
+      description: |
+        JSON based analytics report.
+        This account report contains transaction categorization result.
+      type: object
+      properties:
+        transactionId:
+          description: The id of transaction this analytics result refers to.
+          type: string
+        mainCategory:
+          description: Main category of the booking.
+          type: string
+        subCategory:
+          description: Sub category of the booking.
+          type: string
+        specification:
+          description: Specification of the booking.
+          type: string
+        otherAccount:
+          description: Related account.
+          type: string
+        logo:
+          description: Logo.
+          type: string
+        homepage:
+          description: Homepage.
+          type: string
+        hotline:
+          description: Hotline.
+          type: string
+        email:
+          description: Email.
+          type: string
+        custom:
+          description: Custom information about analyzed transaction.
+          type: object
+          additionalProperties:
+            type: string
+        usedRules:
+          description: Rules that were used to analyze.
+          type: array
+          uniqueItems: true
+          items:
+            type: string
+        nextBookingDate:
+          description: Classification next booking date.
+          type: string
+          format: date
+        cycle:
+          description: Classification cycle result.
+          type: string
+
+    analyticsReport:
+      description: Array of transaction details.
+      type: array
+      items:
+        $ref: "#/components/schemas/analyticsReportDetails"
 
     accountStatus:
       description: |
@@ -1871,6 +2002,8 @@ components:
           $ref: "#/components/schemas/accountReference"
         transactions:
           $ref: "#/components/schemas/accountReport"
+        analytics:
+          $ref: "#/components/schemas/analyticsReport"
 
     ultimateCreditor:
       description: Ultimate Creditor.

@@ -48,10 +48,10 @@ public class FacadeServiceableRequest {
     private final String authorization;
 
     /**
-     * ASPSP ID for this request.
-     * Is {@code de.adorsys.opba.db.domain.entity.Bank} entity ID.
+     * ASPSP profile ID for this request that clearly specifies which protocol is used.
+     * Is {@code de.adorsys.opba.db.domain.entity.BankProfile} entity uuid.
      */
-    private final String bankId;
+    private final UUID bankProfileId;
 
     /**
      * User login within Fintech.
@@ -86,10 +86,15 @@ public class FacadeServiceableRequest {
     /**
      * Allows to skip user login form to OpenBanking to perform payment.
      */
-    private final boolean anonymousPsuAllowed;
+    private final boolean anonymousPsu;
 
     /**
      * When false then account or transaction list will be loaded from cache. Otherwise cache will be updated with new data.
      */
     private final boolean online;
+
+    /**
+     * For transaction listing requests triggers transaction analyzers to enrich online result.
+     */
+    private final boolean withAnalytics;
 }

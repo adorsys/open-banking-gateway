@@ -1,0 +1,23 @@
+<form [formGroup]="customConsentAccessForm">
+  <div class="card">
+    <div class="card-body">
+      <section>
+        <h2>Custom consent for {{ aspspName }}</h2>
+        <textarea formControlName="consentBody" class="w-100"></textarea>
+      </section>
+
+      <div class="d-sm-flex">
+        <button id="do_deny" class="btn btn-outline-back w-100 mr-4" (click)="onBack()">Back</button>
+        <button
+          id="do_submit"
+          type="button"
+          class="btn btn-primary w-100"
+          [disabled]="customConsentAccessForm.invalid"
+          (click)="onSelect()"
+        >
+          Select
+        </button>
+      </div>
+    </div>
+  </div>
+</form>

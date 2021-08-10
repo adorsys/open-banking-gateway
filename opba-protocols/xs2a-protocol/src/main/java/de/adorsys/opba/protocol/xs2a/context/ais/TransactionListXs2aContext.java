@@ -44,4 +44,14 @@ public class TransactionListXs2aContext extends Xs2aAisContext {
      */
     private LocalDate dateTo;
 
+    /**
+     * Result page number.
+     */
+    private Integer page;
+
+    /**
+     * Records per page.
+     */
+    private Integer pageSize;
+
 }

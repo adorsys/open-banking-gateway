@@ -30,6 +30,11 @@ import static de.adorsys.opba.fireflyexporter.config.HeaderFields.X_TIMESTAMP_UT
 public class TppClientConfig {
 
     @Bean
+    public FeignTppErrorDecoder errorDecoder() {
+        return new FeignTppErrorDecoder();
+    }
+
+    @Bean
     public RequestInterceptor requestInterceptorWithSigning(OpenBankingConfig opbaConfig, RequestSigningService requestSigningService) {
         return requestTemplate -> {
             requestTemplate.header(COMPUTE_PSU_IP_ADDRESS, Boolean.TRUE.toString());

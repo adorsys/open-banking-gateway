@@ -6,7 +6,7 @@ import de.adorsys.opba.protocol.xs2a.service.xs2a.annotations.ContextCode;
 import de.adorsys.opba.protocol.xs2a.service.xs2a.annotations.FrontendCode;
 import de.adorsys.opba.protocol.xs2a.service.xs2a.annotations.ValidationInfo;
 import de.adorsys.opba.protocol.xs2a.service.xs2a.dto.ValidationMode;
-import de.adorsys.xs2a.adapter.service.model.SinglePaymentInitiationBody;
+import de.adorsys.xs2a.adapter.api.model.PaymentInitiationJson;
 import lombok.Getter;
 import lombok.Setter;
 import org.mapstruct.Mapper;
@@ -109,14 +109,14 @@ public class PaymentInitiateBody {
     }
 
     @Mapper(componentModel = SPRING_KEYWORD, implementationPackage = XS2A_MAPPERS_PACKAGE)
-    public interface ToXs2aApi extends DtoMapper<PaymentInitiateBody, SinglePaymentInitiationBody> {
+    public interface ToXs2aApi extends DtoMapper<PaymentInitiateBody, PaymentInitiationJson> {
 
-        default SinglePaymentInitiationBody map(Xs2aPisContext cons) {
+        default PaymentInitiationJson map(Xs2aPisContext cons) {
             return map(cons.getPayment());
         }
 
         @Mapping(source = "cons.creditorAddress.city", target = "creditorAddress.townName")
-        SinglePaymentInitiationBody map(PaymentInitiateBody cons);
+        PaymentInitiationJson map(PaymentInitiateBody cons);
     }
 
     @Mapper(componentModel = SPRING_KEYWORD, implementationPackage = XS2A_MAPPERS_PACKAGE)

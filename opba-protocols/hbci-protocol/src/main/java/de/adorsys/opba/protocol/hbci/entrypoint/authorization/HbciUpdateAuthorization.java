@@ -4,9 +4,9 @@ import de.adorsys.opba.protocol.api.authorization.UpdateAuthorization;
 import de.adorsys.opba.protocol.api.dto.context.ServiceContext;
 import de.adorsys.opba.protocol.api.dto.parameters.ExtraAuthRequestParam;
 import de.adorsys.opba.protocol.api.dto.request.authorization.AuthorizationRequest;
-import de.adorsys.opba.protocol.api.dto.result.body.ScaMethod;
 import de.adorsys.opba.protocol.api.dto.result.body.UpdateAuthBody;
 import de.adorsys.opba.protocol.api.dto.result.fromprotocol.Result;
+import de.adorsys.opba.protocol.hbci.config.HbciScaConfiguration;
 import de.adorsys.opba.protocol.hbci.context.HbciContext;
 import de.adorsys.opba.protocol.hbci.entrypoint.HbciExtendWithServiceContext;
 import de.adorsys.opba.protocol.hbci.entrypoint.helpers.HbciAuthorizationContinuationService;
@@ -31,6 +31,7 @@ public class HbciUpdateAuthorization implements UpdateAuthorization {
     private final HbciExtendWithServiceContext extender;
     private final HbciAuthorizationContinuationService continuationService;
     private final HbciContextUpdateService ctxUpdater;
+    private final HbciScaConfiguration scaConfiguration;
 
     @Override
     public CompletableFuture<Result<UpdateAuthBody>> execute(ServiceContext<AuthorizationRequest> serviceContext) {
@@ -74,9 +75,17 @@ public class HbciUpdateAuthorization implements UpdateAuthorization {
             context.setUserSelectScaId(scaChallenges.get(SCA_CHALLENGE_ID));
             context.setSelectedScaType(context.getAvailableSca().stream()
                     .filter(it -> context.getUserSelectScaId().equals(it.getKey()))
-                    .map(ScaMethod::getType)
-                    .findFirst().orElse(null));
+                    .map(scaMethod -> tryConvertBankScaTypeToStandardValue(scaMethod.getType()))
+                    .findFirst()
+                    .orElse(null));
         }
+    }
+
+    private String tryConvertBankScaTypeToStandardValue(String type) {
+        return scaConfiguration.getAuthenticationTypes().entrySet().stream()
+                .filter(e -> type.toUpperCase().contains(e.getKey().toUpperCase()))
+                .map(Map.Entry::getValue)
+                .findFirst().orElse(type);
     }
 }
 

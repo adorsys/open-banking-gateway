@@ -12,9 +12,11 @@
             <column name="service_session_id" type="UUID">
                 <constraints nullable="false"/>
             </column>
-            <column name="psu_id" type="BIGINT">
-                <constraints nullable="false"/>
-            </column>
+            <!-- Key is selected either by psu_id or directly by key_id -->
+            <column name="psu_id" type="BIGINT"/> <!-- PSU ID can be null for anonymous consent -->
+            <!-- Is null if PSU id is set -->
+            <column name="fintech_pub_key_id" type="UUID"/>
+
             <column name="aspsp_id" type="BIGINT">
                 <constraints nullable="false"/>
             </column>
@@ -65,21 +67,22 @@
             <column name="id" type="BIGINT">
                 <constraints primaryKey="true"/>
             </column>
-            <column name="bank_uuid" type="VARCHAR(36)">
+            <column name="profile_uuid" type="UUID">
                 <constraints nullable="false"/>
             </column>
-            <column name="protocol_action" type="VARCHAR(32)">
+            <column name="protocol_action" type="VARCHAR(64)">
                 <constraints nullable="false"/>
             </column>
-            <column name="protocol_bean_name" type="VARCHAR(32)">
+            <column name="protocol_bean_name" type="VARCHAR(64)">
                 <constraints nullable="false"/>
             </column>
             <column name="consent_supported" type="BOOLEAN" defaultValue="true">
                 <constraints nullable="false"/>
             </column>
         </createTable>
-        <createSequence sequenceName="bank_action_id_sequence" incrementBy="50"/>
-        <addUniqueConstraint tableName="${table-prefix}bank_action" columnNames="bank_uuid,protocol_action"/>
+        <!-- startValue is high enough to skip auto-filled banks via migrations sql/csv load -->
+        <createSequence sequenceName="bank_action_id_sequence" startValue="1000000000" incrementBy="50"/>
+        <addUniqueConstraint tableName="${table-prefix}bank_action" columnNames="profile_uuid,protocol_action"/>
 
         <createTable tableName="${table-prefix}bank_sub_action">
             <column name="id" type="BIGINT">
@@ -88,14 +91,15 @@
             <column name="action_id" type="BIGINT">
                 <constraints nullable="false"/>
             </column>
-            <column name="protocol_action" type="VARCHAR(32)">
+            <column name="protocol_action" type="VARCHAR(64)">
                 <constraints nullable="false"/>
             </column>
-            <column name="sub_protocol_bean_name" type="VARCHAR(32)">
+            <column name="sub_protocol_bean_name" type="VARCHAR(64)">
                 <constraints nullable="false"/>
             </column>
         </createTable>
-        <createSequence sequenceName="bank_sub_action_id_sequence" incrementBy="50"/>
+        <!-- startValue is high enough to skip auto-filled banks via migrations sql/csv load -->
+        <createSequence sequenceName="bank_sub_action_id_sequence" startValue="1000000000" incrementBy="50"/>
         <addUniqueConstraint tableName="${table-prefix}bank_sub_action" columnNames="action_id,protocol_action"/>
         <addForeignKeyConstraint constraintName="${table-prefix}fk_bank_sub_action_bank_action"
                                  baseTableName="${table-prefix}bank_sub_action"
@@ -202,6 +206,7 @@
                 <constraints nullable="false"/>
             </column>
             <column name="context" type="VARCHAR(64)"/>
+            <column name="long_context" type="BLOB"/>
             <column name="psu_anonymous" type="BOOLEAN" defaultValueBoolean="false">
                 <constraints nullable="false"/>
             </column>
@@ -478,13 +483,13 @@
                                  referencedColumnNames="id"/>
     </changeSet>
     <changeSet id="add-relation-bank-profile-protocol" author="mhr">
-        <addForeignKeyConstraint baseColumnNames="bank_uuid"
+        <addForeignKeyConstraint baseColumnNames="profile_uuid"
                                  baseTableName="${table-prefix}bank_action"
                                  constraintName="fk_bank_action_bank_profile"
                                  deferrable="true"
                                  initiallyDeferred="true"
                                  onUpdate="RESTRICT"
-                                 referencedColumnNames="bank_uuid"
+                                 referencedColumnNames="uuid"
                                  referencedTableName="${table-prefix}bank_profile"/>
     </changeSet>
     <changeSet id="validation_rule_table" author="mhr">
@@ -515,5 +520,15 @@
                                  referencedTableName="${table-prefix}bank_action"
                                  referencedColumnNames="id"/>
         <createSequence sequenceName="validation_rule_sequence" incrementBy="50"/>
+    </changeSet>
+    <changeSet author="iiuex@adorsys.com.ua" id="2020-10-21">
+    <comment>Create datasafe configuration table</comment>
+        <createTable tableName="${table-prefix}datasafe_config">
+            <column name="id" type="BIGINT">
+                <constraints primaryKey="true"/>
+            </column>
+            <column name="config" type="CLOB"/>
+        </createTable>
+        <createSequence sequenceName="datasafe_config_sequence" incrementBy="50"/>
     </changeSet>
 </databaseChangeLog>

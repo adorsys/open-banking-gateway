@@ -2,7 +2,7 @@ package de.adorsys.opba.protocol.xs2a.service.xs2a.dto.oauth2;
 
 import de.adorsys.opba.protocol.bpmnshared.dto.DtoMapper;
 import de.adorsys.opba.protocol.xs2a.context.Xs2aContext;
-import de.adorsys.xs2a.adapter.service.Oauth2Service;
+import de.adorsys.xs2a.adapter.api.Oauth2Service;
 import lombok.Data;
 import org.mapstruct.Mapper;
 
@@ -28,6 +28,9 @@ public class Xs2aOauth2Parameters {
     // can be blank in pre-step (pre-Authentication), but either consentId/paymentId should be filled in integrated Oauth2
     private String paymentId;
 
+    // Can be blank, only for ING
+    private String scope;
+
     // TODO - MapStruct?
     public Oauth2Service.Parameters toParameters() {
         Oauth2Service.Parameters parameters = new Oauth2Service.Parameters();
@@ -36,6 +39,7 @@ public class Xs2aOauth2Parameters {
         parameters.setConsentId(consentId);
         parameters.setPaymentId(paymentId);
         parameters.setScaOAuthLink(scaOauthLink);
+        parameters.setScope(scope);
         return parameters;
     }
 

@@ -54,6 +54,16 @@ public class ListTransactionsRequest implements FacadeServiceableGetter {
     private Boolean deltaList;
 
     /**
+     * Result page number.
+     */
+    private Integer page;
+
+    /**
+     * Records per page.
+     */
+    private Integer pageSize;
+
+    /**
      * Additional (protocol-customary) request parameters.
      */
     @Builder.Default
