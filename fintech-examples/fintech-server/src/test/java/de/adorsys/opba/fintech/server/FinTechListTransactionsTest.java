@@ -6,6 +6,7 @@ import lombok.SneakyThrows;
 import org.json.JSONArray;
 import org.json.JSONObject;
 import org.junit.jupiter.api.Test;
+import org.mockito.stubbing.OngoingStubbing;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.test.web.servlet.MvcResult;
@@ -34,9 +35,7 @@ public class FinTechListTransactionsTest extends FinTechListAccountsTest {
         BankProfileTestResult  result= getBankProfileTestResult();
         createConsent(UUID.randomUUID().toString(), UUID.randomUUID());
         List<String> accountIDs = listAccountsForOk(result);
-        when(tppAisClientFeignMock.getTransactions(any(), any(), any(), any(), any(), any(), any(), any(), any(), any(),
-                                                   any(), any(), any(), any(), any(), any(), any(), any(), any(), any(), any(), any()))
-                .thenReturn(ResponseEntity.ok(GSON.fromJson(readFile("TPP_LIST_TRANSACTIONS.json"), TransactionsResponse.class)));
+        mockTransactions().thenReturn(ResponseEntity.ok(GSON.fromJson(readFile("TPP_LIST_TRANSACTIONS.json"), TransactionsResponse.class)));
         List<String> amounts = listAmounts(result.getBankUUID(), accountIDs.get(0));
         assertTrue(amounts.containsAll(Arrays.asList(new String[]{"1000"})));
     }
@@ -52,11 +51,15 @@ public class FinTechListTransactionsTest extends FinTechListAccountsTest {
 
         BankProfileTestResult result = getBankProfileTestResult();
         createConsent(UUID.randomUUID().toString(), UUID.randomUUID());
-        when(tppAisClientFeignMock.getTransactions(any(), any(), any(), any(), any(), any(), any(), any(), any(),
-                                                   any(), any(), any(), any(), any(), any(), any(), any(), any(), any(), any(), any(), any()))
+        mockTransactions()
                 .thenReturn(accepted);
         MvcResult mvcResult = plainListAmounts(result.getBankUUID(), listAccountsForOk(result).get(0));
         assertEquals(HttpStatus.ACCEPTED.value(), mvcResult.getResponse().getStatus());
+    }
+
+    private OngoingStubbing<ResponseEntity<TransactionsResponse>> mockTransactions() {
+        return when(tppAisClientFeignMock.getTransactions(any(), any(), any(), any(), any(), any(), any(), any(), any(),
+                any(), any(), any(), any(), any(), any(), any(), any(), any(), any(), any(), any(), any(), any()));
     }
 
     @SneakyThrows

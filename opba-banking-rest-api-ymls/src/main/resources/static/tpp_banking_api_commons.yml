@@ -171,7 +171,7 @@ components:
     Fintech-Redirect-URL-OK:
       name: Fintech-Redirect-URL-OK
       in: header
-      desription: |
+      description: |
         This header provides the desired URL where PSU will be redirected back after authorisation session in case of
         successful authorisation. This URL might contain unique Identifier of this User and/or Session,
         recognisable by FinTech.
@@ -185,7 +185,7 @@ components:
     Fintech-Redirect-URL-NOK:
       name: Fintech-Redirect-URL-NOK
       in: header
-      desription: |
+      description: |
         This header provides the desired URL where PSU will be redirected back  after authorisation session in case of
         unsuccessful authorisation (i.e. PSU's authorisation reject, technical failure, lack of credentials etc.).
         This URL might contain unique Identifier of this User and/or Session,
@@ -205,6 +205,16 @@ components:
         type: string
         description: json representation of AisConsentRequest object
         example: {"access":{"allPsd2":"ALL_ACCOUNTS_WITH_BALANCES"},"frequencyPerDay":4,"validUntil":"2021-06-18","recurringIndicator":true,"combinedServiceIndicator":false}
+
+    X-Import-User-Data:
+      name: X-Import-User-Data
+      description: Optional, third party data like username/password of external service to be used in service session. Allows to import already existing users into this system.
+      required: false
+      in: header
+      schema:
+        type: string
+        description: Json representation of third party authorization object
+        example: { "username": "jane.doe", "password": "secret" }
 
 
   responses:
