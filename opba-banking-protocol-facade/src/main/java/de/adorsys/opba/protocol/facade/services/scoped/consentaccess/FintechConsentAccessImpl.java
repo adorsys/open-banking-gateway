@@ -7,7 +7,7 @@ import de.adorsys.opba.db.domain.entity.sessions.ServiceSession;
 import de.adorsys.opba.db.repository.jpa.ConsentRepository;
 import de.adorsys.opba.db.repository.jpa.fintech.FintechPsuAspspPrvKeyRepository;
 import de.adorsys.opba.protocol.api.services.EncryptionService;
-import de.adorsys.opba.protocol.api.services.scoped.consent.ConsentAccess;
+import de.adorsys.opba.protocol.api.services.scoped.consent.FintechConsentAccess;
 import de.adorsys.opba.protocol.api.services.scoped.consent.ProtocolFacingConsent;
 import de.adorsys.opba.protocol.facade.config.encryption.PsuEncryptionServiceProvider;
 import de.adorsys.opba.protocol.facade.config.encryption.impl.fintech.FintechSecureStorage;
@@ -25,7 +25,7 @@ import java.util.function.Supplier;
 import java.util.stream.Collectors;
 
 @RequiredArgsConstructor
-public class FintechConsentAccess implements ConsentAccess {
+public class FintechConsentAccessImpl implements FintechConsentAccess {
 
     private final Fintech fintech;
     private final PsuEncryptionServiceProvider encryptionService;
@@ -35,16 +35,10 @@ public class FintechConsentAccess implements ConsentAccess {
     private final EntityManager entityManager;
     private final UUID serviceSessionId;
     private final Supplier<char[]> fintechPassword;
+    private final AnonymousPsuConsentAccess anonymousPsuConsentAccess;
 
-
-    @Override
-    public boolean isFinTechScope() {
-        return true;
-    }
-
-    @Override
-    public ProtocolFacingConsent createDoNotPersist() {
-        throw new IllegalStateException("No PSU present - can't create consent");
+    public ProtocolFacingConsent createAnonymousConsentNotPersist() {
+        return anonymousPsuConsentAccess.createDoNotPersist();
     }
 
     @Override

@@ -63,7 +63,7 @@ public class RequestScopedProvider implements RequestScopedServicesProvider {
             SecretKeyWithIv futureAuthorizationSessionKey,
             Supplier<char[]> fintechPassword
     ) {
-        ConsentAccess consentAccess = consentAccessProvider.consentForFintech(fintech, session, fintechPassword);
+        ConsentAccess consentAccess = consentAccessProvider.consentForFintech(fintech, profile.getBank(), session, fintechPassword);
         PaymentAccess paymentAccess = paymentAccessProvider.paymentForFintech(fintech, session, fintechPassword);
 
         EncryptionService authorizationSessionEncService = sessionEncryption(encryptionServiceProvider, futureAuthorizationSessionKey);
