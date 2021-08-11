@@ -4,16 +4,13 @@ import de.adorsys.opba.protocol.bpmnshared.dto.DtoMapper;
 import de.adorsys.opba.protocol.bpmnshared.service.context.ContextUtil;
 import de.adorsys.opba.protocol.bpmnshared.service.exec.ValidatedExecution;
 import de.adorsys.opba.protocol.xs2a.context.Xs2aContext;
-import de.adorsys.opba.protocol.xs2a.service.dto.ValidatedPathHeadersBody;
-import de.adorsys.opba.protocol.xs2a.service.mapper.PathHeadersBodyMapperTemplate;
-import de.adorsys.opba.protocol.xs2a.service.xs2a.dto.Xs2aAuthorizedConsentParameters;
 import de.adorsys.opba.protocol.xs2a.service.xs2a.dto.Xs2aStandardHeaders;
 import de.adorsys.opba.protocol.xs2a.service.xs2a.dto.authenticate.embedded.ProvidePsuPasswordBody;
-import de.adorsys.xs2a.adapter.service.AccountInformationService;
-import de.adorsys.xs2a.adapter.service.RequestParams;
-import de.adorsys.xs2a.adapter.service.Response;
-import de.adorsys.xs2a.adapter.service.model.ScaStatusResponse;
-import de.adorsys.xs2a.adapter.service.model.UpdatePsuAuthentication;
+import de.adorsys.xs2a.adapter.api.AccountInformationService;
+import de.adorsys.xs2a.adapter.api.RequestParams;
+import de.adorsys.xs2a.adapter.api.Response;
+import de.adorsys.xs2a.adapter.api.model.ScaStatusResponse;
+import de.adorsys.xs2a.adapter.api.model.UpdatePsuAuthentication;
 import lombok.RequiredArgsConstructor;
 import org.flowable.engine.delegate.DelegateExecution;
 import org.springframework.stereotype.Service;
@@ -27,8 +24,7 @@ public class Xs2aAisCheckDecoupledAuthorisationStatus extends ValidatedExecution
 
     @Override
     protected void doRealExecution(DelegateExecution execution, Xs2aContext context) {
-        ValidatedPathHeadersBody<Xs2aAuthorizedConsentParameters, Xs2aStandardHeaders, UpdatePsuAuthentication> params =
-                extractor.forExecution(context);
+        ValidatedPathHeadersBody<Xs2aAuthorizedConsentParameters, Xs2aStandardHeaders, UpdatePsuAuthentication> params = extractor.forExecution(context);
         Response<ScaStatusResponse> consentScaStatus = ais.getConsentScaStatus(context.getConsentId(),
                                                                                context.getAuthorizationId(),
                                                                                params.getHeaders().toHeaders(),

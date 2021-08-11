@@ -10,11 +10,11 @@ import de.adorsys.opba.protocol.xs2a.service.mapper.PathHeadersBodyMapperTemplat
 import de.adorsys.opba.protocol.xs2a.service.xs2a.dto.Xs2aAuthorizedPaymentParameters;
 import de.adorsys.opba.protocol.xs2a.service.xs2a.dto.Xs2aStandardHeaders;
 import de.adorsys.opba.protocol.xs2a.service.xs2a.dto.authenticate.embedded.ProvidePsuPasswordBody;
-import de.adorsys.xs2a.adapter.service.PaymentInitiationService;
-import de.adorsys.xs2a.adapter.service.RequestParams;
-import de.adorsys.xs2a.adapter.service.Response;
-import de.adorsys.xs2a.adapter.service.model.PaymentInitiationScaStatusResponse;
-import de.adorsys.xs2a.adapter.service.model.UpdatePsuAuthentication;
+import de.adorsys.xs2a.adapter.api.PaymentInitiationService;
+import de.adorsys.xs2a.adapter.api.RequestParams;
+import de.adorsys.xs2a.adapter.api.Response;
+import de.adorsys.xs2a.adapter.api.model.ScaStatusResponse;
+import de.adorsys.xs2a.adapter.api.model.UpdatePsuAuthentication;
 import lombok.RequiredArgsConstructor;
 import org.flowable.engine.delegate.DelegateExecution;
 import org.springframework.stereotype.Service;
@@ -29,7 +29,7 @@ public class Xs2aPisCheckDecoupledAuthorisationStatus extends ValidatedExecution
     @Override
     protected void doRealExecution(DelegateExecution execution, Xs2aPisContext context) {
         ValidatedPathHeadersBody<Xs2aAuthorizedPaymentParameters, Xs2aStandardHeaders, UpdatePsuAuthentication> params = extractor.forExecution(context);
-        Response<PaymentInitiationScaStatusResponse> paymentInitiationScaStatus = pis.getPaymentInitiationScaStatus(context.getPaymentType().getValue(),
+        Response<ScaStatusResponse> paymentInitiationScaStatus = pis.getPaymentInitiationScaStatus(context.getPaymentType().getValue(),
                                                                                                                     context.getPaymentProduct(),
                                                                                                                     context.getPaymentId(),
                                                                                                                     context.getAuthorizationId(),
