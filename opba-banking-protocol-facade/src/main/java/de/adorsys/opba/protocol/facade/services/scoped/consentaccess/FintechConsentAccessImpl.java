@@ -59,13 +59,13 @@ public class FintechConsentAccessImpl implements FintechConsentAccess {
     @Override
     public List<ProtocolFacingConsent> findByCurrentServiceSessionOrderByModifiedDesc() {
         ServiceSession serviceSession = entityManager.find(ServiceSession.class, serviceSessionId);
-        if (null == serviceSession || null == serviceSession.getAuthSession()) {
+        if (null == serviceSession) {
             return Collections.emptyList();
         }
 
         List<Consent> consent = consents.findByServiceSessionIdOrderByModifiedAtDesc(serviceSession.getId());
         // Anonymous consent session:
-        if (null == serviceSession.getAuthSession().getPsu()) {
+        if (null == serviceSession.getAuthSession() || null == serviceSession.getAuthSession().getPsu()) {
             return anonymousConsent(consent);
         }
 
