@@ -5,5 +5,6 @@ package de.adorsys.opba.protocol.api.dto.parameters;
  * and {@link de.adorsys.opba.protocol.api.dto.request.transactions.ListTransactionsRequest}.
  */
 public enum ExtraRequestParam {
-    CONSENT
+    CONSENT,
+    IMPORT_DATA
 }

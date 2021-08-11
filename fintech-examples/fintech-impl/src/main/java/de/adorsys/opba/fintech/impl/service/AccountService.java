@@ -120,6 +120,7 @@ public class AccountService {
             psuAuthenticationRequired,
             serviceSessionID,
             createConsentIfNone,
+            null,
             withBalance,
             online);
     }
@@ -148,12 +149,12 @@ public class AccountService {
             null,
             null,
             null,
+            null,
             null
         );
         if (response.getStatusCode() != HttpStatus.OK) {
             return response;
         }
-
         return consentAvailable(
                 bankProfileID,
                 sessionEntity,
