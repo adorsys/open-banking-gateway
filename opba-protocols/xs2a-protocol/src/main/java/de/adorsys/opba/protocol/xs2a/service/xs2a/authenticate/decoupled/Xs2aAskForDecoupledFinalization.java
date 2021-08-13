@@ -29,7 +29,7 @@ public class Xs2aAskForDecoupledFinalization extends ValidatedExecution<Xs2aCont
                 execution,
                 context,
                 redirectUrl,
-                redirectUrl,
+                null,
                 redirect -> redirect.doNotRemoveKey(true).build()
         );
     }

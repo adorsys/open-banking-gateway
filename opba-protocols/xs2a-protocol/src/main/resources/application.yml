@@ -102,7 +102,7 @@ protocol:
           select-sca-method: /{authSessionId}/select-sca-method
           report-sca-result: /{authSessionId}/sca-result/{selectedScaType}?wrong={isWrongCreds}
           provide-psu-iban: /{authSessionId}/entry-consent-transactions/dedicated-account-access?wrong={isWrongCreds}
-          wait-decoupled-sca: /{authSessionId}/wait-sca-finalization
+          wait-decoupled-sca: /{authSessionId}/wait-sca-finalization?redirectCode={redirectCode}
     aspspmessages:
       invalid-credentials: PSU_CREDENTIALS_INVALID
       invalid-consent: FORMAT_ERROR
