@@ -102,14 +102,14 @@
           <timeDuration>#{flowableProperties.jobTimeout.pollInterval}</timeDuration>
         </timerEventDefinition>
       </intermediateCatchEvent>
-      <exclusiveGateway id="sid-0f8f5e92-29e8-42e9-b4a8-dfd8fa05e821" name="Authorization finalised?"/>
+      <exclusiveGateway id="sid-0f8f5e92-29e8-42e9-b4a8-dfd8fa05e821" name="Authorization finalised?" default="decoupledAuthorizationStillInProgress"/>
       <sequenceFlow id="sid-37c8fb6d-8f4f-42fc-85c6-978a4baeb22f" name="Start authorization checking" sourceRef="sid-d4c51ec7-0754-45fc-a6d0-c2ee1feb018b" targetRef="sid-65eeaf27-ef53-422a-b15d-3ffa3b770060"/>
       <sequenceFlow id="sid-2ff33854-87e1-43ab-81d8-df9429bb3d91" sourceRef="sid-65eeaf27-ef53-422a-b15d-3ffa3b770060" targetRef="sid-0f8f5e92-29e8-42e9-b4a8-dfd8fa05e821"/>
       <sequenceFlow id="sid-e132ff8d-2001-4193-9cce-07042fa52bed" name="Successful proceeding to the subprocess end" sourceRef="sid-0f8f5e92-29e8-42e9-b4a8-dfd8fa05e821" targetRef="sid-d64a6de3-f8f7-4a2c-9747-8ef0d84ce697">
-        <conditionExpression xsi:type="tFormalExpression"/>
+        <conditionExpression xsi:type="tFormalExpression">#{xs2aConsentInfo.isDecoupledScaFinalizedByPSU(CONTEXT)}</conditionExpression>
       </sequenceFlow>
-      <sequenceFlow id="sid-27a69cd0-ab88-40f6-a6b9-fefda443ff34" name="Waits for user to authorize in 3rd party using decoupled approach" sourceRef="sid-0f8f5e92-29e8-42e9-b4a8-dfd8fa05e821" targetRef="sid-ec530a95-dab1-4827-adf4-7d8acd34b74f">
-        <conditionExpression xsi:type="tFormalExpression">#{!xs2aConsentInfo.isDecoupledScaFinalizedByPSU(CONTEXT)}</conditionExpression>
+      <sequenceFlow id="decoupledAuthorizationStillInProgress" name="Waits for user to authorize in 3rd party using decoupled approach" sourceRef="sid-0f8f5e92-29e8-42e9-b4a8-dfd8fa05e821" targetRef="sid-ec530a95-dab1-4827-adf4-7d8acd34b74f">
+        <conditionExpression xsi:type="tFormalExpression"/>
       </sequenceFlow>
       <sequenceFlow id="sid-c3aabc9c-c751-4ca5-aa3a-d6bec9fc7922" name="Starts authorization check after some delay" sourceRef="sid-ec530a95-dab1-4827-adf4-7d8acd34b74f" targetRef="sid-65eeaf27-ef53-422a-b15d-3ffa3b770060"/>
     </subProcess>
@@ -125,7 +125,7 @@
       <conditionExpression xsi:type="tFormalExpression"/>
     </sequenceFlow>
     <sequenceFlow id="decoupledScaChallengeFlow" sourceRef="sid-b38d0c3b-c743-4b5a-9c09-d3a6ad2286a2" targetRef="sid-00e21d32-fd57-43a7-a983-4a55e22d0826" name="Decoupled SCA Challenge">
-      <conditionExpression xsi:type="tFormalExpression"/>
+      <conditionExpression xsi:type="tFormalExpression">#{xs2aConsentInfo.isDecoupledScaSelected(CONTEXT)}</conditionExpression>
     </sequenceFlow>
     <sequenceFlow id="sid-444da361-d781-44fb-a872-d6bb53efc09a" sourceRef="sid-2b0f96e5-a216-4283-b92f-0dc16ed771c2" targetRef="sid-xs2aReportToFintechPaymentDenied" name="Decoupled payment failed"/>
     <sequenceFlow id="sid-3a2383aa-71db-454f-b838-b0cf3231eb2f" sourceRef="decoupledScaStatusChecking" targetRef="isScaFinalized" name="Decoupled payment success"/>
@@ -384,15 +384,10 @@
       </bpmdi:BPMNEdge>
       <bpmdi:BPMNEdge xmlns:bpmdi="http://www.omg.org/spec/BPMN/20100524/DI" id="sid-15d00203-2f2b-4beb-a808-1bff0aa4f769" bpmnElement="sid-e132ff8d-2001-4193-9cce-07042fa52bed">
         <omgdi:waypoint x="1908.0465" y="-83.50128"/>
-        <omgdi:waypoint x="1930.1318" y="-82.78121"/>
-        <omgdi:waypoint x="1945.6467" y="-83.063934"/>
-        <omgdi:waypoint x="1941.4087" y="-82.781204"/>
         <omgdi:waypoint x="1958.0465" y="-83.50128"/>
       </bpmdi:BPMNEdge>
-      <bpmdi:BPMNEdge xmlns:bpmdi="http://www.omg.org/spec/BPMN/20100524/DI" id="sid-fe610d65-7deb-4eaf-8a50-99ba6e0cf9e6" bpmnElement="sid-27a69cd0-ab88-40f6-a6b9-fefda443ff34">
+      <bpmdi:BPMNEdge xmlns:bpmdi="http://www.omg.org/spec/BPMN/20100524/DI" id="sid-fe610d65-7deb-4eaf-8a50-99ba6e0cf9e6" bpmnElement="decoupledAuthorizationStillInProgress">
         <omgdi:waypoint x="1888.0465" y="-103.50128"/>
-        <omgdi:waypoint x="1888.0465" y="-123.5013"/>
-        <omgdi:waypoint x="1888.0465" y="-135.54625"/>
         <omgdi:waypoint x="1888.0465" y="-170.47119"/>
       </bpmdi:BPMNEdge>
       <bpmdi:BPMNEdge xmlns:bpmdi="http://www.omg.org/spec/BPMN/20100524/DI" id="sid-367fb2bb-c34b-4f81-a68e-cd43233b6994" bpmnElement="sid-c3aabc9c-c751-4ca5-aa3a-d6bec9fc7922">

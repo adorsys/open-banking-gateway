@@ -7,6 +7,7 @@ import de.adorsys.opba.protocol.xs2a.context.Xs2aContext;
 import de.adorsys.opba.protocol.xs2a.domain.dto.forms.ScaMethod;
 import de.adorsys.opba.protocol.xs2a.service.dto.ValidatedPathHeadersBody;
 import de.adorsys.opba.protocol.xs2a.service.mapper.PathHeadersBodyMapperTemplate;
+import de.adorsys.opba.protocol.xs2a.service.xs2a.authenticate.ScaUtil;
 import de.adorsys.opba.protocol.xs2a.service.xs2a.dto.Xs2aAuthorizedConsentParameters;
 import de.adorsys.opba.protocol.xs2a.service.xs2a.dto.Xs2aStandardHeaders;
 import de.adorsys.opba.protocol.xs2a.service.xs2a.dto.authenticate.embedded.ProvidePsuPasswordBody;
@@ -84,7 +85,8 @@ public class Xs2aAisAuthenticateUserConsentWithPin extends ValidatedExecution<Xs
                     ctx.setWrongAuthCredentials(false);
                     ctx.setPsuPassword(null); // eagerly destroy password, albeit it is not persisted
                     setScaAvailableMethodsIfCanBeChosen(authResponse, ctx);
-                    ctx.setScaSelected(authResponse.getBody().getChosenScaMethod());
+                    ctx.setScaSelected(ScaUtil.scaMethodSelected(authResponse.getBody()));
+                    ctx.setSelectedScaDecoupled(ScaUtil.isDecoupled(authResponse.getHeaders()));
                     ctx.setChallengeData(authResponse.getBody().getChallengeData());
                     ctx.setScaStatus(null == scaStatus ? null : scaStatus.toString());
                 }

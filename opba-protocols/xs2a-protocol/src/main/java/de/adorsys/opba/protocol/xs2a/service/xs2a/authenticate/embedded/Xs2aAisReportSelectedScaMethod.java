@@ -6,6 +6,7 @@ import de.adorsys.opba.protocol.bpmnshared.service.exec.ValidatedExecution;
 import de.adorsys.opba.protocol.xs2a.context.Xs2aContext;
 import de.adorsys.opba.protocol.xs2a.service.dto.ValidatedPathHeadersBody;
 import de.adorsys.opba.protocol.xs2a.service.mapper.PathHeadersBodyMapperTemplate;
+import de.adorsys.opba.protocol.xs2a.service.xs2a.authenticate.ScaUtil;
 import de.adorsys.opba.protocol.xs2a.service.xs2a.dto.Xs2aAuthorizedConsentParameters;
 import de.adorsys.opba.protocol.xs2a.service.xs2a.dto.Xs2aStandardHeaders;
 import de.adorsys.opba.protocol.xs2a.service.xs2a.dto.authenticate.embedded.SelectScaChallengeBody;
@@ -63,16 +64,11 @@ public class Xs2aAisReportSelectedScaMethod extends ValidatedExecution<Xs2aConte
         ContextUtil.getAndUpdateContext(
                 execution,
                 (Xs2aContext ctx) -> {
-                    ctx.setScaSelected(authResponse.getBody().getChosenScaMethod());
+                    ctx.setScaSelected(ScaUtil.scaMethodSelected(authResponse.getBody()));
                     ctx.setChallengeData(authResponse.getBody().getChallengeData());
-                    ctx.setSelectedScaDecoupled(checkDecoupledSca(authResponse.getBody().getPsuMessage()));
+                    ctx.setSelectedScaDecoupled(ScaUtil.isDecoupled(authResponse.getHeaders()));
                 }
         );
-    }
-
-    private boolean checkDecoupledSca(String psuMessage) {
-        return psuMessage != null
-                       && psuMessage.startsWith(DECOUPLED_AUTHENTICATION_PSU_MESSAGE);
     }
 
     @Service

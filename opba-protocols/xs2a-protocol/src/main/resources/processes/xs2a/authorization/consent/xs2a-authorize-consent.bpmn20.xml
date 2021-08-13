@@ -97,7 +97,7 @@
       <startEvent id="sid-7721d684-fcd9-4883-89fb-8595e225b40d" name="Start of decoupled Sca subprocess"/>
       <endEvent id="sid-c3a04098-ed6c-40a8-a74d-91c2b5fba95c" name="End of decoupled Sca status checking subprocess"/>
       <serviceTask id="sid-9807ebbf-a03b-4087-ab63-ecc18e1a5e2e" name="Checks authorization status to be finalized" flowable:async="true" flowable:exclusive="true" flowable:delegateExpression="${xs2aAisCheckDecoupledAuthorizationStatus}"/>
-      <exclusiveGateway id="sid-62f4227f-df35-4e97-bee8-6f945711a132" name="Authirization finalised?"/>
+      <exclusiveGateway id="sid-62f4227f-df35-4e97-bee8-6f945711a132" name="Authorization finalised?" default="decoupledAuthorizationStillInProgress"/>
       <intermediateCatchEvent id="sid-a21ddadc-e884-4dd8-bd98-1cd9c101b4b0" name="Waits until authorization is finished by PSU">
         <timerEventDefinition>
           <timeDuration>#{flowableProperties.jobTimeout.pollInterval}</timeDuration>
@@ -106,10 +106,10 @@
       <sequenceFlow id="sid-e5b7e5aa-3bb9-45b7-89d0-8c8838652f6f" name="Start authorization checking" sourceRef="sid-7721d684-fcd9-4883-89fb-8595e225b40d" targetRef="sid-9807ebbf-a03b-4087-ab63-ecc18e1a5e2e"/>
       <sequenceFlow id="sid-cc670a4f-f0b8-4377-a047-65b31d465a07" sourceRef="sid-9807ebbf-a03b-4087-ab63-ecc18e1a5e2e" targetRef="sid-62f4227f-df35-4e97-bee8-6f945711a132"/>
       <sequenceFlow id="sid-faa0078c-c3c7-45a6-8f17-5d89c610cec8" name="Successful proceeding to the subprocess end" sourceRef="sid-62f4227f-df35-4e97-bee8-6f945711a132" targetRef="sid-c3a04098-ed6c-40a8-a74d-91c2b5fba95c">
-        <conditionExpression xsi:type="tFormalExpression"/>
+        <conditionExpression xsi:type="tFormalExpression">#{xs2aConsentInfo.isDecoupledScaFinalizedByPSU(CONTEXT)}</conditionExpression>
       </sequenceFlow>
-      <sequenceFlow id="sid-56bf7bb5-3153-4e20-bce2-783b6791fe1e" name="Waits for user to authorize in 3rd party using decoupled approach" sourceRef="sid-62f4227f-df35-4e97-bee8-6f945711a132" targetRef="sid-a21ddadc-e884-4dd8-bd98-1cd9c101b4b0">
-        <conditionExpression xsi:type="tFormalExpression">#{!xs2aConsentInfo.isDecoupledScaFinalizedByPSU(CONTEXT)}</conditionExpression>
+      <sequenceFlow id="decoupledAuthorizationStillInProgress" name="Waits for user to authorize in 3rd party using decoupled approach" sourceRef="sid-62f4227f-df35-4e97-bee8-6f945711a132" targetRef="sid-a21ddadc-e884-4dd8-bd98-1cd9c101b4b0">
+        <conditionExpression xsi:type="tFormalExpression"/>
       </sequenceFlow>
       <sequenceFlow id="sid-4cc164d6-6a6f-4557-a5c1-a44ab8c82131" name="Starts authorization check after some delay" sourceRef="sid-a21ddadc-e884-4dd8-bd98-1cd9c101b4b0" targetRef="sid-9807ebbf-a03b-4087-ab63-ecc18e1a5e2e"/>
     </subProcess>
@@ -127,7 +127,7 @@
       <conditionExpression xsi:type="tFormalExpression"/>
     </sequenceFlow>
     <sequenceFlow id="decoupledScaChallengeFlow" sourceRef="sid-4743a0ed-8d54-4115-881b-27f8775bda96" targetRef="sid-c8a7957f-271e-4b86-96f5-8a8fd718d9b0" name="Depoupled SCA flow">
-      <conditionExpression xsi:type="tFormalExpression"/>
+      <conditionExpression xsi:type="tFormalExpression">#{xs2aConsentInfo.isDecoupledScaSelected(CONTEXT)}</conditionExpression>
     </sequenceFlow>
   </process>
   <bpmndi:BPMNDiagram id="BPMNDiagram_xs2a-authorize-consent">
@@ -385,7 +385,7 @@
         <omgdi:waypoint x="1910.5881" y="-43.130722"/>
         <omgdi:waypoint x="1975.9883" y="-43.130722"/>
       </bpmdi:BPMNEdge>
-      <bpmdi:BPMNEdge xmlns:bpmdi="http://www.omg.org/spec/BPMN/20100524/DI" id="sid-3a72739c-d601-4a98-8cd5-c41ba5ccc2e0" bpmnElement="sid-56bf7bb5-3153-4e20-bce2-783b6791fe1e">
+      <bpmdi:BPMNEdge xmlns:bpmdi="http://www.omg.org/spec/BPMN/20100524/DI" id="sid-3a72739c-d601-4a98-8cd5-c41ba5ccc2e0" bpmnElement="decoupledAuthorizationStillInProgress">
         <omgdi:waypoint x="1890.5881" y="-63.130722"/>
         <omgdi:waypoint x="1890.5881" y="-162.52795"/>
       </bpmdi:BPMNEdge>
