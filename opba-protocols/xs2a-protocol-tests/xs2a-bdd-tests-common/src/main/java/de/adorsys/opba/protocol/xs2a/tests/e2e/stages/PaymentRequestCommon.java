@@ -35,6 +35,7 @@ import static de.adorsys.opba.protocol.xs2a.tests.e2e.stages.StagesCommonUtil.AU
 import static de.adorsys.opba.protocol.xs2a.tests.e2e.stages.StagesCommonUtil.GET_CONSENT_AUTH_STATE;
 import static de.adorsys.opba.protocol.xs2a.tests.e2e.stages.StagesCommonUtil.MAX_MUSTERMAN;
 import static de.adorsys.opba.protocol.xs2a.tests.e2e.stages.StagesCommonUtil.PIS_SINGLE_PAYMENT_ENDPOINT;
+import static de.adorsys.opba.protocol.xs2a.tests.e2e.stages.StagesCommonUtil.SANDBOX_BANK_PROFILE_ID;
 import static de.adorsys.opba.protocol.xs2a.tests.e2e.stages.StagesCommonUtil.withDefaultHeaders;
 import static de.adorsys.opba.restapi.shared.HttpHeaders.SERVICE_SESSION_ID;
 import static org.assertj.core.api.Assertions.assertThat;
@@ -100,8 +101,12 @@ public class PaymentRequestCommon<SELF extends PaymentRequestCommon<SELF>> exten
     }
 
     public SELF fintech_calls_initiate_payment_for_max_musterman() {
+        return fintech_calls_initiate_payment_for_max_musterman(SANDBOX_BANK_PROFILE_ID);
+    }
+
+    public SELF fintech_calls_initiate_payment_for_max_musterman(String bankProfileId) {
         String body = readResource("restrecord/tpp-ui-input/params/max-musterman-single-sepa-payment.json");
-        ExtractableResponse<Response> response = withPaymentHeaders(MAX_MUSTERMAN)
+        ExtractableResponse<Response> response = withPaymentHeaders(MAX_MUSTERMAN, bankProfileId, true)
                 .contentType(APPLICATION_JSON_VALUE)
                 .body(body)
             .when()
@@ -260,6 +265,15 @@ public class PaymentRequestCommon<SELF extends PaymentRequestCommon<SELF>> exten
                 AUTHORIZE_CONSENT_ENDPOINT,
                 selectedScaBody("PHOTO_OTP:photo_otp"),
                 ACCEPTED
+        );
+        return self();
+    }
+
+    public SELF user_max_musterman_selected_sca_challenge_type_push_otp_to_embedded_authorization() {
+        provideParametersToBankingProtocolWithBody(
+            AUTHORIZE_CONSENT_ENDPOINT,
+            selectedScaBody("PUSH_OTP:TAN2go"),
+            ACCEPTED
         );
         return self();
     }

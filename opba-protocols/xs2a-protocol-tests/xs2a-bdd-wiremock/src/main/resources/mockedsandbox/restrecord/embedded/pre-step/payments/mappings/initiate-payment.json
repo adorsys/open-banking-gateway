@@ -1,0 +1,55 @@
+{
+  "scenarioName": "DKB - single payment",
+  "priority": 5,
+  "requiredScenarioState": "Authenticated",
+  "newScenarioState": "initiated",
+  "request": {
+    "url": "/v1/payments/sepa-credit-transfers",
+    "method": "POST",
+    "headers": {
+      "PSD2-AUTHORIZATION": {
+        "matches": ".+"
+      },
+      "X-Request-ID": {
+        "matches": ".+"
+      },
+      "PSU-ID": {
+        "matches": ".+"
+      },
+      "TPP-Redirect-URI": {
+        "matches": ".+"
+      },
+      "PSU-IP-Address": {
+        "matches": ".+"
+      },
+      "Content-Type": {
+        "matches": "application/json.*"
+      }
+    },
+    "bodyPatterns": [
+      {
+        "equalToJson": "{\"debtorAccount\":{\"iban\":\"DE38760700240320465700\",\"currency\":\"EUR\"},\"instructedAmount\":{\"currency\":\"EUR\",\"amount\":\"1.03\"},\"creditorAccount\":{\"iban\":\"DE38760700240320465700\",\"currency\":\"EUR\"},\"creditorName\":\"WBG\"}",
+        "ignoreArrayOrder": true,
+        "ignoreExtraElements": true
+      }
+    ]
+  },
+  "response": {
+    "status": 201,
+    "bodyFileName": "{\n  \"transactionStatus\": \"RCVD\",\n  \"paymentId\": \"9667011219090020282PSDDE-BAFIN-911360PA4960JJ\",\n  \"_links\": {\n    \"self\": {\n      \"href\": \"/v1/payments/sepa-credit-transfers/9667011219090020282PSDDE-BAFIN-911360PA4960JJ\"\n    },\n    \"startAuthorisation\": {\n      \"href\": \"/v1/payments/sepa-credit-transfers/9667011219090020282PSDDE-BAFIN-911360PA4960JJ/authorisations\"\n    },\n    \"status\": {\n      \"href\": \"/v1/payments/sepa-credit-transfers/de91a99b-5b9d-4f70-8846-81beba089f87/status\"\n    }\n  }\n}",
+    "headers": {
+      "Date": "Mon, 05 Jul 2021 11:59:59 GMT",
+      "Server": "Apache",
+      "glue2gExit": "2021-03-04T09:01:13.376",
+      "X-Request-ID": "da69412c-0cdf-4fce-b17b-4bc162a30560",
+      "bffEntry": "2021-03-04T09:01:11.897",
+      "bffExit": "2021-03-04T09:01:13.376",
+      "Content-Type": "application/json;charset=utf-8",
+      "glue2gEntry": "2021-03-04T09:01:11.897",
+      "Keep-Alive": "timeout=5, max=100"
+    }
+  },
+  "uuid": "ef55d234-0c7c-44e1-acef-7f11c73998f7",
+  "persistent": true,
+  "insertionIndex": 15
+}

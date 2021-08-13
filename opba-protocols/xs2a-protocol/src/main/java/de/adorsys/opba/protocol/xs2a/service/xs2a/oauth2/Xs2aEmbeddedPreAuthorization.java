@@ -78,7 +78,6 @@ public class Xs2aEmbeddedPreAuthorization extends ValidatedExecution<Xs2aContext
                     log.info("aspsp sca approach: {}", ctx.getAspspScaApproach());
                 }
         );
-
     }
 
     @Override
@@ -99,7 +98,6 @@ public class Xs2aEmbeddedPreAuthorization extends ValidatedExecution<Xs2aContext
         }
     }
 
-
     @Mapper(componentModel = SPRING_KEYWORD, implementationPackage = GlobalConst.XS2A_MAPPERS_PACKAGE)
     public interface ToXs2aApi extends DtoMapper<ProvidePsuIdAndPsuPasswordBody, EmbeddedPreAuthorisationRequest> {
         @Mapping(target = "password", source = "psuPassword")
@@ -111,6 +109,4 @@ public class Xs2aEmbeddedPreAuthorization extends ValidatedExecution<Xs2aContext
     public interface FromCtx extends DtoMapper<Xs2aContext, ProvidePsuIdAndPsuPasswordBody> {
         ProvidePsuIdAndPsuPasswordBody map(Xs2aContext ctx);
     }
-
-
 }

@@ -1,0 +1,35 @@
+{
+  "scenarioName": "DKB - single payment",
+  "priority": 5,
+  "request": {
+    "urlPattern": ".*/v1/payments/sepa-credit-transfers/.+/status",
+    "method": "GET",
+    "headers": {
+      "X-GTW-ASPSP-ID": {
+        "equalTo": "335562a2-26e2-4105-b31e-08de285234e0"
+      },
+      "PSD2-AUTHORIZATION": {
+        "matches": ".+"
+      },
+      "X-Request-ID": {
+        "matches": ".+"
+      }
+    }
+  },
+  "response": {
+    "status": 200,
+    "bodyFileName": "{\n  \"transactionStatus\": \"ACCP\",\n  \"fundsAvailable\": true\n}",
+    "headers": {
+      "Date": "Mon, 05 Jul 2021 11:59:59 GMT",
+      "Server": "Apache",
+      "Content-Type": "application/json; charset=utf-8",
+      "X-Request-ID": "06b43276-40f6-4ba4-aa8a-50c8e7f2781d",
+      "Strict-Transport-Security": "max-age=31536000",
+      "X-Content-Type-Options": "nosniff",
+      "Keep-Alive": "timeout=15, max=100"
+    }
+  },
+  "uuid": "a99b81b5-c522-4151-ac84-d3ce37155670",
+  "persistent": true,
+  "insertionIndex": 14
+}

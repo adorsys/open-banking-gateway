@@ -67,12 +67,7 @@ public class StagesCommonUtil {
     public static final String DKB_BANK_PROFILE_ID = "83c24dcf-2cfb-4c43-9812-013e32ab53b1";
 
     public static RequestSpecification withAccountsHeaders(String fintechUserId) {
-        UUID xRequestId = UUID.randomUUID();
-        Instant xTimestampUtc = Instant.now();
-
-        return headersWithoutIpAddress(fintechUserId, xRequestId, xTimestampUtc)
-                       .header(COMPUTE_PSU_IP_ADDRESS, COMPUTE_IP_ADDRESS)
-                       .header(PSU_IP_ADDRESS, IP_ADDRESS);
+        return withAccountsHeaders(fintechUserId, SANDBOX_BANK_PROFILE_ID);
     }
 
     public static RequestSpecification withAccountsHeaders(String fintechUserId, String bankProfileId) {

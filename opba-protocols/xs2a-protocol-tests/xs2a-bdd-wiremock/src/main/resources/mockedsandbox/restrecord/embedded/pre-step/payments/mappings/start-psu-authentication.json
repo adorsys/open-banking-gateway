@@ -1,0 +1,56 @@
+{
+  "scenarioName": "DKB - single payment",
+  "requiredScenarioState": "initiated",
+  "newScenarioState": "authorisation_started",
+  "priority": 5,
+  "request": {
+    "urlPattern": ".*/v1/payments/sepa-credit-transfers/.+/authorisations",
+    "method": "POST",
+    "headers": {
+      "X-GTW-ASPSP-ID": {
+        "equalTo": "335562a2-26e2-4105-b31e-08de285234e0"
+      },
+      "PSD2-AUTHORIZATION": {
+        "matches": ".+"
+      },
+      "X-Request-ID": {
+        "matches": ".+"
+      },
+      "PSU-ID": {
+        "matches": ".+"
+      },
+      "PSU-IP-Address": {
+        "matches": ".+"
+      },
+      "TPP-Redirect-URI": {
+        "matches": ".+"
+      },
+      "Content-Type": {
+        "matches": "application/json.*"
+      }
+    },
+    "bodyPatterns": [
+      {
+        "equalToJson": "{}",
+        "ignoreArrayOrder": true,
+        "ignoreExtraElements": true
+      }
+    ]
+  },
+  "response": {
+    "status": 201,
+    "bodyFileName": "{\n  \"scaStatus\": \"psuAuthenticated\",\n  \"authorisationId\": \"c9ef5300-0091-47c6-9df9-2190313e8f03\",\n  \"scaMethods\": [\n    {\n      \"authenticationType\": \"PHOTO_OTP\",\n      \"authenticationMethodId\": \"QR\",\n      \"authenticationVersion\": \"HHD1.3.2QR\",\n      \"name\": \"chipTAN QR | Kartennummer: ******0430\",\n      \"explanation\": \"Übertragung der Auftragsdaten mittels QR-Code. Erfordert geeigneten TAN-Generator.\"\n    }\n  ],\n  \"_links\": {\n    \"scaStatus\": {\n      \"href\": \"/v1/payments/sepa-credit-transfers/9667011219090020282PSDDE-BAFIN-911360PA4960JJ\"\n    }\n  }\n}",
+    "headers": {
+      "Date": "Mon, 05 Jul 2021 11:59:59 GMT",
+      "Server": "Apache",
+      "Content-Type": "application/json; charset=utf-8",
+      "X-Request-ID": "662388a0-92f3-4d1d-bb95-b4c28fb19fbd",
+      "Strict-Transport-Security": "max-age=31536000",
+      "X-Content-Type-Options": "nosniff",
+      "Keep-Alive": "timeout=15, max=100"
+    }
+  },
+  "uuid": "3b9c5a95-1ede-40a3-a59a-aee21256a90f",
+  "persistent": true,
+  "insertionIndex": 11
+}

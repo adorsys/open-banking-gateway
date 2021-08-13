@@ -332,8 +332,6 @@ class WiremockConsentE2EXs2aProtocolTest extends SpringScenarioTest<MockServers,
                 .open_banking_can_read_max_musterman_account_data_using_consent_bound_to_service_session();
     }
 
-
-
     @Test
     void testDkbAccountsListWithConsentUsingEmbeddedPreStep() {
         given()
@@ -350,13 +348,13 @@ class WiremockConsentE2EXs2aProtocolTest extends SpringScenarioTest<MockServers,
                 .and()
                 .user_max_musterman_provided_password_to_embedded_authorization()
                 .and()
-                .user_max_musterman_selected_sca_challenge_type_push_opt_to_embedded_authorization()
+                .user_max_musterman_selected_sca_challenge_type_push_otp_to_embedded_authorization()
                 .and()
-                .user_max_musterman_provided_sca_challenge_result_to_embedded_pre_step_authorization_and_sees_redirect_to_fintech_ok();
+                .user_max_musterman_provided_sca_challenge_result_to_embedded_authorization_and_sees_redirect_to_fintech_ok("/PUSH_OTP");
         then()
                 .open_banking_has_consent_for_max_musterman_account_list()
                 .fintech_calls_consent_activation_for_current_authorization_id()
-                .open_banking_can_read_max_musterman_account_data_using_consent_bound_to_service_session(true, 0, true,DKB_BANK_PROFILE_ID);
+                .open_banking_can_read_max_musterman_account_data_using_consent_bound_to_service_session(true, 0, true, DKB_BANK_PROFILE_ID);
     }
 
     @ParameterizedTest
@@ -444,11 +442,11 @@ class WiremockConsentE2EXs2aProtocolTest extends SpringScenarioTest<MockServers,
         then()
                 .open_banking_has_consent_for_max_musterman_transaction_list()
                 .fintech_calls_consent_activation_for_current_authorization_id()
-                .open_banking_can_read_max_musterman_account_data_using_consent_bound_to_service_session(true, 0, false,SANDBOX_BANK_PROFILE_ID)
+                .open_banking_can_read_max_musterman_account_data_using_consent_bound_to_service_session(true, 0, false, SANDBOX_BANK_PROFILE_ID)
                 .open_banking_can_read_max_musterman_transactions_data_using_consent_bound_to_service_session(
                         MAX_MUSTERMAN_RESOURCE_ID, DATE_FROM, DATE_TO, BOTH_BOOKING, false
                 )
-                .open_banking_can_read_max_musterman_account_data_using_consent_bound_to_service_session(true, 0, false,SANDBOX_BANK_PROFILE_ID)
+                .open_banking_can_read_max_musterman_account_data_using_consent_bound_to_service_session(true, 0, false, SANDBOX_BANK_PROFILE_ID)
                 .open_banking_can_read_none_due_to_filter_max_musterman_transactions_data_using_consent_bound_to_service_session(
                         MAX_MUSTERMAN_RESOURCE_ID, DATE_FROM, DATE_FROM, BOTH_BOOKING, false
                 );

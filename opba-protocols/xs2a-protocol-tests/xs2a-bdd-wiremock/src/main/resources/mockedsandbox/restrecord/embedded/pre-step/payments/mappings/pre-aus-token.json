@@ -1,16 +1,16 @@
 {
-  "scenarioName": "AccountsListUsingDkbEmbeddedPreStep",
+  "scenarioName": "DKB - single payment",
   "priority": 5,
   "newScenarioState": "Authenticated",
-  "request" : {
+  "request": {
     "urlPattern": ".*/pre-auth/psd2-auth/v1/auth/token",
-    "method" : "POST",
-    "headers" : {
-      "Content-Type" : {
-        "equalTo" : "application/json"
+    "method": "POST",
+    "headers": {
+      "Content-Type": {
+        "matches": "application/json"
       }
     },
-    "bodyPatterns" : [
+    "bodyPatterns": [
       {
         "equalToJson": "{\"username\":\"max.musterman\",\"password\":\"12345\"}",
         "ignoreArrayOrder": true,
@@ -18,10 +18,10 @@
       }
     ]
   },
-  "response" : {
-    "status" : 201,
+  "response": {
+    "status": 201,
     "body" : "{\n  \"returnCode\":\"CORRECT\",\n  \"accessToken\":\"VALID_TOKEN\"\n}",
-    "headers" : {
+    "headers": {
       "Server" : "nginx",
       "Date" : "Mon, 05 Jul 2021 11:59:59 GMT",
       "Content-Type" : "application/json;charset=UTF-8",
@@ -36,7 +36,7 @@
       "Referrer-Policy" : "strict-origin"
     }
   },
-  "uuid" : "eeda0067-864c-4f53-905b-754165fd4d3d",
-  "persistent" : true,
-  "insertionIndex" : 31
+  "uuid": "76f1e26a-bd8c-489c-b922-b6fd8e040fee",
+  "persistent": true,
+  "insertionIndex": 15
 }

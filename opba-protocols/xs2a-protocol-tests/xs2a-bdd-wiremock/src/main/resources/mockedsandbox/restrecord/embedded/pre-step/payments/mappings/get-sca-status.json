@@ -1,0 +1,34 @@
+{
+  "scenarioName": "DKB - single payment",
+  "request": {
+    "urlPattern": ".*/v1/payments/sepa-credit-transfers/.+/authorisations/.+",
+    "method": "GET",
+    "headers": {
+      "X-GTW-ASPSP-ID": {
+        "equalTo": "335562a2-26e2-4105-b31e-08de285234e0"
+      },
+      "PSD2-AUTHORIZATION": {
+        "matches": ".+"
+      },
+      "X-Request-ID": {
+        "matches": ".+"
+      }
+    }
+  },
+  "response": {
+    "status": 200,
+    "body": "{\"scaStatus\":\"finalised\"}",
+    "headers": {
+      "Date": "Mon, 05 Jul 2021 11:59:59 GMT",
+      "Server": "Apache",
+      "Content-Type": "application/json; charset=utf-8",
+      "X-Request-ID": "610cc155-67bf-48b0-91cb-2830321f1856",
+      "Strict-Transport-Security": "max-age=31536000",
+      "X-Content-Type-Options": "nosniff",
+      "Keep-Alive": "timeout=15, max=100"
+    }
+  },
+  "uuid": "72059436-771b-477f-a84f-5b054aaa5fd7",
+  "persistent": true,
+  "insertionIndex": 15
+}
