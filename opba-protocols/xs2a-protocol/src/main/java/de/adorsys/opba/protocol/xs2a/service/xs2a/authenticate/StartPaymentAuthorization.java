@@ -79,6 +79,11 @@ public class StartPaymentAuthorization extends ValidatedExecution<Xs2aPisContext
         context.setStartScaProcessResponse(scaStart.getBody());
 
         ScaStatus scaStatus = scaStart.getBody().getScaStatus();
+        updateContext(execution, scaStart, scaStatus);
+        execution.setVariable(CONTEXT, context);
+    }
+
+    private void updateContext(DelegateExecution execution, Response<StartScaprocessResponse> scaStart, ScaStatus scaStatus) {
         ContextUtil.getAndUpdateContext(
             execution,
             (Xs2aContext ctx) -> {
@@ -87,20 +92,6 @@ public class StartPaymentAuthorization extends ValidatedExecution<Xs2aPisContext
                 ctx.setScaStatus(null == scaStatus ? null : scaStatus.toString());
                 ctx.setStartScaProcessResponse(scaStart.getBody());
             }
-        );
-
-        execution.setVariable(CONTEXT, context);
-    }
-
-    private void setScaAvailableMethodsIfCanBeChosen(Response<StartScaprocessResponse> authResponse, Xs2aContext ctx) {
-        if (null == authResponse.getBody().getScaMethods()) {
-            return;
-        }
-
-        ctx.setAvailableSca(
-            authResponse.getBody().getScaMethods().stream()
-                .map(ScaMethod.FROM_AUTH::map)
-                .collect(Collectors.toList())
         );
     }
 
@@ -124,5 +115,17 @@ public class StartPaymentAuthorization extends ValidatedExecution<Xs2aPisContext
                 DtoMapper<Xs2aPisContext, Xs2aStartPaymentAuthorizationParameters> toParameters) {
             super(toHeaders, toParameters);
         }
+    }
+
+    private void setScaAvailableMethodsIfCanBeChosen(Response<StartScaprocessResponse> authResponse, Xs2aContext ctx) {
+        if (null == authResponse.getBody().getScaMethods()) {
+            return;
+        }
+
+        ctx.setAvailableSca(
+            authResponse.getBody().getScaMethods().stream()
+                .map(ScaMethod.FROM_AUTH::map)
+                .collect(Collectors.toList())
+        );
     }
 }
