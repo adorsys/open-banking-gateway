@@ -35,7 +35,7 @@ public class ScaMethod {
     @Mapper(componentModel = SPRING_KEYWORD)
     public interface FromAuthObject {
         @Mapping(source = "authenticationMethodId", target = "key")
-        @Mapping(target = "value", expression = "java(auth.getAuthenticationType().toString() + ':' + auth.getName())")
+        @Mapping(target = "value", expression = "java(\"\" + auth.getAuthenticationType() + ':' + auth.getName())")
         @Mapping(source = "authenticationType", target = "type")
         ScaMethod map(AuthenticationObject auth);
     }
