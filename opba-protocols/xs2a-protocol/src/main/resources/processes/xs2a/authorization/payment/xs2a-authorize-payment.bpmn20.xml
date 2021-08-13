@@ -93,12 +93,14 @@
     </sequenceFlow>
     <serviceTask id="notifyUserWithRedirectAfterCreate" name="Notify user with redirect url for challenge. Suspends to wait" flowable:async="true" flowable:exclusive="true" flowable:delegateExpression="${xs2aDoScaRedirectToAspspForScaChallengeAfterCreate}" flowable:triggerable="true"/>
     <sequenceFlow id="sid-48bcf86b-005c-4040-b488-687437c96a38" sourceRef="notifyUserWithRedirectAfterCreate" targetRef="sid-7E036180-B980-4A2D-8B6C-7407E2C90C2A"/>
-    <subProcess id="sid-d594293e-9d11-4ac3-92d4-e39ffac3a3af" name="Decoupled Sca status checking subprocess" flowable:exclusive="true">
+    <subProcess id="decoupledScaStatusChecking" name="Decoupled Sca status checking subprocess" flowable:exclusive="true">
       <serviceTask id="sid-65eeaf27-ef53-422a-b15d-3ffa3b770060" name="Checks authorization status to be finalized" flowable:async="true" flowable:exclusive="true" flowable:delegateExpression="${xs2aPisCheckDecoupledAuthorizationStatus}"/>
       <startEvent id="sid-d4c51ec7-0754-45fc-a6d0-c2ee1feb018b" name="Start of decoupled Sca subprocess"/>
       <endEvent id="sid-d64a6de3-f8f7-4a2c-9747-8ef0d84ce697" name="End of decoupled Sca status checking subprocess"/>
       <intermediateCatchEvent id="sid-ec530a95-dab1-4827-adf4-7d8acd34b74f" name="Waits until authorization is finished by PSU">
-        <timerEventDefinition/>
+        <timerEventDefinition>
+          <timeDuration>#{flowableProperties.jobTimeout.pollInterval}</timeDuration>
+        </timerEventDefinition>
       </intermediateCatchEvent>
       <exclusiveGateway id="sid-0f8f5e92-29e8-42e9-b4a8-dfd8fa05e821" name="Authorization finalised?"/>
       <sequenceFlow id="sid-37c8fb6d-8f4f-42fc-85c6-978a4baeb22f" name="Start authorization checking" sourceRef="sid-d4c51ec7-0754-45fc-a6d0-c2ee1feb018b" targetRef="sid-65eeaf27-ef53-422a-b15d-3ffa3b770060"/>
@@ -111,11 +113,13 @@
       </sequenceFlow>
       <sequenceFlow id="sid-c3aabc9c-c751-4ca5-aa3a-d6bec9fc7922" name="Starts authorization check after some delay" sourceRef="sid-ec530a95-dab1-4827-adf4-7d8acd34b74f" targetRef="sid-65eeaf27-ef53-422a-b15d-3ffa3b770060"/>
     </subProcess>
-    <boundaryEvent id="sid-2b0f96e5-a216-4283-b92f-0dc16ed771c2" name="Decoupled authorization time limit (timeout)" attachedToRef="sid-d594293e-9d11-4ac3-92d4-e39ffac3a3af">
-      <timerEventDefinition/>
+    <boundaryEvent id="sid-2b0f96e5-a216-4283-b92f-0dc16ed771c2" name="Decoupled authorization time limit (timeout)" attachedToRef="decoupledScaStatusChecking">
+      <timerEventDefinition>
+        <timeDuration>#{flowableProperties.jobTimeout.timeout}</timeDuration>
+      </timerEventDefinition>
     </boundaryEvent>
     <serviceTask id="sid-00e21d32-fd57-43a7-a983-4a55e22d0826" name="Wait for user to finish SCA. Suspends to wait for reply" flowable:async="true" flowable:exclusive="true" flowable:delegateExpression="${xs2aAskForDecoupledFinalization}" flowable:triggerable="false"/>
-    <sequenceFlow id="sid-2273ab45-8fe5-4b60-b02b-a28e546b6e0c" sourceRef="sid-00e21d32-fd57-43a7-a983-4a55e22d0826" targetRef="sid-d594293e-9d11-4ac3-92d4-e39ffac3a3af"/>
+    <sequenceFlow id="sid-2273ab45-8fe5-4b60-b02b-a28e546b6e0c" sourceRef="sid-00e21d32-fd57-43a7-a983-4a55e22d0826" targetRef="decoupledScaStatusChecking"/>
     <exclusiveGateway id="sid-b38d0c3b-c743-4b5a-9c09-d3a6ad2286a2" name="Is the selected SCA decoupled" default="ordinaryScaChallengeFlow"/>
     <sequenceFlow id="ordinaryScaChallengeFlow" sourceRef="sid-b38d0c3b-c743-4b5a-9c09-d3a6ad2286a2" targetRef="embeddedScaChallenge">
       <conditionExpression xsi:type="tFormalExpression"/>
@@ -124,7 +128,7 @@
       <conditionExpression xsi:type="tFormalExpression"/>
     </sequenceFlow>
     <sequenceFlow id="sid-444da361-d781-44fb-a872-d6bb53efc09a" sourceRef="sid-2b0f96e5-a216-4283-b92f-0dc16ed771c2" targetRef="sid-xs2aReportToFintechPaymentDenied" name="Decoupled payment failed"/>
-    <sequenceFlow id="sid-3a2383aa-71db-454f-b838-b0cf3231eb2f" sourceRef="sid-d594293e-9d11-4ac3-92d4-e39ffac3a3af" targetRef="isScaFinalized" name="Decoupled payment success"/>
+    <sequenceFlow id="sid-3a2383aa-71db-454f-b838-b0cf3231eb2f" sourceRef="decoupledScaStatusChecking" targetRef="isScaFinalized" name="Decoupled payment success"/>
   </process>
   <bpmndi:BPMNDiagram id="BPMNDiagram_xs2a-authorize-singlePaymentBody">
     <bpmndi:BPMNPlane bpmnElement="xs2a-authorize-payment" id="BPMNPlane_xs2a-authorize-singlePaymentBody">
@@ -346,7 +350,7 @@
         <omgdi:waypoint x="935.6506" y="474.99997"/>
         <omgdi:waypoint x="975.0" y="475.0"/>
       </bpmdi:BPMNEdge>
-      <bpmdi:BPMNShape xmlns:bpmdi="http://www.omg.org/spec/BPMN/20100524/DI" id="sid-13f950e5-7965-4559-9155-63262850bd97" bpmnElement="sid-d594293e-9d11-4ac3-92d4-e39ffac3a3af">
+      <bpmdi:BPMNShape xmlns:bpmdi="http://www.omg.org/spec/BPMN/20100524/DI" id="sid-13f950e5-7965-4559-9155-63262850bd97" bpmnElement="decoupledScaStatusChecking">
         <omgdc:Bounds x="1627.1072" y="-239.68298" width="364.0" height="232.0"/>
       </bpmdi:BPMNShape>
       <bpmdi:BPMNShape xmlns:bpmdi="http://www.omg.org/spec/BPMN/20100524/DI" id="sid-34208a3f-b32d-41eb-af7f-23a7bc2e927b" bpmnElement="sid-65eeaf27-ef53-422a-b15d-3ffa3b770060">
