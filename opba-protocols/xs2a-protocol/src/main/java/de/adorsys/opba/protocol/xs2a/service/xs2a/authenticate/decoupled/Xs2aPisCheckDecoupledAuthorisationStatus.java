@@ -5,16 +5,17 @@ import de.adorsys.opba.protocol.bpmnshared.service.context.ContextUtil;
 import de.adorsys.opba.protocol.bpmnshared.service.exec.ValidatedExecution;
 import de.adorsys.opba.protocol.xs2a.context.Xs2aContext;
 import de.adorsys.opba.protocol.xs2a.context.pis.Xs2aPisContext;
-import de.adorsys.opba.protocol.xs2a.service.dto.ValidatedPathHeadersBody;
-import de.adorsys.opba.protocol.xs2a.service.mapper.PathHeadersBodyMapperTemplate;
+import de.adorsys.opba.protocol.xs2a.service.dto.ValidatedQueryHeaders;
+import de.adorsys.opba.protocol.xs2a.service.mapper.QueryHeadersMapperTemplate;
 import de.adorsys.opba.protocol.xs2a.service.xs2a.dto.Xs2aAuthorizedPaymentParameters;
 import de.adorsys.opba.protocol.xs2a.service.xs2a.dto.Xs2aStandardHeaders;
-import de.adorsys.opba.protocol.xs2a.service.xs2a.dto.authenticate.embedded.ProvidePsuPasswordBody;
 import de.adorsys.xs2a.adapter.api.PaymentInitiationService;
 import de.adorsys.xs2a.adapter.api.RequestParams;
 import de.adorsys.xs2a.adapter.api.Response;
+import de.adorsys.xs2a.adapter.api.model.PaymentProduct;
+import de.adorsys.xs2a.adapter.api.model.PaymentService;
+import de.adorsys.xs2a.adapter.api.model.ScaStatus;
 import de.adorsys.xs2a.adapter.api.model.ScaStatusResponse;
-import de.adorsys.xs2a.adapter.api.model.UpdatePsuAuthentication;
 import lombok.RequiredArgsConstructor;
 import org.flowable.engine.delegate.DelegateExecution;
 import org.springframework.stereotype.Service;
@@ -28,36 +29,34 @@ public class Xs2aPisCheckDecoupledAuthorisationStatus extends ValidatedExecution
 
     @Override
     protected void doRealExecution(DelegateExecution execution, Xs2aPisContext context) {
-        ValidatedPathHeadersBody<Xs2aAuthorizedPaymentParameters, Xs2aStandardHeaders, UpdatePsuAuthentication> params = extractor.forExecution(context);
-        Response<ScaStatusResponse> paymentInitiationScaStatus = pis.getPaymentInitiationScaStatus(context.getPaymentType().getValue(),
-                                                                                                                    context.getPaymentProduct(),
-                                                                                                                    context.getPaymentId(),
-                                                                                                                    context.getAuthorizationId(),
-                                                                                                                    params.getHeaders().toHeaders(),
-                                                                                                                    RequestParams.empty());
+        ValidatedQueryHeaders<Xs2aAuthorizedPaymentParameters, Xs2aStandardHeaders> params = extractor.forExecution(context);
+        Response<ScaStatusResponse> paymentInitiationScaStatus = pis.getPaymentInitiationScaStatus(
+                PaymentService.fromValue(params.getQuery().getPaymentType().getValue()),
+                PaymentProduct.fromValue(params.getQuery().getPaymentProduct()),
+                params.getQuery().getPaymentId(),
+                params.getQuery().getAuthorizationId(),
+                params.getHeaders().toHeaders(),
+                RequestParams.empty()
+        );
 
         ContextUtil.getAndUpdateContext(
                 execution,
                 (Xs2aContext ctx) -> {
-                    ctx.setDecoupledScaFinished(paymentInitiationScaStatus.getBody().getScaStatus().isFinalisedStatus());
-                    ctx.setScaStatus(paymentInitiationScaStatus.getBody().getScaStatus().getValue());
+                    ctx.setDecoupledScaFinished(ScaStatus.FINALISED == paymentInitiationScaStatus.getBody().getScaStatus()); // TODO Error cases
+                    ctx.setScaStatus(paymentInitiationScaStatus.getBody().getScaStatus().toString());
                 }
         );
     }
 
     @Service
-    public static class Extractor extends PathHeadersBodyMapperTemplate<Xs2aPisContext,
-                                                                               Xs2aAuthorizedPaymentParameters,
-                                                                               Xs2aStandardHeaders,
-                                                                               ProvidePsuPasswordBody,
-                                                                               UpdatePsuAuthentication> {
+    public static class Extractor extends QueryHeadersMapperTemplate<Xs2aPisContext,
+                Xs2aAuthorizedPaymentParameters,
+                Xs2aStandardHeaders> {
 
         public Extractor(
-                DtoMapper<Xs2aContext, ProvidePsuPasswordBody> toValidatableBody,
-                DtoMapper<ProvidePsuPasswordBody, UpdatePsuAuthentication> toBody,
                 DtoMapper<Xs2aContext, Xs2aStandardHeaders> toHeaders,
                 DtoMapper<Xs2aPisContext, Xs2aAuthorizedPaymentParameters> toParameters) {
-            super(toValidatableBody, toBody, toHeaders, toParameters);
+            super(toHeaders, toParameters);
         }
     }
 }

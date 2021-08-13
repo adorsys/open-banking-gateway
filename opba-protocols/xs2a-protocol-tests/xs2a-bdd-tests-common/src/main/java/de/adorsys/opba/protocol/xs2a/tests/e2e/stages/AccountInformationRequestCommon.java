@@ -521,7 +521,7 @@ public class AccountInformationRequestCommon<SELF extends AccountInformationRequ
         provideParametersToBankingProtocolWithBody(
                 AUTHORIZE_CONSENT_ENDPOINT,
                 selectedScaBody("APP_OTP:app_otp"),
-                HttpStatus.ACCEPTED
+                ACCEPTED
         );
         return self();
     }
