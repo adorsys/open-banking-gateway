@@ -28,7 +28,7 @@
   },
   "response" : {
     "status" : 201,
-    "body" : "{\"scaStatus\":\"started\",\"authorisationId\":\"123456\",\"scaMethods\":[{\"authenticationType\":\"PUSH_OTP\",\"authenticationVersion\":\"1\",\"authenticationMethodId\":\"123\",\"name\":\"TAN2go\",\"explanation\":\"A\"}],\"_links\":{\"scaStatus\":{\"href\":\"/v1/consents/VALID_CONSENT_ID/authorisations/123456\"}}}",
+    "bodyFileName": "start-psu-authentication-response-body.json",
     "headers" : {
       "Date" : "Mon, 05 Jul 2021 11:59:59 GMT",
       "Server" : "Apache",

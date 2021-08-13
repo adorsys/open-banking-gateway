@@ -28,7 +28,7 @@
   },
   "response" : {
     "status" : 200,
-    "body" : "{\"chosenScaMethod\":{\"name\":\"TAN2go\",\"explanation\":\"0030 - Auftrag empfangen - Bitte die empfangene TAN eingeben.(MBT62820200002)\"},\"challengeData\":{\"data\":[\"Bitte geben Sie die pushTAN ein.\"]},\"_links\":{\"scaStatus\":{\"href\":\"/v1/consents/VALID_CONSENT_ID/authorisations/123456\"}},\"scaStatus\":\"scaMethodSelected\"}",
+    "bodyFileName" : "select-sca-method-response-body.json",
     "headers" : {
       "Date" : "Mon, 05 Jul 2021 11:59:59 GMT",
       "Server" : "Apache",

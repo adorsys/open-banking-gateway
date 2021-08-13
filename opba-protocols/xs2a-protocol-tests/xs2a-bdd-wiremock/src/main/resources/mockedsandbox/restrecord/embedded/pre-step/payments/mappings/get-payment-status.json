@@ -5,11 +5,8 @@
     "urlPattern": ".*/v1/payments/sepa-credit-transfers/.+/status",
     "method": "GET",
     "headers": {
-      "X-GTW-ASPSP-ID": {
-        "equalTo": "335562a2-26e2-4105-b31e-08de285234e0"
-      },
       "PSD2-AUTHORIZATION": {
-        "matches": ".+"
+        "equalTo": "Bearer VALID_TOKEN"
       },
       "X-Request-ID": {
         "matches": ".+"
@@ -18,7 +15,7 @@
   },
   "response": {
     "status": 200,
-    "bodyFileName": "{\n  \"transactionStatus\": \"ACCP\",\n  \"fundsAvailable\": true\n}",
+    "body": "{\n  \"transactionStatus\": \"ACCP\",\n  \"fundsAvailable\": true\n}",
     "headers": {
       "Date": "Mon, 05 Jul 2021 11:59:59 GMT",
       "Server": "Apache",

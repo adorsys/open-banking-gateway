@@ -3,26 +3,17 @@
   "requiredScenarioState": "authorisation_started",
   "newScenarioState": "sca_method_selected",
   "request": {
-    "urlPattern": ".*/v1/payments/sepa-credit-transfers/.+/authorisations/.+",
+    "urlPattern": ".*/v1/payments/sepa-credit-transfers/VALID_PAYMENT_ID/authorisations/.+",
     "method": "PUT",
     "headers": {
-      "X-GTW-ASPSP-ID": {
-        "equalTo": "335562a2-26e2-4105-b31e-08de285234e0"
-      },
       "PSD2-AUTHORIZATION": {
-        "matches": ".+"
+        "equalTo": "Bearer VALID_TOKEN"
       },
       "X-Request-ID": {
         "matches": ".+"
       },
       "PSU-ID": {
-        "matches": ".+"
-      },
-      "PSU-IP-Address": {
-        "matches": ".+"
-      },
-      "TPP-Redirect-URI": {
-        "matches": ".+"
+        "matches": "max.musterman"
       },
       "Content-Type": {
         "matches": "application/json.*"
@@ -30,7 +21,7 @@
     },
     "bodyPatterns": [
       {
-        "equalToJson": "{\"authenticationMethodId\":\"${json-unit.any-string}\"}",
+        "equalToJson": "{\"authenticationMethodId\":\"123\"}",
         "ignoreArrayOrder": true,
         "ignoreExtraElements": true
       }
@@ -38,7 +29,7 @@
   },
   "response": {
     "status": 200,
-    "bodyFileName": "{\n  \"chosenScaMethod\": {\n    \"name\": \"chipTAN QR | Kartennummer: ******0430chipTAN QR | Kartennummer: ******0430\",\n    \"explanation\": \"Übertragung der Auftragsdaten mittels QR-Code. Erfordert geeigneten TAN-Generator.\"\n  },\n  \"challengeData\": {\n    \"data\": [\n      \"some challenge data\"\n    ]\n  },\n  \"scaStatus\": \"scaMethodSelected\",\n  \"_links\": {\n    \"authoriseTransaction\": {\n      \"href\": \"https://xs2a-sandbox.f-i-apim.de:8444/fixs2a-env/xs2a-api/12345678/v1/payments/sepa-credit-transfers/9667011219090020282PSDDE-BAFIN-911360PA4960JJ/authorisations/c9ef5300-0091-47c6-9df9-2190313e8f03\"\n    }\n  }\n}",
+    "bodyFileName": "select-sca-method-response-body.json",
     "headers": {
       "Date": "Mon, 05 Jul 2021 11:59:59 GMT",
       "Server": "Apache",

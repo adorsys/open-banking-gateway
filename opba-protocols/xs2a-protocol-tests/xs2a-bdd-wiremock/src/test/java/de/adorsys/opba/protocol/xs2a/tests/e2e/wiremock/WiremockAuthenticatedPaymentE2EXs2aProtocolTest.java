@@ -310,7 +310,7 @@ public class WiremockAuthenticatedPaymentE2EXs2aProtocolTest extends SpringScena
         then()
             .open_banking_has_stored_payment()
             .fintech_calls_payment_activation_for_current_authorization_id()
-            .fintech_calls_payment_status(DKB_BANK_PROFILE_ID, TransactionStatus.ACSP.name());
+            .fintech_calls_payment_status(DKB_BANK_PROFILE_ID, TransactionStatus.ACCP.name());
     }
 
     @ParameterizedTest

@@ -8,18 +8,12 @@
     "method": "POST",
     "headers": {
       "PSD2-AUTHORIZATION": {
-        "matches": ".+"
+        "equalTo": "Bearer VALID_TOKEN"
       },
       "X-Request-ID": {
         "matches": ".+"
       },
       "PSU-ID": {
-        "matches": ".+"
-      },
-      "TPP-Redirect-URI": {
-        "matches": ".+"
-      },
-      "PSU-IP-Address": {
         "matches": ".+"
       },
       "Content-Type": {
@@ -36,7 +30,7 @@
   },
   "response": {
     "status": 201,
-    "bodyFileName": "{\n  \"transactionStatus\": \"RCVD\",\n  \"paymentId\": \"9667011219090020282PSDDE-BAFIN-911360PA4960JJ\",\n  \"_links\": {\n    \"self\": {\n      \"href\": \"/v1/payments/sepa-credit-transfers/9667011219090020282PSDDE-BAFIN-911360PA4960JJ\"\n    },\n    \"startAuthorisation\": {\n      \"href\": \"/v1/payments/sepa-credit-transfers/9667011219090020282PSDDE-BAFIN-911360PA4960JJ/authorisations\"\n    },\n    \"status\": {\n      \"href\": \"/v1/payments/sepa-credit-transfers/de91a99b-5b9d-4f70-8846-81beba089f87/status\"\n    }\n  }\n}",
+    "bodyFileName": "initiate-payment-response-body.json",
     "headers": {
       "Date": "Mon, 05 Jul 2021 11:59:59 GMT",
       "Server": "Apache",

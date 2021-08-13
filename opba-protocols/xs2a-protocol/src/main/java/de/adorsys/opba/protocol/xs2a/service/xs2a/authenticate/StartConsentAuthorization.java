@@ -87,9 +87,7 @@ public class StartConsentAuthorization extends ValidatedExecution<Xs2aContext> {
         execution.setVariable(CONTEXT, context);
     }
 
-    private void setScaAvailableMethodsIfCanBeChosen(
-        Response<StartScaprocessResponse> authResponse, Xs2aContext ctx
-    ) {
+    private void setScaAvailableMethodsIfCanBeChosen(Response<StartScaprocessResponse> authResponse, Xs2aContext ctx) {
         if (null == authResponse.getBody().getScaMethods()) {
             return;
         }

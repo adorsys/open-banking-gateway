@@ -4,26 +4,17 @@
   "newScenarioState": "otp_sent",
   "priority": 5,
   "request": {
-    "urlPattern": ".*/v1/payments/sepa-credit-transfers/.+/authorisations/.+",
+    "urlPattern" : ".*/v1/payments/sepa-credit-transfers/VALID_PAYMENT_ID/authorisations/.+",
     "method": "PUT",
     "headers": {
-      "X-GTW-ASPSP-ID": {
-        "equalTo": "335562a2-26e2-4105-b31e-08de285234e0"
-      },
       "PSD2-AUTHORIZATION": {
-        "matches": ".+"
+        "equalTo": "Bearer VALID_TOKEN"
       },
       "X-Request-ID": {
         "matches": ".+"
       },
       "PSU-ID": {
-        "matches": ".+"
-      },
-      "PSU-IP-Address": {
-        "matches": ".+"
-      },
-      "TPP-Redirect-URI": {
-        "matches": ".+"
+        "equalTo" : "max.musterman"
       },
       "Content-Type": {
         "matches": "application/json.*"
@@ -31,7 +22,7 @@
     },
     "bodyPatterns": [
       {
-        "equalToJson": "{\"scaAuthenticationData\":\"${json-unit.any-string}\"}",
+        "equalToJson": "{\"scaAuthenticationData\":\"123456\"}",
         "ignoreArrayOrder": true,
         "ignoreExtraElements": true
       }
