@@ -78,7 +78,7 @@
     </sequenceFlow>
     <sequenceFlow id="sid-0d710e07-f06f-46bc-ba9e-760744521777" sourceRef="sid-d703df63-d2ab-448d-ae9b-cf344c0d32b2" targetRef="sid-7E036180-B980-4A2D-8B6C-7407E2C90C2A"/>
     <sequenceFlow id="sid-8ac00f14-32e0-4473-83c9-439724d6b92a" sourceRef="isPasswordPresent" targetRef="isMultipleScaAvailable" name="Authenticated with Oauth2 pre-step (pre-Authenticated)">
-      <conditionExpression xsi:type="tFormalExpression">#{xs2aConsentInfo.isOauth2AuthenticationPreStep(CONTEXT)}</conditionExpression>
+      <conditionExpression xsi:type="tFormalExpression">#{xs2aConsentInfo.isOauth2TokenAvailableAndReadyToUse(CONTEXT)}</conditionExpression>
     </sequenceFlow>
     <sequenceFlow id="proceedToAuthentication" sourceRef="startAuthorization" targetRef="scaChallengeSelector">
       <conditionExpression xsi:type="tFormalExpression"/>
@@ -248,7 +248,7 @@
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNEdge bpmnElement="embedded" id="BPMNEdge_embedded">
         <omgdi:waypoint x="355.0" y="318.0"/>
-        <omgdi:waypoint x="355.0" y="235.0"/>
+        <omgdi:waypoint x="355.00003" y="235.0"/>
         <omgdi:waypoint x="390.0" y="235.0"/>
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNEdge bpmnElement="sid-59AE4CB4-9545-4CD9-9495-6A5D8AF74CBE" id="BPMNEdge_sid-59AE4CB4-9545-4CD9-9495-6A5D8AF74CBE">
@@ -277,8 +277,8 @@
       </bpmdi:BPMNEdge>
       <bpmdi:BPMNEdge xmlns:bpmdi="http://www.omg.org/spec/BPMN/20100524/DI" id="edge-ce0f93ed-5a2b-420f-942c-933ef83fa862" bpmnElement="sid-8ac00f14-32e0-4473-83c9-439724d6b92a">
         <omgdi:waypoint x="410.0" y="215.0"/>
-        <omgdi:waypoint x="410.0" y="112.59166"/>
-        <omgdi:waypoint x="717.8999" y="112.59166"/>
+        <omgdi:waypoint x="409.99997" y="9.372208"/>
+        <omgdi:waypoint x="717.89996" y="9.372208"/>
         <omgdi:waypoint x="717.89996" y="235.0"/>
         <omgdi:waypoint x="745.0" y="235.0"/>
       </bpmdi:BPMNEdge>

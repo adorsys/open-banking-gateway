@@ -6,6 +6,7 @@ import de.adorsys.opba.protocol.bpmnshared.dto.DtoMapper;
 import de.adorsys.opba.protocol.bpmnshared.service.context.ContextUtil;
 import de.adorsys.opba.protocol.bpmnshared.service.exec.ValidatedExecution;
 import de.adorsys.opba.protocol.xs2a.context.Xs2aContext;
+import de.adorsys.opba.protocol.xs2a.domain.dto.forms.ScaMethod;
 import de.adorsys.opba.protocol.xs2a.service.dto.ValidatedPathHeaders;
 import de.adorsys.opba.protocol.xs2a.service.mapper.PathHeadersMapperTemplate;
 import de.adorsys.opba.protocol.xs2a.service.xs2a.dto.Xs2aInitialConsentParameters;
@@ -14,12 +15,14 @@ import de.adorsys.opba.protocol.xs2a.service.xs2a.validation.Xs2aValidator;
 import de.adorsys.opba.protocol.xs2a.util.logresolver.Xs2aLogResolver;
 import de.adorsys.xs2a.adapter.api.AccountInformationService;
 import de.adorsys.xs2a.adapter.api.Response;
+import de.adorsys.xs2a.adapter.api.model.ScaStatus;
 import de.adorsys.xs2a.adapter.api.model.StartScaprocessResponse;
 import lombok.RequiredArgsConstructor;
 import org.flowable.engine.delegate.DelegateExecution;
 import org.springframework.stereotype.Service;
 
 import java.util.UUID;
+import java.util.stream.Collectors;
 
 import static de.adorsys.opba.protocol.xs2a.constant.GlobalConst.CONTEXT;
 import static de.adorsys.xs2a.adapter.api.ResponseHeaders.ASPSP_SCA_APPROACH;
@@ -70,7 +73,30 @@ public class StartConsentAuthorization extends ValidatedExecution<Xs2aContext> {
         context.setAuthorizationId(scaStart.getBody().getAuthorisationId());
         context.setStartScaProcessResponse(scaStart.getBody());
 
+        ScaStatus scaStatus = scaStart.getBody().getScaStatus();
+        ContextUtil.getAndUpdateContext(
+            execution,
+            (Xs2aContext ctx) -> {
+                ctx.setWrongAuthCredentials(false);
+                setScaAvailableMethodsIfCanBeChosen(scaStart, ctx);
+                ctx.setScaStatus(null == scaStatus ? null : scaStatus.toString());
+                ctx.setStartScaProcessResponse(scaStart.getBody());
+            }
+        );
+
         execution.setVariable(CONTEXT, context);
+    }
+
+    private void setScaAvailableMethodsIfCanBeChosen(Response<StartScaprocessResponse> authResponse, Xs2aContext ctx) {
+        if (null == authResponse.getBody().getScaMethods()) {
+            return;
+        }
+
+        ctx.setAvailableSca(
+            authResponse.getBody().getScaMethods().stream()
+                .map(ScaMethod.FROM_AUTH::map)
+                .collect(Collectors.toList())
+        );
     }
 
     @Override

@@ -1,0 +1,41 @@
+{
+  "scenarioName": "AccountsListUsingDkbEmbeddedPreStep",
+  "newScenarioState": "GetAccount",
+  "request" : {
+    "urlPathPattern": "/v1/accounts",
+    "method" : "GET",
+    "headers" : {
+      "X-GTW-ASPSP-ID" : {
+        "equalTo": "83c24dcf-2cfb-4c43-9812-013e32ab53b1"
+      },
+      "X-Request-ID" : {
+        "matches" : ".+"
+      },
+      "Consent-ID" : {
+        "equalTo" : "VALID_CONSENT_ID"
+      },
+      "PSU-ID" : {
+        "matches" : "max.musterman"
+      },
+      "PSD2-AUTHORIZATION": {
+        "equalTo": "Bearer VALID_TOKEN"
+      }
+    }
+  },
+  "response" : {
+    "status" : 200,
+    "body" : "{\"accounts\":[{\"resourceId\":\"oN7KTVuJSVotMvPPPavhVo\",\"iban\":\"DE38760700240320465700\",\"currency\":\"EUR\",\"name\":\"max.musterman\",\"cashAccountType\":\"CACC\",\"status\":\"valid\",\"bic\":\"COBADETESTX\",\"usage\":\"PRIV\",\"ownerName\":\"Max Musterman\",\"_links\":{\"balances\":{\"href\":\"\/v1\/accounts\/oN7KTVuJSVotMvPPPavhVo\/balances\"},\"transactions\":{\"href\":\"\/v1\/accounts\/oN7KTVuJSVotMvPPPavhVo\/transactions\"}}}]}",
+    "headers" : {
+      "Date" : "Mon, 05 Jul 2021 11:59:59 GMT",
+      "Server" : "Apache",
+      "Content-Type" : "application/json; charset=utf-8",
+      "X-Request-ID" : "cc29a35e-2f59-4b2f-bc72-442e8f34a4dd",
+      "Strict-Transport-Security" : "max-age=31536000",
+      "X-Content-Type-Options" : "nosniff",
+      "Keep-Alive" : "timeout=15, max=100"
+    }
+  },
+  "uuid" : "348e336d-c6b0-4b00-935d-77381e7e01e6",
+  "persistent" : true,
+  "insertionIndex" : 5
+}

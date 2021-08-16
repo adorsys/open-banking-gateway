@@ -47,10 +47,7 @@ public class PaymentStagesCommonUtil {
         return withPaymentHeaders(fintechUserId, SANDBOX_BANK_PROFILE_ID, true);
     }
 
-    public static RequestSpecification withPaymentHeaders(
-            String fintechUserId,
-            boolean psuAuthenticationRequired
-    ) {
+    public static RequestSpecification withPaymentHeaders(String fintechUserId, boolean psuAuthenticationRequired) {
         return withPaymentHeaders(fintechUserId, SANDBOX_BANK_PROFILE_ID, psuAuthenticationRequired);
     }
 

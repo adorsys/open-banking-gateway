@@ -1,0 +1,15 @@
+{
+  "transactionStatus": "RCVD",
+  "paymentId": "VALID_PAYMENT_ID",
+  "_links": {
+    "self": {
+      "href": "/v1/payments/sepa-credit-transfers/VALID_PAYMENT_ID"
+    },
+    "startAuthorisation": {
+      "href": "/v1/payments/sepa-credit-transfers/VALID_PAYMENT_ID/authorisations"
+    },
+    "status": {
+      "href": "/v1/payments/sepa-credit-transfers/de91a99b-5b9d-4f70-8846-81beba089f87/status"
+    }
+  }
+}
