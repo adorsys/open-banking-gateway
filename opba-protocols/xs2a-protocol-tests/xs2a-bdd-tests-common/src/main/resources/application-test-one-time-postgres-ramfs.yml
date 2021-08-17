@@ -295,6 +295,5 @@ bpmnshared:
     number-of-retries: 0
     job-timeout:
       timeout: PT5M
-      pollInterval: PT1M
 flowable:
   process-definition-location-prefix: classpath*:/processes/**/

@@ -96,29 +96,23 @@
     <subProcess id="decoupledScaStatusChecking" name="Decoupled Sca status checking subprocess" flowable:async="true" flowable:exclusive="true">
       <startEvent id="sid-7721d684-fcd9-4883-89fb-8595e225b40d" name="Start of decoupled Sca subprocess"/>
       <endEvent id="sid-c3a04098-ed6c-40a8-a74d-91c2b5fba95c" name="End of decoupled Sca status checking subprocess"/>
-      <serviceTask id="sid-9807ebbf-a03b-4087-ab63-ecc18e1a5e2e" name="Checks authorization status to be finalized" flowable:async="true" flowable:exclusive="true" flowable:delegateExpression="${xs2aAisCheckDecoupledAuthorizationStatus}"/>
+      <serviceTask id="sid-9807ebbf-a03b-4087-ab63-ecc18e1a5e2e" name="Checks authorization status to be finalized" flowable:async="true" flowable:exclusive="true" flowable:delegateExpression="${xs2aAisCheckDecoupledAuthorizationStatus}" flowable:triggerable="true"/>
       <exclusiveGateway id="sid-62f4227f-df35-4e97-bee8-6f945711a132" name="Authorization finalised?" default="decoupledAuthorizationStillInProgress"/>
-      <intermediateCatchEvent id="sid-a21ddadc-e884-4dd8-bd98-1cd9c101b4b0" name="Waits until authorization is finished by PSU">
-        <timerEventDefinition>
-          <timeDuration>#{flowableProperties.jobTimeout.pollInterval}</timeDuration>
-        </timerEventDefinition>
-      </intermediateCatchEvent>
       <sequenceFlow id="sid-e5b7e5aa-3bb9-45b7-89d0-8c8838652f6f" name="Start authorization checking" sourceRef="sid-7721d684-fcd9-4883-89fb-8595e225b40d" targetRef="sid-9807ebbf-a03b-4087-ab63-ecc18e1a5e2e"/>
       <sequenceFlow id="sid-cc670a4f-f0b8-4377-a047-65b31d465a07" sourceRef="sid-9807ebbf-a03b-4087-ab63-ecc18e1a5e2e" targetRef="sid-62f4227f-df35-4e97-bee8-6f945711a132"/>
       <sequenceFlow id="sid-faa0078c-c3c7-45a6-8f17-5d89c610cec8" name="Successful proceeding to the subprocess end" sourceRef="sid-62f4227f-df35-4e97-bee8-6f945711a132" targetRef="sid-c3a04098-ed6c-40a8-a74d-91c2b5fba95c">
         <conditionExpression xsi:type="tFormalExpression">#{xs2aConsentInfo.isDecoupledScaFinalizedByPSU(CONTEXT)}</conditionExpression>
       </sequenceFlow>
-      <sequenceFlow id="decoupledAuthorizationStillInProgress" name="Waits for user to authorize in 3rd party using decoupled approach" sourceRef="sid-62f4227f-df35-4e97-bee8-6f945711a132" targetRef="sid-a21ddadc-e884-4dd8-bd98-1cd9c101b4b0">
+      <sequenceFlow id="decoupledAuthorizationStillInProgress" sourceRef="sid-62f4227f-df35-4e97-bee8-6f945711a132" targetRef="sid-9807ebbf-a03b-4087-ab63-ecc18e1a5e2e" name="Waits for user to authorize in 3rd party using decoupled approach">
         <conditionExpression xsi:type="tFormalExpression"/>
       </sequenceFlow>
-      <sequenceFlow id="sid-4cc164d6-6a6f-4557-a5c1-a44ab8c82131" name="Starts authorization check after some delay" sourceRef="sid-a21ddadc-e884-4dd8-bd98-1cd9c101b4b0" targetRef="sid-9807ebbf-a03b-4087-ab63-ecc18e1a5e2e"/>
     </subProcess>
     <boundaryEvent id="sid-df6ba3cf-481e-46be-9035-045b4ec9cb23" name="Decoupled authorization time limit (timeout)" attachedToRef="decoupledScaStatusChecking">
       <timerEventDefinition>
         <timeDuration>#{flowableProperties.jobTimeout.timeout}</timeDuration>
       </timerEventDefinition>
     </boundaryEvent>
-    <serviceTask id="sid-c8a7957f-271e-4b86-96f5-8a8fd718d9b0" name="Wait for user to finish SCA. Suspends to wait for reply" flowable:async="true" flowable:exclusive="true" flowable:delegateExpression="${xs2aAskForDecoupledFinalization}" flowable:triggerable="false"/>
+    <serviceTask id="sid-c8a7957f-271e-4b86-96f5-8a8fd718d9b0" name="Wait for user to initiate Decoupled SCA" flowable:async="true" flowable:exclusive="true" flowable:delegateExpression="${xs2aAskForDecoupledInitiation}" flowable:triggerable="false"/>
     <sequenceFlow id="sid-5f13c1e0-6c2b-4f63-9cfc-b7214e3c2e8a" sourceRef="sid-c8a7957f-271e-4b86-96f5-8a8fd718d9b0" targetRef="decoupledScaStatusChecking"/>
     <sequenceFlow id="sid-f23a52c5-16d1-433c-b417-5c6fb17798e9" sourceRef="sid-df6ba3cf-481e-46be-9035-045b4ec9cb23" targetRef="sid-xs2aReportToFintechConsentDenied" name="Decoupled consent failed"/>
     <sequenceFlow id="sid-48ade700-ee9c-4d2b-bf25-70393c9f57f3" sourceRef="decoupledScaStatusChecking" targetRef="isScaFinalized" name="Decoupled consent success"/>
@@ -365,9 +359,6 @@
       <bpmdi:BPMNShape xmlns:bpmdi="http://www.omg.org/spec/BPMN/20100524/DI" id="sid-387e0c5f-1ffe-4112-b380-98504900140b" bpmnElement="sid-62f4227f-df35-4e97-bee8-6f945711a132">
         <omgdc:Bounds x="1870.5881" y="-63.130722" width="40.0" height="40.0"/>
       </bpmdi:BPMNShape>
-      <bpmdi:BPMNShape xmlns:bpmdi="http://www.omg.org/spec/BPMN/20100524/DI" id="sid-05a67ad4-0819-4750-b606-2997def867bf" bpmnElement="sid-a21ddadc-e884-4dd8-bd98-1cd9c101b4b0">
-        <omgdc:Bounds x="1875.5881" y="-192.52795" width="30.0" height="30.0"/>
-      </bpmdi:BPMNShape>
       <bpmdi:BPMNShape xmlns:bpmdi="http://www.omg.org/spec/BPMN/20100524/DI" id="sid-01bd1fe6-4a6c-4114-9529-d165c83697cd" bpmnElement="sid-df6ba3cf-481e-46be-9035-045b4ec9cb23">
         <omgdc:Bounds x="1991.5483" y="4.5292244" width="30.0" height="30.0"/>
       </bpmdi:BPMNShape>
@@ -385,15 +376,6 @@
       <bpmdi:BPMNEdge xmlns:bpmdi="http://www.omg.org/spec/BPMN/20100524/DI" id="sid-09fa4f8e-0f41-4715-82bc-bdb39abf9b68" bpmnElement="sid-faa0078c-c3c7-45a6-8f17-5d89c610cec8">
         <omgdi:waypoint x="1910.5881" y="-43.130722"/>
         <omgdi:waypoint x="1975.9883" y="-43.130722"/>
-      </bpmdi:BPMNEdge>
-      <bpmdi:BPMNEdge xmlns:bpmdi="http://www.omg.org/spec/BPMN/20100524/DI" id="sid-3a72739c-d601-4a98-8cd5-c41ba5ccc2e0" bpmnElement="decoupledAuthorizationStillInProgress">
-        <omgdi:waypoint x="1890.5881" y="-63.130722"/>
-        <omgdi:waypoint x="1890.5881" y="-162.52795"/>
-      </bpmdi:BPMNEdge>
-      <bpmdi:BPMNEdge xmlns:bpmdi="http://www.omg.org/spec/BPMN/20100524/DI" id="sid-fd5bd5ce-8c8a-4d68-9982-2afaf728c3f5" bpmnElement="sid-4cc164d6-6a6f-4557-a5c1-a44ab8c82131">
-        <omgdi:waypoint x="1875.5881" y="-177.52795"/>
-        <omgdi:waypoint x="1772.9883" y="-177.52795"/>
-        <omgdi:waypoint x="1772.9882" y="-83.13073"/>
       </bpmdi:BPMNEdge>
       <bpmdi:BPMNEdge xmlns:bpmdi="http://www.omg.org/spec/BPMN/20100524/DI" id="sid-2d9ffe34-da29-4dd0-a0a2-1ab4eb66b792" bpmnElement="sid-5f13c1e0-6c2b-4f63-9cfc-b7214e3c2e8a">
         <omgdi:waypoint x="1410.0" y="-88.13074"/>
@@ -422,6 +404,12 @@
         <omgdi:waypoint x="1093.265" y="215.0"/>
         <omgdi:waypoint x="1093.265" y="-88.13073"/>
         <omgdi:waypoint x="1310.0" y="-88.13074"/>
+      </bpmdi:BPMNEdge>
+      <bpmdi:BPMNEdge xmlns:bpmdi="http://www.omg.org/spec/BPMN/20100524/DI" id="edge-a5a7be21-80e8-4e66-8d30-954b5dabc17c" bpmnElement="decoupledAuthorizationStillInProgress">
+        <omgdi:waypoint x="1890.5881" y="-63.130722"/>
+        <omgdi:waypoint x="1890.5881" y="-140.01358"/>
+        <omgdi:waypoint x="1772.9883" y="-140.01358"/>
+        <omgdi:waypoint x="1772.9882" y="-83.13072"/>
       </bpmdi:BPMNEdge>
     </bpmndi:BPMNPlane>
   </bpmndi:BPMNDiagram>

@@ -12,7 +12,7 @@ import org.springframework.stereotype.Service;
 /**
  * Asks PSU to proceed SCA with his external device by redirecting him to the waiting page. Suspends process to wait for users' actions.
  */
-@Service("xs2aAskForDecoupledFinalization")
+@Service("xs2aAskForDecoupledInitiation")
 @RequiredArgsConstructor
 public class Xs2aAskForDecoupledFinalization extends ValidatedExecution<Xs2aContext> {
 

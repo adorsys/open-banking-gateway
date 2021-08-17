@@ -71,8 +71,5 @@ public class FlowableProperties {
 
         @NotNull
         private Duration timeout;
-
-        @NotNull
-        private Duration pollInterval;
     }
 }
