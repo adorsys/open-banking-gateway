@@ -40,9 +40,10 @@ public class ConsentAccessFactory {
         return new AnonymousPsuConsentAccess(aspsp, fintech, fintechPubKeys, psuEncryption, session, consentRepository);
     }
 
-    public ConsentAccess consentForFintech(Fintech fintech, ServiceSession session, Supplier<char[]> fintechPassword) {
-        return new FintechConsentAccess(
-                fintech, psuEncryption, fintechPsuAspspPrvKeyRepository, fintechVault, consentRepository, entityManager, session.getId(), fintechPassword
+    public ConsentAccess consentForFintech(Fintech fintech, Bank aspsp, ServiceSession session, Supplier<char[]> fintechPassword) {
+        var anonymousAccess = new AnonymousPsuConsentAccess(aspsp, fintech, fintechPubKeys, psuEncryption, session, consentRepository);
+        return new FintechConsentAccessImpl(
+                fintech, psuEncryption, fintechPsuAspspPrvKeyRepository, fintechVault, consentRepository, entityManager, session.getId(), fintechPassword, anonymousAccess
         );
     }
 }

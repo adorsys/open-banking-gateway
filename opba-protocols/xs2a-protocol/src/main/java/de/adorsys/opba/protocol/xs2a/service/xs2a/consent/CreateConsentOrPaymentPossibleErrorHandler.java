@@ -6,6 +6,7 @@ import de.adorsys.opba.protocol.xs2a.config.aspspmessages.AspspMessages;
 import de.adorsys.opba.protocol.xs2a.context.Xs2aContext;
 import de.adorsys.xs2a.adapter.api.exception.ErrorResponseException;
 import de.adorsys.xs2a.adapter.api.exception.OAuthException;
+import de.adorsys.xs2a.adapter.api.exception.PreAuthorisationException;
 import de.adorsys.xs2a.adapter.api.model.MessageCode;
 import de.adorsys.xs2a.adapter.api.model.TppMessage;
 import lombok.RequiredArgsConstructor;
@@ -46,6 +47,10 @@ public class CreateConsentOrPaymentPossibleErrorHandler {
             log.debug("Trying to handle OAuthException", ex);
             tryHandleOauth2Exception(execution);
             return null;
+        } catch (PreAuthorisationException ex) {
+            log.debug("Trying to handle PreAuthorisationException", ex);
+            tryHandlePreAuthorisationException(execution);
+            return null;
         }
     }
 
@@ -74,6 +79,17 @@ public class CreateConsentOrPaymentPossibleErrorHandler {
                 (Xs2aContext ctx) -> {
                     checkAndHandleIrrecoverableOAuth2State(ctx);
                     ctx.setOauth2PreStepNeeded(true);
+                }
+        );
+    }
+
+    private void tryHandlePreAuthorisationException(DelegateExecution execution) {
+        ContextUtil.getAndUpdateContext(
+                execution,
+                (Xs2aContext ctx) -> {
+                    checkAndHandleIrrecoverableOAuth2State(ctx);
+                    ctx.setEmbeddedPreAuthNeeded(true);
+                    ctx.setEmbeddedPreAuthDone(false);
                 }
         );
     }

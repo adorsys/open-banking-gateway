@@ -1,0 +1,18 @@
+{
+  "scaStatus": "psuAuthenticated",
+  "authorisationId": "c9ef5300-0091-47c6-9df9-2190313e8f03",
+  "scaMethods": [
+    {
+      "authenticationType": "PUSH_OTP",
+      "authenticationMethodId": "123",
+      "authenticationVersion": "1",
+      "name": "TAN2go",
+      "explanation": "A"
+    }
+  ],
+  "_links": {
+    "scaStatus": {
+      "href": "/v1/payments/sepa-credit-transfers/VALID_PAYMENT_ID"
+    }
+  }
+}

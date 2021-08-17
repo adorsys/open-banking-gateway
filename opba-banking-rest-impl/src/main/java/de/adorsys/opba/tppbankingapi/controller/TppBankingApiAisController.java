@@ -5,8 +5,8 @@ import de.adorsys.opba.protocol.api.dto.context.UserAgentContext;
 import de.adorsys.opba.protocol.api.dto.parameters.ExtraRequestParam;
 import de.adorsys.opba.protocol.api.dto.request.FacadeServiceableRequest;
 import de.adorsys.opba.protocol.api.dto.request.accounts.ListAccountsRequest;
-import de.adorsys.opba.protocol.api.dto.request.authorization.DeleteConsentRequest;
 import de.adorsys.opba.protocol.api.dto.request.authorization.AisConsent;
+import de.adorsys.opba.protocol.api.dto.request.authorization.DeleteConsentRequest;
 import de.adorsys.opba.protocol.api.dto.request.transactions.ListTransactionsRequest;
 import de.adorsys.opba.protocol.api.dto.result.body.AccountListBody;
 import de.adorsys.opba.protocol.api.dto.result.body.TransactionsResponseBody;
@@ -29,7 +29,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.time.LocalDate;
-import java.util.Collections;
 import java.util.EnumMap;
 import java.util.Map;
 import java.util.UUID;
@@ -65,6 +64,7 @@ public class TppBankingApiAisController implements TppBankingApiAccountInformati
         Boolean xPsuAuthenticationRequired,
         UUID serviceSessionId,
         String createConsentIfNone,
+        String importUserData,
         Boolean withBalance,
         Boolean online
     ) {
@@ -86,7 +86,7 @@ public class TppBankingApiAisController implements TppBankingApiAccountInformati
                     .build()
                 )
                 .withBalance(withBalance)
-                .extras(getExtras(createConsentIfNone))
+                .extras(getExtras(createConsentIfNone, importUserData))
                 .build()
         ).thenApply((FacadeResult<AccountListBody> result) -> mapper.translate(result, accountListRestMapper));
     }
@@ -107,6 +107,7 @@ public class TppBankingApiAisController implements TppBankingApiAccountInformati
         Boolean xPsuAuthenticationRequired,
         UUID serviceSessionId,
         String createConsentIfNone,
+        String importUserData,
         LocalDate dateFrom,
         LocalDate dateTo,
         String entryReferenceFrom,
@@ -143,7 +144,7 @@ public class TppBankingApiAisController implements TppBankingApiAccountInformati
                 .deltaList(deltaList)
                 .page(page)
                 .pageSize(pageSize)
-                .extras(getExtras(createConsentIfNone))
+                .extras(getExtras(createConsentIfNone, importUserData))
                 .build()
         ).thenApply((FacadeResult<TransactionsResponseBody> result) -> mapper.translate(result, transactionsRestMapper));
     }
@@ -163,6 +164,7 @@ public class TppBankingApiAisController implements TppBankingApiAccountInformati
         Boolean xPsuAuthenticationRequired,
         UUID serviceSessionId,
         String createConsentIfNone,
+        String importUserData,
         LocalDate dateFrom,
         LocalDate dateTo,
         String entryReferenceFrom,
@@ -194,7 +196,7 @@ public class TppBankingApiAisController implements TppBankingApiAccountInformati
                 .deltaList(deltaList)
                 .page(page)
                 .pageSize(pageSize)
-                .extras(getExtras(createConsentIfNone))
+                .extras(getExtras(createConsentIfNone, importUserData))
                 .build()
         ).thenApply((FacadeResult<TransactionsResponseBody> result) -> mapper.translate(result, transactionsRestMapper));
     }
@@ -220,9 +222,16 @@ public class TppBankingApiAisController implements TppBankingApiAccountInformati
 
 
     @NotNull
-    private Map<ExtraRequestParam, Object> getExtras(String createConsentIfNone) throws com.fasterxml.jackson.core.JsonProcessingException {
-        return createConsentIfNone == null ? new EnumMap<>(ExtraRequestParam.class)
-            : Collections.singletonMap(ExtraRequestParam.CONSENT, objectMapper.readValue(createConsentIfNone, AisConsent.class));
+    @SneakyThrows
+    private Map<ExtraRequestParam, Object> getExtras(String createConsentIfNone, String importUserData) {
+        Map<ExtraRequestParam, Object> extras = new EnumMap<>(ExtraRequestParam.class);
+        if (null != createConsentIfNone) {
+            extras.put(ExtraRequestParam.CONSENT, objectMapper.readValue(createConsentIfNone, AisConsent.class));
+        }
+        if (null != importUserData) {
+            extras.put(ExtraRequestParam.IMPORT_DATA, importUserData);
+        }
+        return extras;
     }
 
     @Mapper(componentModel = SPRING_KEYWORD, implementationPackage = Const.API_MAPPERS_PACKAGE)

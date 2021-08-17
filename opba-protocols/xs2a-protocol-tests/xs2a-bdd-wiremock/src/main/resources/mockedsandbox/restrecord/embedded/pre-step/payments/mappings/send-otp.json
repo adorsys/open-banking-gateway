@@ -1,0 +1,47 @@
+{
+  "scenarioName": "DKB - single payment",
+  "requiredScenarioState": "sca_method_selected",
+  "newScenarioState": "otp_sent",
+  "priority": 5,
+  "request": {
+    "urlPattern" : ".*/v1/payments/sepa-credit-transfers/VALID_PAYMENT_ID/authorisations/.+",
+    "method": "PUT",
+    "headers": {
+      "PSD2-AUTHORIZATION": {
+        "equalTo": "Bearer VALID_TOKEN"
+      },
+      "X-Request-ID": {
+        "matches": ".+"
+      },
+      "PSU-ID": {
+        "equalTo" : "max.musterman"
+      },
+      "Content-Type": {
+        "matches": "application/json.*"
+      }
+    },
+    "bodyPatterns": [
+      {
+        "equalToJson": "{\"scaAuthenticationData\":\"123456\"}",
+        "ignoreArrayOrder": true,
+        "ignoreExtraElements": true
+      }
+    ]
+  },
+  "response": {
+    "status": 200,
+    "body": "{\"scaStatus\":\"finalised\"}",
+    "headers": {
+      "Date": "Mon, 05 Jul 2021 11:59:59 GMT",
+      "Server": "Apache",
+      "Content-Type": "application/json; charset=utf-8",
+      "X-Request-ID": "04f6c752-1f2a-4102-b926-52c2f5906afa",
+      "Strict-Transport-Security": "max-age=31536000",
+      "X-Content-Type-Options": "nosniff",
+      "Keep-Alive": "timeout=15, max=100"
+    }
+  },
+  "uuid": "19fe795b-b5fe-4959-8ab0-7a11f7fda099",
+  "persistent": true,
+  "insertionIndex": 13
+}

@@ -1,6 +1,7 @@
 package de.adorsys.opba.protocol.xs2a.tests.e2e.wiremock.mocks;
 
 import com.github.tomakehurst.wiremock.WireMockServer;
+import com.github.tomakehurst.wiremock.common.Slf4jNotifier;
 import com.github.tomakehurst.wiremock.core.WireMockConfiguration;
 import com.github.tomakehurst.wiremock.extension.responsetemplating.ResponseTemplateTransformer;
 import com.google.common.io.Resources;
@@ -40,6 +41,7 @@ public class MockServers<SELF extends MockServers<SELF>> extends CommonGivenStag
 
     public static final long AUTH_ACTION_ID = 3L;
     public static final long ACTION_ID = 1L;
+    public static final String DKB_BANK_ID = "335562a2-26e2-4105-b31e-08de285234e0";
     @Autowired
     private BankProfileJpaRepository bankProfileJpaRepository;
 
@@ -187,6 +189,14 @@ public class MockServers<SELF extends MockServers<SELF>> extends CommonGivenStag
         return self();
     }
 
+    public SELF embedded_pre_step_mock_of_dkb_sandbox_for_max_musterman_accounts_running() {
+        WireMockConfiguration config = WireMockConfiguration.options().dynamicPort()
+                .usingFilesUnderClasspath("mockedsandbox/restrecord/embedded/pre-step/accounts/");
+        config.notifier(new Slf4jNotifier(true));
+        startWireMock(config, DKB_BANK_ID);
+        return self();
+    }
+
     public SELF embedded_mock_of_sandbox_for_max_musterman_zero_sca_accounts_running() {
         WireMockConfiguration config = WireMockConfiguration.options().dynamicPort()
                                                .usingFilesUnderClasspath("mockedsandbox/restrecord/embedded/zero-sca/accounts/sandbox/");
@@ -195,9 +205,17 @@ public class MockServers<SELF extends MockServers<SELF>> extends CommonGivenStag
         return self();
     }
 
+    public SELF embedded_pre_step_mock_of_dkb_sandbox_for_max_musterman_payments_running() {
+        WireMockConfiguration config = WireMockConfiguration.options().dynamicPort()
+            .usingFilesUnderClasspath("mockedsandbox/restrecord/embedded/pre-step/payments/");
+        startWireMock(config, DKB_BANK_ID);
+
+        return self();
+    }
+
     public SELF embedded_mock_of_sandbox_for_max_musterman_payments_running() {
         WireMockConfiguration config = WireMockConfiguration.options().dynamicPort()
-                                               .usingFilesUnderClasspath("mockedsandbox/restrecord/embedded/multi-sca/payments/sandbox/");
+            .usingFilesUnderClasspath("mockedsandbox/restrecord/embedded/multi-sca/payments/sandbox/");
         startWireMock(config);
 
         return self();
@@ -261,12 +279,16 @@ public class MockServers<SELF extends MockServers<SELF>> extends CommonGivenStag
         return self();
     }
 
-
     @SneakyThrows
     private void startWireMock(WireMockConfiguration config) {
+        startWireMock(config, "adadadad-4000-0000-0000-b0b0b0b0b0b0");
+    }
+
+    @SneakyThrows
+    private void startWireMock(WireMockConfiguration config, String bankId) {
         sandbox = new WireMockServer(config);
         sandbox.start();
-        var bankProfiles = bankProfileJpaRepository.findByBankUuid(UUID.fromString("adadadad-4000-0000-0000-b0b0b0b0b0b0"));
+        var bankProfiles = bankProfileJpaRepository.findByBankUuid(UUID.fromString(bankId));
         bankProfiles.forEach(it -> {
             it.setUrl("http://localhost:" + sandbox.port());
             it.setIdpUrl("http://localhost:" + sandbox.port() + "/oauth/authorization-server");

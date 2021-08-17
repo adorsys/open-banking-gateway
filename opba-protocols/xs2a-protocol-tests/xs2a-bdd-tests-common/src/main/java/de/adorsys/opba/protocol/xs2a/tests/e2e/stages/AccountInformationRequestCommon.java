@@ -517,10 +517,10 @@ public class AccountInformationRequestCommon<SELF extends AccountInformationRequ
         return self();
     }
 
-    public SELF user_max_musterman_selected_sca_challenge_type_appOTP_to_decoupled_authorization() {
+    public SELF user_max_musterman_selected_sca_challenge_type_push_otp_to_embedded_authorization() {
         provideParametersToBankingProtocolWithBody(
                 AUTHORIZE_CONSENT_ENDPOINT,
-                selectedScaBody("APP_OTP:app_otp"),
+                selectedScaBody("PUSH_OTP:TAN2go"),
                 ACCEPTED
         );
         return self();

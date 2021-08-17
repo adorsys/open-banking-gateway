@@ -76,6 +76,7 @@ public class TransactionService {
             psuAuthenticationRequired,
             optionalConsent.map(ConsentEntity::getTppServiceSessionId).orElse(null),
             createConsentIfNone,
+            null,
             dateFrom,
             dateTo,
             entryReferenceFrom,

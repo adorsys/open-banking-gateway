@@ -5,6 +5,7 @@ import de.adorsys.opba.protocol.bpmnshared.service.context.ContextUtil;
 import de.adorsys.opba.protocol.bpmnshared.service.exec.ValidatedExecution;
 import de.adorsys.opba.protocol.xs2a.config.protocol.ProtocolUrlsConfiguration;
 import de.adorsys.opba.protocol.xs2a.context.Xs2aContext;
+import de.adorsys.opba.protocol.xs2a.domain.dto.forms.ScaMethod;
 import de.adorsys.opba.protocol.xs2a.service.xs2a.Xs2aRedirectExecutor;
 import de.adorsys.opba.protocol.xs2a.util.logresolver.Xs2aLogResolver;
 import lombok.RequiredArgsConstructor;
@@ -28,8 +29,7 @@ public class Xs2aAskForScaChallenge extends ValidatedExecution<Xs2aContext> {
     @Override
     protected void doRealExecution(DelegateExecution execution, Xs2aContext context) {
         logResolver.log("doRealExecution: execution ({}) with context ({})", execution, context);
-
-        context.setSelectedScaType(context.getScaSelected().getAuthenticationType().toString());
+        context.setSelectedScaType(getSelectedAuthenticationType(context));
         redirectExecutor.redirect(execution, context, urls -> {
             ProtocolUrlsConfiguration.UrlSet urlSet = ProtocolAction.SINGLE_PAYMENT.equals(context.getAction())
                     ? urls.getPis() : urls.getAis();
@@ -50,4 +50,11 @@ public class Xs2aAskForScaChallenge extends ValidatedExecution<Xs2aContext> {
         );
         runtimeService.trigger(execution.getId());
     }
+    private String getSelectedAuthenticationType(Xs2aContext context) {
+        return context.getAvailableSca().stream()
+                .filter(it -> context.getUserSelectScaId().equals(it.getKey()))
+                .map(ScaMethod::getType)
+                .findFirst().orElse(null);
+    }
+
 }
