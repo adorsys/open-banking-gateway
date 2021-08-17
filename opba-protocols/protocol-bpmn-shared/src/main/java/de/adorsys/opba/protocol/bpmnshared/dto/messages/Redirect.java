@@ -17,12 +17,9 @@ public class Redirect extends InternalProcessResult {
     @NonNull
     private URI redirectUri;
 
-    private boolean doNotRemoveKey;
-
     @Builder
-    public Redirect(String processId, String executionId, Object result, URI redirectUri, boolean doNotRemoveKey) {
+    public Redirect(String processId, String executionId, Object result, URI redirectUri) {
         super(processId, executionId, result);
         this.redirectUri = redirectUri;
-        this.doNotRemoveKey = doNotRemoveKey;
     }
 }

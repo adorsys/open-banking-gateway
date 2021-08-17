@@ -21,16 +21,12 @@ public class Xs2aAskForDecoupledFinalization extends ValidatedExecution<Xs2aCont
 
     @Override
     protected void doRealExecution(DelegateExecution execution, Xs2aContext context) {
-        ProtocolUrlsConfiguration.UrlSet urlSet = ProtocolAction.SINGLE_PAYMENT.equals(context.getAction())
-                                                          ? urls.getPis() : urls.getAis();
-        String redirectUrl = urlSet.getParameters().getWaitDecoupledSca();
-
         redirectExecutor.redirect(
                 execution,
                 context,
-                redirectUrl,
-                null,
-                redirect -> redirect.doNotRemoveKey(true).build()
-        );
+                redir -> {
+                    var urlSet = ProtocolAction.SINGLE_PAYMENT.equals(context.getAction()) ? urls.getPis() : urls.getAis();
+                    return urlSet.getParameters().getWaitDecoupledSca();
+                });
     }
 }

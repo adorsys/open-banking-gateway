@@ -11,6 +11,6 @@ import lombok.Getter;
 public class PaymentAcquired extends Redirect {
 
     public PaymentAcquired(Redirect redirect) {
-        super(redirect.getProcessId(), redirect.getExecutionId(), redirect.getResult(), redirect.getRedirectUri(), false);
+        super(redirect.getProcessId(), redirect.getExecutionId(), redirect.getResult(), redirect.getRedirectUri());
     }
 }

@@ -55,7 +55,7 @@ public class Xs2aOutcomeMapper<T> implements OutcomeMapper<T> {
             );
         } else {
             result = new ContextBasedAuthorizationRequiredResult<>(
-                    redirectResult.getRedirectUri(), redirectResult.getExecutionId(), redirectResult.isDoNotRemoveKey()
+                    redirectResult.getRedirectUri(), redirectResult.getExecutionId()
             );
         }
 
@@ -95,22 +95,14 @@ public class Xs2aOutcomeMapper<T> implements OutcomeMapper<T> {
 
         private final String executionId;
 
-        private final boolean doNotRemoveKey;
-
-        ContextBasedAuthorizationRequiredResult(URI redirectionTo, String executionId, boolean doNotRemoveKey) {
+        ContextBasedAuthorizationRequiredResult(URI redirectionTo, String executionId) {
             super(redirectionTo, null);
             this.executionId = executionId;
-            this.doNotRemoveKey = doNotRemoveKey;
         }
 
         @Override
         public String getAuthContext() {
             return executionId;
-        }
-
-        @Override
-        public boolean doNotRemoveKey() {
-            return doNotRemoveKey;
         }
     }
 }
