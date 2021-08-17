@@ -1,10 +1,10 @@
 import {Component, OnInit} from '@angular/core';
-import {UpdateConsentAuthorizationService} from "../../api";
 import {ConsentAuthorizationService} from "../../api/api/consentAuthorization.service";
 import {ActivatedRoute} from "@angular/router";
 import {InlineResponse200} from "../../api/model/inlineResponse200";
 import {ApiHeaders} from "../../api/api.headers";
 import {SessionService} from "../../common/session.service";
+import {uuid} from "uuidv4";
 
 @Component({
   selector: 'wait-for-decoupled-redirection',
@@ -26,7 +26,7 @@ export class WaitForDecoupled implements OnInit {
   }
 
   ngOnInit() {
-    this.consentAuthorizationService.authUsingGET(this.authId, this.redirectCode, 'response')
+    this.consentAuthorizationService.embeddedUsingPOST(this.authId, uuid(), this.redirectCode, null, null, 'response')
       .subscribe(res => {
         this.sessionService.setRedirectCode(this.authId, res.headers.get(ApiHeaders.X_XSRF_TOKEN));
         this.authResponse = res.body;
