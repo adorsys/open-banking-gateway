@@ -4,7 +4,9 @@ import {ActivatedRoute} from "@angular/router";
 import {InlineResponse200} from "../../api/model/inlineResponse200";
 import {ApiHeaders} from "../../api/api.headers";
 import {SessionService} from "../../common/session.service";
-import {uuid} from "uuidv4";
+import * as uuid from 'uuid';
+import {PsuAuthRequest} from '../../api';
+import {StubUtil} from '../../common/utils/stub-util';
 
 @Component({
   selector: 'wait-for-decoupled-redirection',
@@ -26,8 +28,14 @@ export class WaitForDecoupled implements OnInit {
   }
 
   ngOnInit() {
-    this.consentAuthorizationService.embeddedUsingPOST(this.authId, uuid(), this.redirectCode, null, null, 'response')
-      .subscribe(res => {
+    this.consentAuthorizationService.embeddedUsingPOST(
+      this.authId,
+      StubUtil.X_XSRF_TOKEN,
+      StubUtil.X_REQUEST_ID,
+      this.redirectCode,
+      {} as PsuAuthRequest,
+      'response'
+    ).subscribe(res => {
         this.sessionService.setRedirectCode(this.authId, res.headers.get(ApiHeaders.X_XSRF_TOKEN));
         this.authResponse = res.body;
       });
