@@ -1,7 +1,5 @@
 package de.adorsys.opba.protocol.xs2a.service.xs2a.authenticate.decoupled;
 
-import de.adorsys.opba.protocol.api.common.ProtocolAction;
-import de.adorsys.opba.protocol.api.dto.result.body.AuthStateBody;
 import de.adorsys.opba.protocol.api.dto.result.body.UpdateAuthBody;
 import de.adorsys.opba.protocol.bpmnshared.dto.DtoMapper;
 import de.adorsys.opba.protocol.bpmnshared.dto.messages.ProcessResponse;
@@ -38,16 +36,25 @@ public class Xs2aAisCheckDecoupledAuthorisationStatus extends ValidatedExecution
                 params.getHeaders().toHeaders(),
                 RequestParams.empty());
 
+        ScaStatus scaStatus = consentScaStatus.getBody().getScaStatus();
         ContextUtil.getAndUpdateContext(
                 execution,
                 (Xs2aContext ctx) -> {
-                    ctx.setDecoupledScaFinished(ScaStatus.FINALISED == consentScaStatus.getBody().getScaStatus()); // TODO Error cases
-                    ctx.setScaStatus(consentScaStatus.getBody().getScaStatus().toString());
+                    ctx.setDecoupledScaFinished(ScaStatus.FINALISED == scaStatus); // TODO Error cases
+                    ctx.setScaStatus(scaStatus.toString());
                 }
         );
 
         eventPublisher.publishEvent(
-                new ProcessResponse(execution.getRootProcessInstanceId(), execution.getId(), new UpdateAuthBody())
+                new ProcessResponse(
+                        execution.getRootProcessInstanceId(),
+                        execution.getId(),
+                        UpdateAuthBody.builder()
+                                .scaStatus(scaStatus.toString())
+                                .scaAuthenticationType(String.valueOf(context.getScaSelected().getAuthenticationType()))
+                                .scaExplanation(context.getScaSelected().getExplanation())
+                                .build()
+                )
         );
     }
 

@@ -38,7 +38,6 @@ export class EnterPinComponent implements OnInit {
       .embeddedUsingPOST(
         this.authorizationSessionId,
         StubUtil.X_REQUEST_ID, // TODO: real values instead of stubs
-        StubUtil.X_XSRF_TOKEN, // TODO: real values instead of stubs
         this.redirectCode,
         { scaAuthenticationData: { PSU_PASSWORD: this.pinForm.get('pin').value } },
         'response'

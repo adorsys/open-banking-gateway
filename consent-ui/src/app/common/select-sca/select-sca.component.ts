@@ -40,8 +40,7 @@ export class SelectScaComponent implements OnInit {
     this.updateConsentAuthorizationService
       .embeddedUsingPOST(
         this.authorizationSessionId,
-        StubUtil.X_REQUEST_ID, // TODO: real values instead of stubs
-        StubUtil.X_XSRF_TOKEN, // TODO: real values instead of stubs
+        StubUtil.X_REQUEST_ID, // TODO: real values instead of stub
         this.redirectCode,
         { scaAuthenticationData: { SCA_CHALLENGE_ID: this.selectedMethod.value } },
         'response'

@@ -1,14 +1,14 @@
-import { AfterContentChecked, ChangeDetectorRef, Component, Input, OnInit } from '@angular/core';
-import { FormBuilder, FormGroup } from '@angular/forms';
-import { ActivatedRoute, Router } from '@angular/router';
+import {AfterContentChecked, ChangeDetectorRef, Component, Input, OnInit} from '@angular/core';
+import {FormBuilder, FormGroup} from '@angular/forms';
+import {ActivatedRoute, Router} from '@angular/router';
 
-import { DenyRequest, UpdateConsentAuthorizationService } from '../../api';
-import { ApiHeaders } from '../../api/api.headers';
-import { SessionService } from '../../common/session.service';
-import { AuthConsentState } from '../../ais/common/dto/auth-state';
-import { StubUtil } from '../../common/utils/stub-util';
-import { PaymentUtil } from '../common/payment-util';
-import { PisPayment } from '../common/models/pis-payment.model';
+import {UpdateConsentAuthorizationService} from '../../api';
+import {ApiHeaders} from '../../api/api.headers';
+import {SessionService} from '../../common/session.service';
+import {AuthConsentState} from '../../ais/common/dto/auth-state';
+import {StubUtil} from '../../common/utils/stub-util';
+import {PaymentUtil} from '../common/payment-util';
+import {PisPayment} from '../common/models/pis-payment.model';
 
 @Component({
   selector: 'consent-app-payment-access-selection',
@@ -70,8 +70,6 @@ export class ConsentPaymentAccessSelectionComponent implements OnInit, AfterCont
       .denyUsingPOST(
         this.authorizationId,
         StubUtil.X_REQUEST_ID, // TODO: real values instead of stubs
-        StubUtil.X_XSRF_TOKEN, // TODO: real values instead of stubs
-        {} as DenyRequest,
         'response'
       )
       .subscribe((res) => {

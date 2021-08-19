@@ -89,6 +89,9 @@ public class UpdateAuthConsentServiceController implements UpdateConsentAuthoriz
 
     @Mapper(componentModel = SPRING_KEYWORD, implementationPackage = Const.API_MAPPERS_PACKAGE)
     public interface UpdateAuthBodyToApiMapper extends FacadeResponseBodyToRestBodyMapper<ConsentAuth, UpdateAuthBody> {
+
+        @Mapping(source = "scaAuthenticationType", target = "scaMethodSelected.scaMethod")
+        @Mapping(source = "scaExplanation", target = "scaMethodSelected.explanation")
         ConsentAuth map(UpdateAuthBody authStateBody);
     }
 }

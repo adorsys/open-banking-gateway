@@ -1,10 +1,8 @@
 import {Component, OnInit} from '@angular/core';
-import {ConsentAuthorizationService} from "../../api/api/consentAuthorization.service";
 import {ActivatedRoute} from "@angular/router";
-import {InlineResponse200} from "../../api/model/inlineResponse200";
 import {ApiHeaders} from "../../api/api.headers";
 import {SessionService} from "../../common/session.service";
-import {PsuAuthRequest} from '../../api';
+import {ConsentAuth, PsuAuthRequest, UpdateConsentAuthorizationService} from '../../api';
 import {StubUtil} from '../../common/utils/stub-util';
 
 @Component({
@@ -15,12 +13,12 @@ import {StubUtil} from '../../common/utils/stub-util';
 export class WaitForDecoupled implements OnInit {
   public static ROUTE = 'wait-sca-finalization';
 
-  authResponse: InlineResponse200;
+  authResponse: ConsentAuth;
 
   private authId: string;
   private redirectCode: string;
 
-  constructor(private consentAuthorizationService: ConsentAuthorizationService, private sessionService: SessionService, private activatedRoute: ActivatedRoute) {
+  constructor(private consentAuthorizationService: UpdateConsentAuthorizationService, private sessionService: SessionService, private activatedRoute: ActivatedRoute) {
     const route = this.activatedRoute.snapshot;
     this.authId = route.parent.params.authId;
     this.redirectCode = route.queryParams.redirectCode;
@@ -30,7 +28,6 @@ export class WaitForDecoupled implements OnInit {
     setTimeout(() => {
       this.consentAuthorizationService.embeddedUsingPOST(
         this.authId,
-        StubUtil.X_XSRF_TOKEN,
         StubUtil.X_REQUEST_ID,
         this.redirectCode,
         {} as PsuAuthRequest,

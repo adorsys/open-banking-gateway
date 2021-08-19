@@ -318,6 +318,7 @@ components:
 
     redirectState:
       name: redirectState
+      required: true
       in: path
       description: Code used to retrieve a redirect session. This is
         generaly transported as a path parameter due to some banks limitiations (ING ASPSP) instead of
@@ -791,6 +792,8 @@ components:
           description: List of sca methods for selection if necessary.
           items:
             $ref: "#/components/schemas/ScaUserData"
+        scaMethodSelected:
+          $ref: "#/components/schemas/ScaUserData"
         scaStatus:
           $ref: "#/components/schemas/ScaStatus"
         singlePayment:
@@ -880,6 +883,8 @@ components:
         id:
           type: string
         methodValue:
+          type: string
+        explanation:
           type: string
         scaMethod:
           type: string

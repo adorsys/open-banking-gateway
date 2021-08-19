@@ -1,13 +1,13 @@
-import { AfterContentChecked, ChangeDetectorRef, Component, Input, OnInit } from '@angular/core';
-import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
-import { ActivatedRoute, Router } from '@angular/router';
-import { AuthConsentState } from '../../../../common/dto/auth-state';
-import { SessionService } from '../../../../../common/session.service';
-import { StubUtil } from '../../../../../common/utils/stub-util';
-import { AccountAccessLevel, AisConsentToGrant } from '../../../../common/dto/ais-consent';
-import { ConsentUtil } from '../../../../common/consent-util';
-import { DenyRequest, UpdateConsentAuthorizationService } from '../../../../../api';
-import { ApiHeaders } from '../../../../../api/api.headers';
+import {AfterContentChecked, ChangeDetectorRef, Component, Input, OnInit} from '@angular/core';
+import {FormBuilder, FormControl, FormGroup, Validators} from '@angular/forms';
+import {ActivatedRoute, Router} from '@angular/router';
+import {AuthConsentState} from '../../../../common/dto/auth-state';
+import {SessionService} from '../../../../../common/session.service';
+import {StubUtil} from '../../../../../common/utils/stub-util';
+import {AccountAccessLevel, AisConsentToGrant} from '../../../../common/dto/ais-consent';
+import {ConsentUtil} from '../../../../common/consent-util';
+import {UpdateConsentAuthorizationService} from '../../../../../api';
+import {ApiHeaders} from '../../../../../api/api.headers';
 
 @Component({
   selector: 'consent-app-access-selection',
@@ -101,8 +101,6 @@ export class ConsentAccountAccessSelectionComponent implements OnInit, AfterCont
       .denyUsingPOST(
         this.authorizationId,
         StubUtil.X_REQUEST_ID, // TODO: real values instead of stubs
-        StubUtil.X_XSRF_TOKEN, // TODO: real values instead of stubs
-        {} as DenyRequest,
         'response'
       )
       .subscribe((res) => {
