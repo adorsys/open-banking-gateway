@@ -1,6 +1,10 @@
 package de.adorsys.opba.protocol.xs2a.service.xs2a.authenticate.decoupled;
 
+import de.adorsys.opba.protocol.api.common.ProtocolAction;
+import de.adorsys.opba.protocol.api.dto.result.body.AuthStateBody;
+import de.adorsys.opba.protocol.api.dto.result.body.UpdateAuthBody;
 import de.adorsys.opba.protocol.bpmnshared.dto.DtoMapper;
+import de.adorsys.opba.protocol.bpmnshared.dto.messages.ProcessResponse;
 import de.adorsys.opba.protocol.bpmnshared.service.context.ContextUtil;
 import de.adorsys.opba.protocol.bpmnshared.service.exec.ValidatedExecution;
 import de.adorsys.opba.protocol.xs2a.context.Xs2aContext;
@@ -15,6 +19,7 @@ import de.adorsys.xs2a.adapter.api.model.ScaStatus;
 import de.adorsys.xs2a.adapter.api.model.ScaStatusResponse;
 import lombok.RequiredArgsConstructor;
 import org.flowable.engine.delegate.DelegateExecution;
+import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.stereotype.Service;
 
 @Service("xs2aAisCheckDecoupledAuthorizationStatus")
@@ -23,6 +28,7 @@ public class Xs2aAisCheckDecoupledAuthorisationStatus extends ValidatedExecution
 
     private final AccountInformationService ais;
     private final Extractor extractor;
+    private final ApplicationEventPublisher eventPublisher;
 
     @Override
     protected void doRealExecution(DelegateExecution execution, Xs2aContext context) {
@@ -38,6 +44,10 @@ public class Xs2aAisCheckDecoupledAuthorisationStatus extends ValidatedExecution
                     ctx.setDecoupledScaFinished(ScaStatus.FINALISED == consentScaStatus.getBody().getScaStatus()); // TODO Error cases
                     ctx.setScaStatus(consentScaStatus.getBody().getScaStatus().toString());
                 }
+        );
+
+        eventPublisher.publishEvent(
+                new ProcessResponse(execution.getRootProcessInstanceId(), execution.getId(), new UpdateAuthBody())
         );
     }
 
