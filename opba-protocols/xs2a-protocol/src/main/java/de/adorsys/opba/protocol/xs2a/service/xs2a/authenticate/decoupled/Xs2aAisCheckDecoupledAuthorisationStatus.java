@@ -13,12 +13,16 @@ import de.adorsys.opba.protocol.xs2a.service.xs2a.dto.Xs2aStandardHeaders;
 import de.adorsys.xs2a.adapter.api.AccountInformationService;
 import de.adorsys.xs2a.adapter.api.RequestParams;
 import de.adorsys.xs2a.adapter.api.Response;
+import de.adorsys.xs2a.adapter.api.model.AuthenticationObject;
+import de.adorsys.xs2a.adapter.api.model.AuthenticationType;
 import de.adorsys.xs2a.adapter.api.model.ScaStatus;
 import de.adorsys.xs2a.adapter.api.model.ScaStatusResponse;
 import lombok.RequiredArgsConstructor;
 import org.flowable.engine.delegate.DelegateExecution;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.stereotype.Service;
+
+import java.util.Optional;
 
 @Service("xs2aAisCheckDecoupledAuthorizationStatus")
 @RequiredArgsConstructor
@@ -45,14 +49,15 @@ public class Xs2aAisCheckDecoupledAuthorisationStatus extends ValidatedExecution
                 }
         );
 
+        AuthenticationObject scaSelected = context.getScaSelected();
         eventPublisher.publishEvent(
                 new ProcessResponse(
                         execution.getRootProcessInstanceId(),
                         execution.getId(),
                         UpdateAuthBody.builder()
-                                .scaStatus(scaStatus.toString())
-                                .scaAuthenticationType(String.valueOf(context.getScaSelected().getAuthenticationType()))
-                                .scaExplanation(context.getScaSelected().getExplanation())
+                                .scaStatus(scaStatus.name())
+                                .scaAuthenticationType(Optional.ofNullable(scaSelected.getAuthenticationType()).map(AuthenticationType::name).orElse(null))
+                                .scaExplanation(scaSelected.getExplanation())
                                 .build()
                 )
         );
