@@ -93,35 +93,26 @@
     </sequenceFlow>
     <serviceTask id="notifyUserWithRedirectAfterCreate" name="Notify user with redirect url for challenge. Suspends to wait" flowable:async="true" flowable:exclusive="true" flowable:delegateExpression="${xs2aDoScaRedirectToAspspForScaChallengeAfterCreate}" flowable:triggerable="true"/>
     <sequenceFlow id="sid-593f127d-f36b-4250-a9a3-6d6097587ec9" sourceRef="notifyUserWithRedirectAfterCreate" targetRef="wasRedirectConsentGrantSuccessful"/>
-    <subProcess id="decoupledScaStatusChecking" name="Decoupled Sca status checking subprocess" flowable:async="true" flowable:exclusive="true">
-      <startEvent id="sid-7721d684-fcd9-4883-89fb-8595e225b40d" name="Start of decoupled Sca subprocess"/>
-      <endEvent id="sid-c3a04098-ed6c-40a8-a74d-91c2b5fba95c" name="End of decoupled Sca status checking subprocess"/>
-      <serviceTask id="sid-9807ebbf-a03b-4087-ab63-ecc18e1a5e2e" name="Checks authorization status to be finalized" flowable:async="true" flowable:exclusive="true" flowable:delegateExpression="${xs2aAisCheckDecoupledAuthorizationStatus}" flowable:triggerable="true"/>
-      <exclusiveGateway id="sid-62f4227f-df35-4e97-bee8-6f945711a132" name="Authorization finalised?" default="decoupledAuthorizationStillInProgress"/>
-      <sequenceFlow id="sid-e5b7e5aa-3bb9-45b7-89d0-8c8838652f6f" name="Start authorization checking" sourceRef="sid-7721d684-fcd9-4883-89fb-8595e225b40d" targetRef="sid-9807ebbf-a03b-4087-ab63-ecc18e1a5e2e"/>
-      <sequenceFlow id="sid-cc670a4f-f0b8-4377-a047-65b31d465a07" sourceRef="sid-9807ebbf-a03b-4087-ab63-ecc18e1a5e2e" targetRef="sid-62f4227f-df35-4e97-bee8-6f945711a132"/>
-      <sequenceFlow id="sid-faa0078c-c3c7-45a6-8f17-5d89c610cec8" name="Successful proceeding to the subprocess end" sourceRef="sid-62f4227f-df35-4e97-bee8-6f945711a132" targetRef="sid-c3a04098-ed6c-40a8-a74d-91c2b5fba95c">
-        <conditionExpression xsi:type="tFormalExpression">#{xs2aConsentInfo.isDecoupledScaFinalizedByPSU(CONTEXT)}</conditionExpression>
-      </sequenceFlow>
-      <sequenceFlow id="decoupledAuthorizationStillInProgress" sourceRef="sid-62f4227f-df35-4e97-bee8-6f945711a132" targetRef="sid-9807ebbf-a03b-4087-ab63-ecc18e1a5e2e" name="Waits for user to authorize in 3rd party using decoupled approach">
-        <conditionExpression xsi:type="tFormalExpression"/>
-      </sequenceFlow>
-    </subProcess>
-    <boundaryEvent id="sid-df6ba3cf-481e-46be-9035-045b4ec9cb23" name="Decoupled authorization time limit (timeout)" attachedToRef="decoupledScaStatusChecking">
-      <timerEventDefinition>
-        <timeDuration>#{flowableProperties.jobTimeout.timeout}</timeDuration>
-      </timerEventDefinition>
-    </boundaryEvent>
     <serviceTask id="sid-c8a7957f-271e-4b86-96f5-8a8fd718d9b0" name="Wait for user to initiate Decoupled SCA" flowable:async="true" flowable:exclusive="true" flowable:delegateExpression="${xs2aAskForDecoupledInitiation}" flowable:triggerable="false"/>
-    <sequenceFlow id="sid-5f13c1e0-6c2b-4f63-9cfc-b7214e3c2e8a" sourceRef="sid-c8a7957f-271e-4b86-96f5-8a8fd718d9b0" targetRef="decoupledScaStatusChecking"/>
-    <sequenceFlow id="sid-f23a52c5-16d1-433c-b417-5c6fb17798e9" sourceRef="sid-df6ba3cf-481e-46be-9035-045b4ec9cb23" targetRef="sid-xs2aReportToFintechConsentDenied" name="Decoupled consent failed"/>
-    <sequenceFlow id="sid-48ade700-ee9c-4d2b-bf25-70393c9f57f3" sourceRef="decoupledScaStatusChecking" targetRef="isScaFinalized" name="Decoupled consent success"/>
+    <sequenceFlow id="sid-5f13c1e0-6c2b-4f63-9cfc-b7214e3c2e8a" sourceRef="sid-c8a7957f-271e-4b86-96f5-8a8fd718d9b0" targetRef="sid-9bc341dd-157c-4c9d-ae99-de9fec005cc5"/>
+    <sequenceFlow id="decoupledConsentFailed" sourceRef="sid-d17b4862-116f-4b70-8eaa-c23183e502cc" targetRef="sid-xs2aReportToFintechConsentDenied" name="Decoupled consent failed">
+      <conditionExpression xsi:type="tFormalExpression">#{xs2aConsentInfo.isDecoupledScaFailed(CONTEXT)}</conditionExpression>
+    </sequenceFlow>
+    <sequenceFlow id="decoupledConsentSuccess" sourceRef="sid-d17b4862-116f-4b70-8eaa-c23183e502cc" targetRef="isScaFinalized" name="Decoupled consent success">
+      <conditionExpression xsi:type="tFormalExpression">#{xs2aConsentInfo.isDecoupledScaFinalizedByPSU(CONTEXT)}</conditionExpression>
+    </sequenceFlow>
     <exclusiveGateway id="sid-4743a0ed-8d54-4115-881b-27f8775bda96" name="Is the selected SCA decoupled" default="ordinaryScaChallengeFlow"/>
     <sequenceFlow id="ordinaryScaChallengeFlow" sourceRef="sid-4743a0ed-8d54-4115-881b-27f8775bda96" targetRef="embeddedScaChallenge">
       <conditionExpression xsi:type="tFormalExpression"/>
     </sequenceFlow>
     <sequenceFlow id="decoupledScaChallengeFlow" sourceRef="sid-4743a0ed-8d54-4115-881b-27f8775bda96" targetRef="sid-c8a7957f-271e-4b86-96f5-8a8fd718d9b0" name="Depoupled SCA flow">
       <conditionExpression xsi:type="tFormalExpression">#{xs2aConsentInfo.isDecoupledScaSelected(CONTEXT)}</conditionExpression>
+    </sequenceFlow>
+    <serviceTask id="sid-9bc341dd-157c-4c9d-ae99-de9fec005cc5" name="Checks authorization status to be finalized" flowable:async="true" flowable:exclusive="true" flowable:delegateExpression="${xs2aAisCheckDecoupledAuthorizationStatus}" flowable:triggerable="true"/>
+    <exclusiveGateway id="sid-d17b4862-116f-4b70-8eaa-c23183e502cc" name="Authorization finalised?" default="decoupledConsentStatusCheck"/>
+    <sequenceFlow id="sid-ad8a2d25-1dc3-4d06-98d9-eef8e29949f4" sourceRef="sid-9bc341dd-157c-4c9d-ae99-de9fec005cc5" targetRef="sid-d17b4862-116f-4b70-8eaa-c23183e502cc"/>
+    <sequenceFlow id="decoupledConsentStatusCheck" name="Waits for user to authorize in 3rd party using decoupled approach" sourceRef="sid-d17b4862-116f-4b70-8eaa-c23183e502cc" targetRef="sid-9bc341dd-157c-4c9d-ae99-de9fec005cc5">
+      <conditionExpression xsi:type="tFormalExpression"/>
     </sequenceFlow>
   </process>
   <bpmndi:BPMNDiagram id="BPMNDiagram_xs2a-authorize-consent">
@@ -344,52 +335,23 @@
         <omgdi:waypoint x="935.24445" y="475.0"/>
         <omgdi:waypoint x="975.0" y="475.0"/>
       </bpmdi:BPMNEdge>
-      <bpmdi:BPMNShape xmlns:bpmdi="http://www.omg.org/spec/BPMN/20100524/DI" id="sid-5148d581-837a-4e51-8ed4-3315ae8b510b" bpmnElement="decoupledScaStatusChecking">
-        <omgdc:Bounds x="1591.9882" y="-202.33072" width="420.40002" height="228.4"/>
-      </bpmdi:BPMNShape>
-      <bpmdi:BPMNShape xmlns:bpmdi="http://www.omg.org/spec/BPMN/20100524/DI" id="sid-ac00e1ca-0a25-4cb4-97ae-4e4838f7058b" bpmnElement="sid-7721d684-fcd9-4883-89fb-8595e225b40d">
-        <omgdc:Bounds x="1616.3882" y="-58.130722" width="30.0" height="30.0"/>
-      </bpmdi:BPMNShape>
-      <bpmdi:BPMNShape xmlns:bpmdi="http://www.omg.org/spec/BPMN/20100524/DI" id="sid-139d5ac9-94d6-4184-9614-6c798e8c33ce" bpmnElement="sid-c3a04098-ed6c-40a8-a74d-91c2b5fba95c">
-        <omgdc:Bounds x="1975.9883" y="-58.130722" width="30.0" height="30.0"/>
-      </bpmdi:BPMNShape>
-      <bpmdi:BPMNShape xmlns:bpmdi="http://www.omg.org/spec/BPMN/20100524/DI" id="sid-9f862065-9b56-4b15-aecc-c475e80bf95d" bpmnElement="sid-9807ebbf-a03b-4087-ab63-ecc18e1a5e2e">
-        <omgdc:Bounds x="1722.9882" y="-83.13072" width="100.0" height="80.0"/>
-      </bpmdi:BPMNShape>
-      <bpmdi:BPMNShape xmlns:bpmdi="http://www.omg.org/spec/BPMN/20100524/DI" id="sid-387e0c5f-1ffe-4112-b380-98504900140b" bpmnElement="sid-62f4227f-df35-4e97-bee8-6f945711a132">
-        <omgdc:Bounds x="1870.5881" y="-63.130722" width="40.0" height="40.0"/>
-      </bpmdi:BPMNShape>
-      <bpmdi:BPMNShape xmlns:bpmdi="http://www.omg.org/spec/BPMN/20100524/DI" id="sid-01bd1fe6-4a6c-4114-9529-d165c83697cd" bpmnElement="sid-df6ba3cf-481e-46be-9035-045b4ec9cb23">
-        <omgdc:Bounds x="1991.5483" y="4.5292244" width="30.0" height="30.0"/>
-      </bpmdi:BPMNShape>
       <bpmdi:BPMNShape xmlns:bpmdi="http://www.omg.org/spec/BPMN/20100524/DI" id="sid-4acff2b7-0d3d-468d-9a7d-c3baafee3ff8" bpmnElement="sid-c8a7957f-271e-4b86-96f5-8a8fd718d9b0">
         <omgdc:Bounds x="1310.0" y="-128.13074" width="100.0" height="80.0"/>
       </bpmdi:BPMNShape>
-      <bpmdi:BPMNEdge xmlns:bpmdi="http://www.omg.org/spec/BPMN/20100524/DI" id="sid-6c463b72-7c5c-478b-8d52-c1228c7ec5be" bpmnElement="sid-e5b7e5aa-3bb9-45b7-89d0-8c8838652f6f">
-        <omgdi:waypoint x="1646.3882" y="-43.130722"/>
-        <omgdi:waypoint x="1722.9882" y="-43.130722"/>
-      </bpmdi:BPMNEdge>
-      <bpmdi:BPMNEdge xmlns:bpmdi="http://www.omg.org/spec/BPMN/20100524/DI" id="sid-4f3e05d8-b0eb-4bdb-8af8-36535770fff5" bpmnElement="sid-cc670a4f-f0b8-4377-a047-65b31d465a07">
-        <omgdi:waypoint x="1822.9882" y="-43.130722"/>
-        <omgdi:waypoint x="1870.5881" y="-43.130722"/>
-      </bpmdi:BPMNEdge>
-      <bpmdi:BPMNEdge xmlns:bpmdi="http://www.omg.org/spec/BPMN/20100524/DI" id="sid-09fa4f8e-0f41-4715-82bc-bdb39abf9b68" bpmnElement="sid-faa0078c-c3c7-45a6-8f17-5d89c610cec8">
-        <omgdi:waypoint x="1910.5881" y="-43.130722"/>
-        <omgdi:waypoint x="1975.9883" y="-43.130722"/>
-      </bpmdi:BPMNEdge>
       <bpmdi:BPMNEdge xmlns:bpmdi="http://www.omg.org/spec/BPMN/20100524/DI" id="sid-2d9ffe34-da29-4dd0-a0a2-1ab4eb66b792" bpmnElement="sid-5f13c1e0-6c2b-4f63-9cfc-b7214e3c2e8a">
         <omgdi:waypoint x="1410.0" y="-88.13074"/>
-        <omgdi:waypoint x="1591.9882" y="-88.13072"/>
+        <omgdi:waypoint x="1512.0574" y="-88.13074"/>
       </bpmdi:BPMNEdge>
-      <bpmdi:BPMNEdge xmlns:bpmdi="http://www.omg.org/spec/BPMN/20100524/DI" id="edge-2bc84ad5-a80e-4541-a543-66d9eb230080" bpmnElement="sid-f23a52c5-16d1-433c-b417-5c6fb17798e9">
-        <omgdi:waypoint x="2006.5483" y="34.529224"/>
-        <omgdi:waypoint x="2006.5483" y="626.848"/>
+      <bpmdi:BPMNEdge xmlns:bpmdi="http://www.omg.org/spec/BPMN/20100524/DI" id="edge-2bc84ad5-a80e-4541-a543-66d9eb230080" bpmnElement="decoupledConsentFailed">
+        <omgdi:waypoint x="1808.1644" y="-88.13074"/>
+        <omgdi:waypoint x="1905.2753" y="-88.13074"/>
+        <omgdi:waypoint x="1905.2753" y="626.848"/>
         <omgdi:waypoint x="1641.513" y="626.848"/>
         <omgdi:waypoint x="1641.513" y="515.0"/>
       </bpmdi:BPMNEdge>
-      <bpmdi:BPMNEdge xmlns:bpmdi="http://www.omg.org/spec/BPMN/20100524/DI" id="edge-96fd64b4-9512-4511-ae31-0b924db5c33b" bpmnElement="sid-48ade700-ee9c-4d2b-bf25-70393c9f57f3">
-        <omgdi:waypoint x="1802.1881" y="26.069275"/>
-        <omgdi:waypoint x="1802.1881" y="156.8027"/>
+      <bpmdi:BPMNEdge xmlns:bpmdi="http://www.omg.org/spec/BPMN/20100524/DI" id="edge-96fd64b4-9512-4511-ae31-0b924db5c33b" bpmnElement="decoupledConsentSuccess">
+        <omgdi:waypoint x="1788.1644" y="-68.13074"/>
+        <omgdi:waypoint x="1788.1646" y="156.80269"/>
         <omgdi:waypoint x="1467.913" y="156.8027"/>
         <omgdi:waypoint x="1467.913" y="215.0"/>
       </bpmdi:BPMNEdge>
@@ -405,11 +367,21 @@
         <omgdi:waypoint x="1093.265" y="-88.13073"/>
         <omgdi:waypoint x="1310.0" y="-88.13074"/>
       </bpmdi:BPMNEdge>
-      <bpmdi:BPMNEdge xmlns:bpmdi="http://www.omg.org/spec/BPMN/20100524/DI" id="edge-a5a7be21-80e8-4e66-8d30-954b5dabc17c" bpmnElement="decoupledAuthorizationStillInProgress">
-        <omgdi:waypoint x="1890.5881" y="-63.130722"/>
-        <omgdi:waypoint x="1890.5881" y="-140.01358"/>
-        <omgdi:waypoint x="1772.9883" y="-140.01358"/>
-        <omgdi:waypoint x="1772.9882" y="-83.13072"/>
+      <bpmdi:BPMNShape xmlns:bpmdi="http://www.omg.org/spec/BPMN/20100524/DI" id="sid-5f9815e4-746e-4116-a5ae-28612592b9e1" bpmnElement="sid-9bc341dd-157c-4c9d-ae99-de9fec005cc5">
+        <omgdc:Bounds x="1512.0575" y="-128.13074" width="100.0" height="80.0"/>
+      </bpmdi:BPMNShape>
+      <bpmdi:BPMNShape xmlns:bpmdi="http://www.omg.org/spec/BPMN/20100524/DI" id="sid-5b212631-e787-4cf4-b15b-67ebd60ba73d" bpmnElement="sid-d17b4862-116f-4b70-8eaa-c23183e502cc">
+        <omgdc:Bounds x="1768.1644" y="-108.13074" width="40.0" height="40.0"/>
+      </bpmdi:BPMNShape>
+      <bpmdi:BPMNEdge xmlns:bpmdi="http://www.omg.org/spec/BPMN/20100524/DI" id="sid-a80ebff0-4b10-41eb-bd2e-5a8b87128ad6" bpmnElement="sid-ad8a2d25-1dc3-4d06-98d9-eef8e29949f4">
+        <omgdi:waypoint x="1612.0575" y="-88.13074"/>
+        <omgdi:waypoint x="1768.1644" y="-88.13074"/>
+      </bpmdi:BPMNEdge>
+      <bpmdi:BPMNEdge xmlns:bpmdi="http://www.omg.org/spec/BPMN/20100524/DI" id="sid-636baac0-6d6a-4a6c-adb3-d3ef2e240a3d" bpmnElement="decoupledConsentStatusCheck">
+        <omgdi:waypoint x="1788.1644" y="-108.13074"/>
+        <omgdi:waypoint x="1788.1644" y="-185.01361"/>
+        <omgdi:waypoint x="1562.0574" y="-185.0136"/>
+        <omgdi:waypoint x="1562.0575" y="-128.13074"/>
       </bpmdi:BPMNEdge>
     </bpmndi:BPMNPlane>
   </bpmndi:BPMNDiagram>

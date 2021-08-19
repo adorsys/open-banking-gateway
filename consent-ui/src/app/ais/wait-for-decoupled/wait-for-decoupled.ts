@@ -28,16 +28,18 @@ export class WaitForDecoupled implements OnInit {
   }
 
   ngOnInit() {
-    this.consentAuthorizationService.embeddedUsingPOST(
-      this.authId,
-      StubUtil.X_XSRF_TOKEN,
-      StubUtil.X_REQUEST_ID,
-      this.redirectCode,
-      {} as PsuAuthRequest,
-      'response'
-    ).subscribe(res => {
+    setTimeout(() => {
+      this.consentAuthorizationService.embeddedUsingPOST(
+        this.authId,
+        StubUtil.X_XSRF_TOKEN,
+        StubUtil.X_REQUEST_ID,
+        this.redirectCode,
+        {} as PsuAuthRequest,
+        'response'
+      ).subscribe(res => {
         this.sessionService.setRedirectCode(this.authId, res.headers.get(ApiHeaders.X_XSRF_TOKEN));
         this.authResponse = res.body;
       });
+    }, 10000);
   }
 }

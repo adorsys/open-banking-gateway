@@ -85,10 +85,17 @@ public class Xs2aConsentInfo {
     }
 
     /**
-     * Is decoupled SCA was finalised bt PSU with mobile or other type of device
+     * Is decoupled SCA was finalised by PSU with mobile or other type of device
      */
     public boolean isDecoupledScaFinalizedByPSU(Xs2aContext ctx) {
         return ctx.isDecoupledScaFinished();
+    }
+
+    /**
+     * Is decoupled SCA was failed (i.e. took too long)
+     */
+    public boolean isDecoupledScaFailed(Xs2aContext ctx) {
+        return false; // FIXME - check if authorization is taking too much time
     }
 
     /**
