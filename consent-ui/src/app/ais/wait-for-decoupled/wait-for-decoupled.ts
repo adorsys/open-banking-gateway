@@ -4,7 +4,6 @@ import {ActivatedRoute} from "@angular/router";
 import {InlineResponse200} from "../../api/model/inlineResponse200";
 import {ApiHeaders} from "../../api/api.headers";
 import {SessionService} from "../../common/session.service";
-import * as uuid from 'uuid';
 import {PsuAuthRequest} from '../../api';
 import {StubUtil} from '../../common/utils/stub-util';
 

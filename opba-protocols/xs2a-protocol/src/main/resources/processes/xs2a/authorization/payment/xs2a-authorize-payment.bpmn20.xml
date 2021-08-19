@@ -93,7 +93,7 @@
     </sequenceFlow>
     <serviceTask id="notifyUserWithRedirectAfterCreate" name="Notify user with redirect url for challenge. Suspends to wait" flowable:async="true" flowable:exclusive="true" flowable:delegateExpression="${xs2aDoScaRedirectToAspspForScaChallengeAfterCreate}" flowable:triggerable="true"/>
     <sequenceFlow id="sid-48bcf86b-005c-4040-b488-687437c96a38" sourceRef="notifyUserWithRedirectAfterCreate" targetRef="sid-7E036180-B980-4A2D-8B6C-7407E2C90C2A"/>
-    <serviceTask id="sid-00e21d32-fd57-43a7-a983-4a55e22d0826" name="Wait for user to initiate Decoupled SCA" flowable:async="true" flowable:exclusive="true" flowable:delegateExpression="${xs2aAskForDecoupledInitiation}" flowable:triggerable="false"/>
+    <serviceTask id="sid-00e21d32-fd57-43a7-a983-4a55e22d0826" name="Wait for user to initiate Decoupled SCA" flowable:async="true" flowable:exclusive="true" flowable:delegateExpression="${xs2aAskForDecoupledInitiation}" flowable:triggerable="true"/>
     <sequenceFlow id="sid-2273ab45-8fe5-4b60-b02b-a28e546b6e0c" sourceRef="sid-00e21d32-fd57-43a7-a983-4a55e22d0826" targetRef="sid-441a176c-af21-4e02-b35d-167c00caf9d4"/>
     <exclusiveGateway id="sid-b38d0c3b-c743-4b5a-9c09-d3a6ad2286a2" name="Is the selected SCA decoupled" default="ordinaryScaChallengeFlow"/>
     <sequenceFlow id="ordinaryScaChallengeFlow" sourceRef="sid-b38d0c3b-c743-4b5a-9c09-d3a6ad2286a2" targetRef="embeddedScaChallenge">
