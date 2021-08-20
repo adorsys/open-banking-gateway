@@ -41,6 +41,10 @@ public class ScaUtil {
     }
 
     public boolean isDecoupled(ResponseHeaders headers) {
+        if (null == headers) {
+            return false;
+        }
+
         return DECOUPLED.name().equals(headers.getHeader(ResponseHeaders.ASPSP_SCA_APPROACH));
     }
 }
