@@ -1,0 +1,33 @@
+{
+  "name" : "GetConsentStatus",
+  "request" : {
+    "urlPattern" : "/ais/DE/Postbank/v1/consents/.+/status",
+    "method" : "GET",
+    "headers" : {
+      "X-Request-ID" : {
+        "matches" : ".+"
+      },
+      "Date" : {
+        "matches" : ".+"
+      }
+    }
+  },
+  "response" : {
+    "status" : 200,
+    "body" : "{\"consentStatus\":\"valid\"}",
+    "headers" : {
+      "Date" : "Mon, 01 Mar 2021 16:19:53 GMT",
+      "Server" : "Apache",
+      "glue2gExit" : "2021-03-01T16:19:53.392",
+      "X-Request-ID" : "da4c829a-355a-4d5e-854c-3b7c2e765a31",
+      "bffEntry" : "2021-03-01T16:19:53.041",
+      "bffExit" : "2021-03-01T16:19:53.392",
+      "Content-Type" : "application/json;charset=utf-8",
+      "glue2gEntry" : "2021-03-01T16:19:53.041",
+      "Keep-Alive" : "timeout=5, max=100"
+    }
+  },
+  "uuid" : "96f5dbd8-0def-4ca0-9aa5-3ee061adc195",
+  "persistent" : true,
+  "insertionIndex" : 9
+}

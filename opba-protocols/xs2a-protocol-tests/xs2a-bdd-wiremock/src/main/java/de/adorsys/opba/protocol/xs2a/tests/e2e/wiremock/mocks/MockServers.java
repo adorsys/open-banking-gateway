@@ -9,6 +9,7 @@ import com.tngtech.jgiven.annotation.AfterScenario;
 import com.tngtech.jgiven.annotation.ProvidedScenarioState;
 import com.tngtech.jgiven.integration.spring.JGivenStage;
 import de.adorsys.opba.db.domain.entity.BankAction;
+import de.adorsys.opba.db.domain.entity.BankProfile;
 import de.adorsys.opba.db.domain.entity.IgnoreValidationRule;
 import de.adorsys.opba.db.repository.jpa.BankProfileJpaRepository;
 import de.adorsys.opba.db.repository.jpa.IgnoreValidationRuleRepository;
@@ -30,6 +31,7 @@ import java.net.URL;
 import java.nio.file.Path;
 import java.util.Arrays;
 import java.util.UUID;
+import java.util.function.Consumer;
 
 /**
  * Runs Sandbox as json-backed mock.
@@ -42,6 +44,7 @@ public class MockServers<SELF extends MockServers<SELF>> extends CommonGivenStag
     public static final long AUTH_ACTION_ID = 3L;
     public static final long ACTION_ID = 1L;
     public static final String DKB_BANK_ID = "335562a2-26e2-4105-b31e-08de285234e0";
+
     @Autowired
     private BankProfileJpaRepository bankProfileJpaRepository;
 
@@ -51,6 +54,11 @@ public class MockServers<SELF extends MockServers<SELF>> extends CommonGivenStag
 
     @ProvidedScenarioState
     private WireMockServer sandbox;
+
+    Consumer<BankProfile> defaultbankProfileConfigurer = it -> {
+        it.setUrl("http://localhost:" + sandbox.port());
+        it.setIdpUrl("http://localhost:" + sandbox.port() + "/oauth/authorization-server");
+    };
 
     @AfterScenario
     @SneakyThrows
@@ -193,10 +201,17 @@ public class MockServers<SELF extends MockServers<SELF>> extends CommonGivenStag
         WireMockConfiguration config = WireMockConfiguration.options().dynamicPort()
                 .usingFilesUnderClasspath("mockedsandbox/restrecord/embedded/pre-step/accounts/");
         config.notifier(new Slf4jNotifier(true));
-        startWireMock(config, DKB_BANK_ID);
+        startWireMock(config, DKB_BANK_ID, defaultbankProfileConfigurer);
         return self();
     }
+    public SELF embedded_mock_of_postbank_for_anton_brueckner_accounts_running() {
+        WireMockConfiguration config = WireMockConfiguration.options().dynamicPort()
+                .usingFilesUnderClasspath("mockedsandbox/restrecord/embedded/multi-sca/accounts/postbank/");
+        config.notifier(new Slf4jNotifier(true));
 
+        startWireMock(config, "01aa84f2-25c0-4e02-8065-c401657e3fb0", it -> it.setUrl("http://localhost:" + sandbox.port() + "/{Service Group}/DE/Postbank"));
+        return self();
+    }
     public SELF embedded_mock_of_sandbox_for_max_musterman_zero_sca_accounts_running() {
         WireMockConfiguration config = WireMockConfiguration.options().dynamicPort()
                                                .usingFilesUnderClasspath("mockedsandbox/restrecord/embedded/zero-sca/accounts/sandbox/");
@@ -208,8 +223,17 @@ public class MockServers<SELF extends MockServers<SELF>> extends CommonGivenStag
     public SELF embedded_pre_step_mock_of_dkb_sandbox_for_max_musterman_payments_running() {
         WireMockConfiguration config = WireMockConfiguration.options().dynamicPort()
             .usingFilesUnderClasspath("mockedsandbox/restrecord/embedded/pre-step/payments/");
-        startWireMock(config, DKB_BANK_ID);
+        startWireMock(config, DKB_BANK_ID, defaultbankProfileConfigurer);
 
+        return self();
+    }
+
+    public SELF embedded_pre_step_mock_of_postbank_sandbox_for_max_musterman_payments_running() {
+        WireMockConfiguration config = WireMockConfiguration.options().dynamicPort()
+                .usingFilesUnderClasspath("mockedsandbox/restrecord/embedded/multi-sca/payments/postbank/");
+        config.notifier(new Slf4jNotifier(true));
+
+        startWireMock(config, "01aa84f2-25c0-4e02-8065-c401657e3fb0", it -> it.setUrl("http://localhost:" + sandbox.port() + "/{Service Group}/DE/Postbank"));
         return self();
     }
 
@@ -281,23 +305,22 @@ public class MockServers<SELF extends MockServers<SELF>> extends CommonGivenStag
 
     @SneakyThrows
     private void startWireMock(WireMockConfiguration config) {
-        startWireMock(config, "adadadad-4000-0000-0000-b0b0b0b0b0b0");
+
+        startWireMock(config, "adadadad-4000-0000-0000-b0b0b0b0b0b0", defaultbankProfileConfigurer);
     }
 
     @SneakyThrows
-    private void startWireMock(WireMockConfiguration config, String bankId) {
+    private void startWireMock(WireMockConfiguration config, String bankId, Consumer<BankProfile> bankProfileConfigurer) {
         sandbox = new WireMockServer(config);
         sandbox.start();
         var bankProfiles = bankProfileJpaRepository.findByBankUuid(UUID.fromString(bankId));
-        bankProfiles.forEach(it -> {
-            it.setUrl("http://localhost:" + sandbox.port());
-            it.setIdpUrl("http://localhost:" + sandbox.port() + "/oauth/authorization-server");
-        });
+        bankProfiles.forEach(bankProfileConfigurer);
         bankProfileJpaRepository.saveAll(bankProfiles);
 
         Assertions.assertThat(sandbox).isNotNull();
         Assertions.assertThat(sandbox.isRunning()).isTrue();
     }
+
 
     public SELF ignore_validation_rules_table_contains_field_psu_id() {
         IgnoreValidationRule bankValidationRule = IgnoreValidationRule.builder()

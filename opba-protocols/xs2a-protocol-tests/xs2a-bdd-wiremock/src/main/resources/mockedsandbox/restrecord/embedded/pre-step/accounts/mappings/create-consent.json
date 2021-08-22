@@ -16,7 +16,7 @@
         "matches": "max.musterman"
       },
       "PSU-IP-Address": {
-        "matches": "1.1.1.1"
+        "matches": "^(?:[0-9]{1,3}\\.){3}[0-9]{1,3}$"
       },
       "TPP-Redirect-URI" : {
         "matches" : ".+"

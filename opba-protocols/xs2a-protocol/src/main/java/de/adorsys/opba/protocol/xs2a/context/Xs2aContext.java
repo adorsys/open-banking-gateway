@@ -147,6 +147,11 @@ public class Xs2aContext extends BaseContext {
     private String psuIpPort;
 
     /**
+     * Determine if the PSU password should be encrypted
+     */
+    private boolean passwordShouldBeEncrypted;
+
+    /**
      * Is used for embedded SCA with some data to send back to PSU (for example in case of photo tan)
      */
     private ChallengeData challengeData;

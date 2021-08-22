@@ -1,6 +1,7 @@
 package de.adorsys.opba.protocol.xs2a.service.xs2a.consent;
 
 import de.adorsys.opba.protocol.xs2a.context.Xs2aContext;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Service;
 
 import static de.adorsys.opba.protocol.api.common.Approach.EMBEDDED;
@@ -18,6 +19,14 @@ public class Xs2aConsentInfo {
      */
     public boolean isEmbedded(Xs2aContext ctx) {
         return EMBEDDED.name().equalsIgnoreCase(ctx.getAspspScaApproach());
+    }
+
+
+    /**
+     * Is the authorization already started.
+     */
+    public boolean isAuthorisationStarted(Xs2aContext ctx) {
+        return StringUtils.isNotBlank(ctx.getAuthorizationId());
     }
 
     /**

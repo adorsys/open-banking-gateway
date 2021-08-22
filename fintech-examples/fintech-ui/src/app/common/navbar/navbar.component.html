@@ -1,11 +1,11 @@
 <nav class="navbar navbar-light py-3" *ngIf="isLoggedIn()">
   <a class="navbar-brand text-primary mr-4" routerLink="/">
-    <span class="ml-3 text-bold">FintechUI</span>
+    <span class="ml-3 text-bold">FintechUI: session expires {{ timer?.sessionValidUntil }}</span>
     <ul class="list-group">
-      <li class="list-group-item">session expires {{ timer?.sessionValidUntil }}</li>
+      <!--li class="list-group-item">session expires {{ timer?.sessionValidUntil }}</li>
       <li class="list-group-item" *ngFor="let validUntil of timer?.redirectsValidUntil">
         redirect session {{ validUntil }}
-      </li>
+      </li-->
     </ul>
   </a>
   <ul class="nav">
