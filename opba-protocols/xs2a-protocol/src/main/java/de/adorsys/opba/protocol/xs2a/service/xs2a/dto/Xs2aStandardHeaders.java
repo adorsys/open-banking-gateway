@@ -1,6 +1,5 @@
 package de.adorsys.opba.protocol.xs2a.service.xs2a.dto;
 
-import com.google.common.net.MediaType;
 import de.adorsys.opba.protocol.api.dto.codes.FieldCode;
 import de.adorsys.opba.protocol.api.dto.codes.TypeCode;
 import de.adorsys.opba.protocol.bpmnshared.dto.DtoMapper;
@@ -20,7 +19,6 @@ import java.util.Map;
 import static de.adorsys.opba.protocol.xs2a.constant.GlobalConst.SPRING_KEYWORD;
 import static de.adorsys.opba.protocol.xs2a.constant.GlobalConst.XS2A_MAPPERS_PACKAGE;
 import static de.adorsys.xs2a.adapter.api.RequestHeaders.AUTHORIZATION;
-import static de.adorsys.xs2a.adapter.api.RequestHeaders.CONTENT_TYPE;
 import static de.adorsys.xs2a.adapter.api.RequestHeaders.PSU_ID;
 import static de.adorsys.xs2a.adapter.api.RequestHeaders.TPP_REDIRECT_PREFERRED;
 import static de.adorsys.xs2a.adapter.api.RequestHeaders.X_GTW_ASPSP_ID;
@@ -51,9 +49,6 @@ public class Xs2aStandardHeaders {
     @NotBlank // can't be provided manually
     private String requestId;
 
-    @NotBlank
-    private String contentType = MediaType.JSON_UTF_8.type();
-
     /**
      * TPP-Redirect-Preferred - If value is null then approach is irrelevant for TPP.
      * If value is 'true' then Redirect approach is preferred for TPP, if 'false' then other approaches more preferred then Redirect.
@@ -70,7 +65,6 @@ public class Xs2aStandardHeaders {
         allValues.put(PSU_ID, psuId);
         allValues.put(X_REQUEST_ID, requestId);
         allValues.put(X_GTW_ASPSP_ID, aspspId);
-        allValues.put(CONTENT_TYPE, contentType);
 
         if (tppRedirectPreferred != null) {
             allValues.put(TPP_REDIRECT_PREFERRED, String.valueOf(tppRedirectPreferred));

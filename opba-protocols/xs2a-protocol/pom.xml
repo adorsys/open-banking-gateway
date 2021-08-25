@@ -117,6 +117,11 @@
             <groupId>com.jayway.jsonpath</groupId>
             <artifactId>json-path</artifactId>
         </dependency>
+        <dependency>
+            <groupId>de.adorsys</groupId>
+            <artifactId>hbci4j-adorsys</artifactId>
+            <version>3.5.28</version>
+        </dependency>
 
         <!-- Test only dependencies -->
         <!-- BouncyCastle to generate P12 keystores -->

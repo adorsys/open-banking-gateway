@@ -17,4 +17,5 @@
     <include relativeToChangelogFile="true" file="migrations/0011-add-validation-ignore-decoupled.xml"/>
     <include relativeToChangelogFile="true" file="migrations/0012-add-is-active-field-to-bank.xml"/>
     <include relativeToChangelogFile="true" file="migrations/0013-add-auth-session-status.xml"/>
+    <include relativeToChangelogFile="true" file="migrations/0011-update-sparkasse-adapter.xml" context="xs2a-banks"/>
 </databaseChangeLog>

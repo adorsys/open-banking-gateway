@@ -1,8 +1,7 @@
 package de.adorsys.opba.protocol.xs2a.service.xs2a.ais;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import de.adorsys.opba.protocol.api.common.ProtocolAction;
+import de.adorsys.opba.protocol.api.common.ResultContentType;
 import de.adorsys.opba.protocol.api.dto.codes.FieldCode;
 import de.adorsys.opba.protocol.bpmnshared.dto.DtoMapper;
 import de.adorsys.opba.protocol.bpmnshared.dto.context.ContextMode;
@@ -10,11 +9,11 @@ import de.adorsys.opba.protocol.bpmnshared.dto.messages.ProcessResponse;
 import de.adorsys.opba.protocol.bpmnshared.service.TransactionUtil;
 import de.adorsys.opba.protocol.bpmnshared.service.exec.ValidatedExecution;
 import de.adorsys.opba.protocol.xs2a.context.Xs2aContext;
+import de.adorsys.opba.protocol.xs2a.context.Xs2aResultCache;
 import de.adorsys.opba.protocol.xs2a.context.ais.TransactionListXs2aContext;
 import de.adorsys.opba.protocol.xs2a.service.Xs2aCachedResultAccessor;
 import de.adorsys.opba.protocol.xs2a.service.dto.ValidatedPathQueryHeaders;
 import de.adorsys.opba.protocol.xs2a.service.mapper.PathQueryHeadersMapperTemplate;
-import de.adorsys.opba.protocol.xs2a.context.Xs2aResultCache;
 import de.adorsys.opba.protocol.xs2a.service.xs2a.annotations.ExternalValidationModeDeclaration;
 import de.adorsys.opba.protocol.xs2a.service.xs2a.dto.ValidationMode;
 import de.adorsys.opba.protocol.xs2a.service.xs2a.dto.Xs2aResourceParameters;
@@ -27,7 +26,6 @@ import de.adorsys.xs2a.adapter.api.Response;
 import de.adorsys.xs2a.adapter.api.model.Transactions;
 import de.adorsys.xs2a.adapter.api.model.TransactionsResponse200Json;
 import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
 import org.flowable.engine.delegate.DelegateExecution;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.stereotype.Service;
@@ -44,7 +42,6 @@ import java.util.stream.Collectors;
  * Calls ASPSP XS2A API to list transactions of the account using already existing consent.
  * The result with account list is published as {@link ProcessResponse} to the event bus.
  */
-@Slf4j
 @Service("xs2aTransactionListing")
 @RequiredArgsConstructor
 public class Xs2aTransactionListingService extends ValidatedExecution<TransactionListXs2aContext> {
@@ -85,46 +82,40 @@ public class Xs2aTransactionListingService extends ValidatedExecution<Transactio
 
             logResolver.log("getTransactionList with parameters: {}", params.getPath(), params.getQuery(), params.getHeaders());
 
-            TransactionsResponse200Json transactionList = getTransactionList(params);
-
-            Xs2aResultCache result = resultAccessor.resultFromCache(context).orElse(new Xs2aResultCache());
-            if (null == result.getTransactionsById()) {
-                result.setTransactionsById(new HashMap<>());
-            }
-            result.getTransactionsById().put(context.getResourceId(), transactionList);
-            resultAccessor.resultToCache(context, result, context.getRequestScoped().consentAccess().getFirstByCurrentSession());
-
             eventPublisher.publishEvent(
-                new ProcessResponse(execution.getRootProcessInstanceId(), execution.getId(), transactionList)
+                new ProcessResponse(execution.getRootProcessInstanceId(), execution.getId(), getTransactionList(params, context))
             );
         });
     }
 
-    private TransactionsResponse200Json getTransactionList(ValidatedPathQueryHeaders<Xs2aResourceParameters, Xs2aTransactionParameters, Xs2aWithConsentIdHeaders> params) {
-        try {
+    private Object getTransactionList(
+        ValidatedPathQueryHeaders<Xs2aResourceParameters, Xs2aTransactionParameters, Xs2aWithConsentIdHeaders> params,
+        TransactionListXs2aContext context) {
+
+        if (context.aspspProfile().getContentTypeTransactions() == ResultContentType.JSON) {
             Response<TransactionsResponse200Json> transactionList = ais.getTransactionList(
                 params.getPath().getResourceId(),
                 params.getHeaders().toHeaders(),
                 params.getQuery().toParameters()
             );
             logResolver.log("getTransactionList response: {}", transactionList);
-            return transactionList.getBody();
-        } catch (Exception e) {
-            log.error(e.getMessage(), e);
 
+            Xs2aResultCache result = resultAccessor.resultFromCache(context).orElse(new Xs2aResultCache());
+            if (null == result.getTransactionsById()) {
+                result.setTransactionsById(new HashMap<>());
+            }
+            result.getTransactionsById().put(context.getResourceId(), transactionList.getBody());
+            resultAccessor.resultToCache(context, result, context.getRequestScoped().consentAccess().getFirstByCurrentSession());
+
+            return transactionList.getBody();
+        } else {
             Response<String> stringTransactionList = ais.getTransactionListAsString(
                 params.getPath().getResourceId(),
                 params.getHeaders().toHeaders(),
                 params.getQuery().toParameters()
             );
             logResolver.log("getTransactionListAsString response: {}", stringTransactionList);
-            try {
-                return new ObjectMapper().readValue(stringTransactionList.getBody(), TransactionsResponse200Json.class);
-            } catch (JsonProcessingException ex) {
-                log.error(ex.getMessage(), ex);
-            }
-
-            throw e;
+            return stringTransactionList.getBody();
         }
     }
 

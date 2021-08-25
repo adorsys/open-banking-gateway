@@ -1,9 +1,11 @@
 package de.adorsys.opba.protocol.xs2a.entrypoint;
 
+import com.google.common.io.Resources;
 import de.adorsys.opba.protocol.api.dto.result.body.AccountListBody;
 import de.adorsys.opba.protocol.api.dto.result.body.TransactionsResponseBody;
 import de.adorsys.opba.protocol.xs2a.config.MapperTestConfig;
 import de.adorsys.opba.protocol.xs2a.util.FixtureProvider;
+import de.adorsys.opba.protocol.xs2a.util.XmlTransactionsParser;
 import de.adorsys.xs2a.adapter.api.model.AccountList;
 import de.adorsys.xs2a.adapter.api.model.TransactionsResponse200Json;
 import lombok.SneakyThrows;
@@ -11,7 +13,10 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
+import java.nio.charset.StandardCharsets;
+
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.Assert.assertNotNull;
 
 @SpringBootTest(classes = MapperTestConfig.class)
 public class Xs2AToFacadeMapperTest {
@@ -19,6 +24,12 @@ public class Xs2AToFacadeMapperTest {
 
     @Autowired
     private Xs2aResultBodyExtractor.Xs2aToFacadeMapper mapper;
+
+    @Autowired
+    private XmlTransactionsParser xmlTransactionsParser;
+
+    @Autowired
+    AccountStatementMapper xmlMapper;
 
     @Autowired
     private FixtureProvider fixtureProvider;
@@ -44,5 +55,23 @@ public class Xs2AToFacadeMapperTest {
         TransactionsResponseBody expected = fixtureProvider.getFromFile(PATH_PREFIX + "transactions_output.json",
                                                                         TransactionsResponseBody.class);
         assertThat(expected).isEqualToComparingFieldByField(mappingResult);
+    }
+
+    @Test
+    @SneakyThrows
+    public void testCamt() {
+        String camt = Resources.toString(Resources.getResource("mapper-test-fixtures/camt_multibanking.xml"), StandardCharsets.UTF_8);
+        TransactionsResponseBody loadBookingsResponse = xmlTransactionsParser.camtStringToLoadBookingsResponse(camt);
+        assertNotNull(loadBookingsResponse);
+        assertThat(loadBookingsResponse.getTransactions().getBooked().size()).withFailMessage("Wrong count of bookings").isEqualTo(4);
+    }
+
+    @Test
+    @SneakyThrows
+    public void testCamtSparkasse() {
+        String camt = Resources.toString(Resources.getResource("mapper-test-fixtures/camt_sparkasse.xml"), StandardCharsets.UTF_8);
+        TransactionsResponseBody loadBookingsResponse = xmlTransactionsParser.camtStringToLoadBookingsResponse(camt);
+        assertNotNull(loadBookingsResponse);
+        assertThat(loadBookingsResponse.getTransactions().getBooked().size()).withFailMessage("Wrong count of bookings").isEqualTo(1);
     }
 }

@@ -76,4 +76,9 @@ public interface CurrentBankProfile {
      * Bank external interfaces (i.e. in system that is not OBG)
      */
     String getExternalInterfaces();
+
+    /**
+     * Expected result content type for this ASPSP.
+     */
+    ResultContentType getContentTypeTransactions();
 }
