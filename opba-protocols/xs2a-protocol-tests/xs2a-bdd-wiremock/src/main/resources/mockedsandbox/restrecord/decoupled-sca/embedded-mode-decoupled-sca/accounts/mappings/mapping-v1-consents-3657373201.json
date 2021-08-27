@@ -1,5 +1,6 @@
 {
   "id" : "7fb0cf48-d2d9-3dbf-b3d6-cd0d0b3083f6",
+  "scenarioName": "Embedded initial,decoupled by ASPSP max.musterman initiate consent",
   "requiredScenarioState": "Started",
   "newScenarioState": "Received",
   "request" : {

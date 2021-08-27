@@ -1,5 +1,6 @@
 {
   "id" : "0d1c3999-75ed-3560-bb58-a45874572f5e",
+  "scenarioName": "Decoupled max.musterman initiate consent",
   "requiredScenarioState": "Received",
   "newScenarioState": "PsuIdentified",
   "request" : {

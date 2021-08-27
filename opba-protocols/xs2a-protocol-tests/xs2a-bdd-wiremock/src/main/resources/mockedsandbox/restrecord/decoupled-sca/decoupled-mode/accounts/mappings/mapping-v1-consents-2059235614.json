@@ -1,9 +1,10 @@
 {
   "id" : "4c3d56f6-91e8-4ba6-b531-ff06bdea24f6",
+  "scenarioName": "Decoupled max.musterman initiate consent",
   "requiredScenarioState": "PsuAuthenticatedDecoupledSecondGet",
-  "newScenarioState": "Finalized",
+  "newScenarioState": "Finalised",
   "request" : {
-    "url" : "/v1/consents/IaGSU5tL0Zrv6y8UUF_0AjaUyffKVeGTt3ZjwG08SeBz3dsiI8pXi-XCzwyGrfr63Tq72aIvt7r0f-jWmnBZJ8z9MpaJIQIH3NJX8IHgetw=_=_psGLvQpt9Q/authorisations/0b53f83c-4d99-4f9b-900c-80eb16c7c349",
+    "url" : "/v1/consents/gwSmVLCIfQVVPnSGg8v69gSd1H6_g0WCr7YU-RO9SHZnUzxbTouNENYOGkrGbXq1_9SxHzHaMr1NKEIFZyrivsz9MpaJIQIH3NJX8IHgetw=_=_psGLvQpt9Q/authorisations/392e5668-194e-4a11-b90f-815d8be5902a",
     "method" : "GET",
     "headers" : {
       "Accept" : {

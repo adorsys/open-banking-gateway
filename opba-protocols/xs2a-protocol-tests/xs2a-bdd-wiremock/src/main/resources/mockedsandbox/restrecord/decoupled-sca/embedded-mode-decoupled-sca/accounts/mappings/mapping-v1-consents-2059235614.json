@@ -1,7 +1,8 @@
 {
   "id" : "edfd6c7a-c38b-44e3-840c-20e901c551b1",
+  "scenarioName": "Embedded initial,decoupled by ASPSP max.musterman initiate consent",
   "requiredScenarioState": "PsuAuthenticatedDecoupledSecondGet",
-  "newScenarioState": "Finalized",
+  "newScenarioState": "Finalised",
   "request" : {
     "url" : "/v1/consents/IaGSU5tL0Zrv6y8UUF_0AjaUyffKVeGTt3ZjwG08SeBz3dsiI8pXi-XCzwyGrfr63Tq72aIvt7r0f-jWmnBZJ8z9MpaJIQIH3NJX8IHgetw=_=_psGLvQpt9Q/authorisations/0b53f83c-4d99-4f9b-900c-80eb16c7c349",
     "method" : "GET",

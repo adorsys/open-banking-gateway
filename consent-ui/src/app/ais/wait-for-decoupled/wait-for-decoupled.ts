@@ -2,8 +2,15 @@ import {Component, OnInit} from '@angular/core';
 import {ActivatedRoute} from "@angular/router";
 import {ApiHeaders} from "../../api/api.headers";
 import {SessionService} from "../../common/session.service";
-import {ConsentAuth, PsuAuthRequest, UpdateConsentAuthorizationService} from '../../api';
+import {
+  AuthStateConsentAuthorizationService,
+  ConsentAuth,
+  PsuAuthRequest,
+  UpdateConsentAuthorizationService
+} from '../../api';
 import {StubUtil} from '../../common/utils/stub-util';
+import {delay, repeatWhen, shareReplay, single, switchMap, takeUntil, tap} from "rxjs/operators";
+import {interval, Observable, of, Subject} from "rxjs";
 
 @Component({
   selector: 'wait-for-decoupled-redirection',
@@ -13,29 +20,45 @@ import {StubUtil} from '../../common/utils/stub-util';
 export class WaitForDecoupled implements OnInit {
   public static ROUTE = 'wait-sca-finalization';
 
-  authResponse: ConsentAuth;
+  private readonly POLLING_DELAY_MS = 3000;
+
+  authResponse: ConsentAuth | undefined;
 
   private authId: string;
-  private redirectCode: string;
 
-  constructor(private consentAuthorizationService: UpdateConsentAuthorizationService, private sessionService: SessionService, private activatedRoute: ActivatedRoute) {
+  private decoupledCompleted = new Subject();
+
+  constructor(
+    private consentAuthorizationService: UpdateConsentAuthorizationService,
+    private consentStatusService: AuthStateConsentAuthorizationService,
+    private sessionService: SessionService,
+    private activatedRoute: ActivatedRoute
+  ) {
     const route = this.activatedRoute.snapshot;
     this.authId = route.parent.params.authId;
-    this.redirectCode = route.queryParams.redirectCode;
+    this.sessionService.setRedirectCode(this.authId, route.queryParams.redirectCode);
   }
 
   ngOnInit() {
-    setTimeout(() => {
-      this.consentAuthorizationService.embeddedUsingPOST(
+    of(true)
+      .pipe(switchMap(_ => this.consentAuthorizationService.embeddedUsingPOST(
         this.authId,
         StubUtil.X_REQUEST_ID,
-        this.redirectCode,
+        this.sessionService.getRedirectCode(this.authId),
         {} as PsuAuthRequest,
         'response'
-      ).subscribe(res => {
-        this.sessionService.setRedirectCode(this.authId, res.headers.get(ApiHeaders.X_XSRF_TOKEN));
+      )))
+      .pipe(repeatWhen(completed => completed.pipe(delay(this.POLLING_DELAY_MS))), tap())
+      .pipe(takeUntil(this.decoupledCompleted))
+      .subscribe(res => {
+        if (res.headers.get(ApiHeaders.X_XSRF_TOKEN)) {
+          this.sessionService.setRedirectCode(this.authId, res.headers.get(ApiHeaders.X_XSRF_TOKEN));
+        }
         this.authResponse = res.body;
-      });
-    }, 10000);
+
+        if (res.status === 202) {
+          window.location.href = res.headers.get(ApiHeaders.LOCATION);
+        }
+    });
   }
 }

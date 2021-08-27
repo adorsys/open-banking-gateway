@@ -1,5 +1,6 @@
 {
   "id" : "d33b0271-083a-3c50-ab84-d394adf2ed3d",
+  "scenarioName": "Decoupled max.musterman initiate consent",
   "requiredScenarioState": "Started",
   "newScenarioState": "Received",
   "request" : {
@@ -23,7 +24,7 @@
       }
     },
     "bodyPatterns" : [ {
-      "equalToJson" : "{\"access\":{\"allPsd2\":\"allAccounts\"},\"recurringIndicator\":true,\"validUntil\":\"2022-08-21\",\"frequencyPerDay\":24,\"combinedServiceIndicator\":false}",
+      "equalToJson" : "{\"access\":{\"allPsd2\":\"allAccounts\"},\"recurringIndicator\":true,\"validUntil\":\"2022-08-27\",\"frequencyPerDay\":24,\"combinedServiceIndicator\":false}",
       "ignoreArrayOrder" : true,
       "ignoreExtraElements" : true
     } ]
