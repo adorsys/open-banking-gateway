@@ -40,7 +40,7 @@
             <column name="uuid" type="UUID">
                 <constraints unique="true" nullable="false"/>
             </column>
-            <column name="preferred_approach" type="VARCHAR(32)"/>
+            <column name="preferred_approach" type="VARCHAR(32)" defaultValue="REDIRECT"/>
             <column name="try_to_use_preferred_approach" type="BOOLEAN" defaultValue="false">
                 <constraints nullable="false"/>
             </column>
@@ -56,7 +56,7 @@
             <column name="is_sandbox" type="BOOLEAN" defaultValue="false">
                 <constraints nullable="false"/>
             </column>
-            <column name="content_type_transactions" type="VARCHAR(32)"/>
+            <column name="content_type_transactions" type="VARCHAR(64)" defaultValue="application/json"/>
         </createTable>
         <addNotNullConstraint tableName="${table-prefix}bank_profile" columnName="bank_uuid" columnDataType="VARCHAR(255)"/>
     </changeSet>
@@ -111,12 +111,6 @@
             CREATE INDEX bank_trgm_idx1 ON ${table-prefix}bank USING gin (name gin_trgm_ops);
             CREATE INDEX bank_trgm_idx2 ON ${table-prefix}bank USING gin (bic gin_trgm_ops);
             CREATE INDEX bank_trgm_idx3 ON ${table-prefix}bank USING gin (bank_code gin_trgm_ops);
-        </sql>
-    </changeSet>
-
-    <changeSet id="fill_services" author="mhr">
-        <sql dbms="postgresql" stripComments="true">
-            UPDATE ${table-prefix}bank_profile SET preferred_approach = 'REDIRECT', content_type_transactions = 'JSON' WHERE true ;
         </sql>
     </changeSet>
 

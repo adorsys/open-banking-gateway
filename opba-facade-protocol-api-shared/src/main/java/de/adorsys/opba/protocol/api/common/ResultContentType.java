@@ -6,6 +6,16 @@ package de.adorsys.opba.protocol.api.common;
  * and String result will be additionally parsed in OBG
  */
 public enum ResultContentType {
-    JSON,
-    XML
+    JSON("application/json"),
+    XML("application/xml");
+
+    private final String value;
+
+    ResultContentType(String value) {
+        this.value = value;
+    }
+
+    public String getValue() {
+        return value;
+    }
 }

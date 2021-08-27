@@ -37,7 +37,6 @@
             <column header="is_sandbox"                                 type="BOOLEAN"/>
             <column header="preferred_approach"                         type="STRING"/>
             <column header="try_to_use_preferred_approach"              type="BOOLEAN"/>
-            <column header="content_type_transactions"                  type="STRING"/>
         </loadData>
         <rollback />
     </changeSet>

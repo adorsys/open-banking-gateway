@@ -1,4 +1,4 @@
-package de.adorsys.opba.protocol.xs2a.util;
+package de.adorsys.opba.protocol.xs2a.entrypoint.parsers;
 
 import de.adorsys.opba.protocol.api.dto.result.body.AccountReport;
 import de.adorsys.opba.protocol.api.dto.result.body.TransactionListBody;

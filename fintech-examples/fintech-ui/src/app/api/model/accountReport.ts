@@ -24,5 +24,9 @@ export interface AccountReport {
      * Array of transaction details.
      */
     pending?: Array<TransactionDetails>;
+    /**
+     * Raw String returned by Bank
+     */
+    rawTransactions?: string;
 }
 

@@ -120,7 +120,7 @@
         <dependency>
             <groupId>de.adorsys</groupId>
             <artifactId>hbci4j-adorsys</artifactId>
-            <version>3.5.28</version>
+            <version>${hbci4j-adorsys.version}</version>
         </dependency>
 
         <!-- Test only dependencies -->

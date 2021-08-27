@@ -2,10 +2,11 @@ package de.adorsys.opba.protocol.xs2a.entrypoint;
 
 import com.google.common.io.Resources;
 import de.adorsys.opba.protocol.api.dto.result.body.AccountListBody;
+import de.adorsys.opba.protocol.api.dto.result.body.AccountReport;
 import de.adorsys.opba.protocol.api.dto.result.body.TransactionsResponseBody;
 import de.adorsys.opba.protocol.xs2a.config.MapperTestConfig;
+import de.adorsys.opba.protocol.xs2a.entrypoint.parsers.XmlTransactionsParser;
 import de.adorsys.opba.protocol.xs2a.util.FixtureProvider;
-import de.adorsys.opba.protocol.xs2a.util.XmlTransactionsParser;
 import de.adorsys.xs2a.adapter.api.model.AccountList;
 import de.adorsys.xs2a.adapter.api.model.TransactionsResponse200Json;
 import lombok.SneakyThrows;
@@ -73,6 +74,15 @@ public class Xs2AToFacadeMapperTest {
         assertThat(mappingResult.getTransactions().getBooked().size()).withFailMessage("Wrong count of bookings").isEqualTo(2);
         TransactionsResponseBody expected = fixtureProvider.getFromFile(XML_PATH_PREFIX + "sparkasse_output.json",
                                                                         TransactionsResponseBody.class);
+
+        // ignore rawTransactions field
+        mappingResult = mappingResult.toBuilder()
+            .transactions(AccountReport.builder()
+                              .booked(mappingResult.getTransactions().getBooked())
+                              .pending(mappingResult.getTransactions().getPending())
+                              .build())
+            .build();
+
         assertThat(expected).isEqualToComparingFieldByField(mappingResult);
     }
 }

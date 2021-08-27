@@ -5,7 +5,7 @@ import de.adorsys.opba.protocol.api.dto.request.payments.SinglePaymentBody;
 import de.adorsys.opba.protocol.api.dto.result.body.AccountListBody;
 import de.adorsys.opba.protocol.api.dto.result.body.TransactionsResponseBody;
 import de.adorsys.opba.protocol.bpmnshared.dto.messages.ProcessResponse;
-import de.adorsys.opba.protocol.xs2a.util.XmlTransactionsParser;
+import de.adorsys.opba.protocol.xs2a.entrypoint.parsers.XmlTransactionsParser;
 import de.adorsys.xs2a.adapter.api.model.AccountList;
 import de.adorsys.xs2a.adapter.api.model.PaymentInitiationJson;
 import de.adorsys.xs2a.adapter.api.model.RemittanceInformationStructured;

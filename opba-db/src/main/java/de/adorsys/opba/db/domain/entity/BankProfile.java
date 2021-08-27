@@ -1,5 +1,6 @@
 package de.adorsys.opba.db.domain.entity;
 
+import de.adorsys.opba.db.domain.converter.ResultContentTypeConverter;
 import de.adorsys.opba.db.domain.converter.ScaApproachConverter;
 import de.adorsys.opba.db.domain.entity.helpers.UuidMapper;
 import de.adorsys.opba.db.domain.entity.sessions.ServiceSession;
@@ -81,7 +82,7 @@ public class BankProfile implements Serializable, CurrentBankProfile {
     private boolean isSandbox;
     private boolean active;
 
-    @Enumerated(EnumType.STRING)
+    @Convert(converter = ResultContentTypeConverter.class)
     private ResultContentType contentTypeTransactions;
 
     @OneToMany(mappedBy = "bankProfile", cascade = CascadeType.ALL, orphanRemoval = true)
