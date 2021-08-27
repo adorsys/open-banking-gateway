@@ -1,17 +1,19 @@
 package mockedsandbox.restrecord
+
+import com.google.common.base.Joiner
+
+import java.nio.charset.StandardCharsets
+import java.nio.file.Files
+
 /**
  * This helper shortens WireMock generated filenames
  */
 
-import com.google.common.base.Joiner
-import sun.misc.CRC16
-
-import java.nio.charset.StandardCharsets
-import java.nio.file.Files
 import java.nio.file.Paths
+import java.util.zip.CRC32
 
 // YOUR PATH here:
-def root = Paths.get("/tmp/open-banking-gateway/core/banking-protocol/src/test/resources/mockedsandbox/restrecord")
+def root = Paths.get("/home/valb3r/IdeaProjects/open-banking-gateway/opba-protocols/xs2a-protocol-tests/xs2a-bdd-wiremock/src/main/resources/mockedsandbox/restrecord/decoupled-sca/decoupled-mode/accounts-with-balances")
 
 def targetFiles = Files.walk(root)
         .filter {Files.isRegularFile(it)}
@@ -46,7 +48,7 @@ for (def file : targetFiles) {
     def origName = file.getFileName().toString()
     def hash = hashValue(origName.split("\\.")[0])
     println(hash)
-    def crc = new CRC16()
+    def crc = new CRC32()
     hash.getBytes(StandardCharsets.UTF_8).each {crc.update(it)}
     def newName = origName.replaceAll("-" + hash, '-' + crc.value)
     renames[origName] = newName

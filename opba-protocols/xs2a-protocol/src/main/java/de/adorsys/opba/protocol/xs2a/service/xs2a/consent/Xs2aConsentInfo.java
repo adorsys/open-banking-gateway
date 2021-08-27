@@ -3,6 +3,7 @@ package de.adorsys.opba.protocol.xs2a.service.xs2a.consent;
 import de.adorsys.opba.protocol.xs2a.context.Xs2aContext;
 import org.springframework.stereotype.Service;
 
+import static de.adorsys.opba.protocol.api.common.Approach.DECOUPLED;
 import static de.adorsys.opba.protocol.api.common.Approach.EMBEDDED;
 import static de.adorsys.opba.protocol.api.common.Approach.REDIRECT;
 import static de.adorsys.opba.protocol.xs2a.service.xs2a.consent.ConsentConst.CONSENT_FINALIZED;
@@ -68,6 +69,13 @@ public class Xs2aConsentInfo {
     public boolean isOauth2TokenAvailableAndReadyToUse(Xs2aContext ctx) {
         // FIXME - Token validity check
         return null != ctx.getOauth2Token();
+    }
+
+    /**
+     * Is the current consent authorization in DECOUPLED mode.
+     */
+    public boolean isDecoupled(Xs2aContext ctx) {
+        return DECOUPLED.name().equalsIgnoreCase(ctx.getAspspScaApproach());
     }
 
     /**
