@@ -1,0 +1,84 @@
+{
+  "account": null,
+  "transactions": {
+    "booked": [
+      {
+        "transactionId": "2021-08-27-08.55.05.648909",
+        "entryReference": null,
+        "endToEndId": null,
+        "mandateId": null,
+        "checkId": null,
+        "creditorId": null,
+        "bookingDate": [2021, 8, 26],
+        "valueDate": [2021, 8, 26],
+        "transactionAmount": {
+          "currency": "EUR",
+          "amount": "-0.10"
+        },
+        "creditorName": "IVAN SUSANIN",
+        "creditorAccount": {
+          "iban": "DE71760700240088451000",
+          "bban": null,
+          "pan": null,
+          "maskedPan": null,
+          "msisdn": null,
+          "currency": "EUR"
+        },
+        "ultimateCreditor": null,
+        "debtorName": "IVAN SUSANIN",
+        "debtorAccount": {
+          "iban": "DE03763500001061601894",
+          "bban": null,
+          "pan": null,
+          "maskedPan": null,
+          "msisdn": null,
+          "currency": "EUR"
+        },
+        "ultimateDebtor": null,
+        "remittanceInformationUnstructured": "DATUM 27.08.2021, 08.55 UHR",
+        "remittanceInformationStructured": null,
+        "proprietaryBankTransactionCode": null
+      }, {
+        "transactionId": "2021-08-17-07.55.10.311717",
+        "entryReference": null,
+        "endToEndId": null,
+        "mandateId": null,
+        "checkId": null,
+        "creditorId": null,
+        "bookingDate": [2021, 8, 16],
+        "valueDate": [2021, 8, 16],
+        "transactionAmount": {
+          "currency": "EUR",
+          "amount": "1.00"
+        },
+        "creditorName": "VASYA PUPKIN",
+        "creditorAccount": {
+          "iban": "DE03763500001061601894",
+          "bban": null,
+          "pan": null,
+          "maskedPan": null,
+          "msisdn": null,
+          "currency": "EUR"
+        },
+        "ultimateCreditor": null,
+        "debtorName": "VASYA PUPKIN",
+        "debtorAccount": {
+          "iban": "DE38120300001069367801",
+          "bban": null,
+          "pan": null,
+          "maskedPan": null,
+          "msisdn": null,
+          "currency": "EUR"
+        },
+        "ultimateDebtor": null,
+        "remittanceInformationUnstructured": "sparkasse replenishment",
+        "remittanceInformationStructured": null,
+        "proprietaryBankTransactionCode": null
+      }
+    ],
+    "pending": null,
+    "rawTransactions": "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<Document xmlns=\"urn:iso:std:iso:20022:tech:xsd:camt.052.001.02\" xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\"\n          xsi:schemaLocation=\"urn:iso:std:iso:20022:tech:xsd:camt.052.001.02 camt.052.001.02.xsd\">\n    <BkToCstmrAcctRpt>\n        <GrpHdr>\n            <MsgId>camt52_20210827090050__ONLINEBA</MsgId>\n            <CreDtTm>2021-08-27T09:00:50+01:00</CreDtTm>\n            <MsgPgntn>\n                <PgNb>1</PgNb>\n                <LastPgInd>true</LastPgInd>\n            </MsgPgntn>\n        </GrpHdr>\n        <Rpt>\n            <Id>camt052_ONLINEBA</Id>\n            <ElctrncSeqNb>00000</ElctrncSeqNb>\n            <CreDtTm>2021-08-27T09:00:50+01:00</CreDtTm>\n            <Acct>\n                <Id>\n                    <IBAN>DE03763500001061601894</IBAN>\n                </Id>\n                <Ccy>EUR</Ccy>\n                <Svcr>\n                    <FinInstnId>\n                        <BIC>BYLADEM1ERH</BIC>\n                        <Nm>SPARKASSE ERLANGEN</Nm>\n                        <Othr>\n                            <Id>DE132508095</Id>\n                            <Issr>UmsStId</Issr>\n                        </Othr>\n                    </FinInstnId>\n                </Svcr>\n            </Acct>\n            <Bal>\n                <Tp>\n                    <CdOrPrtry>\n                        <Cd>PRCD</Cd>\n                    </CdOrPrtry>\n                </Tp>\n                <Amt Ccy=\"EUR\">0.00</Amt>\n                <CdtDbtInd>DBIT</CdtDbtInd>\n                <Dt>\n                    <Dt>2021-08-16</Dt>\n                </Dt>\n            </Bal>\n            <Bal>\n                <Tp>\n                    <CdOrPrtry>\n                        <Cd>CLBD</Cd>\n                    </CdOrPrtry>\n                </Tp>\n                <Amt Ccy=\"EUR\">0.90</Amt>\n                <CdtDbtInd>CRDT</CdtDbtInd>\n                <Dt>\n                    <Dt>2021-08-27</Dt>\n                </Dt>\n            </Bal>\n            <Ntry>\n                <Amt Ccy=\"EUR\">1.00</Amt>\n                <CdtDbtInd>CRDT</CdtDbtInd>\n                <Sts>BOOK</Sts>\n                <BookgDt>\n                    <Dt>2021-08-17</Dt>\n                </BookgDt>\n                <ValDt>\n                    <Dt>2021-08-17</Dt>\n                </ValDt>\n                <AcctSvcrRef>NONREF</AcctSvcrRef>\n                <BkTxCd/>\n                <NtryDtls>\n                    <TxDtls>\n                        <Refs>\n                            <Prtry>\n                                <Tp>FI-UMSATZ-ID</Tp>\n                                <Ref>2021-08-17-07.55.10.311717</Ref>\n                            </Prtry>\n                        </Refs>\n                        <BkTxCd>\n                            <Prtry>\n                                <Cd>NTRF+166+9201+000</Cd>\n                                <Issr>DK</Issr>\n                            </Prtry>\n                        </BkTxCd>\n                        <RltdPties>\n                            <Dbtr>\n                                <Nm>VASYA PUPKIN</Nm>\n                            </Dbtr>\n                            <DbtrAcct>\n                                <Id>\n                                    <IBAN>DE38120300001069367801</IBAN>\n                                </Id>\n                            </DbtrAcct>\n                            <Cdtr>\n                                <Nm>HANS MUELLER</Nm>\n                            </Cdtr>\n                            <CdtrAcct>\n                                <Id>\n                                    <IBAN>DE03763500001061601894</IBAN>\n                                </Id>\n                            </CdtrAcct>\n                        </RltdPties>\n                        <RltdAgts>\n                            <DbtrAgt>\n                                <FinInstnId>\n                                    <BIC>BYLADEM1001</BIC>\n                                </FinInstnId>\n                            </DbtrAgt>\n                            <CdtrAgt>\n                                <FinInstnId>\n                                    <BIC>BYLADEM1ERH</BIC>\n                                </FinInstnId>\n                            </CdtrAgt>\n                        </RltdAgts>\n                        <RmtInf>\n                            <Ustrd>sparkasse replenishment</Ustrd>\n                        </RmtInf>\n                    </TxDtls>\n                </NtryDtls>\n                <AddtlNtryInf>GUTSCHR. UEBERWEISUNG</AddtlNtryInf>\n            </Ntry>\n            <Ntry>\n                <Amt Ccy=\"EUR\">0.10</Amt>\n                <CdtDbtInd>DBIT</CdtDbtInd>\n                <Sts>BOOK</Sts>\n                <BookgDt>\n                    <Dt>2021-08-27</Dt>\n                </BookgDt>\n                <ValDt>\n                    <Dt>2021-08-27</Dt>\n                </ValDt>\n                <AcctSvcrRef>NONREF</AcctSvcrRef>\n                <BkTxCd/>\n                <NtryDtls>\n                    <TxDtls>\n                        <Refs>\n                            <PmtInfId>NOTPROVIDED</PmtInfId>\n                            <Prtry>\n                                <Tp>FI-UMSATZ-ID</Tp>\n                                <Ref>2021-08-27-08.55.05.648909</Ref>\n                            </Prtry>\n                        </Refs>\n                        <BkTxCd>\n                            <Prtry>\n                                <Cd>NTRF+177+9310+997</Cd>\n                                <Issr>DK</Issr>\n                            </Prtry>\n                        </BkTxCd>\n                        <RltdPties>\n                            <Dbtr>\n                                <Nm>HANS MUELLER</Nm>\n                            </Dbtr>\n                            <DbtrAcct>\n                                <Id>\n                                    <IBAN>DE03763500001061601894</IBAN>\n                                </Id>\n                            </DbtrAcct>\n                            <Cdtr>\n                                <Nm>IVAN SUSANIN</Nm>\n                            </Cdtr>\n                            <CdtrAcct>\n                                <Id>\n                                    <IBAN>DE71760700240088451000</IBAN>\n                                </Id>\n                            </CdtrAcct>\n                        </RltdPties>\n                        <RltdAgts>\n                            <DbtrAgt>\n                                <FinInstnId>\n                                    <BIC>BYLADEM1ERH</BIC>\n                                </FinInstnId>\n                            </DbtrAgt>\n                            <CdtrAgt>\n                                <FinInstnId>\n                                    <BIC>DEUTDEDB760</BIC>\n                                </FinInstnId>\n                            </CdtrAgt>\n                        </RltdAgts>\n                        <RmtInf>\n                            <Ustrd>DATUM 27.08.2021, 08.55 UHR</Ustrd>\n                        </RmtInf>\n                    </TxDtls>\n                </NtryDtls>\n                <AddtlNtryInf>ONLINE-UEBERWEISUNG</AddtlNtryInf>\n            </Ntry>\n        </Rpt>\n    </BkToCstmrAcctRpt>\n</Document>\n"
+  },
+  "analytics": null,
+  "paging": null
+}

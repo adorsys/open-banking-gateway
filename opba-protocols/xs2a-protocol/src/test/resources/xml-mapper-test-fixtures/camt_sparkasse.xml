@@ -3,8 +3,8 @@
           xsi:schemaLocation="urn:iso:std:iso:20022:tech:xsd:camt.052.001.02 camt.052.001.02.xsd">
     <BkToCstmrAcctRpt>
         <GrpHdr>
-            <MsgId>camt52_20210825165003__ONLINEBA</MsgId>
-            <CreDtTm>2021-08-25T16:50:03+01:00</CreDtTm>
+            <MsgId>camt52_20210827090050__ONLINEBA</MsgId>
+            <CreDtTm>2021-08-27T09:00:50+01:00</CreDtTm>
             <MsgPgntn>
                 <PgNb>1</PgNb>
                 <LastPgInd>true</LastPgInd>
@@ -13,7 +13,7 @@
         <Rpt>
             <Id>camt052_ONLINEBA</Id>
             <ElctrncSeqNb>00000</ElctrncSeqNb>
-            <CreDtTm>2021-08-25T16:50:03+01:00</CreDtTm>
+            <CreDtTm>2021-08-27T09:00:50+01:00</CreDtTm>
             <Acct>
                 <Id>
                     <IBAN>DE03763500001061601894</IBAN>
@@ -48,10 +48,10 @@
                         <Cd>CLBD</Cd>
                     </CdOrPrtry>
                 </Tp>
-                <Amt Ccy="EUR">1.00</Amt>
+                <Amt Ccy="EUR">0.90</Amt>
                 <CdtDbtInd>CRDT</CdtDbtInd>
                 <Dt>
-                    <Dt>2021-08-17</Dt>
+                    <Dt>2021-08-27</Dt>
                 </Dt>
             </Bal>
             <Ntry>
@@ -116,6 +116,70 @@
                     </TxDtls>
                 </NtryDtls>
                 <AddtlNtryInf>GUTSCHR. UEBERWEISUNG</AddtlNtryInf>
+            </Ntry>
+            <Ntry>
+                <Amt Ccy="EUR">0.10</Amt>
+                <CdtDbtInd>DBIT</CdtDbtInd>
+                <Sts>BOOK</Sts>
+                <BookgDt>
+                    <Dt>2021-08-27</Dt>
+                </BookgDt>
+                <ValDt>
+                    <Dt>2021-08-27</Dt>
+                </ValDt>
+                <AcctSvcrRef>NONREF</AcctSvcrRef>
+                <BkTxCd/>
+                <NtryDtls>
+                    <TxDtls>
+                        <Refs>
+                            <PmtInfId>NOTPROVIDED</PmtInfId>
+                            <Prtry>
+                                <Tp>FI-UMSATZ-ID</Tp>
+                                <Ref>2021-08-27-08.55.05.648909</Ref>
+                            </Prtry>
+                        </Refs>
+                        <BkTxCd>
+                            <Prtry>
+                                <Cd>NTRF+177+9310+997</Cd>
+                                <Issr>DK</Issr>
+                            </Prtry>
+                        </BkTxCd>
+                        <RltdPties>
+                            <Dbtr>
+                                <Nm>HANS MUELLER</Nm>
+                            </Dbtr>
+                            <DbtrAcct>
+                                <Id>
+                                    <IBAN>DE03763500001061601894</IBAN>
+                                </Id>
+                            </DbtrAcct>
+                            <Cdtr>
+                                <Nm>IVAN SUSANIN</Nm>
+                            </Cdtr>
+                            <CdtrAcct>
+                                <Id>
+                                    <IBAN>DE71760700240088451000</IBAN>
+                                </Id>
+                            </CdtrAcct>
+                        </RltdPties>
+                        <RltdAgts>
+                            <DbtrAgt>
+                                <FinInstnId>
+                                    <BIC>BYLADEM1ERH</BIC>
+                                </FinInstnId>
+                            </DbtrAgt>
+                            <CdtrAgt>
+                                <FinInstnId>
+                                    <BIC>DEUTDEDB760</BIC>
+                                </FinInstnId>
+                            </CdtrAgt>
+                        </RltdAgts>
+                        <RmtInf>
+                            <Ustrd>DATUM 27.08.2021, 08.55 UHR</Ustrd>
+                        </RmtInf>
+                    </TxDtls>
+                </NtryDtls>
+                <AddtlNtryInf>ONLINE-UEBERWEISUNG</AddtlNtryInf>
             </Ntry>
         </Rpt>
     </BkToCstmrAcctRpt>

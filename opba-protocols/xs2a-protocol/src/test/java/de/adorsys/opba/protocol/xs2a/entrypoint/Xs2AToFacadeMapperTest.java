@@ -16,11 +16,11 @@ import org.springframework.boot.test.context.SpringBootTest;
 import java.nio.charset.StandardCharsets;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.Assert.assertNotNull;
 
 @SpringBootTest(classes = MapperTestConfig.class)
 public class Xs2AToFacadeMapperTest {
     public static final String PATH_PREFIX = "mapper-test-fixtures/xs2a_to_facade_response_mapper_";
+    public static final String XML_PATH_PREFIX = "xml-mapper-test-fixtures/";
 
     @Autowired
     private Xs2aResultBodyExtractor.Xs2aToFacadeMapper mapper;
@@ -60,18 +60,19 @@ public class Xs2AToFacadeMapperTest {
     @Test
     @SneakyThrows
     public void testCamt() {
-        String camt = Resources.toString(Resources.getResource("mapper-test-fixtures/camt_multibanking.xml"), StandardCharsets.UTF_8);
+        String camt = Resources.toString(Resources.getResource(XML_PATH_PREFIX + "camt_multibanking.xml"), StandardCharsets.UTF_8);
         TransactionsResponseBody loadBookingsResponse = xmlTransactionsParser.camtStringToLoadBookingsResponse(camt);
-        assertNotNull(loadBookingsResponse);
         assertThat(loadBookingsResponse.getTransactions().getBooked().size()).withFailMessage("Wrong count of bookings").isEqualTo(4);
     }
 
     @Test
     @SneakyThrows
     public void testCamtSparkasse() {
-        String camt = Resources.toString(Resources.getResource("mapper-test-fixtures/camt_sparkasse.xml"), StandardCharsets.UTF_8);
-        TransactionsResponseBody loadBookingsResponse = xmlTransactionsParser.camtStringToLoadBookingsResponse(camt);
-        assertNotNull(loadBookingsResponse);
-        assertThat(loadBookingsResponse.getTransactions().getBooked().size()).withFailMessage("Wrong count of bookings").isEqualTo(1);
+        String camt = Resources.toString(Resources.getResource(XML_PATH_PREFIX + "camt_sparkasse.xml"), StandardCharsets.UTF_8);
+        TransactionsResponseBody mappingResult = xmlTransactionsParser.camtStringToLoadBookingsResponse(camt);
+        assertThat(mappingResult.getTransactions().getBooked().size()).withFailMessage("Wrong count of bookings").isEqualTo(2);
+        TransactionsResponseBody expected = fixtureProvider.getFromFile(XML_PATH_PREFIX + "sparkasse_output.json",
+                                                                        TransactionsResponseBody.class);
+        assertThat(expected).isEqualToComparingFieldByField(mappingResult);
     }
 }

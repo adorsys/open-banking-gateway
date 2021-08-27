@@ -27,14 +27,10 @@ public class XmlTransactionsParser {
         ISEPAParser<List<GVRKUms.BTag>> parser = SEPAParserFactory.get(version);
         GVRKUms bookingsResult = new GVRKUms(null);
         parser.parse(new ByteArrayInputStream(body.getBytes(StandardCharsets.UTF_8)), bookingsResult.getDataPerDay());
-        return jobresultToLoadBookingsResponse(bookingsResult, body);
-    }
-
-    public TransactionsResponseBody jobresultToLoadBookingsResponse(GVRKUms bookingsResult, String raw) {
         TransactionListBody bookings = accountStatementMapper.createBookings(bookingsResult);
 
         return TransactionsResponseBody.builder()
-            .transactions(AccountReport.builder().booked(bookings).rawTransactions(raw).build())
+            .transactions(AccountReport.builder().booked(bookings).rawTransactions(body).build())
             .build();
     }
 }
