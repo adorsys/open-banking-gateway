@@ -13,7 +13,6 @@ import de.adorsys.xs2a.adapter.api.link.LinksRewriter;
 import de.adorsys.xs2a.adapter.impl.http.ApacheHttpClientFactory;
 import de.adorsys.xs2a.adapter.impl.http.BaseHttpClientConfig;
 import de.adorsys.xs2a.adapter.impl.http.Xs2aHttpLogSanitizer;
-import de.adorsys.xs2a.adapter.impl.http.wiremock.WiremockHttpClientFactory;
 import de.adorsys.xs2a.adapter.impl.link.identity.IdentityLinksRewriter;
 import de.adorsys.xs2a.adapter.serviceloader.AccountInformationServiceImpl;
 import de.adorsys.xs2a.adapter.serviceloader.AdapterDelegatingOauth2Service;
@@ -22,7 +21,6 @@ import de.adorsys.xs2a.adapter.serviceloader.DownloadServiceImpl;
 import de.adorsys.xs2a.adapter.serviceloader.EmbeddedPreAuthorisationServiceImpl;
 import de.adorsys.xs2a.adapter.serviceloader.PaymentInitiationServiceImpl;
 import lombok.SneakyThrows;
-import org.apache.commons.lang3.StringUtils;
 import org.apache.http.impl.client.HttpClientBuilder;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
@@ -67,18 +65,12 @@ public class Xs2aAdapterConfiguration {
 
     @Bean
     HttpClientFactory xs2aHttpClientFactory(HttpClientBuilder httpClientBuilder, HttpClientConfig httpClientConfig) {
-        if (StringUtils.isNotBlank(httpClientConfig.getWiremockStandaloneUrl())) {
-            return new WiremockHttpClientFactory(httpClientBuilder, httpClientConfig);
-        } else {
-            return new ApacheHttpClientFactory(httpClientBuilder, httpClientConfig);
-        }
-
-
+        return new ApacheHttpClientFactory(httpClientBuilder, httpClientConfig);
     }
 
     @Bean
-    HttpClientConfig httpClientConfig(Pkcs12KeyStore keyStore, @Value("${WIREMOCK_STANDALONE_URL:}") String wiremockStandaloneUrl) {
-        return new BaseHttpClientConfig(new Xs2aHttpLogSanitizer(), keyStore, wiremockStandaloneUrl);
+    HttpClientConfig httpClientConfig(Pkcs12KeyStore keyStore) {
+        return new BaseHttpClientConfig(new Xs2aHttpLogSanitizer(), keyStore, null);
     }
 
     @Bean

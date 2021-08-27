@@ -1,5 +1,6 @@
 {
-  "name" : "OtpSent",
+  "scenarioName": "AccountsListUsingPostbankEmbedded",
+  "newScenarioState": "OtpSent",
   "request" : {
     "urlPattern" : "/ais/DE/Postbank/v1/consents/.+/authorisations/.+",
     "method" : "PUT",

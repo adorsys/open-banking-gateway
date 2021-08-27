@@ -44,6 +44,7 @@ public class MockServers<SELF extends MockServers<SELF>> extends CommonGivenStag
     public static final long AUTH_ACTION_ID = 3L;
     public static final long ACTION_ID = 1L;
     public static final String DKB_BANK_ID = "335562a2-26e2-4105-b31e-08de285234e0";
+    public static final String POSTBANK_BANK_ID = "01aa84f2-25c0-4e02-8065-c401657e3fb0";
 
     @Autowired
     private BankProfileJpaRepository bankProfileJpaRepository;
@@ -199,7 +200,7 @@ public class MockServers<SELF extends MockServers<SELF>> extends CommonGivenStag
 
     public SELF embedded_pre_step_mock_of_dkb_sandbox_for_max_musterman_accounts_running() {
         WireMockConfiguration config = WireMockConfiguration.options().dynamicPort()
-                .usingFilesUnderClasspath("mockedsandbox/restrecord/embedded/pre-step/accounts/");
+                .usingFilesUnderClasspath("mockedsandbox/restrecord/embedded/pre-step/accounts/dkb/");
         config.notifier(new Slf4jNotifier(true));
         startWireMock(config, DKB_BANK_ID, defaultbankProfileConfigurer);
         return self();
@@ -208,9 +209,9 @@ public class MockServers<SELF extends MockServers<SELF>> extends CommonGivenStag
         WireMockConfiguration config = WireMockConfiguration.options().dynamicPort()
                 .usingFilesUnderClasspath("mockedsandbox/restrecord/embedded/multi-sca/accounts/postbank/");
         config.notifier(new Slf4jNotifier(true));
-
-        startWireMock(config, "01aa84f2-25c0-4e02-8065-c401657e3fb0", it -> it.setUrl("http://localhost:" + sandbox.port() + "/{Service Group}/DE/Postbank"));
+        startWireMock(config, POSTBANK_BANK_ID, it -> it.setUrl("http://localhost:" + sandbox.port() + "/{Service Group}/DE/Postbank"));
         return self();
+
     }
     public SELF embedded_mock_of_sandbox_for_max_musterman_zero_sca_accounts_running() {
         WireMockConfiguration config = WireMockConfiguration.options().dynamicPort()
@@ -222,7 +223,7 @@ public class MockServers<SELF extends MockServers<SELF>> extends CommonGivenStag
 
     public SELF embedded_pre_step_mock_of_dkb_sandbox_for_max_musterman_payments_running() {
         WireMockConfiguration config = WireMockConfiguration.options().dynamicPort()
-            .usingFilesUnderClasspath("mockedsandbox/restrecord/embedded/pre-step/payments/");
+            .usingFilesUnderClasspath("mockedsandbox/restrecord/embedded/pre-step/payments/dkb/");
         startWireMock(config, DKB_BANK_ID, defaultbankProfileConfigurer);
 
         return self();
@@ -231,8 +232,6 @@ public class MockServers<SELF extends MockServers<SELF>> extends CommonGivenStag
     public SELF embedded_pre_step_mock_of_postbank_sandbox_for_max_musterman_payments_running() {
         WireMockConfiguration config = WireMockConfiguration.options().dynamicPort()
                 .usingFilesUnderClasspath("mockedsandbox/restrecord/embedded/multi-sca/payments/postbank/");
-        config.notifier(new Slf4jNotifier(true));
-
         startWireMock(config, "01aa84f2-25c0-4e02-8065-c401657e3fb0", it -> it.setUrl("http://localhost:" + sandbox.port() + "/{Service Group}/DE/Postbank"));
         return self();
     }

@@ -1,6 +1,5 @@
 {
-  "scenarioName": "DKB - single payment",
-  "priority": 5,
+  "scenarioName": "PaymentInitializationUsingDbkEmbedded",
   "newScenarioState": "Authenticated",
   "request": {
     "urlPattern": ".*/pre-auth/psd2-auth/v1/auth/token",

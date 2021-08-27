@@ -1,5 +1,6 @@
 {
-  "name" : "GetAccountWithBalance",
+  "scenarioName": "AccountsListUsingPostbankEmbedded",
+  "newScenarioState": "GetAccountWithBalance",
   "request" : {
     "url" : "/ais/DE/Postbank/v1/accounts?withBalance=true",
     "method" : "GET",

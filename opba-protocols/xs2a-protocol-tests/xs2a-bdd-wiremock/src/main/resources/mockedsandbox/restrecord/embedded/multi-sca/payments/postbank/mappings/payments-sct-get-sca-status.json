@@ -1,5 +1,5 @@
 {
-  "scenarioName": "PaymentInitializationUsingEmbedded",
+  "scenarioName": "PaymentInitializationUsingPostbankEmbedded",
   "newScenarioState": "GetPaymentScaStatus",
   "request" : {
     "urlPattern" : "/pis/DE/Postbank/v1/payments/sepa-credit-transfers/.+/authorisations/.+",

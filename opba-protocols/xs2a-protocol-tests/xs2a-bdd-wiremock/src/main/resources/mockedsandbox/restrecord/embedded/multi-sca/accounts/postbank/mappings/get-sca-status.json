@@ -1,5 +1,6 @@
 {
-  "name" : "GetScaStatus",
+  "scenarioName": "AccountsListUsingPostbankEmbedded",
+  "newScenarioState": "GetScaStatus",
   "request" : {
     "urlPattern" : "/ais/DE/Postbank/v1/consents/.+/authorisations/.+",
     "method" : "GET",

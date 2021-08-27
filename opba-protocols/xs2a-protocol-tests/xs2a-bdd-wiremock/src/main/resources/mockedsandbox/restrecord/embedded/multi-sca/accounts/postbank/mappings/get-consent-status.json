@@ -1,5 +1,6 @@
 {
-  "name" : "GetConsentStatus",
+  "scenarioName": "AccountsListUsingPostbankEmbedded",
+  "newScenarioState": "GetConsentStatus",
   "request" : {
     "urlPattern" : "/ais/DE/Postbank/v1/consents/.+/status",
     "method" : "GET",

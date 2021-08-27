@@ -1,5 +1,6 @@
 {
-  "name" : "CreateConsent",
+  "scenarioName": "AccountsListUsingPostbankEmbedded",
+  "newScenarioState": "CreateConsent",
   "request" : {
     "url" : "/ais/DE/Postbank/v1/consents",
     "method" : "POST",

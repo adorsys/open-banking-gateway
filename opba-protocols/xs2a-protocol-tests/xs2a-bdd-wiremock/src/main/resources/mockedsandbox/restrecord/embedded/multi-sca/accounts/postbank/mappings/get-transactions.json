@@ -1,5 +1,6 @@
 {
-  "name" : "GetTransactions",
+  "scenarioName": "AccountsListUsingPostbankEmbedded",
+  "newScenarioState": "GetTransactions",
   "request" : {
     "urlPattern" : "/ais/DE/Postbank/v1/accounts/.+/transactions?.+",
     "method" : "GET",

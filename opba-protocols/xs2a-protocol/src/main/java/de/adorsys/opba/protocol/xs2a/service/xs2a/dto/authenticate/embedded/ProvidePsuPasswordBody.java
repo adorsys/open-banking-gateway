@@ -29,12 +29,12 @@ public class ProvidePsuPasswordBody {
     @NotBlank(message = "{no.psu.password}")
     private String psuPassword;
 
-    private  boolean passwordShouldBeEncrypted;
+    private boolean passwordShouldBeEncrypted;
 
     @Mapper(componentModel = GlobalConst.SPRING_KEYWORD, implementationPackage = GlobalConst.XS2A_MAPPERS_PACKAGE)
     public interface ToXs2aApi extends DtoMapper<ProvidePsuPasswordBody, UpdatePsuAuthentication> {
 
-       default UpdatePsuAuthentication map(ProvidePsuPasswordBody cons) {
+        default UpdatePsuAuthentication map(ProvidePsuPasswordBody cons) {
             PsuData psuData = new PsuData();
             if (cons.isPasswordShouldBeEncrypted()) {
                 psuData.setEncryptedPassword(cons.getPsuPassword());

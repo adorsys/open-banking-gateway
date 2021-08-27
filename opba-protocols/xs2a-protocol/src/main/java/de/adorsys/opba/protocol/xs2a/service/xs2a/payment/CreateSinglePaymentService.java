@@ -95,7 +95,6 @@ public class CreateSinglePaymentService extends ValidatedExecution<Xs2aPisContex
         if (null != paymentInit.getBody()) {
             OAuth2Util.handlePossibleOAuth2(paymentInit.getBody().getLinks(), context);
             StartAuthorizationHandlerUtil.handleImplicitAuthorizationStartIfPossible(paymentInit.getBody().getLinks(), context);
-
         }
 
         if (null != paymentInit.getHeaders() && Strings.isNotBlank(paymentInit.getHeaders().getHeader(ASPSP_SCA_APPROACH))) {
@@ -126,9 +125,9 @@ public class CreateSinglePaymentService extends ValidatedExecution<Xs2aPisContex
 
     @Service
     public static class Extractor extends PathHeadersBodyMapperTemplate<Xs2aPisContext,
-                                                                                   Xs2aInitialPaymentParameters,
-                                                                               PaymentInitiateHeaders,
-                                                                               PaymentInitiateBody,
+            Xs2aInitialPaymentParameters,
+            PaymentInitiateHeaders,
+            PaymentInitiateBody,
             PaymentInitiationJson> {
 
         public Extractor(

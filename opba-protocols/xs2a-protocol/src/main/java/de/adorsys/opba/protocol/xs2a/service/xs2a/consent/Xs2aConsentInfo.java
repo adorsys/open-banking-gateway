@@ -1,7 +1,7 @@
 package de.adorsys.opba.protocol.xs2a.service.xs2a.consent;
 
+import com.google.common.base.Strings;
 import de.adorsys.opba.protocol.xs2a.context.Xs2aContext;
-import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Service;
 
 import static de.adorsys.opba.protocol.api.common.Approach.EMBEDDED;
@@ -26,7 +26,7 @@ public class Xs2aConsentInfo {
      * Is the authorization already started.
      */
     public boolean isAuthorisationStarted(Xs2aContext ctx) {
-        return StringUtils.isNotBlank(ctx.getAuthorizationId());
+        return !Strings.isNullOrEmpty(ctx.getAuthorizationId());
     }
 
     /**
@@ -91,7 +91,7 @@ public class Xs2aConsentInfo {
      */
     public boolean isZeroScaAvailable(Xs2aContext ctx) {
         return null == ctx.getAvailableSca()
-                       || null != ctx.getAvailableSca() && ctx.getAvailableSca().isEmpty();
+                || null != ctx.getAvailableSca() && ctx.getAvailableSca().isEmpty();
     }
 
     /**

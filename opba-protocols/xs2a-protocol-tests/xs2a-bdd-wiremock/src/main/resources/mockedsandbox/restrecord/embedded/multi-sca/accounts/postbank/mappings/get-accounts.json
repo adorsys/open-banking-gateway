@@ -1,5 +1,6 @@
 {
-  "name" : "GetAccount",
+  "scenarioName": "AccountsListUsingPostbankEmbedded",
+  "newScenarioState": "GetAccount",
   "request" : {
     "url" : "/ais/DE/Postbank/v1/accounts",
     "method" : "GET",

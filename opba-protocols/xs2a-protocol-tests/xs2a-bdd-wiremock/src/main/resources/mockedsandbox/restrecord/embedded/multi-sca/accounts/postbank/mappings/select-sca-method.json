@@ -1,5 +1,6 @@
 {
-  "name" : "ScaMethodSelected",
+  "scenarioName": "AccountsListUsingPostbankEmbedded",
+  "newScenarioState": "ScaMethodSelected",
   "request" : {
     "urlPattern" : "/ais/DE/Postbank/v1/consents/.+/authorisations/.+",
     "method" : "PUT",

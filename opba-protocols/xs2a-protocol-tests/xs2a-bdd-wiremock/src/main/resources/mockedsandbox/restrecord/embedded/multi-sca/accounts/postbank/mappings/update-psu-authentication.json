@@ -1,5 +1,6 @@
 {
-  "name" : "AuthorizationUpdated",
+  "scenarioName": "AccountsListUsingPostbankEmbedded",
+  "newScenarioState": "AuthorizationUpdated",
   "request" : {
     "urlPattern" : "/ais/DE/Postbank/v1/consents/.+/authorisations/.+",
     "method" : "PUT",

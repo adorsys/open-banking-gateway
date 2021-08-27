@@ -1,5 +1,5 @@
 {
-  "scenarioName": "PaymentInitializationUsingEmbedded",
+  "scenarioName": "PaymentInitializationUsingPostbankEmbedded",
   "name" : "PaymentInitiation",
   "request" : {
     "url" : "/pis/DE/Postbank/v1/payments/sepa-credit-transfers",
