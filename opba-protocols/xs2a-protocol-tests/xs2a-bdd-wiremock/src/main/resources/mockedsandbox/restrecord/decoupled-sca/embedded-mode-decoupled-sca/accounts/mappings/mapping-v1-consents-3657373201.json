@@ -1,5 +1,7 @@
 {
   "id" : "7fb0cf48-d2d9-3dbf-b3d6-cd0d0b3083f6",
+  "requiredScenarioState": "Started",
+  "newScenarioState": "Received",
   "request" : {
     "url" : "/v1/consents",
     "method" : "POST",

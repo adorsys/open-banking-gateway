@@ -1,5 +1,7 @@
 {
-  "id" : "dba62480-6bc7-3f3d-9ccd-82b2b777785c",
+  "id" : "4c3d56f6-91e8-4ba6-b531-ff06bdea24f6",
+  "requiredScenarioState": "PsuAuthenticatedDecoupledSecondGet",
+  "newScenarioState": "Finalized",
   "request" : {
     "url" : "/v1/consents/IaGSU5tL0Zrv6y8UUF_0AjaUyffKVeGTt3ZjwG08SeBz3dsiI8pXi-XCzwyGrfr63Tq72aIvt7r0f-jWmnBZJ8z9MpaJIQIH3NJX8IHgetw=_=_psGLvQpt9Q/authorisations/0b53f83c-4d99-4f9b-900c-80eb16c7c349",
     "method" : "GET",
@@ -14,7 +16,7 @@
   },
   "response" : {
     "status" : 200,
-    "bodyFileName" : "body-v1-consents-2059236824.json",
+    "bodyFileName" : "body-v1-consents-2059236999.json",
     "headers" : {
       "Vary" : [ "Origin", "Access-Control-Request-Method", "Access-Control-Request-Headers" ],
       "X-Request-Id" : "e1193402-ac3c-4e49-9da9-4019701f8028",
@@ -23,5 +25,5 @@
       "Keep-Alive" : "timeout=60"
     }
   },
-  "uuid" : "dba62480-6bc7-3f3d-9ccd-82b2b777785c"
+  "uuid" : "4c3d56f6-91e8-4ba6-b531-ff06bdea24f6"
 }

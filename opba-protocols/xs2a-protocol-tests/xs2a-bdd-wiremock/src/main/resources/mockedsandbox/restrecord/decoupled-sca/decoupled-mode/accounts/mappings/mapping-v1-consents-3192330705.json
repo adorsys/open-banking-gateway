@@ -1,5 +1,7 @@
 {
   "id" : "0d1c3999-75ed-3560-bb58-a45874572f5e",
+  "requiredScenarioState": "Received",
+  "newScenarioState": "PsuIdentified",
   "request" : {
     "url" : "/v1/consents/gwSmVLCIfQVVPnSGg8v69gSd1H6_g0WCr7YU-RO9SHZnUzxbTouNENYOGkrGbXq1_9SxHzHaMr1NKEIFZyrivsz9MpaJIQIH3NJX8IHgetw=_=_psGLvQpt9Q/authorisations",
     "method" : "POST",
@@ -7,8 +9,11 @@
       "Accept" : {
         "equalTo" : "application/json"
       },
+      "PSU-ID": {
+        "equalTo": "max.musterman"
+      },
       "X-Request-ID" : {
-        "equalTo" : "e643119c-c501-4012-b561-59ddf3aa1565"
+        "matches" : "[=_0-9a-zA-z\\-]+"
       }
     },
     "bodyPatterns" : [ {

@@ -1,5 +1,7 @@
 {
   "id" : "610c0212-885a-3a35-82cb-abbb27273fb0",
+  "requiredScenarioState": "PsuIdentified",
+  "newScenarioState": "PsuAuthenticated",
   "request" : {
     "url" : "/v1/consents/gwSmVLCIfQVVPnSGg8v69gSd1H6_g0WCr7YU-RO9SHZnUzxbTouNENYOGkrGbXq1_9SxHzHaMr1NKEIFZyrivsz9MpaJIQIH3NJX8IHgetw=_=_psGLvQpt9Q/authorisations/392e5668-194e-4a11-b90f-815d8be5902a",
     "method" : "PUT",
@@ -8,7 +10,7 @@
         "equalTo" : "application/json"
       },
       "X-Request-ID" : {
-        "equalTo" : "ed503954-be7d-45f8-a8e8-f750cf8970f5"
+        "matches" : "[=_0-9a-zA-z\\-]+"
       }
     },
     "bodyPatterns" : [ {

@@ -1,5 +1,7 @@
 {
   "id" : "1e0d0a52-f1b0-3ad2-8d92-721eb8ddf9f5",
+  "requiredScenarioState": "PsuAuthenticated",
+  "newScenarioState": "PsuAuthenticatedDecoupledFirstGet",
   "request" : {
     "url" : "/v1/consents/gwSmVLCIfQVVPnSGg8v69gSd1H6_g0WCr7YU-RO9SHZnUzxbTouNENYOGkrGbXq1_9SxHzHaMr1NKEIFZyrivsz9MpaJIQIH3NJX8IHgetw=_=_psGLvQpt9Q/authorisations/392e5668-194e-4a11-b90f-815d8be5902a",
     "method" : "GET",
@@ -8,7 +10,7 @@
         "equalTo" : "application/json"
       },
       "X-Request-ID" : {
-        "equalTo" : "ad778e87-cc6d-42c5-9949-c6f8540d2e9b"
+        "matches" : "[=_0-9a-zA-z\\-]+"
       }
     }
   },

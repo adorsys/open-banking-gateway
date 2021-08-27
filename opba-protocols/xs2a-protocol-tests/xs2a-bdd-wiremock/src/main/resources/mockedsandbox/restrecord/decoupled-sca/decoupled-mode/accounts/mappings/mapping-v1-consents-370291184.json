@@ -1,5 +1,7 @@
 {
   "id" : "d33b0271-083a-3c50-ab84-d394adf2ed3d",
+  "requiredScenarioState": "Started",
+  "newScenarioState": "Received",
   "request" : {
     "url" : "/v1/consents",
     "method" : "POST",
@@ -8,16 +10,16 @@
         "equalTo" : "application/json"
       },
       "X-Request-ID" : {
-        "equalTo" : "51e1016b-e5f9-444d-865d-dfee43ed78b0"
+        "matches" : "[=_0-9a-zA-z\\-]+"
       },
       "TPP-Nok-Redirect-URI" : {
-        "equalTo" : "http://localhost:4200/embedded-server/v1/consent/3ae9a83b-f41a-470d-87e6-5ea6f102d519/fromAspsp/431c7d20-fc6a-44fa-9dcb-23705f4c49ca/nok"
+        "matches" : "http://localhost:4200/embedded-server/v1/consent/.+/fromAspsp/.+/nok"
       },
       "PSU-IP-Address" : {
-        "equalTo" : "127.0.0.1"
+        "matches" : "\\d+\\.\\d+\\.\\d+\\.\\d+"
       },
       "TPP-Redirect-URI" : {
-        "equalTo" : "http://localhost:4200/embedded-server/v1/consent/3ae9a83b-f41a-470d-87e6-5ea6f102d519/fromAspsp/431c7d20-fc6a-44fa-9dcb-23705f4c49ca/ok"
+        "matches" : "http://localhost:4200/embedded-server/v1/consent/.+/fromAspsp/.+/ok"
       }
     },
     "bodyPatterns" : [ {
