@@ -541,7 +541,7 @@ public class AccountInformationRequestCommon<SELF extends AccountInformationRequ
         ExtractableResponse<Response> response = consentApiPost(AUTHORIZE_CONSENT_ENDPOINT, "{}", httpStatus, serviceSessionId);
         this.responseContent = response.body().asString();
         updateRedirectCodeIfAvailable(response);
-        this.redirectUriToGetUserParams = httpStatus == HttpStatus.ACCEPTED ? LocationExtractorUtil.getLocation(response) : this.redirectUriToGetUserParams;
+        this.redirectUriToGetUserParams = httpStatus == ACCEPTED ? LocationExtractorUtil.getLocation(response) : this.redirectUriToGetUserParams;
         if (null != expectedConsentStatus) {
             assertThat(JsonPath.parse(responseContent).read("scaStatus", String.class)).isEqualTo(expectedConsentStatus);
         }
