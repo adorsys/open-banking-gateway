@@ -197,6 +197,22 @@ public class MockServers<SELF extends MockServers<SELF>> extends CommonGivenStag
         return self();
     }
 
+    public SELF decoupled_embedded_approach_sca_decoupled_start_mock_of_sandbox_for_max_musterman_accounts_running() {
+        WireMockConfiguration config = WireMockConfiguration.options().dynamicPort()
+                .usingFilesUnderClasspath("mockedsandbox/restrecord/decoupled-sca/embedded-mode-decoupled-sca/accounts/");
+        startWireMock(config);
+
+        return self();
+    }
+
+    public SELF decoupled_approach_and_sca_decoupled_start_mock_of_sandbox_for_max_musterman_accounts_running() {
+        WireMockConfiguration config = WireMockConfiguration.options().dynamicPort()
+                .usingFilesUnderClasspath("mockedsandbox/restrecord/decoupled-sca/decoupled-mode/accounts/");
+        startWireMock(config);
+
+        return self();
+    }
+
     public SELF embedded_mock_of_sandbox_for_max_musterman_zero_sca_accounts_running() {
         WireMockConfiguration config = WireMockConfiguration.options().dynamicPort()
                                                .usingFilesUnderClasspath("mockedsandbox/restrecord/embedded/zero-sca/accounts/sandbox/");

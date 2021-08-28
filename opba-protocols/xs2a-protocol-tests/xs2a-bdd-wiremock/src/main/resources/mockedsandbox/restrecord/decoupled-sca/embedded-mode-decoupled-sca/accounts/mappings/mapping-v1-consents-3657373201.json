@@ -14,17 +14,17 @@
         "matches": "[=_0-9a-zA-z\\-]+"
       },
       "TPP-Nok-Redirect-URI" : {
-        "matches" : ".+/nok"
+        "matches" : "http://localhost:.+/v1/consent/.+/fromAspsp/.+/nok"
       },
       "PSU-IP-Address" : {
         "equalTo" : "1.1.1.1"
       },
       "TPP-Redirect-URI" : {
-        "matches" : ".+/ok"
+        "matches" : "http://localhost:.+/v1/consent/.+/fromAspsp/.+/ok"
       }
     },
     "bodyPatterns" : [ {
-      "equalToJson" : "{\"access\":{\"allPsd2\":\"allAccounts\"},\"recurringIndicator\":true,\"validUntil\":\"2030-01-31\",\"frequencyPerDay\":24,\"combinedServiceIndicator\":false}",
+      "equalToJson" : "{\"access\":{\"availableAccounts\":\"allAccounts\"},\"recurringIndicator\":true,\"validUntil\":\"2030-01-31\",\"frequencyPerDay\":12,\"combinedServiceIndicator\":false}",
       "ignoreArrayOrder" : true,
       "ignoreExtraElements" : true
     } ]

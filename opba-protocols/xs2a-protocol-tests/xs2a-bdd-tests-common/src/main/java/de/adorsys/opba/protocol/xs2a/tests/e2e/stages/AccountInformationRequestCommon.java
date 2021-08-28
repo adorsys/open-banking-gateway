@@ -1,6 +1,7 @@
 package de.adorsys.opba.protocol.xs2a.tests.e2e.stages;
 
 import com.google.common.collect.ImmutableMap;
+import com.jayway.jsonpath.JsonPath;
 import com.tngtech.jgiven.annotation.ExpectedScenarioState;
 import com.tngtech.jgiven.integration.spring.JGivenStage;
 import de.adorsys.opba.consentapi.model.generated.AuthViolation;
@@ -43,6 +44,7 @@ import static de.adorsys.opba.restapi.shared.HttpHeaders.SERVICE_SESSION_ID;
 import static de.adorsys.opba.restapi.shared.HttpHeaders.X_CREATE_CONSENT_IF_NONE;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.springframework.http.HttpStatus.ACCEPTED;
+import static org.springframework.http.HttpStatus.OK;
 import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
 
 @Slf4j
@@ -328,7 +330,7 @@ public class AccountInformationRequestCommon<SELF extends AccountInformationRequ
             .when()
                 .get(GET_CONSENT_AUTH_STATE, serviceSessionId)
             .then()
-                .statusCode(HttpStatus.OK.value())
+                .statusCode(OK.value())
                 .extract();
 
         this.redirectUriToGetUserParams = LocationExtractorUtil.getLocation(response);
@@ -535,6 +537,17 @@ public class AccountInformationRequestCommon<SELF extends AccountInformationRequ
         return self();
     }
 
+    public SELF user_max_musterman_polling_api_to_check_sca_status(HttpStatus httpStatus, String expectedConsentStatus) {
+        ExtractableResponse<Response> response = consentApiPost(AUTHORIZE_CONSENT_ENDPOINT, "{}", httpStatus, serviceSessionId);
+        this.responseContent = response.body().asString();
+        updateRedirectCodeIfAvailable(response);
+        this.redirectUriToGetUserParams = httpStatus == HttpStatus.ACCEPTED ? LocationExtractorUtil.getLocation(response) : this.redirectUriToGetUserParams;
+        if (null != expectedConsentStatus) {
+            assertThat(JsonPath.parse(responseContent).read("scaStatus", String.class)).isEqualTo(expectedConsentStatus);
+        }
+        return self();
+    }
+
     public SELF ui_can_read_image_data_from_obg(String user) {
         ExtractableResponse<Response> response = withDefaultHeaders(user)
                 .cookie(AUTHORIZATION_SESSION_KEY, authSessionCookie)
@@ -542,7 +555,7 @@ public class AccountInformationRequestCommon<SELF extends AccountInformationRequ
             .when()
                 .get(GET_CONSENT_AUTH_STATE, serviceSessionId)
             .then()
-                .statusCode(HttpStatus.OK.value())
+                .statusCode(OK.value())
                 .extract();
 
         assertThatResponseContainsCorrectChallengeData(response, "restrecord/tpp-ui-input/params/max-musterman-embedded-consent-challenge-data.json");
@@ -586,6 +599,11 @@ public class AccountInformationRequestCommon<SELF extends AccountInformationRequ
         assertThat(this.redirectUriToGetUserParams).contains("sca-result").contains("/EMAIL").doesNotContain("wrong=true");
         ExtractableResponse<Response> response = user_provides_sca_challenge_result();
         assertThat(LocationExtractorUtil.getLocation(response)).contains("ais").contains("consent-result");
+    }
+
+    public SELF current_redirected_to_screen_is_consent_result() {
+        assertThat(this.redirectUriToGetUserParams).contains("ais").contains("consent-result");
+        return self();
     }
 
     public SELF user_max_musterman_provided_wrong_sca_challenge_result_to_embedded_authorization_and_stays_on_sca_page() {

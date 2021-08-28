@@ -22,6 +22,7 @@ import io.restassured.response.Response;
 import lombok.Getter;
 import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
+import org.assertj.core.util.Strings;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -132,7 +133,16 @@ public abstract class RequestCommon<SELF extends RequestCommon<SELF>> extends St
     protected abstract ExtractableResponse<Response> provideParametersToBankingProtocolWithBody(String uriPath, String body, HttpStatus status);
 
     protected ExtractableResponse<Response> provideParametersToBankingProtocolWithBody(String uriPath, String body, HttpStatus status, String serviceSessionId) {
-        ExtractableResponse<Response> response = RestAssured
+        ExtractableResponse<Response> response = consentApiPost(uriPath, body, status, serviceSessionId);
+
+        this.responseContent = response.body().asString();
+        this.redirectUriToGetUserParams = LocationExtractorUtil.getLocation(response);
+        updateRedirectCode(response);
+        return response;
+    }
+
+    protected ExtractableResponse<Response> consentApiPost(String uriPath, String body, HttpStatus status, String serviceSessionId) {
+        return RestAssured
             .given()
                 .header(X_REQUEST_ID, UUID.randomUUID().toString())
                 .header(X_XSRF_TOKEN, UUID.randomUUID().toString())
@@ -146,11 +156,6 @@ public abstract class RequestCommon<SELF extends RequestCommon<SELF>> extends St
             .then()
                 .statusCode(status.value())
                 .extract();
-
-        this.responseContent = response.body().asString();
-        this.redirectUriToGetUserParams = LocationExtractorUtil.getLocation(response);
-        updateRedirectCode(response);
-        return response;
     }
 
     protected ExtractableResponse<Response> startInitialInternalConsentAuthorization(String uriPath, String resourceData, HttpStatus status) {
@@ -181,6 +186,10 @@ public abstract class RequestCommon<SELF extends RequestCommon<SELF>> extends St
 
     protected void updateRedirectCode(ExtractableResponse<Response> response) {
         this.redirectCode = response.header(X_XSRF_TOKEN);
+    }
+
+    protected void updateRedirectCodeIfAvailable(ExtractableResponse<Response> response) {
+        this.redirectCode = Strings.isNullOrEmpty(response.header(X_XSRF_TOKEN)) ? this.redirectCode : response.header(X_XSRF_TOKEN);
     }
 
     protected ExtractableResponse<Response> max_musterman_provides_password() {
