@@ -33,7 +33,7 @@
       <conditionExpression xsi:type="tFormalExpression"><![CDATA[#{xs2aConsentInfo.isConsentFinalized(CONTEXT)}]]></conditionExpression>
     </sequenceFlow>
     <sequenceFlow id="embeddedOrDecoupled" name="embedded or decoupled" sourceRef="scaChallengeSelector" targetRef="isPasswordPresent">
-      <documentation>embeddedor decoupled  SCA</documentation>
+      <documentation>embedded or decoupled  SCA</documentation>
       <conditionExpression xsi:type="tFormalExpression">#{xs2aConsentInfo.isEmbedded(CONTEXT) || xs2aConsentInfo.isDecoupled(CONTEXT)}</conditionExpression>
     </sequenceFlow>
     <serviceTask id="sendChallengeResult" name="Sends SCA challenge result" flowable:async="true" flowable:exclusive="false" flowable:delegateExpression="${xs2aAuthenticatePaymentWithScaChallenge}"/>
