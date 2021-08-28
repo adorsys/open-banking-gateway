@@ -32,9 +32,9 @@
     <sequenceFlow id="scaFinalized" name="SCA finalized" sourceRef="isScaFinalized" targetRef="persistPaymentAndContext">
       <conditionExpression xsi:type="tFormalExpression"><![CDATA[#{xs2aConsentInfo.isConsentFinalized(CONTEXT)}]]></conditionExpression>
     </sequenceFlow>
-    <sequenceFlow id="embedded" name="embedded" sourceRef="scaChallengeSelector" targetRef="isPasswordPresent">
-      <documentation>ASPSP selected embedded SCA</documentation>
-      <conditionExpression xsi:type="tFormalExpression"><![CDATA[#{xs2aConsentInfo.isEmbedded(CONTEXT)}]]></conditionExpression>
+    <sequenceFlow id="embeddedOrDecoupled" name="embedded or decoupled" sourceRef="scaChallengeSelector" targetRef="isPasswordPresent">
+      <documentation>embeddedor decoupled  SCA</documentation>
+      <conditionExpression xsi:type="tFormalExpression">#{xs2aConsentInfo.isEmbedded(CONTEXT) || xs2aConsentInfo.isDecoupled(CONTEXT)}</conditionExpression>
     </sequenceFlow>
     <serviceTask id="sendChallengeResult" name="Sends SCA challenge result" flowable:async="true" flowable:exclusive="false" flowable:delegateExpression="${xs2aAuthenticatePaymentWithScaChallenge}"/>
     <sequenceFlow id="sid-BC0026EE-A538-4399-8BA7-080F7C2383C9" sourceRef="sendChallengeResult" targetRef="isScaFinalized"/>
@@ -268,7 +268,7 @@
         <omgdi:waypoint x="429.94575712457055" y="235.0"/>
         <omgdi:waypoint x="594.9999999999643" y="235.0"/>
       </bpmndi:BPMNEdge>
-      <bpmndi:BPMNEdge bpmnElement="embedded" id="BPMNEdge_embedded">
+      <bpmndi:BPMNEdge bpmnElement="embeddedOrDecoupled" id="BPMNEdge_embedded">
         <omgdi:waypoint x="355.0" y="318.0"/>
         <omgdi:waypoint x="355.00003" y="235.0"/>
         <omgdi:waypoint x="390.0" y="235.0"/>
