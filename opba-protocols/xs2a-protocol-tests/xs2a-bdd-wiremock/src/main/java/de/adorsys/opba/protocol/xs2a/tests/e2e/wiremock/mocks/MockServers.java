@@ -372,6 +372,7 @@ public class MockServers<SELF extends MockServers<SELF>> extends CommonGivenStag
                                                           .action(BankAction.builder().id(ACTION_ID).build())
                                                           .forEmbedded(true)
                                                           .forRedirect(true)
+                                                          .forDecoupled(true)
                                                           .validationCode(FieldCode.PSU_IP_ADDRESS)
                                                           .build();
 
@@ -379,6 +380,7 @@ public class MockServers<SELF extends MockServers<SELF>> extends CommonGivenStag
                                                                  .action(BankAction.builder().id(AUTH_ACTION_ID).build())
                                                                  .forEmbedded(true)
                                                                  .forRedirect(true)
+                                                                 .forDecoupled(true)
                                                                  .validationCode(FieldCode.PSU_IP_ADDRESS)
                                                                  .build();
 
@@ -415,6 +417,7 @@ public class MockServers<SELF extends MockServers<SELF>> extends CommonGivenStag
                                                           .action(BankAction.builder().id(ACTION_ID).build())
                                                           .forEmbedded(true)
                                                           .forRedirect(true)
+                                                          .forDecoupled(true)
                                                           .validationCode(FieldCode.PSU_IP_PORT)
                                                           .build();
 
@@ -422,6 +425,7 @@ public class MockServers<SELF extends MockServers<SELF>> extends CommonGivenStag
                                                                  .action(BankAction.builder().id(AUTH_ACTION_ID).build())
                                                                  .forEmbedded(true)
                                                                  .forRedirect(true)
+                                                                 .forDecoupled(true)
                                                                  .validationCode(FieldCode.PSU_IP_PORT)
                                                                  .build();
 
