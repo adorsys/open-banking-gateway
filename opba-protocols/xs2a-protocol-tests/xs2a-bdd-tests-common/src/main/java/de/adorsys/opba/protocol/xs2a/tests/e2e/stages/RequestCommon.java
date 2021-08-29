@@ -4,6 +4,7 @@ import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import com.google.common.collect.ImmutableMap;
+import com.jayway.jsonpath.JsonPath;
 import com.tngtech.jgiven.Stage;
 import com.tngtech.jgiven.annotation.ProvidedScenarioState;
 import com.tngtech.jgiven.annotation.ScenarioState;
@@ -41,6 +42,7 @@ import static de.adorsys.opba.protocol.xs2a.tests.e2e.stages.StagesCommonUtil.LO
 import static de.adorsys.opba.protocol.xs2a.tests.e2e.stages.StagesCommonUtil.PASSWORD;
 import static de.adorsys.opba.restapi.shared.HttpHeaders.SERVICE_SESSION_ID;
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.springframework.http.HttpStatus.ACCEPTED;
 
 @Slf4j
 @JGivenStage
@@ -114,6 +116,14 @@ public abstract class RequestCommon<SELF extends RequestCommon<SELF>> extends St
         return self();
     }
 
+    public SELF user_max_musterman_polling_api_to_check_sca_status(HttpStatus httpStatus, String expectedConsentStatus) {
+        return user_max_musterman_polling_api_to_check_sca_status(httpStatus, expectedConsentStatus, serviceSessionId);
+    }
+
+    public SELF user_max_musterman_polling_api_to_check_payment_sca_status(HttpStatus httpStatus, String expectedConsentStatus) {
+        return user_max_musterman_polling_api_to_check_sca_status(httpStatus, expectedConsentStatus, paymentServiceSessionId);
+    }
+
     protected ExtractableResponse<Response> max_musterman_provides_sca_challenge_result() {
         return provideParametersToBankingProtocolWithBody(
                 AUTHORIZE_CONSENT_ENDPOINT,
@@ -174,6 +184,17 @@ public abstract class RequestCommon<SELF extends RequestCommon<SELF>> extends St
 
         updateServiceSessionId(response);
         updateRedirectCode(response);
+    }
+
+    protected SELF user_max_musterman_polling_api_to_check_sca_status(HttpStatus httpStatus, String expectedConsentStatus, String sessionId) {
+        ExtractableResponse<Response> response = consentApiPost(AUTHORIZE_CONSENT_ENDPOINT, "{}", httpStatus, sessionId);
+        this.responseContent = response.body().asString();
+        updateRedirectCodeIfAvailable(response);
+        this.redirectUriToGetUserParams = httpStatus == ACCEPTED ? LocationExtractorUtil.getLocation(response) : this.redirectUriToGetUserParams;
+        if (null != expectedConsentStatus) {
+            assertThat(JsonPath.parse(responseContent).read("scaStatus", String.class)).isEqualTo(expectedConsentStatus);
+        }
+        return self();
     }
 
     protected void updateNextConsentAuthorizationUrl(ExtractableResponse<Response> response) {

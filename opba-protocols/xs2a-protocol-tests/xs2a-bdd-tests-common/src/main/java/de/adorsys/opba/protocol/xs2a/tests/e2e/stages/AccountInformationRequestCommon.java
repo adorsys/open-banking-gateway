@@ -1,7 +1,6 @@
 package de.adorsys.opba.protocol.xs2a.tests.e2e.stages;
 
 import com.google.common.collect.ImmutableMap;
-import com.jayway.jsonpath.JsonPath;
 import com.tngtech.jgiven.annotation.ExpectedScenarioState;
 import com.tngtech.jgiven.integration.spring.JGivenStage;
 import de.adorsys.opba.consentapi.model.generated.AuthViolation;
@@ -537,14 +536,8 @@ public class AccountInformationRequestCommon<SELF extends AccountInformationRequ
         return self();
     }
 
-    public SELF user_max_musterman_polling_api_to_check_sca_status(HttpStatus httpStatus, String expectedConsentStatus) {
-        ExtractableResponse<Response> response = consentApiPost(AUTHORIZE_CONSENT_ENDPOINT, "{}", httpStatus, serviceSessionId);
-        this.responseContent = response.body().asString();
-        updateRedirectCodeIfAvailable(response);
-        this.redirectUriToGetUserParams = httpStatus == ACCEPTED ? LocationExtractorUtil.getLocation(response) : this.redirectUriToGetUserParams;
-        if (null != expectedConsentStatus) {
-            assertThat(JsonPath.parse(responseContent).read("scaStatus", String.class)).isEqualTo(expectedConsentStatus);
-        }
+    public SELF current_redirected_to_screen_is_consent_result() {
+        assertThat(this.redirectUriToGetUserParams).contains("ais").contains("consent-result");
         return self();
     }
 
@@ -599,11 +592,6 @@ public class AccountInformationRequestCommon<SELF extends AccountInformationRequ
         assertThat(this.redirectUriToGetUserParams).contains("sca-result").contains("/EMAIL").doesNotContain("wrong=true");
         ExtractableResponse<Response> response = user_provides_sca_challenge_result();
         assertThat(LocationExtractorUtil.getLocation(response)).contains("ais").contains("consent-result");
-    }
-
-    public SELF current_redirected_to_screen_is_consent_result() {
-        assertThat(this.redirectUriToGetUserParams).contains("ais").contains("consent-result");
-        return self();
     }
 
     public SELF user_max_musterman_provided_wrong_sca_challenge_result_to_embedded_authorization_and_stays_on_sca_page() {

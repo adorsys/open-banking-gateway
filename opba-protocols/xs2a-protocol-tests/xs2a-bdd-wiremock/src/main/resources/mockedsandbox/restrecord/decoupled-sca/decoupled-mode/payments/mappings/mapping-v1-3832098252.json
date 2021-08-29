@@ -1,0 +1,36 @@
+{
+  "id" : "3abb0e52-534a-3cbb-8d4d-0b1e09b62ccf",
+  "scenarioName": "Embedded initial,decoupled by ASPSP max.musterman initiate payment",
+  "requiredScenarioState": "Received",
+  "newScenarioState": "PsuIdentified",
+  "request" : {
+    "url" : "/v1/payments/sepa-credit-transfers/BBfDQPTXX_-FUVHI6tlMpe7x958b-J9Hmrg2ZViBGOQspmLfOLfwMGPMU_K3KjVBcgftJbETkzvNvu5mZQqWcA==_=_psGLvQpt9Q/authorisations",
+    "method" : "POST",
+    "headers" : {
+      "X-Request-ID" : {
+        "matches" : "[=_0-9a-zA-z\\-]+"
+      },
+      "PSU-ID" : {
+        "equalTo" : "max.musterman"
+      }
+    },
+    "bodyPatterns" : [ {
+      "equalToJson" : "{}",
+      "ignoreArrayOrder" : true,
+      "ignoreExtraElements" : true
+    } ]
+  },
+  "response" : {
+    "status" : 201,
+    "bodyFileName" : "body-v1-3832098252.json",
+    "headers" : {
+      "Vary" : [ "Origin", "Access-Control-Request-Method", "Access-Control-Request-Headers" ],
+      "Aspsp-Sca-Approach" : "EMBEDDED",
+      "X-Request-Id" : "21f1c17a-192e-4de3-b732-6329ab483462",
+      "Content-Type" : "application/json",
+      "Date" : "Sat, 28 Aug 2021 18:11:44 GMT",
+      "Keep-Alive" : "timeout=60"
+    }
+  },
+  "uuid" : "3abb0e52-534a-3cbb-8d4d-0b1e09b62ccf"
+}

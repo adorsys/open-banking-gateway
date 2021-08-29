@@ -41,26 +41,7 @@ public class Xs2aAisCheckDecoupledAuthorisationStatus extends ValidatedExecution
                 RequestParams.empty());
 
         ScaStatus scaStatus = consentScaStatus.getBody().getScaStatus();
-        ContextUtil.getAndUpdateContext(
-                execution,
-                (Xs2aContext ctx) -> {
-                    ctx.setDecoupledScaFinished(ScaStatus.FINALISED == scaStatus); // TODO Error cases
-                    ctx.setScaStatus(scaStatus.toString());
-                }
-        );
-
-        AuthenticationObject scaSelected = context.getScaSelected();
-        eventPublisher.publishEvent(
-                new ProcessResponse(
-                        execution.getRootProcessInstanceId(),
-                        execution.getId(),
-                        UpdateAuthBody.builder()
-                                .scaStatus(scaStatus.name())
-                                .scaAuthenticationType(Optional.ofNullable(scaSelected.getAuthenticationType()).map(AuthenticationType::name).orElse(null))
-                                .scaExplanation(scaSelected.getExplanation())
-                                .build()
-                )
-        );
+        DecoupledUtil.postHandleSca(execution, context, scaStatus, eventPublisher);
     }
 
     @Service

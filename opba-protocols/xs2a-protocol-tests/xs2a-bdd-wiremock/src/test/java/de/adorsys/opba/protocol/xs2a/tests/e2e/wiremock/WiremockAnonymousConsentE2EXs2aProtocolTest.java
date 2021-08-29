@@ -51,9 +51,6 @@ class WiremockAnonymousConsentE2EXs2aProtocolTest extends SpringScenarioTest<Moc
 
     private static final String OAUTH2_CODE = "2buKRxcMvi79w8xYLFaNsoyh";
 
-    private static final String SCA_METHOD_SELECTED = "scaMethodSelected";
-    private static final String FINALISED = "finalised";
-
     private final String OPBA_LOGIN = UUID.randomUUID().toString();
     private final String OPBA_PASSWORD = UUID.randomUUID().toString();
 
@@ -200,11 +197,11 @@ class WiremockAnonymousConsentE2EXs2aProtocolTest extends SpringScenarioTest<Moc
                 .and()
                 .user_max_musterman_provided_password_to_embedded_authorization()
                 .and()
-                .user_max_musterman_polling_api_to_check_sca_status(HttpStatus.OK, SCA_METHOD_SELECTED)
+                .user_max_musterman_polling_api_to_check_sca_status(HttpStatus.OK, Const.SCA_METHOD_SELECTED)
                 .and()
-                .user_max_musterman_polling_api_to_check_sca_status(HttpStatus.OK, SCA_METHOD_SELECTED)
+                .user_max_musterman_polling_api_to_check_sca_status(HttpStatus.OK, Const.SCA_METHOD_SELECTED)
                 .and()
-                .user_max_musterman_polling_api_to_check_sca_status(HttpStatus.OK, FINALISED)
+                .user_max_musterman_polling_api_to_check_sca_status(HttpStatus.OK, Const.FINALISED)
                 .and()
                 .user_max_musterman_polling_api_to_check_sca_status(HttpStatus.ACCEPTED, null)
                 .and()
@@ -232,11 +229,11 @@ class WiremockAnonymousConsentE2EXs2aProtocolTest extends SpringScenarioTest<Moc
                 .and()
                 .user_max_musterman_provided_password_to_embedded_authorization()
                 .and()
-                .user_max_musterman_polling_api_to_check_sca_status(HttpStatus.OK, SCA_METHOD_SELECTED)
+                .user_max_musterman_polling_api_to_check_sca_status(HttpStatus.OK, Const.SCA_METHOD_SELECTED)
                 .and()
-                .user_max_musterman_polling_api_to_check_sca_status(HttpStatus.OK, SCA_METHOD_SELECTED)
+                .user_max_musterman_polling_api_to_check_sca_status(HttpStatus.OK, Const.SCA_METHOD_SELECTED)
                 .and()
-                .user_max_musterman_polling_api_to_check_sca_status(HttpStatus.OK, FINALISED)
+                .user_max_musterman_polling_api_to_check_sca_status(HttpStatus.OK, Const.FINALISED)
                 .and()
                 .user_max_musterman_polling_api_to_check_sca_status(HttpStatus.ACCEPTED, null)
                 .and()

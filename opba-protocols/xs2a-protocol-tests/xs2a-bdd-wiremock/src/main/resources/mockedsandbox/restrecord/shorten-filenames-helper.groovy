@@ -13,7 +13,7 @@ import java.nio.file.Paths
 import java.util.zip.CRC32
 
 // YOUR PATH here:
-def root = Paths.get("/home/valb3r/IdeaProjects/open-banking-gateway/opba-protocols/xs2a-protocol-tests/xs2a-bdd-wiremock/src/main/resources/mockedsandbox/restrecord/decoupled-sca/decoupled-mode/accounts-with-balances")
+def root = Paths.get("/home/valb3r/IdeaProjects/open-banking-gateway/opba-protocols/xs2a-protocol-tests/xs2a-bdd-wiremock/src/main/resources/mockedsandbox/restrecord/decoupled-sca/embedded-mode-decoupled-sca/payments")
 
 def targetFiles = Files.walk(root)
         .filter {Files.isRegularFile(it)}
