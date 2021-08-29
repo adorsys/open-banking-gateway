@@ -109,7 +109,7 @@ public abstract class RequestCommon<SELF extends RequestCommon<SELF>> extends St
             .when()
                 .post(path, serviceSessionId)
             .then()
-                .statusCode(HttpStatus.ACCEPTED.value())
+                .statusCode(ACCEPTED.value())
                 .extract();
 
         this.authSessionCookie = response.cookie(AUTHORIZATION_SESSION_KEY);
@@ -128,7 +128,7 @@ public abstract class RequestCommon<SELF extends RequestCommon<SELF>> extends St
         return provideParametersToBankingProtocolWithBody(
                 AUTHORIZE_CONSENT_ENDPOINT,
                 readResource("restrecord/tpp-ui-input/params/max-musterman-sca-challenge-result.json"),
-                HttpStatus.ACCEPTED
+                ACCEPTED
         );
     }
 
@@ -136,7 +136,7 @@ public abstract class RequestCommon<SELF extends RequestCommon<SELF>> extends St
         return provideParametersToBankingProtocolWithBody(
                 AUTHORIZE_CONSENT_ENDPOINT,
                 readResource("restrecord/tpp-ui-input/params/new-user-sca-challenge-result.json"),
-                HttpStatus.ACCEPTED
+                ACCEPTED
         );
     }
 
@@ -176,7 +176,7 @@ public abstract class RequestCommon<SELF extends RequestCommon<SELF>> extends St
 
     protected void startInitialInternalConsentAuthorizationWithCookieValidation(String uriPath, String resourceData) {
         ExtractableResponse<Response> response =
-                startInitialInternalConsentAuthorization(uriPath, resourceData, HttpStatus.ACCEPTED);
+                startInitialInternalConsentAuthorization(uriPath, resourceData, ACCEPTED);
         Cookie detailedCookie = response.response().getDetailedCookie(AUTHORIZATION_SESSION_KEY);
 
         assertThat(detailedCookie.getMaxAge()).isEqualTo(cookieProperties.getRedirectMaxAge().getSeconds());
