@@ -338,6 +338,7 @@ public class MockServers<SELF extends MockServers<SELF>> extends CommonGivenStag
                 .endpointClassCanonicalName(Xs2aAccountListingService.class.getCanonicalName())
                 .forEmbedded(true)
                 .forRedirect(true)
+                .forDecoupled(true)
                 .validationCode(FieldCode.PSU_ID)
                 .build();
         ignoreValidationRuleRepository.deleteAll();
