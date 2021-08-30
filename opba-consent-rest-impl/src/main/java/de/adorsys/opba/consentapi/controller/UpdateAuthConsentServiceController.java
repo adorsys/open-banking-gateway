@@ -1,5 +1,7 @@
 package de.adorsys.opba.consentapi.controller;
 
+import de.adorsys.opba.consentapi.Const;
+import de.adorsys.opba.consentapi.model.generated.ConsentAuth;
 import de.adorsys.opba.consentapi.model.generated.PsuAuthRequest;
 import de.adorsys.opba.consentapi.resource.generated.UpdateConsentAuthorizationApi;
 import de.adorsys.opba.consentapi.service.mapper.AisConsentMapper;
@@ -16,10 +18,14 @@ import de.adorsys.opba.protocol.facade.services.authorization.UpdateAuthorizatio
 import de.adorsys.opba.restapi.shared.mapper.FacadeResponseBodyToRestBodyMapper;
 import de.adorsys.opba.restapi.shared.service.FacadeResponseMapper;
 import lombok.RequiredArgsConstructor;
+import org.mapstruct.Mapper;
+import org.mapstruct.Mapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.UUID;
 import java.util.concurrent.CompletableFuture;
+
+import static de.adorsys.opba.restapi.shared.GlobalConst.SPRING_KEYWORD;
 
 @RestController
 @RequiredArgsConstructor
@@ -32,6 +38,7 @@ public class UpdateAuthConsentServiceController implements UpdateConsentAuthoriz
     private final AisExtrasMapper extrasMapper;
     private final AisConsentMapper aisConsentMapper;
     private final FacadeResponseMapper mapper;
+    private final UpdateAuthBodyToApiMapper updateAuthBodyToApiMapper;
 
     @Override
     public CompletableFuture embeddedUsingPOST(
@@ -53,8 +60,7 @@ public class UpdateAuthConsentServiceController implements UpdateConsentAuthoriz
                         .scaAuthenticationData(body.getScaAuthenticationData())
                         .extras(extrasMapper.map(body.getExtras()))
                         .build()
-        ).thenApply((FacadeResult<UpdateAuthBody> result) ->
-                mapper.translate(result, new NoOpMapper<>()));
+        ).thenApply((FacadeResult<UpdateAuthBody> result) -> mapper.translate(result, updateAuthBodyToApiMapper));
     }
 
     @Override
@@ -78,5 +84,13 @@ public class UpdateAuthConsentServiceController implements UpdateConsentAuthoriz
         public T map(T facadeEntity) {
             return facadeEntity;
         }
+    }
+
+    @Mapper(componentModel = SPRING_KEYWORD, implementationPackage = Const.API_MAPPERS_PACKAGE)
+    public interface UpdateAuthBodyToApiMapper extends FacadeResponseBodyToRestBodyMapper<ConsentAuth, UpdateAuthBody> {
+
+        @Mapping(source = "scaAuthenticationType", target = "scaMethodSelected.scaMethod")
+        @Mapping(source = "scaExplanation", target = "scaMethodSelected.explanation")
+        ConsentAuth map(UpdateAuthBody authStateBody);
     }
 }

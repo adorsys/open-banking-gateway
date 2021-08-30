@@ -9,6 +9,7 @@ import { ToAspspPageComponent } from './to-aspsp-page/to-aspsp-page.component';
 import { ResultPageComponent } from './result-page/result-page.component';
 import { EntryPagePaymentsComponent } from './entry-page-payments/entry-page-payments.component';
 import { PaymentsConsentReviewComponent } from './payments-consent-review/payments-consent-review.component';
+import { WaitForDecoupled } from './wait-for-decoupled/wait-for-decoupled';
 
 const routes: Routes = [
   {
@@ -19,6 +20,7 @@ const routes: Routes = [
       { path: EnterTanPageComponent.ROUTE, component: EnterTanPageComponent },
       { path: SelectScaPageComponent.ROUTE, component: SelectScaPageComponent },
       { path: ToAspspPageComponent.ROUTE, component: ToAspspPageComponent },
+      { path: WaitForDecoupled.ROUTE, component: WaitForDecoupled },
       { path: ResultPageComponent.ROUTE, component: ResultPageComponent },
       {
         path: EntryPagePaymentsComponent.ROUTE,

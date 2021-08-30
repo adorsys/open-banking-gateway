@@ -1,0 +1,46 @@
+{
+  "id" : "d33b0271-083a-3c50-ab84-d394adf2ed3d",
+  "scenarioName": "Decoupled max.musterman initiate consent",
+  "requiredScenarioState": "Started",
+  "newScenarioState": "Received",
+  "request" : {
+    "url" : "/v1/consents",
+    "method" : "POST",
+    "headers" : {
+      "Accept" : {
+        "equalTo" : "application/json"
+      },
+      "X-Request-ID" : {
+        "matches" : "[=_0-9a-zA-z\\-]+"
+      },
+      "TPP-Nok-Redirect-URI" : {
+        "matches" : "http://localhost:.+/v1/consent/.+/fromAspsp/.+/nok"
+      },
+      "PSU-IP-Address" : {
+        "matches" : "\\d+\\.\\d+\\.\\d+\\.\\d+"
+      },
+      "TPP-Redirect-URI" : {
+        "matches" : "http://localhost:.+/v1/consent/.+/fromAspsp/.+/ok"
+      }
+    },
+    "bodyPatterns" : [ {
+      "equalToJson" : "{\"access\":{\"availableAccounts\":\"allAccounts\"},\"recurringIndicator\":true,\"validUntil\":\"2030-01-31\",\"frequencyPerDay\":12,\"combinedServiceIndicator\":false}",
+      "ignoreArrayOrder" : true,
+      "ignoreExtraElements" : true
+    } ]
+  },
+  "response" : {
+    "status" : 201,
+    "bodyFileName" : "body-v1-consents-370291184.json",
+    "headers" : {
+      "Vary" : [ "Origin", "Access-Control-Request-Method", "Access-Control-Request-Headers" ],
+      "Location" : "http://localhost:20014/v1/consents/gwSmVLCIfQVVPnSGg8v69gSd1H6_g0WCr7YU-RO9SHZnUzxbTouNENYOGkrGbXq1_9SxHzHaMr1NKEIFZyrivsz9MpaJIQIH3NJX8IHgetw=_=_psGLvQpt9Q",
+      "Aspsp-Sca-Approach" : "DECOUPLED",
+      "X-Request-Id" : "51e1016b-e5f9-444d-865d-dfee43ed78b0",
+      "Content-Type" : "application/json",
+      "Date" : "Sat, 21 Aug 2021 15:45:09 GMT",
+      "Keep-Alive" : "timeout=60"
+    }
+  },
+  "uuid" : "d33b0271-083a-3c50-ab84-d394adf2ed3d"
+}

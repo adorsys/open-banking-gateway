@@ -75,6 +75,11 @@ public class WiremockPaymentRequest<SELF extends WiremockPaymentRequest<SELF>> e
         return self();
     }
 
+    public SELF current_redirected_to_screen_is_payment_result() {
+        assertThat(this.redirectUriToGetUserParams).contains("pis").contains("consent-result");
+        return self();
+    }
+
     private void extractRedirectOkUriSentByOpbaFromWiremock() {
         extractRedirectOkUriSentByOpbaFromWiremock(0);
     }

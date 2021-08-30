@@ -197,6 +197,22 @@ public class MockServers<SELF extends MockServers<SELF>> extends CommonGivenStag
         return self();
     }
 
+    public SELF decoupled_embedded_approach_sca_decoupled_start_mock_of_sandbox_for_max_musterman_accounts_running() {
+        WireMockConfiguration config = WireMockConfiguration.options().dynamicPort()
+                .usingFilesUnderClasspath("mockedsandbox/restrecord/decoupled-sca/embedded-mode-decoupled-sca/accounts/");
+        startWireMock(config);
+
+        return self();
+    }
+
+    public SELF decoupled_approach_and_sca_decoupled_start_mock_of_sandbox_for_max_musterman_accounts_running() {
+        WireMockConfiguration config = WireMockConfiguration.options().dynamicPort()
+                .usingFilesUnderClasspath("mockedsandbox/restrecord/decoupled-sca/decoupled-mode/accounts/");
+        startWireMock(config);
+
+        return self();
+    }
+
     public SELF embedded_mock_of_sandbox_for_max_musterman_zero_sca_accounts_running() {
         WireMockConfiguration config = WireMockConfiguration.options().dynamicPort()
                                                .usingFilesUnderClasspath("mockedsandbox/restrecord/embedded/zero-sca/accounts/sandbox/");
@@ -224,6 +240,23 @@ public class MockServers<SELF extends MockServers<SELF>> extends CommonGivenStag
     public SELF embedded_mock_of_sandbox_for_max_musterman_zero_sca_payments_running() {
         WireMockConfiguration config = WireMockConfiguration.options().dynamicPort()
                                                .usingFilesUnderClasspath("mockedsandbox/restrecord/embedded/zero-sca/payments/sandbox/");
+        startWireMock(config);
+
+        return self();
+    }
+
+    public SELF decoupled_embedded_approach_sca_decoupled_start_mock_of_sandbox_for_max_musterman_payments_running() {
+        WireMockConfiguration config = WireMockConfiguration.options().dynamicPort()
+                .usingFilesUnderClasspath("mockedsandbox/restrecord/decoupled-sca/embedded-mode-decoupled-sca/payments/");
+        config.notifier(new Slf4jNotifier(true));
+        startWireMock(config);
+
+        return self();
+    }
+
+    public SELF decoupled_approach_and_sca_decoupled_start_mock_of_sandbox_for_max_musterman_payments_running() {
+        WireMockConfiguration config = WireMockConfiguration.options().dynamicPort()
+                .usingFilesUnderClasspath("mockedsandbox/restrecord/decoupled-sca/decoupled-mode/payments/");
         startWireMock(config);
 
         return self();
@@ -305,6 +338,7 @@ public class MockServers<SELF extends MockServers<SELF>> extends CommonGivenStag
                 .endpointClassCanonicalName(Xs2aAccountListingService.class.getCanonicalName())
                 .forEmbedded(true)
                 .forRedirect(true)
+                .forDecoupled(true)
                 .validationCode(FieldCode.PSU_ID)
                 .build();
         ignoreValidationRuleRepository.deleteAll();
@@ -338,6 +372,7 @@ public class MockServers<SELF extends MockServers<SELF>> extends CommonGivenStag
                                                           .action(BankAction.builder().id(ACTION_ID).build())
                                                           .forEmbedded(true)
                                                           .forRedirect(true)
+                                                          .forDecoupled(true)
                                                           .validationCode(FieldCode.PSU_IP_ADDRESS)
                                                           .build();
 
@@ -345,6 +380,7 @@ public class MockServers<SELF extends MockServers<SELF>> extends CommonGivenStag
                                                                  .action(BankAction.builder().id(AUTH_ACTION_ID).build())
                                                                  .forEmbedded(true)
                                                                  .forRedirect(true)
+                                                                 .forDecoupled(true)
                                                                  .validationCode(FieldCode.PSU_IP_ADDRESS)
                                                                  .build();
 
@@ -381,6 +417,7 @@ public class MockServers<SELF extends MockServers<SELF>> extends CommonGivenStag
                                                           .action(BankAction.builder().id(ACTION_ID).build())
                                                           .forEmbedded(true)
                                                           .forRedirect(true)
+                                                          .forDecoupled(true)
                                                           .validationCode(FieldCode.PSU_IP_PORT)
                                                           .build();
 
@@ -388,6 +425,7 @@ public class MockServers<SELF extends MockServers<SELF>> extends CommonGivenStag
                                                                  .action(BankAction.builder().id(AUTH_ACTION_ID).build())
                                                                  .forEmbedded(true)
                                                                  .forRedirect(true)
+                                                                 .forDecoupled(true)
                                                                  .validationCode(FieldCode.PSU_IP_PORT)
                                                                  .build();
 

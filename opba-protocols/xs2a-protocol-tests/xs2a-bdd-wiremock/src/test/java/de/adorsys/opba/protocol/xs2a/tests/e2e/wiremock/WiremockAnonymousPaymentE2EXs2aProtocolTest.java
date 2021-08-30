@@ -16,6 +16,7 @@ import org.junit.jupiter.params.provider.EnumSource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.web.server.LocalServerPort;
+import org.springframework.http.HttpStatus;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
@@ -25,7 +26,9 @@ import java.util.UUID;
 
 import static de.adorsys.opba.protocol.xs2a.tests.TestProfiles.MOCKED_SANDBOX;
 import static de.adorsys.opba.protocol.xs2a.tests.TestProfiles.ONE_TIME_POSTGRES_RAMFS;
+import static de.adorsys.opba.protocol.xs2a.tests.e2e.wiremock.Const.FINALISED;
 import static de.adorsys.opba.protocol.xs2a.tests.e2e.wiremock.Const.PIS_OAUTH2_CODE;
+import static de.adorsys.opba.protocol.xs2a.tests.e2e.wiremock.Const.SCA_METHOD_SELECTED;
 import static org.springframework.boot.test.context.SpringBootTest.WebEnvironment.RANDOM_PORT;
 
 /**
@@ -269,6 +272,70 @@ public class WiremockAnonymousPaymentE2EXs2aProtocolTest extends SpringScenarioT
                 .fintech_calls_payment_activation_for_current_authorization_id()
                 .fintech_calls_payment_status()
                 .fintech_calls_payment_information_iban_700_wiremock();
+    }
+
+    @Test
+    void testPaymentWithConsentUsingDecoupledWhenEmbeddedAndDecoupledSca() {
+        given()
+                .decoupled_embedded_approach_sca_decoupled_start_mock_of_sandbox_for_max_musterman_payments_running()
+                .set_default_preferred_approach()
+                .rest_assured_points_to_opba_server_with_fintech_signer_on_banking_api()
+                .user_registered_in_opba_with_credentials(OPBA_LOGIN, OPBA_PASSWORD);
+
+        when()
+                .fintech_calls_initiate_payment_for_max_musterman_with_anonymous_allowed()
+                .and()
+                .user_logged_in_into_opba_as_anonymous_user_with_credentials_using_fintech_supplied_url()
+                .and()
+                .user_max_musterman_provided_initial_parameters_to_make_payment()
+                .and()
+                .user_max_musterman_provided_password_to_embedded_authorization()
+                .and()
+                .user_max_musterman_polling_api_to_check_payment_sca_status(HttpStatus.OK, SCA_METHOD_SELECTED)
+                .and()
+                .user_max_musterman_polling_api_to_check_payment_sca_status(HttpStatus.OK, SCA_METHOD_SELECTED)
+                .and()
+                .user_max_musterman_polling_api_to_check_payment_sca_status(HttpStatus.OK, FINALISED)
+                .and()
+                .user_max_musterman_polling_api_to_check_payment_sca_status(HttpStatus.ACCEPTED, null)
+                .and()
+                .current_redirected_to_screen_is_payment_result();
+        then()
+                .open_banking_has_stored_payment()
+                .fintech_calls_payment_activation_for_current_authorization_id()
+                .fintech_calls_payment_status();
+    }
+
+    @Test
+    void testPaymentWithConsentUsingDecoupledWhenDecoupledApproach() {
+        given()
+                .decoupled_approach_and_sca_decoupled_start_mock_of_sandbox_for_max_musterman_payments_running()
+                .set_default_preferred_approach()
+                .rest_assured_points_to_opba_server_with_fintech_signer_on_banking_api()
+                .user_registered_in_opba_with_credentials(OPBA_LOGIN, OPBA_PASSWORD);
+
+        when()
+                .fintech_calls_initiate_payment_for_max_musterman_with_anonymous_allowed()
+                .and()
+                .user_logged_in_into_opba_as_anonymous_user_with_credentials_using_fintech_supplied_url()
+                .and()
+                .user_max_musterman_provided_initial_parameters_to_make_payment()
+                .and()
+                .user_max_musterman_provided_password_to_embedded_authorization()
+                .and()
+                .user_max_musterman_polling_api_to_check_payment_sca_status(HttpStatus.OK, SCA_METHOD_SELECTED)
+                .and()
+                .user_max_musterman_polling_api_to_check_payment_sca_status(HttpStatus.OK, SCA_METHOD_SELECTED)
+                .and()
+                .user_max_musterman_polling_api_to_check_payment_sca_status(HttpStatus.OK, FINALISED)
+                .and()
+                .user_max_musterman_polling_api_to_check_payment_sca_status(HttpStatus.ACCEPTED, null)
+                .and()
+                .current_redirected_to_screen_is_payment_result();
+        then()
+                .open_banking_has_stored_payment()
+                .fintech_calls_payment_activation_for_current_authorization_id()
+                .fintech_calls_payment_status();
     }
 
     /**
