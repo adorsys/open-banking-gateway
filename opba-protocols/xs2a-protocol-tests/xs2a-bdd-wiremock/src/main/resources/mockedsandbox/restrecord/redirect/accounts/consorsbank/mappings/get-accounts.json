@@ -1,7 +1,6 @@
 {
-  "id": "616a8d65-cf94-393a-9445-0c2cc0d84445",
-  "scenarioName": "Redirect anton.brueckner initiate consent",
-  "requiredScenarioState": "Finalised",
+  "scenarioName": "AccountsListUsingConsorsbankRedirect",
+  "newScenarioState": "GetAccount",
   "request": {
     "url": "/v1/accounts",
     "method": "GET",
@@ -19,7 +18,7 @@
   },
   "response": {
     "status": 200,
-    "bodyFileName": "body-v1-accounts-12388.json",
+    "bodyFileName": "body-account-response.json",
     "headers": {
       "X-Request-Id": "b575eefc-3232-11ea-b535-e2b5b1f1970b",
       "Content-Type": "application/json;charset=UTF-8",

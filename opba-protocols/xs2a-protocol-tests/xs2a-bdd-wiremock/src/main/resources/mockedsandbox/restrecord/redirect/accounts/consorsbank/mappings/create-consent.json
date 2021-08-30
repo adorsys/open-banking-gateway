@@ -1,8 +1,6 @@
 {
-  "id": "49c02872-029b-3c8b-a29c-e8290789dcb1",
-  "scenarioName": "Redirect anton.brueckner initiate consent",
-  "requiredScenarioState": "Started",
-  "newScenarioState": "Received",
+  "scenarioName": "AccountsListUsingConsorsbankRedirect",
+  "newScenarioState": "CreateConsent",
   "request": {
     "url": "/v1/consents",
     "method": "POST",
@@ -25,7 +23,7 @@
     },
     "bodyPatterns": [
       {
-        "equalToJson": "{\"access\":{\"availableAccounts\":\"allAccounts\"},\"recurringIndicator\":true,\"validUntil\":\"2030-01-31\",\"frequencyPerDay\":12}",
+        "equalToJson": "{\"recurringIndicator\":true,\"combinedServiceIndicator\":false,\"access\":{\"accounts\":[{\"iban\":\"DE80760700240271232400\",\"currency\":\"EUR\"}],\"balances\":[{\"iban\":\"DE80760700240271232400\",\"currency\":\"EUR\"}],\"transactions\":[{\"iban\":\"DE80760700240271232400\",\"currency\":\"EUR\"}]},\"frequencyPerDay\":12,\"validUntil\":\"2030-01-31\"}",
         "ignoreArrayOrder": true,
         "ignoreExtraElements": true
       }
@@ -33,7 +31,7 @@
   },
   "response": {
     "status": 201,
-    "bodyFileName": "body-v1-consents-24281.json",
+    "bodyFileName": "create-consent-body.json",
     "headers": {
       "Aspsp-Sca-Approach": "REDIRECT",
       "Location": "http://127.0.0.1:20014/v1/consents/FnQrERp1CutlTlhTke5EScQUikVhZuNU40Nfru7GjyesxBtjhvuH5WGDIejOpAQ82Kg_O5MgvEsAcowGNyi7d8z9MpaJIQIH3NJX8IHgetw=_=_psGLvQpt9Q",

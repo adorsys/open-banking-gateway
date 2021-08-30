@@ -71,7 +71,7 @@ public class WiremockAuthenticatedPaymentE2EXs2aProtocolTest extends SpringScena
                 .fintech_calls_initiate_payment_for_anton_brueckner();
 
         then()
-            .user_logged_in_into_opba_as_anonymous_user_with_credentials_using_fintech_supplied_url_is_forbidden();
+                .user_logged_in_into_opba_as_anonymous_user_with_credentials_using_fintech_supplied_url_is_forbidden();
     }
 
     @ParameterizedTest
@@ -141,8 +141,8 @@ public class WiremockAuthenticatedPaymentE2EXs2aProtocolTest extends SpringScena
                 .fintech_calls_initiate_payment_for_anton_brueckner(CONSORS_BANK_BANK_PROFILE_ID)
                 .and()
                 .user_logged_in_into_opba_pis_as_opba_user_with_credentials_using_fintech_supplied_url(OPBA_LOGIN, OPBA_PASSWORD)
-                 .and()
-               .user_anton_brueckner_provided_initial_parameters_to_authorize_initiation_payment()
+                .and()
+                .user_anton_brueckner_provided_initial_parameters_to_authorize_initiation_payment()
                 .and()
                 .user_anton_brueckner_sees_that_he_needs_to_be_redirected_to_aspsp_and_redirects_to_aspsp(CONSORS_BANK_BANK_PROFILE_ID)
                 .and()
@@ -319,26 +319,26 @@ public class WiremockAuthenticatedPaymentE2EXs2aProtocolTest extends SpringScena
     @Test
     void testDkbPaymentInitializationUsingEmbedded() {
         given()
-            .embedded_pre_step_mock_of_dkb_sandbox_for_max_musterman_payments_running()
-            .rest_assured_points_to_opba_server_with_fintech_signer_on_banking_api()
-            .user_registered_in_opba_with_credentials(OPBA_LOGIN, OPBA_PASSWORD);
+                .embedded_pre_step_mock_of_dkb_sandbox_for_max_musterman_payments_running()
+                .rest_assured_points_to_opba_server_with_fintech_signer_on_banking_api()
+                .user_registered_in_opba_with_credentials(OPBA_LOGIN, OPBA_PASSWORD);
 
         when()
-            .fintech_calls_initiate_payment_for_max_musterman(DKB_BANK_PROFILE_ID)
-            .and()
-            .user_logged_in_into_opba_pis_as_opba_user_with_credentials_using_fintech_supplied_url(OPBA_LOGIN, OPBA_PASSWORD)
-            .and()
-            .user_max_musterman_provided_initial_parameters_to_make_payment()
-            .and()
-            .user_max_musterman_provided_password_to_embedded_authorization()
-            .and()
-            .user_max_musterman_selected_sca_challenge_type_push_otp_to_embedded_authorization()
-            .and()
-            .user_max_musterman_provided_sca_challenge_result_to_embedded_authorization_and_sees_redirect_to_fintech_ok("/PUSH_OTP");
+                .fintech_calls_initiate_payment_for_max_musterman(DKB_BANK_PROFILE_ID)
+                .and()
+                .user_logged_in_into_opba_pis_as_opba_user_with_credentials_using_fintech_supplied_url(OPBA_LOGIN, OPBA_PASSWORD)
+                .and()
+                .user_max_musterman_provided_initial_parameters_to_make_payment()
+                .and()
+                .user_max_musterman_provided_password_to_embedded_authorization()
+                .and()
+                .user_max_musterman_selected_sca_challenge_type_push_otp_to_embedded_authorization()
+                .and()
+                .user_max_musterman_provided_sca_challenge_result_to_embedded_authorization_and_sees_redirect_to_fintech_ok("/PUSH_OTP");
         then()
-            .open_banking_has_stored_payment()
-            .fintech_calls_payment_activation_for_current_authorization_id()
-            .fintech_calls_payment_status(DKB_BANK_PROFILE_ID, TransactionStatus.ACCP.name());
+                .open_banking_has_stored_payment()
+                .fintech_calls_payment_activation_for_current_authorization_id()
+                .fintech_calls_payment_status(DKB_BANK_PROFILE_ID, TransactionStatus.ACCP.name());
     }
 
     @ParameterizedTest

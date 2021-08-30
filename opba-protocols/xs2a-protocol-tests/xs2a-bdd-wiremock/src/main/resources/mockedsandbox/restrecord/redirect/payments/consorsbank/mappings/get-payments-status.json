@@ -1,15 +1,15 @@
 {
-  "id" : "57d2cd9a-d3be-39b3-9a7e-c265b93e9ef5",
-  "requiredScenarioState": "Finalised",
-  "request" : {
-    "urlPattern" : "/v1/payments/sepa-credit-transfers/.+/status",
-    "method" : "GET",
-    "headers" : {
-      "PSU-ID" : {
-        "equalTo" : ""
+  "scenarioName": "PaymentInitializationUsingConsorsbankRedirect",
+  "newScenarioState": "GetPaymentStatus",
+  "request": {
+    "urlPattern": "/v1/payments/sepa-credit-transfers/.+/status",
+    "method": "GET",
+    "headers": {
+      "PSU-ID": {
+        "equalTo": ""
       },
-      "X-Request-ID" : {
-        "matches" : "[0-9a-zA-z\\-]+"
+      "X-Request-ID": {
+        "matches": "[0-9a-zA-z\\-]+"
       }
     }
   },
