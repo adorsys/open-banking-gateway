@@ -222,6 +222,23 @@ public class PaymentRequestCommon<SELF extends PaymentRequestCommon<SELF>> exten
         updateRedirectCode(response);
         return self();
     }
+    public SELF user_anton_brueckner_sees_that_he_needs_to_be_redirected_to_aspsp_and_redirects_to_aspsp(String bankProfileId) {
+        ExtractableResponse<Response> response = withPaymentInfoHeaders(ANTON_BRUECKNER, bankProfileId)
+                .cookie(AUTHORIZATION_SESSION_KEY, authSessionCookie)
+                .queryParam(X_XSRF_TOKEN_QUERY, redirectCode)
+                .when()
+                .get(GET_PAYMENT_AUTH_STATE, paymentServiceSessionId)
+                .then()
+                .statusCode(HttpStatus.OK.value())
+                .extract();
+
+        assertThatResponseContainsAntonBruecknersSinglePayment(response);
+
+        updateNextPaymentAuthorizationUrl(response);
+        updateServiceSessionId(response);
+        updateRedirectCode(response);
+        return self();
+    }
 
     public SELF user_max_musterman_provided_sca_challenge_result_to_embedded_authorization_and_sees_redirect_to_fintech_ok(String challengeType) {
         assertThat(this.redirectUriToGetUserParams).contains("sca-result").contains(challengeType).doesNotContain("wrong=true");

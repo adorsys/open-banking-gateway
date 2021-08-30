@@ -42,6 +42,8 @@ public class MockServers<SELF extends MockServers<SELF>> extends CommonGivenStag
     public static final long AUTH_ACTION_ID = 3L;
     public static final long ACTION_ID = 1L;
     public static final String DKB_BANK_ID = "335562a2-26e2-4105-b31e-08de285234e0";
+    public static final String CONSORS_BANK_BANK_ID = "81cecc67-6d1b-4169-b67c-2de52b99a0cc";
+
     @Autowired
     private BankProfileJpaRepository bankProfileJpaRepository;
 
@@ -69,6 +71,14 @@ public class MockServers<SELF extends MockServers<SELF>> extends CommonGivenStag
         WireMockConfiguration config = WireMockConfiguration.options().dynamicPort()
                 .usingFilesUnderClasspath("mockedsandbox/restrecord/redirect/accounts/sandbox/");
         startWireMock(config);
+
+        return self();
+    }
+
+    public SELF redirect_mock_of_consorsbank_for_anton_brueckner_accounts_running() {
+        WireMockConfiguration config = WireMockConfiguration.options().dynamicPort()
+                .usingFilesUnderClasspath("mockedsandbox/restrecord/redirect/accounts/consorsbank/");
+        startWireMock(config, CONSORS_BANK_BANK_ID);
 
         return self();
     }
@@ -135,6 +145,14 @@ public class MockServers<SELF extends MockServers<SELF>> extends CommonGivenStag
         WireMockConfiguration config = WireMockConfiguration.options().dynamicPort()
                                                .usingFilesUnderClasspath("mockedsandbox/restrecord/redirect/payments/sandbox/");
         startWireMock(config);
+
+        return self();
+    }
+
+    public SELF redirect_mock_of_consorsbank_for_anton_brueckner_payments_running() {
+        WireMockConfiguration config = WireMockConfiguration.options().dynamicPort()
+                .usingFilesUnderClasspath("mockedsandbox/restrecord/redirect/payments/consorsbank/");
+        startWireMock(config, CONSORS_BANK_BANK_ID);
 
         return self();
     }

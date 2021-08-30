@@ -126,6 +126,11 @@ public class AccountInformationResult<SELF extends AccountInformationResult<SELF
     }
 
     @SneakyThrows
+    public SELF open_banking_can_read_anton_brueckner_account_data_using_consent_bound_to_service_session(String bankProfileId) {
+        return open_banking_can_read_anton_brueckner_account_data_using_consent_bound_to_service_session(true, bankProfileId);
+    }
+
+    @SneakyThrows
     public SELF open_banking_can_read_anton_brueckner_account_data_using_consent_bound_to_service_session(
         boolean validateResourceId
     ) {
@@ -141,6 +146,28 @@ public class AccountInformationResult<SELF extends AccountInformationResult<SELF
                 .body("accounts[0].name", equalTo("anton.brueckner"))
                 .body("accounts", hasSize(1))
             .extract();
+
+        this.responseContent = response.body().asString();
+        return self();
+    }
+
+
+    @SneakyThrows
+    public SELF open_banking_can_read_anton_brueckner_account_data_using_consent_bound_to_service_session(
+            boolean validateResourceId, String bankProfileId
+    ) {
+        ExtractableResponse<Response> response = withAccountsHeaders(ANTON_BRUECKNER, bankProfileId)
+                .header(SERVICE_SESSION_ID, serviceSessionId)
+                .when()
+                .get(AIS_ACCOUNTS_ENDPOINT)
+                .then()
+                .statusCode(HttpStatus.OK.value())
+                .body("accounts[0].iban", equalTo(ANTON_BRUECKNER_IBAN))
+                .body("accounts[0].resourceId", validateResourceId ? equalTo("cmD4EYZeTkkhxRuIV1diKA") : instanceOf(String.class))
+                .body("accounts[0].currency", equalTo("EUR"))
+                .body("accounts[0].name", equalTo("anton.brueckner"))
+                .body("accounts", hasSize(1))
+                .extract();
 
         this.responseContent = response.body().asString();
         return self();

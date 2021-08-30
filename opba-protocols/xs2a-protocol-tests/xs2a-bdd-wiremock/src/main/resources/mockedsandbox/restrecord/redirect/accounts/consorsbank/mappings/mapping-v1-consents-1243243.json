@@ -1,0 +1,30 @@
+{
+  "id": "13e84835-8e5e-3f65-8732-65852ea3dbb9",
+  "request": {
+    "url": "/v1/consents/FnQrERp1CutlTlhTke5EScQUikVhZuNU40Nfru7GjyesxBtjhvuH5WGDIejOpAQ82Kg_O5MgvEsAcowGNyi7d8z9MpaJIQIH3NJX8IHgetw=_=_psGLvQpt9Q",
+    "method": "DELETE",
+    "headers": {
+      "Accept": {
+        "equalTo": "application/json"
+      },
+      "X-Request-ID": {
+        "matches": "[0-9a-zA-z\\-]+"
+      },
+      "PSU-ID": {
+        "equalTo": "anton.brueckner"
+      },
+      "PSU-IP-Address": {
+        "equalTo": "1.1.1.1"
+      }
+    }
+  },
+  "response": {
+    "status": 204,
+    "body": "",
+    "headers": {
+      "X-Request-Id": "c30fa73f-7032-11ea-9ad8-422578fbd335",
+      "Date": "Fri, 27 Mar 2020 13:57:02 GMT"
+    }
+  },
+  "uuid": "13e84835-8e5e-3f65-8732-65852ea3dbb9"
+}
