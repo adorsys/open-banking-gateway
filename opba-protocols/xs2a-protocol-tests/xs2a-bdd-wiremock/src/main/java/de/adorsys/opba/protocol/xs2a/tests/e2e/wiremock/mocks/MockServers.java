@@ -232,7 +232,7 @@ public class MockServers<SELF extends MockServers<SELF>> extends CommonGivenStag
     public SELF embedded_pre_step_mock_of_postbank_sandbox_for_max_musterman_payments_running() {
         WireMockConfiguration config = WireMockConfiguration.options().dynamicPort()
                 .usingFilesUnderClasspath("mockedsandbox/restrecord/embedded/multi-sca/payments/postbank/");
-        startWireMock(config, "01aa84f2-25c0-4e02-8065-c401657e3fb0", it -> it.setUrl("http://localhost:" + sandbox.port() + "/{Service Group}/DE/Postbank"));
+        startWireMock(config, POSTBANK_BANK_ID, it -> it.setUrl("http://localhost:" + sandbox.port() + "/{Service Group}/DE/Postbank"));
         return self();
     }
 
