@@ -1,7 +1,6 @@
 package de.adorsys.opba.protocol.xs2a.tests.e2e.wiremock.mocks;
 
 import com.github.tomakehurst.wiremock.WireMockServer;
-import com.github.tomakehurst.wiremock.common.Slf4jNotifier;
 import com.github.tomakehurst.wiremock.core.WireMockConfiguration;
 import com.github.tomakehurst.wiremock.extension.responsetemplating.ResponseTemplateTransformer;
 import com.google.common.io.Resources;
