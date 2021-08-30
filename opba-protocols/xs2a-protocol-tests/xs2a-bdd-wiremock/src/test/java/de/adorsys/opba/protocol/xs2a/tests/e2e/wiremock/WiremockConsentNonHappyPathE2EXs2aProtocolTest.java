@@ -173,7 +173,7 @@ public class WiremockConsentNonHappyPathE2EXs2aProtocolTest extends
 
     @ParameterizedTest
     @EnumSource(Approach.class)
-    void testAccountsListWithConsentWithMissingPsuId(Approach expectedApproach, @TempDir Path tempDir) {
+    void testAccountsListWithConsentWithMissingPsuIdAllowedUsingRule(Approach expectedApproach, @TempDir Path tempDir) {
         given()
                 .redirect_mock_of_sandbox_nopsu_for_anton_brueckner_accounts_running_for_non_happy_path(tempDir)
                 .ignore_validation_rules_table_contains_field_psu_id()

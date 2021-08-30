@@ -196,6 +196,16 @@ public class Xs2aContext extends BaseContext {
      */
     private String oauth2RedirectBackLink;
 
+    /**
+     * Is selected SCA method is decoupled
+     */
+    private boolean selectedScaDecoupled;
+
+    /**
+     * Is decoupled SCA successfully finalized by PSU
+     */
+    private boolean decoupledScaFinished;
+
     @JsonIgnore
     public String getPsuPassword() {
         TransientDataEntry entry = this.transientStorage().get();

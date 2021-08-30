@@ -1,0 +1,46 @@
+{
+  "id" : "b09252c0-fb4e-3736-990d-4785e9fb9e0b",
+  "scenarioName": "Embedded initial,decoupled by ASPSP max.musterman initiate payment",
+  "requiredScenarioState": "Started",
+  "newScenarioState": "Received",
+  "request" : {
+    "url" : "/v1/payments/sepa-credit-transfers",
+    "method" : "POST",
+    "headers" : {
+      "X-Request-ID" : {
+        "matches" : "[=_0-9a-zA-z\\-]+"
+      },
+      "TPP-Nok-Redirect-URI" : {
+        "matches" : "http://localhost:.+/v1/consent/.+/fromAspsp/.+/nok"
+      },
+      "PSU-ID" : {
+        "equalTo" : "max.musterman"
+      },
+      "PSU-IP-Address" : {
+        "equalTo" : "1.1.1.1"
+      },
+      "TPP-Redirect-URI" : {
+        "matches" : "http://localhost:.+/v1/consent/.+/fromAspsp/.+/ok"
+      }
+    },
+    "bodyPatterns" : [ {
+      "equalToJson" : "{\"endToEndIdentification\":\"WBG-123456789\",\"debtorAccount\":{\"iban\":\"DE38760700240320465700\",\"currency\":\"EUR\"},\"instructedAmount\":{\"currency\":\"EUR\",\"amount\":\"1.03\"},\"creditorAccount\":{\"iban\":\"DE38760700240320465700\",\"currency\":\"EUR\"},\"creditorAgent\":\"AAAADEBBXXX\",\"creditorName\":\"WBG\",\"creditorAddress\":{\"streetName\":\"WBG Straße\",\"buildingNumber\":\"56\",\"townName\":\"Nürnberg\",\"postCode\":\"90543\",\"country\":\"DE\"},\"remittanceInformationUnstructured\":\"Ref. Number WBG-1222\"}",
+      "ignoreArrayOrder" : true,
+      "ignoreExtraElements" : true
+    } ]
+  },
+  "response" : {
+    "status" : 201,
+    "bodyFileName" : "body-v1-492790064.json",
+    "headers" : {
+      "Vary" : [ "Origin", "Access-Control-Request-Method", "Access-Control-Request-Headers" ],
+      "Aspsp-Sca-Approach" : "DECOUPLED",
+      "Location" : "http://host.docker.internal:20014/v1/payments/sepa-credit-transfers/BBfDQPTXX_-FUVHI6tlMpe7x958b-J9Hmrg2ZViBGOQspmLfOLfwMGPMU_K3KjVBcgftJbETkzvNvu5mZQqWcA==_=_psGLvQpt9Q",
+      "X-Request-Id" : "7010b71e-d54e-411a-bb7d-f1791c6db54c",
+      "Content-Type" : "application/json",
+      "Date" : "Sat, 28 Aug 2021 18:11:44 GMT",
+      "Keep-Alive" : "timeout=60"
+    }
+  },
+  "uuid" : "b09252c0-fb4e-3736-990d-4785e9fb9e0b"
+}

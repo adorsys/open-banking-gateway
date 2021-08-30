@@ -76,6 +76,7 @@ protocol:
           select-sca-method: ${facade.urls.embedded-ui-base-url}/ais${protocol.xs2a.urls.common.parameters.select-sca-method}
           report-sca-result: ${facade.urls.embedded-ui-base-url}/ais${protocol.xs2a.urls.common.parameters.report-sca-result}
           provide-psu-iban: ${facade.urls.embedded-ui-base-url}/ais${protocol.xs2a.urls.common.parameters.provide-psu-iban}
+          wait-decoupled-sca: ${facade.urls.embedded-ui-base-url}/ais${protocol.xs2a.urls.common.parameters.wait-decoupled-sca}
       pis:
         to-aspsp: ${facade.urls.embedded-ui-base-url}/pis${protocol.xs2a.urls.common.to-aspsp}
         web-hooks:
@@ -88,6 +89,7 @@ protocol:
           select-sca-method: ${facade.urls.embedded-ui-base-url}/pis${protocol.xs2a.urls.common.parameters.select-sca-method}
           report-sca-result: ${facade.urls.embedded-ui-base-url}/pis${protocol.xs2a.urls.common.parameters.report-sca-result}
           provide-psu-iban: ${facade.urls.embedded-ui-base-url}/pis${protocol.xs2a.urls.common.parameters.provide-psu-iban}
+          wait-decoupled-sca: ${facade.urls.embedded-ui-base-url}/pis${protocol.xs2a.urls.common.parameters.wait-decoupled-sca}
       common:
         to-aspsp: /{authSessionId}/to-aspsp-redirection?redirectCode={redirectCode}
         web-hooks:
@@ -100,6 +102,7 @@ protocol:
           select-sca-method: /{authSessionId}/select-sca-method
           report-sca-result: /{authSessionId}/sca-result/{selectedScaType}?wrong={isWrongCreds}
           provide-psu-iban: /{authSessionId}/entry-consent-transactions/dedicated-account-access?wrong={isWrongCreds}
+          wait-decoupled-sca: /{authSessionId}/wait-sca-finalization?redirectCode={redirectCode}
     aspspmessages:
       invalid-credentials: PSU_CREDENTIALS_INVALID
       invalid-consent: FORMAT_ERROR
@@ -126,5 +129,7 @@ bpmnshared:
       expire-after-write: PT600S
     # TODO: re-enable retry after proper error handling implementation
     number-of-retries: 0
+    job-timeout:
+      timeout: PT5M
 flowable:
   process-definition-location-prefix: classpath*:/processes/**/
