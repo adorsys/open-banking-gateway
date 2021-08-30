@@ -337,7 +337,6 @@ public class MockServers<SELF extends MockServers<SELF>> extends CommonGivenStag
 
     @SneakyThrows
     private void startWireMock(WireMockConfiguration config) {
-
         startWireMock(config, "adadadad-4000-0000-0000-b0b0b0b0b0b0", defaultbankProfileConfigurer);
     }
 

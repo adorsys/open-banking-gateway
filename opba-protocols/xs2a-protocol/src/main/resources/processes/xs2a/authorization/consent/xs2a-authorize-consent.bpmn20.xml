@@ -121,7 +121,7 @@
   <bpmndi:BPMNDiagram id="BPMNDiagram_xs2a-authorize-consent">
     <bpmndi:BPMNPlane bpmnElement="xs2a-authorize-consent" id="BPMNPlane_xs2a-authorize-consent">
       <bpmndi:BPMNShape bpmnElement="start" id="BPMNShape_start">
-        <omgdc:Bounds height="30.0" width="30.0" x="58.27999" y="229.41202"/>
+        <omgdc:Bounds height="30.0" width="30.0" x="64.2337" y="163.68126"/>
       </bpmndi:BPMNShape>
       <bpmndi:BPMNShape bpmnElement="startAuthorization" id="BPMNShape_startAuthorization">
         <omgdc:Bounds height="80.0" width="100.0" x="137.0278" y="298.00003"/>
@@ -319,7 +319,9 @@
         <omgdi:waypoint x="137.0278" y="338.00003"/>
       </bpmdi:BPMNEdge>
       <bpmdi:BPMNEdge xmlns:bpmdi="http://www.omg.org/spec/BPMN/20100524/DI" id="edge-eced39f8-c692-49d5-bd83-716e330ff030" bpmnElement="sid-6ad44981-0d14-42c9-ae1c-dc4b971c8f35">
-        <omgdi:waypoint x="73.27999" y="193.42735"/>
+        <omgdi:waypoint x="71.7337" y="193.68126"/>
+        <omgdi:waypoint x="73.27998" y="183.82233"/>
+        <omgdi:waypoint x="73.28" y="255.0"/>
         <omgdi:waypoint x="73.27999" y="317.99997"/>
       </bpmdi:BPMNEdge>
       <bpmdi:BPMNEdge xmlns:bpmdi="http://www.omg.org/spec/BPMN/20100524/DI" id="edge-74cb95eb-9404-461e-ac3b-c2a776391048" bpmnElement="isRedirectBeforeAuth">
