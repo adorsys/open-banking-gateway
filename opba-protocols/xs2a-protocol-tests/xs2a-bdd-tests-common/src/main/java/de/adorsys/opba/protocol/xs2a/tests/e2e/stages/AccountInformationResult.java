@@ -132,30 +132,21 @@ public class AccountInformationResult<SELF extends AccountInformationResult<SELF
 
     @SneakyThrows
     public SELF open_banking_can_read_anton_brueckner_account_data_using_consent_bound_to_service_session(
-        boolean validateResourceId
+            boolean validateResourceId
     ) {
-        ExtractableResponse<Response> response = withAccountsHeaders(ANTON_BRUECKNER)
-                .header(SERVICE_SESSION_ID, serviceSessionId)
-            .when()
-                .get(AIS_ACCOUNTS_ENDPOINT)
-            .then()
-                .statusCode(HttpStatus.OK.value())
-                .body("accounts[0].iban", equalTo(ANTON_BRUECKNER_IBAN))
-                .body("accounts[0].resourceId", validateResourceId ? equalTo("cmD4EYZeTkkhxRuIV1diKA") : instanceOf(String.class))
-                .body("accounts[0].currency", equalTo("EUR"))
-                .body("accounts[0].name", equalTo("anton.brueckner"))
-                .body("accounts", hasSize(1))
-            .extract();
-
-        this.responseContent = response.body().asString();
+        open_banking_can_read_anton_brueckner_account_data_using_consent_bound_to_service_session_and_bank_profile_id(validateResourceId, SANDBOX_BANK_PROFILE_ID);
         return self();
     }
-
 
     @SneakyThrows
     public SELF open_banking_can_read_anton_brueckner_account_data_using_consent_bound_to_service_session(
             boolean validateResourceId, String bankProfileId
     ) {
+        open_banking_can_read_anton_brueckner_account_data_using_consent_bound_to_service_session_and_bank_profile_id(validateResourceId, bankProfileId);
+        return self();
+    }
+
+    private void open_banking_can_read_anton_brueckner_account_data_using_consent_bound_to_service_session_and_bank_profile_id(boolean validateResourceId, String bankProfileId) {
         ExtractableResponse<Response> response = withAccountsHeaders(ANTON_BRUECKNER, bankProfileId)
                 .header(SERVICE_SESSION_ID, serviceSessionId)
                 .when()
@@ -170,7 +161,6 @@ public class AccountInformationResult<SELF extends AccountInformationResult<SELF
                 .extract();
 
         this.responseContent = response.body().asString();
-        return self();
     }
 
     @SneakyThrows
@@ -179,9 +169,9 @@ public class AccountInformationResult<SELF extends AccountInformationResult<SELF
     ) {
         ExtractableResponse<Response> response = withAccountsHeaders(user)
                 .header(SERVICE_SESSION_ID, serviceSessionId)
-            .when()
+                .when()
                 .get(AIS_ACCOUNTS_ENDPOINT)
-            .then()
+                .then()
                 .statusCode(HttpStatus.OK.value())
                 .body("accounts[0].iban", equalTo(iban))
                 .body("accounts[0].resourceId", validateResourceId ? equalTo(accountResourceId) : instanceOf(String.class))
@@ -201,7 +191,7 @@ public class AccountInformationResult<SELF extends AccountInformationResult<SELF
 
     @SneakyThrows
     public SELF open_banking_can_read_max_musterman_account_data_using_consent_bound_to_service_session(
-        boolean validateResourceId
+            boolean validateResourceId
     ) {
         return open_banking_can_read_max_musterman_account_data_using_consent_bound_to_service_session(validateResourceId, 0);
     }
@@ -215,14 +205,14 @@ public class AccountInformationResult<SELF extends AccountInformationResult<SELF
 
     @SneakyThrows
     public SELF open_banking_can_read_max_musterman_account_data_using_consent_bound_to_service_session(
-        boolean validateResourceId, int expectedBalances, boolean online, String bankId
+            boolean validateResourceId, int expectedBalances, boolean online, String bankId
     ) {
         ValidatableResponse body = withAccountsHeaders(ANTON_BRUECKNER, bankId)
                 .header(SERVICE_SESSION_ID, serviceSessionId)
-            .when()
+                .when()
                 .queryParam("online", online)
                 .get(AIS_ACCOUNTS_ENDPOINT)
-            .then()
+                .then()
                 .statusCode(HttpStatus.OK.value())
                 .body("accounts[0].iban", equalTo(MAX_MUSTERMAN_IBAN))
                 .body("accounts[0].resourceId", validateResourceId ? equalTo("oN7KTVuJSVotMvPPPavhVo") : instanceOf(String.class))
@@ -240,7 +230,7 @@ public class AccountInformationResult<SELF extends AccountInformationResult<SELF
 
     @SneakyThrows
     public SELF open_banking_reads_anton_brueckner_transactions_using_consent_bound_to_service_session_data_validated_by_iban(
-        String resourceId, LocalDate dateFrom, LocalDate dateTo, String bookingStatus
+            String resourceId, LocalDate dateFrom, LocalDate dateTo, String bookingStatus
     ) {
         ExtractableResponse<Response> response = getTransactionListFor(ANTON_BRUECKNER, resourceId, dateFrom, dateTo, bookingStatus);
 
@@ -311,7 +301,7 @@ public class AccountInformationResult<SELF extends AccountInformationResult<SELF
     }
 
     protected ExtractableResponse<Response> getTransactionListFor(
-        String psuId, String bankProfileId, String resourceId, LocalDate dateFrom, LocalDate dateTo, String bookingStatus
+            String psuId, String bankProfileId, String resourceId, LocalDate dateFrom, LocalDate dateTo, String bookingStatus
     ) {
         return withTransactionsHeaders(psuId, bankProfileId)
                 .header(SERVICE_SESSION_ID, serviceSessionId)
@@ -319,36 +309,36 @@ public class AccountInformationResult<SELF extends AccountInformationResult<SELF
                 .queryParam("dateTo", dateTo.format(ISO_DATE))
                 .queryParam("bookingStatus", bookingStatus)
                 .queryParam(ONLINE, false)
-            .when()
+                .when()
                 .get(AIS_TRANSACTIONS_ENDPOINT, resourceId)
-            .then()
+                .then()
                 .statusCode(HttpStatus.OK.value())
-            .extract();
+                .extract();
     }
 
     public SELF open_banking_can_read_anton_brueckner_transactions_data_using_consent_bound_to_service_session(
-        String resourceId, LocalDate dateFrom, LocalDate dateTo, String bookingStatus
+            String resourceId, LocalDate dateFrom, LocalDate dateTo, String bookingStatus
     ) {
         withTransactionsHeaders(ANTON_BRUECKNER)
                 .header(SERVICE_SESSION_ID, serviceSessionId)
                 .queryParam("dateFrom", dateFrom.format(ISO_DATE))
                 .queryParam("dateTo", dateTo.format(ISO_DATE))
                 .queryParam("bookingStatus", bookingStatus)
-            .when()
+                .when()
                 .get(AIS_TRANSACTIONS_ENDPOINT, resourceId)
-            .then()
+                .then()
                 .statusCode(HttpStatus.OK.value())
                 .body("transactions.booked.transactionId",
-                    containsInAnyOrder(
-                        "rnvGvu2TR2Yl99bAoM_skY",
-                        "1Lag4mgPRy4kLuz1rRifJ4",
-                        "xKVwpTr9TaAoW9j1Zem4Tw",
-                        "GrrnMdDgTGIjM-w_kkTVSA",
-                        "mfSdvTvYThwr8hocMJMsxA",
-                        "Tt7Os27bTc0vC6jDk0f5lY",
-                        "qlI0mwopQIknL0n-U4bD80",
-                        "pG7GZlccRPsoBNudHnX25Q"
-                    )
+                        containsInAnyOrder(
+                                "rnvGvu2TR2Yl99bAoM_skY",
+                                "1Lag4mgPRy4kLuz1rRifJ4",
+                                "xKVwpTr9TaAoW9j1Zem4Tw",
+                                "GrrnMdDgTGIjM-w_kkTVSA",
+                                "mfSdvTvYThwr8hocMJMsxA",
+                                "Tt7Os27bTc0vC6jDk0f5lY",
+                                "qlI0mwopQIknL0n-U4bD80",
+                                "pG7GZlccRPsoBNudHnX25Q"
+                        )
                 )
                 .body("transactions.booked", hasSize(ANTON_BRUECKNER_BOOKED_TRANSACTIONS_COUNT));
         return self();
@@ -365,7 +355,7 @@ public class AccountInformationResult<SELF extends AccountInformationResult<SELF
 
     @SneakyThrows
     public SELF open_banking_can_read_max_musterman_transactions_data_using_consent_bound_to_service_session(
-        String resourceId, LocalDate dateFrom, LocalDate dateTo, String bookingStatus, boolean online
+            String resourceId, LocalDate dateFrom, LocalDate dateTo, String bookingStatus, boolean online
     ) {
         withTransactionsHeaders(MAX_MUSTERMAN)
                 .header(SERVICE_SESSION_ID, serviceSessionId)
@@ -373,18 +363,18 @@ public class AccountInformationResult<SELF extends AccountInformationResult<SELF
                 .queryParam("dateTo", dateTo.format(ISO_DATE))
                 .queryParam("bookingStatus", bookingStatus)
                 .queryParam("online", online)
-            .when()
+                .when()
                 .get(AIS_TRANSACTIONS_ENDPOINT, resourceId)
-            .then()
+                .then()
                 .statusCode(HttpStatus.OK.value())
                 .body("transactions.booked.transactionId",
-                    containsInAnyOrder(
-                        "VHF5-8R1RCcskezln6CJAY",
-                        "etA9KGhIT9ohX9dYXrhzc8",
-                        "LjwVWzBBQtwpyQ6WBBTiwk",
-                        "pkOyTAHDTb0uCF2R55HKKo",
-                        "F3qVhSXlQswswIN2nk1rBo"
-                    )
+                        containsInAnyOrder(
+                                "VHF5-8R1RCcskezln6CJAY",
+                                "etA9KGhIT9ohX9dYXrhzc8",
+                                "LjwVWzBBQtwpyQ6WBBTiwk",
+                                "pkOyTAHDTb0uCF2R55HKKo",
+                                "F3qVhSXlQswswIN2nk1rBo"
+                        )
                 )
                 .body("transactions.booked", hasSize(MAX_MUSTERMAN_BOOKED_TRANSACTIONS_COUNT));
         return self();
@@ -410,7 +400,7 @@ public class AccountInformationResult<SELF extends AccountInformationResult<SELF
 
     @SneakyThrows
     public SELF open_banking_reads_max_musterman_transactions_using_consent_bound_to_service_session_data_validated_by_iban(
-        String resourceId, LocalDate dateFrom, LocalDate dateTo, String bookingStatus
+            String resourceId, LocalDate dateFrom, LocalDate dateTo, String bookingStatus
     ) {
         ExtractableResponse<Response> response = getTransactionListFor(MAX_MUSTERMAN, resourceId, dateFrom, dateTo, bookingStatus);
 
@@ -449,18 +439,18 @@ public class AccountInformationResult<SELF extends AccountInformationResult<SELF
         String body = readResource("restrecord/tpp-ui-input/params/anton-brueckner-account-all-accounts-consent.json");
 
         ExtractableResponse<Response> response = RestAssured
-            .given()
+                .given()
                 .header(X_REQUEST_ID, UUID.randomUUID().toString())
                 .header(X_XSRF_TOKEN, UUID.randomUUID().toString())
                 .queryParam(X_XSRF_TOKEN_QUERY, redirectCode)
                 .cookie(AUTHORIZATION_SESSION_KEY, authSessionCookie)
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
                 .body(body)
-            .when()
+                .when()
                 .post(AUTHORIZE_CONSENT_ENDPOINT, serviceSessionId)
-            .then()
+                .then()
                 .statusCode(HttpStatus.ACCEPTED.value())
-            .extract();
+                .extract();
 
         assertThat(LocationExtractorUtil.getLocation(response)).matches(".+/ais/.+");
         return self();
@@ -468,12 +458,12 @@ public class AccountInformationResult<SELF extends AccountInformationResult<SELF
 
     public SELF fintech_calls_consent_activation_for_current_authorization_id(String serviceSessionId) {
         withSignatureHeaders(RestAssured
-            .given()
+                .given()
                 .header(SERVICE_SESSION_PASSWORD, SESSION_PASSWORD)
                 .contentType(MediaType.APPLICATION_JSON_VALUE))
-            .when()
+                .when()
                 .post(CONFIRM_CONSENT_ENDPOINT, serviceSessionId)
-            .then()
+                .then()
                 .statusCode(HttpStatus.OK.value());
         return self();
     }
