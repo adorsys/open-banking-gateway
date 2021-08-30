@@ -41,7 +41,7 @@ public class TppBankSearchController implements TppBankSearchApi {
             Boolean onlyActive
             ) {
 
-        log.debug("Bank search get request. keyword:{}, start:{}, max:{}, xRequestID:{}", keyword, start, max, xRequestID);
+        log.debug("Bank search get request. keyword:{}, start:{}, max:{}, onlyActive:{}, xRequestID:{}", keyword, start, max, onlyActive, xRequestID);
         if (start == null) {
             start = defaultStart;
         }
@@ -68,7 +68,7 @@ public class TppBankSearchController implements TppBankSearchApi {
             String fintechId,
             Boolean onlyActive) {
 
-        log.debug("Bank profile request. bankProfileId:{}, xRequestID:{}", bankProfileId, xRequestID);
+        log.debug("Bank profile request. bankProfileId:{}, onlyActive:{}, xRequestID:{}", bankProfileId, onlyActive, xRequestID);
         Optional<BankProfileDescriptor> bankProfile = bankService.getBankProfile(bankProfileId, onlyActive);
         if (!bankProfile.isPresent()) {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);

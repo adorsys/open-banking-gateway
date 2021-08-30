@@ -89,6 +89,7 @@ class TestTppBankSearchController extends BaseMockitoTest {
                         .param("keyword", keyword)
                         .param("max", "10")
                         .param("start", "0")
+                        .param("onlyActive", "false")
                         .with(new SignaturePostProcessor(requestSigningService, new OpenBankingDataToSignProvider()))
         ).andExpect(status().isOk());
     }

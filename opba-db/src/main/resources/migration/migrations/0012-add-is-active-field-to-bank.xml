@@ -5,7 +5,7 @@
     <changeSet author="ytsex@adorsys.com.ua" id="2021-08-28-00">
         <comment>Added isActive flag to bank</comment>
         <addColumn tableName="${table-prefix}bank">
-            <column name="is_active" type="BOOLEAN" defaultValue="true">
+            <column name="is_active" type="boolean" defaultValue="true">
                 <constraints nullable="false"/>
             </column>
         </addColumn>
@@ -14,7 +14,7 @@
     <changeSet author="ytsex@adorsys.com.ua" id="2021-08-28-01">
         <comment>Added isActive flag to bank profile</comment>
         <addColumn tableName="${table-prefix}bank_profile">
-            <column name="is_active" type="BOOLEAN" defaultValue="true">
+            <column name="is_active" type="boolean" defaultValue="true">
                 <constraints nullable="false"/>
             </column>
         </addColumn>
