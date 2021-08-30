@@ -6,6 +6,7 @@ import de.adorsys.opba.protocol.bpmnshared.service.exec.ValidatedExecution;
 import de.adorsys.opba.protocol.xs2a.context.Xs2aContext;
 import de.adorsys.opba.protocol.xs2a.service.dto.ValidatedPathHeadersBody;
 import de.adorsys.opba.protocol.xs2a.service.mapper.PathHeadersBodyMapperTemplate;
+import de.adorsys.opba.protocol.xs2a.service.xs2a.authenticate.ScaUtil;
 import de.adorsys.opba.protocol.xs2a.service.xs2a.dto.Xs2aAuthorizedConsentParameters;
 import de.adorsys.opba.protocol.xs2a.service.xs2a.dto.Xs2aStandardHeaders;
 import de.adorsys.opba.protocol.xs2a.service.xs2a.dto.authenticate.embedded.SelectScaChallengeBody;
@@ -26,6 +27,8 @@ import org.springframework.stereotype.Service;
 @Service("xs2aReportSelectedScaMethod")
 @RequiredArgsConstructor
 public class Xs2aAisReportSelectedScaMethod extends ValidatedExecution<Xs2aContext> {
+
+    private static final String DECOUPLED_AUTHENTICATION_PSU_MESSAGE = "Please check your app to continue";
 
     private final Extractor extractor;
     private final Xs2aValidator validator;
@@ -61,8 +64,9 @@ public class Xs2aAisReportSelectedScaMethod extends ValidatedExecution<Xs2aConte
         ContextUtil.getAndUpdateContext(
                 execution,
                 (Xs2aContext ctx) -> {
-                    ctx.setScaSelected(authResponse.getBody().getChosenScaMethod());
+                    ctx.setScaSelected(ScaUtil.scaMethodSelected(authResponse.getBody()));
                     ctx.setChallengeData(authResponse.getBody().getChallengeData());
+                    ctx.setSelectedScaDecoupled(ScaUtil.isDecoupled(authResponse.getHeaders()));
                 }
         );
     }

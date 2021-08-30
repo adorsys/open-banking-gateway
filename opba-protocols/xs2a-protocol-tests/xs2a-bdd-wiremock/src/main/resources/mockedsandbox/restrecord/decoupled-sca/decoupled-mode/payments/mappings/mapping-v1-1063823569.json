@@ -1,0 +1,30 @@
+{
+  "id" : "af27174d-1034-3c25-8ee6-477dc267377c",
+  "scenarioName": "Embedded initial,decoupled by ASPSP max.musterman initiate payment",
+  "requiredScenarioState": "PsuAuthenticated",
+  "newScenarioState": "PsuAuthenticatedDecoupledFirstGet",
+  "request" : {
+    "url" : "/v1/payments/sepa-credit-transfers/BBfDQPTXX_-FUVHI6tlMpe7x958b-J9Hmrg2ZViBGOQspmLfOLfwMGPMU_K3KjVBcgftJbETkzvNvu5mZQqWcA==_=_psGLvQpt9Q/authorisations/b650d5e8-d84e-47e1-b31a-746259a35b5e",
+    "method" : "GET",
+    "headers" : {
+      "X-Request-ID" : {
+        "matches" : "[=_0-9a-zA-z\\-]+"
+      },
+      "PSU-ID" : {
+        "equalTo" : "max.musterman"
+      }
+    }
+  },
+  "response" : {
+    "status" : 200,
+    "bodyFileName" : "body-v1-1063823569.json",
+    "headers" : {
+      "Vary" : [ "Origin", "Access-Control-Request-Method", "Access-Control-Request-Headers" ],
+      "X-Request-Id" : "5b1141be-08ef-4932-bf2c-909a26c8560e",
+      "Content-Type" : "application/json",
+      "Date" : "Sat, 28 Aug 2021 18:12:27 GMT",
+      "Keep-Alive" : "timeout=60"
+    }
+  },
+  "uuid" : "af27174d-1034-3c25-8ee6-477dc267377c"
+}

@@ -90,26 +90,19 @@ export class FromASPSPConsentAuthorizationService {
      * Redirecting back from ASPSP to TPP after a failed consent authorization.
      * Redirecting back from ASPSP to TPP after a failed consent authorization. In any case, the corresponding redirect session of the user will be closed and cookies will be deleted with the response to this request. 
      * @param authId Used to distinguish between different consent authorization processes started by the same PSU. Also included in the corresponding cookie path to limit visibility of the consent cookie to the corresponding consent process. 
-     * @param redirectState XSRF parameter used to validate an RedirectCookie. This is generaly transported as a path parameter. 
-     * @param redirectCode Code used to retrieve a redirect session. This is generaly transported as a query parameter
+     * @param redirectState Code used to retrieve a redirect session. This is generaly transported as a path parameter due to some banks limitiations (ING ASPSP) instead of being transported as query parameter
      * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
      * @param reportProgress flag to report request and response progress.
      */
-    public fromAspspNokUsingGET(authId: string, redirectState: string, redirectCode?: string, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<ConsentAuth>;
-    public fromAspspNokUsingGET(authId: string, redirectState: string, redirectCode?: string, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<HttpResponse<ConsentAuth>>;
-    public fromAspspNokUsingGET(authId: string, redirectState: string, redirectCode?: string, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<HttpEvent<ConsentAuth>>;
-    public fromAspspNokUsingGET(authId: string, redirectState: string, redirectCode?: string, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: 'application/json'}): Observable<any> {
+    public fromAspspNokUsingGET(authId: string, redirectState: string, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<ConsentAuth>;
+    public fromAspspNokUsingGET(authId: string, redirectState: string, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<HttpResponse<ConsentAuth>>;
+    public fromAspspNokUsingGET(authId: string, redirectState: string, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<HttpEvent<ConsentAuth>>;
+    public fromAspspNokUsingGET(authId: string, redirectState: string, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: 'application/json'}): Observable<any> {
         if (authId === null || authId === undefined) {
             throw new Error('Required parameter authId was null or undefined when calling fromAspspNokUsingGET.');
         }
         if (redirectState === null || redirectState === undefined) {
             throw new Error('Required parameter redirectState was null or undefined when calling fromAspspNokUsingGET.');
-        }
-
-        let queryParameters = new HttpParams({encoder: this.encoder});
-        if (redirectCode !== undefined && redirectCode !== null) {
-          queryParameters = this.addToHttpParams(queryParameters,
-            <any>redirectCode, 'redirectCode');
         }
 
         let headers = this.defaultHeaders;
@@ -141,7 +134,6 @@ export class FromASPSPConsentAuthorizationService {
 
         return this.httpClient.get<ConsentAuth>(`${this.configuration.basePath}/v1/consent/${encodeURIComponent(String(authId))}/fromAspsp/${encodeURIComponent(String(redirectState))}/nok`,
             {
-                params: queryParameters,
                 responseType: <any>responseType,
                 withCredentials: this.configuration.withCredentials,
                 headers: headers,
@@ -153,18 +145,17 @@ export class FromASPSPConsentAuthorizationService {
 
     /**
      * Redirecting back from ASPSP to ConsentAuthorisationApi after a successful consent authorization.
-     * Redirecting back from ASPSP to ConsentAuthorisationApi after a successful consent authorization. In any case, the corresponding redirect session of the user will be closed and cookies will be deleted with the response to this request.  ##### Desiging the BackRedirectURL (R&lt;sub&gt;6&lt;/sub&gt;) The BackRedirectURL (OkUrl, NokUrl, etc... depending of ASPSP API) is the URL used by the ASPSP to send the PsuUserAgent back to the ConsentAuthorisationApi. Event though the structure of this URL might be constrained by the nature of the ASPSP OpenBankingApi, the BackRedirectURL must contains atleast : * A redirect-id (as a path parameter) used to isolate many redirect processes form each order. * A consentAuthState (as a path or query parameter) used to protect the TppConsentSessionCookie as a XSRF parameter. * The consentAuthState might if necessary be used to encrypt the attached ConsentAuthSessionCookie.  ##### Back-Redirecting PSU to the FinTechApi (4&lt;sub&gt;b&lt;/sub&gt;) Prior to redirecting the PSU back to the FinTechApi, consent information will be stored by the ConsentAuthorisationApi in a RedirectSession as well. * The one time resulting redirectCode will be attached as a query parameter to the location URL leading back to the FinTechApi. * After verifying the FinTechRedirectSessionCookie (4&lt;sub&gt;b&lt;/sub&gt;), the FinTechApi must forward this redirectCode to the token endpoint of the TppBankingAPi (4&lt;sub&gt;c&lt;/sub&gt;).  * The TppBankingApi will then retrieve the RedirectSession using the redirectCode and proceed forward with the authorization process. 
+     * Redirecting back from ASPSP to ConsentAuthorisationApi after a successful consent authorization. In any case, the corresponding redirect session of the user will be closed and cookies will be deleted with the response to this request.  ##### Desiging the BackRedirectURL (R&lt;sub&gt;6&lt;/sub&gt;) The BackRedirectURL (OkUrl, NokUrl, etc... depending of ASPSP API) is the URL used by the ASPSP to send the PsuUserAgent back to the ConsentAuthorisationApi. Event though the structure of this URL might be constrained by the nature of the ASPSP OpenBankingApi, the BackRedirectURL must contains atleast : * A redirect-id (as a path parameter) used to isolate many redirect processes form each order. * A consentAuthState (as a path or query parameter) used to protect the TppConsentSessionCookie as a XSRF parameter. * The consentAuthState might if necessary be used to encrypt the attached ConsentAuthSessionCookie.  ##### Back-Redirecting PSU to the FinTechApi (4&lt;sub&gt;b&lt;/sub&gt;) Prior to redirecting the PSU back to the FinTechApi, consent information will be stored by the ConsentAuthorisationApi in a RedirectSession as well. * The one time resulting xXsrfToken will be attached as a query parameter to the location URL leading back to the FinTechApi. * After verifying the FinTechRedirectSessionCookie (4&lt;sub&gt;b&lt;/sub&gt;), the FinTechApi must forward this xXsrfToken to the token endpoint of the TppBankingAPi (4&lt;sub&gt;c&lt;/sub&gt;). * The TppBankingApi will then retrieve the RedirectSession using the xXsrfToken and proceed forward with the authorization process. 
      * @param authId Used to distinguish between different consent authorization processes started by the same PSU. Also included in the corresponding cookie path to limit visibility of the consent cookie to the corresponding consent process. 
-     * @param redirectState XSRF parameter used to validate an RedirectCookie. This is generaly transported as a path parameter. 
-     * @param redirectCode Code used to retrieve a redirect session. This is generaly transported as a query parameter
+     * @param redirectState Code used to retrieve a redirect session. This is generaly transported as a path parameter due to some banks limitiations (ING ASPSP) instead of being transported as query parameter
      * @param code Oauth2 code to exchange for token.
      * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
      * @param reportProgress flag to report request and response progress.
      */
-    public fromAspspOkUsingGET(authId: string, redirectState: string, redirectCode?: string, code?: string, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<ConsentAuth>;
-    public fromAspspOkUsingGET(authId: string, redirectState: string, redirectCode?: string, code?: string, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<HttpResponse<ConsentAuth>>;
-    public fromAspspOkUsingGET(authId: string, redirectState: string, redirectCode?: string, code?: string, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<HttpEvent<ConsentAuth>>;
-    public fromAspspOkUsingGET(authId: string, redirectState: string, redirectCode?: string, code?: string, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: 'application/json'}): Observable<any> {
+    public fromAspspOkUsingGET(authId: string, redirectState: string, code?: string, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<ConsentAuth>;
+    public fromAspspOkUsingGET(authId: string, redirectState: string, code?: string, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<HttpResponse<ConsentAuth>>;
+    public fromAspspOkUsingGET(authId: string, redirectState: string, code?: string, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<HttpEvent<ConsentAuth>>;
+    public fromAspspOkUsingGET(authId: string, redirectState: string, code?: string, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: 'application/json'}): Observable<any> {
         if (authId === null || authId === undefined) {
             throw new Error('Required parameter authId was null or undefined when calling fromAspspOkUsingGET.');
         }
@@ -173,10 +164,6 @@ export class FromASPSPConsentAuthorizationService {
         }
 
         let queryParameters = new HttpParams({encoder: this.encoder});
-        if (redirectCode !== undefined && redirectCode !== null) {
-          queryParameters = this.addToHttpParams(queryParameters,
-            <any>redirectCode, 'redirectCode');
-        }
         if (code !== undefined && code !== null) {
           queryParameters = this.addToHttpParams(queryParameters,
             <any>code, 'code');

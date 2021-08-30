@@ -15,6 +15,7 @@ export interface ScaUserData {
     decoupled?: boolean;
     id?: string;
     methodValue?: string;
+    explanation?: string;
     scaMethod?: ScaUserData.ScaMethodEnum;
     staticTan?: string;
     usesStaticTan?: boolean;

@@ -13,6 +13,7 @@ import { PaymentsConsentReviewComponent } from './payments-consent-review/paymen
 import { ConsentPaymentAccessSelectionComponent } from './consent-payment-access-selection/consent-payment-access-selection.component';
 import { DynamicInputsComponent } from './dynamic-inputs/dynamic-inputs.component';
 import { PaymentInfoComponent } from './payment-info/payment-info.component';
+import {WaitForDecoupled} from "./wait-for-decoupled/wait-for-decoupled";
 
 @NgModule({
   declarations: [
@@ -27,7 +28,8 @@ import { PaymentInfoComponent } from './payment-info/payment-info.component';
     PaymentsConsentReviewComponent,
     ConsentPaymentAccessSelectionComponent,
     DynamicInputsComponent,
-    PaymentInfoComponent
+    PaymentInfoComponent,
+    WaitForDecoupled
   ],
   imports: [SharedModule, PisRoutingModule]
 })

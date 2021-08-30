@@ -5,7 +5,7 @@ import { StubUtil } from '../utils/stub-util';
 import { UpdateConsentAuthorizationService } from '../../api';
 import { ApiHeaders } from '../../api/api.headers';
 import { SessionService } from '../session.service';
-import { ConsentAuthorizationService } from '../../api/api/consentAuthorization.service';
+import { AuthStateConsentAuthorizationService } from '../../api/api/authStateConsentAuthorization.service';
 
 @Component({
   selector: 'consent-app-enter-tan',
@@ -30,7 +30,7 @@ export class EnterTanComponent implements OnInit {
   constructor(
     private formBuilder: FormBuilder,
     private sessionService: SessionService,
-    private consentAuthorizationService: ConsentAuthorizationService,
+    private consentAuthorizationService: AuthStateConsentAuthorizationService,
     private updateConsentAuthorizationService: UpdateConsentAuthorizationService
   ) {}
 
@@ -70,8 +70,7 @@ export class EnterTanComponent implements OnInit {
     this.updateConsentAuthorizationService
       .embeddedUsingPOST(
         this.authorizationSessionId,
-        StubUtil.X_REQUEST_ID, // TODO: real values instead of stubs
-        StubUtil.X_XSRF_TOKEN, // TODO: real values instead of stubs
+        StubUtil.X_REQUEST_ID, // TODO: real values instead of stub
         this.sessionService.getRedirectCode(this.authorizationSessionId),
         { scaAuthenticationData: { SCA_CHALLENGE_DATA: this.reportScaResultForm.get('tan').value } },
         'response'

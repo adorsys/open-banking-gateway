@@ -232,11 +232,13 @@ components:
             enum:
               - REDIRECT
               - EMBEDDED
+              - DECOUPLED
         preferredApproach:
           type: string
           enum:
             - REDIRECT
             - EMBEDDED
+            - DECOUPLED
         tryToUsePreferredApproach:
           type: boolean
         uniquePaymentPurpose:

@@ -72,7 +72,6 @@ export class AccountsConsentReviewComponent implements OnInit {
     this.updateConsentAuthorizationService
       .embeddedUsingPOST(
         this.authorizationId,
-        StubUtil.X_XSRF_TOKEN,
         StubUtil.X_REQUEST_ID,
         this.sessionService.getRedirectCode(this.authorizationId),
         body,

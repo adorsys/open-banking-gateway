@@ -43,6 +43,7 @@ import static de.adorsys.opba.restapi.shared.HttpHeaders.SERVICE_SESSION_ID;
 import static de.adorsys.opba.restapi.shared.HttpHeaders.X_CREATE_CONSENT_IF_NONE;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.springframework.http.HttpStatus.ACCEPTED;
+import static org.springframework.http.HttpStatus.OK;
 import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
 
 @Slf4j
@@ -328,7 +329,7 @@ public class AccountInformationRequestCommon<SELF extends AccountInformationRequ
             .when()
                 .get(GET_CONSENT_AUTH_STATE, serviceSessionId)
             .then()
-                .statusCode(HttpStatus.OK.value())
+                .statusCode(OK.value())
                 .extract();
 
         this.redirectUriToGetUserParams = LocationExtractorUtil.getLocation(response);
@@ -543,6 +544,11 @@ public class AccountInformationRequestCommon<SELF extends AccountInformationRequ
         return self();
     }
 
+    public SELF current_redirected_to_screen_is_consent_result() {
+        assertThat(this.redirectUriToGetUserParams).contains("ais").contains("consent-result");
+        return self();
+    }
+
     public SELF ui_can_read_image_data_from_obg(String user) {
         ExtractableResponse<Response> response = withDefaultHeaders(user)
                 .cookie(AUTHORIZATION_SESSION_KEY, authSessionCookie)
@@ -550,7 +556,7 @@ public class AccountInformationRequestCommon<SELF extends AccountInformationRequ
             .when()
                 .get(GET_CONSENT_AUTH_STATE, serviceSessionId)
             .then()
-                .statusCode(HttpStatus.OK.value())
+                .statusCode(OK.value())
                 .extract();
 
         assertThatResponseContainsCorrectChallengeData(response, "restrecord/tpp-ui-input/params/max-musterman-embedded-consent-challenge-data.json");

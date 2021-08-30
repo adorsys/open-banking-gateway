@@ -1,15 +1,15 @@
-import { Component, OnInit } from '@angular/core';
-import { Location } from '@angular/common';
-import { ActivatedRoute } from '@angular/router';
+import {Component, OnInit} from '@angular/core';
+import {Location} from '@angular/common';
+import {ActivatedRoute} from '@angular/router';
 
-import { AisConsentToGrant } from '../common/dto/ais-consent';
-import { StubUtil } from '../../common/utils/stub-util';
-import { SessionService } from '../../common/session.service';
-import { ConsentUtil } from '../common/consent-util';
-import { ApiHeaders } from '../../api/api.headers';
-import { Action } from '../../common/utils/action';
-import { AuthStateConsentAuthorizationService, DenyRequest, UpdateConsentAuthorizationService } from '../../api';
-import { combineLatest } from 'rxjs';
+import {AisConsentToGrant} from '../common/dto/ais-consent';
+import {StubUtil} from '../../common/utils/stub-util';
+import {SessionService} from '../../common/session.service';
+import {ConsentUtil} from '../common/consent-util';
+import {ApiHeaders} from '../../api/api.headers';
+import {Action} from '../../common/utils/action';
+import {AuthStateConsentAuthorizationService, UpdateConsentAuthorizationService} from '../../api';
+import {combineLatest} from 'rxjs';
 
 @Component({
   selector: 'consent-app-to-aspsp-redirection',
@@ -67,8 +67,6 @@ export class ToAspspRedirectionComponent implements OnInit {
       .denyUsingPOST(
         this.authorizationId,
         StubUtil.X_REQUEST_ID, // TODO: real values instead of stubs
-        StubUtil.X_XSRF_TOKEN, // TODO: real values instead of stubs
-        {} as DenyRequest,
         'response'
       )
       .subscribe((res) => {

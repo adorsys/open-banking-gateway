@@ -27,7 +27,7 @@
       <conditionExpression xsi:type="tFormalExpression">#{xs2aConsentInfo.isEmbeddedPreAuthNeeded(CONTEXT)}</conditionExpression>
     </sequenceFlow>
     <serviceTask id="embeddedOauth2ExchangeCodeToToken" name="Exchange password to token (embedded pre-auth)" flowable:async="true" flowable:exclusive="true" flowable:delegateExpression="${xs2aEmbeddedExchangePasswordToToken}" flowable:triggerable="false" isForCompensation="false"/>
-    <sequenceFlow id="sid-1b0f3e86-4b13-450c-9f6f-e0975dddedc8" sourceRef="sid-49888494-cd28-4bc7-9070-40c3dfda930f" targetRef="sid-e0dbf285-c6c2-4571-ac5e-9038fcbf8448"/>
+    <sequenceFlow id="passwordIsPresent" sourceRef="sid-49888494-cd28-4bc7-9070-40c3dfda930f" targetRef="sid-e0dbf285-c6c2-4571-ac5e-9038fcbf8448"/>
     <serviceTask id="xs2aAskForPasswordForEmbeddedToken" name="Ask PSU for password for embedded token" isForCompensation="false" flowable:async="true" flowable:exclusive="true" flowable:delegateExpression="${xs2aAskForPassword}" flowable:triggerable="true"/>
     <sequenceFlow id="sid-fade0cee-6d65-4917-9d19-2fe70dddae1a" targetRef="embeddedOauth2ExchangeCodeToToken" sourceRef="xs2aAskForPasswordForEmbeddedToken">
       <conditionExpression/>
@@ -39,7 +39,7 @@
     <sequenceFlow id="passwordPresent" name="Password present" sourceRef="isPsuPasswordPresent" targetRef="embeddedOauth2ExchangeCodeToToken">
       <conditionExpression xsi:type="tFormalExpression">#{xs2aConsentInfo.isPasswordPresent(CONTEXT)}</conditionExpression>
     </sequenceFlow>
-    <exclusiveGateway id="sid-49888494-cd28-4bc7-9070-40c3dfda930f" name="Is Psu Password Present"/>
+    <exclusiveGateway id="sid-49888494-cd28-4bc7-9070-40c3dfda930f" name="Is Psu Password Present" default="passwordIsPresent"/>
     <sequenceFlow id="sid-76a559cd-e3cc-4d2a-b8e8-c0f832bb5a52" name="Wrong password " sourceRef="sid-49888494-cd28-4bc7-9070-40c3dfda930f" targetRef="xs2aAskForPasswordForEmbeddedToken">
       <conditionExpression xsi:type="tFormalExpression">#{xs2aConsentInfo.isWrongPassword(CONTEXT)}</conditionExpression>
     </sequenceFlow>
@@ -106,7 +106,7 @@
       <bpmdi:BPMNShape xmlns:bpmdi="http://www.omg.org/spec/BPMN/20100524/DI" id="sid-72f3dbbf-d40b-4f12-a954-5869b46e0261" bpmnElement="embeddedOauth2ExchangeCodeToToken">
         <omgdc:Bounds x="836.5621" y="-41.47547" width="100.0" height="80.0"/>
       </bpmdi:BPMNShape>
-      <bpmdi:BPMNEdge xmlns:bpmdi="http://www.omg.org/spec/BPMN/20100524/DI" id="sid-ec004bdd-0956-4d0a-867e-9384b40b2523" bpmnElement="sid-1b0f3e86-4b13-450c-9f6f-e0975dddedc8">
+      <bpmdi:BPMNEdge xmlns:bpmdi="http://www.omg.org/spec/BPMN/20100524/DI" id="sid-ec004bdd-0956-4d0a-867e-9384b40b2523" bpmnElement="passwordIsPresent">
         <omgdi:waypoint x="1071.144" y="-1.4754715"/>
         <omgdi:waypoint x="1115.0565" y="-1.475472"/>
         <omgdi:waypoint x="1115.0565" y="264.00003"/>

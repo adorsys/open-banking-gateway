@@ -4,6 +4,7 @@ import com.google.common.base.Strings;
 import de.adorsys.opba.protocol.xs2a.context.Xs2aContext;
 import org.springframework.stereotype.Service;
 
+import static de.adorsys.opba.protocol.api.common.Approach.DECOUPLED;
 import static de.adorsys.opba.protocol.api.common.Approach.EMBEDDED;
 import static de.adorsys.opba.protocol.api.common.Approach.REDIRECT;
 import static de.adorsys.opba.protocol.xs2a.service.xs2a.consent.ConsentConst.CONSENT_FINALIZED;
@@ -80,6 +81,20 @@ public class Xs2aConsentInfo {
     }
 
     /**
+     * Is the current consent authorization in DECOUPLED mode.
+     */
+    public boolean isDecoupled(Xs2aContext ctx) {
+        return DECOUPLED.name().equalsIgnoreCase(ctx.getAspspScaApproach());
+    }
+
+    /**
+     * Is selected SCA method decoupled
+     */
+    public boolean isDecoupledScaSelected(Xs2aContext ctx) {
+        return ctx.isSelectedScaDecoupled();
+    }
+
+    /**
      * Is the current consent authorization using multiple SCA methods (SMS,email,etc.)
      */
     public boolean isMultipleScaAvailable(Xs2aContext ctx) {
@@ -87,11 +102,26 @@ public class Xs2aConsentInfo {
     }
 
     /**
+     * Is decoupled SCA was finalised by PSU with mobile or other type of device
+     */
+    public boolean isDecoupledScaFinalizedByPSU(Xs2aContext ctx) {
+        return ctx.isDecoupledScaFinished();
+    }
+
+    /**
+     * Is decoupled SCA was failed (i.e. took too long)
+     */
+    public boolean isDecoupledScaFailed(Xs2aContext ctx) {
+        return false; // FIXME - check if authorization is taking too much time
+    }
+
+    /**
      * Is the current consent authorization using zero SCA flow
      */
     public boolean isZeroScaAvailable(Xs2aContext ctx) {
-        return null == ctx.getAvailableSca()
-                || null != ctx.getAvailableSca() && ctx.getAvailableSca().isEmpty();
+        return (null == ctx.getAvailableSca()
+                       || null != ctx.getAvailableSca() && ctx.getAvailableSca().isEmpty())
+                && null == ctx.getScaSelected();
     }
 
     /**

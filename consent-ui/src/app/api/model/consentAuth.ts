@@ -53,6 +53,7 @@ export interface ConsentAuth {
      * List of sca methods for selection if necessary.
      */
     scaMethods?: Array<ScaUserData>;
+    scaMethodSelected?: ScaUserData;
     scaStatus?: ScaStatus;
     singlePayment?: SinglePayment;
     challengeData?: ChallengeData;
