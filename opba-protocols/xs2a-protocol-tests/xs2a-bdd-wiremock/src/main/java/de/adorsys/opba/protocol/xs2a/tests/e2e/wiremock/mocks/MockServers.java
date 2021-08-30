@@ -192,7 +192,6 @@ public class MockServers<SELF extends MockServers<SELF>> extends CommonGivenStag
     public SELF embedded_pre_step_mock_of_dkb_sandbox_for_max_musterman_accounts_running() {
         WireMockConfiguration config = WireMockConfiguration.options().dynamicPort()
                 .usingFilesUnderClasspath("mockedsandbox/restrecord/embedded/pre-step/accounts/");
-        config.notifier(new Slf4jNotifier(true));
         startWireMock(config, DKB_BANK_ID);
         return self();
     }
@@ -248,7 +247,6 @@ public class MockServers<SELF extends MockServers<SELF>> extends CommonGivenStag
     public SELF decoupled_embedded_approach_sca_decoupled_start_mock_of_sandbox_for_max_musterman_payments_running() {
         WireMockConfiguration config = WireMockConfiguration.options().dynamicPort()
                 .usingFilesUnderClasspath("mockedsandbox/restrecord/decoupled-sca/embedded-mode-decoupled-sca/payments/");
-        config.notifier(new Slf4jNotifier(true));
         startWireMock(config);
 
         return self();
