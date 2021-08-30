@@ -25,6 +25,7 @@ class MappersTest {
             "Commerzbank",
             "COBADEFFXXX",
             "36040039",
+            true,
             Collections.emptyList(),
             Collections.emptyList()
     );

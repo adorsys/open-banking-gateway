@@ -44,6 +44,7 @@ public class Bank implements Serializable {
     private String name;
     private String bic;
     private String bankCode;
+    private boolean isActive;
 
     @OneToMany(mappedBy = "bank", cascade = CascadeType.ALL, orphanRemoval = true)
     private Collection<BankProfile> profiles;

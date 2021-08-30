@@ -122,7 +122,7 @@ class FinTechBankSearchApiTest extends FinTechApiBaseTest {
         final Integer start = 1;
         final Integer max = 2;
 
-        when(tppBankSearchClientFeignMock.bankSearchGET(any(), eq(keyword), any(), any(), any(), eq(start), eq(max)))
+        when(tppBankSearchClientFeignMock.bankSearchGET(any(), eq(keyword), any(), any(), any(), eq(start), eq(max), any()))
                 .thenReturn(ResponseEntity.ok(GSON.fromJson(readFile(getFilenameBankSearch(keyword, start, max)), BankSearchResponse.class)));
 
         LoginBody loginBody = new LoginBody("peter", "1234");
@@ -177,7 +177,7 @@ class FinTechBankSearchApiTest extends FinTechApiBaseTest {
             final Integer max = 2;
             log.info("DO Bank Search ({}, {}, {}) ==============================", keyword, start, max);
 
-            when(tppBankSearchClientFeignMock.bankSearchGET(any(), eq(keyword), any(), any(), any(), eq(start), eq(max)))
+            when(tppBankSearchClientFeignMock.bankSearchGET(any(), eq(keyword), any(), any(), any(), eq(start), eq(max), any()))
                     .thenReturn(ResponseEntity.ok(GSON.fromJson(readFile(getFilenameBankSearch(keyword, start, max)), BankSearchResponse.class)));
 
             result.setBankUUID(bankSearchOk(keyword, start, max));
@@ -185,7 +185,7 @@ class FinTechBankSearchApiTest extends FinTechApiBaseTest {
 
         {
             log.info("DO Bank Profile ({}) ============================== ", result.getBankUUID());
-            when(tppBankSearchClientFeignMock.bankProfileGET(any(), eq(result.getBankUUID()), any(), any(), any()))
+            when(tppBankSearchClientFeignMock.bankProfileGET(any(), eq(result.getBankUUID()), any(), any(), any(), any()))
                     .thenReturn(ResponseEntity.ok(GSON.fromJson(readFile(getFilenameBankProfile(result.getBankUUID())), BankProfileResponse.class)));
 
             result.setServices(bankProfile(result.getBankUUID()));

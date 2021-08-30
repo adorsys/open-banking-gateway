@@ -42,6 +42,7 @@ paths:
           required: false
           schema:
             type: integer
+        - $ref: "#/components/parameters/onlyActive"
       security:
         - cookieAuth: []
       responses:
@@ -70,6 +71,7 @@ paths:
           schema:
             type: string
             format: uuid
+        - $ref: "#/components/parameters/onlyActive"
       security:
         - cookieAuth: []
       responses:
@@ -81,7 +83,18 @@ paths:
 components:
   headers: {}
 
-  parameters: {}
+  parameters:
+
+    onlyActive:
+      name: onlyActive
+      in: query
+      required: false
+      description: |
+        Makes possible to get not active item.
+      example: "false"
+      schema:
+        type: boolean
+        default: "true"
 
   responses:
 
@@ -152,6 +165,8 @@ components:
           type: array
           items:
             $ref: '#/components/schemas/bankProfileDescriptor'
+        isActive:
+          type: boolean
 
     bankProfileDescriptor:
       title: Bank Profile
@@ -184,4 +199,6 @@ components:
         protocolType:
           type: string
         isSandbox:
+          type: boolean
+        isActive:
           type: boolean

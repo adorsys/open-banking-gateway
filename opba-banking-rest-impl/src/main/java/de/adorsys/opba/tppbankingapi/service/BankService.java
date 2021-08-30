@@ -23,15 +23,17 @@ public class BankService {
     private final BankSearchRepositoryImpl bankRepository;
 
     @Transactional(readOnly = true)
-    public Optional<BankProfileDescriptor> getBankProfile(UUID profileUuid) {
+    public Optional<BankProfileDescriptor> getBankProfile(UUID profileUuid, boolean onlyActive) {
         return bankProfileJpaRepository.findByUuid(profileUuid)
+                .filter(profile -> !onlyActive || profile.isActive())
                 .map(BankProfile.TO_BANK_PROFILE_DESCRIPTOR::map);
     }
 
     @Transactional(readOnly = true)
-    public List<BankDescriptor> getBanks(String query, int startPos, int maxResults) {
+    public List<BankDescriptor> getBanks(String query, int startPos, int maxResults, boolean onlyActive) {
         return bankRepository.getBanks(query, startPos, maxResults)
                 .stream()
+                .filter(bank -> !onlyActive || bank.isActive())
                 .map(Bank.TO_BANK_DESCRIPTOR::map)
                 .collect(Collectors.toList());
     }

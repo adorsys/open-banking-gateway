@@ -40,7 +40,8 @@ public class BankSearchService {
                 COMPUTE_X_REQUEST_SIGNATURE,
                 COMPUTE_FINTECH_ID,
                 start,
-                max).getBody();
+                max,
+                true).getBody();
 
         InlineResponse2001 inlineResponse2001 = new InlineResponse2001().bankDescriptor(Collections.emptyList());
         if (bankSearchResponse.getBankDescriptor() != null) {
@@ -66,6 +67,7 @@ public class BankSearchService {
                 UUID.fromString(bankProfileId),
                 COMPUTE_X_TIMESTAMP_UTC,
                 COMPUTE_X_REQUEST_SIGNATURE,
-                COMPUTE_FINTECH_ID);
+                COMPUTE_FINTECH_ID,
+                true);
     }
 }

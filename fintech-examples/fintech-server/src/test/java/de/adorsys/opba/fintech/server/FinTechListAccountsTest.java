@@ -117,7 +117,7 @@ public class FinTechListAccountsTest extends FinTechBankSearchApiTest {
     @Test
     @SneakyThrows
     public void testListAccountsFor303NoConsentSupport() {
-        when(tppBankSearchClientFeignMock.bankProfileGET(any(), eq(NO_CONSENT_BANK_ID), any(), any(), any()))
+        when(tppBankSearchClientFeignMock.bankProfileGET(any(), eq(NO_CONSENT_BANK_ID), any(), any(), any(), any()))
                 .thenReturn(ResponseEntity.ok(GSON.fromJson(readFile(getFilenameBankProfile(NO_CONSENT_BANK_ID)), BankProfileResponse.class)));
         when(restRequestContext.getRequestId()).thenReturn(UUID.randomUUID().toString());
 

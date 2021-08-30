@@ -37,7 +37,9 @@ public class TppBankSearchController implements TppBankSearchApi {
             String xRequestSignature,
             String fintechId,
             Integer start,
-            Integer max) {
+            Integer max,
+            Boolean onlyActive
+            ) {
 
         log.debug("Bank search get request. keyword:{}, start:{}, max:{}, xRequestID:{}", keyword, start, max, xRequestID);
         if (start == null) {
@@ -46,7 +48,7 @@ public class TppBankSearchController implements TppBankSearchApi {
         if (max == null) {
             max = defaultMax;
         }
-        List<BankDescriptor> banks = bankService.getBanks(keyword, start, max);
+        List<BankDescriptor> banks = bankService.getBanks(keyword, start, max, onlyActive);
 
         BankSearchResponse response = new BankSearchResponse();
         response.bankDescriptor(banks);
@@ -63,10 +65,11 @@ public class TppBankSearchController implements TppBankSearchApi {
             UUID bankProfileId,
             String xTimestampUTC,
             String xRequestSignature,
-            String fintechId) {
+            String fintechId,
+            Boolean onlyActive) {
 
-        log.debug("Bank profile request. bankId:{}, xRequestID:{}", xRequestID, bankProfileId);
-        Optional<BankProfileDescriptor> bankProfile = bankService.getBankProfile(bankProfileId);
+        log.debug("Bank profile request. bankProfileId:{}, xRequestID:{}", bankProfileId, xRequestID);
+        Optional<BankProfileDescriptor> bankProfile = bankService.getBankProfile(bankProfileId, onlyActive);
         if (!bankProfile.isPresent()) {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
