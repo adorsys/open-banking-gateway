@@ -3,6 +3,7 @@ package de.adorsys.opba.protocol.facade.services.authorization;
 import de.adorsys.opba.db.domain.entity.sessions.AuthSession;
 import de.adorsys.opba.db.repository.jpa.AuthorizationSessionRepository;
 import de.adorsys.opba.db.repository.jpa.psu.PsuRepository;
+import de.adorsys.opba.protocol.api.common.SessionStatus;
 import de.adorsys.opba.protocol.api.dto.request.FacadeServiceableRequest;
 import de.adorsys.opba.protocol.api.dto.request.authorization.OnLoginRequest;
 import de.adorsys.opba.protocol.facade.config.encryption.impl.fintech.FintechConsentSpecSecureStorage;
@@ -41,6 +42,7 @@ public class PsuLoginService {
             session.setPsu(psus.findByLogin(psuLogin).orElseThrow(() -> new IllegalStateException("No PSU found: " + psuLogin)));
             associationService.sharePsuAspspSecretKeyWithFintech(psuPassword, session);
             FintechConsentSpecSecureStorage.FinTechUserInboxData inbox = associationService.readInboxFromFinTech(session, authorizationPassword);
+            session.setStatus(SessionStatus.STARTED);
             authRepository.save(session);
             return new SessionAndInbox(session.getRedirectCode(), inbox);
         });
@@ -62,6 +64,7 @@ public class PsuLoginService {
             }
 
             FintechConsentSpecSecureStorage.FinTechUserInboxData inbox = associationService.readInboxFromFinTech(session, authorizationPassword);
+            session.setStatus(SessionStatus.STARTED);
             authRepository.save(session);
             return new SessionAndInbox(session.getRedirectCode(), inbox);
         });

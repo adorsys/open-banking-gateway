@@ -6,6 +6,7 @@ import de.adorsys.opba.api.security.internal.service.TokenBasedAuthService;
 import de.adorsys.opba.db.domain.entity.sessions.AuthSession;
 import de.adorsys.opba.db.repository.jpa.AuthorizationSessionRepository;
 import de.adorsys.opba.db.repository.jpa.ServiceSessionRepository;
+import de.adorsys.opba.protocol.api.common.SessionStatus;
 import de.adorsys.opba.protocol.api.dto.context.ServiceContext;
 import de.adorsys.opba.protocol.api.dto.request.FacadeServiceableGetter;
 import de.adorsys.opba.protocol.api.dto.request.FacadeServiceableRequest;
@@ -91,6 +92,8 @@ public class ProtocolResultHandler {
         ServiceContext<REQUEST> session,
         SecretKeyWithIv sessionKey
     ) {
+        updateAuthSessionStatus(request, result);
+
         if (result instanceof SuccessResult) {
             logResolver.log("handle success result: result({}), request({}), session({})", result, request, session);
 
@@ -273,6 +276,39 @@ public class ProtocolResultHandler {
         mappedResult.setXRequestId(request.getRequestId());
         mappedResult.setRedirectCode(authSession.getRedirectCode());
         return authSession;
+    }
+
+    protected void updateAuthSessionStatus(FacadeServiceableRequest request, Result<?> result) {
+        var session = authorizationSessions.findByParentId(request.getServiceSessionId()).orElse(null);
+        if (null == session) {
+            return;
+        }
+
+        if (result instanceof ConsentAcquiredResult) {
+            session.setLastRequestId(request.getRequestId().toString());
+            session.setStatus(SessionStatus.COMPLETED);
+        }
+
+        if (result instanceof RedirectionResult) {
+            session.setLastRequestId(request.getRequestId().toString());
+            session.setStatus(SessionStatus.PENDING);
+        }
+
+        if (result instanceof AuthorizationDeniedResult) {
+            session.setLastRequestId(request.getRequestId().toString());
+            session.setStatus(SessionStatus.DENIED);
+        }
+
+        if (result instanceof ErrorResult) {
+            session.setLastRequestId(request.getRequestId().toString());
+            session.setStatus(SessionStatus.ERROR);
+        }
+
+        if (result instanceof ReturnableProcessErrorResult) {
+            session.setLastRequestId(request.getRequestId().toString());
+            session.setStatus(SessionStatus.ERROR);
+        }
+        authorizationSessions.save(session);
     }
 
     @NotNull
