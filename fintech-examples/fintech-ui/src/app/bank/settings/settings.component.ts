@@ -6,9 +6,9 @@ import { ConsentSettingType, LoARetrievalInformation, LoTRetrievalInformation } 
 import { StorageService } from '../../services/storage.service';
 
 import AllPsd2Enum = AisAccountAccessInfo.AllPsd2Enum;
-import {FinTechAccountInformationService} from "../../api";
-import {AisConsentRequest} from "../../api/model/aisConsentRequest";
-import {AisAccountAccessInfo} from "../../api/model/aisAccountAccessInfo";
+import { FinTechAccountInformationService } from '../../api';
+import { AisConsentRequest } from '../../api/model/aisConsentRequest';
+import { AisAccountAccessInfo } from '../../api/model/aisAccountAccessInfo';
 
 @Component({
   selector: 'app-settings',

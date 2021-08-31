@@ -1,0 +1,34 @@
+{
+  "scenarioName": "PaymentInitializationUsingPostbankEmbedded",
+  "newScenarioState": "GetPaymentStatus",
+  "request" : {
+    "urlPattern" : "/pis/DE/Postbank/v1/payments/sepa-credit-transfers/.+/status",
+    "method" : "GET",
+    "headers" : {
+      "X-Request-ID" : {
+        "matches" : ".+"
+      },
+      "Date" : {
+        "matches" : ".+"
+      }
+    }
+  },
+  "response" : {
+    "status" : 200,
+    "body" : "{\"transactionStatus\":\"ACTC\",\"fundsAvailable\":true}",
+    "headers" : {
+      "Date" : "Thu, 04 Mar 2021 09:02:30 GMT",
+      "Server" : "Apache",
+      "glue2gExit" : "2021-03-04T09:02:31.189",
+      "X-Request-ID" : "ebe01943-15db-414d-bfa3-1b2283a1b891",
+      "bffEntry" : "2021-03-04T09:02:30.846",
+      "bffExit" : "2021-03-04T09:02:31.189",
+      "Content-Type" : "application/json;charset=utf-8",
+      "glue2gEntry" : "2021-03-04T09:02:30.846",
+      "Keep-Alive" : "timeout=5, max=100"
+    }
+  },
+  "uuid" : "df083538-c590-49a5-a338-7675c6a4ff3d",
+  "persistent" : true,
+  "insertionIndex" : 20
+}

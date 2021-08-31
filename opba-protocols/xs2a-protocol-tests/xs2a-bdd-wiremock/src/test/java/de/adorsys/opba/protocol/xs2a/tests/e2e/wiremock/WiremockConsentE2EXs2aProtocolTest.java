@@ -28,6 +28,7 @@ import java.util.UUID;
 import static de.adorsys.opba.protocol.xs2a.tests.TestProfiles.MOCKED_SANDBOX;
 import static de.adorsys.opba.protocol.xs2a.tests.TestProfiles.ONE_TIME_POSTGRES_RAMFS;
 import static de.adorsys.opba.protocol.xs2a.tests.e2e.stages.StagesCommonUtil.DKB_BANK_PROFILE_ID;
+import static de.adorsys.opba.protocol.xs2a.tests.e2e.stages.StagesCommonUtil.POSTBANK_BANK_PROFILE_ID;
 import static de.adorsys.opba.protocol.xs2a.tests.e2e.stages.StagesCommonUtil.SANDBOX_BANK_PROFILE_ID;
 import static de.adorsys.opba.protocol.xs2a.tests.e2e.wiremock.mocks.WiremockConst.ANTON_BRUECKNER_RESOURCE_ID;
 import static de.adorsys.opba.protocol.xs2a.tests.e2e.wiremock.mocks.WiremockConst.BOTH_BOOKING;
@@ -93,6 +94,34 @@ class WiremockConsentE2EXs2aProtocolTest extends SpringScenarioTest<MockServers,
                 .open_banking_has_consent_for_anton_brueckner_account_list()
                 .fintech_calls_consent_activation_for_current_authorization_id()
                 .open_banking_can_read_anton_brueckner_account_data_using_consent_bound_to_service_session();
+    }
+
+    @Test
+    void testPostbankAccountsListWithConsentUsingEmbedded() {
+
+        given()
+                .embedded_mock_of_postbank_for_anton_brueckner_accounts_running()
+                .set_default_preferred_approach()
+                .rest_assured_points_to_opba_server_with_fintech_signer_on_banking_api()
+                .user_registered_in_opba_with_credentials(OPBA_LOGIN, OPBA_PASSWORD);
+
+        when()
+                .fintech_calls_list_accounts_for_max_musterman(POSTBANK_BANK_PROFILE_ID)
+                .and()
+                .user_logged_in_into_opba_as_opba_user_with_credentials_using_fintech_supplied_url(OPBA_LOGIN, OPBA_PASSWORD)
+                .and()
+                .user_max_musterman_provided_initial_parameters_to_list_accounts_dedicated_accounts_consent()
+                .and()
+                .user_max_musterman_provided_password_to_embedded_authorization()
+                .and()
+                .user_max_musterman_selected_sca_challenge_type_push_otp_to_embedded_authorization()
+                .and()
+                .user_max_musterman_provided_sca_challenge_result_to_embedded_authorization_and_sees_redirect_to_fintech_ok("/PUSH_OTP");
+        then()
+                .open_banking_has_consent_for_max_musterman_account_list()
+                .fintech_calls_consent_activation_for_current_authorization_id()
+                .open_banking_can_read_max_musterman_account_data_using_consent_bound_to_service_session(true, 0, true, POSTBANK_BANK_PROFILE_ID);
+
     }
 
     @ParameterizedTest
@@ -274,34 +303,34 @@ class WiremockConsentE2EXs2aProtocolTest extends SpringScenarioTest<MockServers,
 
     @ParameterizedTest
     @CsvSource({
-        "REDIRECT, 0",
-        "REDIRECT, 2",
-        "EMBEDDED, 0",
-        "EMBEDDED, 2"
+            "REDIRECT, 0",
+            "REDIRECT, 2",
+            "EMBEDDED, 0",
+            "EMBEDDED, 2"
     })
     void testAccountsListWithBalancesWithConsentUsingEmbedded(Approach expectedApproach, int numberOfExpectedBalances, @TempDir Path tempDir) {
         given()
-            .embedded_mock_of_sandbox_for_max_musterman_accounts_running_with_balance_for_happy_path(tempDir)
-            .preferred_sca_approach_selected_for_all_banks_in_opba(expectedApproach)
-            .rest_assured_points_to_opba_server_with_fintech_signer_on_banking_api()
-            .user_registered_in_opba_with_credentials(OPBA_LOGIN, OPBA_PASSWORD);
+                .embedded_mock_of_sandbox_for_max_musterman_accounts_running_with_balance_for_happy_path(tempDir)
+                .preferred_sca_approach_selected_for_all_banks_in_opba(expectedApproach)
+                .rest_assured_points_to_opba_server_with_fintech_signer_on_banking_api()
+                .user_registered_in_opba_with_credentials(OPBA_LOGIN, OPBA_PASSWORD);
 
         when()
-            .fintech_calls_list_accounts_for_max_musterman_with_expected_balances(numberOfExpectedBalances > 0)
-            .and()
-            .user_logged_in_into_opba_as_opba_user_with_credentials_using_fintech_supplied_url(OPBA_LOGIN, OPBA_PASSWORD)
-            .and()
-            .user_max_musterman_provided_initial_parameters_to_list_accounts_all_accounts_consent()
-            .and()
-            .user_max_musterman_provided_password_to_embedded_authorization()
-            .and()
-            .user_max_musterman_selected_sca_challenge_type_email2_to_embedded_authorization()
-            .and()
-            .user_max_musterman_provided_sca_challenge_result_to_embedded_authorization_and_sees_redirect_to_fintech_ok();
+                .fintech_calls_list_accounts_for_max_musterman_with_expected_balances(numberOfExpectedBalances > 0)
+                .and()
+                .user_logged_in_into_opba_as_opba_user_with_credentials_using_fintech_supplied_url(OPBA_LOGIN, OPBA_PASSWORD)
+                .and()
+                .user_max_musterman_provided_initial_parameters_to_list_accounts_all_accounts_consent()
+                .and()
+                .user_max_musterman_provided_password_to_embedded_authorization()
+                .and()
+                .user_max_musterman_selected_sca_challenge_type_email2_to_embedded_authorization()
+                .and()
+                .user_max_musterman_provided_sca_challenge_result_to_embedded_authorization_and_sees_redirect_to_fintech_ok();
         then()
-            .open_banking_has_consent_for_max_musterman_account_list()
-            .fintech_calls_consent_activation_for_current_authorization_id()
-            .open_banking_can_read_max_musterman_account_data_using_consent_bound_to_service_session(true, numberOfExpectedBalances);
+                .open_banking_has_consent_for_max_musterman_account_list()
+                .fintech_calls_consent_activation_for_current_authorization_id()
+                .open_banking_can_read_max_musterman_account_data_using_consent_bound_to_service_session(true, numberOfExpectedBalances);
     }
 
     @ParameterizedTest

@@ -1,0 +1,34 @@
+{
+  "scenarioName": "PaymentInitializationUsingPostbankEmbedded",
+  "newScenarioState": "GetPaymentScaStatus",
+  "request" : {
+    "urlPattern" : "/pis/DE/Postbank/v1/payments/sepa-credit-transfers/.+/authorisations/.+",
+    "method" : "GET",
+    "headers" : {
+      "X-Request-ID" : {
+        "matches" : ".+"
+      },
+      "Date" : {
+        "matches" : ".+"
+      }
+    }
+  },
+  "response" : {
+    "status" : 200,
+    "body" : "{\"scaStatus\":\"finalised\"}",
+    "headers" : {
+      "Date" : "Thu, 04 Mar 2021 09:02:24 GMT",
+      "Server" : "Apache",
+      "glue2gExit" : "2021-03-04T09:02:24.975",
+      "X-Request-ID" : "cf958863-25f1-4f1d-816a-1ad689f2a680",
+      "bffEntry" : "2021-03-04T09:02:24.813",
+      "bffExit" : "2021-03-04T09:02:24.975",
+      "Content-Type" : "application/json;charset=utf-8",
+      "glue2gEntry" : "2021-03-04T09:02:24.813",
+      "Keep-Alive" : "timeout=5, max=100"
+    }
+  },
+  "uuid" : "b9f439fa-1bee-413f-bea1-d848dd797827",
+  "persistent" : true,
+  "insertionIndex" : 19
+}
