@@ -162,6 +162,12 @@ public class AdminApiService {
 
         BankData map(BankDataToMap bank);
 
+        @Mapping(target = "isActive", source = "active")
+        de.adorsys.opba.adminapi.model.generated.Bank bankToBank(Bank bank);
+
+        @Mapping(target = "isActive", source = "active")
+        de.adorsys.opba.adminapi.model.generated.BankProfile bankProfileToBankProfile(BankProfile bankProfile);
+
         @Mapping(target = "bank.id", ignore = true)
         @Mapping(target = "bank.uuid", ignore = true)
         @Mapping(target = "profile.id", ignore = true)
@@ -169,10 +175,12 @@ public class AdminApiService {
 
         @Mapping(target = "id", ignore = true)
         @Mapping(target = "uuid", ignore = true)
+        @Mapping(target = "active", source = "isActive")
         void mapToBank(de.adorsys.opba.adminapi.model.generated.Bank bankData, @MappingTarget Bank bank);
 
         @Mapping(target = "id", ignore = true)
         @Mapping(target = "actions", ignore = true)
+        @Mapping(target = "active", source = "isActive")
         void mapToProfile(de.adorsys.opba.adminapi.model.generated.BankProfile bankData, @MappingTarget BankProfile bank);
 
         Map<ProtocolAction, BankAction> mapActions(Map<String, de.adorsys.opba.adminapi.model.generated.BankAction> map);
