@@ -7,6 +7,7 @@ import de.adorsys.opba.protocol.xs2a.config.protocol.ProtocolUrlsConfiguration;
 import de.adorsys.opba.protocol.xs2a.context.pis.Xs2aPisContext;
 import de.adorsys.opba.protocol.xs2a.service.dto.ValidatedPathHeadersBody;
 import de.adorsys.opba.protocol.xs2a.service.mapper.PathHeadersBodyMapperTemplate;
+import de.adorsys.opba.protocol.xs2a.service.xs2a.authenticate.StartAuthorizationHandlerUtil;
 import de.adorsys.opba.protocol.xs2a.service.xs2a.consent.CreateConsentOrPaymentPossibleErrorHandler;
 import de.adorsys.opba.protocol.xs2a.service.xs2a.dto.Xs2aInitialPaymentParameters;
 import de.adorsys.opba.protocol.xs2a.service.xs2a.dto.payment.PaymentInitiateBody;
@@ -93,6 +94,7 @@ public class CreateSinglePaymentService extends ValidatedExecution<Xs2aPisContex
         context.setPaymentId(paymentInit.getBody().getPaymentId());
         if (null != paymentInit.getBody()) {
             OAuth2Util.handlePossibleOAuth2(paymentInit.getBody().getLinks(), context);
+            StartAuthorizationHandlerUtil.handleImplicitAuthorizationStartIfPossible(paymentInit.getBody().getLinks(), context);
         }
 
         if (null != paymentInit.getHeaders() && Strings.isNotBlank(paymentInit.getHeaders().getHeader(ASPSP_SCA_APPROACH))) {
@@ -123,9 +125,9 @@ public class CreateSinglePaymentService extends ValidatedExecution<Xs2aPisContex
 
     @Service
     public static class Extractor extends PathHeadersBodyMapperTemplate<Xs2aPisContext,
-                                                                                   Xs2aInitialPaymentParameters,
-                                                                               PaymentInitiateHeaders,
-                                                                               PaymentInitiateBody,
+            Xs2aInitialPaymentParameters,
+            PaymentInitiateHeaders,
+            PaymentInitiateBody,
             PaymentInitiationJson> {
 
         public Extractor(

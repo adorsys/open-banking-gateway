@@ -1,9 +1,9 @@
 {
-  "scenarioName": "DKB - single payment",
-  "requiredScenarioState": "authorisation_started",
-  "newScenarioState": "sca_method_selected",
+  "scenarioName": "PaymentInitializationUsingDbkEmbedded",
+  "requiredScenarioState": "ScaMethodSelected",
+  "newScenarioState": "OtpSent",
   "request": {
-    "urlPattern": ".*/v1/payments/sepa-credit-transfers/VALID_PAYMENT_ID/authorisations/.+",
+    "urlPattern" : ".*/v1/payments/sepa-credit-transfers/VALID_PAYMENT_ID/authorisations/.+",
     "method": "PUT",
     "headers": {
       "PSD2-AUTHORIZATION": {
@@ -13,7 +13,7 @@
         "matches": ".+"
       },
       "PSU-ID": {
-        "matches": "max.musterman"
+        "equalTo" : "max.musterman"
       },
       "Content-Type": {
         "matches": "application/json.*"
@@ -21,7 +21,7 @@
     },
     "bodyPatterns": [
       {
-        "equalToJson": "{\"authenticationMethodId\":\"123\"}",
+        "equalToJson": "{\"scaAuthenticationData\":\"123456\"}",
         "ignoreArrayOrder": true,
         "ignoreExtraElements": true
       }
@@ -29,18 +29,18 @@
   },
   "response": {
     "status": 200,
-    "bodyFileName": "select-sca-method-response-body.json",
+    "body": "{\"scaStatus\":\"finalised\"}",
     "headers": {
       "Date": "Mon, 05 Jul 2021 11:59:59 GMT",
       "Server": "Apache",
       "Content-Type": "application/json; charset=utf-8",
-      "X-Request-ID": "7dcdae39-b684-47a4-b856-8fd6215526ac",
+      "X-Request-ID": "04f6c752-1f2a-4102-b926-52c2f5906afa",
       "Strict-Transport-Security": "max-age=31536000",
       "X-Content-Type-Options": "nosniff",
       "Keep-Alive": "timeout=15, max=100"
     }
   },
-  "uuid": "31421179-6771-4f2b-8a46-5f738d0ee8b9",
+  "uuid": "19fe795b-b5fe-4959-8ab0-7a11f7fda099",
   "persistent": true,
-  "insertionIndex": 12
+  "insertionIndex": 13
 }

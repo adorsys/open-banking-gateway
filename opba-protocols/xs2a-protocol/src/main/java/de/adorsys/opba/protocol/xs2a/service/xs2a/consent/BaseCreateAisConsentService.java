@@ -2,13 +2,13 @@ package de.adorsys.opba.protocol.xs2a.service.xs2a.consent;
 
 import de.adorsys.opba.protocol.bpmnshared.service.exec.ValidatedExecution;
 import de.adorsys.opba.protocol.xs2a.context.Xs2aContext;
+import de.adorsys.opba.protocol.xs2a.service.xs2a.authenticate.StartAuthorizationHandlerUtil;
 import de.adorsys.opba.protocol.xs2a.service.xs2a.oauth2.OAuth2Util;
 import de.adorsys.opba.protocol.xs2a.util.logresolver.Xs2aLogResolver;
 import de.adorsys.xs2a.adapter.api.Response;
 import de.adorsys.xs2a.adapter.api.model.ConsentsResponse201;
 import org.apache.logging.log4j.util.Strings;
 import org.flowable.engine.delegate.DelegateExecution;
-
 import java.util.UUID;
 
 import static de.adorsys.opba.protocol.bpmnshared.GlobalConst.CONTEXT;
@@ -31,6 +31,7 @@ public abstract class BaseCreateAisConsentService<T extends Xs2aContext> extends
         context.setConsentId(consentInit.getBody().getConsentId());
         if (null != consentInit.getBody()) {
             handleOAuthIfPossible(consentInit, context);
+            StartAuthorizationHandlerUtil.handleImplicitAuthorizationStartIfPossible(consentInit.getBody().getLinks(), context);
         }
 
         if (null != consentInit.getHeaders() && Strings.isNotBlank(consentInit.getHeaders().getHeader(ASPSP_SCA_APPROACH))) {
