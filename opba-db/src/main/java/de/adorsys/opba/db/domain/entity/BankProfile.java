@@ -78,7 +78,7 @@ public class BankProfile implements Serializable, CurrentBankProfile {
     private String externalInterfaces;
     private String protocolType;
     private boolean isSandbox;
-    private boolean isActive;
+    private boolean active;
 
     @OneToMany(mappedBy = "bankProfile", cascade = CascadeType.ALL, orphanRemoval = true)
     @MapKey(name = "protocolAction")

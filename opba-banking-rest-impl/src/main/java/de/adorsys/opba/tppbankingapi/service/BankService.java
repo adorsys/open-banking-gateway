@@ -31,9 +31,8 @@ public class BankService {
 
     @Transactional(readOnly = true)
     public List<BankDescriptor> getBanks(String query, int startPos, int maxResults, boolean onlyActive) {
-        return bankRepository.getBanks(query, startPos, maxResults)
+        return bankRepository.getBanks(query, startPos, maxResults, onlyActive)
                 .stream()
-                .filter(bank -> !onlyActive || bank.isActive())
                 .map(Bank.TO_BANK_DESCRIPTOR::map)
                 .collect(Collectors.toList());
     }

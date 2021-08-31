@@ -48,6 +48,9 @@ public class TppBankSearchController implements TppBankSearchApi {
         if (max == null) {
             max = defaultMax;
         }
+        if (onlyActive == null) {
+            onlyActive = true;
+        }
         List<BankDescriptor> banks = bankService.getBanks(keyword, start, max, onlyActive);
 
         BankSearchResponse response = new BankSearchResponse();
@@ -69,6 +72,10 @@ public class TppBankSearchController implements TppBankSearchApi {
             Boolean onlyActive) {
 
         log.debug("Bank profile request. bankProfileId:{}, onlyActive:{}, xRequestID:{}", bankProfileId, onlyActive, xRequestID);
+        if (onlyActive == null) {
+            onlyActive = true;
+        }
+
         Optional<BankProfileDescriptor> bankProfile = bankService.getBankProfile(bankProfileId, onlyActive);
         if (!bankProfile.isPresent()) {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
