@@ -98,6 +98,7 @@ public class BankProfile implements Serializable, CurrentBankProfile {
                 target = "serviceList")
         @Mapping(source = "actions", target = "consentSupportByService")
         @Mapping(source = "sandbox", target = "isSandbox")
+        @Mapping(source = "active", target = "isActive")
         BankProfileDescriptor map(BankProfile bankProfile);
     }
 

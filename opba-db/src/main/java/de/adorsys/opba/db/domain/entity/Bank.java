@@ -55,6 +55,7 @@ public class Bank implements Serializable {
     @Mapper(uses = BankProfile.ToBankProfileDescriptor.class)
     public interface ToBankDescriptor {
         @Mapping(source = "name", target = "bankName")
+        @Mapping(source = "active", target = "isActive")
         BankDescriptor map(Bank bank);
     }
 }
