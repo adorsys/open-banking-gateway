@@ -57,7 +57,7 @@ public class MockServers<SELF extends MockServers<SELF>> extends CommonGivenStag
     @ProvidedScenarioState
     private WireMockServer sandbox;
 
-    Consumer<BankProfile> defaultbankProfileConfigurer = it -> {
+    private Consumer<BankProfile> defaultBankProfileConfigurer = it -> {
         it.setUrl("http://localhost:" + sandbox.port());
         it.setIdpUrl("http://localhost:" + sandbox.port() + "/oauth/authorization-server");
     };
@@ -86,7 +86,7 @@ public class MockServers<SELF extends MockServers<SELF>> extends CommonGivenStag
     public SELF redirect_mock_of_consorsbank_for_anton_brueckner_accounts_running() {
         WireMockConfiguration config = WireMockConfiguration.options().dynamicPort()
                 .usingFilesUnderClasspath("mockedsandbox/restrecord/redirect/accounts/consorsbank/");
-        startWireMock(config, CONSORS_BANK_BANK_ID);
+        startWireMock(config, CONSORS_BANK_BANK_ID, defaultBankProfileConfigurer);
 
         return self();
     }
@@ -123,7 +123,7 @@ public class MockServers<SELF extends MockServers<SELF>> extends CommonGivenStag
 
     public SELF redirect_mock_of_sandbox_for_anton_brueckner_accounts_running_for_non_happy_path() {
         WireMockConfiguration config = WireMockConfiguration.options().dynamicPort()
-                                               .usingFilesUnderClasspath("mockedsandbox/restrecord-nonhappy/redirect/accounts/sandbox/");
+                .usingFilesUnderClasspath("mockedsandbox/restrecord-nonhappy/redirect/accounts/sandbox/");
         startWireMock(config);
 
         return self();
@@ -135,7 +135,7 @@ public class MockServers<SELF extends MockServers<SELF>> extends CommonGivenStag
         mergeWireMockFixtures(tempDir, resource, resource2);
 
         WireMockConfiguration config = WireMockConfiguration.options().dynamicPort()
-                                               .usingFilesUnderDirectory(tempDir.toString());
+                .usingFilesUnderDirectory(tempDir.toString());
         startWireMock(config);
 
         return self();
@@ -151,7 +151,7 @@ public class MockServers<SELF extends MockServers<SELF>> extends CommonGivenStag
 
     public SELF redirect_mock_of_sandbox_for_anton_brueckner_payments_running() {
         WireMockConfiguration config = WireMockConfiguration.options().dynamicPort()
-                                               .usingFilesUnderClasspath("mockedsandbox/restrecord/redirect/payments/sandbox/");
+                .usingFilesUnderClasspath("mockedsandbox/restrecord/redirect/payments/sandbox/");
         startWireMock(config);
 
         return self();
@@ -160,7 +160,7 @@ public class MockServers<SELF extends MockServers<SELF>> extends CommonGivenStag
     public SELF redirect_mock_of_consorsbank_for_anton_brueckner_payments_running() {
         WireMockConfiguration config = WireMockConfiguration.options().dynamicPort()
                 .usingFilesUnderClasspath("mockedsandbox/restrecord/redirect/payments/consorsbank/");
-        startWireMock(config, CONSORS_BANK_BANK_ID);
+        startWireMock(config, CONSORS_BANK_BANK_ID, defaultBankProfileConfigurer);
 
         return self();
     }
@@ -201,7 +201,7 @@ public class MockServers<SELF extends MockServers<SELF>> extends CommonGivenStag
         mergeWireMockFixtures(tempDir, resource1, resource2);
 
         WireMockConfiguration config = WireMockConfiguration.options().dynamicPort()
-            .usingFilesUnderDirectory(tempDir.toString());
+                .usingFilesUnderDirectory(tempDir.toString());
         startWireMock(config);
 
         return self();
@@ -219,9 +219,10 @@ public class MockServers<SELF extends MockServers<SELF>> extends CommonGivenStag
         WireMockConfiguration config = WireMockConfiguration.options().dynamicPort()
                 .usingFilesUnderClasspath("mockedsandbox/restrecord/embedded/pre-step/accounts/dkb/");
         config.notifier(new Slf4jNotifier(true));
-        startWireMock(config, DKB_BANK_ID, defaultbankProfileConfigurer);
+        startWireMock(config, DKB_BANK_ID, defaultBankProfileConfigurer);
         return self();
     }
+
     public SELF embedded_mock_of_postbank_for_anton_brueckner_accounts_running() {
         WireMockConfiguration config = WireMockConfiguration.options().dynamicPort()
                 .usingFilesUnderClasspath("mockedsandbox/restrecord/embedded/multi-sca/accounts/postbank/");
@@ -248,7 +249,7 @@ public class MockServers<SELF extends MockServers<SELF>> extends CommonGivenStag
 
     public SELF embedded_mock_of_sandbox_for_max_musterman_zero_sca_accounts_running() {
         WireMockConfiguration config = WireMockConfiguration.options().dynamicPort()
-                                               .usingFilesUnderClasspath("mockedsandbox/restrecord/embedded/zero-sca/accounts/sandbox/");
+                .usingFilesUnderClasspath("mockedsandbox/restrecord/embedded/zero-sca/accounts/sandbox/");
         startWireMock(config);
 
         return self();
@@ -256,8 +257,8 @@ public class MockServers<SELF extends MockServers<SELF>> extends CommonGivenStag
 
     public SELF embedded_pre_step_mock_of_dkb_sandbox_for_max_musterman_payments_running() {
         WireMockConfiguration config = WireMockConfiguration.options().dynamicPort()
-            .usingFilesUnderClasspath("mockedsandbox/restrecord/embedded/pre-step/payments/dkb/");
-        startWireMock(config, DKB_BANK_ID, defaultbankProfileConfigurer);
+                .usingFilesUnderClasspath("mockedsandbox/restrecord/embedded/pre-step/payments/dkb/");
+        startWireMock(config, DKB_BANK_ID, defaultBankProfileConfigurer);
 
         return self();
     }
@@ -271,7 +272,7 @@ public class MockServers<SELF extends MockServers<SELF>> extends CommonGivenStag
 
     public SELF embedded_mock_of_sandbox_for_max_musterman_payments_running() {
         WireMockConfiguration config = WireMockConfiguration.options().dynamicPort()
-            .usingFilesUnderClasspath("mockedsandbox/restrecord/embedded/multi-sca/payments/sandbox/");
+                .usingFilesUnderClasspath("mockedsandbox/restrecord/embedded/multi-sca/payments/sandbox/");
         startWireMock(config);
 
         return self();
@@ -279,7 +280,7 @@ public class MockServers<SELF extends MockServers<SELF>> extends CommonGivenStag
 
     public SELF embedded_mock_of_sandbox_for_max_musterman_zero_sca_payments_running() {
         WireMockConfiguration config = WireMockConfiguration.options().dynamicPort()
-                                               .usingFilesUnderClasspath("mockedsandbox/restrecord/embedded/zero-sca/payments/sandbox/");
+                .usingFilesUnderClasspath("mockedsandbox/restrecord/embedded/zero-sca/payments/sandbox/");
         startWireMock(config);
 
         return self();
@@ -312,7 +313,7 @@ public class MockServers<SELF extends MockServers<SELF>> extends CommonGivenStag
 
     public SELF embedded_mock_of_sandbox_for_max_musterman_accounts_running_for_non_happy_path() {
         WireMockConfiguration config = WireMockConfiguration.options().dynamicPort()
-                                               .usingFilesUnderClasspath("mockedsandbox/restrecord-nonhappy/embedded/multi-sca/accounts/sandbox/");
+                .usingFilesUnderClasspath("mockedsandbox/restrecord-nonhappy/embedded/multi-sca/accounts/sandbox/");
         startWireMock(config);
 
         return self();
@@ -337,7 +338,7 @@ public class MockServers<SELF extends MockServers<SELF>> extends CommonGivenStag
 
     public SELF embedded_mock_of_sandbox_for_max_musterman_zero_sca_transactions_running() {
         WireMockConfiguration config = WireMockConfiguration.options().dynamicPort()
-                                               .usingFilesUnderClasspath("mockedsandbox/restrecord/embedded/zero-sca/transactions/sandbox/");
+                .usingFilesUnderClasspath("mockedsandbox/restrecord/embedded/zero-sca/transactions/sandbox/");
         startWireMock(config);
 
         return self();
@@ -345,7 +346,7 @@ public class MockServers<SELF extends MockServers<SELF>> extends CommonGivenStag
 
     public SELF embedded_mock_of_sandbox_for_max_musterman_transactions_running_for_non_happy_path() {
         WireMockConfiguration config = WireMockConfiguration.options().dynamicPort()
-                                               .usingFilesUnderClasspath("mockedsandbox/restrecord-nonhappy/embedded/multi-sca/transactions/sandbox/");
+                .usingFilesUnderClasspath("mockedsandbox/restrecord-nonhappy/embedded/multi-sca/transactions/sandbox/");
         startWireMock(config);
 
         return self();
@@ -353,7 +354,7 @@ public class MockServers<SELF extends MockServers<SELF>> extends CommonGivenStag
 
     @SneakyThrows
     private void startWireMock(WireMockConfiguration config) {
-        startWireMock(config, "adadadad-4000-0000-0000-b0b0b0b0b0b0", defaultbankProfileConfigurer);
+        startWireMock(config, "adadadad-4000-0000-0000-b0b0b0b0b0b0", defaultBankProfileConfigurer);
     }
 
     @SneakyThrows
@@ -405,20 +406,20 @@ public class MockServers<SELF extends MockServers<SELF>> extends CommonGivenStag
 
     public SELF ignore_validation_rules_table_ignore_missing_ip_address() {
         IgnoreValidationRule bankValidationRuleForInit = IgnoreValidationRule.builder()
-                                                          .action(BankAction.builder().id(ACTION_ID).build())
-                                                          .forEmbedded(true)
-                                                          .forRedirect(true)
-                                                          .forDecoupled(true)
-                                                          .validationCode(FieldCode.PSU_IP_ADDRESS)
-                                                          .build();
+                .action(BankAction.builder().id(ACTION_ID).build())
+                .forEmbedded(true)
+                .forRedirect(true)
+                .forDecoupled(true)
+                .validationCode(FieldCode.PSU_IP_ADDRESS)
+                .build();
 
         IgnoreValidationRule bankValidationRuleForAuth = IgnoreValidationRule.builder()
-                                                                 .action(BankAction.builder().id(AUTH_ACTION_ID).build())
-                                                                 .forEmbedded(true)
-                                                                 .forRedirect(true)
-                                                                 .forDecoupled(true)
-                                                                 .validationCode(FieldCode.PSU_IP_ADDRESS)
-                                                                 .build();
+                .action(BankAction.builder().id(AUTH_ACTION_ID).build())
+                .forEmbedded(true)
+                .forRedirect(true)
+                .forDecoupled(true)
+                .validationCode(FieldCode.PSU_IP_ADDRESS)
+                .build();
 
         ignoreValidationRuleRepository.deleteAll();
         ignoreValidationRuleRepository.save(bankValidationRuleForInit);
@@ -429,18 +430,18 @@ public class MockServers<SELF extends MockServers<SELF>> extends CommonGivenStag
 
     public SELF ignore_validation_rules_table_do_not_ignore_missing_psu_ip_port() {
         IgnoreValidationRule bankValidationRuleForInit = IgnoreValidationRule.builder()
-                                                          .action(BankAction.builder().id(ACTION_ID).build())
-                                                          .forEmbedded(false)
-                                                          .forRedirect(false)
-                                                          .validationCode(FieldCode.PSU_IP_PORT)
-                                                          .build();
+                .action(BankAction.builder().id(ACTION_ID).build())
+                .forEmbedded(false)
+                .forRedirect(false)
+                .validationCode(FieldCode.PSU_IP_PORT)
+                .build();
 
         IgnoreValidationRule bankValidationRuleForAuth = IgnoreValidationRule.builder()
-                                                                 .action(BankAction.builder().id(AUTH_ACTION_ID).build())
-                                                                 .forEmbedded(false)
-                                                                 .forRedirect(false)
-                                                                 .validationCode(FieldCode.PSU_IP_PORT)
-                                                                 .build();
+                .action(BankAction.builder().id(AUTH_ACTION_ID).build())
+                .forEmbedded(false)
+                .forRedirect(false)
+                .validationCode(FieldCode.PSU_IP_PORT)
+                .build();
         ignoreValidationRuleRepository.deleteAll();
         ignoreValidationRuleRepository.save(bankValidationRuleForInit);
         ignoreValidationRuleRepository.save(bankValidationRuleForAuth);
@@ -450,20 +451,20 @@ public class MockServers<SELF extends MockServers<SELF>> extends CommonGivenStag
 
     public SELF ignore_validation_rules_table_ignore_missing_psu_ip_port() {
         IgnoreValidationRule bankValidationRuleForInit = IgnoreValidationRule.builder()
-                                                          .action(BankAction.builder().id(ACTION_ID).build())
-                                                          .forEmbedded(true)
-                                                          .forRedirect(true)
-                                                          .forDecoupled(true)
-                                                          .validationCode(FieldCode.PSU_IP_PORT)
-                                                          .build();
+                .action(BankAction.builder().id(ACTION_ID).build())
+                .forEmbedded(true)
+                .forRedirect(true)
+                .forDecoupled(true)
+                .validationCode(FieldCode.PSU_IP_PORT)
+                .build();
 
         IgnoreValidationRule bankValidationRuleForAuth = IgnoreValidationRule.builder()
-                                                                 .action(BankAction.builder().id(AUTH_ACTION_ID).build())
-                                                                 .forEmbedded(true)
-                                                                 .forRedirect(true)
-                                                                 .forDecoupled(true)
-                                                                 .validationCode(FieldCode.PSU_IP_PORT)
-                                                                 .build();
+                .action(BankAction.builder().id(AUTH_ACTION_ID).build())
+                .forEmbedded(true)
+                .forRedirect(true)
+                .forDecoupled(true)
+                .validationCode(FieldCode.PSU_IP_PORT)
+                .build();
 
         ignoreValidationRuleRepository.deleteAll();
         ignoreValidationRuleRepository.save(bankValidationRuleForInit);
