@@ -173,6 +173,31 @@ paths:
         "401":
           $ref: "./tpp_banking_api_commons.yml#/components/responses/401_UNAUTHORIZED"
 
+  /v1/banking/ais/{Service-Session-ID}/status:
+    get:
+      operationId: getAisSessionStatus
+      summary: Get service session authorization status.
+      tags:
+        - TPP Banking API Account information service (AIS)
+      description: >-
+        Reads session status adding external status providers if necessary. Is used to understand current state
+        of the consent (session) - completed,not started,error,etc. in addition to webhooks.
+      parameters:
+        #path
+        - $ref: "./tpp_banking_api_commons.yml#/components/parameters/Service-Session-ID-Path"
+        #header
+        #common header parameter
+        - $ref: "./tpp_banking_api_commons.yml#/components/parameters/X-Timestamp-UTC"
+        - $ref: "./tpp_banking_api_commons.yml#/components/parameters/X-Request-Signature"
+        - $ref: "./tpp_banking_api_commons.yml#/components/parameters/Fintech-ID"
+        - $ref: "./tpp_banking_api_commons.yml#/components/parameters/ServiceSessionPassword"
+        - $ref: "./tpp_banking_api_commons.yml#/components/parameters/X-Request-ID"
+      responses:
+        "200":
+          $ref: "./tpp_banking_api_commons.yml#/components/responses/sessionStatusResponse"
+        "401":
+          $ref: "./tpp_banking_api_commons.yml#/components/responses/401_UNAUTHORIZED"
+
 components:
   parameters:
     account-id:

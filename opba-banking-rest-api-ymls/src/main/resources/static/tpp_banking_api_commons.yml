@@ -218,6 +218,14 @@ components:
 
 
   responses:
+    sessionStatusResponse:
+      description: |
+        Session status - describe service session (consent/payment) readiness.
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/sessionStatusDetails"
+
     401_UNAUTHORIZED:
       description: |
         Unauthorised. Access token absent or invalid.
@@ -481,6 +489,46 @@ components:
       description: Payment creation time according to OpenBanking database
       type: string
       format: date-time
+
+    sessionStatus:
+      type: string
+      enum:
+        - PENDING
+        - STARTED
+        - COMPLETED
+        - ACTIVATED
+        - DENIED
+        - ERROR
+      description: >
+        * `PENDING` - Session not started (user has not started session authorization)
+        * `STARTED` - Session started (user started session authorization)
+        * `COMPLETED` - Session completed (user completed session authorization, but FinTech must confirm it)
+        * `ACTIVATED` - Session activated and ready to use
+        * `DENIED` - User denied consent/payment authorization
+        * `ERROR` - Error happened during the process
+
+    sessionStatusDetails:
+      type: object
+      properties:
+        createdAt:
+          description: Creation time of service session
+          type: string
+          format: date-time
+        updatedAt:
+          description: Update time of service session
+          type: string
+          format: date-time
+        status:
+          $ref: "#/components/schemas/sessionStatus"
+        detailedStatus:
+          type: object
+          additionalProperties:
+            type: object
+            properties:
+              authSessionId:
+                type: string
+              status:
+                $ref: "#/components/schemas/sessionStatus"
 
     generalError:
       type: object
