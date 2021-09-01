@@ -1,0 +1,29 @@
+{
+  "id" : "652c47ec-99d1-4b70-8cba-0a3987ddd0ce",
+  "name" : "v1_consents_e3d6fd32-8e41-498b-a20a-c643215e420c_status",
+  "request" : {
+    "urlPattern" : "/v1/consents/.+/status",
+    "method" : "GET",
+    "headers" : {
+      "X-Request-ID" : {
+        "matches" : ".+"
+      }
+    }
+  },
+  "response" : {
+    "status" : 200,
+    "body" : "{\"consentStatus\":\"valid\"}",
+    "headers" : {
+      "Date" : "Thu, 06 Aug 2020 09:03:52 GMT",
+      "Server" : "Apache",
+      "Content-Type" : "application/json; charset=utf-8",
+      "X-Request-ID" : "d27dedbd-9cfa-4c00-8bc6-f6a8f2223869",
+      "Strict-Transport-Security" : "max-age=31536000",
+      "X-Content-Type-Options" : "nosniff",
+      "Keep-Alive" : "timeout=15, max=100"
+    }
+  },
+  "uuid" : "652c47ec-99d1-4b70-8cba-0a3987ddd0ce",
+  "persistent" : true,
+  "insertionIndex" : 7
+}

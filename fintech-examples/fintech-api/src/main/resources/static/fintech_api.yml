@@ -1308,7 +1308,7 @@ components:
         pending:
           $ref: "#/components/schemas/transactionList"
         rawTransactions:
-          description: Raw String returned by Bank
+          description: Raw bank response as String
           type: string
 
     analyticsReportDetails:

@@ -21,7 +21,7 @@ public class AccountReport {
   TransactionListBody pending;
 
   /**
-   * Raw String returned by Bank
+   * Raw bank response as String
    */
   String rawTransactions;
 }

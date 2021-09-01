@@ -1,0 +1,48 @@
+{
+  "id" : "7f5448ee-3988-4742-bae6-5ca325b72b0d",
+  "name" : "v1_consents_e3d6fd32-8e41-498b-a20a-c643215e420c_authorisations_a7129418-87e2-43c3-ba57-38aa2e23093b",
+  "request" : {
+    "urlPattern" : "/v1/consents/.+/authorisations/.+",
+    "method" : "PUT",
+    "headers" : {
+      "X-Request-ID" : {
+        "matches" : ".+"
+      },
+      "PSU-ID" : {
+        "equalTo" : "max.musterman"
+      },
+      "TPP-Redirect-URI" : {
+        "matches" : ".+"
+      },
+      "PSU-IP-Address" : {
+        "matches" : ".+"
+      },
+      "Content-Type" : {
+        "equalTo" : "application/json; charset=UTF-8"
+      }
+    },
+    "bodyPatterns" : [ {
+      "equalToJson" : "{\"authenticationMethodId\":\"MANUAL\"}",
+      "ignoreArrayOrder" : true,
+      "ignoreExtraElements" : true
+    } ]
+  },
+  "response" : {
+    "status" : 200,
+    "body" : "{\"scaStatus\":\"scaMethodSelected\",\"chosenScaMethod\":{\"authenticationType\":\"CHIP_OTP\",\"authenticationMethodId\":\"MANUAL\",\"authenticationVersion\":\"HHD1.3.2\",\"name\":\"chipTAN MANUAL | Kartennummer: ******9876\",\"explanation\":\"Erfassung der Auftragsdaten über die Tasten Ihres TAN-Generator.\"},\"challengeData\":{\"otpMaxLength\":6,\"otpFormat\":\"integer\",\"additionalInformation\":\"Sie haben eine 'Einzelüberweisung' erfasst: Überprüfen Sie die Richtigkeit der 'letzten 10 Zeichen der IBAN des Empfängers' und bestätigen Sie diese mit der Taste 'OK'. Überprüfen Sie die Richtigkeit des 'Betrags' und bestätigen Sie diesen mit der Taste 'OK'.\"},\"_links\":{\"authoriseTransaction\":{\"href\":\"https://xs2a-sandbox.f-i-apim.de:8444/fixs2a-env/xs2a-api/12345678/v1/consents/e3d6fd32-8e41-498b-a20a-c643215e420c/authorisations/a7129418-87e2-43c3-ba57-38aa2e23093b\"},\"scaStatus\":{\"href\":\"https://xs2a-sandbox.f-i-apim.de:8444/fixs2a-env/xs2a-api/12345678/v1/consents/e3d6fd32-8e41-498b-a20a-c643215e420c/authorisations/a7129418-87e2-43c3-ba57-38aa2e23093b\"}},\"psuMessage\":\"Bitte geben Sie die TAN ein.\"}",
+    "headers" : {
+      "Date" : "Thu, 06 Aug 2020 09:03:46 GMT",
+      "Server" : "Apache",
+      "Content-Type" : "application/json; charset=utf-8",
+      "ASPSP-SCA-Approach" : "EMBEDDED",
+      "X-Request-ID" : "193cea26-e821-459f-808c-06cbc61417bc",
+      "Location" : "https://xs2a-sandbox.f-i-apim.de:8444/fixs2a-env/xs2a-api/12345678/v1/e3d6fd32-8e41-498b-a20a-c643215e420c",
+      "Strict-Transport-Security" : "max-age=31536000",
+      "X-Content-Type-Options" : "nosniff",
+      "Keep-Alive" : "timeout=15, max=100"
+    }
+  },
+  "uuid" : "7f5448ee-3988-4742-bae6-5ca325b72b0d",
+  "persistent" : true,
+  "insertionIndex" : 3
+}

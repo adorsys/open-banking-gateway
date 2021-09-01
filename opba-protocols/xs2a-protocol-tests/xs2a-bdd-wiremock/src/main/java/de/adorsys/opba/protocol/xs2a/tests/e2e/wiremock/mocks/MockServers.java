@@ -45,6 +45,7 @@ public class MockServers<SELF extends MockServers<SELF>> extends CommonGivenStag
     public static final String DKB_BANK_ID = "335562a2-26e2-4105-b31e-08de285234e0";
     public static final String POSTBANK_BANK_ID = "01aa84f2-25c0-4e02-8065-c401657e3fb0";
     public static final String CONSORS_BANK_BANK_ID = "81cecc67-6d1b-4169-b67c-2de52b99a0cc";
+    public static final String SPARKASSE_BANK_ID = "03668d3e-c2a7-425a-b50a-f73347fbfb33";
 
     @Autowired
     private BankProfileJpaRepository bankProfileJpaRepository;
@@ -241,6 +242,14 @@ public class MockServers<SELF extends MockServers<SELF>> extends CommonGivenStag
                 .usingFilesUnderClasspath("mockedsandbox/restrecord/decoupled-sca/decoupled-mode/accounts/");
         startWireMock(config);
 
+        return self();
+    }
+
+    public SELF embedded_mock_of_sparkasse_sandbox_for_max_musterman_accounts_running() {
+        WireMockConfiguration config = WireMockConfiguration.options().dynamicPort()
+            .usingFilesUnderClasspath("mockedsandbox/restrecord/embedded/sparkasse/");
+        config.notifier(new Slf4jNotifier(true));
+        startWireMock(config, SPARKASSE_BANK_ID, defaultBankProfileConfigurer);
         return self();
     }
 
