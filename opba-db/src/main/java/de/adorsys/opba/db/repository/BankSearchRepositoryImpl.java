@@ -31,14 +31,16 @@ public class BankSearchRepositoryImpl {
     private final BankProfileJpaRepository profilesRepo;
     private final NamedParameterJdbcTemplate jdbcTemplate;
 
-    public List<Bank> getBanks(String keyword, int startPos, int maxResults) {
+    public List<Bank> getBanks(String keyword, int startPos, int maxResults, boolean onlyActive) {
         MapSqlParameterSource parameters = new MapSqlParameterSource();
         parameters.addValue("keyword", keyword);
         parameters.addValue("max", maxResults);
         parameters.addValue("start", startPos);
+        parameters.addValue("onlyActive", onlyActive);
 
         var banks = jdbcTemplate.query(query, parameters, ROW_MAPPER);
         var profilesByBankId = profilesRepo.findByBankIdIn(banks.stream().map(Bank::getId).collect(Collectors.toSet())).stream()
+                .filter(profile -> !onlyActive || profile.isActive())
                 .collect(
                         HashMap<Long, List<BankProfile>>::new,
                         (map, v) -> map.computeIfAbsent(v.getBank().getId(), id -> new ArrayList<>()).add(v),

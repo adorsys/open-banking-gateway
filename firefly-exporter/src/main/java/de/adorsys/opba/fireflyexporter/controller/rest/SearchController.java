@@ -20,6 +20,6 @@ public class SearchController {
 
     @GetMapping("/search")
     public ResponseEntity<BankSearchResponse> searchBank(@RequestParam(value = "q", defaultValue = "") String query) {
-        return bankSearchApi.bankSearchGET(UUID.randomUUID(), query, null, null, null, 0, DEFAULT_PAGE_SIZE);
+        return bankSearchApi.bankSearchGET(UUID.randomUUID(), query, null, null, null, 0, DEFAULT_PAGE_SIZE, false);
     }
 }

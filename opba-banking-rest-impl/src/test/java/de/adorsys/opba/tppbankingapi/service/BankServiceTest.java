@@ -28,7 +28,7 @@ class BankServiceTest {
         int end = 10;
 
         // When
-        List<BankDescriptor> banks = bankService.getBanks(NON_EXISTING_KEYWORD, start, end);
+        List<BankDescriptor> banks = bankService.getBanks(NON_EXISTING_KEYWORD, start, end, true);
 
         // Then
         assertThat(banks).isNotNull();
