@@ -1,3 +1,3 @@
 #!/usr/bin/env bash
 
-mvn install --no-transfer-progress -DskipTests=true -Dmaven.javadoc.skip=true -B -V || exit 1
+./mvnw install --no-transfer-progress -DskipTests=true -Dmaven.javadoc.skip=true -B -V || exit 1
