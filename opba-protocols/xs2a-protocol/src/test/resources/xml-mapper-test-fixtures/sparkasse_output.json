@@ -9,8 +9,8 @@
         "mandateId": null,
         "checkId": null,
         "creditorId": null,
-        "bookingDate": [2021, 8, 26],
-        "valueDate": [2021, 8, 26],
+        "bookingDate": [2021, 8, 27],
+        "valueDate": [2021, 8, 27],
         "transactionAmount": {
           "currency": "EUR",
           "amount": "-0.10"
@@ -45,8 +45,8 @@
         "mandateId": null,
         "checkId": null,
         "creditorId": null,
-        "bookingDate": [2021, 8, 16],
-        "valueDate": [2021, 8, 16],
+        "bookingDate": [2021, 8, 17],
+        "valueDate": [2021, 8, 17],
         "transactionAmount": {
           "currency": "EUR",
           "amount": "1.00"
