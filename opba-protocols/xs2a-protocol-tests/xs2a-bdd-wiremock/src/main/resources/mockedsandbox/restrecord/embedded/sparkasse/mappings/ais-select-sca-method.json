@@ -10,19 +10,10 @@
       },
       "PSU-ID" : {
         "equalTo" : "max.musterman"
-      },
-      "TPP-Redirect-URI" : {
-        "matches" : ".+"
-      },
-      "PSU-IP-Address" : {
-        "matches" : ".+"
-      },
-      "Content-Type" : {
-        "equalTo" : "application/json; charset=UTF-8"
       }
     },
     "bodyPatterns" : [ {
-      "equalToJson" : "{\"authenticationMethodId\":\"MANUAL\"}",
+      "equalToJson" : "{\"authenticationMethodId\":\"photoOTP\"}",
       "ignoreArrayOrder" : true,
       "ignoreExtraElements" : true
     } ]

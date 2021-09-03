@@ -2,7 +2,7 @@
   "id" : "c8c2b316-9eda-4334-9a4a-199a1f4ef844",
   "name" : "v1_accounts",
   "request" : {
-    "url" : "/v1/accounts?withBalance=false",
+    "url" : "/v1/accounts",
     "method" : "GET",
     "headers" : {
       "X-Request-ID" : {
@@ -13,18 +13,12 @@
       },
       "PSU-ID" : {
         "equalTo" : "max.musterman"
-      },
-      "TPP-Redirect-URI" : {
-        "matches" : ".+"
-      },
-      "PSU-IP-Address" : {
-        "equalTo" : "0.0.0.0"
       }
     }
   },
   "response" : {
     "status" : 200,
-    "body" : "{\"accounts\":[{\"resourceId\":\"3217d050-f5b5-4318-a799-413bce784ef6\",\"iban\":\"DE86999999990000001000\",\"currency\":\"EUR\",\"ownerName\":\"Anton Apfel\",\"product\":\"Girokonto\",\"_links\":{\"balances\":{\"href\":\"https://xs2a-sandbox.f-i-apim.de:8444/fixs2a-env/xs2a-api/12345678/v1/accounts/3217d050-f5b5-4318-a799-413bce784ef6/balances\"},\"transactions\":{\"href\":\"https://xs2a-sandbox.f-i-apim.de:8444/fixs2a-env/xs2a-api/12345678/v1/accounts/3217d050-f5b5-4318-a799-413bce784ef6/transactions\"}}}]}",
+    "body" : "{\"accounts\":[{\"resourceId\":\"oN7KTVuJSVotMvPPPavhVo\",\"iban\":\"DE38760700240320465700\",\"currency\":\"EUR\",\"name\":\"max.musterman\",\"cashAccountType\":\"CACC\",\"status\":\"valid\",\"bic\":\"COBADETESTX\",\"usage\":\"PRIV\",\"ownerName\":\"Max Musterman\",\"_links\":{\"balances\":{\"href\":\"\/v1\/accounts\/oN7KTVuJSVotMvPPPavhVo\/balances\"},\"transactions\":{\"href\":\"\/v1\/accounts\/oN7KTVuJSVotMvPPPavhVo\/transactions\"}}}]}",
     "headers" : {
       "Date" : "Thu, 06 Aug 2020 09:03:51 GMT",
       "Server" : "Apache",

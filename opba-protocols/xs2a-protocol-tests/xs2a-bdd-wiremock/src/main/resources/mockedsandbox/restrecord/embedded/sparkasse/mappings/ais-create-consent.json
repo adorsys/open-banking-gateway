@@ -1,4 +1,6 @@
 {
+  "scenarioName": "AccountsListUsingSparkasseEmbedded",
+  "newScenarioState": "CreateConsent",
   "id" : "2d8c8b3e-a819-4ae9-9919-ef0fd32c2e77",
   "name" : "v1_consents",
   "request" : {

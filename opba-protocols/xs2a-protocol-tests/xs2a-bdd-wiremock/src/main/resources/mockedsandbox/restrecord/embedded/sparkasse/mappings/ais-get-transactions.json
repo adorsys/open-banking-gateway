@@ -13,12 +13,6 @@
       },
       "PSU-ID" : {
         "equalTo" : "max.musterman"
-      },
-      "TPP-Redirect-URI" : {
-        "matches" : ".+"
-      },
-      "PSU-IP-Address" : {
-        "matches" : ".+"
       }
     }
   },

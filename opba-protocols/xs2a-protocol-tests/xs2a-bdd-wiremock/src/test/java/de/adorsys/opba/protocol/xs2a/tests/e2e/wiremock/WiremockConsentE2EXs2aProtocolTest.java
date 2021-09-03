@@ -9,7 +9,6 @@ import de.adorsys.opba.protocol.xs2a.tests.e2e.stages.RequestStatusUtil;
 import de.adorsys.opba.protocol.xs2a.tests.e2e.wiremock.mocks.MockServers;
 import de.adorsys.opba.protocol.xs2a.tests.e2e.wiremock.mocks.WiremockAccountInformationRequest;
 import de.adorsys.opba.protocol.xs2a.tests.e2e.wiremock.mocks.Xs2aProtocolApplication;
-import org.junit.Ignore;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.io.TempDir;
@@ -390,12 +389,11 @@ class WiremockConsentE2EXs2aProtocolTest extends SpringScenarioTest<MockServers,
                 .open_banking_can_read_max_musterman_account_data_using_consent_bound_to_service_session();
     }
 
-    @Ignore
     @ParameterizedTest
     @EnumSource(Approach.class)
     void testSparkasseAccountsListWithConsentUsingEmbedded(Approach expectedApproach) {
         given()
-            .embedded_mock_of_sparkasse_sandbox_for_max_musterman_accounts_running()
+            .embedded_mock_of_sparkasse_for_max_musterman_accounts_running()
             .set_default_preferred_approach()
             .preferred_sca_approach_selected_for_all_banks_in_opba(expectedApproach)
             .rest_assured_points_to_opba_server_with_fintech_signer_on_banking_api()
@@ -410,13 +408,13 @@ class WiremockConsentE2EXs2aProtocolTest extends SpringScenarioTest<MockServers,
             .and()
             .user_max_musterman_provided_password_to_embedded_authorization()
             .and()
-            .user_max_musterman_selected_sca_challenge_type_email2_to_embedded_authorization()
+            .user_max_musterman_selected_sca_challenge_type_push_otp_to_embedded_authorization()
             .and()
-            .user_max_musterman_provided_sca_challenge_result_to_embedded_authorization_and_sees_redirect_to_fintech_ok();
+            .user_max_musterman_provided_sca_challenge_result_to_embedded_authorization_and_sees_redirect_to_fintech_ok("/PUSH_OTP");
         then()
             .open_banking_has_consent_for_max_musterman_account_list()
             .fintech_calls_consent_activation_for_current_authorization_id()
-            .open_banking_can_read_max_musterman_account_data_using_consent_bound_to_service_session();
+            .open_banking_can_read_max_musterman_account_data_using_consent_bound_to_service_session(true, 0, true, SPARKASSE_BANK_PROFILE_ID);
     }
 
     @Test

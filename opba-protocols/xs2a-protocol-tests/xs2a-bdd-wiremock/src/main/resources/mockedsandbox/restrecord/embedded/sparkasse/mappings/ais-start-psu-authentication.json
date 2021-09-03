@@ -1,4 +1,6 @@
 {
+  "scenarioName": "AccountsListUsingSparkasseEmbedded",
+  "newScenarioState": "AuthorizationUpdated",
   "id" : "322e7f81-9535-45e7-8a20-b0f37547a99a",
   "name" : "v1_consents_e3d6fd32-8e41-498b-a20a-c643215e420c_authorisations",
   "request" : {
@@ -11,12 +13,7 @@
       "PSU-ID" : {
         "equalTo" : "max.musterman"
       }
-    },
-    "bodyPatterns" : [ {
-      "equalToJson" : "{\"psuData\":{\"password\":\"okok1\"}}",
-      "ignoreArrayOrder" : true,
-      "ignoreExtraElements" : true
-    } ]
+    }
   },
   "response" : {
     "status" : 201,
