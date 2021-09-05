@@ -184,6 +184,7 @@ components:
             - list-transactions
             - delete-consent
             - get-consent-status
+            - get-ais-authorization-status
             - authorization
             - on-login
             - get-authorization-state
@@ -193,6 +194,7 @@ components:
             - single-payment
             - get-payment-status
             - get-payment-information
+            - get-pis-authorization-status
         protocolBeanName:
           type: string
         consentSupported:
@@ -272,6 +274,7 @@ components:
             - list-transactions
             - delete-consent
             - get-consent-status
+            - get-ais-authorization-status
             - authorization
             - on-login
             - get-authorization-state
@@ -281,6 +284,7 @@ components:
             - single-payment
             - get-payment-status
             - get-payment-information
+            - get-pis-authorization-status
         subProtocolBeanName:
           type: string
     PageBankData:

@@ -12,6 +12,7 @@ import de.adorsys.opba.protocol.facade.exceptions.NoProtocolRegisteredException;
 import de.adorsys.opba.protocol.facade.services.context.ServiceContextProvider;
 import de.adorsys.opba.protocol.facade.util.logresolver.FacadeLogResolver;
 import lombok.RequiredArgsConstructor;
+import org.jetbrains.annotations.Nullable;
 import org.springframework.transaction.support.TransactionTemplate;
 
 import java.util.Map;
@@ -29,6 +30,29 @@ public abstract class FacadeService<REQUEST extends FacadeServiceableGetter, RES
     private final FacadeLogResolver logResolver = new FacadeLogResolver(getClass());
 
     public CompletableFuture<FacadeResult<RESULT>> execute(REQUEST request) {
+        ProtocolWithCtx<ACTION, REQUEST> protocolWithCtx = createContextAndFindProtocol(request);
+
+        if (protocolWithCtx == null || protocolWithCtx.getProtocol() == null) {
+            throw new NoProtocolRegisteredException("can't create service context or determine protocol");
+        }
+
+        CompletableFuture<Result<RESULT>> result = execute(protocolWithCtx.getProtocol(), protocolWithCtx.getServiceContext());
+        return handleProtocolResult(request, protocolWithCtx, result);
+    }
+
+    protected CompletableFuture<FacadeResult<RESULT>> handleProtocolResult(REQUEST request, ProtocolWithCtx<ACTION, REQUEST> protocolWithCtx, CompletableFuture<Result<RESULT>> result) {
+        // This one must exist in decoupled transaction
+        return result.thenApply(
+                res -> handleResult(
+                        res,
+                        request.getFacadeServiceable(),
+                        protocolWithCtx.getServiceContext()
+                )
+        );
+    }
+
+    @Nullable
+    protected ProtocolWithCtx<ACTION, REQUEST> createContextAndFindProtocol(REQUEST request) {
         logResolver.log("execute request({})", request);
 
         ProtocolWithCtx<ACTION, REQUEST> protocolWithCtx = txTemplate.execute(callback -> {
@@ -39,20 +63,7 @@ public abstract class FacadeService<REQUEST extends FacadeServiceableGetter, RES
         });
 
         logResolver.log("About to execute protocol with context: {}", protocolWithCtx);
-
-        if (protocolWithCtx == null || protocolWithCtx.getProtocol() == null) {
-            throw new NoProtocolRegisteredException("can't create service context or determine protocol");
-        }
-
-        CompletableFuture<Result<RESULT>> result = execute(protocolWithCtx.getProtocol(), protocolWithCtx.getServiceContext());
-        // This one must exist in decoupled transaction
-        return result.thenApply(
-                res -> handleResult(
-                        res,
-                        request.getFacadeServiceable(),
-                        protocolWithCtx.getServiceContext()
-                )
-        );
+        return protocolWithCtx;
     }
 
     protected InternalContext<REQUEST, ACTION> contextFor(REQUEST request) {

@@ -5,15 +5,19 @@ import de.adorsys.opba.protocol.api.dto.request.payments.PaymentInfoBody;
 import de.adorsys.opba.protocol.api.dto.request.payments.PaymentInfoRequest;
 import de.adorsys.opba.protocol.api.dto.request.payments.PaymentStatusBody;
 import de.adorsys.opba.protocol.api.dto.request.payments.PaymentStatusRequest;
+import de.adorsys.opba.protocol.api.dto.request.payments.PisAuthorizationStatusRequest;
 import de.adorsys.opba.protocol.api.dto.result.body.PaymentProductDetails;
+import de.adorsys.opba.protocol.api.dto.result.body.PisAuthorizationStatusBody;
 import de.adorsys.opba.protocol.facade.dto.result.torest.FacadeResult;
 import de.adorsys.opba.protocol.facade.services.pis.GetPaymentInformationService;
 import de.adorsys.opba.protocol.facade.services.pis.GetPaymentStatusService;
+import de.adorsys.opba.protocol.facade.services.pis.GetPisAuthorizationStatusService;
 import de.adorsys.opba.restapi.shared.mapper.FacadeResponseBodyToRestBodyMapper;
 import de.adorsys.opba.restapi.shared.service.FacadeResponseMapper;
 import de.adorsys.opba.tppbankingapi.Const;
 import de.adorsys.opba.tppbankingapi.pis.model.generated.PaymentInformationResponse;
 import de.adorsys.opba.tppbankingapi.pis.model.generated.PaymentStatusResponse;
+import de.adorsys.opba.tppbankingapi.pis.model.generated.SessionStatusDetails;
 import de.adorsys.opba.tppbankingapi.pis.resource.generated.TppBankingApiPaymentStatusPisApi;
 import lombok.RequiredArgsConstructor;
 import org.mapstruct.Mapper;
@@ -28,11 +32,14 @@ import static de.adorsys.opba.restapi.shared.GlobalConst.SPRING_KEYWORD;
 @RestController
 @RequiredArgsConstructor
 public class TppBankingApiPisInfoController implements TppBankingApiPaymentStatusPisApi {
+
     private final GetPaymentStatusService paymentStatusService;
     private final GetPaymentInformationService paymentInfoService;
+    private final GetPisAuthorizationStatusService pisSessionStatus;
     private final FacadeResponseMapper mapper;
     private final PaymentInfoBodyToApiMapper paymentInfoResponseMapper;
     private final PaymentStatusBodyToApiMapper paymentStatusResponseMapper;
+    private final PaymentAuthorizationSessionStatusToApiMapper sessionStatusToApiMapper;
 
 
     @Override
@@ -85,6 +92,24 @@ public class TppBankingApiPisInfoController implements TppBankingApiPaymentStatu
         ).thenApply((FacadeResult<PaymentStatusBody> result) -> mapper.translate(result, paymentStatusResponseMapper));
     }
 
+    @Override
+    public CompletableFuture getPisSessionStatus(UUID serviceSessionId,
+                                                 String serviceSessionPassword,
+                                                 UUID xRequestID,
+                                                 String xTimestampUTC,
+                                                 String xRequestSignature,
+                                                 String fintechId) {
+        return pisSessionStatus.execute(PisAuthorizationStatusRequest.builder()
+                .facadeServiceable(FacadeServiceableRequest.builder()
+                        .authorization(fintechId)
+                        .sessionPassword(serviceSessionPassword)
+                        .serviceSessionId(serviceSessionId)
+                        .requestId(xRequestID)
+                        .build()
+                ).build()
+        ).thenApply((FacadeResult<PisAuthorizationStatusBody> result) -> mapper.translate(result, sessionStatusToApiMapper));
+    }
+
     @Mapper(componentModel = SPRING_KEYWORD, implementationPackage = Const.API_MAPPERS_PACKAGE)
     public interface PaymentInfoBodyToApiMapper extends FacadeResponseBodyToRestBodyMapper<PaymentInformationResponse, PaymentInfoBody> {
 
@@ -95,5 +120,10 @@ public class TppBankingApiPisInfoController implements TppBankingApiPaymentStatu
     @Mapper(componentModel = SPRING_KEYWORD, implementationPackage = Const.API_MAPPERS_PACKAGE)
     public interface PaymentStatusBodyToApiMapper extends FacadeResponseBodyToRestBodyMapper<PaymentStatusResponse, PaymentStatusBody> {
         PaymentStatusResponse map(PaymentStatusBody facade);
+    }
+
+    @Mapper(componentModel = SPRING_KEYWORD, implementationPackage = Const.API_MAPPERS_PACKAGE, uses = UuidMapper.class)
+    public interface PaymentAuthorizationSessionStatusToApiMapper extends FacadeResponseBodyToRestBodyMapper<SessionStatusDetails, PisAuthorizationStatusBody> {
+        SessionStatusDetails map(PisAuthorizationStatusBody facade);
     }
 }

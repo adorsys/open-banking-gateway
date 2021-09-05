@@ -491,21 +491,27 @@ components:
       format: date-time
 
     sessionStatus:
-      type: string
-      enum:
-        - PENDING
-        - STARTED
-        - COMPLETED
-        - ACTIVATED
-        - DENIED
-        - ERROR
-      description: >
-        * `PENDING` - Session not started (user has not started session authorization)
-        * `STARTED` - Session started (user started session authorization)
-        * `COMPLETED` - Session completed (user completed session authorization, but FinTech must confirm it)
-        * `ACTIVATED` - Session activated and ready to use
-        * `DENIED` - User denied consent/payment authorization
-        * `ERROR` - Error happened during the process
+      type: object
+      properties:
+        status:
+          type: string
+          enum:
+            - PENDING
+            - STARTED
+            - COMPLETED
+            - ACTIVATED
+            - DENIED
+            - ERROR
+          description: >
+            * `PENDING` - Session not started (user has not started session authorization)
+            * `STARTED` - Session started (user started session authorization)
+            * `COMPLETED` - Session completed (user completed session authorization, but FinTech must confirm it)
+            * `ACTIVATED` - Session activated and ready to use
+            * `DENIED` - User denied consent/payment authorization
+            * `ERROR` - Error happened during the process
+        externalStatus:
+          description: External status (i.e. in 3rd party service)
+          type: string
 
     sessionStatusDetails:
       type: object
@@ -527,6 +533,7 @@ components:
             properties:
               authSessionId:
                 type: string
+                format: uuid
               status:
                 $ref: "#/components/schemas/sessionStatus"
 
