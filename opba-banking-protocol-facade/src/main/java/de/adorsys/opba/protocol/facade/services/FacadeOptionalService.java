@@ -13,7 +13,7 @@ import org.springframework.transaction.support.TransactionTemplate;
 import java.util.Map;
 import java.util.concurrent.CompletableFuture;
 
-public class FacadeOptionalService<REQUEST extends FacadeServiceableGetter, RESULT extends ResultBody, ACTION extends Action<REQUEST, RESULT>> extends FacadeService<REQUEST, RESULT, ACTION>  {
+public abstract class FacadeOptionalService<REQUEST extends FacadeServiceableGetter, RESULT extends ResultBody, ACTION extends Action<REQUEST, RESULT>> extends FacadeService<REQUEST, RESULT, ACTION>  {
 
     public FacadeOptionalService(ProtocolAction action, Map<String, ? extends ACTION> actionProviders, ProtocolSelector selector,
                                  ServiceContextProvider provider, ProtocolResultHandler handler, TransactionTemplate txTemplate) {
