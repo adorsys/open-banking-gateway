@@ -33,7 +33,11 @@ public class OnLoginService extends FacadeOptionalService<OnLoginRequest, Update
     }
 
     @Override
-    protected CompletableFuture<FacadeResult<UpdateAuthBody>> handleProtocolResult(OnLoginRequest onLoginRequest, ProtocolWithCtx<OnLogin, OnLoginRequest> protocolWithCtx, CompletableFuture<Result<UpdateAuthBody>> result) {
+    protected CompletableFuture<FacadeResult<UpdateAuthBody>> handleProtocolResult(
+            OnLoginRequest onLoginRequest,
+            ProtocolWithCtx<OnLogin, OnLoginRequest> protocolWithCtx,
+            CompletableFuture<Result<UpdateAuthBody>> result
+    ) {
         return result.thenCompose(it -> {
             if (null == it) {
                 return CompletableFuture.completedFuture(null);

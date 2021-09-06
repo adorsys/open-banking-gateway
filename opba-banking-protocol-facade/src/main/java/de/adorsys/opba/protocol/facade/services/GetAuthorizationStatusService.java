@@ -18,11 +18,19 @@ import java.util.Collections;
 import java.util.Map;
 import java.util.Set;
 
-public abstract class GetAuthorizationStatusService<REQUEST extends FacadeServiceableGetter, RESULT extends ResultBody, ACTION extends Action<REQUEST, RESULT>> extends FacadeOptionalService<REQUEST, RESULT, ACTION> {
+public abstract class GetAuthorizationStatusService<REQUEST extends FacadeServiceableGetter, RESULT extends ResultBody, ACTION extends Action<REQUEST, RESULT>>
+        extends FacadeOptionalService<REQUEST, RESULT, ACTION> {
 
     private static final Set<SessionStatus> STATUSES_COMPLETED = Set.of(SessionStatus.COMPLETED, SessionStatus.ACTIVATED, SessionStatus.ERROR);
 
-    public GetAuthorizationStatusService(ProtocolAction action, Map<String, ? extends ACTION> actionProviders, ProtocolSelector selector, ServiceContextProvider provider, ProtocolResultHandler handler, TransactionTemplate txTemplate) {
+    public GetAuthorizationStatusService(
+            ProtocolAction action,
+            Map<String, ? extends ACTION> actionProviders,
+            ProtocolSelector selector,
+            ServiceContextProvider provider,
+            ProtocolResultHandler handler,
+            TransactionTemplate txTemplate
+    ) {
         super(action, actionProviders, selector, provider, handler, txTemplate);
     }
 
