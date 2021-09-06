@@ -19,10 +19,10 @@ public class ProtocolSelector {
     private final BankActionRepository bankActionRepository;
 
     @Transactional
-    public <REQUEST, ACTION> InternalContext<REQUEST, ACTION> selectProtocolFor(
-        InternalContext<REQUEST, ACTION> ctx,
-        ProtocolAction protocolAction,
-        Map<String, ? extends ACTION> actionBeans) {
+    public <REQUEST, ACTION> Optional<InternalContext<REQUEST, ACTION>> selectProtocolFor(
+            InternalContext<REQUEST, ACTION> ctx,
+            ProtocolAction protocolAction,
+            Map<String, ? extends ACTION> actionBeans) {
         Optional<BankAction> bankAction;
 
         if (null == ctx.getAuthSession()) {
@@ -42,7 +42,15 @@ public class ProtocolSelector {
                             .serviceCtx(ctx.getServiceCtx().toBuilder().serviceBankProtocolId(action.getId()).build())
                             .action(actionBean)
                             .build();
-                })
+                });
+    }
+
+    @Transactional
+    public <REQUEST, ACTION> InternalContext<REQUEST, ACTION> requireProtocolFor(
+        InternalContext<REQUEST, ACTION> ctx,
+        ProtocolAction protocolAction,
+        Map<String, ? extends ACTION> actionBeans) {
+        return selectProtocolFor(ctx, protocolAction, actionBeans)
                 .orElseThrow(() ->
                         new IllegalStateException(
                                 "No action bean for " + protocolAction.name() + " of: " + ctx.getServiceCtx().loggableBankId()

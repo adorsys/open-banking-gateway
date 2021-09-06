@@ -7,6 +7,7 @@ import de.adorsys.opba.protocol.api.dto.request.FacadeServiceableGetter;
 import de.adorsys.opba.protocol.api.dto.request.FacadeServiceableRequest;
 import de.adorsys.opba.protocol.api.dto.result.body.ResultBody;
 import de.adorsys.opba.protocol.api.dto.result.fromprotocol.Result;
+import de.adorsys.opba.protocol.api.dto.result.fromprotocol.error.ErrorResult;
 import de.adorsys.opba.protocol.facade.dto.result.torest.FacadeResult;
 import de.adorsys.opba.protocol.facade.exceptions.NoProtocolRegisteredException;
 import de.adorsys.opba.protocol.facade.services.context.ServiceContextProvider;
@@ -21,13 +22,13 @@ import java.util.concurrent.CompletableFuture;
 @RequiredArgsConstructor
 public abstract class FacadeService<REQUEST extends FacadeServiceableGetter, RESULT extends ResultBody, ACTION extends Action<REQUEST, RESULT>> {
 
-    private final ProtocolAction action;
-    private final Map<String, ? extends ACTION> actionProviders;
-    private final ProtocolSelector selector;
-    private final ServiceContextProvider provider;
-    private final ProtocolResultHandler handler;
-    private final TransactionTemplate txTemplate;
-    private final FacadeLogResolver logResolver = new FacadeLogResolver(getClass());
+    protected final ProtocolAction action;
+    protected final Map<String, ? extends ACTION> actionProviders;
+    protected final ProtocolSelector selector;
+    protected final ServiceContextProvider provider;
+    protected final ProtocolResultHandler handler;
+    protected final TransactionTemplate txTemplate;
+    protected final FacadeLogResolver logResolver = new FacadeLogResolver(getClass());
 
     public CompletableFuture<FacadeResult<RESULT>> execute(REQUEST request) {
         ProtocolWithCtx<ACTION, REQUEST> protocolWithCtx = createContextAndFindProtocol(request);
@@ -75,7 +76,7 @@ public abstract class FacadeService<REQUEST extends FacadeServiceableGetter, RES
     }
 
     protected InternalContext<REQUEST, ACTION> selectAndSetProtocolTo(InternalContext<REQUEST, ACTION> ctx) {
-        return selector.selectProtocolFor(
+        return selector.requireProtocolFor(
                 ctx,
                 action,
                 actionProviders
@@ -89,6 +90,10 @@ public abstract class FacadeService<REQUEST extends FacadeServiceableGetter, RES
     }
 
     protected CompletableFuture<Result<RESULT>> execute(ACTION protocol, ServiceContext<REQUEST> ctx) {
-        return protocol.execute(ctx);
+        try {
+            return protocol.execute(ctx);
+        } catch (Exception ex) {
+            return CompletableFuture.completedFuture(new ErrorResult<>());
+        }
     }
 }

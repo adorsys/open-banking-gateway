@@ -38,6 +38,15 @@ public class FacadeOptionalService<REQUEST extends FacadeServiceableGetter, RESU
         return handleProtocolResult(request, protocolWithCtx, result);
     }
 
+    @Override
+    protected InternalContext<REQUEST, ACTION> selectAndSetProtocolTo(InternalContext<REQUEST, ACTION> ctx) {
+        return selector.selectProtocolFor(
+                ctx,
+                action,
+                actionProviders
+        ).orElse(ctx);
+    }
+
     protected CompletableFuture<Result<RESULT>> supplyNoProtocolResult(REQUEST request, ServiceContext<REQUEST> ctx) {
         return CompletableFuture.completedFuture(null);
     }

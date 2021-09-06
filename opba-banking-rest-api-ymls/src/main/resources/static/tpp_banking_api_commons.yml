@@ -490,25 +490,19 @@ components:
       type: string
       format: date-time
 
-    sessionStatus:
+    authSessionStatus:
       type: object
       properties:
-        status:
+        createdAt:
+          description: Creation time of authorization session
           type: string
-          enum:
-            - PENDING
-            - STARTED
-            - COMPLETED
-            - ACTIVATED
-            - DENIED
-            - ERROR
-          description: >
-            * `PENDING` - Session not started (user has not started session authorization)
-            * `STARTED` - Session started (user started session authorization)
-            * `COMPLETED` - Session completed (user completed session authorization, but FinTech must confirm it)
-            * `ACTIVATED` - Session activated and ready to use
-            * `DENIED` - User denied consent/payment authorization
-            * `ERROR` - Error happened during the process
+          format: date-time
+        updatedAt:
+          description: Update time of authorization session
+          type: string
+          format: date-time
+        status:
+          $ref: "#/components/schemas/sessionStatus"
         externalStatus:
           description: External status (i.e. in 3rd party service)
           type: string
@@ -526,16 +520,30 @@ components:
           format: date-time
         status:
           $ref: "#/components/schemas/sessionStatus"
+        externalStatus:
+          description: External status (i.e. in 3rd party service)
+          type: string
         detailedStatus:
           type: object
           additionalProperties:
-            type: object
-            properties:
-              authSessionId:
-                type: string
-                format: uuid
-              status:
-                $ref: "#/components/schemas/sessionStatus"
+            $ref: "#/components/schemas/authSessionStatus"
+
+    sessionStatus:
+      type: string
+      enum:
+        - PENDING
+        - STARTED
+        - COMPLETED
+        - ACTIVATED
+        - DENIED
+        - ERROR
+      description: >
+        * `PENDING` - Session not started (user has not started session authorization)
+        * `STARTED` - Session started (user started session authorization)
+        * `COMPLETED` - Session completed (user completed session authorization, but FinTech must confirm it)
+        * `ACTIVATED` - Session activated and ready to use
+        * `DENIED` - User denied consent/payment authorization
+        * `ERROR` - Error happened during the process
 
     generalError:
       type: object

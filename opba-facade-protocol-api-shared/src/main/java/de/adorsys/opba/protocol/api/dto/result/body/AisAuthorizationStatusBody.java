@@ -12,7 +12,7 @@ import java.util.UUID;
  * {@link de.adorsys.opba.protocol.api.dto.request.accounts.AisAuthorizationStatusRequest}.
  */
 @Data
-public class AisAuthorizationStatusBody implements ResultBody {
+public class AisAuthorizationStatusBody implements AuthorizationStatusBody {
 
     private SessionStatus status;
     private Map<UUID, DetailedSessionStatus> detailedStatus;
