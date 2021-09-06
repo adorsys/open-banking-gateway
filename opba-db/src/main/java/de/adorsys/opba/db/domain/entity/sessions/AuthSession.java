@@ -83,6 +83,7 @@ public class AuthSession {
     private SessionStatus status;
 
     private String lastRequestId;
+    private String lastErrorRequestId;
 
     @Version
     private int version;

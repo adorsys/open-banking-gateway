@@ -10,6 +10,8 @@ public class DetailedSessionStatus {
 
     private SessionStatus status;
     private String externalStatus;
+    private String lastRequestId;
+    private String lastErrorRequestId;
     private OffsetDateTime createdAt;
     private OffsetDateTime updatedAt;
 }

@@ -49,6 +49,8 @@ public abstract class GetAuthorizationStatusService<REQUEST extends FacadeServic
             detailedStatus.setStatus(dbAuthSession.getStatus());
             detailedStatus.setCreatedAt(dbAuthSession.getCreatedAt().atOffset(ZoneOffset.UTC));
             detailedStatus.setUpdatedAt(dbAuthSession.getModifiedAt().atOffset(ZoneOffset.UTC));
+            detailedStatus.setLastRequestId(dbAuthSession.getLastRequestId());
+            detailedStatus.setLastErrorRequestId(dbAuthSession.getLastErrorRequestId());
 
             statusBody.setDetailedStatus(Collections.singletonMap(dbAuthSession.getId(), detailedStatus));
         }

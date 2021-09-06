@@ -7,6 +7,7 @@
         <addColumn tableName="${table-prefix}auth_session">
             <column name="status" type="VARCHAR(32)"/>
             <column name="last_request_id" type="VARCHAR(64)"/>
+            <column name="last_error_request_id" type="VARCHAR(64)"/>
         </addColumn>
     </changeSet>
 </databaseChangeLog>

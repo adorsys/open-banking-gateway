@@ -493,6 +493,12 @@ components:
     authSessionStatus:
       type: object
       properties:
+        lastErrorRequestId:
+          description: Last request ID that finished with error that was done within this session.
+          type: string
+        lastRequestId:
+          description: Last request ID that was done within this session.
+          type: string
         createdAt:
           description: Creation time of authorization session
           type: string

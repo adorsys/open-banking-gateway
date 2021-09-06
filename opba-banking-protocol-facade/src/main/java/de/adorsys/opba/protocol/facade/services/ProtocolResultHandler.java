@@ -11,6 +11,7 @@ import de.adorsys.opba.protocol.api.dto.context.ServiceContext;
 import de.adorsys.opba.protocol.api.dto.request.FacadeServiceableGetter;
 import de.adorsys.opba.protocol.api.dto.request.FacadeServiceableRequest;
 import de.adorsys.opba.protocol.api.dto.result.body.AuthStateBody;
+import de.adorsys.opba.protocol.api.dto.result.body.AuthorizationStatusBody;
 import de.adorsys.opba.protocol.api.dto.result.body.ReturnableProcessErrorResult;
 import de.adorsys.opba.protocol.api.dto.result.fromprotocol.Result;
 import de.adorsys.opba.protocol.api.dto.result.fromprotocol.dialog.AuthorizationDeniedResult;
@@ -289,30 +290,27 @@ public class ProtocolResultHandler {
             return;
         }
 
+        // Skip AisAuthorizationStatusRequest/PisAuthorizationStatusRequest requests
+        if (result instanceof SuccessResult && result.getBody() instanceof AuthorizationStatusBody) {
+            return;
+        }
+
         if (result instanceof ConsentAcquiredResult) {
             session.setLastRequestId(getLastRequestId(request.getRequestId()));
             session.setStatus(SessionStatus.COMPLETED);
-        }
-
-        if (result instanceof RedirectionResult) {
-            session.setLastRequestId(getLastRequestId(request.getRequestId()));
-            session.setStatus(SessionStatus.PENDING);
-        }
-
-        if (result instanceof AuthorizationDeniedResult) {
+        } else if (result instanceof AuthorizationDeniedResult) {
             session.setLastRequestId(getLastRequestId(request.getRequestId()));
             session.setStatus(SessionStatus.DENIED);
-        }
-
-        if (result instanceof ErrorResult) {
+        } else if (result instanceof ErrorResult) {
             session.setLastRequestId(getLastRequestId(request.getRequestId()));
+            session.setLastErrorRequestId(session.getLastRequestId());
+            session.setStatus(SessionStatus.ERROR);
+        } else if (result instanceof ReturnableProcessErrorResult) {
+            session.setLastRequestId(getLastRequestId(request.getRequestId()));
+            session.setLastErrorRequestId(session.getLastRequestId());
             session.setStatus(SessionStatus.ERROR);
         }
 
-        if (result instanceof ReturnableProcessErrorResult) {
-            session.setLastRequestId(getLastRequestId(request.getRequestId()));
-            session.setStatus(SessionStatus.ERROR);
-        }
         authorizationSessions.save(session);
     }
 
