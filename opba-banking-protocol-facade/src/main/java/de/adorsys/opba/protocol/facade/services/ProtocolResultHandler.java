@@ -166,7 +166,6 @@ public class ProtocolResultHandler {
     ) {
         FacadeRuntimeErrorResult<RESULT> mappedResult = (FacadeRuntimeErrorResult<RESULT>) FacadeRuntimeErrorResult.ERROR_FROM_PROTOCOL.map(result);
         mappedResult.setServiceSessionId(getLastRequestId(session.getServiceSessionId()));
-
         mappedResult.setXRequestId(xRequestId);
         return mappedResult;
     }

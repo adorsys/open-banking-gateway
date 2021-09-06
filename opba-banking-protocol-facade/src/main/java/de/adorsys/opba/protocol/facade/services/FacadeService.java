@@ -8,17 +8,20 @@ import de.adorsys.opba.protocol.api.dto.request.FacadeServiceableRequest;
 import de.adorsys.opba.protocol.api.dto.result.body.ResultBody;
 import de.adorsys.opba.protocol.api.dto.result.fromprotocol.Result;
 import de.adorsys.opba.protocol.api.dto.result.fromprotocol.error.ErrorResult;
+import de.adorsys.opba.protocol.api.errors.ReturnableException;
 import de.adorsys.opba.protocol.facade.dto.result.torest.FacadeResult;
 import de.adorsys.opba.protocol.facade.exceptions.NoProtocolRegisteredException;
 import de.adorsys.opba.protocol.facade.services.context.ServiceContextProvider;
 import de.adorsys.opba.protocol.facade.util.logresolver.FacadeLogResolver;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.jetbrains.annotations.Nullable;
 import org.springframework.transaction.support.TransactionTemplate;
 
 import java.util.Map;
 import java.util.concurrent.CompletableFuture;
 
+@Slf4j
 @RequiredArgsConstructor
 public abstract class FacadeService<REQUEST extends FacadeServiceableGetter, RESULT extends ResultBody, ACTION extends Action<REQUEST, RESULT>> {
 
@@ -92,8 +95,12 @@ public abstract class FacadeService<REQUEST extends FacadeServiceableGetter, RES
     protected CompletableFuture<Result<RESULT>> execute(ACTION protocol, ServiceContext<REQUEST> ctx) {
         try {
             return protocol.execute(ctx);
+        } catch (ReturnableException ex) {
+            log.error("[{}]/{}/{}", ctx.getRequest().getFacadeServiceable().getRequestId(), ctx.getServiceSessionId(), ctx.getAuthSessionId(), ex);
+            return CompletableFuture.completedFuture(new ErrorResult<>(ex.getMessage()));
         } catch (Exception ex) {
-            return CompletableFuture.completedFuture(new ErrorResult<>());
+            log.error("[{}]/{}/{}", ctx.getRequest().getFacadeServiceable().getRequestId(), ctx.getServiceSessionId(), ctx.getAuthSessionId(), ex);
+            return CompletableFuture.completedFuture(new ErrorResult<>(ex.getClass().toString()));
         }
     }
 }
