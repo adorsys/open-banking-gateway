@@ -78,6 +78,7 @@ public class BankProfile implements Serializable, CurrentBankProfile {
     private String externalInterfaces;
     private String protocolType;
     private boolean isSandbox;
+    private boolean active;
 
     @OneToMany(mappedBy = "bankProfile", cascade = CascadeType.ALL, orphanRemoval = true)
     @MapKey(name = "protocolAction")
@@ -97,6 +98,7 @@ public class BankProfile implements Serializable, CurrentBankProfile {
                 target = "serviceList")
         @Mapping(source = "actions", target = "consentSupportByService")
         @Mapping(source = "sandbox", target = "isSandbox")
+        @Mapping(source = "active", target = "isActive")
         BankProfileDescriptor map(BankProfile bankProfile);
     }
 

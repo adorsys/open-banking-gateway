@@ -65,6 +65,8 @@ public class StagesCommonUtil {
     public static final String COMPUTE_IP_ADDRESS = "false";
     public static final String IP_ADDRESS = "1.1.1.1";
     public static final String DKB_BANK_PROFILE_ID = "83c24dcf-2cfb-4c43-9812-013e32ab53b1";
+    public static final String CONSORS_BANK_BANK_PROFILE_ID = "a9f7a345-9921-4c5c-93d6-b2f5af31a4cd";
+    public static final String POSTBANK_BANK_PROFILE_ID = "e431a602-15ab-48b8-8c9b-ce381d2034c4";
 
     public static RequestSpecification withAccountsHeaders(String fintechUserId) {
         return withAccountsHeaders(fintechUserId, SANDBOX_BANK_PROFILE_ID);

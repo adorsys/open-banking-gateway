@@ -114,6 +114,9 @@
     <sequenceFlow id="decoupledPaymentStatusCheck" name="Waits for user to authorize in 3rd party using decoupled approach" sourceRef="sid-c41937f6-8757-456c-81fb-789cadab7b4e" targetRef="sid-441a176c-af21-4e02-b35d-167c00caf9d4">
       <conditionExpression xsi:type="tFormalExpression"/>
     </sequenceFlow>
+    <sequenceFlow id="sid-ddc29320-583b-4fcd-9551-f2f037c5a46a" name="ASPSP started authorization" sourceRef="sid-3ac85279-91f9-41fc-8644-369b8d2c9ee5" targetRef="scaChallengeSelector">
+      <conditionExpression xsi:type="tFormalExpression">#{xs2aConsentInfo.isAuthorisationStarted(CONTEXT)}</conditionExpression>
+    </sequenceFlow>
   </process>
   <bpmndi:BPMNDiagram id="BPMNDiagram_xs2a-authorize-singlePaymentBody">
     <bpmndi:BPMNPlane bpmnElement="xs2a-authorize-payment" id="BPMNPlane_xs2a-authorize-singlePaymentBody">
@@ -121,7 +124,7 @@
         <omgdc:Bounds height="30.0" width="30.0" x="46.959988" y="219.99998"/>
       </bpmndi:BPMNShape>
       <bpmndi:BPMNShape bpmnElement="startAuthorization" id="BPMNShape_startAuthorization">
-        <omgdc:Bounds height="80.0" width="100.0" x="143.66205" y="297.99994"/>
+        <omgdc:Bounds height="80.0" width="100.0" x="143.66203" y="297.99988"/>
       </bpmndi:BPMNShape>
       <bpmndi:BPMNShape bpmnElement="end" id="BPMNShape_end">
         <omgdc:Bounds height="28.0" width="28.0" x="1795.1072" y="415.0"/>
@@ -382,6 +385,12 @@
         <omgdi:waypoint x="1792.5428" y="-203.86469"/>
         <omgdi:waypoint x="1562.0039" y="-203.86467"/>
         <omgdi:waypoint x="1562.004" y="-163.68298"/>
+      </bpmdi:BPMNEdge>
+      <bpmdi:BPMNEdge xmlns:bpmdi="http://www.omg.org/spec/BPMN/20100524/DI" id="sid-a7b86809-f149-4d32-9776-8bf3af219bd5" bpmnElement="sid-ddc29320-583b-4fcd-9551-f2f037c5a46a">
+        <omgdi:waypoint x="61.959984" y="324.0"/>
+        <omgdi:waypoint x="87.66347" y="267.3994"/>
+        <omgdi:waypoint x="335.0" y="267.39938"/>
+        <omgdi:waypoint x="342.36633" y="332.43372"/>
       </bpmdi:BPMNEdge>
     </bpmndi:BPMNPlane>
   </bpmndi:BPMNDiagram>

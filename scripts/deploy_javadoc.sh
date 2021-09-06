@@ -17,7 +17,7 @@ then
   exit 1
 fi
 
-mvn clean javadoc:aggregate -P javadoc --no-transfer-progress
+./mvnw clean javadoc:aggregate -P javadoc --no-transfer-progress
 
 echo -e "Publishing javadoc...\n"
 

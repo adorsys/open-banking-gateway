@@ -1,7 +1,7 @@
 {
-  "scenarioName": "DKB - single payment",
-  "requiredScenarioState": "initiated",
-  "newScenarioState": "authorisation_started",
+  "scenarioName": "PaymentInitializationUsingDbkEmbedded",
+  "requiredScenarioState": "Initiated",
+  "newScenarioState": "AuthorisationStarted",
   "priority": 5,
   "request": {
     "url": "/v1/payments/sepa-credit-transfers/VALID_PAYMENT_ID/authorisations",

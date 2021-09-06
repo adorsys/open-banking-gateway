@@ -1,6 +1,6 @@
 {
   "scenarioName": "AccountsListUsingDkbEmbeddedPreStep",
-  "requiredScenarioState": "Started",
+  "requiredScenarioState": "Authenticated",
   "newScenarioState": "CreateConsent",
   "request": {
     "url": "/v1/consents",
@@ -16,7 +16,7 @@
         "matches": "max.musterman"
       },
       "PSU-IP-Address": {
-        "matches": "1.1.1.1"
+        "matches": "^(?:[0-9]{1,3}\\.){3}[0-9]{1,3}$"
       },
       "TPP-Redirect-URI" : {
         "matches" : ".+"
@@ -30,7 +30,7 @@
     },
     "bodyPatterns": [
       {
-        "equalToJson": "{\"access\":{\"availableAccounts\":\"allAccounts\"},\"recurringIndicator\":true,\"validUntil\":\"2030-01-31\",\"frequencyPerDay\":12,\"combinedServiceIndicator\":false}",
+        "equalToJson": "{\"access\":{\"allPsd2\":\"allAccounts\"},\"recurringIndicator\":true,\"validUntil\":\"2030-01-31\",\"frequencyPerDay\":24,\"combinedServiceIndicator\":false}",
         "ignoreArrayOrder": true,
         "ignoreExtraElements": true
       }

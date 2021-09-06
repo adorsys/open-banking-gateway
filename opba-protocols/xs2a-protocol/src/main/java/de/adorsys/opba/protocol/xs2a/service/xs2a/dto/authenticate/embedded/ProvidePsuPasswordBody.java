@@ -6,10 +6,10 @@ import de.adorsys.opba.protocol.xs2a.context.Xs2aContext;
 import de.adorsys.opba.protocol.xs2a.service.xs2a.annotations.ContextCode;
 import de.adorsys.opba.protocol.xs2a.service.xs2a.annotations.FrontendCode;
 import de.adorsys.opba.protocol.xs2a.service.xs2a.annotations.ValidationInfo;
+import de.adorsys.xs2a.adapter.api.model.PsuData;
 import de.adorsys.xs2a.adapter.api.model.UpdatePsuAuthentication;
 import lombok.Data;
 import org.mapstruct.Mapper;
-import org.mapstruct.Mapping;
 
 import javax.validation.constraints.NotBlank;
 
@@ -29,11 +29,22 @@ public class ProvidePsuPasswordBody {
     @NotBlank(message = "{no.psu.password}")
     private String psuPassword;
 
+    private boolean passwordShouldBeEncrypted;
+
     @Mapper(componentModel = GlobalConst.SPRING_KEYWORD, implementationPackage = GlobalConst.XS2A_MAPPERS_PACKAGE)
     public interface ToXs2aApi extends DtoMapper<ProvidePsuPasswordBody, UpdatePsuAuthentication> {
 
-        @Mapping(target = "psuData.password", source = "psuPassword")
-        UpdatePsuAuthentication map(ProvidePsuPasswordBody cons);
+        default UpdatePsuAuthentication map(ProvidePsuPasswordBody cons) {
+            PsuData psuData = new PsuData();
+            if (cons.isPasswordShouldBeEncrypted()) {
+                psuData.setEncryptedPassword(cons.getPsuPassword());
+            } else {
+                psuData.setPassword(cons.getPsuPassword());
+            }
+            UpdatePsuAuthentication updatePsuAuthentication = new UpdatePsuAuthentication();
+            updatePsuAuthentication.setPsuData(psuData);
+            return updatePsuAuthentication;
+        }
     }
 
     @Mapper(componentModel = GlobalConst.SPRING_KEYWORD, implementationPackage = GlobalConst.XS2A_MAPPERS_PACKAGE)

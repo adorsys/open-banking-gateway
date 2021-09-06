@@ -28,14 +28,14 @@ api:
       start: 0
       max: 10
       query:
-        "SELECT id, uuid, name, bic, bank_code, word_similarity(:keyword, name) as sml
-        FROM opb_bank WHERE word_similarity(:keyword, name) >= 0.6
+        "SELECT id, uuid, name, bic, bank_code, active, word_similarity(:keyword, name) as sml
+        FROM opb_bank WHERE ((word_similarity(:keyword, name) >= 0.6) AND (NOT :onlyActive OR active))
         UNION
-        SELECT id, uuid, name, bic, bank_code, word_similarity(:keyword, bic) as sml
-        FROM opb_bank WHERE word_similarity(:keyword, bic) >= 0.8
+        SELECT id, uuid, name, bic, bank_code, active, word_similarity(:keyword, bic) as sml
+        FROM opb_bank WHERE ((word_similarity(:keyword, bic) >= 0.8) AND (NOT :onlyActive OR active))
         UNION
-        SELECT id, uuid, name, bic, bank_code, word_similarity(:keyword, bank_code) as sml
-        FROM opb_bank WHERE word_similarity(:keyword, bank_code) >= 0.8
+        SELECT id, uuid, name, bic, bank_code, active, word_similarity(:keyword, bank_code) as sml
+        FROM opb_bank WHERE ((word_similarity(:keyword, bank_code) >= 0.8) AND (NOT :onlyActive OR active))
         ORDER BY sml DESC, id
         LIMIT :max
         OFFSET :start"

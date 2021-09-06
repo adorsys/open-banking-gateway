@@ -114,11 +114,14 @@
     <sequenceFlow id="decoupledConsentStatusCheck" name="Waits for user to authorize in 3rd party using decoupled approach" sourceRef="sid-d17b4862-116f-4b70-8eaa-c23183e502cc" targetRef="sid-9bc341dd-157c-4c9d-ae99-de9fec005cc5">
       <conditionExpression xsi:type="tFormalExpression"/>
     </sequenceFlow>
+    <sequenceFlow id="sid-7ac9f81f-cc30-4c83-83a4-05c93e63fe70" name="Aspsp started Authorization" sourceRef="sid-28d87700-36b4-4ef7-9f81-42473767bb7e" targetRef="scaChallengeSelector">
+      <conditionExpression xsi:type="tFormalExpression">#{xs2aConsentInfo.isAuthorisationStarted(CONTEXT)}</conditionExpression>
+    </sequenceFlow>
   </process>
   <bpmndi:BPMNDiagram id="BPMNDiagram_xs2a-authorize-consent">
     <bpmndi:BPMNPlane bpmnElement="xs2a-authorize-consent" id="BPMNPlane_xs2a-authorize-consent">
       <bpmndi:BPMNShape bpmnElement="start" id="BPMNShape_start">
-        <omgdc:Bounds height="30.0" width="30.0" x="58.27999" y="229.41202"/>
+        <omgdc:Bounds height="30.0" width="30.0" x="64.2337" y="163.68126"/>
       </bpmndi:BPMNShape>
       <bpmndi:BPMNShape bpmnElement="startAuthorization" id="BPMNShape_startAuthorization">
         <omgdc:Bounds height="80.0" width="100.0" x="137.0278" y="298.00003"/>
@@ -316,7 +319,9 @@
         <omgdi:waypoint x="137.0278" y="338.00003"/>
       </bpmdi:BPMNEdge>
       <bpmdi:BPMNEdge xmlns:bpmdi="http://www.omg.org/spec/BPMN/20100524/DI" id="edge-eced39f8-c692-49d5-bd83-716e330ff030" bpmnElement="sid-6ad44981-0d14-42c9-ae1c-dc4b971c8f35">
-        <omgdi:waypoint x="73.27999" y="259.41202"/>
+        <omgdi:waypoint x="71.7337" y="193.68126"/>
+        <omgdi:waypoint x="73.27998" y="183.82233"/>
+        <omgdi:waypoint x="73.28" y="255.0"/>
         <omgdi:waypoint x="73.27999" y="317.99997"/>
       </bpmdi:BPMNEdge>
       <bpmdi:BPMNEdge xmlns:bpmdi="http://www.omg.org/spec/BPMN/20100524/DI" id="edge-74cb95eb-9404-461e-ac3b-c2a776391048" bpmnElement="isRedirectBeforeAuth">
@@ -382,6 +387,12 @@
         <omgdi:waypoint x="1788.1644" y="-185.01361"/>
         <omgdi:waypoint x="1562.0574" y="-185.0136"/>
         <omgdi:waypoint x="1562.0575" y="-128.13074"/>
+      </bpmdi:BPMNEdge>
+      <bpmdi:BPMNEdge xmlns:bpmdi="http://www.omg.org/spec/BPMN/20100524/DI" id="sid-105653af-fd8a-4735-8545-1d087fe85cfc" bpmnElement="sid-7ac9f81f-cc30-4c83-83a4-05c93e63fe70">
+        <omgdi:waypoint x="73.28" y="323.99997"/>
+        <omgdi:waypoint x="93.27999" y="264.4825"/>
+        <omgdi:waypoint x="320.9607" y="264.48254"/>
+        <omgdi:waypoint x="342.4887" y="338.0"/>
       </bpmdi:BPMNEdge>
     </bpmndi:BPMNPlane>
   </bpmndi:BPMNDiagram>

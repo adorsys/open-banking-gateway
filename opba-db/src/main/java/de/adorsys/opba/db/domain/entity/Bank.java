@@ -44,6 +44,7 @@ public class Bank implements Serializable {
     private String name;
     private String bic;
     private String bankCode;
+    private boolean active;
 
     @OneToMany(mappedBy = "bank", cascade = CascadeType.ALL, orphanRemoval = true)
     private Collection<BankProfile> profiles;
@@ -54,6 +55,7 @@ public class Bank implements Serializable {
     @Mapper(uses = BankProfile.ToBankProfileDescriptor.class)
     public interface ToBankDescriptor {
         @Mapping(source = "name", target = "bankName")
+        @Mapping(source = "active", target = "isActive")
         BankDescriptor map(Bank bank);
     }
 }

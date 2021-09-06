@@ -1,8 +1,7 @@
 {
-  "scenarioName": "DKB - single payment",
-  "priority": 5,
+  "scenarioName": "PaymentInitializationUsingDbkEmbedded",
   "requiredScenarioState": "Authenticated",
-  "newScenarioState": "initiated",
+  "newScenarioState": "Initiated",
   "request": {
     "url": "/v1/payments/sepa-credit-transfers",
     "method": "POST",

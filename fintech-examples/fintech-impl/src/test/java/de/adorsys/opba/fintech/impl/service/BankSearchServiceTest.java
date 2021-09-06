@@ -45,7 +45,8 @@ class BankSearchServiceTest {
                 any(),
                 any(),
                 eq(start),
-                eq(max))).thenReturn(ResponseEntity.ok().body(bankSearchResponse));
+                eq(max),
+                any())).thenReturn(ResponseEntity.ok().body(bankSearchResponse));
 
         // When
         InlineResponse2001 actual = bankSearchService.searchBank(INVALID_KEYWORD, start, max);

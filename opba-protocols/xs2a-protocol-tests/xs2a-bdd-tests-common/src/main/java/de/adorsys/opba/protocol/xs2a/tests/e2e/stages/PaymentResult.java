@@ -185,6 +185,10 @@ public class PaymentResult<SELF extends PaymentResult<SELF>> extends Stage<SELF>
         return fintech_calls_payment_status(SANDBOX_BANK_PROFILE_ID, TransactionStatus.ACSP.name());
     }
 
+    public SELF fintech_calls_payment_status(String bankProfileId) {
+        return fintech_calls_payment_status(bankProfileId, TransactionStatus.ACSP.name());
+    }
+
     public SELF fintech_calls_payment_status(String bankProfileId, String expectedStatus, String serviceSessionId) {
         ExtractableResponse<Response> response = withPaymentInfoHeaders(UUID.randomUUID().toString(), bankProfileId)
                 .header(SERVICE_SESSION_ID, serviceSessionId)

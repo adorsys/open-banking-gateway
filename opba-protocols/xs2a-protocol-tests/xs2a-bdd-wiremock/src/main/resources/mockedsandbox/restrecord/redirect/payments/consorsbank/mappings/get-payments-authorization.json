@@ -1,0 +1,37 @@
+{
+  "scenarioName": "PaymentInitializationUsingConsorsbankRedirect",
+  "newScenarioState": "GetPaymentAutorisation",
+  "request": {
+    "urlPattern": "/v1/payments/sepa-credit-transfers/.+/authorisations",
+    "method": "POST",
+    "headers": {
+      "X-Request-ID": {
+        "matches": "[0-9a-zA-z\\-]+"
+      },
+      "PSU-ID": {
+        "equalTo": "anton.brueckner"
+      },
+      "Content-Type": {
+        "equalTo": "application/json; charset=UTF-8"
+      }
+    },
+    "bodyPatterns": [
+      {
+        "equalToJson": "{}",
+        "ignoreArrayOrder": true,
+        "ignoreExtraElements": true
+      }
+    ]
+  },
+  "response": {
+    "status": 201,
+    "bodyFileName": "body-payments-sepa-credit-transfers-authorization.json",
+    "headers": {
+      "Aspsp-Sca-Approach": "REDIRECT",
+      "X-Request-Id": "12b34483-242a-428b-8295-2f4805bb0a30",
+      "Content-Type": "application/json;charset=UTF-8",
+      "Date": "Mon, 15 Jun 2020 05:15:17 GMT"
+    }
+  },
+  "uuid": "4f25512c-f6cf-30e6-b163-e16e287c9a32"
+}
