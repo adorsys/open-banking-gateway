@@ -7,28 +7,56 @@ import de.adorsys.opba.protocol.api.dto.request.FacadeServiceableGetter;
 import de.adorsys.opba.protocol.api.dto.request.FacadeServiceableRequest;
 import de.adorsys.opba.protocol.api.dto.result.body.ResultBody;
 import de.adorsys.opba.protocol.api.dto.result.fromprotocol.Result;
+import de.adorsys.opba.protocol.api.dto.result.fromprotocol.error.ErrorResult;
+import de.adorsys.opba.protocol.api.errors.ReturnableException;
 import de.adorsys.opba.protocol.facade.dto.result.torest.FacadeResult;
 import de.adorsys.opba.protocol.facade.exceptions.NoProtocolRegisteredException;
 import de.adorsys.opba.protocol.facade.services.context.ServiceContextProvider;
 import de.adorsys.opba.protocol.facade.util.logresolver.FacadeLogResolver;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
+import org.jetbrains.annotations.Nullable;
 import org.springframework.transaction.support.TransactionTemplate;
 
 import java.util.Map;
 import java.util.concurrent.CompletableFuture;
 
+@Slf4j
 @RequiredArgsConstructor
 public abstract class FacadeService<REQUEST extends FacadeServiceableGetter, RESULT extends ResultBody, ACTION extends Action<REQUEST, RESULT>> {
 
-    private final ProtocolAction action;
-    private final Map<String, ? extends ACTION> actionProviders;
-    private final ProtocolSelector selector;
-    private final ServiceContextProvider provider;
-    private final ProtocolResultHandler handler;
-    private final TransactionTemplate txTemplate;
-    private final FacadeLogResolver logResolver = new FacadeLogResolver(getClass());
+    protected final ProtocolAction action;
+    protected final Map<String, ? extends ACTION> actionProviders;
+    protected final ProtocolSelector selector;
+    protected final ServiceContextProvider provider;
+    protected final ProtocolResultHandler handler;
+    protected final TransactionTemplate txTemplate;
+    protected final FacadeLogResolver logResolver = new FacadeLogResolver(getClass());
 
     public CompletableFuture<FacadeResult<RESULT>> execute(REQUEST request) {
+        ProtocolWithCtx<ACTION, REQUEST> protocolWithCtx = createContextAndFindProtocol(request);
+
+        if (protocolWithCtx == null || protocolWithCtx.getProtocol() == null) {
+            throw new NoProtocolRegisteredException("can't create service context or determine protocol");
+        }
+
+        CompletableFuture<Result<RESULT>> result = execute(protocolWithCtx.getProtocol(), protocolWithCtx.getServiceContext());
+        return handleProtocolResult(request, protocolWithCtx, result);
+    }
+
+    protected CompletableFuture<FacadeResult<RESULT>> handleProtocolResult(REQUEST request, ProtocolWithCtx<ACTION, REQUEST> protocolWithCtx, CompletableFuture<Result<RESULT>> result) {
+        // This one must exist in decoupled transaction
+        return result.thenApply(
+                res -> handleResult(
+                        res,
+                        request.getFacadeServiceable(),
+                        protocolWithCtx.getServiceContext()
+                )
+        );
+    }
+
+    @Nullable
+    protected ProtocolWithCtx<ACTION, REQUEST> createContextAndFindProtocol(REQUEST request) {
         logResolver.log("execute request({})", request);
 
         ProtocolWithCtx<ACTION, REQUEST> protocolWithCtx = txTemplate.execute(callback -> {
@@ -39,20 +67,7 @@ public abstract class FacadeService<REQUEST extends FacadeServiceableGetter, RES
         });
 
         logResolver.log("About to execute protocol with context: {}", protocolWithCtx);
-
-        if (protocolWithCtx == null || protocolWithCtx.getProtocol() == null) {
-            throw new NoProtocolRegisteredException("can't create service context or determine protocol");
-        }
-
-        CompletableFuture<Result<RESULT>> result = execute(protocolWithCtx.getProtocol(), protocolWithCtx.getServiceContext());
-        // This one must exist in decoupled transaction
-        return result.thenApply(
-                res -> handleResult(
-                        res,
-                        request.getFacadeServiceable(),
-                        protocolWithCtx.getServiceContext()
-                )
-        );
+        return protocolWithCtx;
     }
 
     protected InternalContext<REQUEST, ACTION> contextFor(REQUEST request) {
@@ -64,7 +79,7 @@ public abstract class FacadeService<REQUEST extends FacadeServiceableGetter, RES
     }
 
     protected InternalContext<REQUEST, ACTION> selectAndSetProtocolTo(InternalContext<REQUEST, ACTION> ctx) {
-        return selector.selectProtocolFor(
+        return selector.requireProtocolFor(
                 ctx,
                 action,
                 actionProviders
@@ -78,6 +93,14 @@ public abstract class FacadeService<REQUEST extends FacadeServiceableGetter, RES
     }
 
     protected CompletableFuture<Result<RESULT>> execute(ACTION protocol, ServiceContext<REQUEST> ctx) {
-        return protocol.execute(ctx);
+        try {
+            return protocol.execute(ctx);
+        } catch (ReturnableException ex) {
+            log.error("[{}]/{}/{}", ctx.getRequest().getFacadeServiceable().getRequestId(), ctx.getServiceSessionId(), ctx.getAuthSessionId(), ex);
+            return CompletableFuture.completedFuture(new ErrorResult<>(ex.getMessage()));
+        } catch (Exception ex) {
+            log.error("[{}]/{}/{}", ctx.getRequest().getFacadeServiceable().getRequestId(), ctx.getServiceSessionId(), ctx.getAuthSessionId(), ex);
+            return CompletableFuture.completedFuture(new ErrorResult<>(ex.getClass().toString()));
+        }
     }
 }

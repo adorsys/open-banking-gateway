@@ -6,10 +6,12 @@ import de.adorsys.opba.api.security.internal.service.TokenBasedAuthService;
 import de.adorsys.opba.db.domain.entity.sessions.AuthSession;
 import de.adorsys.opba.db.repository.jpa.AuthorizationSessionRepository;
 import de.adorsys.opba.db.repository.jpa.ServiceSessionRepository;
+import de.adorsys.opba.protocol.api.common.SessionStatus;
 import de.adorsys.opba.protocol.api.dto.context.ServiceContext;
 import de.adorsys.opba.protocol.api.dto.request.FacadeServiceableGetter;
 import de.adorsys.opba.protocol.api.dto.request.FacadeServiceableRequest;
 import de.adorsys.opba.protocol.api.dto.result.body.AuthStateBody;
+import de.adorsys.opba.protocol.api.dto.result.body.AuthorizationStatusBody;
 import de.adorsys.opba.protocol.api.dto.result.body.ReturnableProcessErrorResult;
 import de.adorsys.opba.protocol.api.dto.result.fromprotocol.Result;
 import de.adorsys.opba.protocol.api.dto.result.fromprotocol.dialog.AuthorizationDeniedResult;
@@ -91,6 +93,8 @@ public class ProtocolResultHandler {
         ServiceContext<REQUEST> session,
         SecretKeyWithIv sessionKey
     ) {
+        updateAuthSessionStatus(request, result);
+
         if (result instanceof SuccessResult) {
             logResolver.log("handle success result: result({}), request({}), session({})", result, request, session);
 
@@ -121,7 +125,8 @@ public class ProtocolResultHandler {
             return handleReturnableError((ReturnableProcessErrorResult) result, request, session);
         }
 
-        throw new IllegalStateException("Can't handle protocol result: " + result.getClass());
+        log.error("[{}]/{} Can't handle protocol result: {}", request.getRequestId(), request.getAuthorizationSessionId(), null == result ? null : result.getClass());
+        return handleNonRedirectableError(new ErrorResult<>("General error"), request.getRequestId(), session);
     }
 
     @NotNull
@@ -130,7 +135,7 @@ public class ProtocolResultHandler {
                                                                                                          ServiceContext<REQUEST> session) {
         FacadeRuntimeErrorResultWithOwnResponseCode<RESULT> mappedResult =
             (FacadeRuntimeErrorResultWithOwnResponseCode<RESULT>) FacadeRuntimeErrorResultWithOwnResponseCode.ERROR_FROM_PROTOCOL.map(result);
-        mappedResult.setServiceSessionId(session.getServiceSessionId().toString());
+        mappedResult.setServiceSessionId(uuidToString(session.getServiceSessionId()));
         mappedResult.setXRequestId(request.getRequestId());
         return mappedResult;
     }
@@ -141,7 +146,7 @@ public class ProtocolResultHandler {
     ) {
         FacadeSuccessResult<RESULT> mappedResult =
             (FacadeSuccessResult<RESULT>) FacadeSuccessResult.FROM_PROTOCOL.map(result);
-        mappedResult.setServiceSessionId(session.getServiceSessionId().toString());
+        mappedResult.setServiceSessionId(uuidToString(session.getServiceSessionId()));
         applyPostProcessorsToResult(request, result, xRequestId, mappedResult);
         return mappedResult;
     }
@@ -160,8 +165,7 @@ public class ProtocolResultHandler {
         ErrorResult<RESULT> result, UUID xRequestId, ServiceContext<REQUEST> session
     ) {
         FacadeRuntimeErrorResult<RESULT> mappedResult = (FacadeRuntimeErrorResult<RESULT>) FacadeRuntimeErrorResult.ERROR_FROM_PROTOCOL.map(result);
-        mappedResult.setServiceSessionId(session.getServiceSessionId().toString());
-
+        mappedResult.setServiceSessionId(uuidToString(session.getServiceSessionId()));
         mappedResult.setXRequestId(xRequestId);
         return mappedResult;
     }
@@ -171,7 +175,7 @@ public class ProtocolResultHandler {
     ) {
         FacadeRedirectErrorResult<RESULT, AuthStateBody> mappedResult =
             (FacadeRedirectErrorResult<RESULT, AuthStateBody>) FacadeRedirectErrorResult.ERROR_FROM_PROTOCOL.map(result);
-        mappedResult.setServiceSessionId(session.getServiceSessionId().toString());
+        mappedResult.setServiceSessionId(uuidToString(session.getServiceSessionId()));
         mappedResult.setRedirectionTo(URI.create(request.getFintechRedirectUrlNok()));
         mappedResult.setXRequestId(xRequestId);
         addAuthorizationSessionDataIfAvailable(result, request, session, mappedResult);
@@ -243,7 +247,7 @@ public class ProtocolResultHandler {
 
     protected <RESULT> void setAspspRedirectCodeIfRequired(RedirectionResult<RESULT, ?> result, AuthSession session, ServiceContext context) {
         if (result instanceof AuthorizationRequiredResult) {
-            session.setAspspRedirectCode(context.getFutureAspspRedirectCode().toString());
+            session.setAspspRedirectCode(uuidToString(context.getFutureAspspRedirectCode()));
         }
     }
 
@@ -264,15 +268,57 @@ public class ProtocolResultHandler {
         ServiceContext session,
         FacadeResultRedirectable<RESULT, ?> mappedResult
     ) {
-        authSession.setRedirectCode(session.getFutureRedirectCode().toString());
+        authSession.setRedirectCode(uuidToString(session.getFutureRedirectCode()));
         authSession.setAuthSessionContext(result.getAuthContext());
         authorizationSessions.save(authSession);
 
-        mappedResult.setAuthorizationSessionId(authSession.getId().toString());
-        mappedResult.setServiceSessionId(authSession.getParent().getId().toString());
+        mappedResult.setAuthorizationSessionId(uuidToString(authSession.getId()));
+        mappedResult.setServiceSessionId(uuidToString(authSession.getParent().getId()));
         mappedResult.setXRequestId(request.getRequestId());
         mappedResult.setRedirectCode(authSession.getRedirectCode());
         return authSession;
+    }
+
+    protected void updateAuthSessionStatus(FacadeServiceableRequest request, Result<?> result) {
+        var session = authorizationSessions.findByParentId(request.getServiceSessionId()).orElse(null);
+        if (null == session && null != request.getAuthorizationSessionId()) {
+            session = authorizationSessions.findById(UUID.fromString(request.getAuthorizationSessionId())).orElse(null);
+        }
+
+        if (null == session) {
+            return;
+        }
+
+        // Skip AisAuthorizationStatusRequest/PisAuthorizationStatusRequest requests
+        if (result instanceof SuccessResult && result.getBody() instanceof AuthorizationStatusBody) {
+            return;
+        }
+
+        if (result instanceof ConsentAcquiredResult) {
+            session.setLastRequestId(uuidToString(request.getRequestId()));
+            session.setStatus(SessionStatus.COMPLETED);
+        } else if (result instanceof AuthorizationDeniedResult) {
+            session.setLastRequestId(uuidToString(request.getRequestId()));
+            session.setStatus(SessionStatus.DENIED);
+        } else if (result instanceof ErrorResult) {
+            session.setLastRequestId(uuidToString(request.getRequestId()));
+            session.setLastErrorRequestId(session.getLastRequestId());
+            session.setStatus(SessionStatus.ERROR);
+        } else if (result instanceof ReturnableProcessErrorResult) {
+            session.setLastRequestId(uuidToString(request.getRequestId()));
+            session.setLastErrorRequestId(session.getLastRequestId());
+            session.setStatus(SessionStatus.ERROR);
+        }
+
+        authorizationSessions.save(session);
+    }
+
+    private String uuidToString(UUID requestId) {
+        if (null == requestId) {
+            return null;
+        }
+
+        return requestId.toString();
     }
 
     @NotNull

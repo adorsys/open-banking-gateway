@@ -15,6 +15,7 @@ import java.util.Arrays;
 import java.util.Set;
 
 import static de.adorsys.opba.api.security.external.domain.HttpHeaders.AUTHORIZATION_SESSION_KEY;
+import static de.adorsys.opba.api.security.external.domain.HttpHeaders.X_REQUEST_ID;
 
 /**
  * This Filter removes all requests that dont have security cookie key
@@ -46,7 +47,7 @@ public class RequestCookieFilter implements Filter {
             return;
         }
 
-        log.warn("Cookie is required for the request {} - {} but it was not provided!", request.getMethod(), request.getRequestURI());
+        log.warn("Cookie is required for the request [{}] {} - {} but it was not provided!", request.getHeader(X_REQUEST_ID), request.getMethod(), request.getRequestURI());
         response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
     }
 

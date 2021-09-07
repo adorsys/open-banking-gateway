@@ -1,5 +1,6 @@
 package de.adorsys.opba.protocol.xs2a.service.xs2a.consent;
 
+import de.adorsys.opba.protocol.api.errors.ReturnableException;
 import de.adorsys.opba.protocol.api.services.scoped.consent.ProtocolFacingConsent;
 import de.adorsys.opba.protocol.xs2a.context.Xs2aContext;
 import de.adorsys.opba.protocol.xs2a.context.ais.Xs2aAisContext;
@@ -50,6 +51,6 @@ public class AbortConsent {
             return;
         }
 
-        throw new IllegalStateException("Unable to drop payment after it was authorized");
+        throw new ReturnableException("Unable to drop payment after it was authorized");
     }
 }

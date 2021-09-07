@@ -90,7 +90,7 @@ public class ServiceContextProviderTest extends DbDropper {
         InternalContext<FacadeServiceableGetter, Action<ListAccountsRequest, AccountListBody>> ctxWithoutProtocol = serviceContextProvider.provide(request);
         Map<String, ListAccounts> actionBeans = Collections.singletonMap("xs2aListAccounts", listAccounts);
         InternalContext<FacadeServiceableGetter, Action<ListAccountsRequest, AccountListBody>> context =
-                protocolSelector.selectProtocolFor(ctxWithoutProtocol, ProtocolAction.LIST_ACCOUNTS, actionBeans);
+                protocolSelector.requireProtocolFor(ctxWithoutProtocol, ProtocolAction.LIST_ACCOUNTS, actionBeans);
         ServiceContext<FacadeServiceableGetter> providedContext = serviceContextProvider.provideRequestScoped(request, context);
         URI redirectionTo = new URI("/");
         Result<URI> result = new ConsentAcquiredResult<>(redirectionTo, null);

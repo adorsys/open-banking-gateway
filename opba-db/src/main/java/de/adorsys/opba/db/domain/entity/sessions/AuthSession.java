@@ -4,6 +4,7 @@ import de.adorsys.opba.db.domain.entity.BankAction;
 import de.adorsys.opba.db.domain.entity.fintech.FintechConsentSpec;
 import de.adorsys.opba.db.domain.entity.fintech.FintechUser;
 import de.adorsys.opba.db.domain.entity.psu.Psu;
+import de.adorsys.opba.protocol.api.common.SessionStatus;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -18,6 +19,8 @@ import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.EntityListeners;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
 import javax.persistence.FetchType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
@@ -75,6 +78,12 @@ public class AuthSession {
     private byte[] longContext;
 
     private boolean psuAnonymous;
+
+    @Enumerated(EnumType.STRING)
+    private SessionStatus status;
+
+    private String lastRequestId;
+    private String lastErrorRequestId;
 
     @Version
     private int version;

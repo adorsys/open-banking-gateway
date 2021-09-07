@@ -10,6 +10,7 @@ import de.adorsys.opba.db.repository.jpa.AuthorizationSessionRepository;
 import de.adorsys.opba.db.repository.jpa.BankActionRepository;
 import de.adorsys.opba.db.repository.jpa.fintech.FintechRepository;
 import de.adorsys.opba.db.repository.jpa.fintech.FintechUserRepository;
+import de.adorsys.opba.protocol.api.common.SessionStatus;
 import de.adorsys.opba.protocol.api.dto.context.ServiceContext;
 import de.adorsys.opba.protocol.api.dto.request.FacadeServiceableGetter;
 import de.adorsys.opba.protocol.api.dto.request.FacadeServiceableRequest;
@@ -102,6 +103,7 @@ public class AuthSessionHandler {
                         .fintechUser(user)
                         .psuAnonymous(request.isAnonymousPsu())
                         .redirectCode(context.getFutureRedirectCode().toString())
+                        .status(SessionStatus.PENDING)
                         .build()
         );
 

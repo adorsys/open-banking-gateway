@@ -79,6 +79,11 @@ public class PaymentResult<SELF extends PaymentResult<SELF>> extends Stage<SELF>
         return self();
     }
 
+    public SELF fintech_calls_pis_authorization_session_state(String expectedSessionState, String expectedAuthSessionState) {
+        RequestStatusUtil.fintechCallsPisAuthorizationSessionState(expectedSessionState, expectedAuthSessionState, paymentServiceSessionId);
+        return self();
+    }
+
     public SELF fintech_calls_payment_information_iban_400() {
         return fintech_calls_payment_information("DE80760700240271232400");
     }

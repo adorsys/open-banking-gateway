@@ -124,6 +124,16 @@ public abstract class RequestCommon<SELF extends RequestCommon<SELF>> extends St
         return user_max_musterman_polling_api_to_check_sca_status(httpStatus, expectedConsentStatus, paymentServiceSessionId);
     }
 
+    public SELF fintech_calls_ais_authorization_session_state(String expectedSessionState, String expectedAuthSessionState) {
+        RequestStatusUtil.fintechCallsAisAuthorizationSessionState(expectedSessionState, expectedAuthSessionState, serviceSessionId);
+        return self();
+    }
+
+    public SELF fintech_calls_pis_authorization_session_state(String expectedSessionState, String expectedAuthSessionState) {
+        RequestStatusUtil.fintechCallsAisAuthorizationSessionState(expectedSessionState, expectedAuthSessionState, paymentServiceSessionId);
+        return self();
+    }
+
     protected ExtractableResponse<Response> max_musterman_provides_sca_challenge_result() {
         return provideParametersToBankingProtocolWithBody(
                 AUTHORIZE_CONSENT_ENDPOINT,

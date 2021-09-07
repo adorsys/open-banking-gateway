@@ -558,4 +558,9 @@ public class AccountInformationResult<SELF extends AccountInformationResult<SELF
         assertThat(body).extracting(it -> it.read("$.transactions.booked[*]")).asList().hasSize(0);
         return self();
     }
+
+    public SELF fintech_calls_authorization_session_state(String expectedSessionState, String expectedAuthSessionState) {
+        RequestStatusUtil.fintechCallsAisAuthorizationSessionState(expectedSessionState, expectedAuthSessionState, serviceSessionId);
+        return self();
+    }
 }

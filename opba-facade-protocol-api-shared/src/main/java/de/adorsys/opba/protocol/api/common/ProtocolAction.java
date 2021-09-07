@@ -24,6 +24,10 @@ public enum ProtocolAction {
      * {@code de.adorsys.opba.protocol.api.ais.GetConsentStatus}
      */
     GET_CONSENT_STATUS("get-consent-status"),
+    /**
+     * {@code de.adorsys.opba.protocol.api.ais.GetAisAuthorizationStatus}
+     */
+    GET_AIS_AUTHORIZATION_STATUS("get-ais-authorization-status"),
     // Consent authorization
     /**
      * Root action for all authorizations
@@ -55,7 +59,12 @@ public enum ProtocolAction {
 
     GET_PAYMENT_STATUS("get-payment-status"),
 
-    GET_PAYMENT_INFORMATION("get-payment-information");
+    GET_PAYMENT_INFORMATION("get-payment-information"),
+
+    /**
+     * {@code de.adorsys.opba.protocol.api.pis.GetPisAuthorizationStatus}
+     */
+    GET_PIS_AUTHORIZATION_STATUS("get-pis-authorization-status");
 
     private final String name;
 

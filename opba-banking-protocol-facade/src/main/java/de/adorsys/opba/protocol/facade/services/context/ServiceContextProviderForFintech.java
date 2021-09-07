@@ -151,7 +151,7 @@ public class ServiceContextProviderForFintech implements ServiceContextProvider 
             REQUEST request,
             ServiceSession session,
             AuthSession authSession,
-            long bankProtocolId) {
+            Long bankProtocolId) {
         return null == request.getFacadeServiceable().getAuthorizationKey()
                 ? fintechFacingSecretKeyBasedEncryption(request, session, bankProtocolId)
                 : psuCookieBasedKeyEncryption(request, authSession, bankProtocolId);
@@ -160,7 +160,7 @@ public class ServiceContextProviderForFintech implements ServiceContextProvider 
     private <REQUEST extends FacadeServiceableGetter> RequestScoped psuCookieBasedKeyEncryption(
             REQUEST request,
             AuthSession session,
-            long bankProtocolId
+            Long bankProtocolId
     ) {
         if (null == session) {
             throw new IllegalArgumentException("Missing authorization session");
@@ -180,7 +180,7 @@ public class ServiceContextProviderForFintech implements ServiceContextProvider 
     private <REQUEST extends FacadeServiceableGetter> RequestScoped fintechFacingSecretKeyBasedEncryption(
             REQUEST request,
             ServiceSession session,
-            long bankProtocolId
+            Long bankProtocolId
     ) {
         BankProfile profile = session.getBankProfile();
 

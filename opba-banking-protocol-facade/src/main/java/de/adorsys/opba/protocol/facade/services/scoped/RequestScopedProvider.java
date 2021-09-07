@@ -58,7 +58,7 @@ public class RequestScopedProvider implements RequestScopedServicesProvider {
             Fintech fintech,
             BankProfile profile,
             ServiceSession session,
-            long bankProtocolId,
+            Long bankProtocolId,
             ConsentAuthorizationEncryptionServiceProvider encryptionServiceProvider,
             SecretKeyWithIv futureAuthorizationSessionKey,
             Supplier<char[]> fintechPassword
@@ -80,7 +80,7 @@ public class RequestScopedProvider implements RequestScopedServicesProvider {
     public RequestScoped registerForPsuSession(
             AuthSession authSession,
             ConsentAuthorizationEncryptionServiceProvider encryptionServiceProvider,
-            long bankProtocolId,
+            Long bankProtocolId,
             SecretKeyWithIv key
     ) {
         EncryptionService sessionEncryption = sessionEncryption(encryptionServiceProvider, key);

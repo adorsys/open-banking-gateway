@@ -4,6 +4,7 @@ import de.adorsys.opba.db.domain.entity.Payment;
 import de.adorsys.opba.db.domain.entity.sessions.AuthSession;
 import de.adorsys.opba.db.repository.jpa.AuthorizationSessionRepository;
 import de.adorsys.opba.db.repository.jpa.PaymentRepository;
+import de.adorsys.opba.protocol.api.common.SessionStatus;
 import de.adorsys.opba.protocol.facade.config.encryption.impl.fintech.FintechSecureStorage;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -35,6 +36,8 @@ public class PaymentConfirmationService {
         }
 
         paymentRepository.setConfirmed(session.get().getParent().getId());
+        session.get().setStatus(SessionStatus.ACTIVATED);
+        authSessions.save(session.get());
 
         if (session.get().isPsuAnonymous()) {
             return true;

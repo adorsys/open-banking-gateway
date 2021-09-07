@@ -64,7 +64,7 @@ public class NonHappyPaymentResult<SELF extends NonHappyPaymentResult<SELF>> ext
                 .post(DENY_PAYMENT_ENDPOINT, paymentServiceSessionId)
             .then()
                 .statusCode(INTERNAL_SERVER_ERROR.value())
-                .body("message", is("Unable to drop payment after it was authorized"));
+                .header("X-ERROR-MESSAGE", is("Unable to drop payment after it was authorized"));
 
         return self();
     }

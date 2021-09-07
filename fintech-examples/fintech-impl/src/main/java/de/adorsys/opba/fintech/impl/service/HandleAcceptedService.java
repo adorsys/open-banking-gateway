@@ -52,7 +52,7 @@ public class HandleAcceptedService {
         consentRepository.save(consent);
 
         URI location = headers.getLocation();
-        log.info("call was accepted, but redirect has to be done for authID:{} location:{}", consent.getTppAuthId(), location);
+        log.info("call was accepted, but redirect has to be done for serviceSessionId:{} authID:{} location:{}", consent.getTppServiceSessionId(), consent.getTppAuthId(), location);
 
         HttpHeaders responseHeaders = sessionLogicService.startRedirect(sessionEntity.getUserEntity(), consent.getTppAuthId());
         responseHeaders.add(FIN_TECH_REDIRECT_CODE, fintechRedirectCode);
