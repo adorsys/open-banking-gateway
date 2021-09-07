@@ -135,7 +135,7 @@ public class ProtocolResultHandler {
                                                                                                          ServiceContext<REQUEST> session) {
         FacadeRuntimeErrorResultWithOwnResponseCode<RESULT> mappedResult =
             (FacadeRuntimeErrorResultWithOwnResponseCode<RESULT>) FacadeRuntimeErrorResultWithOwnResponseCode.ERROR_FROM_PROTOCOL.map(result);
-        mappedResult.setServiceSessionId(getLastRequestId(session.getServiceSessionId()));
+        mappedResult.setServiceSessionId(uuidToString(session.getServiceSessionId()));
         mappedResult.setXRequestId(request.getRequestId());
         return mappedResult;
     }
@@ -146,7 +146,7 @@ public class ProtocolResultHandler {
     ) {
         FacadeSuccessResult<RESULT> mappedResult =
             (FacadeSuccessResult<RESULT>) FacadeSuccessResult.FROM_PROTOCOL.map(result);
-        mappedResult.setServiceSessionId(getLastRequestId(session.getServiceSessionId()));
+        mappedResult.setServiceSessionId(uuidToString(session.getServiceSessionId()));
         applyPostProcessorsToResult(request, result, xRequestId, mappedResult);
         return mappedResult;
     }
@@ -165,7 +165,7 @@ public class ProtocolResultHandler {
         ErrorResult<RESULT> result, UUID xRequestId, ServiceContext<REQUEST> session
     ) {
         FacadeRuntimeErrorResult<RESULT> mappedResult = (FacadeRuntimeErrorResult<RESULT>) FacadeRuntimeErrorResult.ERROR_FROM_PROTOCOL.map(result);
-        mappedResult.setServiceSessionId(getLastRequestId(session.getServiceSessionId()));
+        mappedResult.setServiceSessionId(uuidToString(session.getServiceSessionId()));
         mappedResult.setXRequestId(xRequestId);
         return mappedResult;
     }
@@ -175,7 +175,7 @@ public class ProtocolResultHandler {
     ) {
         FacadeRedirectErrorResult<RESULT, AuthStateBody> mappedResult =
             (FacadeRedirectErrorResult<RESULT, AuthStateBody>) FacadeRedirectErrorResult.ERROR_FROM_PROTOCOL.map(result);
-        mappedResult.setServiceSessionId(getLastRequestId(session.getServiceSessionId()));
+        mappedResult.setServiceSessionId(uuidToString(session.getServiceSessionId()));
         mappedResult.setRedirectionTo(URI.create(request.getFintechRedirectUrlNok()));
         mappedResult.setXRequestId(xRequestId);
         addAuthorizationSessionDataIfAvailable(result, request, session, mappedResult);
@@ -247,7 +247,7 @@ public class ProtocolResultHandler {
 
     protected <RESULT> void setAspspRedirectCodeIfRequired(RedirectionResult<RESULT, ?> result, AuthSession session, ServiceContext context) {
         if (result instanceof AuthorizationRequiredResult) {
-            session.setAspspRedirectCode(getLastRequestId(context.getFutureAspspRedirectCode()));
+            session.setAspspRedirectCode(uuidToString(context.getFutureAspspRedirectCode()));
         }
     }
 
@@ -268,12 +268,12 @@ public class ProtocolResultHandler {
         ServiceContext session,
         FacadeResultRedirectable<RESULT, ?> mappedResult
     ) {
-        authSession.setRedirectCode(getLastRequestId(session.getFutureRedirectCode()));
+        authSession.setRedirectCode(uuidToString(session.getFutureRedirectCode()));
         authSession.setAuthSessionContext(result.getAuthContext());
         authorizationSessions.save(authSession);
 
-        mappedResult.setAuthorizationSessionId(getLastRequestId(authSession.getId()));
-        mappedResult.setServiceSessionId(getLastRequestId(authSession.getParent().getId()));
+        mappedResult.setAuthorizationSessionId(uuidToString(authSession.getId()));
+        mappedResult.setServiceSessionId(uuidToString(authSession.getParent().getId()));
         mappedResult.setXRequestId(request.getRequestId());
         mappedResult.setRedirectCode(authSession.getRedirectCode());
         return authSession;
@@ -295,17 +295,17 @@ public class ProtocolResultHandler {
         }
 
         if (result instanceof ConsentAcquiredResult) {
-            session.setLastRequestId(getLastRequestId(request.getRequestId()));
+            session.setLastRequestId(uuidToString(request.getRequestId()));
             session.setStatus(SessionStatus.COMPLETED);
         } else if (result instanceof AuthorizationDeniedResult) {
-            session.setLastRequestId(getLastRequestId(request.getRequestId()));
+            session.setLastRequestId(uuidToString(request.getRequestId()));
             session.setStatus(SessionStatus.DENIED);
         } else if (result instanceof ErrorResult) {
-            session.setLastRequestId(getLastRequestId(request.getRequestId()));
+            session.setLastRequestId(uuidToString(request.getRequestId()));
             session.setLastErrorRequestId(session.getLastRequestId());
             session.setStatus(SessionStatus.ERROR);
         } else if (result instanceof ReturnableProcessErrorResult) {
-            session.setLastRequestId(getLastRequestId(request.getRequestId()));
+            session.setLastRequestId(uuidToString(request.getRequestId()));
             session.setLastErrorRequestId(session.getLastRequestId());
             session.setStatus(SessionStatus.ERROR);
         }
@@ -313,7 +313,7 @@ public class ProtocolResultHandler {
         authorizationSessions.save(session);
     }
 
-    private String getLastRequestId(UUID requestId) {
+    private String uuidToString(UUID requestId) {
         if (null == requestId) {
             return null;
         }
