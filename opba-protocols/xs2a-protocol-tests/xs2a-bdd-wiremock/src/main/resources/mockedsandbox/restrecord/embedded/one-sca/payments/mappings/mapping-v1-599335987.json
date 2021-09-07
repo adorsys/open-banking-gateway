@@ -1,0 +1,27 @@
+{
+  "id" : "e2bf9e2a-0c2f-30d7-83b2-870e24679a2c",
+  "request" : {
+    "url" : "/v1/payments/sepa-credit-transfers/7oF-gOJ3ZTdMzlLfoJ4TQnLOqGZrKh_ULmco09rOjagDzpYOndpDU_gjE_PblDkCcgftJbETkzvNvu5mZQqWcA==_=_psGLvQpt9Q",
+    "method" : "GET",
+    "headers" : {
+      "X-Request-ID" : {
+        "equalTo" : "4c7f8808-60a1-4054-8928-4b4991457f5a"
+      },
+      "PSU-ID" : {
+        "equalTo" : ""
+      }
+    }
+  },
+  "response" : {
+    "status" : 200,
+    "bodyFileName" : "body-v1-599335987.json",
+    "headers" : {
+      "Vary" : [ "Origin", "Access-Control-Request-Method", "Access-Control-Request-Headers" ],
+      "X-Request-Id" : "4c7f8808-60a1-4054-8928-4b4991457f5a",
+      "Content-Type" : "application/json;charset=UTF-8",
+      "Date" : "Tue, 07 Sep 2021 11:58:10 GMT",
+      "Keep-Alive" : "timeout=60"
+    }
+  },
+  "uuid" : "e2bf9e2a-0c2f-30d7-83b2-870e24679a2c"
+}

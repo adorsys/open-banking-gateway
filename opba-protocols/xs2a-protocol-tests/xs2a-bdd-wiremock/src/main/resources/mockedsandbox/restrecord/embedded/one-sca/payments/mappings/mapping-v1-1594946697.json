@@ -1,0 +1,33 @@
+{
+  "id" : "dcf6dc2c-8e1b-3ce9-af14-b11df473a094",
+  "request" : {
+    "url" : "/v1/payments/sepa-credit-transfers/7oF-gOJ3ZTdMzlLfoJ4TQnLOqGZrKh_ULmco09rOjagDzpYOndpDU_gjE_PblDkCcgftJbETkzvNvu5mZQqWcA==_=_psGLvQpt9Q/authorisations",
+    "method" : "POST",
+    "headers" : {
+      "X-Request-ID" : {
+        "equalTo" : "17a89d24-6be7-4c3f-9d85-d840f99e9a89"
+      },
+      "PSU-ID" : {
+        "equalTo" : "anton.brueckner"
+      }
+    },
+    "bodyPatterns" : [ {
+      "equalToJson" : "{}",
+      "ignoreArrayOrder" : true,
+      "ignoreExtraElements" : true
+    } ]
+  },
+  "response" : {
+    "status" : 201,
+    "bodyFileName" : "body-v1-1594946697.json",
+    "headers" : {
+      "Vary" : [ "Origin", "Access-Control-Request-Method", "Access-Control-Request-Headers" ],
+      "Aspsp-Sca-Approach" : "EMBEDDED",
+      "X-Request-Id" : "17a89d24-6be7-4c3f-9d85-d840f99e9a89",
+      "Content-Type" : "application/json",
+      "Date" : "Tue, 07 Sep 2021 11:57:55 GMT",
+      "Keep-Alive" : "timeout=60"
+    }
+  },
+  "uuid" : "dcf6dc2c-8e1b-3ce9-af14-b11df473a094"
+}

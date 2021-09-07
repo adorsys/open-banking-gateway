@@ -1,0 +1,33 @@
+{
+  "id" : "01864d6a-f1cf-33f6-a6ac-6058a6410af9",
+  "request" : {
+    "url" : "/v1/accounts?withBalance=true",
+    "method" : "GET",
+    "headers" : {
+      "Consent-ID" : {
+        "equalTo" : "4onENNxRphrd222OPTkg2vOSKaZzI2eb56feivcxcn3qZb_NBSzF92px9quYfKvEMC88Q_FdvkYAlq6N2RTUp8z9MpaJIQIH3NJX8IHgetw=_=_psGLvQpt9Q"
+      },
+      "Accept" : {
+        "equalTo" : "application/json"
+      },
+      "X-Request-ID" : {
+        "equalTo" : "7fd25f9d-0d53-4b76-a675-a6c23eee368b"
+      },
+      "PSU-ID" : {
+        "equalTo" : "anton.brueckner"
+      }
+    }
+  },
+  "response" : {
+    "status" : 200,
+    "bodyFileName" : "body-v1-accounts-1994691150.json",
+    "headers" : {
+      "Vary" : [ "Origin", "Access-Control-Request-Method", "Access-Control-Request-Headers" ],
+      "X-Request-Id" : "7fd25f9d-0d53-4b76-a675-a6c23eee368b",
+      "Content-Type" : "application/json",
+      "Date" : "Tue, 07 Sep 2021 11:55:44 GMT",
+      "Keep-Alive" : "timeout=60"
+    }
+  },
+  "uuid" : "01864d6a-f1cf-33f6-a6ac-6058a6410af9"
+}

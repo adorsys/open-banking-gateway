@@ -1,0 +1,40 @@
+{
+  "id" : "b6c2ed6c-3d10-3325-8cee-4205f209c009",
+  "request" : {
+    "url" : "/v1/consents",
+    "method" : "POST",
+    "headers" : {
+      "Accept" : {
+        "equalTo" : "application/json"
+      },
+      "X-Request-ID" : {
+        "equalTo" : "6ccad635-4d9a-44e8-abc4-77d015778e92"
+      },
+      "PSU-ID" : {
+        "equalTo" : "anton.brueckner"
+      },
+      "PSU-IP-Address" : {
+        "equalTo" : "127.0.0.1"
+      }
+    },
+    "bodyPatterns" : [ {
+      "equalToJson" : "{\"access\":{\"allPsd2\":\"allAccounts\"},\"recurringIndicator\":true,\"validUntil\":\"2022-09-07\",\"frequencyPerDay\":24,\"combinedServiceIndicator\":false}",
+      "ignoreArrayOrder" : true,
+      "ignoreExtraElements" : true
+    } ]
+  },
+  "response" : {
+    "status" : 201,
+    "bodyFileName" : "body-v1-consents-3442849901.json",
+    "headers" : {
+      "Vary" : [ "Origin", "Access-Control-Request-Method", "Access-Control-Request-Headers" ],
+      "Location" : "http://host.docker.internal:20014/v1/consents/4onENNxRphrd222OPTkg2vOSKaZzI2eb56feivcxcn3qZb_NBSzF92px9quYfKvEMC88Q_FdvkYAlq6N2RTUp8z9MpaJIQIH3NJX8IHgetw=_=_psGLvQpt9Q",
+      "Aspsp-Sca-Approach" : "REDIRECT",
+      "X-Request-Id" : "6ccad635-4d9a-44e8-abc4-77d015778e92",
+      "Content-Type" : "application/json",
+      "Date" : "Tue, 07 Sep 2021 11:55:32 GMT",
+      "Keep-Alive" : "timeout=60"
+    }
+  },
+  "uuid" : "b6c2ed6c-3d10-3325-8cee-4205f209c009"
+}

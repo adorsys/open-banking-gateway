@@ -1,0 +1,37 @@
+{
+  "id" : "c452f6d2-f5f3-34d4-801c-1ac52a3b0c95",
+  "request" : {
+    "url" : "/v1/payments/sepa-credit-transfers",
+    "method" : "POST",
+    "headers" : {
+      "X-Request-ID" : {
+        "equalTo" : "b667d20b-22cf-4773-8f91-dd7823519c74"
+      },
+      "PSU-ID" : {
+        "equalTo" : "anton.brueckner"
+      },
+      "PSU-IP-Address" : {
+        "equalTo" : "127.0.0.1"
+      }
+    },
+    "bodyPatterns" : [ {
+      "equalToJson" : "{\"debtorAccount\":{\"iban\":\"DE80760700240271232400\"},\"instructedAmount\":{\"currency\":\"EUR\",\"amount\":\"12.34\"},\"creditorAccount\":{\"iban\":\"AL90208110080000001039531801\"},\"creditorName\":\"Netflix TV\",\"remittanceInformationUnstructured\":\"Netflix payment (demo)\"}",
+      "ignoreArrayOrder" : true,
+      "ignoreExtraElements" : true
+    } ]
+  },
+  "response" : {
+    "status" : 201,
+    "bodyFileName" : "body-v1-779753501.json",
+    "headers" : {
+      "Vary" : [ "Origin", "Access-Control-Request-Method", "Access-Control-Request-Headers" ],
+      "Aspsp-Sca-Approach" : "REDIRECT",
+      "Location" : "http://host.docker.internal:20014/v1/payments/sepa-credit-transfers/7oF-gOJ3ZTdMzlLfoJ4TQnLOqGZrKh_ULmco09rOjagDzpYOndpDU_gjE_PblDkCcgftJbETkzvNvu5mZQqWcA==_=_psGLvQpt9Q",
+      "X-Request-Id" : "b667d20b-22cf-4773-8f91-dd7823519c74",
+      "Content-Type" : "application/json",
+      "Date" : "Tue, 07 Sep 2021 11:57:55 GMT",
+      "Keep-Alive" : "timeout=60"
+    }
+  },
+  "uuid" : "c452f6d2-f5f3-34d4-801c-1ac52a3b0c95"
+}

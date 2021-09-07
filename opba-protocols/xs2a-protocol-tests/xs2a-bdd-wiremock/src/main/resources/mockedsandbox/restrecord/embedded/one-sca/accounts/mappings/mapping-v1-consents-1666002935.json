@@ -1,0 +1,36 @@
+{
+  "id" : "3c49629a-0403-3702-bed9-fca4bf4babf7",
+  "request" : {
+    "url" : "/v1/consents/4onENNxRphrd222OPTkg2vOSKaZzI2eb56feivcxcn3qZb_NBSzF92px9quYfKvEMC88Q_FdvkYAlq6N2RTUp8z9MpaJIQIH3NJX8IHgetw=_=_psGLvQpt9Q/authorisations/dbea6784-f054-456d-b440-93d0b7799209",
+    "method" : "PUT",
+    "headers" : {
+      "Accept" : {
+        "equalTo" : "application/json"
+      },
+      "X-Request-ID" : {
+        "equalTo" : "85676a1e-20bd-4991-a922-edde646d7d40"
+      },
+      "PSU-ID" : {
+        "equalTo" : "anton.brueckner"
+      }
+    },
+    "bodyPatterns" : [ {
+      "equalToJson" : "{\"scaAuthenticationData\":\"123456\"}",
+      "ignoreArrayOrder" : true,
+      "ignoreExtraElements" : true
+    } ]
+  },
+  "response" : {
+    "status" : 200,
+    "bodyFileName" : "body-v1-consents-1666002935.json",
+    "headers" : {
+      "Vary" : [ "Origin", "Access-Control-Request-Method", "Access-Control-Request-Headers" ],
+      "Aspsp-Sca-Approach" : "EMBEDDED",
+      "X-Request-Id" : "85676a1e-20bd-4991-a922-edde646d7d40",
+      "Content-Type" : "application/json",
+      "Date" : "Tue, 07 Sep 2021 11:55:39 GMT",
+      "Keep-Alive" : "timeout=60"
+    }
+  },
+  "uuid" : "3c49629a-0403-3702-bed9-fca4bf4babf7"
+}
