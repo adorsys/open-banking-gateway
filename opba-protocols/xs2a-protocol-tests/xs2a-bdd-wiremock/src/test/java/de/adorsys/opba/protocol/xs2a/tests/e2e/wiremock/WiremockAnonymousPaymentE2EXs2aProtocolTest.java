@@ -5,6 +5,7 @@ import de.adorsys.opba.protocol.api.common.Approach;
 import de.adorsys.opba.protocol.xs2a.config.protocol.ProtocolUrlsConfiguration;
 import de.adorsys.opba.protocol.xs2a.tests.e2e.JGivenConfig;
 import de.adorsys.opba.protocol.xs2a.tests.e2e.stages.PaymentResult;
+import de.adorsys.opba.protocol.xs2a.tests.e2e.stages.RequestStatusUtil;
 import de.adorsys.opba.protocol.xs2a.tests.e2e.wiremock.mocks.MockServers;
 import de.adorsys.opba.protocol.xs2a.tests.e2e.wiremock.mocks.WiremockPaymentRequest;
 import de.adorsys.opba.protocol.xs2a.tests.e2e.wiremock.mocks.Xs2aProtocolApplication;
@@ -392,6 +393,43 @@ public class WiremockAnonymousPaymentE2EXs2aProtocolTest extends SpringScenarioT
                 .open_banking_has_stored_payment()
                 .fintech_calls_payment_activation_for_current_authorization_id()
                 .fintech_calls_payment_status();
+    }
+
+    @Test
+    void testAuthorizationStatusWithPaymentInitializationUsingRedirect() {
+        given()
+                .redirect_mock_of_sandbox_for_anton_brueckner_payments_running()
+                .set_default_preferred_approach()
+                .rest_assured_points_to_opba_server_with_fintech_signer_on_banking_api()
+                .user_registered_in_opba_with_credentials(OPBA_LOGIN, OPBA_PASSWORD);
+
+        when()
+                .fintech_calls_initiate_payment_for_anton_brueckner_with_anonymous_allowed()
+                .and()
+                .fintech_calls_pis_authorization_session_state(RequestStatusUtil.STARTED, RequestStatusUtil.PENDING)
+                .and()
+                .user_logged_in_into_opba_as_anonymous_user_with_credentials_using_fintech_supplied_url()
+                .and()
+                .fintech_calls_pis_authorization_session_state(RequestStatusUtil.STARTED, RequestStatusUtil.STARTED)
+                .and()
+                .user_anton_brueckner_provided_initial_parameters_to_authorize_initiation_payment()
+                .and()
+                .fintech_calls_pis_authorization_session_state(RequestStatusUtil.STARTED, RequestStatusUtil.STARTED)
+                .and()
+                .user_anton_brueckner_sees_that_he_needs_to_be_redirected_to_aspsp_and_redirects_to_aspsp()
+                .and()
+                .fintech_calls_pis_authorization_session_state(RequestStatusUtil.STARTED, RequestStatusUtil.STARTED)
+                .and()
+                .open_banking_redirect_from_aspsp_ok_webhook_called_for_api_test()
+                .and()
+                .fintech_calls_pis_authorization_session_state(RequestStatusUtil.STARTED, RequestStatusUtil.STARTED);
+        then()
+                .open_banking_has_stored_payment()
+                .fintech_calls_payment_activation_for_current_authorization_id()
+                .fintech_calls_pis_authorization_session_state(RequestStatusUtil.ACTIVATED, RequestStatusUtil.ACTIVATED)
+                .fintech_calls_payment_status()
+                .fintech_calls_payment_information_iban_400_wiremock()
+                .fintech_calls_pis_authorization_session_state(RequestStatusUtil.ACTIVATED, RequestStatusUtil.ACTIVATED);
     }
 }
 
