@@ -8,6 +8,8 @@ import io.restassured.specification.RequestSpecification;
 import lombok.SneakyThrows;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.ValueSource;
 import org.skyscreamer.jsonassert.JSONAssert;
 import org.skyscreamer.jsonassert.JSONCompareMode;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -92,19 +94,20 @@ class AdminApiModyfingTest {
         JSONAssert.assertEquals(updated.replaceAll("\"profiles\": \\[],", ""), body, JSONCompareMode.LENIENT);
     }
 
-    @Test
-    void patchAdminBanksByIdProfileReplaced() throws Exception {
-        String updated = fixture("adadadad-1000-0000-0000-b0b0b0b0b0b0-profiles-replaced");
+    @ValueSource(strings = {"adadadad-1000-0000-0000-b0b0b0b0b0b0","adadadad-4000-0000-0000-b0b0b0b0b0b0"})
+    @ParameterizedTest
+    void patchAdminBanksByIdProfileReplaced(String bankUiid) throws Exception {
+        String updated = fixture(bankUiid+"-profiles-replaced");
 
         withBasic
                 .contentType(ContentType.JSON)
                 .body(updated)
-                .patch(ADMIN_API + "banks/adadadad-1000-0000-0000-b0b0b0b0b0b0")
+                .patch(ADMIN_API + "banks/"+bankUiid)
                 .then()
                 .statusCode(HttpStatus.OK.value());
 
         String body = withBasic
-                .get(ADMIN_API + "banks/adadadad-1000-0000-0000-b0b0b0b0b0b0")
+                .get(ADMIN_API + "banks/"+bankUiid)
                 .then()
                 .statusCode(HttpStatus.OK.value())
                 .extract()
