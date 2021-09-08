@@ -1,5 +1,6 @@
 package de.adorsys.opba.db.repository.jpa;
 
+import de.adorsys.opba.db.domain.entity.Bank;
 import de.adorsys.opba.db.domain.entity.Consent;
 import de.adorsys.opba.db.domain.entity.psu.Psu;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -18,6 +19,7 @@ public interface ConsentRepository extends JpaRepository<Consent, Long> {
 
     List<Consent> findByServiceSessionIdOrderByModifiedAtDesc(UUID serviceSessionId);
     Collection<Consent> findByPsu(Psu owner);
+    void deleteByAspsp(Bank bank);
 
     @Modifying
     @Transactional

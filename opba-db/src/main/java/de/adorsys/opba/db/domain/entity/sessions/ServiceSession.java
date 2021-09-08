@@ -3,6 +3,7 @@ package de.adorsys.opba.db.domain.entity.sessions;
 import de.adorsys.opba.db.domain.entity.BankProfile;
 import de.adorsys.opba.db.domain.entity.Consent;
 import de.adorsys.opba.db.domain.entity.IdAssignable;
+import de.adorsys.opba.db.domain.entity.Payment;
 import de.adorsys.opba.db.domain.generators.AssignedUuidGenerator;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -60,6 +61,9 @@ public class ServiceSession implements IdAssignable<UUID>  {
 
     @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "serviceSession")
     private Collection<Consent> consents;
+
+    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "serviceSession")
+    private Collection<Payment> payments;
 
     @Version
     private int version;
