@@ -248,7 +248,6 @@ public class MockServers<SELF extends MockServers<SELF>> extends CommonGivenStag
     public SELF embedded_mock_of_sparkasse_for_max_musterman_accounts_running() {
         WireMockConfiguration config = WireMockConfiguration.options().dynamicPort()
             .usingFilesUnderClasspath("mockedsandbox/restrecord/embedded/sparkasse/");
-        config.notifier(new Slf4jNotifier(true));
         startWireMock(config, SPARKASSE_BANK_ID, defaultBankProfileConfigurer);
         return self();
     }
