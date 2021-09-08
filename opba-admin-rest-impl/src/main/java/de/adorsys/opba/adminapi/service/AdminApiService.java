@@ -114,7 +114,7 @@ public class AdminApiService {
             dbProfile.setBank(bank);
             if (null != profile.getActions()) {
                 dbProfile.getActions().clear();
-                bankProfileJpaRepository.saveAndFlush(dbProfile);
+                dbProfile = bankProfileJpaRepository.saveAndFlush(dbProfile);
                 dbProfile.getActions().putAll(bankMapper.mapActions(profile.getActions()));
                 BankProfile finalDbProfile = dbProfile;
                 dbProfile.getActions().forEach((key, action) -> updateActions(finalDbProfile, action));
