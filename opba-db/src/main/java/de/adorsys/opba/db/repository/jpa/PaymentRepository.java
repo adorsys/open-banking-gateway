@@ -1,5 +1,6 @@
 package de.adorsys.opba.db.repository.jpa;
 
+import de.adorsys.opba.db.domain.entity.Bank;
 import de.adorsys.opba.db.domain.entity.Payment;
 import de.adorsys.opba.db.domain.entity.psu.Psu;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -18,6 +19,7 @@ public interface PaymentRepository extends JpaRepository<Payment, Long> {
 
     List<Payment> findByServiceSessionIdOrderByModifiedAtDesc(UUID serviceSessionId);
     Collection<Payment> findByPsu(Psu owner);
+    void deleteByAspsp(Bank bank);
 
     @Modifying
     @Transactional

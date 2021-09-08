@@ -5,9 +5,13 @@ import de.adorsys.opba.adminapi.model.generated.PageBankData;
 import de.adorsys.opba.db.domain.entity.Bank;
 import de.adorsys.opba.db.domain.entity.BankAction;
 import de.adorsys.opba.db.domain.entity.BankProfile;
-import de.adorsys.opba.db.repository.jpa.BankActionRepository;
 import de.adorsys.opba.db.repository.jpa.BankProfileJpaRepository;
 import de.adorsys.opba.db.repository.jpa.BankRepository;
+import de.adorsys.opba.db.repository.jpa.ConsentRepository;
+import de.adorsys.opba.db.repository.jpa.PaymentRepository;
+import de.adorsys.opba.db.repository.jpa.fintech.FintechPsuAspspPrvKeyInboxRepository;
+import de.adorsys.opba.db.repository.jpa.fintech.FintechPsuAspspPrvKeyRepository;
+import de.adorsys.opba.db.repository.jpa.psu.PsuAspspPrvKeyRepository;
 import de.adorsys.opba.protocol.api.common.ProtocolAction;
 import lombok.Data;
 import lombok.Getter;
@@ -45,10 +49,13 @@ public class AdminApiService {
 
     private static final String ADMIN_MAPPERS_PACKAGE = "de.adorsys.opba.adminapi.service.mappers";
 
-    private final BankActionRepository actionRepository;
     private final BankRepository bankRepository;
     private final BankProfileJpaRepository bankProfileJpaRepository;
-
+    private final PsuAspspPrvKeyRepository psuAspspPrvKeyRepository;
+    private final FintechPsuAspspPrvKeyInboxRepository fintechPsuAspspPrvKeyInboxRepository;
+    private final FintechPsuAspspPrvKeyRepository fintechPsuAspspPrvKeyRepository;
+    private final PaymentRepository paymentRepository;
+    private final ConsentRepository consentRepository;
     private final BankMapper bankMapper;
     private final PageMapper pageMapper;
 
@@ -131,6 +138,11 @@ public class AdminApiService {
     public void deleteBank(UUID bankId) {
         Bank bank = bankRepository.findByUuid(bankId).orElseThrow(() -> new EntityNotFoundException("No bank: " + bankId));
         bankProfileJpaRepository.deleteAll(bankProfileJpaRepository.findByBankUuid(bank.getUuid()));
+        psuAspspPrvKeyRepository.deleteByAspsp(bank);
+        fintechPsuAspspPrvKeyRepository.deleteByAspsp(bank);
+        fintechPsuAspspPrvKeyInboxRepository.deleteByAspsp(bank);
+        paymentRepository.deleteByAspsp(bank);
+        consentRepository.deleteByAspsp(bank);
         bankRepository.delete(bank);
     }
 
