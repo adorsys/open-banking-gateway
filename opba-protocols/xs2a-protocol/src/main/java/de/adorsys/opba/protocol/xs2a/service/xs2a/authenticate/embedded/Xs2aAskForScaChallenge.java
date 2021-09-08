@@ -12,6 +12,7 @@ import lombok.RequiredArgsConstructor;
 import org.flowable.engine.RuntimeService;
 import org.flowable.engine.delegate.DelegateExecution;
 import org.springframework.stereotype.Service;
+import org.springframework.util.CollectionUtils;
 
 import static de.adorsys.opba.protocol.xs2a.service.xs2a.consent.ConsentConst.CONSENT_FINALIZED;
 
@@ -50,11 +51,15 @@ public class Xs2aAskForScaChallenge extends ValidatedExecution<Xs2aContext> {
         );
         runtimeService.trigger(execution.getId());
     }
+
     private String getSelectedAuthenticationType(Xs2aContext context) {
-        return context.getAvailableSca().stream()
+        if (CollectionUtils.isEmpty(context.getAvailableSca())) {
+            return context.getScaSelected().getAuthenticationType().toString();
+        } else {
+            return context.getAvailableSca().stream()
                 .filter(it -> context.getUserSelectScaId().equals(it.getKey()))
                 .map(ScaMethod::getType)
                 .findFirst().orElse(null);
+        }
     }
-
 }

@@ -13,22 +13,22 @@ public class TransactionsResponseBody implements ResultBody {
   /**
    * Account on which the transactions happened.
    */
-  private AccountReference account;
+  AccountReference account;
 
   /**
    * List of the transactions.
    */
-  private AccountReport transactions;
+  AccountReport transactions;
 
   /**
    * Transaction categorization result, optional.
    */
-  private AnalyticsResult analytics;
+  AnalyticsResult analytics;
 
   /**
    * Optional information for pagination
    */
-  private Paging paging;
+  Paging paging;
 
   @Override
   public Object getBody() {

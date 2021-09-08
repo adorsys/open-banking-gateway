@@ -1,11 +1,13 @@
 package de.adorsys.opba.db.domain.entity;
 
+import de.adorsys.opba.db.domain.converter.ResultContentTypeConverter;
 import de.adorsys.opba.db.domain.converter.ScaApproachConverter;
 import de.adorsys.opba.db.domain.entity.helpers.UuidMapper;
 import de.adorsys.opba.db.domain.entity.sessions.ServiceSession;
 import de.adorsys.opba.protocol.api.common.Approach;
 import de.adorsys.opba.protocol.api.common.CurrentBankProfile;
 import de.adorsys.opba.protocol.api.common.ProtocolAction;
+import de.adorsys.opba.protocol.api.common.ResultContentType;
 import de.adorsys.opba.tppbankingapi.search.model.generated.BankProfileDescriptor;
 import de.adorsys.xs2a.adapter.api.model.Aspsp;
 import lombok.AllArgsConstructor;
@@ -79,6 +81,9 @@ public class BankProfile implements Serializable, CurrentBankProfile {
     private String protocolType;
     private boolean isSandbox;
     private boolean active;
+
+    @Convert(converter = ResultContentTypeConverter.class)
+    private ResultContentType contentTypeTransactions;
 
     @OneToMany(mappedBy = "bankProfile", cascade = CascadeType.ALL, orphanRemoval = true)
     @MapKey(name = "protocolAction")

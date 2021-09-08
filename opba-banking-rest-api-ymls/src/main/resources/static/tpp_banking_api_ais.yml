@@ -529,6 +529,8 @@ components:
           $ref: "#/components/schemas/transactionList"
         pending:
           $ref: "#/components/schemas/transactionList"
+        rawTransactions:
+          type: string
 
     analyticsReportDetails:
       description: |

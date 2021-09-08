@@ -1,6 +1,7 @@
 package de.adorsys.opba.protocol.xs2a.service.xs2a.ais;
 
 import de.adorsys.opba.protocol.api.common.ProtocolAction;
+import de.adorsys.opba.protocol.api.common.ResultContentType;
 import de.adorsys.opba.protocol.api.dto.codes.FieldCode;
 import de.adorsys.opba.protocol.bpmnshared.dto.DtoMapper;
 import de.adorsys.opba.protocol.bpmnshared.dto.context.ContextMode;
@@ -8,11 +9,11 @@ import de.adorsys.opba.protocol.bpmnshared.dto.messages.ProcessResponse;
 import de.adorsys.opba.protocol.bpmnshared.service.TransactionUtil;
 import de.adorsys.opba.protocol.bpmnshared.service.exec.ValidatedExecution;
 import de.adorsys.opba.protocol.xs2a.context.Xs2aContext;
+import de.adorsys.opba.protocol.xs2a.context.Xs2aResultCache;
 import de.adorsys.opba.protocol.xs2a.context.ais.TransactionListXs2aContext;
 import de.adorsys.opba.protocol.xs2a.service.Xs2aCachedResultAccessor;
 import de.adorsys.opba.protocol.xs2a.service.dto.ValidatedPathQueryHeaders;
 import de.adorsys.opba.protocol.xs2a.service.mapper.PathQueryHeadersMapperTemplate;
-import de.adorsys.opba.protocol.xs2a.context.Xs2aResultCache;
 import de.adorsys.opba.protocol.xs2a.service.xs2a.annotations.ExternalValidationModeDeclaration;
 import de.adorsys.opba.protocol.xs2a.service.xs2a.dto.ValidationMode;
 import de.adorsys.opba.protocol.xs2a.service.xs2a.dto.Xs2aResourceParameters;
@@ -81,12 +82,22 @@ public class Xs2aTransactionListingService extends ValidatedExecution<Transactio
 
             logResolver.log("getTransactionList with parameters: {}", params.getPath(), params.getQuery(), params.getHeaders());
 
+            eventPublisher.publishEvent(
+                new ProcessResponse(execution.getRootProcessInstanceId(), execution.getId(), getTransactionList(params, context))
+            );
+        });
+    }
+
+    private Object getTransactionList(
+        ValidatedPathQueryHeaders<Xs2aResourceParameters, Xs2aTransactionParameters, Xs2aWithConsentIdHeaders> params,
+        TransactionListXs2aContext context) {
+
+        if (context.aspspProfile().getContentTypeTransactions() == ResultContentType.JSON) {
             Response<TransactionsResponse200Json> transactionList = ais.getTransactionList(
                 params.getPath().getResourceId(),
                 params.getHeaders().toHeaders(),
                 params.getQuery().toParameters()
             );
-
             logResolver.log("getTransactionList response: {}", transactionList);
 
             Xs2aResultCache result = resultAccessor.resultFromCache(context).orElse(new Xs2aResultCache());
@@ -96,10 +107,16 @@ public class Xs2aTransactionListingService extends ValidatedExecution<Transactio
             result.getTransactionsById().put(context.getResourceId(), transactionList.getBody());
             resultAccessor.resultToCache(context, result, context.getRequestScoped().consentAccess().getFirstByCurrentSession());
 
-            eventPublisher.publishEvent(
-                new ProcessResponse(execution.getRootProcessInstanceId(), execution.getId(), transactionList.getBody())
+            return transactionList.getBody();
+        } else {
+            Response<String> stringTransactionList = ais.getTransactionListAsString(
+                params.getPath().getResourceId(),
+                params.getHeaders().toHeaders(),
+                params.getQuery().toParameters()
             );
-        });
+            logResolver.log("getTransactionListAsString response: {}", stringTransactionList);
+            return stringTransactionList.getBody();
+        }
     }
 
     private boolean resultFromCache(DelegateExecution execution, TransactionListXs2aContext context) {
@@ -128,8 +145,8 @@ public class Xs2aTransactionListingService extends ValidatedExecution<Transactio
         }
 
         return target.stream()
-                .filter(it -> TransactionUtil.isWithinRange(it.getBookingDate(), context.getDateFrom(), context.getDateTo()))
-                .collect(Collectors.toList());
+            .filter(it -> TransactionUtil.isWithinRange(it.getBookingDate(), context.getDateFrom(), context.getDateTo()))
+            .collect(Collectors.toList());
     }
 
     @Service
