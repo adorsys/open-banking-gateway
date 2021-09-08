@@ -97,17 +97,17 @@ class AdminApiModyfingTest {
     @ValueSource(strings = {"adadadad-1000-0000-0000-b0b0b0b0b0b0","adadadad-4000-0000-0000-b0b0b0b0b0b0"})
     @ParameterizedTest
     void patchAdminBanksByIdProfileReplaced(String bankUiid) throws Exception {
-        String updated = fixture(bankUiid+"-profiles-replaced");
+        String updated = fixture(bankUiid + "-profiles-replaced");
 
         withBasic
                 .contentType(ContentType.JSON)
                 .body(updated)
-                .patch(ADMIN_API + "banks/"+bankUiid)
+                .patch(ADMIN_API + "banks/" + bankUiid)
                 .then()
                 .statusCode(HttpStatus.OK.value());
 
         String body = withBasic
-                .get(ADMIN_API + "banks/"+bankUiid)
+                .get(ADMIN_API + "banks/" + bankUiid)
                 .then()
                 .statusCode(HttpStatus.OK.value())
                 .extract()
