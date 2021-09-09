@@ -61,12 +61,17 @@ public class Xs2aTransactionParameters extends Xs2aWithBalanceParameters {
     // TODO - MapStruct?
     @Override
     public RequestParams toParameters() {
-        return RequestParams.builder()
+        var requestParamsMap = RequestParams.builder()
                 .withBalance(super.getWithBalance())
                 .bookingStatus(bookingStatus)
                 .dateFrom(dateFrom)
                 .dateTo(dateTo)
-                .build();
+                .build()
+                .toMap();
+        requestParamsMap.put("pageIndex", page.toString());
+        requestParamsMap.put("itemsPerPage", pageSize.toString());
+
+        return RequestParams.fromMap(requestParamsMap);
     }
 
     @Mapper(componentModel = SPRING_KEYWORD, implementationPackage = XS2A_MAPPERS_PACKAGE)
