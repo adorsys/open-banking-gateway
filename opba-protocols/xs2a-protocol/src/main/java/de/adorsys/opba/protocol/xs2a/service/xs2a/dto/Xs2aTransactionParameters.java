@@ -14,6 +14,7 @@ import javax.annotation.Nullable;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 import java.time.LocalDate;
+import java.util.Optional;
 
 import static de.adorsys.opba.protocol.api.dto.codes.FieldCode.BOOKING_STATUS;
 import static de.adorsys.opba.protocol.api.dto.codes.TypeCode.STRING;
@@ -68,8 +69,9 @@ public class Xs2aTransactionParameters extends Xs2aWithBalanceParameters {
                 .dateTo(dateTo)
                 .build()
                 .toMap();
-        requestParamsMap.put("pageIndex", page.toString());
-        requestParamsMap.put("itemsPerPage", pageSize.toString());
+
+        Optional.ofNullable(page).ifPresent(p -> requestParamsMap.put("pageIndex", p.toString()));
+        Optional.ofNullable(pageSize).ifPresent(ps -> requestParamsMap.put("itemsPerPage", ps.toString()));
 
         return RequestParams.fromMap(requestParamsMap);
     }
