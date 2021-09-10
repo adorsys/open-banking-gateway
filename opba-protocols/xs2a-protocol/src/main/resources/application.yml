@@ -129,7 +129,5 @@ bpmnshared:
       expire-after-write: PT600S
     # TODO: re-enable retry after proper error handling implementation
     number-of-retries: 0
-    job-timeout:
-      timeout: PT5M
 flowable:
   process-definition-location-prefix: classpath*:/processes/**/
