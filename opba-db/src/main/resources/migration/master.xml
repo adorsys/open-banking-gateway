@@ -18,4 +18,5 @@
     <include relativeToChangelogFile="true" file="migrations/0012-add-is-active-field-to-bank.xml"/>
     <include relativeToChangelogFile="true" file="migrations/0013-add-auth-session-status.xml"/>
     <include relativeToChangelogFile="true" file="migrations/0014-update-sparkasse-adapter.xml" context="xs2a-banks"/>
+    <includeAll relativeToChangelogFile="true" path="migrations/0015-finapi-add-status-handlers" context="finapi-sandbox-banks OR finapi-prod-banks"/>
 </databaseChangeLog>
