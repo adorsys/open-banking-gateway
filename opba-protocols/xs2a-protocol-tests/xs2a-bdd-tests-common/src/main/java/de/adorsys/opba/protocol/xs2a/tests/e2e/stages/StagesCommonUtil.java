@@ -17,6 +17,7 @@ import static de.adorsys.opba.protocol.xs2a.tests.HeaderNames.X_REQUEST_ID;
 import static de.adorsys.opba.protocol.xs2a.tests.HeaderNames.X_TIMESTAMP_UTC;
 import static de.adorsys.opba.restapi.shared.HttpHeaders.COMPUTE_PSU_IP_ADDRESS;
 import static de.adorsys.opba.restapi.shared.HttpHeaders.UserAgentContext.PSU_IP_ADDRESS;
+import static org.springframework.http.HttpHeaders.AUTHORIZATION;
 
 @UtilityClass
 @SuppressWarnings({"checkstyle:HideUtilityClassConstructor", "PMD.AvoidUsingHardCodedIP"}) //Checkstyle doesn't recognise Lombok
@@ -70,6 +71,9 @@ public class StagesCommonUtil {
     public static final String CONSORS_BANK_BANK_PROFILE_ID = "a9f7a345-9921-4c5c-93d6-b2f5af31a4cd";
     public static final String POSTBANK_BANK_PROFILE_ID = "e431a602-15ab-48b8-8c9b-ce381d2034c4";
     public static final String SPARKASSE_BANK_PROFILE_ID = "f31a87dd-5d3e-41b8-924a-0d85b10288bc";
+
+    public static final String ADMIN_API = "/admin/v1/";
+    public static final String BASIC_AUTH = "Basic QWxhZGRpbjpPcGVuU2VzYW1l";
 
     public static RequestSpecification withAccountsHeaders(String fintechUserId) {
         return withAccountsHeaders(fintechUserId, SANDBOX_BANK_PROFILE_ID);
@@ -127,6 +131,12 @@ public class StagesCommonUtil {
                        .header(X_TIMESTAMP_UTC, xTimestampUtc.toString());
     }
 
+    public static RequestSpecification headersWithAuthorization(String authorization) {
+        return RestAssured
+                .given()
+                .header(AUTHORIZATION, authorization);
+    }
+
     private static RequestSpecification headersWithoutIpAddress(String fintechUserId, UUID xRequestId, Instant xTimestampUtc) {
         return headersWithoutIpAddress(fintechUserId, SANDBOX_BANK_PROFILE_ID, xRequestId, xTimestampUtc);
     }
@@ -143,4 +153,7 @@ public class StagesCommonUtil {
                 .header(X_REQUEST_ID, xRequestId.toString())
                 .header(X_TIMESTAMP_UTC, xTimestampUtc.toString());
     }
+
+
+
 }

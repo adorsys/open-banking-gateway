@@ -30,14 +30,17 @@ import static de.adorsys.opba.protocol.xs2a.tests.HeaderNames.X_REQUEST_ID;
 import static de.adorsys.opba.protocol.xs2a.tests.HeaderNames.X_XSRF_TOKEN;
 import static de.adorsys.opba.protocol.xs2a.tests.e2e.ResourceUtil.readResource;
 import static de.adorsys.opba.protocol.xs2a.tests.e2e.stages.RequestCommon.X_XSRF_TOKEN_QUERY;
+import static de.adorsys.opba.protocol.xs2a.tests.e2e.stages.StagesCommonUtil.ADMIN_API;
 import static de.adorsys.opba.protocol.xs2a.tests.e2e.stages.StagesCommonUtil.AIS_ACCOUNTS_ENDPOINT;
 import static de.adorsys.opba.protocol.xs2a.tests.e2e.stages.StagesCommonUtil.AIS_TRANSACTIONS_ENDPOINT;
 import static de.adorsys.opba.protocol.xs2a.tests.e2e.stages.StagesCommonUtil.ANTON_BRUECKNER;
 import static de.adorsys.opba.protocol.xs2a.tests.e2e.stages.StagesCommonUtil.AUTHORIZE_CONSENT_ENDPOINT;
+import static de.adorsys.opba.protocol.xs2a.tests.e2e.stages.StagesCommonUtil.BASIC_AUTH;
 import static de.adorsys.opba.protocol.xs2a.tests.e2e.stages.StagesCommonUtil.CONFIRM_CONSENT_ENDPOINT;
 import static de.adorsys.opba.protocol.xs2a.tests.e2e.stages.StagesCommonUtil.MAX_MUSTERMAN;
 import static de.adorsys.opba.protocol.xs2a.tests.e2e.stages.StagesCommonUtil.SANDBOX_BANK_PROFILE_ID;
 import static de.adorsys.opba.protocol.xs2a.tests.e2e.stages.StagesCommonUtil.SESSION_PASSWORD;
+import static de.adorsys.opba.protocol.xs2a.tests.e2e.stages.StagesCommonUtil.headersWithAuthorization;
 import static de.adorsys.opba.protocol.xs2a.tests.e2e.stages.StagesCommonUtil.withAccountsHeaders;
 import static de.adorsys.opba.protocol.xs2a.tests.e2e.stages.StagesCommonUtil.withSignatureHeaders;
 import static de.adorsys.opba.protocol.xs2a.tests.e2e.stages.StagesCommonUtil.withTransactionsHeaders;
@@ -95,6 +98,13 @@ public class AccountInformationResult<SELF extends AccountInformationResult<SELF
 
     @SneakyThrows
     @Transactional
+    public SELF open_banking_has_no_consent_for_anton_brueckner_account_list() {
+        assertThat(consents.findByServiceSessionIdOrderByModifiedAtDesc(UUID.fromString(serviceSessionId))).isEmpty();
+        return self();
+    }
+
+    @SneakyThrows
+    @Transactional
     public SELF open_banking_has_no_consent() {
         assertThat(consents.findByServiceSessionIdOrderByModifiedAtDesc(UUID.fromString(serviceSessionId))).isEmpty();
         return self();
@@ -130,6 +140,18 @@ public class AccountInformationResult<SELF extends AccountInformationResult<SELF
         return open_banking_can_read_anton_brueckner_account_data_using_consent_bound_to_service_session(true, bankProfileId);
     }
 
+
+
+    @SneakyThrows
+    public  SELF open_banking_admin_check_that_bank_is_deleted(String bankUuid) {
+                headersWithAuthorization(BASIC_AUTH)
+                .when()
+                     .get(ADMIN_API + "banks/" + bankUuid)
+                .then()
+                     .statusCode(HttpStatus.NOT_FOUND.value());
+        return self();
+    }
+
     @SneakyThrows
     public SELF open_banking_can_read_anton_brueckner_account_data_using_consent_bound_to_service_session(
             boolean validateResourceId
@@ -163,6 +185,16 @@ public class AccountInformationResult<SELF extends AccountInformationResult<SELF
         this.responseContent = response.body().asString();
     }
 
+    public void open_banking_can_not_read_anton_brueckner_account_data_using_consent_bound_to_service_session_and_bank_profile_id() {
+                withAccountsHeaders(ANTON_BRUECKNER, SANDBOX_BANK_PROFILE_ID)
+                     .header(SERVICE_SESSION_ID, serviceSessionId)
+                .when()
+                     .get(AIS_ACCOUNTS_ENDPOINT)
+                .then()
+                     .statusCode(HttpStatus.INTERNAL_SERVER_ERROR.value())
+                     .body("message", equalTo("No bank profile for bank: " + SANDBOX_BANK_PROFILE_ID))
+                .extract();
+    }
     @SneakyThrows
     public SELF open_banking_can_read_user_account_data_using_consent_bound_to_service_session(
             String user, boolean validateResourceId
@@ -456,7 +488,7 @@ public class AccountInformationResult<SELF extends AccountInformationResult<SELF
         return self();
     }
 
-    public SELF fintech_calls_consent_activation_for_current_authorization_id(String serviceSessionId) {
+    public SELF fintech_calls_consent_activation_for_current_authorization_id(String serviceSessionId, HttpStatus status) {
         withSignatureHeaders(RestAssured
                 .given()
                     .header(SERVICE_SESSION_PASSWORD, SESSION_PASSWORD)
@@ -464,12 +496,16 @@ public class AccountInformationResult<SELF extends AccountInformationResult<SELF
                 .when()
                     .post(CONFIRM_CONSENT_ENDPOINT, serviceSessionId)
                 .then()
-                    .statusCode(HttpStatus.OK.value());
+                    .statusCode(status.value());
         return self();
     }
 
     public SELF fintech_calls_consent_activation_for_current_authorization_id() {
-        return fintech_calls_consent_activation_for_current_authorization_id(serviceSessionId);
+        return fintech_calls_consent_activation_for_current_authorization_id(serviceSessionId, HttpStatus.OK);
+    }
+
+    public SELF fintech_calls_consent_activation_for_current_authorization_id_failed_with_not_found() {
+        return fintech_calls_consent_activation_for_current_authorization_id(serviceSessionId, HttpStatus.NOT_FOUND);
     }
 
     @SneakyThrows

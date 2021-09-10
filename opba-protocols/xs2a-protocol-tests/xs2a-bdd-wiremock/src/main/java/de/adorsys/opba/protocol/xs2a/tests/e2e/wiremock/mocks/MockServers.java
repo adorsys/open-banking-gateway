@@ -46,6 +46,8 @@ public class MockServers<SELF extends MockServers<SELF>> extends CommonGivenStag
     public static final String POSTBANK_BANK_ID = "01aa84f2-25c0-4e02-8065-c401657e3fb0";
     public static final String CONSORS_BANK_BANK_ID = "81cecc67-6d1b-4169-b67c-2de52b99a0cc";
     public static final String SPARKASSE_BANK_ID = "03668d3e-c2a7-425a-b50a-f73347fbfb33";
+    public static final String SANDBOX_BANK_ID = "adadadad-4000-0000-0000-b0b0b0b0b0b0";
+
 
     @Autowired
     private BankProfileJpaRepository bankProfileJpaRepository;
@@ -359,7 +361,7 @@ public class MockServers<SELF extends MockServers<SELF>> extends CommonGivenStag
 
     @SneakyThrows
     private void startWireMock(WireMockConfiguration config) {
-        startWireMock(config, "adadadad-4000-0000-0000-b0b0b0b0b0b0", defaultBankProfileConfigurer);
+        startWireMock(config, SANDBOX_BANK_ID, defaultBankProfileConfigurer);
     }
 
     @SneakyThrows

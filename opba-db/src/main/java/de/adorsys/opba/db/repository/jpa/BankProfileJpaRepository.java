@@ -1,5 +1,6 @@
 package de.adorsys.opba.db.repository.jpa;
 
+import de.adorsys.opba.db.domain.entity.Bank;
 import de.adorsys.opba.db.domain.entity.BankProfile;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
@@ -13,6 +14,8 @@ import java.util.UUID;
 public interface BankProfileJpaRepository extends JpaRepository<BankProfile, Long> {
 
     Optional<BankProfile> findByUuid(UUID uuid);
+
+    void deleteByBank(Bank bank);
 
     List<BankProfile> findByBankUuid(UUID bankUuid);
 

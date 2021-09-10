@@ -137,7 +137,7 @@ public class AdminApiService {
     @Transactional
     public void deleteBank(UUID bankId) {
         Bank bank = bankRepository.findByUuid(bankId).orElseThrow(() -> new EntityNotFoundException("No bank: " + bankId));
-        bankProfileJpaRepository.deleteAll(bankProfileJpaRepository.findByBankUuid(bank.getUuid()));
+        bankProfileJpaRepository.deleteByBank(bank);
         psuAspspPrvKeyRepository.deleteByAspsp(bank);
         fintechPsuAspspPrvKeyRepository.deleteByAspsp(bank);
         fintechPsuAspspPrvKeyInboxRepository.deleteByAspsp(bank);
