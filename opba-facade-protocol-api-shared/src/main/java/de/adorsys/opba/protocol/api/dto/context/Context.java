@@ -5,6 +5,7 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NonNull;
 
+import java.util.Set;
 import java.util.UUID;
 
 @Getter
@@ -40,6 +41,11 @@ public class Context<REQUEST> {
      * The ID of the authorization session associated with this request.
      */
     private final UUID authSessionId;
+
+    /**
+     * The IDs of all authorization session(s) associated with this request.
+     */
+    private final Set<UUID> associatedAuthSessionIds;
 
     /**
      * Will be used as redirect code when coming back from ASPSP.
