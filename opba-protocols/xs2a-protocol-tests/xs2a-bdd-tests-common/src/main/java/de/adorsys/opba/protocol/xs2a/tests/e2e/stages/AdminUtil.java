@@ -18,7 +18,7 @@ public class AdminUtil {
                     .statusCode(HttpStatus.OK.value());
     }
 
-    public static void adminChecksThatBankIsDeleted(String bankUuid) {
+    public void adminChecksThatBankIsDeleted(String bankUuid) {
         headersWithAuthorization(BASIC_AUTH)
         .when()
              .get(ADMIN_API + "banks/" + bankUuid)
