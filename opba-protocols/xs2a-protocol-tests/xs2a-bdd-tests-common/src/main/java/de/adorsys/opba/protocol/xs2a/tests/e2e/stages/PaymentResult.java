@@ -9,6 +9,7 @@ import de.adorsys.xs2a.adapter.api.model.TransactionStatus;
 import io.restassured.RestAssured;
 import io.restassured.response.ExtractableResponse;
 import io.restassured.response.Response;
+import lombok.SneakyThrows;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.transaction.annotation.Transactional;
@@ -53,6 +54,13 @@ public class PaymentResult<SELF extends PaymentResult<SELF>> extends Stage<SELF>
     @Transactional
     public SELF open_banking_has_stored_payment() {
         assertThat(payments.findByServiceSessionIdOrderByModifiedAtDesc(UUID.fromString(paymentServiceSessionId))).isNotEmpty();
+        return self();
+    }
+
+    @SneakyThrows
+    @Transactional
+    public SELF open_banking_has_no_payment_for_anton_brueckner() {
+        assertThat(payments.findByServiceSessionIdOrderByModifiedAtDesc(UUID.fromString(paymentServiceSessionId))).isEmpty();
         return self();
     }
 
@@ -220,6 +228,12 @@ public class PaymentResult<SELF extends PaymentResult<SELF>> extends Stage<SELF>
                 .post(CONFIRM_PAYMENT_ENDPOINT, serviceSessionId)
             .then()
                 .statusCode(HttpStatus.OK.value());
+        return self();
+    }
+
+    @SneakyThrows
+    public SELF admin_check_that_bank_is_deleted(String bankUuid) {
+        AdminUtil.adminChecksThatBankIsDeleted(bankUuid);
         return self();
     }
 }

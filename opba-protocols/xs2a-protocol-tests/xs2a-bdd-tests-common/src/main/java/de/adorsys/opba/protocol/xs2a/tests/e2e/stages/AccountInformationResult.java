@@ -30,17 +30,14 @@ import static de.adorsys.opba.protocol.xs2a.tests.HeaderNames.X_REQUEST_ID;
 import static de.adorsys.opba.protocol.xs2a.tests.HeaderNames.X_XSRF_TOKEN;
 import static de.adorsys.opba.protocol.xs2a.tests.e2e.ResourceUtil.readResource;
 import static de.adorsys.opba.protocol.xs2a.tests.e2e.stages.RequestCommon.X_XSRF_TOKEN_QUERY;
-import static de.adorsys.opba.protocol.xs2a.tests.e2e.stages.StagesCommonUtil.ADMIN_API;
 import static de.adorsys.opba.protocol.xs2a.tests.e2e.stages.StagesCommonUtil.AIS_ACCOUNTS_ENDPOINT;
 import static de.adorsys.opba.protocol.xs2a.tests.e2e.stages.StagesCommonUtil.AIS_TRANSACTIONS_ENDPOINT;
 import static de.adorsys.opba.protocol.xs2a.tests.e2e.stages.StagesCommonUtil.ANTON_BRUECKNER;
 import static de.adorsys.opba.protocol.xs2a.tests.e2e.stages.StagesCommonUtil.AUTHORIZE_CONSENT_ENDPOINT;
-import static de.adorsys.opba.protocol.xs2a.tests.e2e.stages.StagesCommonUtil.BASIC_AUTH;
 import static de.adorsys.opba.protocol.xs2a.tests.e2e.stages.StagesCommonUtil.CONFIRM_CONSENT_ENDPOINT;
 import static de.adorsys.opba.protocol.xs2a.tests.e2e.stages.StagesCommonUtil.MAX_MUSTERMAN;
 import static de.adorsys.opba.protocol.xs2a.tests.e2e.stages.StagesCommonUtil.SANDBOX_BANK_PROFILE_ID;
 import static de.adorsys.opba.protocol.xs2a.tests.e2e.stages.StagesCommonUtil.SESSION_PASSWORD;
-import static de.adorsys.opba.protocol.xs2a.tests.e2e.stages.StagesCommonUtil.headersWithAuthorization;
 import static de.adorsys.opba.protocol.xs2a.tests.e2e.stages.StagesCommonUtil.withAccountsHeaders;
 import static de.adorsys.opba.protocol.xs2a.tests.e2e.stages.StagesCommonUtil.withSignatureHeaders;
 import static de.adorsys.opba.protocol.xs2a.tests.e2e.stages.StagesCommonUtil.withTransactionsHeaders;
@@ -140,15 +137,9 @@ public class AccountInformationResult<SELF extends AccountInformationResult<SELF
         return open_banking_can_read_anton_brueckner_account_data_using_consent_bound_to_service_session(true, bankProfileId);
     }
 
-
-
     @SneakyThrows
-    public  SELF open_banking_admin_check_that_bank_is_deleted(String bankUuid) {
-                headersWithAuthorization(BASIC_AUTH)
-                .when()
-                     .get(ADMIN_API + "banks/" + bankUuid)
-                .then()
-                     .statusCode(HttpStatus.NOT_FOUND.value());
+    public SELF admin_check_that_bank_is_deleted(String bankUuid) {
+        AdminUtil.adminChecksThatBankIsDeleted(bankUuid);
         return self();
     }
 
@@ -195,6 +186,7 @@ public class AccountInformationResult<SELF extends AccountInformationResult<SELF
                      .body("message", equalTo("No bank profile for bank: " + SANDBOX_BANK_PROFILE_ID))
                 .extract();
     }
+
     @SneakyThrows
     public SELF open_banking_can_read_user_account_data_using_consent_bound_to_service_session(
             String user, boolean validateResourceId
