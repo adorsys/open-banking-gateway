@@ -13,9 +13,9 @@ public class AdminUtil {
      public void adminCallsDeleteBank(String bankUuid) {
         headersWithAuthorization(BASIC_AUTH)
                 .when()
-                .delete(ADMIN_API + "banks/" + bankUuid)
+                    .delete(ADMIN_API + "banks/" + bankUuid)
                 .then()
-                .statusCode(HttpStatus.OK.value());
+                    .statusCode(HttpStatus.OK.value());
     }
 
     public static void adminChecksThatBankIsDeleted(String bankUuid) {
