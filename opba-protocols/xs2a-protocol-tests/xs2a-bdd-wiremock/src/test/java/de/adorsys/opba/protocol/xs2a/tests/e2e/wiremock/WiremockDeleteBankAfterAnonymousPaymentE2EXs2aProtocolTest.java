@@ -28,7 +28,7 @@ import static org.springframework.boot.test.context.SpringBootTest.WebEnvironmen
  */
 @SuppressWarnings("CPD-START") // Makes no sense to be too abstract
 @Transactional(propagation = Propagation.NOT_SUPPORTED)
-@SpringBootTest(classes = {Xs2aProtocolApplication.class, JGivenConfig.class}, webEnvironment = RANDOM_PORT)
+@SpringBootTest(classes = {Xs2aProtocolApplication.class, JGivenConfig.class}, webEnvironment = RANDOM_PORT, properties = {"spring.datasource.url=jdbc:tc:postgresql:12:////open_banking?TC_INITSCRIPT=init.sql?TC_TMPFS=/testtmpfs1:rw"})
 @ActiveProfiles(profiles = {ONE_TIME_POSTGRES_RAMFS, MOCKED_SANDBOX})
 public class WiremockDeleteBankAfterAnonymousPaymentE2EXs2aProtocolTest extends SpringScenarioTest<MockServers, WiremockPaymentRequest<? extends WiremockPaymentRequest<?>>, PaymentResult> {
 
