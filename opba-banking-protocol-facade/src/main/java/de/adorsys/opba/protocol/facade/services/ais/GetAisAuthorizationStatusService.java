@@ -13,6 +13,7 @@ import de.adorsys.opba.protocol.facade.services.ProtocolResultHandler;
 import de.adorsys.opba.protocol.facade.services.ProtocolSelector;
 import de.adorsys.opba.protocol.facade.services.ProtocolWithCtx;
 import de.adorsys.opba.protocol.facade.services.context.ServiceContextProvider;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.support.TransactionTemplate;
@@ -26,6 +27,7 @@ import static de.adorsys.opba.protocol.facade.services.context.ServiceContextPro
 /**
  * Unlike other types of Facade services, this one does not require protocol implementation available.
  */
+@Slf4j
 @Service
 public class GetAisAuthorizationStatusService extends GetAuthorizationStatusService<AisAuthorizationStatusRequest, AisAuthorizationStatusBody, GetAisAuthorizationStatus> {
 
@@ -54,7 +56,11 @@ public class GetAisAuthorizationStatusService extends GetAuthorizationStatusServ
         var dbSvcSession = svcSessions.findById(protocolWithCtx.getServiceContext().getServiceSessionId()).orElseThrow();
         var statusResult = result.thenApply(it -> {
             var dbAuthSession = sessions.findByParentId(protocolWithCtx.getServiceContext().getServiceSessionId()).orElse(null);
-            var status = null == it ? new SuccessResult<>(new AisAuthorizationStatusBody()) : it;
+            var status = it;
+            if (!(it instanceof SuccessResult)) {
+                log.error("[{}] Unexpected result type from protocol", aisAuthorizationStatusRequest.getFacadeServiceable().getRequestId());
+                status = new SuccessResult<>(new AisAuthorizationStatusBody());
+            }
             updateStatusFromDb(dbSvcSession, dbAuthSession, status);
             return status;
         });

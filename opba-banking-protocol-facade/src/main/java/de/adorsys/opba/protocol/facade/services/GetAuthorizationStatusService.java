@@ -15,6 +15,7 @@ import org.springframework.transaction.support.TransactionTemplate;
 
 import java.time.ZoneOffset;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
 
@@ -52,7 +53,18 @@ public abstract class GetAuthorizationStatusService<REQUEST extends FacadeServic
             detailedStatus.setLastRequestId(dbAuthSession.getLastRequestId());
             detailedStatus.setLastErrorRequestId(dbAuthSession.getLastErrorRequestId());
 
-            statusBody.setDetailedStatus(Collections.singletonMap(dbAuthSession.getId(), detailedStatus));
+            if (null == statusBody.getDetailedStatus()) {
+                statusBody.setDetailedStatus(Collections.singletonMap(dbAuthSession.getId(), detailedStatus));
+            } else {
+                statusBody.setDetailedStatus(new HashMap<>(statusBody.getDetailedStatus()));
+                statusBody.getDetailedStatus().compute(dbAuthSession.getId(), (id, currStatus) -> {
+                    if (null == currStatus) {
+                        return detailedStatus;
+                    }
+                    detailedStatus.setExternalStatus(currStatus.getExternalStatus());
+                    return detailedStatus;
+                });
+            }
         }
     }
 }

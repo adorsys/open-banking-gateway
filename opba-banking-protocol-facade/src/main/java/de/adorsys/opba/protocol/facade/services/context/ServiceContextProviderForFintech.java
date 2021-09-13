@@ -27,6 +27,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Objects;
 import java.util.UUID;
+import java.util.stream.Collectors;
 
 @Service(ServiceContextProviderForFintech.FINTECH_CONTEXT_PROVIDER)
 @RequiredArgsConstructor
@@ -59,6 +60,7 @@ public class ServiceContextProviderForFintech implements ServiceContextProvider 
                         .bankProfileId(null != request.getFacadeServiceable().getBankProfileId() ? request.getFacadeServiceable().getBankProfileId() : session.getBankProfile().getUuid())
                         .authSessionId(null == authSession ? null : authSession.getId())
                         .authContext(null == authSession ? null : authSession.getAuthSessionContext())
+                        .associatedAuthSessionIds(authSessions.findByParentId(session.getId()).map(AuthSession::getId).stream().collect(Collectors.toSet()))
                         // Currently 1-1 auth-session to service session
                         .futureAuthSessionId(session.getId())
                         .futureRedirectCode(UUID.randomUUID())
@@ -185,7 +187,7 @@ public class ServiceContextProviderForFintech implements ServiceContextProvider 
         BankProfile profile = session.getBankProfile();
 
         // FinTech requests should be signed, so creating Fintech entity if it does not exist.
-        Fintech fintech = authenticator.authenticateOrCreateFintech(request.getFacadeServiceable());
+        Fintech fintech = authenticator.authenticateOrCreateFintech(request.getFacadeServiceable(), session);
 
         return provider.registerForFintechSession(
                 fintech,
