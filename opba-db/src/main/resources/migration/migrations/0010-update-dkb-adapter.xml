@@ -4,7 +4,7 @@
 
     <changeSet id="set_preffered_approach_dkb" author="mhr">
         <sql dbms="postgresql" stripComments="true">
-            UPDATE opb_bank_profile SET preferred_approach = 'EMBEDDED', try_to_use_preferred_approach = true WHERE adapter_id = 'dkb-adapter';
+            UPDATE ${table-prefix}bank_profile SET preferred_approach = 'EMBEDDED', try_to_use_preferred_approach = true WHERE adapter_id = 'dkb-adapter';
         </sql>
     </changeSet>
 

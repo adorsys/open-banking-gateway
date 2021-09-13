@@ -4,7 +4,7 @@
 
     <changeSet id="set_content_type_xml_sparkasse" author="mhr">
         <sql dbms="postgresql" stripComments="true">
-            UPDATE opb_bank_profile SET content_type_transactions = 'application/xml' WHERE adapter_id = 'sparkasse-adapter';
+            UPDATE ${table-prefix}bank_profile SET content_type_transactions = 'application/xml' WHERE adapter_id = 'sparkasse-adapter';
         </sql>
     </changeSet>
 
