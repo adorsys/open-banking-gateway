@@ -709,6 +709,11 @@ public class AccountInformationRequestCommon<SELF extends AccountInformationRequ
         return self();
     }
 
+    public SELF admin_calls_delete_bank(String bankUuid) {
+        AdminUtil.adminCallsDeleteBank(bankUuid);
+        return self();
+    }
+
     protected ExtractableResponse<Response> startInitialInternalConsentAuthorization(String uriPath, String resourceData) {
         ExtractableResponse<Response> response =
                 startInitialInternalConsentAuthorization(uriPath, resourceData, ACCEPTED);

@@ -5,6 +5,7 @@ import com.github.tomakehurst.wiremock.verification.LoggedRequest;
 import com.tngtech.jgiven.annotation.ExpectedScenarioState;
 import com.tngtech.jgiven.integration.spring.JGivenStage;
 import de.adorsys.opba.protocol.xs2a.tests.e2e.LocationExtractorUtil;
+import de.adorsys.opba.protocol.xs2a.tests.e2e.stages.AdminUtil;
 import de.adorsys.opba.protocol.xs2a.tests.e2e.stages.PaymentRequestCommon;
 import io.restassured.RestAssured;
 import io.restassured.response.ExtractableResponse;
@@ -77,6 +78,11 @@ public class WiremockPaymentRequest<SELF extends WiremockPaymentRequest<SELF>> e
 
     public SELF current_redirected_to_screen_is_payment_result() {
         assertThat(this.redirectUriToGetUserParams).contains("pis").contains("consent-result");
+        return self();
+    }
+
+    public SELF admin_calls_delete_bank(String bankUuid) {
+        AdminUtil.adminCallsDeleteBank(bankUuid);
         return self();
     }
 
