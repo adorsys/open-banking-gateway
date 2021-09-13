@@ -217,7 +217,7 @@ components:
           Json representation of third party authorization object, may include credentials to create new user in
           3rd party-service (username/password) with flag 'createUser' to specify that we need to create user explicitly,
           or credentials to re-use in 3rd party-service
-        example: { "username": "jane.doe", "password": "secret", "createUser": true }
+        example: { "username": "jane.doe", "password": "secret", "createUser": true, "email": "foo@example.com", "phone": "+1234567", "isAutoUpdateEnabled": true }
 
 
   responses:
