@@ -213,8 +213,11 @@ components:
       in: header
       schema:
         type: string
-        description: Json representation of third party authorization object
-        example: { "username": "jane.doe", "password": "secret" }
+        description: |
+          Json representation of third party authorization object, may include credentials to create new user in
+          3rd party-service (username/password) with flag 'createUser' to specify that we need to create user explicitly,
+          or credentials to re-use in 3rd party-service
+        example: { "username": "jane.doe", "password": "secret", "createUser": true }
 
 
   responses:
