@@ -5,6 +5,7 @@ import de.adorsys.opba.fintech.impl.tppclients.TppAisClient;
 import de.adorsys.opba.tpp.ais.api.model.generated.AccountList;
 import de.adorsys.opba.tpp.ais.api.model.generated.SessionStatusDetails;
 import de.adorsys.opba.tpp.ais.api.model.generated.TransactionsResponse;
+import de.adorsys.opba.tpp.ais.api.model.generated.UpdateAisExternalSessionStatus;
 import org.springframework.http.ResponseEntity;
 
 import javax.servlet.http.HttpServletRequest;
@@ -100,6 +101,11 @@ public class TppAisClientFeignMock implements TppAisClient {
     @Override
     public ResponseEntity<SessionStatusDetails> getAisSessionStatus(UUID serviceSessionID, String serviceSessionPassword,
                                                                     UUID xRequestID, String xTimestampUTC, String xRequestSignature, String fintechID) {
+        return null;
+    }
+
+    @Override
+    public ResponseEntity<UpdateAisExternalSessionStatus> updateExternalAisSession(UUID serviceSessionID, String serviceSessionPassword, UUID xRequestID, String xTimestampUTC, String xRequestSignature, String fintechID) {
         return null;
     }
 

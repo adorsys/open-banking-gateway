@@ -198,6 +198,37 @@ paths:
         "401":
           $ref: "./tpp_banking_api_commons.yml#/components/responses/401_UNAUTHORIZED"
 
+  /v1/banking/ais/{Service-Session-ID}/update:
+    post:
+      operationId: updateExternalAisSession
+      summary: >-
+        Update data that is associated with service session in 3rd party service(s).
+        For example can be used to re-import connection data in 3rd party service.
+        May require PSU re-authentication
+      tags:
+        - TPP Banking API Account information service (AIS)
+      description: >-
+        In cases when OBG uses 3rd party services to receive account/transactions information, those
+        services may cache the data. This endpoint is used to refresh the cached data in those 3rd party
+        services.
+      parameters:
+        #path
+        - $ref: "./tpp_banking_api_commons.yml#/components/parameters/Service-Session-ID-Path"
+        #header
+        #common header parameter
+        - $ref: "./tpp_banking_api_commons.yml#/components/parameters/X-Timestamp-UTC"
+        - $ref: "./tpp_banking_api_commons.yml#/components/parameters/X-Request-Signature"
+        - $ref: "./tpp_banking_api_commons.yml#/components/parameters/Fintech-ID"
+        - $ref: "./tpp_banking_api_commons.yml#/components/parameters/ServiceSessionPassword"
+        - $ref: "./tpp_banking_api_commons.yml#/components/parameters/X-Request-ID"
+      responses:
+        "200":
+          $ref: "./tpp_banking_api_commons.yml#/components/responses/updateExternalAisSessionResponse"
+        "202":
+          $ref: "#/components/responses/202_AUTHORIZATION_REQUIRED"
+        "401":
+          $ref: "./tpp_banking_api_commons.yml#/components/responses/401_UNAUTHORIZED"
+
 components:
   parameters:
     account-id:
