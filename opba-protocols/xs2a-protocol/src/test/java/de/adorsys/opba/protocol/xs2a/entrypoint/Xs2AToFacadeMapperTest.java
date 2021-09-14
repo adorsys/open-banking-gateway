@@ -52,10 +52,31 @@ public class Xs2AToFacadeMapperTest {
     @Test
     @SneakyThrows
     void transactionsMapperTest() {
-        TransactionsResponse200Json transactionsResponseMappingInput = fixtureProvider.getFromFile(PATH_PREFIX + "transactions_input.json",
+        TransactionsResponse200Json mappingInput = fixtureProvider.getFromFile(PATH_PREFIX + "transactions_input.json",
                 TransactionsResponse200Json.class);
 
         ListTransactionsRequest transactionsRequest = fixtureProvider.getFromFile(PATH_PREFIX + "list_transactions_request_input.json", ListTransactionsRequest.class);
+        ServiceContext<ListTransactionsRequest> context = ServiceContext.<ListTransactionsRequest>builder()
+                .ctx(Context.<ListTransactionsRequest>builder()
+                        .serviceSessionId(transactionsRequest.getFacadeServiceable().getServiceSessionId())
+                        .request(transactionsRequest)
+                        .build())
+                .build();
+
+        TransactionsResponseBody mappingResult = mapper.map(mappingInput, context);
+
+        TransactionsResponseBody expected = fixtureProvider.getFromFile(PATH_PREFIX + "transactions_output.json",
+                                                                        TransactionsResponseBody.class);
+        assertThat(expected).isEqualToComparingFieldByField(mappingResult);
+    }
+
+    @Test
+    @SneakyThrows
+    void transactionsWithPagingMapperTest() {
+        TransactionsResponse200Json transactionsResponseMappingInput = fixtureProvider.getFromFile(PATH_PREFIX + "transactions_with_paging_input.json",
+                TransactionsResponse200Json.class);
+
+        ListTransactionsRequest transactionsRequest = fixtureProvider.getFromFile(PATH_PREFIX + "list_transactions_request_with_paging_input.json", ListTransactionsRequest.class);
         ServiceContext<ListTransactionsRequest> contextMappingInput = ServiceContext.<ListTransactionsRequest>builder()
                 .ctx(Context.<ListTransactionsRequest>builder()
                         .serviceSessionId(transactionsRequest.getFacadeServiceable().getServiceSessionId())
@@ -65,8 +86,8 @@ public class Xs2AToFacadeMapperTest {
 
         TransactionsResponseBody mappingResult = mapper.map(transactionsResponseMappingInput, contextMappingInput);
 
-        TransactionsResponseBody expected = fixtureProvider.getFromFile(PATH_PREFIX + "transactions_output.json",
-                                                                        TransactionsResponseBody.class);
+        TransactionsResponseBody expected = fixtureProvider.getFromFile(PATH_PREFIX + "transactions_with_paging_output.json",
+                TransactionsResponseBody.class);
         assertThat(expected).isEqualToComparingFieldByField(mappingResult);
     }
 

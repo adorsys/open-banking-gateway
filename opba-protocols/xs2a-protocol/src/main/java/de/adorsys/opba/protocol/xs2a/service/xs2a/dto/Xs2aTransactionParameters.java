@@ -27,6 +27,8 @@ import static de.adorsys.opba.protocol.xs2a.constant.GlobalConst.XS2A_MAPPERS_PA
 @Data
 @EqualsAndHashCode(callSuper = true)
 public class Xs2aTransactionParameters extends Xs2aWithBalanceParameters {
+    private static final String PAGE_INDEX_QUERY_PARAMETER_NAME = "pageIndex";
+    private static final String PAGE_SIZE_QUERY_PARAMETER_NAME = "itemsPerPage";
 
     /**
      * Transaction booking status - i.e. PENDING/BOOKED.
@@ -70,8 +72,8 @@ public class Xs2aTransactionParameters extends Xs2aWithBalanceParameters {
                 .build()
                 .toMap();
 
-        Optional.ofNullable(page).ifPresent(p -> requestParamsMap.put("pageIndex", p.toString()));
-        Optional.ofNullable(pageSize).ifPresent(ps -> requestParamsMap.put("itemsPerPage", ps.toString()));
+        Optional.ofNullable(page).ifPresent(p -> requestParamsMap.put(PAGE_INDEX_QUERY_PARAMETER_NAME, p.toString()));
+        Optional.ofNullable(pageSize).ifPresent(ps -> requestParamsMap.put(PAGE_SIZE_QUERY_PARAMETER_NAME, ps.toString()));
 
         return RequestParams.fromMap(requestParamsMap);
     }

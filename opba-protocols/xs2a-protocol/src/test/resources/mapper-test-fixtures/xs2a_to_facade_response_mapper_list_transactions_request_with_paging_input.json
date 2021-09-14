@@ -30,5 +30,7 @@
   "entryReferenceFrom": "test entry reference",
   "bookingStatus": "PENDING",
   "deltaList": false,
-  "extras": null
+  "extras": null,
+  "page":  "1",
+  "pageSize": "10"
 }
