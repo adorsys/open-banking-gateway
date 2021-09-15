@@ -192,6 +192,22 @@ public class MockServers<SELF extends MockServers<SELF>> extends CommonGivenStag
         return self();
     }
 
+    public SELF oauth2_integrated_mock_of_santander_for_anton_brueckner_payments_running(Path tempDir) {
+
+        mergeWireMockFixtures(
+                tempDir,
+                "mockedsandbox/restrecord/oauth2/integrated/payments/santander/"
+        );
+
+        WireMockConfiguration config = WireMockConfiguration.options().dynamicPort()
+                .usingFilesUnderClasspath(tempDir.toAbsolutePath().toString())
+                .extensions(new ResponseTemplateTransformer(false));
+        startWireMock(config);
+        startWireMock(config, SANTANDER_BANK_ID, defaultBankProfileConfigurer);
+
+        return self();
+    }
+
     public SELF oauth2_integrated_mock_of_sandbox_for_anton_brueckner_payments_running(Path tempDir) {
         mergeWireMockFixtures(
                 tempDir,

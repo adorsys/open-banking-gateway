@@ -184,7 +184,6 @@ class WiremockConsentE2EXs2aProtocolTest extends SpringScenarioTest<MockServers,
     void testSantanderAccountsListWithConsentUsingUsingOAuth2Integrated() {
         given()
                 .oauth2_integrated_mock_of_santander_for_anton_brueckner_accounts_running()
-                .set_default_preferred_approach()
                 .preferred_sca_approach_selected_for_all_banks_in_opba(Approach.REDIRECT)
                 .rest_assured_points_to_opba_server_with_fintech_signer_on_banking_api()
                 .user_registered_in_opba_with_credentials(OPBA_LOGIN, OPBA_PASSWORD);
