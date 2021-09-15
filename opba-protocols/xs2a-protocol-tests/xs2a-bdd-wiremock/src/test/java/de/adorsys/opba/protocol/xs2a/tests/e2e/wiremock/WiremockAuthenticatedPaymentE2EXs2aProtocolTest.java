@@ -452,9 +452,7 @@ public class WiremockAuthenticatedPaymentE2EXs2aProtocolTest extends SpringScena
                 .fintech_calls_payment_status();
     }
 
-    /**
-     * Not using {@code ParameterizedTest} as OAuth2 is the special case of REDIRECT (to reduce pipeline runtime).
-     */
+
     @Test
     void testPaymentInitializationUsingOAuth2Integrated(@TempDir Path tempDir) {
         given()

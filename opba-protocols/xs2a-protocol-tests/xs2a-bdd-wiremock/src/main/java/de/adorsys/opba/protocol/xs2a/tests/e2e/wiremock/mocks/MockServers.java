@@ -47,7 +47,7 @@ public class MockServers<SELF extends MockServers<SELF>> extends CommonGivenStag
     public static final String CONSORS_BANK_BANK_ID = "81cecc67-6d1b-4169-b67c-2de52b99a0cc";
     public static final String SPARKASSE_BANK_ID = "03668d3e-c2a7-425a-b50a-f73347fbfb33";
     public static final String SANDBOX_BANK_ID = "adadadad-4000-0000-0000-b0b0b0b0b0b0";
-    public static final String SANTANDER_BANK_BANK_ID = "afd7605a-0834-4f84-9a86-cfe468b3f336";
+    public static final String SANTANDER_BANK_ID = "afd7605a-0834-4f84-9a86-cfe468b3f336";
 
 
 
@@ -97,8 +97,8 @@ public class MockServers<SELF extends MockServers<SELF>> extends CommonGivenStag
 
     public SELF oauth2_integrated_mock_of_santander_for_anton_brueckner_accounts_running() {
         WireMockConfiguration config = WireMockConfiguration.options().dynamicPort()
-                .usingFilesUnderClasspath("mockedsandbox/restrecord/redirect/accounts/santander/");
-        startWireMock(config, SANTANDER_BANK_BANK_ID, defaultBankProfileConfigurer);
+                .usingFilesUnderClasspath("mockedsandbox/restrecord/oauth2/integrated/accounts/santander/");
+        startWireMock(config, SANTANDER_BANK_ID, defaultBankProfileConfigurer);
 
         return self();
     }
