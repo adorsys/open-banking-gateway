@@ -1,6 +1,9 @@
 package de.adorsys.opba.protocol.xs2a.entrypoint;
 
 import com.google.common.io.Resources;
+import de.adorsys.opba.protocol.api.dto.context.Context;
+import de.adorsys.opba.protocol.api.dto.context.ServiceContext;
+import de.adorsys.opba.protocol.api.dto.request.transactions.ListTransactionsRequest;
 import de.adorsys.opba.protocol.api.dto.result.body.AccountListBody;
 import de.adorsys.opba.protocol.api.dto.result.body.AccountReport;
 import de.adorsys.opba.protocol.api.dto.result.body.TransactionsResponseBody;
@@ -52,7 +55,15 @@ public class Xs2AToFacadeMapperTest {
         TransactionsResponse200Json mappingInput = fixtureProvider.getFromFile(PATH_PREFIX + "transactions_input.json",
                 TransactionsResponse200Json.class);
 
-        TransactionsResponseBody mappingResult = mapper.map(mappingInput);
+        ListTransactionsRequest transactionsRequest = fixtureProvider.getFromFile(PATH_PREFIX + "list_transactions_request_input.json", ListTransactionsRequest.class);
+        ServiceContext<ListTransactionsRequest> context = ServiceContext.<ListTransactionsRequest>builder()
+                .ctx(Context.<ListTransactionsRequest>builder()
+                        .serviceSessionId(transactionsRequest.getFacadeServiceable().getServiceSessionId())
+                        .request(transactionsRequest)
+                        .build())
+                .build();
+
+        TransactionsResponseBody mappingResult = mapper.map(mappingInput, context);
 
         TransactionsResponseBody expected = fixtureProvider.getFromFile(PATH_PREFIX + "transactions_output.json",
                                                                         TransactionsResponseBody.class);
@@ -61,7 +72,28 @@ public class Xs2AToFacadeMapperTest {
 
     @Test
     @SneakyThrows
-    public void testCamt() {
+    void transactionsWithPagingMapperTest() {
+        TransactionsResponse200Json transactionsResponseMappingInput = fixtureProvider.getFromFile(PATH_PREFIX + "transactions_with_paging_input.json",
+                TransactionsResponse200Json.class);
+
+        ListTransactionsRequest transactionsRequest = fixtureProvider.getFromFile(PATH_PREFIX + "list_transactions_request_with_paging_input.json", ListTransactionsRequest.class);
+        ServiceContext<ListTransactionsRequest> contextMappingInput = ServiceContext.<ListTransactionsRequest>builder()
+                .ctx(Context.<ListTransactionsRequest>builder()
+                        .serviceSessionId(transactionsRequest.getFacadeServiceable().getServiceSessionId())
+                        .request(transactionsRequest)
+                        .build())
+                .build();
+
+        TransactionsResponseBody mappingResult = mapper.map(transactionsResponseMappingInput, contextMappingInput);
+
+        TransactionsResponseBody expected = fixtureProvider.getFromFile(PATH_PREFIX + "transactions_with_paging_output.json",
+                TransactionsResponseBody.class);
+        assertThat(expected).isEqualToComparingFieldByField(mappingResult);
+    }
+
+    @Test
+    @SneakyThrows
+    void testCamt() {
         String camt = Resources.toString(Resources.getResource(XML_PATH_PREFIX + "camt_multibanking.xml"), StandardCharsets.UTF_8);
         TransactionsResponseBody loadBookingsResponse = xmlTransactionsParser.camtStringToLoadBookingsResponse(camt);
         assertThat(loadBookingsResponse.getTransactions().getBooked().size()).withFailMessage("Wrong count of bookings").isEqualTo(4);
@@ -69,7 +101,7 @@ public class Xs2AToFacadeMapperTest {
 
     @Test
     @SneakyThrows
-    public void testCamtSparkasse() {
+    void testCamtSparkasse() {
         TimeZone.setDefault(TimeZone.getTimeZone("UTC"));
         String camt = Resources.toString(Resources.getResource(XML_PATH_PREFIX + "camt_sparkasse.xml"), StandardCharsets.UTF_8);
         TransactionsResponseBody mappingResult = xmlTransactionsParser.camtStringToLoadBookingsResponse(camt);

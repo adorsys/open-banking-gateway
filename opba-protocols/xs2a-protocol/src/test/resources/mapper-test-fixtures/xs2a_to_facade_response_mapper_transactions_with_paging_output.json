@@ -1,5 +1,4 @@
 {
-  "account": null,
   "transactions": {
     "booked": [
       {
@@ -181,34 +180,12 @@
         "proprietaryBankTransactionCode": null
       }
     ],
-    "pending": null,
-    "_links": {
-      "account": {
-        "href": "http://localhost:20014/v1/accounts/MXp18v3aQCQsatLYCBsUjM"
-      }
-    }
+    "pending": null
   },
-  "balances": [
-    {
-      "balanceAmount": {
-        "currency": "EUR",
-        "amount": "10120.00"
-      },
-      "balanceType": "interimAvailable",
-      "lastCommittedTransaction": null
-    },
-    {
-      "balanceAmount": {
-        "currency": "EUR",
-        "amount": "10120.00"
-      },
-      "balanceType": "closingBooked",
-      "lastCommittedTransaction": null
-    }
-  ],
-  "_links": {
-    "download": {
-      "href": "http://localhost:20014/v1/accounts/MXp18v3aQCQsatLYCBsUjM/transactions/download/ZG93bmxvYWRJZA=="
-    }
+
+  "paging": {
+    "page": "1",
+    "pageSize":  "10",
+    "pageCount": "197"
   }
 }

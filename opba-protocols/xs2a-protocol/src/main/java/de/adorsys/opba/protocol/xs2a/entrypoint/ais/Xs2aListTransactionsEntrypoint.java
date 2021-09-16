@@ -63,7 +63,7 @@ public class Xs2aListTransactionsEntrypoint implements ListTransactions {
 
         registrar.addHandler(
                 instance.getProcessInstanceId(),
-                new Xs2aOutcomeMapper<>(result, extractor::extractTransactionsReport, errorMapper)
+                new Xs2aOutcomeMapper<>(result, res -> extractor.extractTransactionsReport(res, serviceContext), errorMapper)
         );
 
         return result;
