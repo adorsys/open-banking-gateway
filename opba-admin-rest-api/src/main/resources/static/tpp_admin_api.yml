@@ -187,6 +187,7 @@ components:
             - delete-consent
             - get-consent-status
             - get-ais-authorization-status
+            - update-external-ais-session
             - authorization
             - on-login
             - get-authorization-state
@@ -279,6 +280,7 @@ components:
             - delete-consent
             - get-consent-status
             - get-ais-authorization-status
+            - update-external-ais-session
             - authorization
             - on-login
             - get-authorization-state
