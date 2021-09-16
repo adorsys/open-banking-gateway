@@ -1,0 +1,31 @@
+{
+  "scenarioName": "PaymentUsingSantanderOauthIntegrated",
+  "newScenarioState": "GetOauthToken",
+  "request": {
+    "url": "/v1/oauth_matls/token",
+    "method": "POST",
+    "headers": {
+    },
+    "bodyPatterns": [
+      {
+        "matches": "(.*&|^)grant_type=authorization_code($|&.*)"
+      }
+    ]
+  },
+
+  "response": {
+    "status": 200,
+    "body": "{\"access_token\":\"OAUTH_TOKEN\",\"token_type\":\"Bearer\",\"expires_in\":300,\"accessTokenObject\":{\"sub\":\"d0auuIq7RzAtzvCDT8zm_o\",\"jti\":\"rFGNH5XjTsAkHn4Y5mUkJI\",\"login\":\"anton.brueckner\",\"role\":\"CUSTOMER\",\"iat\":\"1970-01-19T12:20:53.913+0000\",\"exp\":\"1970-01-19T12:20:54.213+0000\",\"act\":{},\"sca_id\":\"7TBSOLYyRksuw664NzdVB0\",\"authorisation_id\":\"7TBSOLYyRksuw664NzdVB0\",\"token_usage\":\"LOGIN\"}}",
+    "headers": {
+      "cache-control": "no-cache, no-store, max-age=0, must-revalidate",
+      "date": "Wed, 09 Sep 2020 12:18:33 GMT",
+      "expires": "0",
+      "keep-alive": "timeout=60",
+      "pragma": "no-cache",
+      "x-content-type-options": "nosniff",
+      "x-xss-protection": "1; mode=block",
+      "Content-Type": "application/json"
+    }
+  },
+  "uuid": "29d73b07-bd2d-3a61-9b08-19ba840681b5"
+}

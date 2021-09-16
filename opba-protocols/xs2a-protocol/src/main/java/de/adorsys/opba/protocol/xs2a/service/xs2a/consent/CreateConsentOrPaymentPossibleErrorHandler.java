@@ -6,7 +6,7 @@ import de.adorsys.opba.protocol.xs2a.config.aspspmessages.AspspMessages;
 import de.adorsys.opba.protocol.xs2a.context.Xs2aContext;
 import de.adorsys.xs2a.adapter.api.exception.ErrorResponseException;
 import de.adorsys.xs2a.adapter.api.exception.OAuthException;
-import de.adorsys.xs2a.adapter.api.exception.PreAuthorisationException;
+import de.adorsys.xs2a.adapter.api.exception.RequestAuthorizationValidationException;
 import de.adorsys.xs2a.adapter.api.model.MessageCode;
 import de.adorsys.xs2a.adapter.api.model.TppMessage;
 import lombok.RequiredArgsConstructor;
@@ -47,11 +47,12 @@ public class CreateConsentOrPaymentPossibleErrorHandler {
             log.debug("Trying to handle OAuthException", ex);
             tryHandleOauth2Exception(execution);
             return null;
-        } catch (PreAuthorisationException ex) {
-            log.debug("Trying to handle PreAuthorisationException", ex);
-            tryHandlePreAuthorisationException(execution);
+        } catch (RequestAuthorizationValidationException ex) {
+            log.debug("Trying to handle AccessTokenException", ex);
+            tryHandleRequestAuthorizationValidationException(execution);
             return null;
         }
+
     }
 
     private void tryHandleWrongIbanOrCredentialsExceptionOrOauth2(DelegateExecution execution, ErrorResponseException ex) {
@@ -83,7 +84,7 @@ public class CreateConsentOrPaymentPossibleErrorHandler {
         );
     }
 
-    private void tryHandlePreAuthorisationException(DelegateExecution execution) {
+    private void tryHandleRequestAuthorizationValidationException(DelegateExecution execution) {
         ContextUtil.getAndUpdateContext(
                 execution,
                 (Xs2aContext ctx) -> {

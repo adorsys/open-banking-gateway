@@ -29,6 +29,7 @@ import static de.adorsys.opba.protocol.xs2a.tests.TestProfiles.ONE_TIME_POSTGRES
 import static de.adorsys.opba.protocol.xs2a.tests.e2e.stages.StagesCommonUtil.CONSORS_BANK_BANK_PROFILE_ID;
 import static de.adorsys.opba.protocol.xs2a.tests.e2e.stages.StagesCommonUtil.DKB_BANK_PROFILE_ID;
 import static de.adorsys.opba.protocol.xs2a.tests.e2e.stages.StagesCommonUtil.POSTBANK_BANK_PROFILE_ID;
+import static de.adorsys.opba.protocol.xs2a.tests.e2e.stages.StagesCommonUtil.SANTANDER_BANK_PROFILE_ID;
 import static de.adorsys.opba.protocol.xs2a.tests.e2e.wiremock.Const.PIS_OAUTH2_CODE;
 import static org.springframework.boot.test.context.SpringBootTest.WebEnvironment.RANDOM_PORT;
 
@@ -465,6 +466,31 @@ public class WiremockAuthenticatedPaymentE2EXs2aProtocolTest extends SpringScena
 
         when()
                 .fintech_calls_initiate_payment_for_anton_brueckner()
+                .and()
+                .user_logged_in_into_opba_pis_as_opba_user_with_credentials_using_fintech_supplied_url(OPBA_LOGIN, OPBA_PASSWORD)
+                .and()
+                .user_anton_brueckner_provided_initial_parameters_to_authorize_initiation_payment()
+                .and()
+                .user_anton_brueckner_sees_that_he_needs_to_be_redirected_to_aspsp_and_redirects_to_aspsp()
+                .and()
+                .open_banking_redirect_from_aspsp_with_static_oauth2_code_to_exchange_to_token(PIS_OAUTH2_CODE);
+        then()
+                .open_banking_has_stored_payment()
+                .fintech_calls_payment_activation_for_current_authorization_id()
+                .fintech_calls_payment_status();
+    }
+
+
+    @Test
+    void testSantanderPaymentInitializationUsingOAuth2Integrated(@TempDir Path tempDir) {
+        given()
+                .oauth2_integrated_mock_of_santander_for_anton_brueckner_payments_running(tempDir)
+                .preferred_sca_approach_selected_for_all_banks_in_opba(Approach.REDIRECT)
+                .rest_assured_points_to_opba_server_with_fintech_signer_on_banking_api()
+                .user_registered_in_opba_with_credentials(OPBA_LOGIN, OPBA_PASSWORD);
+
+        when()
+                .fintech_calls_initiate_payment_for_anton_brueckner(SANTANDER_BANK_PROFILE_ID)
                 .and()
                 .user_logged_in_into_opba_pis_as_opba_user_with_credentials_using_fintech_supplied_url(OPBA_LOGIN, OPBA_PASSWORD)
                 .and()
