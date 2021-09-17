@@ -28,6 +28,10 @@ public enum ProtocolAction {
      * {@code de.adorsys.opba.protocol.api.ais.GetAisAuthorizationStatus}
      */
     GET_AIS_AUTHORIZATION_STATUS("get-ais-authorization-status"),
+    /**
+     * {@code de.adorsys.opba.protocol.api.authorization.UpdateExternalAisSession}
+     */
+    UPDATE_EXTERNAL_AIS_SESSION("update-external-ais-session"),
     // Consent authorization
     /**
      * Root action for all authorizations

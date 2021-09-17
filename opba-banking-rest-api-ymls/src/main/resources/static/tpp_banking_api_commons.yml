@@ -229,6 +229,14 @@ components:
           schema:
             $ref: "#/components/schemas/sessionStatusDetails"
 
+    updateExternalAisSessionResponse:
+      description: |
+        Update status of external service.
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/updateAisExternalSessionStatus"
+
     401_UNAUTHORIZED:
       description: |
         Unauthorised. Access token absent or invalid.
@@ -536,6 +544,13 @@ components:
           type: object
           additionalProperties:
             $ref: "#/components/schemas/authSessionStatus"
+
+    updateAisExternalSessionStatus:
+      type: object
+      properties:
+        status:
+          description: Resulting status of external status update call.
+          type: string
 
     sessionStatus:
       type: string
