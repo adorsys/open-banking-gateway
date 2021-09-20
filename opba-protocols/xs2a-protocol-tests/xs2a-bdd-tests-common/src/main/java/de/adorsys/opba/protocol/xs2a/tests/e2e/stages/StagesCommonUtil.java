@@ -72,6 +72,7 @@ public class StagesCommonUtil {
     public static final String POSTBANK_BANK_PROFILE_ID = "e431a602-15ab-48b8-8c9b-ce381d2034c4";
     public static final String SPARKASSE_BANK_PROFILE_ID = "f31a87dd-5d3e-41b8-924a-0d85b10288bc";
     public static final String SANTANDER_BANK_PROFILE_ID = "ca18cc3a-d242-4acf-8043-61d8b57fb615";
+    public static final String TARGO_BANK_PROFILE_ID = "b915ceba-8ec2-4492-97ef-912c8c9244d8";
 
     public static final String ADMIN_API = "/admin/v1/";
     public static final String BASIC_AUTH = "Basic QWxhZGRpbjpPcGVuU2VzYW1l";

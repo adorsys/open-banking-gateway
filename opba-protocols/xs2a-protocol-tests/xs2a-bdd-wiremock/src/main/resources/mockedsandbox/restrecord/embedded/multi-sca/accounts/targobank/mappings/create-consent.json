@@ -1,0 +1,50 @@
+{
+  "scenarioName": "AccountsListUsingTargoBankEmbedded",
+  "newScenarioState": "CreateConsent",
+  "request" : {
+    "url" : "/v1/consents",
+    "method" : "POST",
+    "headers" : {
+      "X-Request-ID" : {
+        "matches" : ".+"
+      },
+      "PSU-ID" : {
+        "equalTo" : "max.musterman"
+      },
+      "TPP-Redirect-URI" : {
+        "matches" : ".+"
+      },
+      "TPP-Nok-Redirect-URI" : {
+        "matches" : ".+"
+      },
+      "PSU-IP-Address" : {
+        "matches" : ".+"
+      },
+      "X-GTW-ASPSP-ID" : {
+        "matches" : ".+"
+      },
+      "X-bvpsd2-test-apikey" : {
+        "equalTo" : "tUfZ5KOHRTFrikZUsmSMUabKw09UIzGE"
+      }
+    },
+    "bodyPatterns" : [ {
+      "equalToJson" : "{\"access\":{\"accounts\":[{\"iban\":\"DE80760700240271232400\",\"currency\":\"EUR\"}],\"balances\":[{\"iban\":\"DE80760700240271232400\",\"currency\":\"EUR\"}],\"transactions\":[{\"iban\":\"DE80760700240271232400\",\"currency\":\"EUR\"}]},\"recurringIndicator\":true,\"validUntil\":\"2030-01-31\",\"frequencyPerDay\":4,\"combinedServiceIndicator\":false}",
+      "ignoreArrayOrder" : true,
+      "ignoreExtraElements" : true
+    } ]
+  },
+  "response" : {
+    "status" : 201,
+    "body" : "{\"consentId\":\"17501be7-1dcd-4ad5-ab30-6d02b170e31a\",\"_links\":{\"startAuthorisationWithPsuAuthentication\":{\"href\":\"https://http://localhost:4444/v1/consents/17501be7-1dcd-4ad5-ab30-6d02b170e31a/authorisations\"},\"self\":{\"href\":\"https://http://localhost:4444/v1/consents/17501be7-1dcd-4ad5-ab30-6d02b170e31a\"},\"status\":{\"href\":\"https://http://localhost:4444/v1/consents/17501be7-1dcd-4ad5-ab30-6d02b170e31a/status\"}},\"consentStatus\":\"received\"}",
+    "headers" : {
+      "Date" : "Mon, 01 Mar 2021 16:19:17 GMT",
+      "Server" : "Apache",
+      "ASPSP-Notification-Support" : "false",
+      "X-Request-ID" : "910670d3-04fa-4fde-b254-a43be22df9c9",
+      "Content-Type" : "application/json;charset=utf-8"
+    }
+  },
+  "uuid" : "c4874869-3173-4a3b-a303-e447a0b6a559",
+  "persistent" : true,
+  "insertionIndex" : 1
+}
