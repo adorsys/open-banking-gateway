@@ -4,9 +4,13 @@ import {ActivatedRoute, Router} from '@angular/router';
 import {AuthConsentState} from '../../../../common/dto/auth-state';
 import {SessionService} from '../../../../../common/session.service';
 import {StubUtil} from '../../../../../common/utils/stub-util';
-import {AccountAccessLevel, AisConsentToGrant} from '../../../../common/dto/ais-consent';
+import {
+  AccountAccessLevel,
+  AccountAccessLevelAspspConsentSupport,
+  AisConsentToGrant
+} from '../../../../common/dto/ais-consent';
 import {ConsentUtil} from '../../../../common/consent-util';
-import {UpdateConsentAuthorizationService} from '../../../../../api';
+import {ConsentAuth, UpdateConsentAuthorizationService} from '../../../../../api';
 import {ApiHeaders} from '../../../../../api/api.headers';
 
 @Component({
@@ -22,6 +26,7 @@ export class ConsentAccountAccessSelectionComponent implements OnInit, AfterCont
   @Input() consentReviewPage: string;
   @Input() dedicatedConsentPage: string;
 
+  public filteredAccountAccesses: Access[];
   public selectedAccess;
   public accountAccessForm: FormGroup;
   public state: AuthConsentState;
@@ -57,6 +62,14 @@ export class ConsentAccountAccessSelectionComponent implements OnInit, AfterCont
       this.selectedAccess = new FormControl(this.accountAccesses[0], Validators.required);
       this.accountAccessForm.addControl('accountAccess', this.selectedAccess);
       this.consent = ConsentUtil.getOrDefault(this.authorizationId, this.sessionService);
+      const bankSupportFromApi = this.sessionService.getConsentTypesSupported(res.authId);
+      if (bankSupportFromApi) {
+        const bankSupport = new Set(this.sessionService.getConsentTypesSupported(res.authId) || []);
+        this.filteredAccountAccesses = this.accountAccesses
+          .filter(it => ConsentAccountAccessSelectionComponent.hasIntersection(AccountAccessLevelAspspConsentSupport.get(it.id), bankSupport));
+      } else {
+        this.filteredAccountAccesses = this.accountAccesses;
+      }
     });
   }
 
@@ -102,6 +115,16 @@ export class ConsentAccountAccessSelectionComponent implements OnInit, AfterCont
       .subscribe((res) => {
         window.location.href = res.headers.get(ApiHeaders.LOCATION);
       });
+  }
+
+  private static hasIntersection(source: Set<ConsentAuth.SupportedConsentTypesEnum>, target: Set<ConsentAuth.SupportedConsentTypesEnum>): boolean {
+    for (const entry of source) {
+      if (target.has(entry)) {
+        return true;
+      }
+    }
+
+    return false;
   }
 
   private updateConsentObject() {

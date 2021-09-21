@@ -19,7 +19,7 @@
             Please choose an account access level for <strong class="text-dark">{{ finTechName }}</strong>
           </p>
           <div class="mb-5">
-            <div *ngFor="let access of accountAccesses; let i = index" class="form-check">
+            <div *ngFor="let access of filteredAccountAccesses; let i = index" class="form-check">
               <label class="form-check-label" [id]="access.id"
                 >{{ access.message }}
                 <input
