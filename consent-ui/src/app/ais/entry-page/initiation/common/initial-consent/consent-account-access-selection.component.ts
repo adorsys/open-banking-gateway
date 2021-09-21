@@ -71,6 +71,9 @@ export class ConsentAccountAccessSelectionComponent implements OnInit, AfterCont
         this.filteredAccountAccesses = this.accountAccesses;
       }
     });
+    if (this.filteredAccountAccesses.length == 1) {
+      this.selectedAccess.setValue(this.filteredAccountAccesses[0]);
+    }
   }
 
   hasInputs(): boolean {
