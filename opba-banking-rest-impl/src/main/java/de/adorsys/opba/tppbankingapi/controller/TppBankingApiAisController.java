@@ -78,6 +78,8 @@ public class TppBankingApiAisController implements TppBankingApiAccountInformati
         UUID serviceSessionId,
         String createConsentIfNone,
         String importUserData,
+        Boolean computePsuIpAddress,
+        String psuIpAddress,
         Boolean withBalance,
         Boolean online
     ) {
@@ -121,6 +123,8 @@ public class TppBankingApiAisController implements TppBankingApiAccountInformati
         UUID serviceSessionId,
         String createConsentIfNone,
         String importUserData,
+        Boolean computePsuIpAddress,
+        String psuIpAddress,
         LocalDate dateFrom,
         LocalDate dateTo,
         String entryReferenceFrom,
@@ -178,6 +182,8 @@ public class TppBankingApiAisController implements TppBankingApiAccountInformati
         UUID serviceSessionId,
         String createConsentIfNone,
         String importUserData,
+        Boolean computePsuIpAddress,
+        String psuIpAddress,
         LocalDate dateFrom,
         LocalDate dateTo,
         String entryReferenceFrom,
