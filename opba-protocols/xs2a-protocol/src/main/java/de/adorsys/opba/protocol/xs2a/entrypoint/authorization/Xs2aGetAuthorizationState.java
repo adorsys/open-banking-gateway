@@ -125,6 +125,7 @@ public class Xs2aGetAuthorizationState implements GetAuthorizationState {
         return new AuthStateBody(
                 action.name(),
                 violationsMapper.map(issues.getViolations()),
+                ctx.getRequestScoped().aspspProfile().getSupportedConsentTypes(),
                 scaMethodsMapper.map(scaMethods),
                 redirectTo,
                 authRequestData,

@@ -1,4 +1,4 @@
-package de.adorsys.opba.db.domain.entity;
+package de.adorsys.opba.protocol.api.common;
 
 /**
  * The type of the consent that is supported by the bank (the widest one in permission terms).

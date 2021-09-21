@@ -1,6 +1,6 @@
 package de.adorsys.opba.db.domain.converter;
 
-import de.adorsys.opba.protocol.api.common.Approach;
+import de.adorsys.opba.protocol.api.common.SupportedConsentType;
 import org.apache.commons.lang3.StringUtils;
 
 import javax.persistence.AttributeConverter;
@@ -11,26 +11,26 @@ import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 @Converter
-public class ScaApproachConverter implements AttributeConverter<List<Approach>, String> {
+public class SupportedConsentTypeConverter implements AttributeConverter<List<SupportedConsentType>, String> {
     @Override
-    public String convertToDatabaseColumn(List<Approach> services) {
-        if (null == services) {
+    public String convertToDatabaseColumn(List<SupportedConsentType> types) {
+        if (null == types) {
             return null;
         }
 
-        return services.stream()
-                .map(Approach::name)
+        return types.stream()
+                .map(SupportedConsentType::name)
                 .collect(Collectors.joining(","));
     }
 
     @Override
-    public List<Approach> convertToEntityAttribute(String attribute) {
+    public List<SupportedConsentType> convertToEntityAttribute(String attribute) {
         if (null == attribute) {
             return Collections.emptyList();
         }
 
         return Stream.of(StringUtils.split(attribute, ","))
-                .map(Approach::valueOf)
+                .map(SupportedConsentType::valueOf)
                 .collect(Collectors.toList());
     }
 }

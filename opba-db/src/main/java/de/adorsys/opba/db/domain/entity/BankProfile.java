@@ -2,12 +2,14 @@ package de.adorsys.opba.db.domain.entity;
 
 import de.adorsys.opba.db.domain.converter.ResultContentTypeConverter;
 import de.adorsys.opba.db.domain.converter.ScaApproachConverter;
+import de.adorsys.opba.db.domain.converter.SupportedConsentTypeConverter;
 import de.adorsys.opba.db.domain.entity.helpers.UuidMapper;
 import de.adorsys.opba.db.domain.entity.sessions.ServiceSession;
 import de.adorsys.opba.protocol.api.common.Approach;
 import de.adorsys.opba.protocol.api.common.CurrentBankProfile;
 import de.adorsys.opba.protocol.api.common.ProtocolAction;
 import de.adorsys.opba.protocol.api.common.ResultContentType;
+import de.adorsys.opba.protocol.api.common.SupportedConsentType;
 import de.adorsys.opba.tppbankingapi.search.model.generated.BankProfileDescriptor;
 import de.adorsys.xs2a.adapter.api.model.Aspsp;
 import lombok.AllArgsConstructor;
@@ -83,8 +85,8 @@ public class BankProfile implements Serializable, CurrentBankProfile {
     private boolean isSandbox;
     private boolean active;
 
-    @Enumerated(EnumType.STRING)
-    private SupportedConsentType supportedConsentType;
+    @Convert(converter = SupportedConsentTypeConverter.class)
+    private List<SupportedConsentType> supportedConsentTypes;
 
     @Convert(converter = ResultContentTypeConverter.class)
     private ResultContentType contentTypeTransactions;
