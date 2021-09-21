@@ -244,6 +244,12 @@ components:
             - REDIRECT
             - EMBEDDED
             - DECOUPLED
+        supportedConsentType:
+          type: string
+          enum:
+            - DEDICATED_ALL
+            - GLOBAL_ALL
+            - GLOBAL_ACCOUNTS
         tryToUsePreferredApproach:
           type: boolean
         uniquePaymentPurpose:

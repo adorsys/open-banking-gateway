@@ -73,6 +73,7 @@ public class BankProfile implements Serializable, CurrentBankProfile {
 
     @Enumerated(EnumType.STRING)
     private Approach preferredApproach;
+
     private boolean tryToUsePreferredApproach;
     private boolean uniquePaymentPurpose;
     private boolean xs2aSkipConsentAuthorization;
@@ -81,6 +82,9 @@ public class BankProfile implements Serializable, CurrentBankProfile {
     private String protocolType;
     private boolean isSandbox;
     private boolean active;
+
+    @Enumerated(EnumType.STRING)
+    private SupportedConsentType supportedConsentType;
 
     @Convert(converter = ResultContentTypeConverter.class)
     private ResultContentType contentTypeTransactions;
