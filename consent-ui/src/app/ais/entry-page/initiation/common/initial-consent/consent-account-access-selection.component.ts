@@ -21,7 +21,6 @@ export class ConsentAccountAccessSelectionComponent implements OnInit, AfterCont
   @Input() accountAccesses: Access[];
   @Input() consentReviewPage: string;
   @Input() dedicatedConsentPage: string;
-  @Input() customConsentPage: string;
 
   public selectedAccess;
   public accountAccessForm: FormGroup;
@@ -88,9 +87,6 @@ export class ConsentAccountAccessSelectionComponent implements OnInit, AfterCont
     if (this.selectedAccess.value.id === AccountAccessLevel.FINE_GRAINED) {
       this.handleDedicatedAccess();
       return;
-    } else if (this.selectedAccess.value.id === AccountAccessLevel.CUSTOM) {
-      this.handleCustomAccess();
-      return;
     }
 
     this.handleGenericAccess();
@@ -123,8 +119,6 @@ export class ConsentAccountAccessSelectionComponent implements OnInit, AfterCont
     if (this.selectedAccess.value.id !== AccountAccessLevel.FINE_GRAINED) {
       if (this.selectedAccess.value.id === AccountAccessLevel.ALL_PSD2) {
         consentObj.consent.access.allPsd2 = AccountAccessLevel.ALL_ACCOUNTS;
-      } else if (this.selectedAccess.value.id !== AccountAccessLevel.CUSTOM){
-        consentObj.consent.access.availableAccounts = this.selectedAccess.value.id;
       }
     }
 
@@ -137,11 +131,6 @@ export class ConsentAccountAccessSelectionComponent implements OnInit, AfterCont
 
   private handleDedicatedAccess() {
     this.router.navigate([this.dedicatedConsentPage], { relativeTo: this.activatedRoute });
-    return;
-  }
-
-  private handleCustomAccess() {
-    this.router.navigate([this.customConsentPage], { relativeTo: this.activatedRoute });
     return;
   }
 

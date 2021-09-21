@@ -5,13 +5,13 @@
     <changeSet author="vbeex@adorsys.com.ua" id="2021-09-21-10">
         <comment>Added supported consent type</comment>
         <addColumn tableName="${table-prefix}bank_profile">
-            <column name="supported_consent_type" type="VARCHAR(64)"/>
+            <column name="supported_consent_types" type="VARCHAR(256)"/>
         </addColumn>
         <sql dbms="postgresql" stripComments="true">
-            UPDATE ${table-prefix}bank_profile SET supported_consent_type = 'DEDICATED' WHERE protocol_type = 'XS2A';
+            UPDATE ${table-prefix}bank_profile SET supported_consent_types = 'DEDICATED' WHERE protocol_type = 'XS2A';
         </sql>
         <sql dbms="postgresql" stripComments="true">
-            UPDATE ${table-prefix}bank_profile SET supported_consent_type = 'GLOBAL_ALL' WHERE protocol_type = 'XS2A' AND is_sandbox = true;
+            UPDATE ${table-prefix}bank_profile SET supported_consent_types = 'GLOBAL_ALL,DEDICATED' WHERE protocol_type = 'XS2A' AND is_sandbox = true;
         </sql>
     </changeSet>
 
