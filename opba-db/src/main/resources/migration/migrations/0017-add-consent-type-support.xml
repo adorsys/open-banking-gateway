@@ -8,10 +8,10 @@
             <column name="supported_consent_types" type="VARCHAR(256)"/>
         </addColumn>
         <sql dbms="postgresql" stripComments="true">
-            UPDATE ${table-prefix}bank_profile SET supported_consent_types = 'DEDICATED' WHERE protocol_type = 'XS2A';
+            UPDATE ${table-prefix}bank_profile SET supported_consent_types = 'DEDICATED_ALL' WHERE protocol_type = 'XS2A';
         </sql>
         <sql dbms="postgresql" stripComments="true">
-            UPDATE ${table-prefix}bank_profile SET supported_consent_types = 'GLOBAL_ALL,DEDICATED' WHERE protocol_type = 'XS2A' AND is_sandbox = true;
+            UPDATE ${table-prefix}bank_profile SET supported_consent_types = 'GLOBAL_ALL,DEDICATED_ALL' WHERE protocol_type = 'XS2A' AND is_sandbox = true;
         </sql>
     </changeSet>
 
