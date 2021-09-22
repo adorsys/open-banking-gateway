@@ -400,6 +400,15 @@ public class AccountInformationRequestCommon<SELF extends AccountInformationRequ
         return self();
     }
 
+    public SELF user_max_musterman_provided_initial_parameters_with_password_to_list_accounts_dedicated_accounts_consent() {
+        startInitialInternalConsentAuthorization(
+            AUTHORIZE_CONSENT_ENDPOINT,
+            readResource("restrecord/tpp-ui-input/params/max-musterman-dedicated-account-consent_with_password.json")
+        );
+        updateAvailableScas();
+        return self();
+    }
+
     public SELF user_provided_initial_parameters_to_list_accounts_all_accounts_consent(String user) {
         startInitialInternalConsentAuthorization(
                 AUTHORIZE_CONSENT_ENDPOINT,
@@ -546,6 +555,15 @@ public class AccountInformationRequestCommon<SELF extends AccountInformationRequ
                 AUTHORIZE_CONSENT_ENDPOINT,
                 selectedScaBody("PUSH_OTP:TAN2go"),
                 ACCEPTED
+        );
+        return self();
+    }
+
+    public SELF user_max_musterman_selected_sca_challenge_type_sms_otp_to_embedded_authorization() {
+        provideParametersToBankingProtocolWithBody(
+            AUTHORIZE_CONSENT_ENDPOINT,
+            selectedScaBody("SMS_OTP:mobile TAN"),
+            ACCEPTED
         );
         return self();
     }

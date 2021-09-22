@@ -143,7 +143,7 @@ public class Xs2aConsentInfo {
      * Is the PSU password present in the context.
      */
     public boolean isPasswordPresent(Xs2aContext ctx) {
-        return null != ctx.getPsuPassword() && !isOauthEmbeddedPreStepDone(ctx);
+        return null != ctx.getPsuPassword() && !isOauthEmbeddedPreStepDone(ctx) && !isAuthenticatedOnStart(ctx);
     }
 
     /**
@@ -151,6 +151,10 @@ public class Xs2aConsentInfo {
      */
     public boolean isOauthEmbeddedPreStepDone(Xs2aContext ctx) {
         return ctx.isEmbeddedPreAuthDone();
+    }
+
+    public boolean isAuthenticatedOnStart(Xs2aContext ctx) {
+        return ctx.isAuthenticatedOnStart();
     }
 
     /**

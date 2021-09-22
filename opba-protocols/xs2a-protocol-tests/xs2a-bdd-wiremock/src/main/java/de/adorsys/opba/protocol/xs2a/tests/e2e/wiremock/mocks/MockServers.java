@@ -45,6 +45,7 @@ public class MockServers<SELF extends MockServers<SELF>> extends CommonGivenStag
     public static final String DKB_BANK_ID = "335562a2-26e2-4105-b31e-08de285234e0";
     public static final String POSTBANK_BANK_ID = "01aa84f2-25c0-4e02-8065-c401657e3fb0";
     public static final String CONSORS_BANK_BANK_ID = "81cecc67-6d1b-4169-b67c-2de52b99a0cc";
+    public static final String VOLKS_BANK_ID = "be716ff6-d274-4b46-b69f-46da1a382fa6";
     public static final String SPARKASSE_BANK_ID = "03668d3e-c2a7-425a-b50a-f73347fbfb33";
     public static final String SANDBOX_BANK_ID = "adadadad-4000-0000-0000-b0b0b0b0b0b0";
     public static final String SANTANDER_BANK_ID = "afd7605a-0834-4f84-9a86-cfe468b3f336";
@@ -267,7 +268,14 @@ public class MockServers<SELF extends MockServers<SELF>> extends CommonGivenStag
         return self();
     }
 
-    public SELF embedded_mock_of_postbank_for_anton_brueckner_accounts_running() {
+    public SELF embedded_mock_of_volksbank_for_max_musterman_accounts_running() {
+        WireMockConfiguration config = WireMockConfiguration.options().dynamicPort()
+            .usingFilesUnderClasspath("mockedsandbox/restrecord/embedded/multi-sca/accounts/volksbank");
+        startWireMock(config, VOLKS_BANK_ID, defaultBankProfileConfigurer);
+        return self();
+    }
+
+    public SELF embedded_mock_of_postbank_for_max_musterman_accounts_running() {
         WireMockConfiguration config = WireMockConfiguration.options().dynamicPort()
                 .usingFilesUnderClasspath("mockedsandbox/restrecord/embedded/multi-sca/accounts/postbank/");
         startWireMock(config, POSTBANK_BANK_ID, it -> it.setUrl("http://localhost:" + sandbox.port() + "/{Service Group}/DE/Postbank"));

@@ -1,0 +1,37 @@
+{
+  "id" : "e1faf92a-c198-4e94-b949-eb217e76f3de",
+  "name" : "v1_consents_8117230618090020246psdde-bafin-911360co4960jj_status",
+  "request" : {
+    "urlPattern" : "/v1/consents/.+/status",
+    "method" : "GET",
+    "headers" : {
+      "X-Request-ID" : {
+        "matches" : ".+"
+      },
+      "Digest" : {
+        "matches" : ".+"
+      },
+      "Signature" : {
+        "matches" : ".+"
+      },
+      "TPP-Signature-Certificate" : {
+        "matches" : ".+"
+      }
+    }
+  },
+  "response" : {
+    "status" : 200,
+    "body" : "{\"consentStatus\":\"valid\"}",
+    "headers" : {
+      "Date" : "Tue, 08 Sep 2020 14:03:56 GMT",
+      "Server" : "Webserver",
+      "X-Request-ID" : "27579d7f-5e61-4e44-a5c9-aa0df358d08a",
+      "Content-Language" : "de",
+      "Content-Type" : "application/json;charset=UTF-8",
+      "Keep-Alive" : "timeout=15, max=96"
+    }
+  },
+  "uuid" : "e1faf92a-c198-4e94-b949-eb217e76f3de",
+  "persistent" : true,
+  "insertionIndex" : 16
+}

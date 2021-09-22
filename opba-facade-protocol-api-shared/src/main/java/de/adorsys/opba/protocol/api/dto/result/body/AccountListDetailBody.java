@@ -24,4 +24,5 @@ public class AccountListDetailBody {
     String bic;
     String linkedAccounts;
     List<Balance> balances;
+    String ownerName;
 }

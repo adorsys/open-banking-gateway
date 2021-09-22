@@ -1,0 +1,40 @@
+{
+  "id" : "732fcf37-e3b5-4f55-9741-93c993944539",
+  "name" : "v1_accounts",
+  "request" : {
+    "url" : "/v1/accounts?withBalance=false",
+    "method" : "GET",
+    "headers" : {
+      "X-Request-ID" : {
+        "matches" : ".+"
+      },
+      "Consent-ID" : {
+        "equalTo" : "8117230618090020246PSDDE-BAFIN-911360CO4960JJ"
+      },
+      "Digest" : {
+        "matches" : ".+"
+      },
+      "Signature" : {
+        "matches" : ".+"
+      },
+      "TPP-Signature-Certificate" : {
+        "matches" : ".+"
+      }
+    }
+  },
+  "response" : {
+    "status" : 200,
+    "body" : "{\"accounts\":[{\"resourceId\":\"oN7KTVuJSVotMvPPPavhVo\",\"iban\":\"DE38760700240320465700\",\"currency\":\"EUR\",\"ownerName\":\"max.musterman\"},{\"resourceId\":\"imuBy9AzEHJ0ZRRTWQKJtu\",\"iban\":\"DE18499999600000005101\",\"currency\":\"EUR\",\"ownerName\":\"Elisa Kehl\"},{\"resourceId\":\"imBBy9AzEHJ0ZRRTWQKJtv\",\"iban\":\"DE88499999600000005102\",\"currency\":\"EUR\",\"ownerName\":\"Company GmbH\"},{\"resourceId\":\"imzuy9AzEHJ0ZRRTWQKJtw\",\"iban\":\"DE61499999600000005103\",\"currency\":\"EUR\",\"ownerName\":\"Daniela Gerdesmeyer\"},{\"resourceId\":\"imwxy9AzEHJ0ZRRTWQKJtx\",\"iban\":\"DE34499999600000005104\",\"currency\":\"EUR\",\"ownerName\":\"Britta Schoen\"},{\"resourceId\":\"imtAy9AzEHJ0ZRRTWQKJty\",\"iban\":\"DE07499999600000005105\",\"currency\":\"EUR\",\"ownerName\":\"AcountOwnerNameLongerThan35DigitsWi\"},{\"resourceId\":\"imAAy9AzEHJ0ZRRTWQKJtz\",\"iban\":\"DE77499999600000005106\",\"currency\":\"EUR\",\"ownerName\":\"Janna Donhauser\"},{\"resourceId\":\"imvwy9AzEHJ0ZRRTWQKJtB\",\"iban\":\"DE23499999600000005108\",\"currency\":\"EUR\",\"ownerName\":\"Laura Olszewski\"},{\"resourceId\":\"imCwy9AzEHJ0ZRRTWQKJtC\",\"iban\":\"DE93499999600000005109\",\"currency\":\"EUR\",\"ownerName\":\"Fabienne Roppert\"},{\"resourceId\":\"imwCy9AzEHJ0ZRRTWQKJuu\",\"iban\":\"DE39499999600000005111\",\"currency\":\"EUR\",\"ownerName\":\"Fabienne Roppert\"},{\"resourceId\":\"imyyy9AzEHJ0ZRRTWQKJux\",\"iban\":\"DE55499999600000005114\",\"currency\":\"EUR\",\"ownerName\":\"Fabienne Roppert\"},{\"resourceId\":\"imvBy9AzEHJ0ZRRTWQKJuy\",\"iban\":\"DE28499999600000005115\",\"currency\":\"EUR\",\"ownerName\":\"Fabienne Roppert\"},{\"resourceId\":\"imCBy9AzEHJ0ZRRTWQKJuz\",\"iban\":\"DE98499999600000005116\",\"currency\":\"EUR\",\"ownerName\":\"Fabienne Roppert\"},{\"resourceId\":\"imAuy9AzEHJ0ZRRTWQKJuA\",\"iban\":\"DE71499999600000005117\",\"currency\":\"EUR\",\"ownerName\":\"Fabienne Roppert\"},{\"resourceId\":\"imzty9AzEHJ0ZRRTWQKJvu\",\"iban\":\"DE60499999600000005121\",\"currency\":\"EUR\",\"ownerName\":\"Fabienne Roppert\"}]}",
+    "headers" : {
+      "Date" : "Tue, 08 Sep 2020 14:04:02 GMT",
+      "Server" : "Webserver",
+      "X-Request-ID" : "258d5985-f018-44bc-b567-d366cac4a69b",
+      "Content-Language" : "de",
+      "Content-Type" : "application/json;charset=UTF-8",
+      "Keep-Alive" : "timeout=15, max=95"
+    }
+  },
+  "uuid" : "732fcf37-e3b5-4f55-9741-93c993944539",
+  "persistent" : true,
+  "insertionIndex" : 17
+}

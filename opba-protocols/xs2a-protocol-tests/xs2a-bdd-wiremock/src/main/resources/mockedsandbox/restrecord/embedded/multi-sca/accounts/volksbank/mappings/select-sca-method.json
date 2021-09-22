@@ -1,0 +1,49 @@
+{
+  "id" : "f277c36d-9405-4917-902b-18f4bcd64481",
+  "name" : "v1_consents_8117230618090020246psdde-bafin-911360co4960jj_authorisations_0942330618090020247psdde-bafin-911360au4960jj",
+  "request" : {
+    "urlPattern" : "/v1/consents/.+/authorisations/.+",
+    "method" : "PUT",
+    "headers" : {
+      "X-Request-ID" : {
+        "matches" : ".+"
+      },
+      "Digest" : {
+        "matches" : ".+"
+      },
+      "PSU-ID" : {
+        "equalTo" : "max.musterman"
+      },
+      "Signature" : {
+        "matches" : ".+"
+      },
+      "TPP-Signature-Certificate" : {
+        "matches" : ".+"
+      },
+      "Content-Type" : {
+        "equalTo" : "application/json; charset=UTF-8"
+      }
+    },
+    "bodyPatterns" : [ {
+      "equalToJson" : "{\"authenticationMethodId\":\"942\"}",
+      "ignoreArrayOrder" : true,
+      "ignoreExtraElements" : true
+    } ]
+  },
+  "response" : {
+    "status" : 200,
+    "body" : "{\"challengeData\":{\"additionalInformation\":\"Die mobileTAN zu diesem Auftrag wird als SMS an Ihre Mobil-Telefonnummer gesendet, die bei Ihrer Bank registriert ist.\"},\"_links\":{\"authoriseTransaction\":{\"href\":\"/v1/consents/8117230618090020246PSDDE-BAFIN-911360CO4960JJ/authorisations/0942330618090020247PSDDE-BAFIN-911360AU4960JJ\"}},\"scaStatus\":\"started\"}",
+    "headers" : {
+      "Date" : "Tue, 08 Sep 2020 14:03:39 GMT",
+      "Server" : "Webserver",
+      "X-Request-ID" : "fe40221f-f3ed-4aae-9e17-7d6dd80b9247",
+      "ASPSP-SCA-Approach" : "EMBEDDED",
+      "Content-Language" : "de",
+      "Content-Type" : "application/json;charset=UTF-8",
+      "Keep-Alive" : "timeout=15, max=98"
+    }
+  },
+  "uuid" : "f277c36d-9405-4917-902b-18f4bcd64481",
+  "persistent" : true,
+  "insertionIndex" : 14
+}

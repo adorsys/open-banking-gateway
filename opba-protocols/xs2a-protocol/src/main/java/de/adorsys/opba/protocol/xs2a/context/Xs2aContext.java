@@ -214,6 +214,8 @@ public class Xs2aContext extends BaseContext {
      */
     private boolean decoupledScaFinished;
 
+    private boolean authenticatedOnStart;
+
     @JsonIgnore
     public String getPsuPassword() {
         TransientDataEntry entry = this.transientStorage().get();

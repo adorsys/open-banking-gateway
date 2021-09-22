@@ -15,9 +15,12 @@ import de.adorsys.opba.protocol.xs2a.service.xs2a.validation.Xs2aValidator;
 import de.adorsys.opba.protocol.xs2a.util.logresolver.Xs2aLogResolver;
 import de.adorsys.xs2a.adapter.api.AccountInformationService;
 import de.adorsys.xs2a.adapter.api.Response;
+import de.adorsys.xs2a.adapter.api.model.PsuData;
 import de.adorsys.xs2a.adapter.api.model.ScaStatus;
 import de.adorsys.xs2a.adapter.api.model.StartScaprocessResponse;
+import de.adorsys.xs2a.adapter.api.model.UpdatePsuAuthentication;
 import lombok.RequiredArgsConstructor;
+import org.apache.commons.lang3.StringUtils;
 import org.flowable.engine.delegate.DelegateExecution;
 import org.springframework.stereotype.Service;
 
@@ -60,17 +63,17 @@ public class StartConsentAuthorization extends ValidatedExecution<Xs2aContext> {
 
         logResolver.log("startConsentAuthorisation with parameters: {}", params.getPath(), params.getHeaders());
 
-        Response<StartScaprocessResponse> scaStart = ais.startConsentAuthorisation(
-                params.getPath().getConsentId(),
-                params.getHeaders().toHeaders(),
-                params.getPath().toParameters()
-        );
+        Response<StartScaprocessResponse> scaStart = getScaStart(context, params);
 
         logResolver.log("startConsentAuthorisation response: {}", scaStart);
 
         String aspspSelectedApproach = scaStart.getHeaders().getHeader(ASPSP_SCA_APPROACH);
         context.setAspspScaApproach(null == aspspSelectedApproach ? config.getPreferredApproach().name() : aspspSelectedApproach);
         context.setAuthorizationId(scaStart.getBody().getAuthorisationId());
+        if (context.getAuthorizationId() == null) {
+            String selectAuthenticationMethod = scaStart.getBody().getLinks().get("selectAuthenticationMethod").getHref();
+            context.setAuthorizationId(StringUtils.substringAfterLast(selectAuthenticationMethod, "authorisations/"));
+        }
         context.setStartScaProcessResponse(scaStart.getBody());
 
         ScaStatus scaStatus = scaStart.getBody().getScaStatus();
@@ -85,6 +88,28 @@ public class StartConsentAuthorization extends ValidatedExecution<Xs2aContext> {
         );
 
         execution.setVariable(CONTEXT, context);
+    }
+
+    private Response<StartScaprocessResponse> getScaStart(Xs2aContext context, ValidatedPathHeaders<Xs2aInitialConsentParameters, Xs2aStandardHeaders> params) {
+        if (context.getPsuPassword() != null) {
+            UpdatePsuAuthentication updatePsuAuthentication = new UpdatePsuAuthentication();
+            PsuData psuData = new PsuData();
+            psuData.setPassword(context.getPsuPassword());
+            updatePsuAuthentication.setPsuData(psuData);
+            context.setAuthenticatedOnStart(true);
+            return ais.startConsentAuthorisation(
+                params.getPath().getConsentId(),
+                params.getHeaders().toHeaders(),
+                params.getPath().toParameters(),
+                updatePsuAuthentication
+            );
+        } else {
+            return ais.startConsentAuthorisation(
+                params.getPath().getConsentId(),
+                params.getHeaders().toHeaders(),
+                params.getPath().toParameters()
+            );
+        }
     }
 
     private void setScaAvailableMethodsIfCanBeChosen(Response<StartScaprocessResponse> authResponse, Xs2aContext ctx) {

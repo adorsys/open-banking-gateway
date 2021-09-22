@@ -1,0 +1,39 @@
+{
+  "scaStatus": "psuAuthenticated",
+  "scaMethods": [
+    {
+      "authenticationType": "CHIP_OTP",
+      "authenticationMethodId": "962",
+      "name": "SmartTAN plus HHD 1.4"
+    }, {
+      "authenticationType": "CHIP_OTP",
+      "authenticationMethodId": "952",
+      "name": "SmartTAN optic"
+    }, {
+      "authenticationType": "CHIP_OTP",
+      "authenticationMethodId": "972",
+      "name": "SmartTAN optic/USB HHD 1.4"
+    }, {
+      "authenticationType": "PHOTO_OTP",
+      "authenticationMethodId": "982",
+      "name": "Smart-TAN photo"
+    }, {
+      "authenticationType": "CHIP_OTP",
+      "authenticationMethodId": "932",
+      "name": "SmartTAN plus"
+    }, {
+      "authenticationType": "PUSH_OTP",
+      "authenticationMethodId": "944",
+      "name": "SecureSIGN"
+    }, {
+      "authenticationType": "SMS_OTP",
+      "authenticationMethodId": "942",
+      "name": "mobile TAN"
+    }
+  ],
+  "_links": {
+    "selectAuthenticationMethod": {
+      "href": "/v1/consents/8117230618090020246PSDDE-BAFIN-911360CO4960JJ/authorisations/0942330618090020247PSDDE-BAFIN-911360AU4960JJ"
+    }
+  }
+}
