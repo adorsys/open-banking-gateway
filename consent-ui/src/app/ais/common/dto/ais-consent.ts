@@ -1,3 +1,6 @@
+import {ConsentAuth} from '../../../api';
+import SupportedType = ConsentAuth.SupportedConsentTypesEnum;
+
 export class AisConsentToGrant {
   level: AccountAccessLevel;
   consent: AisConsent;
@@ -38,6 +41,13 @@ export enum AccountAccessLevel {
   ALL_ACCOUNTS = 'ALL_ACCOUNTS',
   ALL_PSD2 = 'ALL_PSD2',
   ALL_ACCOUNTS_WITH_BALANCES = 'ALL_ACCOUNTS_WITH_BALANCES',
-  FINE_GRAINED = 'FINE_GRAINED',
-  CUSTOM = 'CUSTOM_CONSENT'
+  FINE_GRAINED = 'FINE_GRAINED'
 }
+
+
+export const AccountAccessLevelAspspConsentSupport = new Map<AccountAccessLevel, Set<SupportedType>>([
+  [AccountAccessLevel.ALL_ACCOUNTS, new Set([SupportedType.GLOBALACCOUNTS, SupportedType.GLOBALALL])],
+  [AccountAccessLevel.ALL_PSD2, new Set([SupportedType.GLOBALALL])],
+  [AccountAccessLevel.ALL_ACCOUNTS_WITH_BALANCES, new Set([SupportedType.GLOBALALL])],
+  [AccountAccessLevel.FINE_GRAINED, new Set([SupportedType.DEDICATEDALL, SupportedType.GLOBALALL, SupportedType.GLOBALACCOUNTS])]
+]);

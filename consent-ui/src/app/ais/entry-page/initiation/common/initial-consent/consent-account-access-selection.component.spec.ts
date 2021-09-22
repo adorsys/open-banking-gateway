@@ -41,7 +41,8 @@ describe('ConsentAccountAccessSelectionComponent', () => {
             getConsentObject: () => new AisConsentToGrant(),
             getConsentState: () => new AuthConsentState([]),
             getFintechName: (): string => StubUtil.FINTECH_NAME,
-            getBankName: (): string => StubUtil.ASPSP_NAME
+            getBankName: (): string => StubUtil.ASPSP_NAME,
+            getConsentTypesSupported: () => []
           }
         }
       ],

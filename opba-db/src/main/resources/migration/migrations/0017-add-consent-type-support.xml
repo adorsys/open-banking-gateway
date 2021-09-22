@@ -1,0 +1,18 @@
+<databaseChangeLog logicalFilePath="db.changelog-1.0.xml" xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+                   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                   xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.8.xsd">
+
+    <changeSet author="vbeex@adorsys.com.ua" id="2021-09-21-10">
+        <comment>Added supported consent type</comment>
+        <addColumn tableName="${table-prefix}bank_profile">
+            <column name="supported_consent_types" type="VARCHAR(256)"/>
+        </addColumn>
+        <sql dbms="postgresql" stripComments="true">
+            UPDATE ${table-prefix}bank_profile SET supported_consent_types = 'DEDICATED_ALL' WHERE protocol_type = 'XS2A';
+        </sql>
+        <sql dbms="postgresql" stripComments="true">
+            UPDATE ${table-prefix}bank_profile SET supported_consent_types = 'GLOBAL_ALL,DEDICATED_ALL' WHERE protocol_type = 'XS2A' AND is_sandbox = true;
+        </sql>
+    </changeSet>
+
+</databaseChangeLog>

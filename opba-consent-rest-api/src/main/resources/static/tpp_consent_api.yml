@@ -757,6 +757,14 @@ components:
           type: array
           items:
             $ref: "#/components/schemas/AccountDetails"
+        supportedConsentTypes:
+          type: array
+          items:
+            type: string
+            enum:
+              - DEDICATED_ALL
+              - GLOBAL_ALL
+              - GLOBAL_ACCOUNTS
         authMessageTemplate:
           type: string
         authenticationMethodId:
