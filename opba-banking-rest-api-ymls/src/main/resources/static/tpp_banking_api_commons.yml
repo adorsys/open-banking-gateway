@@ -219,8 +219,8 @@ components:
           or credentials to re-use in 3rd party-service
         example: { "username": "jane.doe", "password": "secret", "createUser": true, "email": "foo@example.com", "phone": "+1234567", "isAutoUpdateEnabled": true }
 
-    Compute-Psu-Ip-Address:
-      name: Compute-Psu-Ip-Address
+    Compute-PSU-IP-Address:
+      name: Compute-PSU-IP-Address
       in: header
       required: false
       description: |
@@ -230,10 +230,9 @@ components:
       example: "true"
       schema:
         type: boolean
-        default: "true"
 
-    Psu-Ip-Address:
-      name: Psu-Ip-Address
+    PSU-IP-Address:
+      name: PSU-IP-Address
       in: header
       required: false
       description: |
