@@ -145,6 +145,8 @@ export class ConsentAccountAccessSelectionComponent implements OnInit, AfterCont
     if (this.selectedAccess.value.id !== AccountAccessLevel.FINE_GRAINED) {
       if (this.selectedAccess.value.id === AccountAccessLevel.ALL_PSD2) {
         consentObj.consent.access.allPsd2 = AccountAccessLevel.ALL_ACCOUNTS;
+      } else {
+        consentObj.consent.access.availableAccounts = this.selectedAccess.value.id;
       }
     }
 
