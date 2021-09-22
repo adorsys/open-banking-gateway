@@ -153,13 +153,11 @@ class WiremockConsentE2EXs2aProtocolTest extends SpringScenarioTest<MockServers,
                 .open_banking_can_read_anton_brueckner_account_data_using_consent_bound_to_service_session();
     }
 
-    @ParameterizedTest
-    @EnumSource(Approach.class)
-    void testConsorsBankAccountsListWithConsentUsingRedirectWithTppRedirectPreferredTrue(Approach expectedApproach) {
+    @Test
+    void testConsorsBankAccountsListWithConsentUsingRedirectWithTppRedirectPreferredTrue() {
         given()
                 .redirect_mock_of_consorsbank_for_anton_brueckner_accounts_running()
-                .set_tpp_redirect_preferred_true()
-                .preferred_sca_approach_selected_for_all_banks_in_opba(expectedApproach)
+                .preferred_sca_approach_selected_for_all_banks_in_opba(Approach.REDIRECT)
                 .rest_assured_points_to_opba_server_with_fintech_signer_on_banking_api()
                 .user_registered_in_opba_with_credentials(OPBA_LOGIN, OPBA_PASSWORD);
 
