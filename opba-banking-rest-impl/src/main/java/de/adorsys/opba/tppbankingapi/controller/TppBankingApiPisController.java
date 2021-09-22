@@ -44,7 +44,9 @@ public class TppBankingApiPisController implements TppBankingApiSinglePaymentPis
                                              String xRequestSignature,
                                              String fintechID,
                                              UUID bankProfileID,
-                                             Boolean xPsuAuthenticationRequired
+                                             Boolean xPsuAuthenticationRequired,
+                                             Boolean computePsuIpAddress,
+                                             String psuIpAddress
     ) {
         return payments.execute(
                 InitiateSinglePaymentRequest.builder()

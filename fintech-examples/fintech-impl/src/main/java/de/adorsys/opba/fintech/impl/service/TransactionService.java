@@ -27,6 +27,7 @@ import java.util.UUID;
 import static de.adorsys.opba.fintech.impl.tppclients.Consts.COMPUTE_FINTECH_ID;
 import static de.adorsys.opba.fintech.impl.tppclients.Consts.COMPUTE_X_REQUEST_SIGNATURE;
 import static de.adorsys.opba.fintech.impl.tppclients.Consts.COMPUTE_X_TIMESTAMP_UTC;
+import static de.adorsys.opba.fintech.impl.tppclients.Consts.HEADER_COMPUTE_PSU_IP_ADDRESS;
 
 
 @Service
@@ -76,6 +77,8 @@ public class TransactionService {
             psuAuthenticationRequired,
             optionalConsent.map(ConsentEntity::getTppServiceSessionId).orElse(null),
             createConsentIfNone,
+            null,
+            HEADER_COMPUTE_PSU_IP_ADDRESS,
             null,
             dateFrom,
             dateTo,

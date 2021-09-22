@@ -28,6 +28,7 @@ import java.util.UUID;
 import static de.adorsys.opba.fintech.impl.tppclients.Consts.COMPUTE_FINTECH_ID;
 import static de.adorsys.opba.fintech.impl.tppclients.Consts.COMPUTE_X_REQUEST_SIGNATURE;
 import static de.adorsys.opba.fintech.impl.tppclients.Consts.COMPUTE_X_TIMESTAMP_UTC;
+import static de.adorsys.opba.fintech.impl.tppclients.Consts.HEADER_COMPUTE_PSU_IP_ADDRESS;
 
 
 @Service
@@ -121,6 +122,8 @@ public class AccountService {
             serviceSessionID,
             createConsentIfNone,
             null,
+            HEADER_COMPUTE_PSU_IP_ADDRESS,
+            null,
             withBalance,
             online);
     }
@@ -144,13 +147,13 @@ public class AccountService {
             serviceSessionID,
             createConsentIfNone,
             null,
+            HEADER_COMPUTE_PSU_IP_ADDRESS,
             null,
             null,
             null,
             null,
             null,
-            null,
-            null
+            null, null, null
         );
         if (response.getStatusCode() != HttpStatus.OK) {
             return response;

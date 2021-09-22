@@ -59,7 +59,7 @@ public class FinTechListTransactionsTest extends FinTechListAccountsTest {
 
     private OngoingStubbing<ResponseEntity<TransactionsResponse>> mockTransactions() {
         return when(tppAisClientFeignMock.getTransactions(any(), any(), any(), any(), any(), any(), any(), any(), any(),
-                any(), any(), any(), any(), any(), any(), any(), any(), any(), any(), any(), any(), any(), any()));
+                any(), any(), any(), any(), any(), any(), any(), any(), any(), any(), any(), any(), any(), any(), any(), any()));
     }
 
     @SneakyThrows
