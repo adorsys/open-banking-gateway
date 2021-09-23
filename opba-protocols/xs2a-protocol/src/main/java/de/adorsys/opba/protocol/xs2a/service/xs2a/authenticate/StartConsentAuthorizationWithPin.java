@@ -32,7 +32,7 @@ import static de.adorsys.opba.protocol.xs2a.constant.GlobalConst.CONTEXT;
 import static de.adorsys.xs2a.adapter.api.ResponseHeaders.ASPSP_SCA_APPROACH;
 
 /**
- * Initiates the consent authorization. Optionally may provide preferred ASPSP approach.
+ * Initiates the consent authorization with pin. Optionally may provide preferred ASPSP approach.
  */
 @Slf4j
 @Service("xs2aStartConsentAuthorizationWithPin")

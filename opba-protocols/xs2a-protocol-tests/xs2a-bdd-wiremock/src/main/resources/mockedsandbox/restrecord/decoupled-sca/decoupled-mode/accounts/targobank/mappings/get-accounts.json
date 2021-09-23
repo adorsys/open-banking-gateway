@@ -1,7 +1,7 @@
 {
   "scenarioName": "AccountsListUsingTargoBankDecoupled",
   "newScenarioState": "GetAccount",
-  "requiredScenarioState": "ScaFinalised",
+  "requiredScenarioState": "GetScaFinalisedStatus",
   "request" : {
     "url" : "/v1/accounts",
     "method" : "GET",

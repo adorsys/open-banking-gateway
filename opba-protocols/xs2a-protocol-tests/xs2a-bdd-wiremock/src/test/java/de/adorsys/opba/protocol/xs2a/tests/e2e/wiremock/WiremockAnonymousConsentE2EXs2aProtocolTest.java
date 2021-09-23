@@ -247,7 +247,7 @@ class WiremockAnonymousConsentE2EXs2aProtocolTest extends SpringScenarioTest<Moc
     }
 
     @Test
-    void testTargoBankAccountListWithConsentUsingDecoupled() {
+    void testTargoBankAccountListWithConsentUsingDecoupledWhenEmbeddedAndDecoupledSca() {
         given()
                 .decoupled_embedded_approach_sca_decoupled_start_mock_of_targoBank_for_max_musterman_accounts_running()
                 .set_default_preferred_approach()
