@@ -26,6 +26,7 @@ public class Xs2aUpdateToRealModeBpmnContext implements JavaDelegate {
 
                     ctx.setMode(ContextMode.REAL_CALLS);
                     ctx.setConsentId(null);
+                    ctx.setPsuPassword(null);
 
                     logResolver.log("done execution ({}) with context ({})", execution, ctx);
                 }

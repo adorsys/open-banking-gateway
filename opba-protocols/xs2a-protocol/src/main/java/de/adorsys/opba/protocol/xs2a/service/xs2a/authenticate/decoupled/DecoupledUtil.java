@@ -25,15 +25,15 @@ public class DecoupledUtil {
                 }
         );
 
-        AuthenticationObject scaSelected = context.getScaSelected();
+        Optional<AuthenticationObject> scaSelectedOp = Optional.ofNullable(context.getScaSelected());
         eventPublisher.publishEvent(
                 new ProcessResponse(
                         execution.getRootProcessInstanceId(),
                         execution.getId(),
                         UpdateAuthBody.builder()
                                 .scaStatus(scaStatus.name())
-                                .scaAuthenticationType(Optional.ofNullable(scaSelected.getAuthenticationType()).map(AuthenticationType::name).orElse(null))
-                                .scaExplanation(scaSelected.getExplanation())
+                                .scaAuthenticationType(scaSelectedOp.map(AuthenticationObject::getAuthenticationType).map(AuthenticationType::name).orElse(null))
+                                .scaExplanation(scaSelectedOp.map(AuthenticationObject::getExplanation).orElse(null))
                                 .build()
                 )
         );

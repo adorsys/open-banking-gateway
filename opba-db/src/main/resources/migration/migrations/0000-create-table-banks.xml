@@ -47,6 +47,13 @@
             <column name="xs2a_skip_consent_authorization" type="BOOLEAN" defaultValue="false">
                 <constraints nullable="false"/>
             </column>
+            <column name="xs2a_skip_consent_psu_authentication" type="BOOLEAN" defaultValue="false">
+                <constraints nullable="false"/>
+            </column>
+            <column name="xs2a_start_consent_authorization_with_pin" type="BOOLEAN" defaultValue="false">
+                <constraints nullable="false"/>
+            </column>
+
             <column name="unique_payment_purpose" type="BOOLEAN" defaultValue="false">
                 <constraints nullable="false"/>
             </column>

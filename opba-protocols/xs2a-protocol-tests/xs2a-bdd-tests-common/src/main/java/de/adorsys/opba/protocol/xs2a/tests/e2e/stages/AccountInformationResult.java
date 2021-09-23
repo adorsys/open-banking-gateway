@@ -161,29 +161,29 @@ public class AccountInformationResult<SELF extends AccountInformationResult<SELF
 
     private void open_banking_can_read_anton_brueckner_account_data_using_consent_bound_to_service_session_and_bank_profile_id(boolean validateResourceId, String bankProfileId) {
         ExtractableResponse<Response> response = withAccountsHeaders(ANTON_BRUECKNER, bankProfileId)
-                     .header(SERVICE_SESSION_ID, serviceSessionId)
+                .header(SERVICE_SESSION_ID, serviceSessionId)
                 .when()
-                     .get(AIS_ACCOUNTS_ENDPOINT)
+                .get(AIS_ACCOUNTS_ENDPOINT)
                 .then()
-                     .statusCode(HttpStatus.OK.value())
-                     .body("accounts[0].iban", equalTo(ANTON_BRUECKNER_IBAN))
-                     .body("accounts[0].resourceId", validateResourceId ? equalTo("cmD4EYZeTkkhxRuIV1diKA") : instanceOf(String.class))
-                     .body("accounts[0].currency", equalTo("EUR"))
-                     .body("accounts[0].name", equalTo("anton.brueckner"))
-                     .body("accounts", hasSize(1))
+                .statusCode(HttpStatus.OK.value())
+                .body("accounts[0].iban", equalTo(ANTON_BRUECKNER_IBAN))
+                .body("accounts[0].resourceId", validateResourceId ? equalTo("cmD4EYZeTkkhxRuIV1diKA") : instanceOf(String.class))
+                .body("accounts[0].currency", equalTo("EUR"))
+                .body("accounts[0].name", equalTo("anton.brueckner"))
+                .body("accounts", hasSize(1))
                 .extract();
 
         this.responseContent = response.body().asString();
     }
 
     public void open_banking_can_not_read_anton_brueckner_account_data_using_consent_bound_to_service_session_and_bank_profile_id() {
-                withAccountsHeaders(ANTON_BRUECKNER, SANDBOX_BANK_PROFILE_ID)
-                     .header(SERVICE_SESSION_ID, serviceSessionId)
+        withAccountsHeaders(ANTON_BRUECKNER, SANDBOX_BANK_PROFILE_ID)
+                .header(SERVICE_SESSION_ID, serviceSessionId)
                 .when()
-                     .get(AIS_ACCOUNTS_ENDPOINT)
+                .get(AIS_ACCOUNTS_ENDPOINT)
                 .then()
-                     .statusCode(HttpStatus.INTERNAL_SERVER_ERROR.value())
-                     .body("message", equalTo("No bank profile for bank: " + SANDBOX_BANK_PROFILE_ID))
+                .statusCode(HttpStatus.INTERNAL_SERVER_ERROR.value())
+                .body("message", equalTo("No bank profile for bank: " + SANDBOX_BANK_PROFILE_ID))
                 .extract();
     }
 
@@ -192,16 +192,16 @@ public class AccountInformationResult<SELF extends AccountInformationResult<SELF
             String user, boolean validateResourceId
     ) {
         ExtractableResponse<Response> response = withAccountsHeaders(user)
-                     .header(SERVICE_SESSION_ID, serviceSessionId)
+                .header(SERVICE_SESSION_ID, serviceSessionId)
                 .when()
-                     .get(AIS_ACCOUNTS_ENDPOINT)
+                .get(AIS_ACCOUNTS_ENDPOINT)
                 .then()
-                     .statusCode(HttpStatus.OK.value())
-                     .body("accounts[0].iban", equalTo(iban))
-                     .body("accounts[0].resourceId", validateResourceId ? equalTo(accountResourceId) : instanceOf(String.class))
-                     .body("accounts[0].currency", equalTo("EUR"))
-                     .body("accounts[0].name", equalTo(user))
-                     .body("accounts", hasSize(1))
+                .statusCode(HttpStatus.OK.value())
+                .body("accounts[0].iban", equalTo(iban))
+                .body("accounts[0].resourceId", validateResourceId ? equalTo(accountResourceId) : instanceOf(String.class))
+                .body("accounts[0].currency", equalTo("EUR"))
+                .body("accounts[0].name", equalTo(user))
+                .body("accounts", hasSize(1))
                 .extract();
 
         this.responseContent = response.body().asString();
@@ -211,6 +211,11 @@ public class AccountInformationResult<SELF extends AccountInformationResult<SELF
     @SneakyThrows
     public SELF open_banking_can_read_max_musterman_account_data_using_consent_bound_to_service_session() {
         return open_banking_can_read_max_musterman_account_data_using_consent_bound_to_service_session(true);
+    }
+
+    @SneakyThrows
+    public SELF open_banking_can_read_max_musterman_account_data_using_consent_bound_to_service_session(String bankProfileId) {
+        return open_banking_can_read_max_musterman_account_data_using_consent_bound_to_service_session(true, 0, true, bankProfileId);
     }
 
     @SneakyThrows
@@ -232,17 +237,17 @@ public class AccountInformationResult<SELF extends AccountInformationResult<SELF
             boolean validateResourceId, int expectedBalances, boolean online, String bankId
     ) {
         ValidatableResponse body = withAccountsHeaders(ANTON_BRUECKNER, bankId)
-                     .header(SERVICE_SESSION_ID, serviceSessionId)
+                .header(SERVICE_SESSION_ID, serviceSessionId)
                 .when()
-                     .queryParam("online", online)
-                     .get(AIS_ACCOUNTS_ENDPOINT)
+                .queryParam("online", online)
+                .get(AIS_ACCOUNTS_ENDPOINT)
                 .then()
-                    .statusCode(HttpStatus.OK.value())
-                    .body("accounts[0].iban", equalTo(MAX_MUSTERMAN_IBAN))
-                    .body("accounts[0].resourceId", validateResourceId ? equalTo("oN7KTVuJSVotMvPPPavhVo") : instanceOf(String.class))
-                    .body("accounts[0].currency", equalTo("EUR"))
-                    .body("accounts[0].name", equalTo("max.musterman"))
-                    .body("accounts", hasSize(1));
+                .statusCode(HttpStatus.OK.value())
+                .body("accounts[0].iban", equalTo(MAX_MUSTERMAN_IBAN))
+                .body("accounts[0].resourceId", validateResourceId ? equalTo("oN7KTVuJSVotMvPPPavhVo") : instanceOf(String.class))
+                .body("accounts[0].currency", equalTo("EUR"))
+                .body("accounts[0].name", equalTo("max.musterman"))
+                .body("accounts", hasSize(1));
         if (expectedBalances > 0) {
             body.body("accounts[0].balances", hasSize(expectedBalances));
         }
@@ -328,31 +333,31 @@ public class AccountInformationResult<SELF extends AccountInformationResult<SELF
             String psuId, String bankProfileId, String resourceId, LocalDate dateFrom, LocalDate dateTo, String bookingStatus
     ) {
         return withTransactionsHeaders(psuId, bankProfileId)
-                    .header(SERVICE_SESSION_ID, serviceSessionId)
-                    .queryParam("dateFrom", dateFrom.format(ISO_DATE))
-                    .queryParam("dateTo", dateTo.format(ISO_DATE))
-                    .queryParam("bookingStatus", bookingStatus)
-                    .queryParam(ONLINE, false)
+                .header(SERVICE_SESSION_ID, serviceSessionId)
+                .queryParam("dateFrom", dateFrom.format(ISO_DATE))
+                .queryParam("dateTo", dateTo.format(ISO_DATE))
+                .queryParam("bookingStatus", bookingStatus)
+                .queryParam(ONLINE, false)
                 .when()
-                    .get(AIS_TRANSACTIONS_ENDPOINT, resourceId)
+                .get(AIS_TRANSACTIONS_ENDPOINT, resourceId)
                 .then()
-                    .statusCode(HttpStatus.OK.value())
-                    .extract();
+                .statusCode(HttpStatus.OK.value())
+                .extract();
     }
 
     public SELF open_banking_can_read_anton_brueckner_transactions_data_using_consent_bound_to_service_session(
             String resourceId, LocalDate dateFrom, LocalDate dateTo, String bookingStatus
     ) {
         withTransactionsHeaders(ANTON_BRUECKNER)
-                    .header(SERVICE_SESSION_ID, serviceSessionId)
-                    .queryParam("dateFrom", dateFrom.format(ISO_DATE))
-                    .queryParam("dateTo", dateTo.format(ISO_DATE))
-                    .queryParam("bookingStatus", bookingStatus)
+                .header(SERVICE_SESSION_ID, serviceSessionId)
+                .queryParam("dateFrom", dateFrom.format(ISO_DATE))
+                .queryParam("dateTo", dateTo.format(ISO_DATE))
+                .queryParam("bookingStatus", bookingStatus)
                 .when()
-                    .get(AIS_TRANSACTIONS_ENDPOINT, resourceId)
+                .get(AIS_TRANSACTIONS_ENDPOINT, resourceId)
                 .then()
-                    .statusCode(HttpStatus.OK.value())
-                    .body("transactions.booked.transactionId",
+                .statusCode(HttpStatus.OK.value())
+                .body("transactions.booked.transactionId",
                         containsInAnyOrder(
                                 "rnvGvu2TR2Yl99bAoM_skY",
                                 "1Lag4mgPRy4kLuz1rRifJ4",
@@ -382,17 +387,17 @@ public class AccountInformationResult<SELF extends AccountInformationResult<SELF
             String resourceId, LocalDate dateFrom, LocalDate dateTo, String bookingStatus, boolean online
     ) {
         withTransactionsHeaders(MAX_MUSTERMAN)
-                    .header(SERVICE_SESSION_ID, serviceSessionId)
-                    .queryParam("dateFrom", dateFrom.format(ISO_DATE))
-                    .queryParam("dateTo", dateTo.format(ISO_DATE))
-                    .queryParam("bookingStatus", bookingStatus)
-                    .queryParam("online", online)
+                .header(SERVICE_SESSION_ID, serviceSessionId)
+                .queryParam("dateFrom", dateFrom.format(ISO_DATE))
+                .queryParam("dateTo", dateTo.format(ISO_DATE))
+                .queryParam("bookingStatus", bookingStatus)
+                .queryParam("online", online)
                 .when()
-                    .get(AIS_TRANSACTIONS_ENDPOINT, resourceId)
+                .get(AIS_TRANSACTIONS_ENDPOINT, resourceId)
                 .then()
-                    .statusCode(HttpStatus.OK.value())
-                    .body("transactions.booked.transactionId",
-                         containsInAnyOrder(
+                .statusCode(HttpStatus.OK.value())
+                .body("transactions.booked.transactionId",
+                        containsInAnyOrder(
                                 "VHF5-8R1RCcskezln6CJAY",
                                 "etA9KGhIT9ohX9dYXrhzc8",
                                 "LjwVWzBBQtwpyQ6WBBTiwk",
@@ -409,16 +414,16 @@ public class AccountInformationResult<SELF extends AccountInformationResult<SELF
             String resourceId, LocalDate dateFrom, LocalDate dateTo, String bookingStatus, boolean online
     ) {
         withTransactionsHeaders(MAX_MUSTERMAN)
-                    .header(SERVICE_SESSION_ID, serviceSessionId)
-                    .queryParam("dateFrom", dateFrom.format(ISO_DATE))
-                    .queryParam("dateTo", dateTo.format(ISO_DATE))
-                    .queryParam("bookingStatus", bookingStatus)
-                    .queryParam("online", online)
+                .header(SERVICE_SESSION_ID, serviceSessionId)
+                .queryParam("dateFrom", dateFrom.format(ISO_DATE))
+                .queryParam("dateTo", dateTo.format(ISO_DATE))
+                .queryParam("bookingStatus", bookingStatus)
+                .queryParam("online", online)
                 .when()
-                    .get(AIS_TRANSACTIONS_ENDPOINT, resourceId)
+                .get(AIS_TRANSACTIONS_ENDPOINT, resourceId)
                 .then()
-                    .statusCode(HttpStatus.OK.value())
-                    .body("transactions.booked", empty());
+                .statusCode(HttpStatus.OK.value())
+                .body("transactions.booked", empty());
         return self();
     }
 
@@ -464,17 +469,17 @@ public class AccountInformationResult<SELF extends AccountInformationResult<SELF
 
         ExtractableResponse<Response> response = RestAssured
                 .given()
-                    .header(X_REQUEST_ID, UUID.randomUUID().toString())
-                    .header(X_XSRF_TOKEN, UUID.randomUUID().toString())
-                    .queryParam(X_XSRF_TOKEN_QUERY, redirectCode)
-                    .cookie(AUTHORIZATION_SESSION_KEY, authSessionCookie)
-                    .contentType(MediaType.APPLICATION_JSON_VALUE)
-                    .body(body)
+                .header(X_REQUEST_ID, UUID.randomUUID().toString())
+                .header(X_XSRF_TOKEN, UUID.randomUUID().toString())
+                .queryParam(X_XSRF_TOKEN_QUERY, redirectCode)
+                .cookie(AUTHORIZATION_SESSION_KEY, authSessionCookie)
+                .contentType(MediaType.APPLICATION_JSON_VALUE)
+                .body(body)
                 .when()
-                    .post(AUTHORIZE_CONSENT_ENDPOINT, serviceSessionId)
+                .post(AUTHORIZE_CONSENT_ENDPOINT, serviceSessionId)
                 .then()
-                    .statusCode(HttpStatus.ACCEPTED.value())
-                    .extract();
+                .statusCode(HttpStatus.ACCEPTED.value())
+                .extract();
 
         assertThat(LocationExtractorUtil.getLocation(response)).matches(".+/ais/.+");
         return self();
@@ -483,12 +488,12 @@ public class AccountInformationResult<SELF extends AccountInformationResult<SELF
     public SELF fintech_calls_consent_activation_for_current_authorization_id(String serviceSessionId, HttpStatus status) {
         withSignatureHeaders(RestAssured
                 .given()
-                    .header(SERVICE_SESSION_PASSWORD, SESSION_PASSWORD)
-                    .contentType(MediaType.APPLICATION_JSON_VALUE))
+                .header(SERVICE_SESSION_PASSWORD, SESSION_PASSWORD)
+                .contentType(MediaType.APPLICATION_JSON_VALUE))
                 .when()
-                    .post(CONFIRM_CONSENT_ENDPOINT, serviceSessionId)
+                .post(CONFIRM_CONSENT_ENDPOINT, serviceSessionId)
                 .then()
-                    .statusCode(status.value());
+                .statusCode(status.value());
         return self();
     }
 
@@ -503,21 +508,21 @@ public class AccountInformationResult<SELF extends AccountInformationResult<SELF
     @SneakyThrows
     public SELF open_banking_can_read_max_musterman_hbci_account_data_using_consent_bound_to_service_session(String bankProfileId) {
         ExtractableResponse<Response> response = withAccountsHeaders(MAX_MUSTERMAN, bankProfileId)
-                    .header(SERVICE_SESSION_ID, serviceSessionId)
-                    .queryParam(ONLINE, false)
+                .header(SERVICE_SESSION_ID, serviceSessionId)
+                .queryParam(ONLINE, false)
                 .when()
-                    .get(AIS_ACCOUNTS_ENDPOINT)
+                .get(AIS_ACCOUNTS_ENDPOINT)
                 .then()
-                    .statusCode(HttpStatus.OK.value())
-                    .body("accounts[0].iban", equalTo("DE59300000033466865655"))
-                    .body("accounts[0].resourceId", instanceOf(String.class))
-                    .body("accounts[0].currency", equalTo("EUR"))
-                    .body("accounts[0].name", equalTo("Extra-Konto"))
-                    .body("accounts[1].iban", equalTo("DE13300000032278292697"))
-                    .body("accounts[1].resourceId", instanceOf(String.class))
-                    .body("accounts[1].currency", equalTo("EUR"))
-                    .body("accounts[1].name", equalTo("Extra-Konto"))
-                    .body("accounts", hasSize(2))
+                .statusCode(HttpStatus.OK.value())
+                .body("accounts[0].iban", equalTo("DE59300000033466865655"))
+                .body("accounts[0].resourceId", instanceOf(String.class))
+                .body("accounts[0].currency", equalTo("EUR"))
+                .body("accounts[0].name", equalTo("Extra-Konto"))
+                .body("accounts[1].iban", equalTo("DE13300000032278292697"))
+                .body("accounts[1].resourceId", instanceOf(String.class))
+                .body("accounts[1].currency", equalTo("EUR"))
+                .body("accounts[1].name", equalTo("Extra-Konto"))
+                .body("accounts", hasSize(2))
                 .extract();
 
         this.responseContent = response.body().asString();
@@ -527,21 +532,21 @@ public class AccountInformationResult<SELF extends AccountInformationResult<SELF
     @SneakyThrows
     public SELF open_banking_can_read_anton_brueckner_hbci_account_data_using_consent_bound_to_service_session(String bankProfileId) {
         ExtractableResponse<Response> response = withAccountsHeaders(ANTON_BRUECKNER, bankProfileId)
-                    .header(SERVICE_SESSION_ID, serviceSessionId)
-                    .queryParam(ONLINE, false)
+                .header(SERVICE_SESSION_ID, serviceSessionId)
+                .queryParam(ONLINE, false)
                 .when()
-                    .get(AIS_ACCOUNTS_ENDPOINT)
+                .get(AIS_ACCOUNTS_ENDPOINT)
                 .then()
-                    .statusCode(HttpStatus.OK.value())
-                    .body("accounts[0].iban", equalTo("DE65300000035827542519"))
-                    .body("accounts[0].resourceId", instanceOf(String.class))
-                    .body("accounts[0].currency", equalTo("EUR"))
-                    .body("accounts[0].name", equalTo("Extra-Konto"))
-                    .body("accounts[1].iban", equalTo("DE17300000039185286653"))
-                    .body("accounts[1].resourceId", instanceOf(String.class))
-                    .body("accounts[1].currency", equalTo("EUR"))
-                    .body("accounts[1].name", equalTo("Extra-Konto"))
-                    .body("accounts", hasSize(2))
+                .statusCode(HttpStatus.OK.value())
+                .body("accounts[0].iban", equalTo("DE65300000035827542519"))
+                .body("accounts[0].resourceId", instanceOf(String.class))
+                .body("accounts[0].currency", equalTo("EUR"))
+                .body("accounts[0].name", equalTo("Extra-Konto"))
+                .body("accounts[1].iban", equalTo("DE17300000039185286653"))
+                .body("accounts[1].resourceId", instanceOf(String.class))
+                .body("accounts[1].currency", equalTo("EUR"))
+                .body("accounts[1].name", equalTo("Extra-Konto"))
+                .body("accounts", hasSize(2))
                 .extract();
 
         this.responseContent = response.body().asString();

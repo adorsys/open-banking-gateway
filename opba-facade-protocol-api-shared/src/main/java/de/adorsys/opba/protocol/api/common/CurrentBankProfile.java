@@ -52,6 +52,20 @@ public interface CurrentBankProfile {
      */
     boolean isXs2aSkipConsentAuthorization();
 
+
+
+    /**
+     * Whether to try to skip call to update  ConsentAuthorization action .
+     */
+
+    boolean isXs2aSkipConsentPsuAuthentication();
+
+
+    /**
+     * Whether to start Consent Authorization with user Pin
+     */
+    boolean isXs2aStartConsentAuthorizationWithPin();
+
     /**
      * Bank identification code.
      */

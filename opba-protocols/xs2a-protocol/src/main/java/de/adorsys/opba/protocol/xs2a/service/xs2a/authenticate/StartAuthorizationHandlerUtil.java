@@ -28,7 +28,6 @@ public class StartAuthorizationHandlerUtil {
         bodyLinks.keySet().stream()
                 .filter(START_AUTHORIZATION_KEYS::contains).findAny()
                 .ifPresent(key -> {
-                    context.setStartAuthorizationWithData(true);
                     String path = URI.create(bodyLinks.get(key).getHref()).getPath();
                     String authorizationId = StringUtils.substringAfterLast(path, AUTHORISATION);
                     if (!Strings.isNullOrEmpty(authorizationId)) {

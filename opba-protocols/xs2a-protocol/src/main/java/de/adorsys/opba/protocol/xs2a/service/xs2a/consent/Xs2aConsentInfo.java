@@ -45,6 +45,13 @@ public class Xs2aConsentInfo {
     }
 
     /**
+     * If ASPSP needs startConsentAuthorization with User Password.
+     */
+    public boolean isStartConsentAuthorizationWithPin(Xs2aContext ctx) {
+        return ctx.aspspProfile().isXs2aStartConsentAuthorizationWithPin();
+    }
+
+    /**
      * Is the current consent authorization in OAUTH (not OAUTH pre-step) mode.
      */
     public boolean isOauth2Authorization(Xs2aContext ctx) {
@@ -80,11 +87,19 @@ public class Xs2aConsentInfo {
         return null != ctx.getOauth2Token();
     }
 
+    public boolean isTrySkipStartPsuAuthentication(Xs2aContext ctx) {
+        return isOauth2TokenAvailableAndReadyToUse(ctx) || ctx.aspspProfile().isXs2aSkipConsentPsuAuthentication();
+    }
+
     /**
      * Is the current consent authorization in DECOUPLED mode.
      */
     public boolean isDecoupled(Xs2aContext ctx) {
         return DECOUPLED.name().equalsIgnoreCase(ctx.getAspspScaApproach());
+    }
+
+    public boolean isDecoupledWithZeroSca(Xs2aContext ctx) {
+        return isDecoupled(ctx) && isZeroScaAvailable(ctx);
     }
 
     /**
@@ -120,7 +135,7 @@ public class Xs2aConsentInfo {
      */
     public boolean isZeroScaAvailable(Xs2aContext ctx) {
         return (null == ctx.getAvailableSca()
-                       || null != ctx.getAvailableSca() && ctx.getAvailableSca().isEmpty())
+                || null != ctx.getAvailableSca() && ctx.getAvailableSca().isEmpty())
                 && null == ctx.getScaSelected();
     }
 

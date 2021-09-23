@@ -12,19 +12,16 @@ import de.adorsys.opba.db.domain.entity.BankProfile;
 import de.adorsys.opba.db.domain.entity.IgnoreValidationRule;
 import de.adorsys.opba.db.repository.jpa.BankProfileJpaRepository;
 import de.adorsys.opba.db.repository.jpa.IgnoreValidationRuleRepository;
-import de.adorsys.opba.protocol.api.common.Approach;
 import de.adorsys.opba.protocol.api.dto.codes.FieldCode;
 import de.adorsys.opba.protocol.xs2a.service.xs2a.ais.Xs2aAccountListingService;
 import de.adorsys.opba.protocol.xs2a.service.xs2a.authenticate.StartConsentAuthorization;
 import de.adorsys.opba.protocol.xs2a.service.xs2a.authenticate.embedded.Xs2aAisAuthenticateUserConsentWithPin;
 import de.adorsys.opba.protocol.xs2a.service.xs2a.consent.CreateAisAccountListConsentService;
 import de.adorsys.opba.protocol.xs2a.tests.e2e.stages.CommonGivenStages;
-import de.adorsys.xs2a.adapter.api.config.AdapterConfig;
 import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
 import org.assertj.core.api.Assertions;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.test.util.ReflectionTestUtils;
 import org.springframework.util.FileSystemUtils;
 
 import java.io.File;
@@ -32,8 +29,6 @@ import java.io.IOException;
 import java.net.URL;
 import java.nio.file.Path;
 import java.util.Arrays;
-import java.util.Map;
-import java.util.Properties;
 import java.util.UUID;
 import java.util.function.Consumer;
 
@@ -54,7 +49,6 @@ public class MockServers<SELF extends MockServers<SELF>> extends CommonGivenStag
     public static final String SANDBOX_BANK_ID = "adadadad-4000-0000-0000-b0b0b0b0b0b0";
     public static final String SANTANDER_BANK_ID = "afd7605a-0834-4f84-9a86-cfe468b3f336";
     public static final String TARGO_BANK_ID = "d1eab9f5-1746-4629-b961-bf6df48ff4d6";
-
 
 
     @Autowired
@@ -92,7 +86,6 @@ public class MockServers<SELF extends MockServers<SELF>> extends CommonGivenStag
 
         return self();
     }
-
 
 
     public SELF redirect_mock_of_consorsbank_for_anton_brueckner_accounts_running() {
@@ -266,19 +259,6 @@ public class MockServers<SELF extends MockServers<SELF>> extends CommonGivenStag
     }
 
 
-    public SELF embedded_targoBank_of_sandbox_for_anton_brueckner_accounts_running() {
-        ((Properties) ReflectionTestUtils.getField(AdapterConfig.class, "properties")).putAll(Map.of("verlag.apikey.name", "X-bvpsd2-test-apikey", "verlag.apikey.value", "tUfZ5KOHRTFrikZUsmSMUabKw09UIzGE"));
-
-
-        WireMockConfiguration config = WireMockConfiguration.options().dynamicPort()
-                .usingFilesUnderClasspath("mockedsandbox/restrecord/embedded/multi-sca/accounts/targobank/");
-        startWireMock(config, TARGO_BANK_ID, it -> {
-            defaultBankProfileConfigurer.accept(it);
-            it.setPreferredApproach(Approach.EMBEDDED);
-            it.setTryToUsePreferredApproach(true);
-        });
-        return self();
-    }
 
     public SELF decoupled_embedded_approach_sca_decoupled_start_mock_of_sandbox_for_max_musterman_accounts_running() {
         WireMockConfiguration config = WireMockConfiguration.options().dynamicPort()
@@ -296,9 +276,18 @@ public class MockServers<SELF extends MockServers<SELF>> extends CommonGivenStag
         return self();
     }
 
+
+    public SELF decoupled_embedded_approach_sca_decoupled_start_mock_of_targoBank_for_max_musterman_accounts_running() {
+
+        WireMockConfiguration config = WireMockConfiguration.options().dynamicPort()
+                .usingFilesUnderClasspath("mockedsandbox/restrecord/decoupled-sca/decoupled-mode/accounts/targobank/");
+        startWireMock(config, TARGO_BANK_ID, defaultBankProfileConfigurer);
+        return self();
+    }
+
     public SELF embedded_mock_of_sparkasse_for_max_musterman_accounts_running() {
         WireMockConfiguration config = WireMockConfiguration.options().dynamicPort()
-            .usingFilesUnderClasspath("mockedsandbox/restrecord/embedded/sparkasse/");
+                .usingFilesUnderClasspath("mockedsandbox/restrecord/embedded/sparkasse/");
         startWireMock(config, SPARKASSE_BANK_ID, defaultBankProfileConfigurer);
         return self();
     }

@@ -4,6 +4,7 @@ import de.adorsys.xs2a.adapter.api.ResponseHeaders;
 import de.adorsys.xs2a.adapter.api.model.AuthenticationObject;
 import de.adorsys.xs2a.adapter.api.model.ScaStatus;
 import de.adorsys.xs2a.adapter.api.model.SelectPsuAuthenticationMethodResponse;
+import de.adorsys.xs2a.adapter.api.model.StartScaprocessResponse;
 import de.adorsys.xs2a.adapter.api.model.UpdatePsuAuthenticationResponse;
 import lombok.experimental.UtilityClass;
 
@@ -27,6 +28,20 @@ public class ScaUtil {
     }
 
     public AuthenticationObject scaMethodSelected(SelectPsuAuthenticationMethodResponse response) {
+        if (null != response.getChosenScaMethod()) {
+            return response.getChosenScaMethod();
+        }
+
+        if (ScaStatus.SCAMETHODSELECTED == response.getScaStatus()) {
+            var result = new AuthenticationObject();
+            result.setExplanation(response.getPsuMessage());
+            return result;
+        }
+
+        return null;
+    }
+
+    public AuthenticationObject scaMethodSelected(StartScaprocessResponse response) {
         if (null != response.getChosenScaMethod()) {
             return response.getChosenScaMethod();
         }

@@ -1,6 +1,7 @@
 {
-  "scenarioName": "AccountsListUsingTargoBankEmbedded",
+  "scenarioName": "AccountsListUsingTargoBankDecoupled",
   "newScenarioState": "GetAccount",
+  "requiredScenarioState": "ScaFinalised",
   "request" : {
     "url" : "/v1/accounts",
     "method" : "GET",
@@ -11,8 +12,8 @@
       "Consent-ID" : {
         "matches" : ".+"
       },
-      "Date" : {
-        "matches" : ".+"
+      "PSU-ID" : {
+        "equalTo" : "max.musterman"
       }
     }
   },
@@ -22,12 +23,8 @@
     "headers" : {
       "Date" : "Mon, 01 Mar 2021 16:19:38 GMT",
       "Server" : "Apache",
-      "glue2gExit" : "2021-03-01T16:19:38.620",
       "X-Request-ID" : "fd660897-6302-4ea4-9ce5-f699e978891d",
-      "bffEntry" : "2021-03-01T16:19:37.853",
-      "bffExit" : "2021-03-01T16:19:38.621",
       "Content-Type" : "application/json;charset=utf-8",
-      "glue2gEntry" : "2021-03-01T16:19:37.853",
       "Keep-Alive" : "timeout=5, max=100"
     }
   },

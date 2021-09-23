@@ -1,0 +1,17 @@
+<databaseChangeLog logicalFilePath="db.changelog-1.0.xml" xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+                   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                   xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.8.xsd">
+
+    <changeSet author="cga@adorsys.com" id="2021-05-09-21">
+        <comment>Updates xs2a_skip_consent_psu_authentication for bank verlag</comment>
+        <update tableName="${table-prefix}bank_profile">
+            <column name="xs2a_skip_consent_psu_authentication" value="true"/>
+            <column name="xs2a_start_consent_authorization_with_pin" value="true"/>
+            <column name="preferred_approach" value="DECOUPLED"/>
+            <where>
+                adapter_id = 'verlag-adapter'
+            </where>
+        </update>
+    </changeSet>
+
+</databaseChangeLog>

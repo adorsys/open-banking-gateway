@@ -1,6 +1,6 @@
 {
-  "scenarioName": "AccountsListUsingTargoBankEmbedded",
-  "newScenarioState": "GetScaStatus",
+  "scenarioName": "AccountsListUsingTargoBankDecoupled",
+  "newScenarioState": "ScaFinalised",
   "request" : {
     "urlPattern" : "/v1/consents/.+/authorisations/.+",
     "method" : "GET",
@@ -8,23 +8,22 @@
       "X-Request-ID" : {
         "matches" : ".+"
       },
-      "Date" : {
-        "matches" : ".+"
+      "X-bvpsd2-test-apikey" : {
+        "equalTo" : "tUfZ5KOHRTFrikZUsmSMUabKw09UIzGE"
+      },
+      "PSU-ID" : {
+        "equalTo" : "max.musterman"
       }
     }
   },
   "response" : {
-    "status" : 200,
+    "status" : 202,
     "body" : "{\"scaStatus\":\"finalised\"}",
     "headers" : {
       "Date" : "Mon, 01 Mar 2021 16:19:49 GMT",
       "Server" : "Apache",
-      "glue2gExit" : "2021-03-01T16:19:49.892",
       "X-Request-ID" : "b28cdd07-d567-4942-98dc-b3cc146eb8ce",
-      "bffEntry" : "2021-03-01T16:19:49.612",
-      "bffExit" : "2021-03-01T16:19:49.892",
       "Content-Type" : "application/json;charset=utf-8",
-      "glue2gEntry" : "2021-03-01T16:19:49.612",
       "Keep-Alive" : "timeout=5, max=100"
     }
   },
