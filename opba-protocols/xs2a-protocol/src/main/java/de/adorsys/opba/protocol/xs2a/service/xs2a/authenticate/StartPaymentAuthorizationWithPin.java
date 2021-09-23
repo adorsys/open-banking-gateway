@@ -67,7 +67,8 @@ public class StartPaymentAuthorizationWithPin extends ValidatedExecution<Xs2aPis
     }
 
 
-    private void startAuthorizationWithPin(DelegateExecution execution, Xs2aPisContext context, ValidatedPathHeadersBody<Xs2aStartPaymentAuthorizationParameters, Xs2aStandardHeaders, UpdatePsuAuthentication> params) {
+    private void startAuthorizationWithPin(DelegateExecution execution, Xs2aPisContext context, ValidatedPathHeadersBody<Xs2aStartPaymentAuthorizationParameters,
+            Xs2aStandardHeaders, UpdatePsuAuthentication> params) {
         CurrentBankProfile config = context.aspspProfile();
         params.getHeaders().setTppRedirectPreferred(tppRedirectPreferredResolver.isRedirectApproachPreferred(config));
 
