@@ -14,7 +14,6 @@ import { EntryPageTransactionsComponent } from './entry-page/initiation/transact
 import { TransactionsConsentReviewComponent } from './entry-page/initiation/transactions/transactions-consent-review/transactions-consent-review.component';
 import { ToAspspRedirectionComponent } from './to-aspsp-page/to-aspsp-redirection.component';
 import { ConsentSharingComponent } from './entry-page/initiation/consent-sharing/consent-sharing.component';
-import { CustomConsentComponent } from "./entry-page/initiation/common/custom-consent/custom-consent.component";
 import { WaitForDecoupled } from "./wait-for-decoupled/wait-for-decoupled";
 
 const routes: Routes = [
@@ -29,7 +28,6 @@ const routes: Routes = [
         children: [
           { path: '', component: EntryPageAccountsComponent },
           { path: DedicatedAccessComponent.ROUTE, component: DedicatedAccessComponent },
-          { path: CustomConsentComponent.ROUTE, component: CustomConsentComponent },
           { path: AccountsConsentReviewComponent.ROUTE, component: AccountsConsentReviewComponent }
         ]
       },
@@ -38,7 +36,6 @@ const routes: Routes = [
         children: [
           { path: '', component: EntryPageTransactionsComponent },
           { path: DedicatedAccessComponent.ROUTE, component: DedicatedAccessComponent },
-          { path: CustomConsentComponent.ROUTE, component: CustomConsentComponent },
           { path: TransactionsConsentReviewComponent.ROUTE, component: TransactionsConsentReviewComponent }
         ]
       },

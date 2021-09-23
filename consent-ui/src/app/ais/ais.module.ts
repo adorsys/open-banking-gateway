@@ -7,7 +7,6 @@ import { EnterPinPageComponent } from './enter-pin-page/enter-pin-page.component
 import { EntryPageComponent } from './entry-page/entry-page.component';
 import { ScaSelectPageComponent } from './sca-select-page/sca-select-page.component';
 import { EnterTanPageComponent } from './enter-tan-page/enter-tan-page.component';
-import { AccountDetailsComponent } from './common/account-details/account-details.component';
 import { ErrorPageComponent } from './error-page/error-page.component';
 import { RouteBasedCardWithSidebarComponent } from './route-based-card-with-sidebar/route-based-card-with-sidebar.component';
 import { SidebarComponent } from './sidebar/sidebar.component';
@@ -24,7 +23,6 @@ import { ToAspspRedirectionComponent } from './to-aspsp-page/to-aspsp-redirectio
 import { ConsentInfoComponent } from './components/consent-info/consent-info.component';
 import { ConsentSharingComponent } from './entry-page/initiation/consent-sharing/consent-sharing.component';
 import { SharedModule } from '../common/shared.module';
-import { CustomConsentComponent } from './entry-page/initiation/common/custom-consent/custom-consent.component';
 import { WaitForDecoupled } from "./wait-for-decoupled/wait-for-decoupled";
 
 @NgModule({
@@ -34,7 +32,6 @@ import { WaitForDecoupled } from "./wait-for-decoupled/wait-for-decoupled";
     EntryPageComponent,
     ScaSelectPageComponent,
     EnterTanPageComponent,
-    AccountDetailsComponent,
     ConsentAccountAccessSelectionComponent,
     EntryPageTransactionsComponent,
     ErrorPageComponent,
@@ -50,7 +47,6 @@ import { WaitForDecoupled } from "./wait-for-decoupled/wait-for-decoupled";
     ToAspspRedirectionComponent,
     ConsentInfoComponent,
     ConsentSharingComponent,
-    CustomConsentComponent,
     WaitForDecoupled
   ],
   imports: [SharedModule, AisRoutingModule, AngularIbanModule]

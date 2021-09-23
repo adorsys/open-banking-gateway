@@ -41,6 +41,8 @@ paths:
         - $ref: "./tpp_banking_api_commons.yml#/components/parameters/X-Request-ID"
         - $ref: "./tpp_banking_api_commons.yml#/components/parameters/X-Create-Consent-If-None"
         - $ref: "./tpp_banking_api_commons.yml#/components/parameters/X-Import-User-Data"
+        - $ref: "./tpp_banking_api_commons.yml#/components/parameters/Compute-PSU-IP-Address"
+        - $ref: "./tpp_banking_api_commons.yml#/components/parameters/PSU-IP-Address"
           # query
         - $ref: "#/components/parameters/withBalance"
         - $ref: "#/components/parameters/online"
@@ -84,6 +86,8 @@ paths:
         - $ref: "./tpp_banking_api_commons.yml#/components/parameters/X-Request-ID"
         - $ref: "./tpp_banking_api_commons.yml#/components/parameters/X-Create-Consent-If-None"
         - $ref: "./tpp_banking_api_commons.yml#/components/parameters/X-Import-User-Data"
+        - $ref: "./tpp_banking_api_commons.yml#/components/parameters/Compute-PSU-IP-Address"
+        - $ref: "./tpp_banking_api_commons.yml#/components/parameters/PSU-IP-Address"
         #query
         - $ref: "#/components/parameters/dateFrom"
         - $ref: "#/components/parameters/dateTo"
@@ -127,6 +131,8 @@ paths:
         - $ref: "./tpp_banking_api_commons.yml#/components/parameters/X-Request-ID"
         - $ref: "./tpp_banking_api_commons.yml#/components/parameters/X-Create-Consent-If-None"
         - $ref: "./tpp_banking_api_commons.yml#/components/parameters/X-Import-User-Data"
+        - $ref: "./tpp_banking_api_commons.yml#/components/parameters/Compute-PSU-IP-Address"
+        - $ref: "./tpp_banking_api_commons.yml#/components/parameters/PSU-IP-Address"
         #query
         - $ref: "#/components/parameters/dateFrom"
         - $ref: "#/components/parameters/dateTo"

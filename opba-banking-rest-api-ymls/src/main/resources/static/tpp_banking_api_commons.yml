@@ -219,6 +219,27 @@ components:
           or credentials to re-use in 3rd party-service
         example: { "username": "jane.doe", "password": "secret", "createUser": true, "email": "foo@example.com", "phone": "+1234567", "isAutoUpdateEnabled": true }
 
+    Compute-PSU-IP-Address:
+      name: Compute-PSU-IP-Address
+      in: header
+      required: false
+      description: |
+        Should be provided if consent does not exist.
+        If false, PSU IP address should be provided in an appropriate header.
+        If absent or true - PSU IP address will be computed by OBG.
+      example: "true"
+      schema:
+        type: boolean
+
+    PSU-IP-Address:
+      name: PSU-IP-Address
+      in: header
+      required: false
+      description: |
+        IP address of PSU, should be provided if consent does not exist or "Compute-Psu-Ip-Address" header is "false".
+      example: "1.1.1.1"
+      schema:
+        type: string
 
   responses:
     sessionStatusResponse:

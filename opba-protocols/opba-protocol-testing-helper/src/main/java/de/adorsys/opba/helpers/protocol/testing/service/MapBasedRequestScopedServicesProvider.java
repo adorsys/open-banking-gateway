@@ -4,6 +4,7 @@ import de.adorsys.opba.protocol.api.common.Approach;
 import de.adorsys.opba.protocol.api.common.CurrentBankProfile;
 import de.adorsys.opba.protocol.api.common.CurrentFintechProfile;
 import de.adorsys.opba.protocol.api.common.ResultContentType;
+import de.adorsys.opba.protocol.api.common.SupportedConsentType;
 import de.adorsys.opba.protocol.api.dto.codes.FieldCode;
 import de.adorsys.opba.protocol.api.services.EncryptionService;
 import de.adorsys.opba.protocol.api.services.scoped.RequestScoped;
@@ -135,6 +136,7 @@ public class MapBasedRequestScopedServicesProvider implements RequestScopedServi
         private String idpUrl;
         private UUID uuid;
         private List<Approach> scaApproaches;
+        private List<SupportedConsentType> supportedConsentTypes;
         private Approach preferredApproach;
         private boolean tryToUsePreferredApproach;
         private boolean uniquePaymentPurpose;

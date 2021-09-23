@@ -27,6 +27,7 @@ export interface ConsentAuth {
     action?: ConsentAuth.ActionEnum;
     violations?: Array<AuthViolation>;
     accounts?: Array<AccountDetails>;
+    supportedConsentTypes?: Array<ConsentAuth.SupportedConsentTypesEnum>;
     authMessageTemplate?: string;
     /**
      * An identification provided by the ASPSP for the later identification of the authentication method selection.
@@ -64,6 +65,12 @@ export namespace ConsentAuth {
         LISTACCOUNTS: 'LIST_ACCOUNTS' as ActionEnum,
         LISTTRANSACTIONS: 'LIST_TRANSACTIONS' as ActionEnum,
         INITIATEPAYMENT: 'INITIATE_PAYMENT' as ActionEnum
+    };
+    export type SupportedConsentTypesEnum = 'DEDICATED_ALL' | 'GLOBAL_ALL' | 'GLOBAL_ACCOUNTS';
+    export const SupportedConsentTypesEnum = {
+        DEDICATEDALL: 'DEDICATED_ALL' as SupportedConsentTypesEnum,
+        GLOBALALL: 'GLOBAL_ALL' as SupportedConsentTypesEnum,
+        GLOBALACCOUNTS: 'GLOBAL_ACCOUNTS' as SupportedConsentTypesEnum
     };
 }
 

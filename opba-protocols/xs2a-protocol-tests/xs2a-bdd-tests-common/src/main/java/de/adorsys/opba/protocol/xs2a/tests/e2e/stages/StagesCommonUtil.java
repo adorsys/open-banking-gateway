@@ -98,6 +98,14 @@ public class StagesCommonUtil {
                        .header(COMPUTE_PSU_IP_ADDRESS, COMPUTE_IP_ADDRESS);
     }
 
+    public static RequestSpecification withAccountsHeadersComputeIpAddress(String fintechUserId) {
+        UUID xRequestId = UUID.randomUUID();
+        Instant xTimestampUtc = Instant.now();
+
+        return headersWithoutIpAddress(fintechUserId, xRequestId, xTimestampUtc)
+                .header(COMPUTE_PSU_IP_ADDRESS, true);
+    }
+
     public static RequestSpecification withTransactionsHeaders(String fintechUserId) {
         return withTransactionsHeaders(fintechUserId, SANDBOX_BANK_PROFILE_ID);
     }

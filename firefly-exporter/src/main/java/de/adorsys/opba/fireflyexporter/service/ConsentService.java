@@ -49,6 +49,8 @@ public class ConsentService {
                 serviceSessionId,
                 "",
                 null,
+                true,
+                null,
                 null,
                 null,
                 null,

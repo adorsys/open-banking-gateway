@@ -32,6 +32,7 @@ import java.util.UUID;
 import static de.adorsys.opba.fintech.impl.tppclients.Consts.COMPUTE_FINTECH_ID;
 import static de.adorsys.opba.fintech.impl.tppclients.Consts.COMPUTE_X_REQUEST_SIGNATURE;
 import static de.adorsys.opba.fintech.impl.tppclients.Consts.COMPUTE_X_TIMESTAMP_UTC;
+import static de.adorsys.opba.fintech.impl.tppclients.Consts.HEADER_COMPUTE_PSU_IP_ADDRESS;
 
 @Slf4j
 @Service
@@ -77,7 +78,9 @@ public class PaymentService {
                 COMPUTE_X_REQUEST_SIGNATURE,
                 COMPUTE_FINTECH_ID,
                 UUID.fromString(bankProfileId),
-                xPisPsuAuthenticationRequired);
+                xPisPsuAuthenticationRequired,
+                HEADER_COMPUTE_PSU_IP_ADDRESS,
+                null);
         if (responseOfTpp.getStatusCode() != HttpStatus.ACCEPTED) {
             throw new RuntimeException("Did expect status 202 from tpp, but got " + responseOfTpp.getStatusCodeValue());
         }

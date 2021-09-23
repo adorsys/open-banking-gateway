@@ -38,6 +38,11 @@ public interface CurrentBankProfile {
     Approach getPreferredApproach();
 
     /**
+     * Supported consent type (if any) by ASPSP.
+     */
+    List<SupportedConsentType> getSupportedConsentTypes();
+
+    /**
      * ASPSP tries to use preferred SCA approach.
      */
     boolean isTryToUsePreferredApproach();

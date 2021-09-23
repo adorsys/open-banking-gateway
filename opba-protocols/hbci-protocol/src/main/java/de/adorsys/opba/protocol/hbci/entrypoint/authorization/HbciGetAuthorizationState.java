@@ -33,6 +33,7 @@ import org.springframework.stereotype.Service;
 
 import java.net.URI;
 import java.util.Base64;
+import java.util.Collections;
 import java.util.List;
 import java.util.Set;
 import java.util.concurrent.CompletableFuture;
@@ -126,6 +127,7 @@ public class HbciGetAuthorizationState implements GetAuthorizationState {
         return new AuthStateBody(
                 action.name(),
                 violationsMapper.map(issues.getViolations()),
+                Collections.emptyList(),
                 scaMethodsMapper.map(scaMethods),
                 redirectTo,
                 authRequestData,

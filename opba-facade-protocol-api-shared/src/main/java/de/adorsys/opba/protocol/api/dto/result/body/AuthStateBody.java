@@ -1,9 +1,11 @@
 package de.adorsys.opba.protocol.api.dto.result.body;
 
+import de.adorsys.opba.protocol.api.common.SupportedConsentType;
 import de.adorsys.opba.protocol.api.dto.request.ChallengeData;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 
+import java.util.List;
 import java.util.Set;
 
 /**
@@ -23,6 +25,12 @@ public class AuthStateBody implements ResultBody {
      * What inputs are required from user - i.e. PSU ID.
      */
     private Set<ValidationError> violations;
+
+    /**
+     * The type of the consent supported by ASPSP.
+     * See {@code de.adorsys.opba.protocol.api.common.SupportedConsentType}
+     */
+    private List<SupportedConsentType> supportedConsentTypes;
 
     /**
      * Which SCA methods are available for consent authorization (i.e. SMS, email).
