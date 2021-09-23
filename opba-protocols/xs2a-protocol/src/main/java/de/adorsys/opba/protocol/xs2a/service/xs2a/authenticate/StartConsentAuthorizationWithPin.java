@@ -70,7 +70,7 @@ public class StartConsentAuthorizationWithPin extends ValidatedExecution<Xs2aCon
 
         ValidatedPathHeadersBody<Xs2aInitialConsentParameters, Xs2aStandardHeaders, UpdatePsuAuthentication> params = extractor.forExecution(context);
         errorSink.handlePossibleAuthorizationError(
-                () -> startAuthorizationWIthPin(execution, context, params),
+                () -> startAuthorizationWithPin(execution, context, params),
                 ex -> aisOnWrongPassword(execution)
         );
     }
@@ -85,7 +85,7 @@ public class StartConsentAuthorizationWithPin extends ValidatedExecution<Xs2aCon
         );
     }
 
-    private void startAuthorizationWIthPin(DelegateExecution execution, Xs2aContext context,
+    private void startAuthorizationWithPin(DelegateExecution execution, Xs2aContext context,
                                            ValidatedPathHeadersBody<Xs2aInitialConsentParameters, Xs2aStandardHeaders, UpdatePsuAuthentication> params) {
 
         CurrentBankProfile config = context.aspspProfile();

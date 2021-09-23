@@ -6,6 +6,7 @@ import de.adorsys.opba.protocol.xs2a.config.protocol.ProtocolUrlsConfiguration;
 import de.adorsys.opba.protocol.xs2a.tests.e2e.JGivenConfig;
 import de.adorsys.opba.protocol.xs2a.tests.e2e.stages.PaymentResult;
 import de.adorsys.opba.protocol.xs2a.tests.e2e.stages.RequestStatusUtil;
+import de.adorsys.opba.protocol.xs2a.tests.e2e.stages.StagesCommonUtil;
 import de.adorsys.opba.protocol.xs2a.tests.e2e.wiremock.mocks.MockServers;
 import de.adorsys.opba.protocol.xs2a.tests.e2e.wiremock.mocks.WiremockPaymentRequest;
 import de.adorsys.opba.protocol.xs2a.tests.e2e.wiremock.mocks.Xs2aProtocolApplication;
@@ -337,6 +338,37 @@ public class WiremockAnonymousPaymentE2EXs2aProtocolTest extends SpringScenarioT
                 .open_banking_has_stored_payment()
                 .fintech_calls_payment_activation_for_current_authorization_id()
                 .fintech_calls_payment_status();
+    }
+
+    @Test
+    void testTargoPaymentWithConsentUsingDecoupledWhenEmbeddedAndDecoupledSca() {
+        given()
+                .decoupled_embedded_approach_sca_decoupled_start_mock_of_targo_bank_for_max_musterman_payments_running()
+                .set_default_preferred_approach()
+                .preferred_sca_approach_selected_for_all_banks_in_opba(Approach.DECOUPLED)
+                .rest_assured_points_to_opba_server_with_fintech_signer_on_banking_api()
+                .user_registered_in_opba_with_credentials(OPBA_LOGIN, OPBA_PASSWORD);
+
+        when()
+                .fintech_calls_initiate_payment_for_max_musterman(StagesCommonUtil.TARGO_BANK_PROFILE_ID)
+                .and()
+                .user_logged_in_into_opba_pis_as_opba_user_with_credentials_using_fintech_supplied_url(OPBA_LOGIN, OPBA_PASSWORD)
+                .and()
+                .user_max_musterman_provided_initial_parameters_to_make_payment()
+                .and()
+                .user_max_musterman_provided_password_to_embedded_authorization()
+                .and()
+                .user_max_musterman_polling_api_to_check_payment_sca_status(HttpStatus.OK, SCA_METHOD_SELECTED)
+                .and()
+                .user_max_musterman_polling_api_to_check_payment_sca_status(HttpStatus.OK, FINALISED)
+                .and()
+                .user_max_musterman_polling_api_to_check_payment_sca_status(HttpStatus.ACCEPTED, null)
+                .and()
+                .current_redirected_to_screen_is_payment_result();
+        then()
+                .open_banking_has_stored_payment()
+                .fintech_calls_payment_activation_for_current_authorization_id()
+                .fintech_calls_payment_status(StagesCommonUtil.TARGO_BANK_PROFILE_ID, "ACTC");
     }
 
     /**
