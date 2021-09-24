@@ -9,6 +9,7 @@ import lombok.Value;
 @Value
 @Builder
 public class AccountReference {
+    String externalResourceId;
     String iban;
     String bban;
     String pan;

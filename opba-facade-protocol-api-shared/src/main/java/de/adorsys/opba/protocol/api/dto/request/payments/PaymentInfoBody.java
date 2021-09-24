@@ -13,6 +13,7 @@ import java.time.OffsetDateTime;
  */
 @Data
 public class PaymentInfoBody implements ResultBody {
+    private String externalResourceId;
     private String endToEndIdentification;
     private AccountReference debtorAccount;
     private Amount instructedAmount;

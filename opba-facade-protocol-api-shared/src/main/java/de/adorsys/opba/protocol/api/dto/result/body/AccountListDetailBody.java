@@ -12,6 +12,7 @@ import java.util.List;
 @Builder
 public class AccountListDetailBody {
     String resourceId;
+    String externalResourceId;
     String iban;
     String bban;
     String msisdn;
