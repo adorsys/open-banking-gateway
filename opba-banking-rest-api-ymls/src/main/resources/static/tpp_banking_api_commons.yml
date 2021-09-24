@@ -365,6 +365,9 @@ components:
           * an alias to access a payment account via a registered mobile phone number (MSISDN).
       type: object
       properties:
+        externalResourceId:
+          description: Identifier of the account in 3rd party data provider like FinAPI (similar to resourceId)
+          type: string
         iban:
           $ref: "#/components/schemas/iban"
         bban:
