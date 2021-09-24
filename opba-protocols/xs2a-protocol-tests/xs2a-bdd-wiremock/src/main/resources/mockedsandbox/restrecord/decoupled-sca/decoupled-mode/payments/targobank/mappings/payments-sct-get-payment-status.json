@@ -1,5 +1,6 @@
 {
   "scenarioName": "PaymentInitializationUsingTargoBankDecoupled",
+  "requiredScenarioState": "GetScaFinalisedStatus",
   "newScenarioState": "GetPaymentStatus",
   "request" : {
     "urlPattern" : "/v1/payments/sepa-credit-transfers/.+/status",

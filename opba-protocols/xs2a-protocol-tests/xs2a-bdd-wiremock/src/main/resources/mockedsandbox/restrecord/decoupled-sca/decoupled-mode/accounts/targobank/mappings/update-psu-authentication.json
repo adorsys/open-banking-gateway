@@ -1,6 +1,7 @@
 {
   "scenarioName": "AccountsListUsingTargoBankDecoupled",
   "newScenarioState": "AuthorizationUpdated",
+  "requiredScenarioState": "CreateConsent",
   "request" : {
     "urlPattern" : "/v1/consents/.+/authorisations",
     "method" : "POST",

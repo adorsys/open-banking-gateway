@@ -87,8 +87,8 @@ public class Xs2aConsentInfo {
         return null != ctx.getOauth2Token();
     }
 
-    public boolean isTrySkipStartPsuAuthentication(Xs2aContext ctx) {
-        return isOauth2TokenAvailableAndReadyToUse(ctx) || ctx.aspspProfile().isXs2aSkipConsentPsuAuthentication();
+    public boolean isEmbeddedOrDecoupled(Xs2aContext ctx) {
+        return isEmbedded(ctx) || isDecoupled(ctx);
     }
 
     /**

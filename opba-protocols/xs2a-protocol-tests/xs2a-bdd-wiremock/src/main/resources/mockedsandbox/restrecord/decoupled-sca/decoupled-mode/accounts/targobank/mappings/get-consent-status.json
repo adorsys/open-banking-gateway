@@ -1,6 +1,7 @@
 {
   "scenarioName": "AccountsListUsingTargoBankDecoupled",
   "newScenarioState": "GetConsentStatus",
+  "requiredScenarioState": "GetScaFinalisedStatus",
   "request" : {
     "urlPattern" : "/v1/consents/.+/status",
     "method" : "GET",

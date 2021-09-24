@@ -1,5 +1,6 @@
 {
   "scenarioName": "PaymentInitializationUsingTargoBankDecoupled",
+  "requiredScenarioState": "PaymentInitiation",
   "newScenarioState": "AuthorizationUpdated",
   "request" : {
     "urlPattern" : "/v1/payments/sepa-credit-transfers/.+/authorisations",
