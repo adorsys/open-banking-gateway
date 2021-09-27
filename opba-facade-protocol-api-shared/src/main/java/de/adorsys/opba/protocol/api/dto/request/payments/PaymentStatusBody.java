@@ -10,6 +10,7 @@ import java.time.OffsetDateTime;
  */
 @Data
 public class PaymentStatusBody implements ResultBody {
+    private String externalResourceId;
     private String transactionStatus;
     private OffsetDateTime createdAt;
 }

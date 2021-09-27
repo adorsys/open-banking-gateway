@@ -13,6 +13,7 @@ import java.time.LocalDate;
 public class TransactionDetailsBody {
 
     String transactionId;
+    String externalResourceId;
     String entryReference;
     String endToEndId;
     String mandateId;

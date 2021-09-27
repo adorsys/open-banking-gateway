@@ -225,6 +225,9 @@ components:
         - creditorAccount
         - creditorName
       properties:
+        externalResourceId:
+          description: Identifier of the account in 3rd party data provider like FinAPI (similar to resourceId)
+          type: string
         endToEndIdentification:
           type: string
           maxLength: 35
@@ -253,6 +256,9 @@ components:
       required:
         - transactionStatus
       properties:
+        externalResourceId:
+          description: Identifier of the account in 3rd party data provider like FinAPI (similar to resourceId)
+          type: string
         transactionStatus:
           $ref: "#/components/schemas/transactionStatus"
         fundsAvailable:

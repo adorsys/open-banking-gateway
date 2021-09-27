@@ -478,6 +478,9 @@ components:
           description: Name of the account given by the bank or the PSU in online-banking.
           type: string
           maxLength: 35
+        externalResourceId:
+          description: Identifier of the account in 3rd party data provider like FinAPI (similar to resourceId)
+          type: string
         product:
           description: Product name of the bank for this account, proprietary definition.
           type: string
@@ -1073,6 +1076,9 @@ components:
             the Transaction Id can be used as access-ID in the API, where more details on an transaction is offered.
             If this data attribute is provided this shows that the AIS can get access on more details about this
             transaction using the Get transaction details request.
+          type: string
+        externalResourceId:
+          description: Identifier of the account in 3rd party data provider like FinAPI (similar to resourceId)
           type: string
         entryReference:
           description: |
