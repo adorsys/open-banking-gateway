@@ -10,7 +10,7 @@
         "matches" : ".+"
       },
       "X-bvpsd2-test-apikey" : {
-        "equalTo" : "tUfZ5KOHRTFrikZUsmSMUabKw09UIzGE"
+        "equalTo" : "dmVybGFnLmFwaWtleS50ZXN0LnZhbHVl"
       }
     }
   },
