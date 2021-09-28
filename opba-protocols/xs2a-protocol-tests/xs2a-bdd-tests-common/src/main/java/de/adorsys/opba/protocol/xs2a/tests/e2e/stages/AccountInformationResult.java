@@ -214,6 +214,11 @@ public class AccountInformationResult<SELF extends AccountInformationResult<SELF
     }
 
     @SneakyThrows
+    public SELF open_banking_can_read_max_musterman_account_data_using_consent_bound_to_service_session(String bankProfileId) {
+        return open_banking_can_read_max_musterman_account_data_using_consent_bound_to_service_session(true, 0, true, bankProfileId);
+    }
+
+    @SneakyThrows
     public SELF open_banking_can_read_max_musterman_account_data_using_consent_bound_to_service_session(
             boolean validateResourceId
     ) {

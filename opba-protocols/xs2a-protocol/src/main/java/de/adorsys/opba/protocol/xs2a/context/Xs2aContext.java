@@ -85,6 +85,9 @@ public class Xs2aContext extends BaseContext {
      */
     private String authorizationId;
 
+
+    private boolean startAuthorizationWithData;
+
     /**
      * Current status of consent authorization (consent authorization stage)
      */

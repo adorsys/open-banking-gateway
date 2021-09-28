@@ -18,6 +18,7 @@
     <include relativeToChangelogFile="true" file="migrations/0012-add-is-active-field-to-bank.xml"/>
     <include relativeToChangelogFile="true" file="migrations/0013-add-auth-session-status.xml"/>
     <include relativeToChangelogFile="true" file="migrations/0014-update-sparkasse-adapter.xml" context="xs2a-banks"/>
+    <include relativeToChangelogFile="true" file="migrations/0015-add-skip-psu-auth-for-verlag-bank.xml"/>
     <includeAll relativeToChangelogFile="true" path="migrations/0015-finapi-add-status-handlers" context="finapi-sandbox-banks OR finapi-prod-banks OR finapi-sandbox-test-bank"/>
     <includeAll relativeToChangelogFile="true" path="migrations/0016-finapi-add-ais-session-update" context="finapi-sandbox-banks OR finapi-prod-banks OR finapi-sandbox-test-bank"/>
     <include relativeToChangelogFile="true" file="migrations/0017-add-consent-type-support.xml"/>

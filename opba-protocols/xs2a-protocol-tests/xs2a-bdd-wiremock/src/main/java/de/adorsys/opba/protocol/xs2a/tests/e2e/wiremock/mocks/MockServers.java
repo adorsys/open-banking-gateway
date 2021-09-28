@@ -48,7 +48,7 @@ public class MockServers<SELF extends MockServers<SELF>> extends CommonGivenStag
     public static final String SPARKASSE_BANK_ID = "03668d3e-c2a7-425a-b50a-f73347fbfb33";
     public static final String SANDBOX_BANK_ID = "adadadad-4000-0000-0000-b0b0b0b0b0b0";
     public static final String SANTANDER_BANK_ID = "afd7605a-0834-4f84-9a86-cfe468b3f336";
-
+    public static final String TARGO_BANK_ID = "d1eab9f5-1746-4629-b961-bf6df48ff4d6";
 
 
     @Autowired
@@ -86,6 +86,7 @@ public class MockServers<SELF extends MockServers<SELF>> extends CommonGivenStag
 
         return self();
     }
+
 
     public SELF redirect_mock_of_consorsbank_for_anton_brueckner_accounts_running() {
         WireMockConfiguration config = WireMockConfiguration.options().dynamicPort()
@@ -257,6 +258,8 @@ public class MockServers<SELF extends MockServers<SELF>> extends CommonGivenStag
         return self();
     }
 
+
+
     public SELF decoupled_embedded_approach_sca_decoupled_start_mock_of_sandbox_for_max_musterman_accounts_running() {
         WireMockConfiguration config = WireMockConfiguration.options().dynamicPort()
                 .usingFilesUnderClasspath("mockedsandbox/restrecord/decoupled-sca/embedded-mode-decoupled-sca/accounts/");
@@ -273,9 +276,18 @@ public class MockServers<SELF extends MockServers<SELF>> extends CommonGivenStag
         return self();
     }
 
+
+    public SELF decoupled_embedded_approach_sca_decoupled_start_mock_of_targoBank_for_max_musterman_accounts_running() {
+
+        WireMockConfiguration config = WireMockConfiguration.options().dynamicPort()
+                .usingFilesUnderClasspath("mockedsandbox/restrecord/decoupled-sca/decoupled-mode/accounts/targobank/");
+        startWireMock(config, TARGO_BANK_ID, defaultBankProfileConfigurer);
+        return self();
+    }
+
     public SELF embedded_mock_of_sparkasse_for_max_musterman_accounts_running() {
         WireMockConfiguration config = WireMockConfiguration.options().dynamicPort()
-            .usingFilesUnderClasspath("mockedsandbox/restrecord/embedded/sparkasse/");
+                .usingFilesUnderClasspath("mockedsandbox/restrecord/embedded/sparkasse/");
         startWireMock(config, SPARKASSE_BANK_ID, defaultBankProfileConfigurer);
         return self();
     }
@@ -334,6 +346,15 @@ public class MockServers<SELF extends MockServers<SELF>> extends CommonGivenStag
 
         return self();
     }
+
+    public SELF decoupled_embedded_approach_sca_decoupled_start_mock_of_targo_bank_for_max_musterman_payments_running() {
+        WireMockConfiguration config = WireMockConfiguration.options().dynamicPort()
+                .usingFilesUnderClasspath("mockedsandbox/restrecord/decoupled-sca/decoupled-mode/payments/targobank/");
+        startWireMock(config, TARGO_BANK_ID, defaultBankProfileConfigurer);
+        return self();
+    }
+
+
 
     // Stress tests can't use WireMock state without making them complicated
     public SELF embedded_mock_of_sandbox_for_max_musterman_accounts_running_stateless() {

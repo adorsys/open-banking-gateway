@@ -141,6 +141,7 @@ public class MapBasedRequestScopedServicesProvider implements RequestScopedServi
         private boolean tryToUsePreferredApproach;
         private boolean uniquePaymentPurpose;
         private boolean xs2aSkipConsentAuthorization;
+        private boolean xs2aStartConsentAuthorizationWithPin;
         private String bic;
         private String bankCode;
         private String name;

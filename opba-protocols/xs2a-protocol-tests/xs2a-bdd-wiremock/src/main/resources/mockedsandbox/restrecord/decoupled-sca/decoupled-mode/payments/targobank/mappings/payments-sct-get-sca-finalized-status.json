@@ -1,30 +1,30 @@
 {
-  "scenarioName": "AccountsListUsingPostbankEmbedded",
-  "newScenarioState": "GetScaStatus",
+  "scenarioName": "PaymentInitializationUsingTargoBankDecoupled",
+  "newScenarioState": "GetScaFinalisedStatus",
+  "requiredScenarioState": "GetScaMethodSelectedStatus",
   "request" : {
-    "urlPattern" : "/ais/DE/Postbank/v1/consents/.+/authorisations/.+",
+    "urlPattern" : "/v1/payments/sepa-credit-transfers/.+/authorisations/.+",
     "method" : "GET",
     "headers" : {
       "X-Request-ID" : {
         "matches" : ".+"
       },
-      "Date" : {
-        "matches" : ".+"
+      "X-bvpsd2-test-apikey" : {
+        "equalTo" : "dmVybGFnLmFwaWtleS50ZXN0LnZhbHVl"
+      },
+      "PSU-ID" : {
+        "equalTo" : "max.musterman"
       }
     }
   },
   "response" : {
-    "status" : 200,
+    "status" : 202,
     "body" : "{\"scaStatus\":\"finalised\"}",
     "headers" : {
       "Date" : "Mon, 01 Mar 2021 16:19:49 GMT",
       "Server" : "Apache",
-      "glue2gExit" : "2021-03-01T16:19:49.892",
       "X-Request-ID" : "b28cdd07-d567-4942-98dc-b3cc146eb8ce",
-      "bffEntry" : "2021-03-01T16:19:49.612",
-      "bffExit" : "2021-03-01T16:19:49.892",
       "Content-Type" : "application/json;charset=utf-8",
-      "glue2gEntry" : "2021-03-01T16:19:49.612",
       "Keep-Alive" : "timeout=5, max=100"
     }
   },

@@ -24,9 +24,11 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.nio.file.Path;
 import java.util.UUID;
-import static de.adorsys.opba.protocol.xs2a.tests.e2e.stages.StagesCommonUtil.SANDBOX_BANK_PROFILE_ID;
+
 import static de.adorsys.opba.protocol.xs2a.tests.TestProfiles.MOCKED_SANDBOX;
 import static de.adorsys.opba.protocol.xs2a.tests.TestProfiles.ONE_TIME_POSTGRES_RAMFS;
+import static de.adorsys.opba.protocol.xs2a.tests.e2e.stages.StagesCommonUtil.SANDBOX_BANK_PROFILE_ID;
+import static de.adorsys.opba.protocol.xs2a.tests.e2e.stages.StagesCommonUtil.TARGO_BANK_PROFILE_ID;
 import static de.adorsys.opba.protocol.xs2a.tests.e2e.wiremock.mocks.WiremockConst.ANTON_BRUECKNER_RESOURCE_ID;
 import static de.adorsys.opba.protocol.xs2a.tests.e2e.wiremock.mocks.WiremockConst.BOTH_BOOKING;
 import static de.adorsys.opba.protocol.xs2a.tests.e2e.wiremock.mocks.WiremockConst.DATE_FROM;
@@ -242,6 +244,37 @@ class WiremockAnonymousConsentE2EXs2aProtocolTest extends SpringScenarioTest<Moc
                 .open_banking_has_consent_for_max_musterman_transaction_list()
                 .fintech_calls_consent_activation_for_current_authorization_id()
                 .open_banking_can_read_max_musterman_account_data_using_consent_bound_to_service_session();
+    }
+
+    @Test
+    void testTargoBankAccountListWithConsentUsingDecoupledWhenEmbeddedAndDecoupledSca() {
+        given()
+                .decoupled_embedded_approach_sca_decoupled_start_mock_of_targoBank_for_max_musterman_accounts_running()
+                .set_default_preferred_approach()
+                .preferred_sca_approach_selected_for_all_banks_in_opba(Approach.DECOUPLED)
+                .rest_assured_points_to_opba_server_with_fintech_signer_on_banking_api()
+                .user_registered_in_opba_with_credentials(OPBA_LOGIN, OPBA_PASSWORD);
+
+        when()
+                .fintech_calls_list_accounts_for_max_musterman(TARGO_BANK_PROFILE_ID)
+                .and()
+                .user_logged_in_into_opba_as_opba_user_with_credentials_using_fintech_supplied_url(OPBA_LOGIN, OPBA_PASSWORD)
+                .and()
+                .user_max_musterman_provided_initial_parameters_to_list_accounts_dedicated_accounts_consent()
+                .and()
+                .user_max_musterman_provided_password_to_embedded_authorization()
+                .and()
+                .user_max_musterman_polling_api_to_check_sca_status(HttpStatus.OK, Const.SCA_METHOD_SELECTED)
+                .and()
+                .user_max_musterman_polling_api_to_check_sca_status(HttpStatus.OK, Const.FINALISED)
+                .and()
+                .user_max_musterman_polling_api_to_check_sca_status(HttpStatus.ACCEPTED, null)
+                .and()
+                .current_redirected_to_screen_is_consent_result();
+        then()
+                .open_banking_has_consent_for_max_musterman_transaction_list()
+                .fintech_calls_consent_activation_for_current_authorization_id()
+                .open_banking_can_read_max_musterman_account_data_using_consent_bound_to_service_session(TARGO_BANK_PROFILE_ID);
     }
 
     @ParameterizedTest

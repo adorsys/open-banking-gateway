@@ -58,6 +58,11 @@ public interface CurrentBankProfile {
     boolean isXs2aSkipConsentAuthorization();
 
     /**
+     * Whether to start Consent Authorization with user Pin
+     */
+    boolean isXs2aStartConsentAuthorizationWithPin();
+
+    /**
      * Bank identification code.
      */
     String getBic();
