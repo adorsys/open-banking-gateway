@@ -1,6 +1,8 @@
 {
   "id" : "732fcf37-e3b5-4f55-9741-93c993944539",
   "name" : "v1_accounts",
+  "requiredScenarioState": "Finalised",
+  "newScenarioState": "GetAccount",
   "request" : {
     "url" : "/v1/accounts?withBalance=false",
     "method" : "GET",

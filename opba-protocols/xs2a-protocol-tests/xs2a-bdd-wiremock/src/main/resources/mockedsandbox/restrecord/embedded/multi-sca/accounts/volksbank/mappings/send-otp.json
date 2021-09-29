@@ -1,6 +1,8 @@
 {
   "id" : "e567958d-d81f-479e-ae97-75707fbd30df",
   "name" : "v1_consents_8117230618090020246psdde-bafin-911360co4960jj_authorisations_0942330618090020247psdde-bafin-911360au4960jj",
+  "requiredScenarioState": "ScaMethodSelected",
+  "newScenarioState": "Finalised",
   "request" : {
     "urlPattern" : "/v1/consents/.+/authorisations/.+",
     "method" : "PUT",

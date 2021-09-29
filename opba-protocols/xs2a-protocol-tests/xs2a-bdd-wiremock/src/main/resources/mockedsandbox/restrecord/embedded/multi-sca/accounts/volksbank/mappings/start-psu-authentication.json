@@ -1,6 +1,8 @@
 {
   "id" : "d7a83703-ca5c-4490-a9de-1def361ff6e8",
   "name" : "v1_consents_8117230618090020246psdde-bafin-911360co4960jj_authorisations",
+  "requiredScenarioState": "Received",
+  "newScenarioState": "PsuIdentified",
   "request" : {
     "urlPattern" : "/v1/consents/.+/authorisations",
     "method" : "POST",
