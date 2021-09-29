@@ -22,6 +22,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
+import java.util.Collections;
 import java.util.UUID;
 
 import static de.adorsys.opba.api.security.external.domain.HttpHeaders.AUTHORIZATION_SESSION_KEY;
@@ -428,6 +429,25 @@ public class AccountInformationResult<SELF extends AccountInformationResult<SELF
                         )
                 )
                 .body("transactions.booked", hasSize(MAX_MUSTERMAN_BOOKED_TRANSACTIONS_COUNT));
+        return self();
+    }
+
+    @SneakyThrows
+    public SELF open_banking_can_read_max_musterman_transactions_data_using_consent_bound_to_service_session_volksbank(
+        String resourceId, LocalDate dateFrom, LocalDate dateTo, String bookingStatus, boolean online
+    ) {
+        withTransactionsHeaders(MAX_MUSTERMAN)
+            .header(SERVICE_SESSION_ID, serviceSessionId)
+            .queryParam("dateFrom", dateFrom.format(ISO_DATE))
+            .queryParam("dateTo", dateTo.format(ISO_DATE))
+            .queryParam("bookingStatus", bookingStatus)
+            .queryParam("online", online)
+            .when()
+            .get(AIS_TRANSACTIONS_ENDPOINT, resourceId)
+            .then()
+            .statusCode(HttpStatus.OK.value())
+            .body("transactions.booked.mandateId", equalTo(Collections.singletonList("VHF5-8R1RCcskezln6CJAY")))
+            .body("transactions.booked", hasSize(1));
         return self();
     }
 

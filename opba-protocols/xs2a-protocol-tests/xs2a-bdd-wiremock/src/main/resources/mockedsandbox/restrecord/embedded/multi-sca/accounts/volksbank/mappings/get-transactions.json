@@ -1,8 +1,10 @@
 {
   "id" : "2d629556-f1bc-41c1-a839-2fb6688ff4de",
   "name" : "v1_accounts_imxyy9azehj0zrrtwqkjtt_transactions",
+  "requiredScenarioState": "GetAccount",
+  "newScenarioState": "GetTransaction",
   "request" : {
-    "urlPattern" : "/v1/accounts/.+/transactions\\?dateFrom=.+&dateTo=.+&bookingStatus=booked&withBalance=true",
+    "url" : "/v1/accounts/oN7KTVuJSVotMvPPPavhVo/transactions?dateTo=2020-09-30&bookingStatus=booked&dateFrom=2018-01-01",
     "method" : "GET",
     "headers" : {
       "X-Request-ID" : {
@@ -24,7 +26,7 @@
   },
   "response" : {
     "status" : 200,
-    "body" : "{\"account\":{\"iban\":\"DE45499999600000005100\",\"currency\":\"EUR\"},\"transactions\":{\"booked\":[{\"bookingDate\":\"2018-11-30\",\"valueDate\":\"2018-11-30\",\"transactionAmount\":{\"currency\":\"EUR\",\"amount\":\"-231.88\"},\"remittanceInformationUnstructured\":\"Abrechnung vom  30.11.2018\",\"proprietaryBankTransactionCode\":\"NDDT+005+990197\"},{\"bookingDate\":\"2018-12-03\",\"valueDate\":\"2018-12-03\",\"transactionAmount\":{\"currency\":\"EUR\",\"amount\":\"-2.31\"},\"remittanceInformationUnstructured\":\"Dauerauftragsgebühren\",\"proprietaryBankTransactionCode\":\"NDDT+005+991300\"},{\"bookingDate\":\"2018-12-28\",\"valueDate\":\"2018-12-30\",\"transactionAmount\":{\"currency\":\"EUR\",\"amount\":\"-24.45\"},\"remittanceInformationUnstructured\":\"für Konto      0000005101\",\"proprietaryBankTransactionCode\":\"NDDT+005+990197\"},{\"bookingDate\":\"2018-12-28\",\"valueDate\":\"2018-12-30\",\"transactionAmount\":{\"currency\":\"EUR\",\"amount\":\"-235.38\"},\"remittanceInformationUnstructured\":\"Abrechnung vom  28.12.2018\",\"proprietaryBankTransactionCode\":\"NDDT+005+990197\"},{\"bookingDate\":\"2019-01-02\",\"valueDate\":\"2019-01-02\",\"transactionAmount\":{\"currency\":\"EUR\",\"amount\":\"-2.31\"},\"remittanceInformationUnstructured\":\"Dauerauftragsgebühren\",\"proprietaryBankTransactionCode\":\"NDDT+005+991300\"},{\"bookingDate\":\"2019-01-18\",\"valueDate\":\"2019-01-18\",\"transactionAmount\":{\"currency\":\"EUR\",\"amount\":\"-2.31\"},\"remittanceInformationUnstructured\":\"Dauerauftragsgebühren\",\"proprietaryBankTransactionCode\":\"NDDT+005+991300\"},{\"bookingDate\":\"2019-01-31\",\"valueDate\":\"2019-01-30\",\"transactionAmount\":{\"currency\":\"EUR\",\"amount\":\"-239.23\"},\"remittanceInformationUnstructured\":\"Abrechnung vom  31.01.2019\",\"proprietaryBankTransactionCode\":\"NDDT+005+990197\"},{\"bookingDate\":\"2019-02-15\",\"valueDate\":\"2019-02-15\",\"transactionAmount\":{\"currency\":\"EUR\",\"amount\":\"-2.31\"},\"remittanceInformationUnstructured\":\"Dauerauftragsgebühren\",\"proprietaryBankTransactionCode\":\"NDDT+005+991300\"}],\"_links\":{\"account\":{\"href\":\"/v1/accounts/imxyy9AzEHJ0ZRRTWQKJtt\"}}},\"balances\":[{\"balanceAmount\":{\"currency\":\"EUR\",\"amount\":\"-16054.94\"},\"balanceType\":\"openingBooked\",\"referenceDate\":\"2018-11-30\"},{\"balanceAmount\":{\"currency\":\"EUR\",\"amount\":\"-16795.12\"},\"balanceType\":\"closingBooked\",\"referenceDate\":\"2019-02-15\"}]}",
+    "bodyFileName" : "response-body-get-transactions.json",
     "headers" : {
       "Date" : "Tue, 08 Sep 2020 14:04:11 GMT",
       "Server" : "Webserver",

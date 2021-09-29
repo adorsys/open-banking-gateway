@@ -156,7 +156,7 @@ class WiremockConsentE2EXs2aProtocolTest extends SpringScenarioTest<MockServers,
     }
 
     @Test
-    void testVolksbankAccountsListWithConsentUsingEmbedded() {
+    void testVolksbankAccountsAndTransactionListWithConsentUsingEmbedded() {
         given()
             .embedded_mock_of_volksbank_for_max_musterman_accounts_running()
             .set_default_preferred_approach()
@@ -178,7 +178,10 @@ class WiremockConsentE2EXs2aProtocolTest extends SpringScenarioTest<MockServers,
         then()
             .open_banking_has_consent_for_max_musterman_account_list()
             .fintech_calls_consent_activation_for_current_authorization_id()
-            .open_banking_can_read_volksbank_account_data_using_consent_bound_to_service_session(true);
+            .open_banking_can_read_volksbank_account_data_using_consent_bound_to_service_session(true)
+            .open_banking_can_read_max_musterman_transactions_data_using_consent_bound_to_service_session_volksbank(
+            MAX_MUSTERMAN_RESOURCE_ID, DATE_FROM, DATE_TO, "booked", true
+        );
     }
 
     @ParameterizedTest
