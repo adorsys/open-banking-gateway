@@ -289,12 +289,16 @@ protocol:
   finapi:
     api-url: https://sandbox.finapi.io
     token-url: ${protocol.finapi.api-url}/oauth/token
+    banks-url: ${protocol.finapi.api-url}/api/v1/banks
     token-scope: all
     client-id: dummy
     client-secret: dummy
     client-api-cache-size: 100
     client-api-expire-after-access: PT30M
     from-aspsp-url: ${facade.urls.embedded-ui-base-url}/embedded-server/v1/consent/{authSessionId}/fromAspsp/{aspspRedirectCode}/ok
+    bank-service:
+      obg-banks-url: "https://raw.githubusercontent.com/adorsys/open-banking-gateway/develop/opba-db/src/main/resources/migration/migrations/csv/v0/0-banks.csv";
+      finapi-bank-data-path: /tmp
 
 # Flowable comes for all protocols shared
 bpmnshared:
