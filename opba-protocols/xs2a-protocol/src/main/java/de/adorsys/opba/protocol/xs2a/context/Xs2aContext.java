@@ -85,9 +85,6 @@ public class Xs2aContext extends BaseContext {
      */
     private String authorizationId;
 
-
-    private boolean startAuthorizationWithData;
-
     /**
      * Current status of consent authorization (consent authorization stage)
      */
@@ -213,8 +210,6 @@ public class Xs2aContext extends BaseContext {
      * Is decoupled SCA successfully finalized by PSU
      */
     private boolean decoupledScaFinished;
-
-    private boolean authenticatedOnStart;
 
     @JsonIgnore
     public String getPsuPassword() {

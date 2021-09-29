@@ -22,6 +22,7 @@ import de.adorsys.xs2a.adapter.api.model.StartScaprocessResponse;
 import de.adorsys.xs2a.adapter.api.model.UpdatePsuAuthentication;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.lang3.StringUtils;
 import org.flowable.engine.delegate.DelegateExecution;
 import org.springframework.stereotype.Service;
 
@@ -99,10 +100,13 @@ public class StartConsentAuthorizationWithPin extends ValidatedExecution<Xs2aCon
                 params.getPath().toParameters(),
                 params.getBody()
         );
-
         logResolver.log("startConsentAuthorisation response: {}", scaStart);
 
         context.setAuthorizationId(scaStart.getBody().getAuthorisationId());
+        if (context.getAuthorizationId() == null) {
+            String selectAuthenticationMethod = scaStart.getBody().getLinks().get("selectAuthenticationMethod").getHref();
+            context.setAuthorizationId(StringUtils.substringAfterLast(selectAuthenticationMethod, "authorisations/"));
+        }
         context.setStartScaProcessResponse(scaStart.getBody());
         String aspspSelectedApproach = scaStart.getHeaders().getHeader(ASPSP_SCA_APPROACH);
         context.setAspspScaApproach(null == aspspSelectedApproach ? config.getPreferredApproach().name() : aspspSelectedApproach);
@@ -114,7 +118,7 @@ public class StartConsentAuthorizationWithPin extends ValidatedExecution<Xs2aCon
                     ctx.setPsuPassword(null); // eagerly destroy password, albeit it is not persisted
                     setScaAvailableMethodsIfCanBeChosen(scaStart, ctx);
                     ctx.setScaSelected(ScaUtil.scaMethodSelected(scaStart.getBody()));
-                    ctx.setAuthorizationId(scaStart.getBody().getAuthorisationId());
+                    ctx.setAuthorizationId(context.getAuthorizationId());
                     ctx.setSelectedScaDecoupled(ScaUtil.isDecoupled(scaStart.getHeaders()));
                     ctx.setChallengeData(scaStart.getBody().getChallengeData());
                     ctx.setStartScaProcessResponse(scaStart.getBody());
