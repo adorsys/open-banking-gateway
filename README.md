@@ -19,7 +19,7 @@ The European PSD2 as the first regulator driven Open Banking initiative offers m
 
 Being able to interact with different banking APIs can be a time and cost consuming challenge. Even though the PSD2 requires European banks to provide APIs and despite the effort of market initiatives to provide common standard interfaces, there is still a multitude of divergent authorization schemes involved and a lot of space for implementation options. A bank can even decide not to join one of the known market initiatives and define it's own PSD2 compliant API. 
 
-The purpose of this open banking gateway is to provide the community with a common and simple interface for accessing major Open Banking APIs.
+The purpose of this OpenBankingGateway is to provide the community with a common and simple interface for accessing major Open Banking APIs.
 
 ### Introducing the FinTech as a Major Role
 Being a regulator driven initiative, PSD2 mandates the regulation of TPPs. With this additional detail, the market is experiencing a distinction between regulated TPPs and non regulated FinTechs. This framework is therefore designed taking in consideration the existence of the category of payment service providers called FinTech that used APIs exposed by a regulated TPP to access payment services exposed by banks.
@@ -34,13 +34,13 @@ In the Open Banking Context, a payment service user (PSU or banking account hold
 
 ## Big Picture
 
-The following picture displays the overall architecture of this banking gateway:
+The following picture displays the overall architecture of this OpenBankingGateway:
 ![High level architecture](docs/img/open-banking-gateway-arch-14-01-2020.png)
 
 
 ## Security concept
 
-The following picture displays the overall security concept of this banking gateway:
+The following picture displays the overall security concept of this OpenBankingGateway:
 ![Security concept](docs/img/security-concept.png)
 
 Security concept has 2 kinds of flows:
@@ -53,7 +53,7 @@ Here are detailed diagrams of each flow:
 
 ## Technical architecture
 
-The following picture displays the overall technical architecture concept of this banking gateway:
+The following picture displays the overall technical architecture concept of this OpenBankingGateway:
 ![Technical architecture](docs/img/technical-architecture.svg)
 
 **Key components as shown on diagram**:

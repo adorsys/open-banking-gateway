@@ -183,7 +183,7 @@ Even in this embedded case, there is still a missing equivalence between __alice
 
 ### Step-3b: Identify PSU at the ASPSP's OnlineBankingApi (Redirect-sca) 
 
-In a Redirect-SCA case (oauth, redirect, decoupled), the PSU has to be redirected by the ConsentAuthorisationApi to the OnlienBanking interface of the ASPSP. After a successful consent authorization at the OnlienBanking interface, the record could be updated by the mean of poling the authorization status of this ConsentAuthorizationSession at the OpenBankingApi of the ASPSP. Upon successful authorization of the requested consent, the ConsentAuthorizationSession in the database of the TPP looks like:   
+In a Redirect-SCA case (oauth, redirect, decoupled), the PSU has to be redirected by the ConsentAuthorisationApi to the OnlineBanking interface of the ASPSP. After a successful consent authorization at the OnlineBanking interface, the record could be updated by the mean of poling the authorization status of this ConsentAuthorizationSession at the OpenBankingApi of the ASPSP. Upon successful authorization of the requested consent, the ConsentAuthorizationSession in the database of the TPP looks like:   
 
 ```
 [auth-id,redirectCode]=ConsentAuthorizationSession[auth-id,redirectCode, alice@fintech, alice123@tpp, alice-s@aspsp, ConsentData]

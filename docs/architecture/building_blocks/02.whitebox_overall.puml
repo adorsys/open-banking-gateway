@@ -6,7 +6,7 @@ actor PSU
 component "PSU User Agent" as PsuUserAgent
 component FinTech
 
-component "Banking Gateway" as opba {
+component "Open Banking Gateway" as opba {
     interface "TPP Bank search API" as BankSearchAPI
     interface "TPP Consent Auth API" as PsuConsentAuthAPI
     interface "TPP Banking Rest API" as BankingAPI
