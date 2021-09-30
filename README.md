@@ -53,7 +53,7 @@ In the Open Banking Context, a payment service user (PSU or banking account hold
 ## Big Picture
 
 The following picture displays the overall architecture of this banking gateway:
-![High level architecture](docs/img/open-banking-gateway-arch-14-01-2020.png)
+![High level architecture](docs/img/big-picture.png)
 
 
 ## Security concept
@@ -165,8 +165,8 @@ This project is licensed **(until 01.01.2022)** under the Apache License version
 
 Under a dual-licensing model, our product is available under two licenses:
 
-- [The Affero GNU General Public License v3 (AGPL v3)](https://www.gnu.org/licenses/agpl-3.0.en.html),
-- A proprietary commercial license.
+- [The Affero GNU General Public License v3 (AGPL v3)](https://www.gnu.org/licenses/agpl-3.0.en.html)
+- A proprietary commercial license
 
 If you are a developer or business that would like to review our products in detail, test and implement in your 
 open-source projects and share the changes back to the community, the product repository is freely available under AGPL v3.
@@ -232,11 +232,11 @@ All older Apache 2.0 licensed versions prior and including v1.0 will remain avai
 ### What open-source products from Adorsys are affected by the licensing change?
 
 The following products are affected:
- - XS2A Core
- - XS2A Sandbox & ModelBank
- - Open Banking Gateway incl. XS2A Adapters
- - SmartAnalytics
- - Datasafe
+ - [XS2A Core](https://github.com/adorsys/xs2a)
+ - [XS2A Sandbox & ModelBank](https://github.com/adorsys/XS2A-Sandbox)
+ - [Open Banking Gateway](https://github.com/adorsys/open-banking-gateway) incl. [XS2A Adapters](https://github.com/adorsys/xs2a-adapter)
+ - [SmartAnalytics](https://github.com/adorsys/smartanalytics)
+ - [Datasafe](https://github.com/adorsys/datasafe)
 
 
 ### I’m using one of these products indirectly via some software integrator. How does the licensing change affect me?
