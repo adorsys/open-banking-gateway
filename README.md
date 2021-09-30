@@ -24,7 +24,7 @@ We would like to thank all our users for their trust so far and are convinced th
 For more information, advice for your implementation project or if your use case requires more time to adapt this change, 
 please contact us at [psd2@adorsys.com](mailto:psd2@adorsys.com).
 
-For additional details please see the section [FAQ on Licensing Change](#licensing-model-change-to-dual-license-_agpl-v3_-or-_commercial-license_).
+For additional details please see the section [FAQ on Licensing Change](#faq-on-licensing-change).
 
 
 # Open Banking Gateway
