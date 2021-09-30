@@ -33,6 +33,7 @@ class TestTppBankSearchController extends BaseMockitoTest {
 
     @Autowired
     private RequestSigningService requestSigningService;
+
     @Test
     void testBankSearch() throws Exception {
         UUID xRequestId = UUID.randomUUID();
@@ -45,6 +46,18 @@ class TestTppBankSearchController extends BaseMockitoTest {
                 .andExpect(jsonPath("$.bankDescriptor[0].bic").value("COBADEFFXXX"))
                 .andExpect(jsonPath("$.bankDescriptor[0].bankCode").value("35640064"))
                 .andExpect(jsonPath("$.bankDescriptor[0].uuid").value("291b2ca1-b35f-463e-ad94-2a1a26c09304"))
+                .andReturn();
+    }
+
+    @Test
+    void testBankSearchWithBlankKeyword() throws Exception {
+        UUID xRequestId = UUID.randomUUID();
+        Instant xTimestampUtc = Instant.now();
+        String keyword = " ";
+
+        performBankSearchRequest(xRequestId, xTimestampUtc, keyword)
+                .andExpect(jsonPath("$.bankDescriptor.length()").value("0"))
+                .andExpect(jsonPath("$.keyword").value(" "))
                 .andReturn();
     }
 

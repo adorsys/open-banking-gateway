@@ -14,6 +14,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
@@ -51,7 +52,8 @@ public class TppBankSearchController implements TppBankSearchApi {
         if (onlyActive == null) {
             onlyActive = true;
         }
-        List<BankDescriptor> banks = bankService.getBanks(keyword, start, max, onlyActive);
+
+        List<BankDescriptor> banks = keyword.isBlank() ? Collections.emptyList() : bankService.getBanks(keyword, start, max, onlyActive);
 
         BankSearchResponse response = new BankSearchResponse();
         response.bankDescriptor(banks);
