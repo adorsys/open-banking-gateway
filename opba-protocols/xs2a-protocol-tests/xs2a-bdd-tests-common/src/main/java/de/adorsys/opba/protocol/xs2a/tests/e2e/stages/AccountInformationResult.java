@@ -262,18 +262,18 @@ public class AccountInformationResult<SELF extends AccountInformationResult<SELF
     @SneakyThrows
     public SELF open_banking_can_read_volksbank_account_data_using_consent_bound_to_service_session(boolean online) {
         ValidatableResponse body = withAccountsHeaders(ANTON_BRUECKNER, VOLKSBANK_BANK_PROFILE_ID)
-            .header(SERVICE_SESSION_ID, serviceSessionId)
-            .when()
-            .queryParam("online", online)
-            .queryParam("withBalance", false)
-            .get(AIS_ACCOUNTS_ENDPOINT)
-            .then()
-            .statusCode(HttpStatus.OK.value())
-            .body("accounts[0].iban", equalTo(MAX_MUSTERMAN_IBAN))
-            .body("accounts[0].resourceId", equalTo("oN7KTVuJSVotMvPPPavhVo"))
-            .body("accounts[0].currency", equalTo("EUR"))
-            .body("accounts[0].ownerName", equalTo("max.musterman"))
-            .body("accounts", hasSize(15));
+                    .header(SERVICE_SESSION_ID, serviceSessionId)
+                .when()
+                    .queryParam("online", online)
+                    .queryParam("withBalance", false)
+                    .get(AIS_ACCOUNTS_ENDPOINT)
+                .then()
+                    .statusCode(HttpStatus.OK.value())
+                    .body("accounts[0].iban", equalTo(MAX_MUSTERMAN_IBAN))
+                    .body("accounts[0].resourceId", equalTo("oN7KTVuJSVotMvPPPavhVo"))
+                    .body("accounts[0].currency", equalTo("EUR"))
+                    .body("accounts[0].ownerName", equalTo("max.musterman"))
+                    .body("accounts", hasSize(15));
         ExtractableResponse<Response> response = body.extract();
         this.responseContent = response.body().asString();
         return self();
@@ -437,17 +437,17 @@ public class AccountInformationResult<SELF extends AccountInformationResult<SELF
         String resourceId, LocalDate dateFrom, LocalDate dateTo, String bookingStatus, boolean online
     ) {
         withTransactionsHeaders(MAX_MUSTERMAN)
-            .header(SERVICE_SESSION_ID, serviceSessionId)
-            .queryParam("dateFrom", dateFrom.format(ISO_DATE))
-            .queryParam("dateTo", dateTo.format(ISO_DATE))
-            .queryParam("bookingStatus", bookingStatus)
-            .queryParam("online", online)
-            .when()
-            .get(AIS_TRANSACTIONS_ENDPOINT, resourceId)
-            .then()
-            .statusCode(HttpStatus.OK.value())
-            .body("transactions.booked.mandateId", equalTo(Collections.singletonList("VHF5-8R1RCcskezln6CJAY")))
-            .body("transactions.booked", hasSize(1));
+                    .header(SERVICE_SESSION_ID, serviceSessionId)
+                    .queryParam("dateFrom", dateFrom.format(ISO_DATE))
+                    .queryParam("dateTo", dateTo.format(ISO_DATE))
+                    .queryParam("bookingStatus", bookingStatus)
+                    .queryParam("online", online)
+                .when()
+                    .get(AIS_TRANSACTIONS_ENDPOINT, resourceId)
+                .then()
+                    .statusCode(HttpStatus.OK.value())
+                    .body("transactions.booked.mandateId", equalTo(Collections.singletonList("VHF5-8R1RCcskezln6CJAY")))
+                    .body("transactions.booked", hasSize(1));
         return self();
     }
 
