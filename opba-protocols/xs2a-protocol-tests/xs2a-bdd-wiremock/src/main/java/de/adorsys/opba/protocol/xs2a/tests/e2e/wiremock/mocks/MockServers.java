@@ -244,6 +244,22 @@ public class MockServers<SELF extends MockServers<SELF>> extends CommonGivenStag
         return self();
     }
 
+    public SELF embedded_mock_of_sandbox_for_anton_brueckner_accounts_running() {
+        WireMockConfiguration config = WireMockConfiguration.options().dynamicPort()
+                .usingFilesUnderClasspath("mockedsandbox/restrecord/embedded/one-sca/accounts/sandbox/");
+        startWireMock(config);
+
+        return self();
+    }
+
+    public SELF embedded_mock_of_sandbox_for_anton_brueckner_payments_running() {
+        WireMockConfiguration config = WireMockConfiguration.options().dynamicPort()
+                .usingFilesUnderClasspath("mockedsandbox/restrecord/embedded/one-sca/payments/sandbox/");
+        startWireMock(config);
+
+        return self();
+    }
+
     public SELF embedded_pre_step_mock_of_dkb_sandbox_for_max_musterman_accounts_running() {
         WireMockConfiguration config = WireMockConfiguration.options().dynamicPort()
                 .usingFilesUnderClasspath("mockedsandbox/restrecord/embedded/pre-step/accounts/dkb/");

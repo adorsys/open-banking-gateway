@@ -1,0 +1,38 @@
+{
+  "id" : "34ca3923-6029-3c94-aabd-ac9434b9c6e6",
+  "scenarioName": "PaymentInitializationUsingOneScaEmbedded",
+  "newScenarioState": "InitAuthorization",
+  "request" : {
+    "url" : "/v1/payments/sepa-credit-transfers/QY__AVEz7_jSBQ7DoVT5RUK-MXSZq_LdvJpCrILSc1q_T9itf-ZHujfO-sPZAfNFcgftJbETkzvNvu5mZQqWcA==_=_psGLvQpt9Q/authorisations",
+    "method" : "POST",
+    "headers" : {
+      "X-Request-ID" : {
+        "matches": "[0-9a-zA-z\\-]+"
+      },
+      "PSU-ID" : {
+        "equalTo" : "anton.brueckner"
+      },
+      "Content-Type" : {
+        "equalTo" : "application/json; charset=UTF-8"
+      }
+    },
+    "bodyPatterns" : [ {
+      "equalToJson" : "{}",
+      "ignoreArrayOrder" : true,
+      "ignoreExtraElements" : true
+    } ]
+  },
+  "response" : {
+    "status" : 201,
+    "bodyFileName" : "body-v1-payments-sepa-credit-transfers-DNg0h.json",
+    "headers" : {
+      "Vary" : [ "Origin", "Access-Control-Request-Method", "Access-Control-Request-Headers" ],
+      "Aspsp-Sca-Approach" : "EMBEDDED",
+      "X-Request-Id" : "383e0855-07c4-4be6-a638-83f5c15fd95f",
+      "Content-Type" : "application/json",
+      "Date" : "Mon, 04 Oct 2021 16:38:46 GMT",
+      "Keep-Alive" : "timeout=60"
+    }
+  },
+  "uuid" : "34ca3923-6029-3c94-aabd-ac9434b9c6e6"
+}

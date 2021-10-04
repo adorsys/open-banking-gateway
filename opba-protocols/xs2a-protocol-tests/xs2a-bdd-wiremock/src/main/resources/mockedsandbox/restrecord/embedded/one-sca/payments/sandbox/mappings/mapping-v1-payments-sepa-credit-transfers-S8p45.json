@@ -1,0 +1,26 @@
+{
+  "id" : "3e2bc154-b68c-358f-ad36-ff2e8b5e7fad",
+  "scenarioName": "PaymentInitializationUsingOneScaEmbedded",
+  "newScenarioState": "GetPayment",
+  "request" : {
+    "url" : "/v1/payments/sepa-credit-transfers/QY__AVEz7_jSBQ7DoVT5RUK-MXSZq_LdvJpCrILSc1q_T9itf-ZHujfO-sPZAfNFcgftJbETkzvNvu5mZQqWcA==_=_psGLvQpt9Q",
+    "method" : "GET",
+    "headers" : {
+      "X-Request-ID" : {
+        "matches": "[0-9a-zA-z\\-]+"
+      }
+    }
+  },
+  "response" : {
+    "status" : 200,
+    "bodyFileName" : "body-v1-payments-sepa-credit-transfers-S8p45.json",
+    "headers" : {
+      "Vary" : [ "Origin", "Access-Control-Request-Method", "Access-Control-Request-Headers" ],
+      "X-Request-Id" : "b7ca77cc-a780-46e7-af88-ba062c94e913",
+      "Content-Type" : "application/json;charset=UTF-8",
+      "Date" : "Mon, 04 Oct 2021 16:39:02 GMT",
+      "Keep-Alive" : "timeout=60"
+    }
+  },
+  "uuid" : "3e2bc154-b68c-358f-ad36-ff2e8b5e7fad"
+}

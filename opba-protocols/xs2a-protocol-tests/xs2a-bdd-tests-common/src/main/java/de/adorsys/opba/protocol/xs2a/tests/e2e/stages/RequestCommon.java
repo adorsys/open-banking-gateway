@@ -230,6 +230,13 @@ public abstract class RequestCommon<SELF extends RequestCommon<SELF>> extends St
         );
     }
 
+    protected ExtractableResponse<Response> anton_brueckner_provides_password() {
+        return startInitialInternalConsentAuthorization(
+                AUTHORIZE_CONSENT_ENDPOINT,
+                readResource("restrecord/tpp-ui-input/params/anton-brueckner-password.json")
+        );
+    }
+
     protected ExtractableResponse<Response> user_provides_password(String password) {
         return startInitialInternalConsentAuthorization(
                 AUTHORIZE_CONSENT_ENDPOINT,
