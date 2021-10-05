@@ -27,7 +27,7 @@ paths:
         - name: keyword
           in: query
           description: The bank search input string
-          required: true
+          required: false
           schema:
             type: string
         - name: start

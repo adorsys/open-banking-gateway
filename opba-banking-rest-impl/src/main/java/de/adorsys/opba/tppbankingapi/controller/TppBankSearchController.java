@@ -14,7 +14,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.RestController;
 
-import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
@@ -25,6 +24,8 @@ import java.util.UUID;
 @CrossOrigin(origins = "*") //FIXME move CORS at gateway/load balancer level
 @SuppressWarnings("checkstyle:ParameterNumber")
 public class TppBankSearchController implements TppBankSearchApi {
+    private static final String EMPTY_STRING = "";
+
     @Value("${bank-search.start:0}") int defaultStart;
     @Value("${bank-search.max:10}") int defaultMax;
 
@@ -33,16 +34,19 @@ public class TppBankSearchController implements TppBankSearchApi {
     @Override
     public ResponseEntity<BankSearchResponse> bankSearchGET(
             UUID xRequestID,
-            String keyword,
             String xTimestampUTC,
             String xRequestSignature,
             String fintechId,
+            String keyword,
             Integer start,
             Integer max,
             Boolean onlyActive
             ) {
 
         log.debug("Bank search get request. keyword:{}, start:{}, max:{}, onlyActive:{}, xRequestID:{}", keyword, start, max, onlyActive, xRequestID);
+        if (keyword == null) {
+            keyword = EMPTY_STRING;
+        }
         if (start == null) {
             start = defaultStart;
         }
@@ -53,7 +57,7 @@ public class TppBankSearchController implements TppBankSearchApi {
             onlyActive = true;
         }
 
-        List<BankDescriptor> banks = keyword.isBlank() ? Collections.emptyList() : bankService.getBanks(keyword, start, max, onlyActive);
+        List<BankDescriptor> banks = bankService.getBanks(keyword, start, max, onlyActive);
 
         BankSearchResponse response = new BankSearchResponse();
         response.bankDescriptor(banks);
