@@ -48,6 +48,7 @@ public class MockServers<SELF extends MockServers<SELF>> extends CommonGivenStag
     public static final String SPARKASSE_BANK_ID = "03668d3e-c2a7-425a-b50a-f73347fbfb33";
     public static final String SANDBOX_BANK_ID = "adadadad-4000-0000-0000-b0b0b0b0b0b0";
     public static final String SANTANDER_BANK_ID = "afd7605a-0834-4f84-9a86-cfe468b3f336";
+    public static final String COMMERZ_BANK_ID = "22aa42be-c41a-4616-a2e7-6682d96ae64f";
     public static final String TARGO_BANK_ID = "d1eab9f5-1746-4629-b961-bf6df48ff4d6";
 
 
@@ -100,6 +101,14 @@ public class MockServers<SELF extends MockServers<SELF>> extends CommonGivenStag
         WireMockConfiguration config = WireMockConfiguration.options().dynamicPort()
                 .usingFilesUnderClasspath("mockedsandbox/restrecord/oauth2/integrated/accounts/santander/");
         startWireMock(config, SANTANDER_BANK_ID, defaultBankProfileConfigurer);
+
+        return self();
+    }
+
+    public SELF oauth2_integrated_mock_of_commerzbank_for_anton_brueckner_accounts_running() {
+        WireMockConfiguration config = WireMockConfiguration.options().dynamicPort()
+                .usingFilesUnderClasspath("mockedsandbox/restrecord/oauth2/integrated/accounts/commerzbank/");
+        startWireMock(config, COMMERZ_BANK_ID, defaultBankProfileConfigurer);
 
         return self();
     }
@@ -205,6 +214,22 @@ public class MockServers<SELF extends MockServers<SELF>> extends CommonGivenStag
                 .extensions(new ResponseTemplateTransformer(false));
         startWireMock(config);
         startWireMock(config, SANTANDER_BANK_ID, defaultBankProfileConfigurer);
+
+        return self();
+    }
+
+    public SELF oauth2_integrated_mock_of_commerzbank_for_anton_brueckner_payments_running(Path tempDir) {
+
+        mergeWireMockFixtures(
+                tempDir,
+                "mockedsandbox/restrecord/oauth2/integrated/payments/commerzbank/"
+        );
+
+        WireMockConfiguration config = WireMockConfiguration.options().dynamicPort()
+                .usingFilesUnderClasspath(tempDir.toAbsolutePath().toString())
+                .extensions(new ResponseTemplateTransformer(false));
+        startWireMock(config);
+        startWireMock(config, COMMERZ_BANK_ID, defaultBankProfileConfigurer);
 
         return self();
     }

@@ -1,0 +1,19 @@
+{
+  "scenarioName": "AccountsListUsingCommerzbankOauthIntegrated",
+  "newScenarioState": "GetAuthorizationEndpoint",
+  "request": {
+    "url": "/oauth/authorization-server",
+    "method": "GET",
+    "headers": {
+    }
+  },
+  "response": {
+    "status": 200,
+    "body": "{\"authorization_endpoint\":\"https://localhost:8080/authorize\"}",
+    "headers": {
+      "Content-Type": "application/json;charset=UTF-8",
+      "Date": "Wed, 08 Jan 2020 16:20:14 GMT"
+    }
+  },
+  "uuid": "49c02872-029b-3c8b-a29c-e8290789dcb1"
+}
