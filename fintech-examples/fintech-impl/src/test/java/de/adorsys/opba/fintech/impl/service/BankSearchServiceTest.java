@@ -40,10 +40,10 @@ class BankSearchServiceTest {
         when(restRequestContext.getRequestId()).thenReturn(UUID.randomUUID().toString());
         when(tppBankSearchClient.bankSearchGET(
                 any(),
+                any(),
+                any(),
+                any(),
                 eq(INVALID_KEYWORD),
-                any(),
-                any(),
-                any(),
                 eq(start),
                 eq(max),
                 any())).thenReturn(ResponseEntity.ok().body(bankSearchResponse));

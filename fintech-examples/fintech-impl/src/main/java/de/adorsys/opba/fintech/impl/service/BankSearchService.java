@@ -35,10 +35,10 @@ public class BankSearchService {
 
         BankSearchResponse bankSearchResponse = tppBankSearchClient.bankSearchGET(
                 xRequestId,
-                keyword,
                 COMPUTE_X_TIMESTAMP_UTC,
                 COMPUTE_X_REQUEST_SIGNATURE,
                 COMPUTE_FINTECH_ID,
+                keyword,
                 start,
                 max,
                 true).getBody();

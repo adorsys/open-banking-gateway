@@ -27,12 +27,14 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @ActiveProfiles({ONE_TIME_POSTGRES_RAMFS, "test-search"})
 @AutoConfigureMockMvc
 class TestTppBankSearchController extends BaseMockitoTest {
+    private static final String EMPTY_STRING = "";
 
     @Autowired
     private MockMvc mockMvc;
 
     @Autowired
     private RequestSigningService requestSigningService;
+
     @Test
     void testBankSearch() throws Exception {
         UUID xRequestId = UUID.randomUUID();
@@ -45,6 +47,40 @@ class TestTppBankSearchController extends BaseMockitoTest {
                 .andExpect(jsonPath("$.bankDescriptor[0].bic").value("COBADEFFXXX"))
                 .andExpect(jsonPath("$.bankDescriptor[0].bankCode").value("35640064"))
                 .andExpect(jsonPath("$.bankDescriptor[0].uuid").value("291b2ca1-b35f-463e-ad94-2a1a26c09304"))
+                .andReturn();
+    }
+
+    @Test
+    void testBankSearchWithNullKeyword() throws Exception {
+        UUID xRequestId = UUID.randomUUID();
+        Instant xTimestampUtc = Instant.now();
+
+        performBankSearchRequest(xRequestId, xTimestampUtc, null)
+                .andExpect(jsonPath("$.bankDescriptor.length()").value("0"))
+                .andExpect(jsonPath("$.keyword").value(EMPTY_STRING))
+                .andReturn();
+    }
+
+    @Test
+    void testBankSearchWithEmptyKeyword() throws Exception {
+        UUID xRequestId = UUID.randomUUID();
+        Instant xTimestampUtc = Instant.now();
+
+        performBankSearchRequest(xRequestId, xTimestampUtc, EMPTY_STRING)
+                .andExpect(jsonPath("$.bankDescriptor.length()").value("0"))
+                .andExpect(jsonPath("$.keyword").value(EMPTY_STRING))
+                .andReturn();
+    }
+
+    @Test
+    void testBankSearchWithBlankKeyword() throws Exception {
+        UUID xRequestId = UUID.randomUUID();
+        Instant xTimestampUtc = Instant.now();
+        String keyword = " ";
+
+        performBankSearchRequest(xRequestId, xTimestampUtc, keyword)
+                .andExpect(jsonPath("$.bankDescriptor.length()").value("0"))
+                .andExpect(jsonPath("$.keyword").value(" "))
                 .andReturn();
     }
 
