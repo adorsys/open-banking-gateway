@@ -261,9 +261,25 @@ public class PaymentRequestCommon<SELF extends PaymentRequestCommon<SELF>> exten
         return self();
     }
 
+    public SELF user_anton_brueckner_provided_initial_parameters_to_make_payment() {
+        ExtractableResponse<Response> response = startInitialInternalConsentAuthorization(
+                AUTHORIZE_CONSENT_ENDPOINT,
+                readResource("restrecord/tpp-ui-input/params/anton-brueckner-account-all-accounts-consent.json")
+        );
+
+        assertThat(response.header(LOCATION)).contains("/pis/");
+        return self();
+    }
+
     public SELF user_max_musterman_provided_password_to_embedded_authorization() {
         assertThat(this.redirectUriToGetUserParams).contains("authenticate").doesNotContain("wrong=true");
         max_musterman_provides_password();
+        updateAvailableScas();
+        return self();
+    }
+    public SELF user_anton_brueckner_provided_password_to_embedded_authorization() {
+        assertThat(this.redirectUriToGetUserParams).contains("authenticate").doesNotContain("wrong=true");
+        anton_brueckner_provides_password();
         updateAvailableScas();
         return self();
     }
