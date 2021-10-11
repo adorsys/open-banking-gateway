@@ -5,7 +5,7 @@
     <parent>
         <artifactId>open-banking-gateway</artifactId>
         <groupId>de.adorsys.opba</groupId>
-        <version>0.30.0.1</version>
+        <version>1.0.0</version>
     </parent>
     <modelVersion>4.0.0</modelVersion>
 
@@ -88,6 +88,7 @@
                                 <defaultInterfaces>false</defaultInterfaces>
                                 <useTags>true</useTags>
                                 <library>spring-mvc</library>
+                                <async>true</async>
                                 <swaggerDocketConfig>false</swaggerDocketConfig>
                                 <generateApiDocumentation>false</generateApiDocumentation>
                                 <generateModelDocumentation>false</generateModelDocumentation>

@@ -12,7 +12,7 @@ spring:
     parameters:
       table-prefix: opb_
       adorsys-sandbox-url: http://localhost:20014
-      fill-with-mock-data: true
+    contexts: none
 
 # Application configuration
 api:
@@ -28,14 +28,14 @@ api:
       start: 0
       max: 10
       query:
-        "SELECT id, uuid, name, bic, bank_code, word_similarity(:keyword, name) as sml
-        FROM opb_bank WHERE word_similarity(:keyword, name) >= 0.6
+        "SELECT id, uuid, name, bic, bank_code, active, word_similarity(:keyword, name) as sml
+        FROM opb_bank WHERE ((word_similarity(:keyword, name) >= 0.6) AND (NOT :onlyActive OR active))
         UNION
-        SELECT id, uuid, name, bic, bank_code, word_similarity(:keyword, bic) as sml
-        FROM opb_bank WHERE word_similarity(:keyword, bic) >= 0.8
+        SELECT id, uuid, name, bic, bank_code, active, word_similarity(:keyword, bic) as sml
+        FROM opb_bank WHERE ((word_similarity(:keyword, bic) >= 0.8) AND (NOT :onlyActive OR active))
         UNION
-        SELECT id, uuid, name, bic, bank_code, word_similarity(:keyword, bank_code) as sml
-        FROM opb_bank WHERE word_similarity(:keyword, bank_code) >= 0.8
+        SELECT id, uuid, name, bic, bank_code, active, word_similarity(:keyword, bank_code) as sml
+        FROM opb_bank WHERE ((word_similarity(:keyword, bank_code) >= 0.8) AND (NOT :onlyActive OR active))
         ORDER BY sml DESC, id
         LIMIT :max
         OFFSET :start"
@@ -91,7 +91,7 @@ facade:
         page:
           for-ais: ${facade.urls.embedded-ui-base-url}/ais/{authorizationSessionId}/login?redirectCode={fintechUserTempPassword}
           for-pis: ${facade.urls.embedded-ui-base-url}/pis/{authorizationSessionId}/login?redirectCode={fintechUserTempPassword}
-          # PIS allows anonymous users in OPBA
+          for-ais-anonymous: ${facade.urls.embedded-ui-base-url}/ais/{authorizationSessionId}/anonymous?redirectCode={fintechUserTempPassword}
           for-pis-anonymous: ${facade.urls.embedded-ui-base-url}/pis/{authorizationSessionId}/anonymous?redirectCode={fintechUserTempPassword}
         password:
           byte-size: 8

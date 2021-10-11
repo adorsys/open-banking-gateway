@@ -31,7 +31,7 @@ public class ConsentService {
     private final OpenBankingConfig bankingConfig;
 
     @Transactional
-    public String createConsentForAccountsAndTransactions(String bankId) {
+    public String createConsentForAccountsAndTransactions(UUID bankProfileId) {
         UUID redirectCode = UUID.randomUUID();
         UUID serviceSessionId = UUID.randomUUID();
 
@@ -44,20 +44,27 @@ public class ConsentService {
                 null,
                 null,
                 null,
-                bankId,
+                bankProfileId,
+                null,
                 serviceSessionId,
+                "",
+                null,
+                true,
+                null,
                 null,
                 null,
                 null,
                 "both",
-                false
+                false,
+                null,
+                null
         );
 
         if (apiResponse.getStatusCode() == HttpStatus.ACCEPTED) {
             RedirectState redirectState = new RedirectState();
             redirectState.setId(redirectCode);
             redirectState.setServiceSessionId(serviceSessionId);
-            redirectState.setBankId(bankId);
+            redirectState.setBankProfileId(bankProfileId);
             redirectState.setAuthorizationSessionId(apiResponse.getHeaders().get("Authorization-Session-ID").get(0));
             redirectStateRepository.save(redirectState);
 
@@ -68,7 +75,7 @@ public class ConsentService {
     }
 
     @Transactional
-    public String confirmConsentAndGetBankId(String redirectCode) {
+    public UUID confirmConsentAndGetBankProfileId(String redirectCode) {
         RedirectState state = redirectStateRepository.findById(UUID.fromString(redirectCode))
                 .orElseThrow(() -> new IllegalStateException("No redirect state for code: " + redirectCode));
 
@@ -86,10 +93,10 @@ public class ConsentService {
         }
 
         BankConsent consent = new BankConsent();
-        consent.setBankId(state.getBankId());
+        consent.setBankProfileUuid(state.getBankProfileId());
         consent.setConsentId(state.getServiceSessionId());
         bankConsentRepository.save(consent);
 
-        return consent.getBankId();
+        return consent.getBankProfileUuid();
     }
 }

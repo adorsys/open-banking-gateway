@@ -88,24 +88,24 @@ export class AuthStateConsentAuthorizationService {
 
     /**
      * Redirect entry point for initiating a consent authorization process. 
-     * This is the &lt;b&gt;entry point&lt;/b&gt; for processing a consent redirected by the TppBankingApi to this ConsentAuthorisationApi.  At this entry point, the ConsentAuthorisationApi will use the redirectCode to retrieve the RedirectSession from the TppServer. An analysis of the RedirectSession will help decide if the ConsentAuthorisationApi will proceed with an embedded approach (E&lt;sub&gt;1&lt;/sub&gt;) or a redirect approach (R&lt;sub&gt;1&lt;/sub&gt;). 
+     * This is the &lt;b&gt;entry point&lt;/b&gt; for processing a consent redirected by the TppBankingApi to this ConsentAuthorisationApi.  At this entry point, the ConsentAuthorisationApi will use the xXsrfToken to retrieve the RedirectSession from the TppServer. An analysis of the RedirectSession will help decide if the ConsentAuthorisationApi will proceed with an embedded approach (E&lt;sub&gt;1&lt;/sub&gt;) or a redirect approach (R&lt;sub&gt;1&lt;/sub&gt;). 
      * @param authId Used to distinguish between different consent authorization processes started by the same PSU. Also included in the corresponding cookie path to limit visibility of the consent cookie to the corresponding consent process. 
-     * @param redirectCode Code used to retrieve a redirect session. This is generaly transported as a query parameter
+     * @param xXsrfToken XSRF parameter used to retrieve a redirect session. This is generaly transported as a query parameter.
      * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
      * @param reportProgress flag to report request and response progress.
      */
-    public authUsingGET(authId: string, redirectCode?: string, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<ConsentAuth>;
-    public authUsingGET(authId: string, redirectCode?: string, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<HttpResponse<ConsentAuth>>;
-    public authUsingGET(authId: string, redirectCode?: string, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<HttpEvent<ConsentAuth>>;
-    public authUsingGET(authId: string, redirectCode?: string, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: 'application/json'}): Observable<any> {
+    public authUsingGET(authId: string, xXsrfToken?: string, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<ConsentAuth>;
+    public authUsingGET(authId: string, xXsrfToken?: string, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<HttpResponse<ConsentAuth>>;
+    public authUsingGET(authId: string, xXsrfToken?: string, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<HttpEvent<ConsentAuth>>;
+    public authUsingGET(authId: string, xXsrfToken?: string, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: 'application/json'}): Observable<any> {
         if (authId === null || authId === undefined) {
             throw new Error('Required parameter authId was null or undefined when calling authUsingGET.');
         }
 
         let queryParameters = new HttpParams({encoder: this.encoder});
-        if (redirectCode !== undefined && redirectCode !== null) {
+        if (xXsrfToken !== undefined && xXsrfToken !== null) {
           queryParameters = this.addToHttpParams(queryParameters,
-            <any>redirectCode, 'redirectCode');
+            <any>xXsrfToken, 'xXsrfToken');
         }
 
         let headers = this.defaultHeaders;

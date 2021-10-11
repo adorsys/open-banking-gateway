@@ -16,11 +16,31 @@ public enum ProtocolAction {
      * {@code de.adorsys.opba.protocol.api.ais.ListTransactions}
      */
     LIST_TRANSACTIONS("list-transactions"),
-    // Consent
+    /**
+     * {@code de.adorsys.opba.protocol.api.ais.DeleteConsent}
+     */
+    DELETE_CONSENT("delete-consent"),
+    /**
+     * {@code de.adorsys.opba.protocol.api.ais.GetConsentStatus}
+     */
+    GET_CONSENT_STATUS("get-consent-status"),
+    /**
+     * {@code de.adorsys.opba.protocol.api.ais.GetAisAuthorizationStatus}
+     */
+    GET_AIS_AUTHORIZATION_STATUS("get-ais-authorization-status"),
+    /**
+     * {@code de.adorsys.opba.protocol.api.authorization.UpdateExternalAisSession}
+     */
+    UPDATE_EXTERNAL_AIS_SESSION("update-external-ais-session"),
+    // Consent authorization
     /**
      * Root action for all authorizations
      */
     AUTHORIZATION("authorization"),
+    /**
+     * {@code de.adorsys.opba.protocol.api.authorization.OnLogin}
+     */
+    ON_LOGIN("on-login", AUTHORIZATION),
     /**
      * {@code de.adorsys.opba.protocol.api.authorization.GetAuthorizationState}
      */
@@ -43,7 +63,12 @@ public enum ProtocolAction {
 
     GET_PAYMENT_STATUS("get-payment-status"),
 
-    GET_PAYMENT_INFORMATION("get-payment-information");
+    GET_PAYMENT_INFORMATION("get-payment-information"),
+
+    /**
+     * {@code de.adorsys.opba.protocol.api.pis.GetPisAuthorizationStatus}
+     */
+    GET_PIS_AUTHORIZATION_STATUS("get-pis-authorization-status");
 
     private final String name;
 

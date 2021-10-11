@@ -4,12 +4,12 @@ import de.adorsys.opba.db.domain.entity.Payment;
 import de.adorsys.opba.db.domain.entity.sessions.AuthSession;
 import de.adorsys.opba.db.repository.jpa.AuthorizationSessionRepository;
 import de.adorsys.opba.db.repository.jpa.PaymentRepository;
+import de.adorsys.opba.protocol.api.common.SessionStatus;
 import de.adorsys.opba.protocol.facade.config.encryption.impl.fintech.FintechSecureStorage;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.security.PrivateKey;
 import java.util.Collection;
 import java.util.Optional;
 import java.util.UUID;
@@ -36,6 +36,8 @@ public class PaymentConfirmationService {
         }
 
         paymentRepository.setConfirmed(session.get().getParent().getId());
+        session.get().setStatus(SessionStatus.ACTIVATED);
+        authSessions.save(session.get());
 
         if (session.get().isPsuAnonymous()) {
             return true;
@@ -45,7 +47,7 @@ public class PaymentConfirmationService {
     }
 
     private boolean sendPsuKeyFromInboxToFintech(String finTechPassword, AuthSession session) {
-        PrivateKey psuAspspKey = vault.psuAspspKeyFromInbox(
+        var psuAspspKey = vault.psuAspspKeyFromInbox(
                 session,
                 finTechPassword::toCharArray
         );

@@ -21,8 +21,8 @@ do
 
     IMAGE_NAME=$REGISTRY_DOMAIN/$PROJECT_NAME/$SERVICE_NAME:$IMAGE_TAG
     LATEST_IMAGE_NAME=$REGISTRY_DOMAIN/$PROJECT_NAME/$SERVICE_NAME:latest
-    docker build -t "$IMAGE_NAME" "$CONTEXT"
-    docker tag "$IMAGE_NAME" "$LATEST_IMAGE_NAME"
-    docker push "$IMAGE_NAME"
-    docker push "$LATEST_IMAGE_NAME"
+    docker build -t "$IMAGE_NAME" "$CONTEXT" || exit 1
+    docker tag "$IMAGE_NAME" "$LATEST_IMAGE_NAME" || exit 1
+    docker push "$IMAGE_NAME" || exit 1
+    docker push "$LATEST_IMAGE_NAME" || exit 1
 done < "$SERVICE_LIST_FILE"

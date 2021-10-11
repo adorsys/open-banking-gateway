@@ -58,7 +58,7 @@ public class HbciListTransactionsEntrypoint implements ListTransactions {
 
         registrar.addHandler(
                 instance.getProcessInstanceId(),
-                new HbciOutcomeMapper<>(result, extractor::extractTransactionsReport, errorMapper)
+                new HbciOutcomeMapper<>(result, res -> extractor.extractTransactionsReport(res, serviceContext), errorMapper)
         );
 
         return result;
@@ -73,6 +73,8 @@ public class HbciListTransactionsEntrypoint implements ListTransactions {
         bank.setBankCode(serviceContext.getRequestScoped().aspspProfile().getBankCode());
         context.setBank(bank);
         context.setAccountIban(serviceContext.getRequest().getAccountId());
+        context.setDateFrom(serviceContext.getRequest().getDateFrom());
+        context.setDateTo(serviceContext.getRequest().getDateTo());
         return context;
     }
 
@@ -82,7 +84,7 @@ public class HbciListTransactionsEntrypoint implements ListTransactions {
     @Mapper(componentModel = SPRING_KEYWORD, uses = HbciUuidMapper.class, implementationPackage = HBCI_MAPPERS_PACKAGE)
     public interface FromRequest extends DtoMapper<ListTransactionsRequest, TransactionListHbciContext> {
 
-        @Mapping(source = "facadeServiceable.bankId", target = "aspspId")
+        @Mapping(source = "facadeServiceable.bankProfileId", target = "aspspId")
         @Mapping(source = "facadeServiceable.requestId", target = "requestId")
         @Mapping(source = "facadeServiceable.fintechRedirectUrlOk", target = "fintechRedirectUriOk")
         @Mapping(source = "facadeServiceable.fintechRedirectUrlNok", target = "fintechRedirectUriNok")

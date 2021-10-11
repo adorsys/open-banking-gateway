@@ -215,7 +215,7 @@
       </bpmdi:BPMNShape>
       <bpmdi:BPMNEdge xmlns:bpmdi="http://www.omg.org/spec/BPMN/20100524/DI" id="edge-1ff9673e-0d16-42e6-90c1-953cbeb7ea8e" bpmnElement="hbciTanNotNeededBefore">
         <omgdi:waypoint x="455.65448" y="90.58669"/>
-        <omgdi:waypoint x="455.6545" y="260.26996"/>
+        <omgdi:waypoint x="455.6545" y="252.75336"/>
         <omgdi:waypoint x="813.85205" y="252.75336"/>
       </bpmdi:BPMNEdge>
       <bpmdi:BPMNEdge xmlns:bpmdi="http://www.omg.org/spec/BPMN/20100524/DI" id="edge-cbd4bf64-14f5-4a5c-828b-23a11a6532a6" bpmnElement="sid-02abad2c-5877-4180-91a2-c9fce98d421f">
@@ -285,7 +285,7 @@
       <bpmdi:BPMNEdge xmlns:bpmdi="http://www.omg.org/spec/BPMN/20100524/DI" id="edge-2f36f795-6f81-4471-9959-431546962420" bpmnElement="tanChallengeResultNotRequired">
         <omgdi:waypoint x="883.85205" y="-275.93597"/>
         <omgdi:waypoint x="953.0083" y="-275.93597"/>
-        <omgdi:waypoint x="950.7514" y="78.58667"/>
+        <omgdi:waypoint x="953.00824" y="70.00001"/>
         <omgdi:waypoint x="1130.7908" y="70.58667"/>
       </bpmdi:BPMNEdge>
       <bpmdi:BPMNShape xmlns:bpmdi="http://www.omg.org/spec/BPMN/20100524/DI" id="shape-ed0712ec-9702-46ae-a32d-d32aa88b6ea2" bpmnElement="checkPin">

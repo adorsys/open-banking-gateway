@@ -16,6 +16,7 @@ public interface AisConsentMapper {
     @Mapping(target = "frequencyPerDay", source = "request.consentAuth.consent.frequencyPerDay")
     @Mapping(target = "recurringIndicator", source = "request.consentAuth.consent.recurringIndicator")
     @Mapping(target = "validUntil", source = "request.consentAuth.consent.validUntil")
+    @Mapping(target = "combinedServiceIndicator", source = "request.consentAuth.consent.combinedServiceIndicator")
     AisConsent map(PsuAuthRequest request);
 
     default String map(AisAccountAccessInfo.AllPsd2Enum allPsd2Enum) {

@@ -5,14 +5,16 @@ import de.adorsys.opba.protocol.xs2a.context.ais.TransactionListXs2aContext;
 import de.adorsys.opba.protocol.xs2a.service.xs2a.annotations.ContextCode;
 import de.adorsys.opba.protocol.xs2a.service.xs2a.annotations.FrontendCode;
 import de.adorsys.opba.protocol.xs2a.service.xs2a.annotations.ValidationInfo;
-import de.adorsys.xs2a.adapter.service.RequestParams;
+import de.adorsys.xs2a.adapter.api.RequestParams;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import org.mapstruct.Mapper;
 
+import javax.annotation.Nullable;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 import java.time.LocalDate;
+import java.util.Optional;
 
 import static de.adorsys.opba.protocol.api.dto.codes.FieldCode.BOOKING_STATUS;
 import static de.adorsys.opba.protocol.api.dto.codes.TypeCode.STRING;
@@ -25,6 +27,8 @@ import static de.adorsys.opba.protocol.xs2a.constant.GlobalConst.XS2A_MAPPERS_PA
 @Data
 @EqualsAndHashCode(callSuper = true)
 public class Xs2aTransactionParameters extends Xs2aWithBalanceParameters {
+    private static final String PAGE_INDEX_QUERY_PARAMETER_NAME = "pageIndex";
+    private static final String PAGE_SIZE_QUERY_PARAMETER_NAME = "itemsPerPage";
 
     /**
      * Transaction booking status - i.e. PENDING/BOOKED.
@@ -45,15 +49,33 @@ public class Xs2aTransactionParameters extends Xs2aWithBalanceParameters {
     @NotNull(message = "{no.ctx.dateTo}")
     private LocalDate dateTo;
 
+    /**
+     * Result page number.
+     */
+    @Nullable
+    private Integer page;
+
+    /**
+     * Records per page.
+     */
+    @Nullable
+    private Integer pageSize;
+
     // TODO - MapStruct?
     @Override
     public RequestParams toParameters() {
-        return RequestParams.builder()
+        var requestParamsMap = RequestParams.builder()
                 .withBalance(super.getWithBalance())
                 .bookingStatus(bookingStatus)
                 .dateFrom(dateFrom)
                 .dateTo(dateTo)
-                .build();
+                .build()
+                .toMap();
+
+        Optional.ofNullable(page).ifPresent(p -> requestParamsMap.put(PAGE_INDEX_QUERY_PARAMETER_NAME, p.toString()));
+        Optional.ofNullable(pageSize).ifPresent(ps -> requestParamsMap.put(PAGE_SIZE_QUERY_PARAMETER_NAME, ps.toString()));
+
+        return RequestParams.fromMap(requestParamsMap);
     }
 
     @Mapper(componentModel = SPRING_KEYWORD, implementationPackage = XS2A_MAPPERS_PACKAGE)

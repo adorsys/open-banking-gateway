@@ -4,12 +4,12 @@ import de.adorsys.opba.db.domain.entity.Consent;
 import de.adorsys.opba.db.domain.entity.sessions.AuthSession;
 import de.adorsys.opba.db.repository.jpa.AuthorizationSessionRepository;
 import de.adorsys.opba.db.repository.jpa.ConsentRepository;
+import de.adorsys.opba.protocol.api.common.SessionStatus;
 import de.adorsys.opba.protocol.facade.config.encryption.impl.fintech.FintechSecureStorage;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.security.PrivateKey;
 import java.util.Collection;
 import java.util.Optional;
 import java.util.UUID;
@@ -36,7 +36,15 @@ public class ConsentConfirmationService {
         }
 
         consentRepository.setConfirmed(session.get().getParent().getId());
-        PrivateKey psuAspspKey = vault.psuAspspKeyFromInbox(
+        session.get().setStatus(SessionStatus.ACTIVATED);
+        authSessions.save(session.get());
+
+        // Handling anonymous consent grant flow:
+        if (null == session.get().getPsu()) {
+            return true;
+        }
+
+        var psuAspspKey = vault.psuAspspKeyFromInbox(
                 session.get(),
                 finTechPassword::toCharArray
         );

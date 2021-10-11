@@ -49,7 +49,7 @@ export class PaymentInitiateComponent implements OnInit {
     this.authStateConsentAuthorizationService
       .authUsingGET(authorizationId, redirectCode, 'response')
       .subscribe((res) => {
-        this.sessionService.setRedirectCode(authorizationId, res.headers.get(ApiHeaders.REDIRECT_CODE));
+        this.sessionService.setRedirectCode(authorizationId, res.headers.get(ApiHeaders.X_XSRF_TOKEN));
 
         // setting bank and fintech names
         this.sessionService.setBankName(authorizationId, (res.body as ConsentAuth).bankName);

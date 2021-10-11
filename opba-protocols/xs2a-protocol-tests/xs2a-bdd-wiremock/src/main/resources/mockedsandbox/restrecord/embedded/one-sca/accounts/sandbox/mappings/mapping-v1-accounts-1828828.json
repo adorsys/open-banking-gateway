@@ -1,0 +1,32 @@
+{
+  "id" : "f5c8cac3-a589-3fc1-83f6-3a12a0ab34f4",
+  "scenarioName": "AccountsListUsingEmbeddedWithOneSca",
+  "newScenarioState": "GetTransaction",
+  "request" : {
+    "url" : "/v1/accounts/RSIF9dO1R50sDN4AWDk5uE/transactions?dateTo=2021-10-04&bookingStatus=both&dateFrom=1970-01-01",
+    "method" : "GET",
+    "headers" : {
+      "Accept" : {
+        "equalTo" : "application/json"
+      },
+      "X-Request-ID" : {
+        "matches": "[0-9a-zA-z\\-]+"
+      },
+      "PSU-ID" : {
+        "equalTo" : "anton.brueckner"
+      }
+    }
+  },
+  "response" : {
+    "status" : 200,
+    "bodyFileName" : "body-v1-accounts-1828828.json",
+    "headers" : {
+      "Vary" : [ "Origin", "Access-Control-Request-Method", "Access-Control-Request-Headers" ],
+      "X-Request-Id" : "3f74a7b8-2de8-4ea3-822a-323e88527664",
+      "Content-Type" : "application/json",
+      "Date" : "Mon, 04 Oct 2021 14:24:32 GMT",
+      "Keep-Alive" : "timeout=60"
+    }
+  },
+  "uuid" : "f5c8cac3-a589-3fc1-83f6-3a12a0ab34f4"
+}

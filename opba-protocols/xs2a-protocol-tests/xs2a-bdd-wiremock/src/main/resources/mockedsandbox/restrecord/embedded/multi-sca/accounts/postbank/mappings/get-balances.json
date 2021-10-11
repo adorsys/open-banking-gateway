@@ -1,0 +1,37 @@
+{
+  "scenarioName": "AccountsListUsingPostbankEmbedded",
+  "newScenarioState": "GetBalance",
+  "request" : {
+    "urlPattern" : "/ais/DE/Postbank/v1/accounts/.+/balances",
+    "method" : "GET",
+    "headers" : {
+      "X-Request-ID" : {
+        "matches" : ".+"
+      },
+      "Consent-ID" : {
+        "matches" : ".+"
+      },
+      "Date" : {
+        "matches" : ".+"
+      }
+    }
+  },
+  "response" : {
+    "status" : 200,
+    "body" : "{\"balances\":[{\"balanceType\":\"closingBooked\",\"balanceAmount\":{\"amount\":\"500.00\",\"currency\":\"EUR\"},\"referenceDate\":\"2017-10-25\"},{\"balanceType\":\"expected\",\"lastChangeDateTime\":\"2017-10-25T15:30:35.035Z\",\"balanceAmount\":{\"amount\":\"900.00\",\"currency\":\"EUR\"}},{\"balanceType\":\"closingBooked\",\"balanceAmount\":{\"amount\":\"350.00\",\"currency\":\"USD\"},\"referenceDate\":\"2017-10-25\"},{\"balanceType\":\"expected\",\"lastChangeDateTime\":\"2017-10-24T14:30:21Z\",\"balanceAmount\":{\"amount\":\"350.00\",\"currency\":\"USD\"}}],\"account\":{\"iban\":\"DE76215730140403343700\",\"currency\":\"EUR\"}}",
+    "headers" : {
+      "Date" : "Mon, 01 Mar 2021 16:19:45 GMT",
+      "Server" : "Apache",
+      "glue2gExit" : "2021-03-01T16:19:46.575",
+      "X-Request-ID" : "d3975c7f-8a78-400a-915f-f97d7d341fc0",
+      "bffEntry" : "2021-03-01T16:19:46.053",
+      "bffExit" : "2021-03-01T16:19:46.575",
+      "Content-Type" : "application/json;charset=utf-8",
+      "glue2gEntry" : "2021-03-01T16:19:46.053",
+      "Keep-Alive" : "timeout=5, max=100"
+    }
+  },
+  "uuid" : "eb02bea7-c27c-4e04-8d49-e627ad395f02",
+  "persistent" : true,
+  "insertionIndex" : 7
+}

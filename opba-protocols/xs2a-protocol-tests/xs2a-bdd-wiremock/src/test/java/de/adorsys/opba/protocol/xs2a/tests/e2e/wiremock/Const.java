@@ -6,4 +6,6 @@ import lombok.experimental.UtilityClass;
 public class Const {
 
     public static final String PIS_OAUTH2_CODE = "jCLPmAuBugTKfOkmxcmGKsiq";
+    public static final String SCA_METHOD_SELECTED = "scaMethodSelected";
+    public static final String FINALISED = "finalised";
 }

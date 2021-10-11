@@ -1,0 +1,30 @@
+{
+  "id": "2e9813f3-49cf-3a89-ad4d-68bb0b571c1c",
+  "scenarioName": "Decoupled max.musterman initiate consent",
+  "requiredScenarioState": "Finalised",
+  "request": {
+    "url": "/v1/accounts",
+    "method": "GET",
+    "headers": {
+      "X-Request-ID": {
+        "matches": "[0-9a-zA-z\\-]+"
+      },
+      "PSU-ID": {
+        "equalTo": "max.musterman"
+      },
+      "Consent-ID": {
+        "matches": "[=_0-9a-zA-z\\-]+"
+      }
+    }
+  },
+  "response": {
+    "status": 200,
+    "bodyFileName": "body-v1-accounts-55313.json",
+    "headers": {
+      "X-Request-Id": "6a5334bd-3233-11ea-b535-e2b5b1f1970b",
+      "Content-Type": "application/json;charset=UTF-8",
+      "Date": "Wed, 08 Jan 2020 16:25:26 GMT"
+    }
+  },
+  "uuid": "2e9813f3-49cf-3a89-ad4d-68bb0b571c1c"
+}

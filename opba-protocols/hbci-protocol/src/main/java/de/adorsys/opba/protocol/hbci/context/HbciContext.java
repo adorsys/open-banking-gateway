@@ -3,6 +3,7 @@ package de.adorsys.opba.protocol.hbci.context;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.google.common.collect.ImmutableMap;
 import de.adorsys.multibanking.domain.Bank;
+import de.adorsys.multibanking.domain.ChallengeData;
 import de.adorsys.multibanking.hbci.model.HbciConsent;
 import de.adorsys.multibanking.hbci.model.HbciTanSubmit;
 import de.adorsys.opba.protocol.api.common.ProtocolAction;
@@ -75,6 +76,11 @@ public class HbciContext extends BaseContext {
     private boolean tanChallengeRequired;
 
     /**
+     * Is used for embedded SCA with some data to send back to PSU (for example in case of photo tan)
+     */
+    private ChallengeData challengeData;
+
+    /**
      * Available SCA methods (i.e. SMS,email) for consent SCA challenge (2FA/multifactor authorization - 2nd factor)
      */
     private List<ScaMethod> availableSca;
@@ -97,8 +103,6 @@ public class HbciContext extends BaseContext {
     private String hbciPassportState;
 
     private HbciResultCache cachedResult;
-
-    private Boolean online;
 
     public HbciConsent getHbciDialogConsent() {
         if (null == hbciDialogConsent) {

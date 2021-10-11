@@ -27,7 +27,7 @@ paths:
         - name: keyword
           in: query
           description: The bank search input string
-          required: true
+          required: false
           schema:
             type: string
         - name: start
@@ -42,6 +42,7 @@ paths:
           required: false
           schema:
             type: integer
+        - $ref: "#/components/parameters/onlyActive"
       security:
         - cookieAuth: []
       responses:
@@ -63,12 +64,14 @@ paths:
         - $ref: "./tpp_banking_api_commons.yml#/components/parameters/X-Request-Signature"
         - $ref: "./tpp_banking_api_commons.yml#/components/parameters/Fintech-ID"
         - $ref: "./tpp_banking_api_commons.yml#/components/parameters/X-Request-ID"
-        - name: bankId
+        - name: bankProfileId
           in: query
-          description: Identifier of the bank to be loaded.
+          description: Identifier of the bank profile to be loaded.
           required: true
           schema:
             type: string
+            format: uuid
+        - $ref: "#/components/parameters/onlyActive"
       security:
         - cookieAuth: []
       responses:
@@ -80,7 +83,17 @@ paths:
 components:
   headers: {}
 
-  parameters: {}
+  parameters:
+    onlyActive:
+      name: onlyActive
+      in: query
+      required: false
+      description: |
+        Controls visibility of inactive banks in the response (false - both active and inactive, true - only active)
+      example: "false"
+      schema:
+        type: boolean
+        default: "true"
 
   responses:
 
@@ -146,14 +159,27 @@ components:
           type: string
         uuid:
           type: string
+          format: uuid
+        profiles:
+          type: array
+          items:
+            $ref: '#/components/schemas/bankProfileDescriptor'
+        isActive:
+          type: boolean
+
     bankProfileDescriptor:
       title: Bank Profile
       type: object
       properties:
         bankName:
           type: string
+        name:
+          type: string
         bic:
           type: string
+        uuid:
+          type: string
+          format: uuid
         bankUuid:
           type: string
         serviceList:
@@ -165,19 +191,13 @@ components:
           type: object
           additionalProperties:
             type: string
-
-  securitySchemes:
-    BearerAuthOAuth:
-      description: |
-        Bearer Token.
-      type: http
-      scheme: bearer
-    accessCode:
-      type: oauth2
-      flows:
-        authorizationCode:
-          authorizationUrl: 'http://example.com/oauth/auth'
-          tokenUrl: 'http://example.com/oauth/token'
-          scopes:
-            write: allows modifying resources
-            read: allows reading resources
+        externalId:
+          type: string
+        externalInterfaces:
+          type: string
+        protocolType:
+          type: string
+        isSandbox:
+          type: boolean
+        isActive:
+          type: boolean

@@ -4,7 +4,7 @@ import de.adorsys.opba.protocol.xs2a.BaseMockitoTest;
 import de.adorsys.opba.protocol.xs2a.EnableXs2aProtocol;
 import de.adorsys.opba.protocol.xs2a.TestProfiles;
 import de.adorsys.opba.protocol.xs2a.constant.GlobalConst;
-import de.adorsys.xs2a.adapter.service.AspspReadOnlyRepository;
+import de.adorsys.xs2a.adapter.api.AspspReadOnlyRepository;
 import org.flowable.common.engine.api.FlowableOptimisticLockingException;
 import org.flowable.engine.RuntimeService;
 import org.junit.jupiter.api.Test;

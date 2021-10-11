@@ -7,7 +7,7 @@ import de.adorsys.opba.protocol.xs2a.context.Xs2aContext;
 import de.adorsys.opba.protocol.xs2a.service.xs2a.annotations.ContextCode;
 import de.adorsys.opba.protocol.xs2a.service.xs2a.annotations.FrontendCode;
 import de.adorsys.opba.protocol.xs2a.service.xs2a.annotations.ValidationInfo;
-import de.adorsys.xs2a.adapter.service.RequestHeaders;
+import de.adorsys.xs2a.adapter.api.RequestHeaders;
 import lombok.Data;
 import org.jetbrains.annotations.Nullable;
 import org.mapstruct.Mapper;
@@ -18,11 +18,11 @@ import java.util.Map;
 
 import static de.adorsys.opba.protocol.xs2a.constant.GlobalConst.SPRING_KEYWORD;
 import static de.adorsys.opba.protocol.xs2a.constant.GlobalConst.XS2A_MAPPERS_PACKAGE;
-import static de.adorsys.xs2a.adapter.service.RequestHeaders.AUTHORIZATION;
-import static de.adorsys.xs2a.adapter.service.RequestHeaders.PSU_ID;
-import static de.adorsys.xs2a.adapter.service.RequestHeaders.TPP_REDIRECT_PREFERRED;
-import static de.adorsys.xs2a.adapter.service.RequestHeaders.X_GTW_ASPSP_ID;
-import static de.adorsys.xs2a.adapter.service.RequestHeaders.X_REQUEST_ID;
+import static de.adorsys.xs2a.adapter.api.RequestHeaders.AUTHORIZATION;
+import static de.adorsys.xs2a.adapter.api.RequestHeaders.PSU_ID;
+import static de.adorsys.xs2a.adapter.api.RequestHeaders.TPP_REDIRECT_PREFERRED;
+import static de.adorsys.xs2a.adapter.api.RequestHeaders.X_GTW_ASPSP_ID;
+import static de.adorsys.xs2a.adapter.api.RequestHeaders.X_REQUEST_ID;
 
 /**
  * Standard headers to call XS2A-adapter (excluding consent creation cases).

@@ -38,6 +38,11 @@ public interface CurrentBankProfile {
     Approach getPreferredApproach();
 
     /**
+     * Supported consent type (if any) by ASPSP.
+     */
+    List<SupportedConsentType> getSupportedConsentTypes();
+
+    /**
      * ASPSP tries to use preferred SCA approach.
      */
     boolean isTryToUsePreferredApproach();
@@ -46,6 +51,16 @@ public interface CurrentBankProfile {
      * Current date will be added in the end of payment purpose if this field is true .
      */
     boolean isUniquePaymentPurpose();
+
+    /**
+     * Whether to try to skip call to ConsentAuthorization action (startAuthorization)
+     */
+    boolean isXs2aSkipConsentAuthorization();
+
+    /**
+     * Whether to start Consent Authorization with user Pin
+     */
+    boolean isXs2aStartConsentAuthorizationWithPin();
 
     /**
      * Bank identification code.
@@ -60,5 +75,20 @@ public interface CurrentBankProfile {
     /**
      * Bank name
      */
-    String getName();
+    String getBankName();
+
+    /**
+     * Bank external id (i.e. in system that is not OBG)
+     */
+    String getExternalId();
+
+    /**
+     * Bank external interfaces (i.e. in system that is not OBG)
+     */
+    String getExternalInterfaces();
+
+    /**
+     * Expected result content type for this ASPSP.
+     */
+    ResultContentType getContentTypeTransactions();
 }

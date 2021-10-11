@@ -12,6 +12,7 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.UUID;
 import java.util.stream.Collectors;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -20,10 +21,12 @@ class MappersTest {
 
     private static final Bank TEST_BANK = new Bank(
             1L,
-            "dd624199-d071-4c95-b554-179b0e92c707",
+            UUID.fromString("dd624199-d071-4c95-b554-179b0e92c707"),
             "Commerzbank",
             "COBADEFFXXX",
             "36040039",
+            true,
+            Collections.emptyList(),
             Collections.emptyList()
     );
 
@@ -52,7 +55,7 @@ class MappersTest {
 
         assertEquals(bankProfileDescriptor.getBankName(), bankProfile.getBank().getName());
         assertEquals(bankProfileDescriptor.getBic(), bankProfile.getBank().getBic());
-        assertEquals(bankProfileDescriptor.getBankUuid(), bankProfile.getBank().getUuid());
+        assertEquals(bankProfileDescriptor.getBankUuid(), bankProfile.getBank().getUuid().toString());
         List<String> services = bankProfile.getActions().keySet().stream().map(Enum::name).collect(Collectors.toList());
         assertEquals(bankProfileDescriptor.getServiceList(), services);
     }

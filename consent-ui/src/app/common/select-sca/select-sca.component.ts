@@ -40,14 +40,13 @@ export class SelectScaComponent implements OnInit {
     this.updateConsentAuthorizationService
       .embeddedUsingPOST(
         this.authorizationSessionId,
-        StubUtil.X_REQUEST_ID, // TODO: real values instead of stubs
-        StubUtil.X_XSRF_TOKEN, // TODO: real values instead of stubs
+        StubUtil.X_REQUEST_ID, // TODO: real values instead of stub
         this.redirectCode,
         { scaAuthenticationData: { SCA_CHALLENGE_ID: this.selectedMethod.value } },
         'response'
       )
       .subscribe((res) => {
-        this.sessionService.setRedirectCode(this.authorizationSessionId, res.headers.get(ApiHeaders.REDIRECT_CODE));
+        this.sessionService.setRedirectCode(this.authorizationSessionId, res.headers.get(ApiHeaders.X_XSRF_TOKEN));
         this.selectedValue.emit(res);
       });
   }
@@ -58,7 +57,7 @@ export class SelectScaComponent implements OnInit {
       .subscribe((consentAuth) => {
         this.sessionService.setRedirectCode(
           this.authorizationSessionId,
-          consentAuth.headers.get(ApiHeaders.REDIRECT_CODE)
+          consentAuth.headers.get(ApiHeaders.X_XSRF_TOKEN)
         );
         this.redirectCode = this.sessionService.getRedirectCode(this.authorizationSessionId);
         this.scaMethods = consentAuth.body.scaMethods;

@@ -12,12 +12,12 @@
             <column autoIncrement="true" name="id" type="BIGINT">
                 <constraints primaryKey="true" primaryKeyName="${table-prefix}bankPK"/>
             </column>
-            <column name="uuid" type="VARCHAR(36)">
+            <column name="uuid" type="UUID">
                 <constraints unique="true"/>
             </column>
             <column name="name" type="VARCHAR(255)"/>
             <column name="bic" type="VARCHAR(11)"/>
-            <column name="bank_code" type="VARCHAR(8)"/>
+            <column name="bank_code" type="VARCHAR(16)"/>
         </createTable>
     </changeSet>
 
@@ -31,20 +31,36 @@
             <column autoIncrement="true" name="id" type="BIGINT">
                 <constraints primaryKey="true" primaryKeyName="${table-prefix}bank_profilePK"/>
             </column>
+            <column name="name" type="VARCHAR(255)"/>
             <column name="url" type="VARCHAR(255)"/>
             <column name="adapter_id" type="VARCHAR(255)"/>
             <column name="idp_url" type="VARCHAR(255)"/>
             <column name="sca_approaches" type="VARCHAR(255)"/>
-            <column name="bank_uuid" type="VARCHAR(36)">
-                <constraints unique="true"/>
+            <column name="bank_uuid" type="UUID"/>
+            <column name="uuid" type="UUID">
+                <constraints unique="true" nullable="false"/>
             </column>
-            <column name="preferred_approach" type="VARCHAR(32)"/>
+            <column name="preferred_approach" type="VARCHAR(32)" defaultValue="REDIRECT"/>
             <column name="try_to_use_preferred_approach" type="BOOLEAN" defaultValue="false">
                 <constraints nullable="false"/>
             </column>
+            <column name="xs2a_skip_consent_authorization" type="BOOLEAN" defaultValue="false">
+                <constraints nullable="false"/>
+            </column>
+            <column name="xs2a_start_consent_authorization_with_pin" type="BOOLEAN" defaultValue="false">
+                <constraints nullable="false"/>
+            </column>
+
             <column name="unique_payment_purpose" type="BOOLEAN" defaultValue="false">
                 <constraints nullable="false"/>
             </column>
+            <column name="external_id" type="VARCHAR(64)"/>
+            <column name="external_interfaces" type="VARCHAR(512)"/>
+            <column name="protocol_type" type="VARCHAR(32)"/>
+            <column name="is_sandbox" type="BOOLEAN" defaultValue="false">
+                <constraints nullable="false"/>
+            </column>
+            <column name="content_type_transactions" type="VARCHAR(64)" defaultValue="application/json"/>
         </createTable>
         <addNotNullConstraint tableName="${table-prefix}bank_profile" columnName="bank_uuid" columnDataType="VARCHAR(255)"/>
     </changeSet>
@@ -57,33 +73,30 @@
                                  referencedColumnNames="uuid"/>
     </changeSet>
 
-    <changeSet id="load_csv_bank" author="mhr">
+    <changeSet id="load_csv_bank_xs2a" author="mhr" context="xs2a-banks OR hbci-banks">
+        <!-- Note that on Liquibase 4.4.0 relativeToChangelogFile (for loadData) does not work  when using PropertiesLauncher -->
         <loadData
                 encoding="utf8"
-                relativeToChangelogFile="true"
-                file="banks.csv"
+                file="migration/migrations/csv/v0/0-banks.csv"
                 catalogName=""
                 tableName="${table-prefix}bank">
-            <column header="uuid"       name="uuid"         type="STRING"/>
+            <column header="bank_uuid"  name="uuid"         type="UUID"/>
             <column header="name"       name="name"         type="STRING"/>
             <column header="bic"        name="bic"          type="STRING"/>
-            <column header="url"                            type="skip"/>
-            <column header="adapter_id"                     type="skip"/>
             <column header="bank_code"  name="bank_code"    type="STRING"/>
-            <column header="idp_url"                        type="skip"/>
-            <column header="aspsp_sca_approaches"           type="skip"/>
         </loadData>
         <rollback />
     </changeSet>
 
-    <changeSet id="load_csv_bank_profile" author="mhr">
+    <changeSet id="load_csv_bank_profile_xs2a" author="mhr" context="xs2a-banks">
+        <!-- Note that on Liquibase 4.4.0 relativeToChangelogFile (for loadData) does not work  when using PropertiesLauncher -->
         <loadData
                 encoding="utf8"
-                relativeToChangelogFile="true"
-                file="banks.csv"
+                file="migration/migrations/csv/v0/0-xs2a_bank-profile.csv"
                 catalogName=""
                 tableName="${table-prefix}bank_profile">
-            <column header="uuid"       name="bank_uuid"                type="STRING"/>
+            <column header="bank_uuid"  name="bank_uuid"                type="UUID"/>
+            <column header="profile_uuid"  name="uuid"                  type="UUID"/>
             <column header="name"       name="name"                     type="skip"/>
             <column header="bic"        name="bic"                      type="skip"/>
             <column header="url"        name="url"                      type="STRING"/>
@@ -91,21 +104,17 @@
             <column header="bank_code"  name="bank_code"                type="skip"/>
             <column header="idp_url"    name="idp_url"                  type="STRING"/>
             <column header="aspsp_sca_approaches" name="sca_approaches" type="STRING"/>
+            <column header="protocol_type" name="protocol_type"         type="STRING"/>
+            <column header="is_sandbox"   name="is_sandbox"             type="BOOL"/>
         </loadData>
         <rollback />
     </changeSet>
     
     <changeSet id="create_index" author="mhr">
         <sql dbms="postgresql" stripComments="true">
-            CREATE INDEX bank_trgm_idx1 ON opb_bank USING gin (name gin_trgm_ops);
-            CREATE INDEX bank_trgm_idx2 ON opb_bank USING gin (bic gin_trgm_ops);
-            CREATE INDEX bank_trgm_idx3 ON opb_bank USING gin (bank_code gin_trgm_ops);
-        </sql>
-    </changeSet>
-
-    <changeSet id="fill_services" author="mhr">
-        <sql dbms="postgresql" stripComments="true">
-            UPDATE opb_bank_profile SET preferred_approach = 'REDIRECT' WHERE true ;
+            CREATE INDEX bank_trgm_idx1 ON ${table-prefix}bank USING gin (name gin_trgm_ops);
+            CREATE INDEX bank_trgm_idx2 ON ${table-prefix}bank USING gin (bic gin_trgm_ops);
+            CREATE INDEX bank_trgm_idx3 ON ${table-prefix}bank USING gin (bank_code gin_trgm_ops);
         </sql>
     </changeSet>
 

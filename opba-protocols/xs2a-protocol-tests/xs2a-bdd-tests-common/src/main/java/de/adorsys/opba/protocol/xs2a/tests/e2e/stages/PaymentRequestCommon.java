@@ -5,7 +5,7 @@ import com.tngtech.jgiven.integration.spring.JGivenStage;
 import de.adorsys.opba.consentapi.model.generated.ConsentAuth;
 import de.adorsys.opba.consentapi.model.generated.SinglePayment;
 import de.adorsys.opba.protocol.xs2a.tests.e2e.LocationExtractorUtil;
-import de.adorsys.xs2a.adapter.adapter.StandardPaymentProduct;
+import de.adorsys.xs2a.adapter.api.model.PaymentProduct;
 import io.restassured.RestAssured;
 import io.restassured.response.ExtractableResponse;
 import io.restassured.response.Response;
@@ -35,8 +35,8 @@ import static de.adorsys.opba.protocol.xs2a.tests.e2e.stages.StagesCommonUtil.AU
 import static de.adorsys.opba.protocol.xs2a.tests.e2e.stages.StagesCommonUtil.GET_CONSENT_AUTH_STATE;
 import static de.adorsys.opba.protocol.xs2a.tests.e2e.stages.StagesCommonUtil.MAX_MUSTERMAN;
 import static de.adorsys.opba.protocol.xs2a.tests.e2e.stages.StagesCommonUtil.PIS_SINGLE_PAYMENT_ENDPOINT;
+import static de.adorsys.opba.protocol.xs2a.tests.e2e.stages.StagesCommonUtil.SANDBOX_BANK_PROFILE_ID;
 import static de.adorsys.opba.protocol.xs2a.tests.e2e.stages.StagesCommonUtil.withDefaultHeaders;
-import static de.adorsys.opba.restapi.shared.HttpHeaders.REDIRECT_CODE;
 import static de.adorsys.opba.restapi.shared.HttpHeaders.SERVICE_SESSION_ID;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.springframework.http.HttpHeaders.LOCATION;
@@ -49,9 +49,9 @@ import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
 @SuppressWarnings("checkstyle:MethodName") // Jgiven prettifies snake-case names not camelCase
 public class PaymentRequestCommon<SELF extends PaymentRequestCommon<SELF>> extends RequestCommon<SELF> {
 
-    public SELF fintech_calls_initiate_payment_for_anton_brueckner(String bankId) {
+    public SELF fintech_calls_initiate_payment_for_anton_brueckner(String bankProfileId) {
         String body = readResource("restrecord/tpp-ui-input/params/anton-brueckner-single-sepa-payment.json");
-        ExtractableResponse<Response> response = withPaymentHeaders(ANTON_BRUECKNER, bankId, true)
+        ExtractableResponse<Response> response = withPaymentHeaders(ANTON_BRUECKNER, bankProfileId, true)
                 .contentType(APPLICATION_JSON_VALUE)
                 .body(body)
             .when()
@@ -101,12 +101,16 @@ public class PaymentRequestCommon<SELF extends PaymentRequestCommon<SELF>> exten
     }
 
     public SELF fintech_calls_initiate_payment_for_max_musterman() {
+        return fintech_calls_initiate_payment_for_max_musterman(SANDBOX_BANK_PROFILE_ID);
+    }
+
+    public SELF fintech_calls_initiate_payment_for_max_musterman(String bankProfileId) {
         String body = readResource("restrecord/tpp-ui-input/params/max-musterman-single-sepa-payment.json");
-        ExtractableResponse<Response> response = withPaymentHeaders(MAX_MUSTERMAN)
+        ExtractableResponse<Response> response = withPaymentHeaders(MAX_MUSTERMAN, bankProfileId, true)
                 .contentType(APPLICATION_JSON_VALUE)
                 .body(body)
             .when()
-                .post(PIS_SINGLE_PAYMENT_ENDPOINT, StandardPaymentProduct.SEPA_CREDIT_TRANSFERS.getSlug())
+                .post(PIS_SINGLE_PAYMENT_ENDPOINT, PaymentProduct.SEPA_CREDIT_TRANSFERS.toString())
             .then()
                 .statusCode(ACCEPTED.value())
                 .extract();
@@ -123,7 +127,7 @@ public class PaymentRequestCommon<SELF extends PaymentRequestCommon<SELF>> exten
                 .contentType(APPLICATION_JSON_VALUE)
                 .body(body)
              .when()
-                .post(PIS_SINGLE_PAYMENT_ENDPOINT, StandardPaymentProduct.SEPA_CREDIT_TRANSFERS.getSlug())
+                .post(PIS_SINGLE_PAYMENT_ENDPOINT, PaymentProduct.SEPA_CREDIT_TRANSFERS.toString())
              .then()
                 .statusCode(ACCEPTED.value())
                 .extract();
@@ -184,7 +188,7 @@ public class PaymentRequestCommon<SELF extends PaymentRequestCommon<SELF>> exten
                  .header(X_XSRF_TOKEN, UUID.randomUUID().toString())
                  .header(X_REQUEST_ID, UUID.randomUUID().toString())
                  .cookie(AUTHORIZATION_SESSION_KEY, authSessionCookie)
-                 .queryParam(REDIRECT_CODE_QUERY, redirectCode)
+                 .queryParam(X_XSRF_TOKEN_QUERY, redirectCode)
                  .contentType(APPLICATION_JSON_VALUE)
                  .body(readResource("restrecord/tpp-ui-input/params/anton-brueckner-payments-authorize.json"))
              .when()
@@ -204,11 +208,28 @@ public class PaymentRequestCommon<SELF extends PaymentRequestCommon<SELF>> exten
     public SELF user_anton_brueckner_sees_that_he_needs_to_be_redirected_to_aspsp_and_redirects_to_aspsp() {
         ExtractableResponse<Response> response = withPaymentInfoHeaders(ANTON_BRUECKNER)
                  .cookie(AUTHORIZATION_SESSION_KEY, authSessionCookie)
-                 .queryParam(REDIRECT_CODE_QUERY, redirectCode)
+                 .queryParam(X_XSRF_TOKEN_QUERY, redirectCode)
              .when()
                 .get(GET_PAYMENT_AUTH_STATE, paymentServiceSessionId)
              .then()
                 .statusCode(HttpStatus.OK.value())
+                .extract();
+
+        assertThatResponseContainsAntonBruecknersSinglePayment(response);
+
+        updateNextPaymentAuthorizationUrl(response);
+        updateServiceSessionId(response);
+        updateRedirectCode(response);
+        return self();
+    }
+    public SELF user_anton_brueckner_sees_that_he_needs_to_be_redirected_to_aspsp_and_redirects_to_aspsp(String bankProfileId) {
+        ExtractableResponse<Response> response = withPaymentInfoHeaders(ANTON_BRUECKNER, bankProfileId)
+                    .cookie(AUTHORIZATION_SESSION_KEY, authSessionCookie)
+                    .queryParam(X_XSRF_TOKEN_QUERY, redirectCode)
+                .when()
+                    .get(GET_PAYMENT_AUTH_STATE, paymentServiceSessionId)
+                .then()
+                    .statusCode(HttpStatus.OK.value())
                 .extract();
 
         assertThatResponseContainsAntonBruecknersSinglePayment(response);
@@ -240,9 +261,25 @@ public class PaymentRequestCommon<SELF extends PaymentRequestCommon<SELF>> exten
         return self();
     }
 
+    public SELF user_anton_brueckner_provided_initial_parameters_to_make_payment() {
+        ExtractableResponse<Response> response = startInitialInternalConsentAuthorization(
+                AUTHORIZE_CONSENT_ENDPOINT,
+                readResource("restrecord/tpp-ui-input/params/anton-brueckner-account-all-accounts-consent.json")
+        );
+
+        assertThat(response.header(LOCATION)).contains("/pis/");
+        return self();
+    }
+
     public SELF user_max_musterman_provided_password_to_embedded_authorization() {
         assertThat(this.redirectUriToGetUserParams).contains("authenticate").doesNotContain("wrong=true");
         max_musterman_provides_password();
+        updateAvailableScas();
+        return self();
+    }
+    public SELF user_anton_brueckner_provided_password_to_embedded_authorization() {
+        assertThat(this.redirectUriToGetUserParams).contains("authenticate").doesNotContain("wrong=true");
+        anton_brueckner_provides_password();
         updateAvailableScas();
         return self();
     }
@@ -251,6 +288,15 @@ public class PaymentRequestCommon<SELF extends PaymentRequestCommon<SELF>> exten
         provideParametersToBankingProtocolWithBody(
                 AUTHORIZE_CONSENT_ENDPOINT,
                 selectedScaBody("EMAIL:max.musterman2@mail.de"),
+                ACCEPTED
+        );
+        return self();
+    }
+
+    public SELF user_max_musterman_selected_sca_challenge_type_appOTP_to_decoupled_authorization() {
+        provideParametersToBankingProtocolWithBody(
+                AUTHORIZE_CONSENT_ENDPOINT,
+                selectedScaBody("APP_OTP:app_otp"),
                 ACCEPTED
         );
         return self();
@@ -265,10 +311,19 @@ public class PaymentRequestCommon<SELF extends PaymentRequestCommon<SELF>> exten
         return self();
     }
 
+    public SELF user_max_musterman_selected_sca_challenge_type_push_otp_to_embedded_authorization() {
+        provideParametersToBankingProtocolWithBody(
+            AUTHORIZE_CONSENT_ENDPOINT,
+            selectedScaBody("PUSH_OTP:TAN2go"),
+            ACCEPTED
+        );
+        return self();
+    }
+
     public SELF ui_can_read_image_data_from_obg(String user) {
         ExtractableResponse<Response> response = withDefaultHeaders(user)
                                                             .cookie(AUTHORIZATION_SESSION_KEY, authSessionCookie)
-                                                            .queryParam(REDIRECT_CODE_QUERY, redirectCode)
+                                                            .queryParam(X_XSRF_TOKEN_QUERY, redirectCode)
                                                          .when()
                                                             .get(GET_CONSENT_AUTH_STATE, paymentServiceSessionId)
                                                          .then()
@@ -286,7 +341,7 @@ public class PaymentRequestCommon<SELF extends PaymentRequestCommon<SELF>> exten
             .given()
                     .header(X_XSRF_TOKEN, UUID.randomUUID().toString())
                     .header(X_REQUEST_ID, UUID.randomUUID().toString())
-                    .queryParam(REDIRECT_CODE_QUERY, redirectCode)
+                    .queryParam(X_XSRF_TOKEN_QUERY, redirectCode)
                     .contentType(APPLICATION_JSON_VALUE)
                     .body(readResource("restrecord/tpp-ui-input/params/anton-brueckner-psu-id-parameter.json"))
             .when()
@@ -300,7 +355,7 @@ public class PaymentRequestCommon<SELF extends PaymentRequestCommon<SELF>> exten
 
     public SELF user_anton_brueckner_sees_that_he_needs_to_be_redirected_to_aspsp_and_redirects_to_aspsp_without_cookie_unauthorized() {
         withPaymentInfoHeaders(ANTON_BRUECKNER)
-                .queryParam(REDIRECT_CODE_QUERY, redirectCode)
+                .queryParam(X_XSRF_TOKEN_QUERY, redirectCode)
             .when()
                 .get(GET_PAYMENT_AUTH_STATE, paymentServiceSessionId)
             .then()
@@ -315,7 +370,7 @@ public class PaymentRequestCommon<SELF extends PaymentRequestCommon<SELF>> exten
     }
 
     protected void updateRedirectCode(ExtractableResponse<Response> response) {
-        this.redirectCode = response.header(REDIRECT_CODE);
+        this.redirectCode = response.header(X_XSRF_TOKEN);
     }
 
     protected void updateNextPaymentAuthorizationUrl(ExtractableResponse<Response> response) {

@@ -1,0 +1,30 @@
+{
+  "id" : "79e31099-222c-4a37-a44b-564734765783",
+  "scenarioName": "Embedded initial,decoupled by ASPSP max.musterman initiate consent",
+  "requiredScenarioState": "PsuAuthenticatedDecoupledFirstGet",
+  "newScenarioState": "PsuAuthenticatedDecoupledSecondGet",
+  "request" : {
+    "url" : "/v1/consents/IaGSU5tL0Zrv6y8UUF_0AjaUyffKVeGTt3ZjwG08SeBz3dsiI8pXi-XCzwyGrfr63Tq72aIvt7r0f-jWmnBZJ8z9MpaJIQIH3NJX8IHgetw=_=_psGLvQpt9Q/authorisations/0b53f83c-4d99-4f9b-900c-80eb16c7c349",
+    "method" : "GET",
+    "headers" : {
+      "Accept" : {
+        "equalTo" : "application/json"
+      },
+      "X-Request-ID" : {
+        "matches": "[=_0-9a-zA-z\\-]+"
+      }
+    }
+  },
+  "response" : {
+    "status" : 200,
+    "bodyFileName" : "body-v1-consents-2059236824.json",
+    "headers" : {
+      "Vary" : [ "Origin", "Access-Control-Request-Method", "Access-Control-Request-Headers" ],
+      "X-Request-Id" : "e1193402-ac3c-4e49-9da9-4019701f8028",
+      "Content-Type" : "application/json",
+      "Date" : "Sat, 21 Aug 2021 13:37:52 GMT",
+      "Keep-Alive" : "timeout=60"
+    }
+  },
+  "uuid" : "79e31099-222c-4a37-a44b-564734765783"
+}

@@ -18,5 +18,6 @@ public class Xs2aExecutionErrorHandler implements JavaDelegate {
     @Override
     public void execute(DelegateExecution execution) {
         log.error("Handling execution error");
+        throw new IllegalStateException("Should not be reached: " + execution.getId());
     }
 }

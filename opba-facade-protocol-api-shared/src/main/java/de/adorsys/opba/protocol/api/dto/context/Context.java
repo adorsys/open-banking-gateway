@@ -5,6 +5,7 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NonNull;
 
+import java.util.Set;
 import java.util.UUID;
 
 @Getter
@@ -25,9 +26,10 @@ public class Context<REQUEST> {
     private final Long authorizationBankProtocolId;
 
     /**
-     * Bank ID for this request {@code de.adorsys.opba.db.domain.entity.Bank}.
+     * Bank Profile ID for this request {@code de.adorsys.opba.db.domain.entity.BankProfile} (uuid field). Uniquely identifies
+     * available actions for current protocol.
      */
-    private final String bankId;
+    private final UUID bankProfileId;
 
     /**
      * The ID of this session.
@@ -39,6 +41,11 @@ public class Context<REQUEST> {
      * The ID of the authorization session associated with this request.
      */
     private final UUID authSessionId;
+
+    /**
+     * The IDs of all authorization session(s) associated with this request.
+     */
+    private final Set<UUID> associatedAuthSessionIds;
 
     /**
      * Will be used as redirect code when coming back from ASPSP.
@@ -72,9 +79,9 @@ public class Context<REQUEST> {
 
     public String loggableBankId() {
         return String.format(
-                "[protocol id: %s / bank uuid: %s]",
+                "[protocol id: %s / bank profile id: %s]",
                 getServiceBankProtocolId(),
-                getBankId()
+                getBankProfileId()
         );
     }
 }

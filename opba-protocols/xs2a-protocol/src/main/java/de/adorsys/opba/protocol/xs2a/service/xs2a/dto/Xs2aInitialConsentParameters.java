@@ -2,6 +2,7 @@ package de.adorsys.opba.protocol.xs2a.service.xs2a.dto;
 
 import de.adorsys.opba.protocol.bpmnshared.dto.DtoMapper;
 import de.adorsys.opba.protocol.xs2a.context.Xs2aContext;
+import de.adorsys.xs2a.adapter.api.RequestParams;
 import lombok.Data;
 import org.mapstruct.Mapper;
 
@@ -25,5 +26,9 @@ public class Xs2aInitialConsentParameters {
     @Mapper(componentModel = SPRING_KEYWORD, implementationPackage = XS2A_MAPPERS_PACKAGE)
     public interface FromCtx extends DtoMapper<Xs2aContext, Xs2aInitialConsentParameters> {
         Xs2aInitialConsentParameters map(Xs2aContext ctx);
+    }
+
+    public RequestParams toParameters() {
+        return RequestParams.builder().build();
     }
 }

@@ -7,15 +7,17 @@ import de.adorsys.opba.protocol.xs2a.context.Xs2aContext;
 import de.adorsys.opba.protocol.xs2a.domain.dto.forms.ScaMethod;
 import de.adorsys.opba.protocol.xs2a.service.dto.ValidatedPathHeadersBody;
 import de.adorsys.opba.protocol.xs2a.service.mapper.PathHeadersBodyMapperTemplate;
+import de.adorsys.opba.protocol.xs2a.service.xs2a.authenticate.ScaUtil;
 import de.adorsys.opba.protocol.xs2a.service.xs2a.dto.Xs2aAuthorizedConsentParameters;
 import de.adorsys.opba.protocol.xs2a.service.xs2a.dto.Xs2aStandardHeaders;
 import de.adorsys.opba.protocol.xs2a.service.xs2a.dto.authenticate.embedded.ProvidePsuPasswordBody;
 import de.adorsys.opba.protocol.xs2a.service.xs2a.validation.Xs2aValidator;
-import de.adorsys.xs2a.adapter.service.AccountInformationService;
-import de.adorsys.xs2a.adapter.service.Response;
-import de.adorsys.xs2a.adapter.service.model.ScaStatus;
-import de.adorsys.xs2a.adapter.service.model.UpdatePsuAuthentication;
-import de.adorsys.xs2a.adapter.service.model.UpdatePsuAuthenticationResponse;
+import de.adorsys.opba.protocol.xs2a.util.logresolver.Xs2aLogResolver;
+import de.adorsys.xs2a.adapter.api.AccountInformationService;
+import de.adorsys.xs2a.adapter.api.Response;
+import de.adorsys.xs2a.adapter.api.model.ScaStatus;
+import de.adorsys.xs2a.adapter.api.model.UpdatePsuAuthentication;
+import de.adorsys.xs2a.adapter.api.model.UpdatePsuAuthenticationResponse;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.flowable.engine.delegate.DelegateExecution;
@@ -37,14 +39,17 @@ public class Xs2aAisAuthenticateUserConsentWithPin extends ValidatedExecution<Xs
     private final Xs2aValidator validator;
     private final AccountInformationService ais;
     private final AuthorizationPossibleErrorHandler errorSink;
+    private final Xs2aLogResolver logResolver = new Xs2aLogResolver(getClass());
 
     @Override
     protected void doValidate(DelegateExecution execution, Xs2aContext context) {
+        logResolver.log("doValidate: execution ({}) with context ({})", execution, context);
         validator.validate(execution, context, this.getClass(), extractor.forValidation(context));
     }
 
     @Override
     protected void doRealExecution(DelegateExecution execution, Xs2aContext context) {
+        logResolver.log("doRealExecution: execution ({}) with context ({})", execution, context);
         ValidatedPathHeadersBody<Xs2aAuthorizedConsentParameters, Xs2aStandardHeaders, UpdatePsuAuthentication> params =
                 extractor.forExecution(context);
 
@@ -57,12 +62,18 @@ public class Xs2aAisAuthenticateUserConsentWithPin extends ValidatedExecution<Xs
     private void aisAuthorizeWithPassword(
             DelegateExecution execution,
             ValidatedPathHeadersBody<Xs2aAuthorizedConsentParameters, Xs2aStandardHeaders, UpdatePsuAuthentication> params) {
+
+        logResolver.log("updateConsentsPsuData with parameters: {}", params.getPath(), params.getHeaders(), params.getBody());
+
         Response<UpdatePsuAuthenticationResponse> authResponse = ais.updateConsentsPsuData(
                 params.getPath().getConsentId(),
                 params.getPath().getAuthorizationId(),
                 params.getHeaders().toHeaders(),
+                params.getPath().toParameters(),
                 params.getBody()
         );
+
+        logResolver.log("updateConsentsPsuData response: {}", authResponse);
 
         ScaStatus scaStatus = authResponse.getBody().getScaStatus();
 
@@ -72,9 +83,10 @@ public class Xs2aAisAuthenticateUserConsentWithPin extends ValidatedExecution<Xs
                     ctx.setWrongAuthCredentials(false);
                     ctx.setPsuPassword(null); // eagerly destroy password, albeit it is not persisted
                     setScaAvailableMethodsIfCanBeChosen(authResponse, ctx);
-                    ctx.setScaSelected(authResponse.getBody().getChosenScaMethod());
+                    ctx.setScaSelected(ScaUtil.scaMethodSelected(authResponse.getBody()));
+                    ctx.setSelectedScaDecoupled(ScaUtil.isDecoupled(authResponse.getHeaders()));
                     ctx.setChallengeData(authResponse.getBody().getChallengeData());
-                    ctx.setScaStatus(null == scaStatus ? null : scaStatus.getValue());
+                    ctx.setScaStatus(null == scaStatus ? null : scaStatus.toString());
                 }
         );
     }

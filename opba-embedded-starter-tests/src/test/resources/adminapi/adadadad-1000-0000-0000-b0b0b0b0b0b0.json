@@ -1,0 +1,78 @@
+{
+  "bank": {
+    "id": 1,
+    "uuid": "adadadad-1000-0000-0000-b0b0b0b0b0b0",
+    "name": "adorsys HBCI no SCA",
+    "bic": "ADORSYS HA",
+    "bankCode": "10000001"
+  },
+  "profiles": [{
+    "id": 1,
+    "url": "http://localhost:8090/hbci-mock/",
+    "adapterId": "hbci-adapter",
+    "tryToUsePreferredApproach": false,
+    "uniquePaymentPurpose": true,
+    "actions": {
+      "LIST_ACCOUNTS": {
+        "protocolAction": "list-accounts",
+        "protocolBeanName": "hbciListAccounts",
+        "consentSupported": false
+      },
+      "LIST_TRANSACTIONS": {
+        "protocolAction": "list-transactions",
+        "protocolBeanName": "hbciListTransactions",
+        "consentSupported": false
+      },
+      "GET_CONSENT_STATUS": {
+        "protocolAction": "get-consent-status",
+        "protocolBeanName": "hbciGetConsentStatus",
+        "consentSupported": false
+      },
+      "GET_PAYMENT_INFORMATION": {
+        "protocolAction": "get-payment-information",
+        "protocolBeanName": "hbciGetPaymentInfoState",
+        "consentSupported": false
+      },
+      "GET_PAYMENT_STATUS": {
+        "protocolAction": "get-payment-status",
+        "protocolBeanName": "hbciGetPaymentStatusState",
+        "consentSupported": false
+      },
+      "SINGLE_PAYMENT": {
+        "protocolAction": "single-payment",
+        "protocolBeanName": "hbciInitiateSinglePayment",
+        "consentSupported": false
+      },
+      "DELETE_CONSENT": {
+        "protocolAction": "delete-consent",
+        "protocolBeanName": "hbciDeleteConsent",
+        "consentSupported": false
+      },
+      "AUTHORIZATION": {
+        "protocolAction": "authorization",
+        "consentSupported": false,
+        "subProtocols": [
+          {
+            "protocolAction": "deny-authorization",
+            "subProtocolBeanName": "hbciDenyAuthorization"
+          },
+          {
+            "protocolAction": "from-aspsp-redirect",
+            "subProtocolBeanName": "hbciFromAspspRedirect"
+          },
+          {
+            "protocolAction": "get-authorization-state",
+            "subProtocolBeanName": "hbciGetAuthorizationState"
+          },
+          {
+            "protocolAction": "update-authorization",
+            "subProtocolBeanName": "hbciUpdateAuthorization"
+          }
+        ]
+      }
+    },
+    "bankCode": "10000001",
+    "bic": "ADORSYS HA",
+    "name": "HBCI no SCA"
+  }]
+}

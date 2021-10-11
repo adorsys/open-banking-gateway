@@ -1,0 +1,42 @@
+{
+  "id" : "732fcf37-e3b5-4f55-9741-93c993944539",
+  "name" : "v1_accounts",
+  "requiredScenarioState": "Finalised",
+  "newScenarioState": "GetAccount",
+  "request" : {
+    "url" : "/v1/accounts?withBalance=false",
+    "method" : "GET",
+    "headers" : {
+      "X-Request-ID" : {
+        "matches" : ".+"
+      },
+      "Consent-ID" : {
+        "equalTo" : "8117230618090020246PSDDE-BAFIN-911360CO4960JJ"
+      },
+      "Digest" : {
+        "matches" : ".+"
+      },
+      "Signature" : {
+        "matches" : ".+"
+      },
+      "TPP-Signature-Certificate" : {
+        "matches" : ".+"
+      }
+    }
+  },
+  "response" : {
+    "status" : 200,
+    "bodyFileName" : "response-body-get-accounts.json",
+    "headers" : {
+      "Date" : "Tue, 08 Sep 2020 14:04:02 GMT",
+      "Server" : "Webserver",
+      "X-Request-ID" : "258d5985-f018-44bc-b567-d366cac4a69b",
+      "Content-Language" : "de",
+      "Content-Type" : "application/json;charset=UTF-8",
+      "Keep-Alive" : "timeout=15, max=95"
+    }
+  },
+  "uuid" : "732fcf37-e3b5-4f55-9741-93c993944539",
+  "persistent" : true,
+  "insertionIndex" : 17
+}

@@ -4,6 +4,7 @@ import de.adorsys.opba.db.domain.entity.BankAction;
 import de.adorsys.opba.db.domain.entity.fintech.FintechConsentSpec;
 import de.adorsys.opba.db.domain.entity.fintech.FintechUser;
 import de.adorsys.opba.db.domain.entity.psu.Psu;
+import de.adorsys.opba.protocol.api.common.SessionStatus;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -13,18 +14,23 @@ import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
+import javax.persistence.Basic;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.EntityListeners;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
 import javax.persistence.FetchType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
+import javax.persistence.Lob;
 import javax.persistence.ManyToOne;
 import javax.persistence.MapsId;
 import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 import javax.persistence.Version;
+import java.nio.charset.StandardCharsets;
 import java.time.Instant;
 import java.util.Collection;
 import java.util.UUID;
@@ -37,6 +43,8 @@ import java.util.UUID;
 @NoArgsConstructor
 @EntityListeners(AuditingEntityListener.class)
 public class AuthSession {
+
+    private static final int SHORT_CONTEXT_DB_LEN = 64;
 
     @Id
     private UUID id;
@@ -64,7 +72,18 @@ public class AuthSession {
 
     private String context;
 
+    @Lob
+    @Basic(fetch = FetchType.LAZY)
+    @Column(nullable = false)
+    private byte[] longContext;
+
     private boolean psuAnonymous;
+
+    @Enumerated(EnumType.STRING)
+    private SessionStatus status;
+
+    private String lastRequestId;
+    private String lastErrorRequestId;
 
     @Version
     private int version;
@@ -74,4 +93,26 @@ public class AuthSession {
 
     @LastModifiedDate
     private Instant modifiedAt;
+
+    public String getAuthSessionContext() {
+        if (null == context) {
+            return null == longContext ? null : new String(longContext, StandardCharsets.UTF_8);
+        } else {
+            return context;
+        }
+    }
+
+    public void setAuthSessionContext(String newContext) {
+        if (null == newContext) {
+            context = null;
+            longContext = null;
+            return;
+        }
+
+        if (newContext.length() <= SHORT_CONTEXT_DB_LEN) {
+            this.context = newContext;
+        } else {
+            this.longContext = newContext.getBytes(StandardCharsets.UTF_8);
+        }
+    }
 }

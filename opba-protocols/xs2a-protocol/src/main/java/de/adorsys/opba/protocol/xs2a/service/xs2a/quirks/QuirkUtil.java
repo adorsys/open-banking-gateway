@@ -2,12 +2,12 @@ package de.adorsys.opba.protocol.xs2a.service.xs2a.quirks;
 
 import com.google.common.base.Strings;
 import de.adorsys.opba.protocol.xs2a.context.Xs2aContext;
-import de.adorsys.xs2a.adapter.service.RequestHeaders;
+import de.adorsys.xs2a.adapter.api.RequestHeaders;
 import lombok.experimental.UtilityClass;
 
 import java.util.Map;
 
-import static de.adorsys.xs2a.adapter.service.RequestHeaders.X_GTW_BANK_CODE;
+import static de.adorsys.xs2a.adapter.api.RequestHeaders.X_GTW_BANK_CODE;
 
 /**
  * Utility to contain hacks and quirks.

@@ -12,7 +12,6 @@ spring:
     parameters:
       table-prefix: opb_
       adorsys-sandbox-url: http://localhost:20014
-      fill-with-mock-data: true
 
 # Application configuration
 api:
@@ -62,7 +61,7 @@ facade:
         page:
           for-ais: http://localhost:1010/ais/{authorizationSessionId}/login?redirectCode={fintechUserTempPassword}
           for-pis: http://localhost:1010/ais/{authorizationSessionId}/login?redirectCode={fintechUserTempPassword}
-          # PIS allows anonymous users in OPBA
+          for-ais-anonymous: http://localhost:1010/ais/{authorizationSessionId}/anonymous?redirectCode={fintechUserTempPassword}
           for-pis-anonymous: http://localhost:1010/pis/{authorizationSessionId}/anonymous?redirectCode={fintechUserTempPassword}
         password:
           byte-size: 8

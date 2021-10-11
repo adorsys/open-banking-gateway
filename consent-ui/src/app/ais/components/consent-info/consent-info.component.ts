@@ -1,6 +1,5 @@
 import { Component, OnInit } from '@angular/core';
 import { AccountAccessLevel, AisConsentToGrant } from '../../common/dto/ais-consent';
-import { StubUtil } from '../../../common/utils/stub-util';
 import { ActivatedRoute, Router } from '@angular/router';
 import { SessionService } from '../../../common/session.service';
 import { ConsentUtil } from '../../common/consent-util';

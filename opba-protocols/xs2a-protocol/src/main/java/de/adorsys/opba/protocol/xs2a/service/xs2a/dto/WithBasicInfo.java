@@ -13,11 +13,11 @@ import java.util.HashMap;
 import java.util.Map;
 
 import static de.adorsys.opba.protocol.api.dto.codes.TypeCode.STRING;
-import static de.adorsys.xs2a.adapter.service.RequestHeaders.AUTHORIZATION;
-import static de.adorsys.xs2a.adapter.service.RequestHeaders.CONTENT_TYPE;
-import static de.adorsys.xs2a.adapter.service.RequestHeaders.PSU_ID;
-import static de.adorsys.xs2a.adapter.service.RequestHeaders.X_GTW_ASPSP_ID;
-import static de.adorsys.xs2a.adapter.service.RequestHeaders.X_REQUEST_ID;
+import static de.adorsys.xs2a.adapter.api.RequestHeaders.AUTHORIZATION;
+import static de.adorsys.xs2a.adapter.api.RequestHeaders.CONTENT_TYPE;
+import static de.adorsys.xs2a.adapter.api.RequestHeaders.PSU_ID;
+import static de.adorsys.xs2a.adapter.api.RequestHeaders.X_GTW_ASPSP_ID;
+import static de.adorsys.xs2a.adapter.api.RequestHeaders.X_REQUEST_ID;
 
 /**
  * Typical headers that are required for all XS2A-adapter api calls.

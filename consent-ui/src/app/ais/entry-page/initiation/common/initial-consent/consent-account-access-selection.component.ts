@@ -1,13 +1,17 @@
-import { AfterContentChecked, ChangeDetectorRef, Component, Input, OnInit } from '@angular/core';
-import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
-import { ActivatedRoute, Router } from '@angular/router';
-import { AuthConsentState } from '../../../../common/dto/auth-state';
-import { SessionService } from '../../../../../common/session.service';
-import { StubUtil } from '../../../../../common/utils/stub-util';
-import { AccountAccessLevel, AisConsentToGrant } from '../../../../common/dto/ais-consent';
-import { ConsentUtil } from '../../../../common/consent-util';
-import { DenyRequest, UpdateConsentAuthorizationService } from '../../../../../api';
-import { ApiHeaders } from '../../../../../api/api.headers';
+import {AfterContentChecked, ChangeDetectorRef, Component, Input, OnInit} from '@angular/core';
+import {FormBuilder, FormControl, FormGroup, Validators} from '@angular/forms';
+import {ActivatedRoute, Router} from '@angular/router';
+import {AuthConsentState} from '../../../../common/dto/auth-state';
+import {SessionService} from '../../../../../common/session.service';
+import {StubUtil} from '../../../../../common/utils/stub-util';
+import {
+  AccountAccessLevel,
+  AccountAccessLevelAspspConsentSupport,
+  AisConsentToGrant
+} from '../../../../common/dto/ais-consent';
+import {ConsentUtil} from '../../../../common/consent-util';
+import {ConsentAuth, UpdateConsentAuthorizationService} from '../../../../../api';
+import {ApiHeaders} from '../../../../../api/api.headers';
 
 @Component({
   selector: 'consent-app-access-selection',
@@ -22,6 +26,7 @@ export class ConsentAccountAccessSelectionComponent implements OnInit, AfterCont
   @Input() consentReviewPage: string;
   @Input() dedicatedConsentPage: string;
 
+  public filteredAccountAccesses: Access[];
   public selectedAccess;
   public accountAccessForm: FormGroup;
   public state: AuthConsentState;
@@ -57,7 +62,18 @@ export class ConsentAccountAccessSelectionComponent implements OnInit, AfterCont
       this.selectedAccess = new FormControl(this.accountAccesses[0], Validators.required);
       this.accountAccessForm.addControl('accountAccess', this.selectedAccess);
       this.consent = ConsentUtil.getOrDefault(this.authorizationId, this.sessionService);
+      const bankSupportFromApi = this.sessionService.getConsentTypesSupported(res.authId);
+      if (bankSupportFromApi) {
+        const bankSupport = new Set(this.sessionService.getConsentTypesSupported(res.authId) || []);
+        this.filteredAccountAccesses = this.accountAccesses
+          .filter(it => ConsentAccountAccessSelectionComponent.hasIntersection(AccountAccessLevelAspspConsentSupport.get(it.id), bankSupport));
+      } else {
+        this.filteredAccountAccesses = this.accountAccesses;
+      }
     });
+    if (this.filteredAccountAccesses && this.filteredAccountAccesses.length == 1) {
+      this.selectedAccess.setValue(this.filteredAccountAccesses[0]);
+    }
   }
 
   hasInputs(): boolean {
@@ -97,13 +113,21 @@ export class ConsentAccountAccessSelectionComponent implements OnInit, AfterCont
       .denyUsingPOST(
         this.authorizationId,
         StubUtil.X_REQUEST_ID, // TODO: real values instead of stubs
-        StubUtil.X_XSRF_TOKEN, // TODO: real values instead of stubs
-        {} as DenyRequest,
         'response'
       )
       .subscribe((res) => {
         window.location.href = res.headers.get(ApiHeaders.LOCATION);
       });
+  }
+
+  private static hasIntersection(source: Set<ConsentAuth.SupportedConsentTypesEnum>, target: Set<ConsentAuth.SupportedConsentTypesEnum>): boolean {
+    for (const entry of source) {
+      if (target.has(entry)) {
+        return true;
+      }
+    }
+
+    return false;
   }
 
   private updateConsentObject() {

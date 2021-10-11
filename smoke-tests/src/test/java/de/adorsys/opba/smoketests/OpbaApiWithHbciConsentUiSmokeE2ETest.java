@@ -19,16 +19,16 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.ActiveProfiles;
 
+import java.time.LocalDate;
 import java.util.UUID;
 
 import static de.adorsys.opba.protocol.xs2a.tests.Const.ENABLE_SMOKE_TESTS;
 import static de.adorsys.opba.protocol.xs2a.tests.Const.TRUE_BOOL;
 import static de.adorsys.opba.protocol.xs2a.tests.TestProfiles.SMOKE_TEST;
 import static de.adorsys.opba.protocol.xs2a.tests.e2e.stages.StagesCommonUtil.ANTON_BRUECKNER;
-import static de.adorsys.opba.protocol.xs2a.tests.e2e.stages.StagesCommonUtil.HBCI_SANDBOX_BANK_SCA_ID;
+import static de.adorsys.opba.protocol.xs2a.tests.e2e.stages.StagesCommonUtil.HBCI_SANDBOX_BANK_PROFILE_SCA_ID;
 import static de.adorsys.opba.protocol.xs2a.tests.e2e.stages.StagesCommonUtil.MAX_MUSTERMAN;
 import static de.adorsys.opba.smoketests.config.SmokeConfig.BOTH_BOOKING;
-import static de.adorsys.opba.smoketests.config.SmokeConfig.DATE_FROM;
 import static de.adorsys.opba.smoketests.config.SmokeConfig.DATE_TO;
 import static org.springframework.boot.test.context.SpringBootTest.WebEnvironment.NONE;
 
@@ -43,7 +43,8 @@ import static org.springframework.boot.test.context.SpringBootTest.WebEnvironmen
 class OpbaApiWithHbciConsentUiSmokeE2ETest extends SpringScenarioTest<SmokeSandboxServers, WebDriverBasedAccountInformation<? extends WebDriverBasedAccountInformation<?>>, AccountInformationResult> {
 
     private static final String MAX_MUSTERMAN_IBAN = "DE59300000033466865655";
-    private static final String PUSH_TAN = "pushTAN";
+    private static final String PUSH_TAN_SCA_NAME = "pushTAN";
+    private static final String PUSH_TAN_PAGE_NAME = "PUSH_OTP";
 
     private final String opbaLogin = UUID.randomUUID().toString();
     private final String opbaPassword = UUID.randomUUID().toString();
@@ -62,7 +63,7 @@ class OpbaApiWithHbciConsentUiSmokeE2ETest extends SpringScenarioTest<SmokeSandb
                 .rest_assured_points_to_opba_server_with_fintech_signer_on_banking_api(config.getOpbaServerUri());
 
         when()
-                .fintech_calls_list_accounts_for_anton_brueckner(HBCI_SANDBOX_BANK_SCA_ID)
+                .fintech_calls_list_accounts_for_anton_brueckner(HBCI_SANDBOX_BANK_PROFILE_SCA_ID)
                 .and()
                 .user_opens_opba_consent_login_page(firefoxDriver)
                 .and()
@@ -80,7 +81,7 @@ class OpbaApiWithHbciConsentUiSmokeE2ETest extends SpringScenarioTest<SmokeSandb
 
         then()
                 .fintech_calls_consent_activation_for_current_authorization_id()
-                .open_banking_can_read_anton_brueckner_hbci_account_data_using_consent_bound_to_service_session(HBCI_SANDBOX_BANK_SCA_ID);
+                .open_banking_can_read_anton_brueckner_hbci_account_data_using_consent_bound_to_service_session(HBCI_SANDBOX_BANK_PROFILE_SCA_ID);
     }
 
     @Test
@@ -89,7 +90,7 @@ class OpbaApiWithHbciConsentUiSmokeE2ETest extends SpringScenarioTest<SmokeSandb
                 .rest_assured_points_to_opba_server_with_fintech_signer_on_banking_api(config.getOpbaServerUri());
 
         when()
-                .fintech_calls_list_transactions_for_max_musterman(MAX_MUSTERMAN_IBAN, HBCI_SANDBOX_BANK_SCA_ID)
+                .fintech_calls_list_transactions_for_max_musterman(MAX_MUSTERMAN_IBAN, HBCI_SANDBOX_BANK_PROFILE_SCA_ID)
                 .and()
                 .user_opens_opba_consent_login_page(firefoxDriver)
                 .and()
@@ -103,16 +104,16 @@ class OpbaApiWithHbciConsentUiSmokeE2ETest extends SpringScenarioTest<SmokeSandb
                 .and()
                 .user_in_consent_ui_provides_pin(firefoxDriver)
                 .and()
-                .user_in_consent_ui_sees_sca_select_and_selected_type(firefoxDriver, PUSH_TAN)
+                .user_in_consent_ui_sees_sca_select_and_selected_type(firefoxDriver, PUSH_TAN_SCA_NAME)
                 .and()
-                .user_in_consent_ui_provides_sca_result_to_embedded_authorization(firefoxDriver, PUSH_TAN)
+                .user_in_consent_ui_provides_sca_result_to_embedded_authorization(firefoxDriver, PUSH_TAN_PAGE_NAME)
                 .and()
                 .user_in_consent_ui_sees_thank_you_for_consent_and_clicks_to_tpp(firefoxDriver);
 
         then()
                 .fintech_calls_consent_activation_for_current_authorization_id()
                 .open_banking_can_read_max_musterman_hbci_transaction_data_using_consent_bound_to_service_session(
-                        MAX_MUSTERMAN_IBAN, HBCI_SANDBOX_BANK_SCA_ID, DATE_FROM, DATE_TO, BOTH_BOOKING
+                        MAX_MUSTERMAN_IBAN, HBCI_SANDBOX_BANK_PROFILE_SCA_ID, LocalDate.EPOCH, DATE_TO, BOTH_BOOKING
                 );
     }
 }

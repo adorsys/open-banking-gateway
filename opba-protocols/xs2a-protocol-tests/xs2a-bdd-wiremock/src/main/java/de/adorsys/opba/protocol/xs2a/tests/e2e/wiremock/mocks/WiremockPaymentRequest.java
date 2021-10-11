@@ -5,6 +5,7 @@ import com.github.tomakehurst.wiremock.verification.LoggedRequest;
 import com.tngtech.jgiven.annotation.ExpectedScenarioState;
 import com.tngtech.jgiven.integration.spring.JGivenStage;
 import de.adorsys.opba.protocol.xs2a.tests.e2e.LocationExtractorUtil;
+import de.adorsys.opba.protocol.xs2a.tests.e2e.stages.AdminUtil;
 import de.adorsys.opba.protocol.xs2a.tests.e2e.stages.PaymentRequestCommon;
 import io.restassured.RestAssured;
 import io.restassured.response.ExtractableResponse;
@@ -16,7 +17,7 @@ import static com.github.tomakehurst.wiremock.client.WireMock.postRequestedFor;
 import static com.github.tomakehurst.wiremock.client.WireMock.urlMatching;
 import static de.adorsys.opba.api.security.external.domain.HttpHeaders.AUTHORIZATION_SESSION_KEY;
 import static de.adorsys.opba.protocol.xs2a.tests.e2e.stages.StagesCommonUtil.withSignatureHeaders;
-import static de.adorsys.xs2a.adapter.service.RequestHeaders.TPP_REDIRECT_URI;
+import static de.adorsys.xs2a.adapter.api.RequestHeaders.TPP_REDIRECT_URI;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.awaitility.Awaitility.await;
 
@@ -66,12 +67,22 @@ public class WiremockPaymentRequest<SELF extends WiremockPaymentRequest<SELF>> e
                 .given()
                     .cookie(AUTHORIZATION_SESSION_KEY, authSessionCookie)
                 .when()
-                    .get(redirectOkUri + "&code=" + code)
+                    .get(redirectOkUri + "?code=" + code)
                 .then()
                     .statusCode(HttpStatus.SEE_OTHER.value())
                 .extract();
 
         updateRedirectCode(response);
+        return self();
+    }
+
+    public SELF current_redirected_to_screen_is_payment_result() {
+        assertThat(this.redirectUriToGetUserParams).contains("pis").contains("consent-result");
+        return self();
+    }
+
+    public SELF admin_calls_delete_bank(String bankUuid) {
+        AdminUtil.adminCallsDeleteBank(bankUuid);
         return self();
     }
 

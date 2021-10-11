@@ -5,7 +5,6 @@ import { Location } from '@angular/common';
 import { SessionService } from '../../common/session.service';
 import {
   AuthStateConsentAuthorizationService,
-  DenyRequest,
   SinglePayment,
   UpdateConsentAuthorizationService
 } from '../../api';
@@ -74,8 +73,6 @@ export class ResultPageComponent implements OnInit {
       .denyUsingPOST(
         this.authorizationId,
         StubUtil.X_REQUEST_ID, // TODO: real values instead of stubs
-        StubUtil.X_XSRF_TOKEN, // TODO: real values instead of stubs
-        {} as DenyRequest,
         'response'
       )
       .subscribe((res) => {
@@ -94,7 +91,7 @@ export class ResultPageComponent implements OnInit {
   private loadRedirectUri(authId: string, redirectCode: string) {
     this.authStateConsentAuthorizationService.authUsingGET(authId, redirectCode, 'response').subscribe((res) => {
       console.log(res);
-      this.sessionService.setRedirectCode(authId, res.headers.get(ApiHeaders.REDIRECT_CODE));
+      this.sessionService.setRedirectCode(authId, res.headers.get(ApiHeaders.X_XSRF_TOKEN));
       this.redirectTo = res.headers.get(ApiHeaders.LOCATION);
     });
   }

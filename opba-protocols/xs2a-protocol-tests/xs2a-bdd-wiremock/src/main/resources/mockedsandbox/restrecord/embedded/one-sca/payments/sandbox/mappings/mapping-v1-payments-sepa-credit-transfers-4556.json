@@ -1,0 +1,26 @@
+{
+  "id" : "57d2cd9a-d3be-39b3-9a7e-c265b93e9ef5",
+  "scenarioName": "PaymentInitializationUsingOneScaEmbedded",
+  "newScenarioState": "GetPaymentStatus",
+  "request" : {
+    "url" : "/v1/payments/sepa-credit-transfers/QY__AVEz7_jSBQ7DoVT5RUK-MXSZq_LdvJpCrILSc1q_T9itf-ZHujfO-sPZAfNFcgftJbETkzvNvu5mZQqWcA==_=_psGLvQpt9Q/status",
+    "method" : "GET",
+    "headers" : {
+      "X-Request-ID" : {
+        "matches" : "[0-9a-zA-z\\-]+"
+      }
+    }
+  },
+  "response" : {
+    "status" : 200,
+    "body" : "{\"transactionStatus\":\"ACSP\",\"psuMessage\":\"Mocked PSU message from SPI for this payment\"}",
+    "headers" : {
+      "Vary" : [ "Origin", "Access-Control-Request-Method", "Access-Control-Request-Headers" ],
+      "X-Request-Id" : "4780c77a-c37e-43a8-85af-3acf9ecea976",
+      "Content-Type" : "application/json",
+      "Date" : "Tue, 21 Jul 2020 12:53:43 GMT",
+      "Keep-Alive" : "timeout=60"
+    }
+  },
+  "uuid" : "57d2cd9a-d3be-39b3-9a7e-c265b93e9ef5"
+}

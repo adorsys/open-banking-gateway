@@ -5,7 +5,7 @@
     <parent>
         <groupId>de.adorsys.opba</groupId>
         <artifactId>opba-protocols</artifactId>
-        <version>0.30.0.1</version>
+        <version>1.0.0</version>
     </parent>
 
     <!-- BPMN based engine to talk to XS2A-compliant banks -->
@@ -152,9 +152,57 @@
             </plugin>
             <!-- Protocol customization: -->
             <!--
-            This plugin performs replacement of flowable-called beans with protocol customary ones.
+            This plugins performs replacement of flowable-called beans with protocol customary ones.
             We customize only 'xs2a-list-transactions.bpmn20.xml' flow as it is the only one that needs custom beans.
             -->
+            <!-- Normalize paths on Windows -->
+            <plugin>
+                <groupId>org.codehaus.mojo</groupId>
+                <artifactId>build-helper-maven-plugin</artifactId>
+                <version>3.2.0</version>
+                <executions>
+                    <execution>
+                        <id>regex-properties</id>
+                        <phase>generate-resources</phase>
+                        <goals>
+                            <goal>regex-properties</goal>
+                        </goals>
+                        <configuration>
+                            <regexPropertySettings>
+                                <regexPropertySetting>
+                                    <name>build-dir.normalized.backslash-path</name>
+                                    <value>${project.build.directory}</value>
+                                    <regex>\\</regex>
+                                    <replacement>\\\\</replacement>
+                                    <failIfNoMatch>false</failIfNoMatch>
+                                </regexPropertySetting>
+                                <regexPropertySetting>
+                                    <name>build-dir.normalized.slash-path</name>
+                                    <value>${project.build.directory}</value>
+                                    <regex>\\</regex>
+                                    <replacement>/</replacement>
+                                    <failIfNoMatch>false</failIfNoMatch>
+                                </regexPropertySetting>
+                                <regexPropertySetting>
+                                    <name>base-dir.normalized.slash-path</name>
+                                    <value>${project.basedir}</value>
+                                    <regex>\\</regex>
+                                    <replacement>/</replacement>
+                                    <failIfNoMatch>false</failIfNoMatch>
+                                </regexPropertySetting>
+                                <regexPropertySetting>
+                                    <name>file-sep</name>
+                                    <value>${file.separator}</value>
+                                    <regex>\\</regex>
+                                    <replacement>\\\\</replacement>
+                                    <failIfNoMatch>false</failIfNoMatch>
+                                </regexPropertySetting>
+                            </regexPropertySettings>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+            <!-- Copy and modify 'basic' flows -->
             <plugin>
                 <groupId>com.google.code.maven-replacer-plugin</groupId>
                 <artifactId>replacer</artifactId>
@@ -168,10 +216,10 @@
                     </execution>
                 </executions>
                 <configuration>
-                    <filesToInclude>${project.build.directory}/shared-processes/processes/xs2a/accounts/xs2a-list-transactions.bpmn20.xml</filesToInclude>
-                    <tokenValueMap>${project.basedir}/src/main/resources/context.properties</tokenValueMap>
-                    <inputFilePattern>${project.build.directory}/shared-processes/processes/(.*)/([A-Za-z0-9\.\-]+)$</inputFilePattern>
-                    <outputFilePattern>${project.build.directory}/classes/processes/$1/sandbox-$2</outputFilePattern>
+                    <filesToInclude>${build-dir.normalized.slash-path}/shared-processes/processes/xs2a/accounts/xs2a-list-transactions.bpmn20.xml</filesToInclude>
+                    <tokenValueMap>${base-dir.normalized.slash-path}/src/main/resources/context.properties</tokenValueMap>
+                    <inputFilePattern>${build-dir.normalized.backslash-path}[/\\]shared-processes[/\\]processes[/\\](.*)[/\\]([A-Za-z0-9\.\-]+)$</inputFilePattern>
+                    <outputFilePattern>${build-dir.normalized.backslash-path}${file-sep}classes${file-sep}processes${file-sep}$1${file-sep}sandbox-$2</outputFilePattern>
                 </configuration>
             </plugin>
             <!-- FLOW CUSTOMIZATION END -->

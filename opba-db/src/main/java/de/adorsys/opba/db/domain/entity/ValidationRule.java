@@ -42,4 +42,6 @@ public class ValidationRule {
     private boolean forEmbedded;
 
     private boolean forRedirect;
+
+    private boolean forDecoupled;
 }

@@ -9,6 +9,7 @@ import de.adorsys.opba.db.domain.entity.sessions.AuthSession;
 import de.adorsys.opba.protocol.facade.config.encryption.PsuEncryptionServiceProvider;
 import de.adorsys.opba.protocol.facade.config.encryption.datasafe.BaseDatasafeDbStorageService;
 import de.adorsys.opba.protocol.facade.config.encryption.impl.PairIdPsuAspspTuple;
+import de.adorsys.opba.protocol.facade.dto.PubAndPrivKey;
 import de.adorsys.opba.protocol.facade.services.EncryptionKeySerde;
 import lombok.RequiredArgsConstructor;
 import lombok.SneakyThrows;
@@ -17,7 +18,6 @@ import lombok.experimental.Delegate;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.security.KeyPair;
-import java.security.PrivateKey;
 import java.security.PublicKey;
 import java.util.UUID;
 import java.util.function.BiConsumer;
@@ -42,26 +42,21 @@ public class PsuSecureStorage {
     }
 
     @SneakyThrows
-    public PrivateKey getOrCreateKeyFromPrivateForAspsp(Supplier<char[]> password, AuthSession session, BiConsumer<UUID, PublicKey> storePublicKeyIfNeeded) {
+    public PubAndPrivKey getOrCreateKeyFromPrivateForAspsp(Supplier<char[]> password, AuthSession session, BiConsumer<UUID, PublicKey> storePublicKeyIfNeeded) {
         try (InputStream is = datasafeServices.privateService().read(
                 ReadRequest.forDefaultPrivate(
                         session.getPsu().getUserIdAuth(password),
                         new PairIdPsuAspspTuple(session).toDatasafePathWithoutPsuAndId()
                 )
         )) {
-            return serde.readPrivateKey(is);
+            return serde.readKey(is);
         } catch (BaseDatasafeDbStorageService.DbStorageEntityNotFoundException ex) {
             return generateAndSaveAspspSecretKey(password, session, storePublicKeyIfNeeded);
         }
     }
 
     @SneakyThrows
-    public PrivateKey createOneTimePrivateKey(Supplier<char[]> password, AuthSession session, BiConsumer<UUID, PublicKey> storePublicKeyIfNeeded) {
-        return generateAndSaveAspspSecretKey(password, session, storePublicKeyIfNeeded);
-    }
-
-    @SneakyThrows
-    private PrivateKey generateAndSaveAspspSecretKey(Supplier<char[]> password, AuthSession session, BiConsumer<UUID, PublicKey> storePublicKeyIfNeeded) {
+    private PubAndPrivKey generateAndSaveAspspSecretKey(Supplier<char[]> password, AuthSession session, BiConsumer<UUID, PublicKey> storePublicKeyIfNeeded) {
         UUID keyId = UUID.randomUUID();
         KeyPair key = encryptionServiceProvider.generateKeyPair();
         try (OutputStream os = datasafeServices.privateService().write(
@@ -69,9 +64,9 @@ public class PsuSecureStorage {
                         session.getPsu().getUserIdAuth(password),
                         new PairIdPsuAspspTuple(keyId, session).toDatasafePathWithoutPsu()))
         ) {
-            serde.writePrivateKey(key.getPrivate(), os);
+            serde.writeKey(key.getPublic(), key.getPrivate(), os);
         }
         storePublicKeyIfNeeded.accept(keyId, key.getPublic());
-        return key.getPrivate();
+        return new PubAndPrivKey(key.getPublic(), key.getPrivate());
     }
 }

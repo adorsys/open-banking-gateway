@@ -1,0 +1,56 @@
+{
+  "scenarioName": "AccountsListUsingDkbEmbeddedPreStep",
+  "requiredScenarioState": "Started",
+  "newScenarioState": "CreateConsent",
+  "request": {
+    "url": "/v1/consents",
+    "method": "POST",
+    "headers": {
+      "X-GTW-ASPSP-ID" : {
+        "equalTo" : "83c24dcf-2cfb-4c43-9812-013e32ab53b1"
+      },
+      "X-Request-ID": {
+        "matches": "[0-9a-zA-z\\-]+"
+      },
+      "PSU-ID": {
+        "matches": "max.musterman"
+      },
+      "PSU-IP-Address": {
+        "matches": "^(?:[0-9]{1,3}\\.){3}[0-9]{1,3}$"
+      },
+      "TPP-Redirect-URI" : {
+        "matches" : ".+"
+      },
+      "PSD2-AUTHORIZATION": {
+        "equalTo": "Bearer VALID_TOKEN"
+      },
+      "TPP-Nok-Redirect-URI" : {
+        "matches" : ".+"
+      }
+    },
+    "bodyPatterns": [
+      {
+        "equalToJson": "{\"access\":{\"availableAccounts\":\"allAccounts\"},\"recurringIndicator\":true,\"validUntil\":\"2030-01-31\",\"frequencyPerDay\":12,\"combinedServiceIndicator\":false}",
+        "ignoreArrayOrder": true,
+        "ignoreExtraElements": true
+      }
+    ]
+  },
+  "response": {
+    "status": 201,
+    "body": "{\n  \"consentStatus\":\"received\",\n  \"consentId\":\"VALID_CONSENT_ID\",\n  \"_links\": {\n    \"startAuthorisation\": {\n      \"href\":\"/v1/consents/VALID_CONSENT_ID/authorisations\"\n    }\n  }\n}",
+    "headers": {
+      "Date": "Mon, 05 Jul 2021 11:59:59 GMT",
+      "Server": "Webserver",
+      "X-Request-ID": "6e662589-c15a-4238-a129-e7f960431158",
+      "ASPSP-SCA-Approach": "EMBEDDED",
+      "Content-Language": "de",
+      "Location": "/v1/consents/VALID_CONSENT_ID",
+      "Content-Type": "application/json;charset=UTF-8",
+      "Keep-Alive": "timeout=15, max=100"
+    }
+  },
+  "uuid": "812be3b4-d0e4-43e5-844f-f89858b2f6ca",
+  "persistent": true,
+  "insertionIndex": 12
+}

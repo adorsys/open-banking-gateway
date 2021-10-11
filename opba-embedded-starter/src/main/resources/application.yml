@@ -25,8 +25,7 @@ spring:
       adorsys-sandbox-url: http://localhost:20014
       adorsys-sandbox-oauth-server-url: http://localhost:20015/oauth/authorization-server
       adorsys-hbci-sandbox-url: http://localhost:8090/hbci-mock/
-      fill-with-mock-data: true
-    contexts: dev
+    contexts: dev,mock-banks
 
 # Actuator:
 management:
@@ -49,14 +48,14 @@ api:
       start: 0
       max: 10
       query:
-        "SELECT id, uuid, name, bic, bank_code, word_similarity(:keyword, name) as sml
-        FROM opb_bank WHERE word_similarity(:keyword, name) >= 0.6
+        "SELECT id, uuid, name, bic, bank_code, active, word_similarity(:keyword, name) as sml
+        FROM opb_bank WHERE ((word_similarity(:keyword, name) >= 0.6) AND (NOT :onlyActive OR active))
         UNION
-        SELECT id, uuid, name, bic, bank_code, word_similarity(:keyword, bic) as sml
-        FROM opb_bank WHERE word_similarity(:keyword, bic) >= 0.8
+        SELECT id, uuid, name, bic, bank_code, active, word_similarity(:keyword, bic) as sml
+        FROM opb_bank WHERE ((word_similarity(:keyword, bic) >= 0.8) AND (NOT :onlyActive OR active))
         UNION
-        SELECT id, uuid, name, bic, bank_code, word_similarity(:keyword, bank_code) as sml
-        FROM opb_bank WHERE word_similarity(:keyword, bank_code) >= 0.8
+        SELECT id, uuid, name, bic, bank_code, active, word_similarity(:keyword, bank_code) as sml
+        FROM opb_bank WHERE ((word_similarity(:keyword, bank_code) >= 0.8) AND (NOT :onlyActive OR active))
         ORDER BY sml DESC, id
         LIMIT :max
         OFFSET :start"
@@ -112,7 +111,7 @@ facade:
         page:
           for-ais: ${facade.urls.embedded-ui-base-url}/auth/ais/{authorizationSessionId}/login?redirectCode={fintechUserTempPassword}
           for-pis: ${facade.urls.embedded-ui-base-url}/auth/pis/{authorizationSessionId}/login?redirectCode={fintechUserTempPassword}
-          # PIS allows anonymous users in OPBA
+          for-ais-anonymous: ${facade.urls.embedded-ui-base-url}/auth/ais/{authorizationSessionId}/anonymous?redirectCode={fintechUserTempPassword}
           for-pis-anonymous: ${facade.urls.embedded-ui-base-url}/auth/pis/{authorizationSessionId}/anonymous?redirectCode={fintechUserTempPassword}
         password:
           byte-size: 8
@@ -201,6 +200,7 @@ protocol:
           select-sca-method: ${facade.urls.embedded-ui-base-url}/ais${protocol.xs2a.urls.common.parameters.select-sca-method}
           report-sca-result: ${facade.urls.embedded-ui-base-url}/ais${protocol.xs2a.urls.common.parameters.report-sca-result}
           provide-psu-iban: ${facade.urls.embedded-ui-base-url}/ais${protocol.xs2a.urls.common.parameters.provide-psu-iban}
+          wait-decoupled-sca: ${facade.urls.embedded-ui-base-url}/ais${protocol.xs2a.urls.common.parameters.wait-decoupled-sca}
       pis:
         to-aspsp: ${facade.urls.embedded-ui-base-url}/pis${protocol.xs2a.urls.common.to-aspsp}
         web-hooks:
@@ -213,11 +213,12 @@ protocol:
           select-sca-method: ${facade.urls.embedded-ui-base-url}/pis${protocol.xs2a.urls.common.parameters.select-sca-method}
           report-sca-result: ${facade.urls.embedded-ui-base-url}/pis${protocol.xs2a.urls.common.parameters.report-sca-result}
           provide-psu-iban: ${facade.urls.embedded-ui-base-url}/pis${protocol.xs2a.urls.common.parameters.provide-psu-iban}
+          wait-decoupled-sca: ${facade.urls.embedded-ui-base-url}/pis${protocol.xs2a.urls.common.parameters.wait-decoupled-sca}
       common:
         to-aspsp: /{authSessionId}/to-aspsp-redirection?redirectCode={redirectCode}
         web-hooks:
-          ok: ${facade.urls.embedded-ui-base-url}/embedded-server/v1/consent/{authSessionId}/fromAspsp/STUB_STATE/ok?redirectCode={aspspRedirectCode}
-          nok: ${facade.urls.embedded-ui-base-url}/embedded-server/v1/consent/{authSessionId}/fromAspsp/STUB_STATE/nok?redirectCode={aspspRedirectCode}
+          ok: ${facade.urls.embedded-ui-base-url}/embedded-server/v1/consent/{authSessionId}/fromAspsp/{aspspRedirectCode}/ok
+          nok: ${facade.urls.embedded-ui-base-url}/embedded-server/v1/consent/{authSessionId}/fromAspsp/{aspspRedirectCode}/nok
           result: /{authSessionId}/consent-result?redirectCode={redirectCode}
         parameters:
           provide-more: /{authSessionId}?redirectCode={redirectCode}
@@ -225,10 +226,17 @@ protocol:
           select-sca-method: /{authSessionId}/select-sca-method
           report-sca-result: /{authSessionId}/sca-result/{selectedScaType}?wrong={isWrongCreds}
           provide-psu-iban: /{authSessionId}/entry-consent-transactions/dedicated-account-access?wrong={isWrongCreds}
+          wait-decoupled-sca: /{authSessionId}/wait-sca-finalization?redirectCode={redirectCode}
     aspspmessages:
       invalid-credentials: PSU_CREDENTIALS_INVALID
       invalid-consent: FORMAT_ERROR
-      missing-oauth2-token: UNAUTHORIZED
+      missing-oauth2-token: TOKEN_INVALID
+      missing-oauth2-token-message: Please retrieve token first
+      consent-gone:
+        ACCESS_EXCEEDED: CONSENT_ACCESS_EXCEEDED_LIMIT
+        CONSENT_UNKNOWN: CONSENT_UNKNOWN
+        CONSENT_EXPIRED: CONSENT_EXPIRED
+        CONSENT_INVALID: CONSENT_INVALID
     pkcs12:
       keystore: sample-qwac.keystore
       password: password
@@ -245,8 +253,8 @@ protocol:
         redirect:
           to-aspsp: ${facade.urls.embedded-ui-base-url}/ais/{authSessionId}/to-aspsp-redirection
           web-hooks:
-            ok: ${facade.urls.embedded-ui-base-url}/embedded-server/v1/consent/{authSessionId}/fromAspsp/STUB_STATE/ok?redirectCode={aspspRedirectCode}
-            nok: ${facade.urls.embedded-ui-base-url}/embedded-server/v1/consent/{authSessionId}/fromAspsp/STUB_STATE/nok?redirectCode={aspspRedirectCode}
+            ok: ${facade.urls.embedded-ui-base-url}/embedded-server/v1/consent/{authSessionId}/fromAspsp/{aspspRedirectCode}/ok
+            nok: ${facade.urls.embedded-ui-base-url}/embedded-server/v1/consent/{authSessionId}/fromAspsp/{aspspRedirectCode}/nok
             result: ${facade.urls.embedded-ui-base-url}/ais/{authSessionId}/consent-result?redirectCode={redirectCode}
           parameters:
             max-array-size: 32
@@ -259,8 +267,8 @@ protocol:
         redirect:
           to-aspsp: ${facade.urls.embedded-ui-base-url}/pis/{authSessionId}/to-aspsp-redirection
           web-hooks:
-            ok: ${facade.urls.embedded-ui-base-url}/embedded-server/v1/consent/{authSessionId}/fromAspsp/STUB_STATE/ok?redirectCode={aspspRedirectCode}
-            nok: ${facade.urls.embedded-ui-base-url}/embedded-server/v1/consent/{authSessionId}/fromAspsp/STUB_STATE/nok?redirectCode={aspspRedirectCode}
+            ok: ${facade.urls.embedded-ui-base-url}/embedded-server/v1/consent/{authSessionId}/fromAspsp/{aspspRedirectCode}/ok
+            nok: ${facade.urls.embedded-ui-base-url}/embedded-server/v1/consent/{authSessionId}/fromAspsp/{aspspRedirectCode}/nok
             result: ${facade.urls.embedded-ui-base-url}/pis/{authSessionId}/consent-result?redirectCode={redirectCode}
           parameters:
             max-array-size: 32
@@ -269,7 +277,28 @@ protocol:
             select-sca-method: ${facade.urls.embedded-ui-base-url}/pis/{authSessionId}/select-sca-method
             report-sca-result: ${facade.urls.embedded-ui-base-url}/pis/{authSessionId}/sca-result/{selectedScaType}?wrong={isWrongCreds}
             provide-psu-iban: ${facade.urls.embedded-ui-base-url}/pis/{authSessionId}/entry-consent-transactions/dedicated-account-access?wrong={isWrongCreds}
-
+    sca:
+      authentication-types:
+        SMS: "SMS_OTP"
+        MOBILE: "SMS_OTP"
+        CHIP: "CHIP_OTP"
+        PHOTO: "PHOTO_OTP"
+        PUSH: "PUSH_OTP"
+        EMAIL: "SMTP_OTP"
+  # Is an optional protocol from extensions
+  finapi:
+    api-url: https://sandbox.finapi.io
+    token-url: ${protocol.finapi.api-url}/oauth/token
+    banks-url: ${protocol.finapi.api-url}/api/v1/banks
+    token-scope: all
+    client-id: dummy
+    client-secret: dummy
+    client-api-cache-size: 100
+    client-api-expire-after-access: PT30M
+    from-aspsp-url: ${facade.urls.embedded-ui-base-url}/embedded-server/v1/consent/{authSessionId}/fromAspsp/{aspspRedirectCode}/ok
+    bank-service:
+      obg-banks-url: https://raw.githubusercontent.com/adorsys/open-banking-gateway/develop/opba-db/src/main/resources/migration/migrations/csv/v0/0-banks.csv
+      finapi-bank-data-path: /tmp
 
 # Flowable comes for all protocols shared
 bpmnshared:

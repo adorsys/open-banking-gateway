@@ -1,4 +1,4 @@
-openapi: 3.0.1
+openapi: 3.0.3
 info:
   title: An include file to define common attributes
   version: 1.0.0
@@ -72,15 +72,16 @@ components:
       schema:
         type: string
 
-    Bank-ID:
-      name: Bank-ID
+    Bank-Profile-ID:
+      name: Bank-Profile-ID
       in: header
       required: false
       description: |
-        A bank identifier, provided by TPP Bank Search API. To be provided by FinTech only if PsuConsentSession is missing.
-      example: "1234-0XGJK"
+        A bank profile UUID identifier, provided by TPP Bank Search API. To be provided by FinTech only if PsuConsentSession is missing.
+      example: "bcc52c4f-5523-4477-aef5-84c3ae7cc468"
       schema:
         type: string
+        format: uuid
 
     Fintech-User-ID:
       name: Fintech-User-ID
@@ -97,6 +98,17 @@ components:
       name: Service-Session-ID
       in: header
       required: false
+      description: |
+        Unique ID that identifies service session. Can be used for batch processing to correlate input and output.
+      example: "99391c7e-ad88-49ec-a2ad-99ddcb1f7721"
+      schema:
+        type: string
+        format: uuid
+
+    Service-Session-ID-Path:
+      name: Service-Session-ID
+      in: path
+      required: true
       description: |
         Unique ID that identifies service session. Can be used for batch processing to correlate input and output.
       example: "99391c7e-ad88-49ec-a2ad-99ddcb1f7721"
@@ -126,12 +138,12 @@ components:
       schema:
         type: string
 
-    X-Pis-Psu-Authentication-Required:
-      name: X-Pis-Psu-Authentication-Required
+    X-Psu-Authentication-Required:
+      name: X-Psu-Authentication-Required
       in: header
       description: |
-        If false, login form to OPBA will not be displayed as there might be nothing to share for payments, so
-        that authentication is not necessary. If absent or true - login form for payments will be displayed.
+        If false, login form to OPBA will not be displayed, so that authentication is not necessary.
+        If absent or true - login form will be displayed, in order for OBG to know the PSU.
       example: "true"
       schema:
         type: boolean
@@ -159,7 +171,7 @@ components:
     Fintech-Redirect-URL-OK:
       name: Fintech-Redirect-URL-OK
       in: header
-      desription: |
+      description: |
         This header provides the desired URL where PSU will be redirected back after authorisation session in case of
         successful authorisation. This URL might contain unique Identifier of this User and/or Session,
         recognisable by FinTech.
@@ -173,7 +185,7 @@ components:
     Fintech-Redirect-URL-NOK:
       name: Fintech-Redirect-URL-NOK
       in: header
-      desription: |
+      description: |
         This header provides the desired URL where PSU will be redirected back  after authorisation session in case of
         unsuccessful authorisation (i.e. PSU's authorisation reject, technical failure, lack of credentials etc.).
         This URL might contain unique Identifier of this User and/or Session,
@@ -185,7 +197,67 @@ components:
         type: string
       example: "https://example.com/myservice/sf3-3r33-3535/failure"
 
+    X-Create-Consent-If-None:
+      name: X-Create-Consent-If-None
+      required: false
+      in: header
+      schema:
+        type: string
+        description: json representation of AisConsentRequest object
+        example: {"access":{"allPsd2":"ALL_ACCOUNTS_WITH_BALANCES"},"frequencyPerDay":4,"validUntil":"2021-06-18","recurringIndicator":true,"combinedServiceIndicator":false}
+
+    X-Import-User-Data:
+      name: X-Import-User-Data
+      description: Optional, third party data like username/password of external service to be used in service session. Allows to import already existing users into this system.
+      required: false
+      in: header
+      schema:
+        type: string
+        description: |
+          Json representation of third party authorization object, may include credentials to create new user in
+          3rd party-service (username/password) with flag 'createUser' to specify that we need to create user explicitly,
+          or credentials to re-use in 3rd party-service
+        example: { "username": "jane.doe", "password": "secret", "createUser": true, "email": "foo@example.com", "phone": "+1234567", "isAutoUpdateEnabled": true }
+
+    Compute-PSU-IP-Address:
+      name: Compute-PSU-IP-Address
+      in: header
+      required: false
+      description: |
+        Should be provided if consent does not exist.
+        If false, PSU IP address should be provided in an appropriate header.
+        If absent or true - PSU IP address will be computed by OBG.
+      example: "true"
+      schema:
+        type: boolean
+
+    PSU-IP-Address:
+      name: PSU-IP-Address
+      in: header
+      required: false
+      description: |
+        IP address of PSU, should be provided if consent does not exist or "Compute-Psu-Ip-Address" header is "false".
+      example: "1.1.1.1"
+      schema:
+        type: string
+
   responses:
+    sessionStatusResponse:
+      description: |
+        Session status - describe service session (consent/payment) readiness.
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/sessionStatusDetails"
+
+    updateExternalAisSessionResponse:
+      description: |
+        Update status of external service.
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/updateAisExternalSessionStatus"
+
     401_UNAUTHORIZED:
       description: |
         Unauthorised. Access token absent or invalid.
@@ -209,6 +281,80 @@ components:
             $ref: "./tpp_banking_api_commons.yml#/components/schemas/generalError"
 
   schemas:
+    aisAccountAccessInfo:
+      title: AisAccountAccessInfo
+      type: object
+      properties:
+        accounts:
+          type: array
+          description: Access to accounts
+          items:
+            $ref: "#/components/schemas/accountReference"
+        allPsd2:
+          type: string
+          description: Consent on all accounts, balances and transactions of psu
+          example: ALL_ACCOUNTS
+          enum:
+            - ALL_ACCOUNTS
+            - ALL_ACCOUNTS_WITH_BALANCES
+        availableAccounts:
+          type: string
+          description: Consent on all available accounts of psu
+          example: ALL_ACCOUNTS
+          enum:
+            - ALL_ACCOUNTS
+            - ALL_ACCOUNTS_WITH_BALANCES
+        balances:
+          type: array
+          description: Access to balances
+          items:
+            $ref: "#/components/schemas/accountReference"
+        transactions:
+          type: array
+          description: Access to transactions
+          items:
+            $ref: "#/components/schemas/accountReference"
+      description: Ais account access information
+
+    aisConsentRequest:
+      title: AisConsentRequest
+      required:
+        - access
+        - frequencyPerDay
+        - recurringIndicator
+        - validUntil
+      type: object
+      properties:
+        access:
+          $ref: "#/components/schemas/aisAccountAccessInfo"
+        frequencyPerDay:
+          type: integer
+          description:
+            Maximum frequency for an access per day. For a once-off access,
+            this attribute is set to 1
+          format: int32
+          example: 4
+        recurringIndicator:
+          type: boolean
+          description:
+            "'true', if the consent is for recurring access to the account
+              data , 'false', if the consent is for one access to the account data"
+          example: false
+        validUntil:
+          type: string
+          description:
+            Consent`s expiration date. The content is the local ASPSP date
+            in ISODate Format
+          format: date
+          example: 2020-10-10
+        combinedServiceIndicator:
+          type: boolean
+          description:
+            "'true', if the consent is i.e. account list and then payment
+              'false', if the consent is for one access to the account data"
+          default: false
+      description: Ais consent request
+
     accountReference:
       description: |
         Reference to an account by either:
@@ -219,6 +365,9 @@ components:
           * an alias to access a payment account via a registered mobile phone number (MSISDN).
       type: object
       properties:
+        externalResourceId:
+          description: Identifier of the account in 3rd party data provider like FinAPI (similar to resourceId)
+          type: string
         iban:
           $ref: "#/components/schemas/iban"
         bban:
@@ -375,6 +524,74 @@ components:
       description: Payment creation time according to OpenBanking database
       type: string
       format: date-time
+
+    authSessionStatus:
+      type: object
+      properties:
+        lastErrorRequestId:
+          description: Last request ID that finished with error that was done within this session.
+          type: string
+        lastRequestId:
+          description: Last request ID that was done within this session.
+          type: string
+        createdAt:
+          description: Creation time of authorization session
+          type: string
+          format: date-time
+        updatedAt:
+          description: Update time of authorization session
+          type: string
+          format: date-time
+        status:
+          $ref: "#/components/schemas/sessionStatus"
+        externalStatus:
+          description: External status (i.e. in 3rd party service)
+          type: string
+
+    sessionStatusDetails:
+      type: object
+      properties:
+        createdAt:
+          description: Creation time of service session
+          type: string
+          format: date-time
+        updatedAt:
+          description: Update time of service session
+          type: string
+          format: date-time
+        status:
+          $ref: "#/components/schemas/sessionStatus"
+        externalStatus:
+          description: External status (i.e. in 3rd party service)
+          type: string
+        detailedStatus:
+          type: object
+          additionalProperties:
+            $ref: "#/components/schemas/authSessionStatus"
+
+    updateAisExternalSessionStatus:
+      type: object
+      properties:
+        status:
+          description: Resulting status of external status update call.
+          type: string
+
+    sessionStatus:
+      type: string
+      enum:
+        - PENDING
+        - STARTED
+        - COMPLETED
+        - ACTIVATED
+        - DENIED
+        - ERROR
+      description: >
+        * `PENDING` - Session not started (user has not started session authorization)
+        * `STARTED` - Session started (user started session authorization)
+        * `COMPLETED` - Session completed (user completed session authorization, but FinTech must confirm it)
+        * `ACTIVATED` - Session activated and ready to use
+        * `DENIED` - User denied consent/payment authorization
+        * `ERROR` - Error happened during the process
 
     generalError:
       type: object

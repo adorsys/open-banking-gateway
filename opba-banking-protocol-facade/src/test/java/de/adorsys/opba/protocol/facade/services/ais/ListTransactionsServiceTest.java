@@ -58,7 +58,7 @@ class ListTransactionsServiceTest extends DbDropper {
                                 FacadeServiceableRequest.builder()
                                         .uaContext(UserAgentContext.builder().psuIpAddress("1.1.1.1").build())
                                         .requestId(UUID.randomUUID())
-                                        .bankId("53c47f54-b9a4-465a-8f77-bc6cd5f0cf46")
+                                        .bankProfileId(UUID.fromString("53c47f54-b9a4-465a-8f77-bc6cd5f0cf46"))
                                         .sessionPassword("123")
                                         .authorization("SUPER-FINTECH-ID")
                                         .fintechUserId("user1@fintech.com")

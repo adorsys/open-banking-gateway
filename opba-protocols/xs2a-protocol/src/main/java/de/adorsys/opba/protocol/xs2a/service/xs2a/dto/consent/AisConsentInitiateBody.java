@@ -6,8 +6,8 @@ import de.adorsys.opba.protocol.xs2a.service.xs2a.annotations.ContextCode;
 import de.adorsys.opba.protocol.xs2a.service.xs2a.annotations.FrontendCode;
 import de.adorsys.opba.protocol.xs2a.service.xs2a.annotations.ValidConsentBody;
 import de.adorsys.opba.protocol.xs2a.service.xs2a.annotations.ValidationInfo;
-import de.adorsys.xs2a.adapter.service.model.AccountAccess;
-import de.adorsys.xs2a.adapter.service.model.Consents;
+import de.adorsys.xs2a.adapter.api.model.AccountAccess;
+import de.adorsys.xs2a.adapter.api.model.Consents;
 import lombok.Getter;
 import lombok.Setter;
 import org.mapstruct.Mapper;
@@ -142,9 +142,9 @@ public class AisConsentInitiateBody {
             return map(cons.getAisConsent());
         }
 
-        default AccountAccess.AvailableAccountsEnum accounts(String availableAccounts) {
+        default AccountAccess.AvailableAccounts accounts(String availableAccounts) {
             if (ALL_ACCOUNTS.getApiName().equals(availableAccounts)) {
-                return AccountAccess.AvailableAccountsEnum.ALLACCOUNTS;
+                return AccountAccess.AvailableAccounts.ALLACCOUNTS;
             }
 
             return null;
@@ -158,9 +158,9 @@ public class AisConsentInitiateBody {
             return null;
         }
 
-        default AccountAccess.AllPsd2Enum allPsd2(String allPsd2) {
+        default AccountAccess.AllPsd2 allPsd2(String allPsd2) {
             if (ALL_ACCOUNTS.getApiName().equals(allPsd2)) {
-                return AccountAccess.AllPsd2Enum.ALLACCOUNTS;
+                return AccountAccess.AllPsd2.ALLACCOUNTS;
             }
 
             return null;

@@ -21,12 +21,14 @@ paths:
         - $ref: "./tpp_banking_api_commons.yml#/components/parameters/X-Request-Signature"
         - $ref: "./tpp_banking_api_commons.yml#/components/parameters/Fintech-ID"
         - $ref: "./tpp_banking_api_commons.yml#/components/parameters/ServiceSessionPassword"
-        - $ref: "./tpp_banking_api_commons.yml#/components/parameters/Bank-ID"
-        - $ref: "./tpp_banking_api_commons.yml#/components/parameters/X-Pis-Psu-Authentication-Required"
+        - $ref: "./tpp_banking_api_commons.yml#/components/parameters/Bank-Profile-ID"
+        - $ref: "./tpp_banking_api_commons.yml#/components/parameters/X-Psu-Authentication-Required"
         - $ref: "./tpp_banking_api_commons.yml#/components/parameters/Fintech-User-ID"
         - $ref: "./tpp_banking_api_commons.yml#/components/parameters/Fintech-Redirect-URL-OK"
         - $ref: "./tpp_banking_api_commons.yml#/components/parameters/Fintech-Redirect-URL-NOK"
         - $ref: "./tpp_banking_api_commons.yml#/components/parameters/X-Request-ID"
+        - $ref: "./tpp_banking_api_commons.yml#/components/parameters/Compute-PSU-IP-Address"
+        - $ref: "./tpp_banking_api_commons.yml#/components/parameters/PSU-IP-Address"
         #path
         - $ref: "#/components/parameters/PaymentProduct"
       requestBody:
@@ -34,9 +36,6 @@ paths:
       responses:
         202:
           $ref: "#/components/responses/202_PaymentInitiationResponse"
-      security:
-        - {}
-        - BearerAuthOAuth: []
       x-codegen-request-body-name: body
 
     get:
@@ -45,17 +44,13 @@ paths:
       operationId: getPaymentInformation
       tags:
         - TPP Banking API Payment Status (PIS)
-      security:
-        - {}
-        - BearerAuthOAuth: []
       parameters:
         #header
         - $ref: "./tpp_banking_api_commons.yml#/components/parameters/X-Timestamp-UTC"
         - $ref: "./tpp_banking_api_commons.yml#/components/parameters/X-Request-Signature"
         - $ref: "./tpp_banking_api_commons.yml#/components/parameters/Fintech-ID"
         - $ref: "./tpp_banking_api_commons.yml#/components/parameters/ServiceSessionPassword"
-        - $ref: "./tpp_banking_api_commons.yml#/components/parameters/Bank-ID"
-        - $ref: "./tpp_banking_api_commons.yml#/components/parameters/Fintech-User-ID"
+        - $ref: "./tpp_banking_api_commons.yml#/components/parameters/Bank-Profile-ID"
         - $ref: "./tpp_banking_api_commons.yml#/components/parameters/Service-Session-ID"
         - $ref: "./tpp_banking_api_commons.yml#/components/parameters/X-Request-ID"
         #path
@@ -71,17 +66,13 @@ paths:
       operationId: getPaymentStatus
       tags:
         - TPP Banking API Payment Status (PIS)
-      security:
-        - {}
-        - BearerAuthOAuth: []
       parameters:
         #header
         - $ref: "./tpp_banking_api_commons.yml#/components/parameters/X-Timestamp-UTC"
         - $ref: "./tpp_banking_api_commons.yml#/components/parameters/X-Request-Signature"
         - $ref: "./tpp_banking_api_commons.yml#/components/parameters/Fintech-ID"
         - $ref: "./tpp_banking_api_commons.yml#/components/parameters/ServiceSessionPassword"
-        - $ref: "./tpp_banking_api_commons.yml#/components/parameters/Bank-ID"
-        - $ref: "./tpp_banking_api_commons.yml#/components/parameters/Fintech-User-ID"
+        - $ref: "./tpp_banking_api_commons.yml#/components/parameters/Bank-Profile-ID"
         - $ref: "./tpp_banking_api_commons.yml#/components/parameters/Service-Session-ID"
         - $ref: "./tpp_banking_api_commons.yml#/components/parameters/X-Request-ID"
         #path
@@ -89,6 +80,31 @@ paths:
       responses:
         200:
           $ref: "#/components/responses/200_PaymentStatusResponse"
+
+  /v1/banking/pis/{Service-Session-ID}/status:
+    get:
+      operationId: getPisSessionStatus
+      summary: Get service session (payment) authorization status.
+      tags:
+        - TPP Banking API Payment Status (PIS)
+      description: >-
+        Reads session status adding external status providers if necessary. Is used to understand current state
+        of the entire payment (session) - completed,not started,error,etc. in addition to webhooks.
+      parameters:
+        #path
+        - $ref: "./tpp_banking_api_commons.yml#/components/parameters/Service-Session-ID-Path"
+        #header
+        #common header parameter
+        - $ref: "./tpp_banking_api_commons.yml#/components/parameters/X-Timestamp-UTC"
+        - $ref: "./tpp_banking_api_commons.yml#/components/parameters/X-Request-Signature"
+        - $ref: "./tpp_banking_api_commons.yml#/components/parameters/Fintech-ID"
+        - $ref: "./tpp_banking_api_commons.yml#/components/parameters/ServiceSessionPassword"
+        - $ref: "./tpp_banking_api_commons.yml#/components/parameters/X-Request-ID"
+      responses:
+        "200":
+          $ref: "./tpp_banking_api_commons.yml#/components/responses/sessionStatusResponse"
+        "401":
+          $ref: "./tpp_banking_api_commons.yml#/components/responses/401_UNAUTHORIZED"
 
 components:
   parameters:
@@ -191,13 +207,6 @@ components:
         instantPayment:
           type: boolean
 
-    remittanceInformationUnstructured:
-      description: |
-        Unstructured remittance information.
-      type: string
-      maxLength: 140
-      example: "Ref Number Merchant"
-
     paymentInitiationResponse:
       description: Body of the response for a successful payment initiation request.
       type: object
@@ -216,6 +225,9 @@ components:
         - creditorAccount
         - creditorName
       properties:
+        externalResourceId:
+          description: Identifier of the account in 3rd party data provider like FinAPI (similar to resourceId)
+          type: string
         endToEndIdentification:
           type: string
           maxLength: 35
@@ -244,6 +256,9 @@ components:
       required:
         - transactionStatus
       properties:
+        externalResourceId:
+          description: Identifier of the account in 3rd party data provider like FinAPI (similar to resourceId)
+          type: string
         transactionStatus:
           $ref: "#/components/schemas/transactionStatus"
         fundsAvailable:
@@ -262,19 +277,3 @@ components:
       description: Text to be displayed to the PSU.
       type: string
       maxLength: 500
-
-  securitySchemes:
-    BearerAuthOAuth:
-      description: |
-        Bearer Token.
-      type: http
-      scheme: bearer
-    accessCode:
-      type: oauth2
-      flows:
-        authorizationCode:
-          authorizationUrl: "http://example.com/oauth/auth"
-          tokenUrl: "http://example.com/oauth/token"
-          scopes:
-            write: allows modifying resources
-            read: allows reading resources

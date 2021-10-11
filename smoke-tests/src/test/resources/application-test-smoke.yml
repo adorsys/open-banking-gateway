@@ -18,7 +18,7 @@ test:
   retry:
     max: 10
   webdriver:
-    timeout: PT10S
+    timeout: PT15S
   api:
     cookie:
       redirect-path-template: /embedded-server/v1/consent/{authorizationSessionId}/fromAspsp/*

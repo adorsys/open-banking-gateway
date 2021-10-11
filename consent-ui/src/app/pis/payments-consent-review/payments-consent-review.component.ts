@@ -56,14 +56,13 @@ export class PaymentsConsentReviewComponent implements OnInit {
     this.updateConsentAuthorizationService
       .embeddedUsingPOST(
         this.authorizationId,
-        StubUtil.X_XSRF_TOKEN,
         StubUtil.X_REQUEST_ID,
         this.sessionService.getRedirectCode(this.authorizationId),
         body,
         'response'
       )
       .subscribe((res) => {
-        this.sessionService.setRedirectCode(this.authorizationId, res.headers.get(ApiHeaders.REDIRECT_CODE));
+        this.sessionService.setRedirectCode(this.authorizationId, res.headers.get(ApiHeaders.X_XSRF_TOKEN));
         window.location.href = res.headers.get(ApiHeaders.LOCATION);
       });
   }

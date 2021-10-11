@@ -10,6 +10,7 @@ import de.adorsys.opba.protocol.api.dto.result.body.ScaMethod;
 import de.adorsys.opba.protocol.bpmnshared.service.context.ContextUtil;
 import de.adorsys.opba.protocol.bpmnshared.service.exec.ValidatedExecution;
 import de.adorsys.opba.protocol.hbci.context.HbciContext;
+import de.adorsys.opba.protocol.hbci.util.logresolver.HbciLogResolver;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.logging.log4j.util.Strings;
@@ -28,10 +29,11 @@ public class HbciInitiateSendPinAndPsuId extends ValidatedExecution<HbciContext>
     private final Optional<HBCIProduct> product;
     private final OnlineBankingService onlineBankingService;
     private final HbciAuthorizationPossibleErrorHandler errorSink;
-
+    private final HbciLogResolver logResolver = new HbciLogResolver(getClass());
 
     @Override
     protected void doRealExecution(DelegateExecution execution, HbciContext context) {
+        logResolver.log("doRealExecution: execution ({}) with context ({})", execution, context);
 
         errorSink.handlePossibleAuthorizationError(
                 () -> askForCredentials(execution, context),
@@ -60,7 +62,11 @@ public class HbciInitiateSendPinAndPsuId extends ValidatedExecution<HbciContext>
         request.setBankApiConsentData(consent);
         request.setBank(context.getBank());
 
+        logResolver.log("updatePsuAuthentication request: {}", request);
+
         UpdateAuthResponse response = onlineBankingService.getStrongCustomerAuthorisation().updatePsuAuthentication(request);
+
+        logResolver.log("updatePsuAuthentication response: {}", response);
 
         if (handleScaChallengeRequired(execution, response)) {
             return;

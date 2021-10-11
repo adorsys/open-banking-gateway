@@ -76,7 +76,7 @@ export interface AccountDetails {
      * Specifications that might be provided by the ASPSP:   - characteristics of the account   - characteristics of the relevant card 
      */
     details?: string;
-    links?: LinksAccountDetails;
+    _links?: LinksAccountDetails;
     /**
      * Name of the legal account owner. If there is more than one owner, then e.g. two names might be noted here.
      */

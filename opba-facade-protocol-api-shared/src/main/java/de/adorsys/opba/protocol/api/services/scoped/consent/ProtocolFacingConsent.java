@@ -17,6 +17,16 @@ public interface ProtocolFacingConsent {
     String getConsentContext();
 
     /**
+     * Get cached data that is associated with the consent.
+     */
+    String getConsentCache();
+
+    /**
+     * Set cached data that is associated with the consent.
+     */
+    void setConsentCache(String cache);
+
+    /**
      * Set consent ID that is used to identify this consent in ASPSP API calls.
      */
     void setConsentId(String id);

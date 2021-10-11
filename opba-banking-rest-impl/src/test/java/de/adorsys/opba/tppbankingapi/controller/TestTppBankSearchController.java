@@ -24,15 +24,17 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @SpringBootTest
-@ActiveProfiles(ONE_TIME_POSTGRES_RAMFS)
+@ActiveProfiles({ONE_TIME_POSTGRES_RAMFS, "test-search"})
 @AutoConfigureMockMvc
 class TestTppBankSearchController extends BaseMockitoTest {
+    private static final String EMPTY_STRING = "";
 
     @Autowired
     private MockMvc mockMvc;
 
     @Autowired
     private RequestSigningService requestSigningService;
+
     @Test
     void testBankSearch() throws Exception {
         UUID xRequestId = UUID.randomUUID();
@@ -49,6 +51,40 @@ class TestTppBankSearchController extends BaseMockitoTest {
     }
 
     @Test
+    void testBankSearchWithNullKeyword() throws Exception {
+        UUID xRequestId = UUID.randomUUID();
+        Instant xTimestampUtc = Instant.now();
+
+        performBankSearchRequest(xRequestId, xTimestampUtc, null)
+                .andExpect(jsonPath("$.bankDescriptor.length()").value("0"))
+                .andExpect(jsonPath("$.keyword").value(EMPTY_STRING))
+                .andReturn();
+    }
+
+    @Test
+    void testBankSearchWithEmptyKeyword() throws Exception {
+        UUID xRequestId = UUID.randomUUID();
+        Instant xTimestampUtc = Instant.now();
+
+        performBankSearchRequest(xRequestId, xTimestampUtc, EMPTY_STRING)
+                .andExpect(jsonPath("$.bankDescriptor.length()").value("0"))
+                .andExpect(jsonPath("$.keyword").value(EMPTY_STRING))
+                .andReturn();
+    }
+
+    @Test
+    void testBankSearchWithBlankKeyword() throws Exception {
+        UUID xRequestId = UUID.randomUUID();
+        Instant xTimestampUtc = Instant.now();
+        String keyword = " ";
+
+        performBankSearchRequest(xRequestId, xTimestampUtc, keyword)
+                .andExpect(jsonPath("$.bankDescriptor.length()").value("0"))
+                .andExpect(jsonPath("$.keyword").value(" "))
+                .andReturn();
+    }
+
+    @Test
     void testBankProfile() throws Exception {
         UUID xRequestId = UUID.randomUUID();
         Instant xTimestampUtc = Instant.now();
@@ -58,7 +94,7 @@ class TestTppBankSearchController extends BaseMockitoTest {
                         .header(X_REQUEST_ID, xRequestId)
                         .header(X_TIMESTAMP_UTC, xTimestampUtc)
                         .header(FINTECH_ID, "MY-SUPER-FINTECH-ID")
-                        .param("bankId", "fcfe98fe-5514-4992-8f36-8239f3a74571")
+                        .param("bankProfileId", "0e8ea18c-4c9c-4c1e-aa20-1cba7abbbd6f")
                         .with(new SignaturePostProcessor(requestSigningService, new OpenBankingDataToSignProvider())))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.bankProfileDescriptor.bankName").value("VR Bank Fulda eG"))

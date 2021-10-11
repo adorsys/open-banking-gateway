@@ -7,26 +7,31 @@ import de.adorsys.opba.protocol.xs2a.config.protocol.ProtocolUrlsConfiguration;
 import de.adorsys.opba.protocol.xs2a.context.pis.Xs2aPisContext;
 import de.adorsys.opba.protocol.xs2a.service.dto.ValidatedPathHeadersBody;
 import de.adorsys.opba.protocol.xs2a.service.mapper.PathHeadersBodyMapperTemplate;
+import de.adorsys.opba.protocol.xs2a.service.xs2a.authenticate.StartAuthorizationHandlerUtil;
 import de.adorsys.opba.protocol.xs2a.service.xs2a.consent.CreateConsentOrPaymentPossibleErrorHandler;
 import de.adorsys.opba.protocol.xs2a.service.xs2a.dto.Xs2aInitialPaymentParameters;
 import de.adorsys.opba.protocol.xs2a.service.xs2a.dto.payment.PaymentInitiateBody;
 import de.adorsys.opba.protocol.xs2a.service.xs2a.dto.payment.PaymentInitiateHeaders;
+import de.adorsys.opba.protocol.xs2a.service.xs2a.oauth2.OAuth2Util;
 import de.adorsys.opba.protocol.xs2a.service.xs2a.quirks.QuirkUtil;
 import de.adorsys.opba.protocol.xs2a.service.xs2a.validation.Xs2aValidator;
-import de.adorsys.xs2a.adapter.service.PaymentInitiationService;
-import de.adorsys.xs2a.adapter.service.RequestParams;
-import de.adorsys.xs2a.adapter.service.Response;
-import de.adorsys.xs2a.adapter.service.model.PaymentInitiationRequestResponse;
-import de.adorsys.xs2a.adapter.service.model.SinglePaymentInitiationBody;
+import de.adorsys.opba.protocol.xs2a.util.logresolver.Xs2aLogResolver;
+import de.adorsys.xs2a.adapter.api.PaymentInitiationService;
+import de.adorsys.xs2a.adapter.api.RequestParams;
+import de.adorsys.xs2a.adapter.api.Response;
+import de.adorsys.xs2a.adapter.api.model.PaymentInitationRequestResponse201;
+import de.adorsys.xs2a.adapter.api.model.PaymentInitiationJson;
+import de.adorsys.xs2a.adapter.api.model.PaymentService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.logging.log4j.util.Strings;
 import org.flowable.engine.delegate.DelegateExecution;
 import org.springframework.stereotype.Service;
 
 import java.util.UUID;
 
 import static de.adorsys.opba.protocol.xs2a.constant.GlobalConst.CONTEXT;
-import static de.adorsys.xs2a.adapter.adapter.link.bg.template.LinksTemplate.SCA_OAUTH;
+import static de.adorsys.xs2a.adapter.api.ResponseHeaders.ASPSP_SCA_APPROACH;
 
 /**
  * Initiates Account list consent by sending mapped {@link de.adorsys.opba.protocol.api.dto.request.authorization.AisConsent}
@@ -42,6 +47,7 @@ public class CreateSinglePaymentService extends ValidatedExecution<Xs2aPisContex
     private final ProtocolUrlsConfiguration urlsConfiguration;
     private final CreateConsentOrPaymentPossibleErrorHandler handler;
     private final Extractor extractor;
+    private final Xs2aLogResolver logResolver = new Xs2aLogResolver(getClass());
 
     @Override
     protected void doPrepareContext(DelegateExecution execution, Xs2aPisContext context) {
@@ -55,52 +61,78 @@ public class CreateSinglePaymentService extends ValidatedExecution<Xs2aPisContex
 
     @Override
     protected void doValidate(DelegateExecution execution, Xs2aPisContext context) {
+        logResolver.log("doValidate: execution ({}) with context ({})", execution, context);
+
         validator.validate(execution, context, this.getClass(), extractor.forValidation(context));
     }
 
     @Override
     protected void doRealExecution(DelegateExecution execution, Xs2aPisContext context) {
-        ValidatedPathHeadersBody<Xs2aInitialPaymentParameters, PaymentInitiateHeaders, SinglePaymentInitiationBody> params = extractor.forExecution(context);
-        handler.tryCreateAndHandleErrors(execution, () -> initiatePayment(execution, context, params));
+        logResolver.log("doRealExecution: execution ({}) with context ({})", execution, context);
+
+        ValidatedPathHeadersBody<Xs2aInitialPaymentParameters, PaymentInitiateHeaders, PaymentInitiationJson> params = extractor.forExecution(context);
+        var result = handler.tryCreateAndHandleErrors(execution, () -> initiatePayment(context, params));
+        if (null == result) {
+            execution.setVariable(CONTEXT, context);
+            log.warn("Payment creation failed");
+            return;
+        }
+
+        postHandleCreatedPayment(result, execution, context);
     }
 
     @Override
     protected void doMockedExecution(DelegateExecution execution, Xs2aPisContext context) {
+        logResolver.log("doMockedExecution: execution ({}) with context ({})", execution, context);
+
         context.setPaymentId("MOCK-" + UUID.randomUUID().toString());
         execution.setVariable(CONTEXT, context);
     }
 
-    private void initiatePayment(
-            DelegateExecution execution,
-            Xs2aPisContext context,
-            ValidatedPathHeadersBody<Xs2aInitialPaymentParameters, PaymentInitiateHeaders, SinglePaymentInitiationBody> params) {
+    protected void postHandleCreatedPayment(Response<PaymentInitationRequestResponse201> paymentInit, DelegateExecution execution, Xs2aPisContext context) {
+        context.setWrongAuthCredentials(false);
+        context.setPaymentId(paymentInit.getBody().getPaymentId());
+        if (null != paymentInit.getBody()) {
+            OAuth2Util.handlePossibleOAuth2(paymentInit.getBody().getLinks(), context);
+            StartAuthorizationHandlerUtil.handleImplicitAuthorizationStartIfPossible(paymentInit.getBody().getLinks(), context);
+        }
 
-        Response<PaymentInitiationRequestResponse> paymentInit = pis.initiateSinglePayment(
+        if (null != paymentInit.getHeaders() && Strings.isNotBlank(paymentInit.getHeaders().getHeader(ASPSP_SCA_APPROACH))) {
+            context.setAspspScaApproach(paymentInit.getHeaders().getHeader(ASPSP_SCA_APPROACH));
+            if (null != paymentInit.getBody()) {
+                context.setConsentOrPaymentCreateLinks(paymentInit.getBody().getLinks());
+            }
+        }
+        execution.setVariable(CONTEXT, context);
+    }
+
+    private Response<PaymentInitationRequestResponse201> initiatePayment(
+            Xs2aPisContext context,
+            ValidatedPathHeadersBody<Xs2aInitialPaymentParameters, PaymentInitiateHeaders, PaymentInitiationJson> params) {
+
+        logResolver.log("initiatePayment with parameters: {}", params.getPath(), params.getHeaders(), params.getBody());
+
+        Response<PaymentInitationRequestResponse201> paymentInit = pis.initiatePayment(PaymentService.PAYMENTS,
                 params.getPath().getPaymentProduct(),
                 QuirkUtil.pushBicToXs2aAdapterHeaders(context, params.getHeaders().toHeaders()),
                 RequestParams.empty(),
                 params.getBody()
         );
 
-        context.setWrongAuthCredentials(false);
-        context.setPaymentId(paymentInit.getBody().getPaymentId());
-        if (null != paymentInit.getBody().getLinks() && paymentInit.getBody().getLinks().containsKey(SCA_OAUTH)) {
-            context.setOauth2IntegratedNeeded(true);
-            context.setScaOauth2Link(paymentInit.getBody().getLinks().get(SCA_OAUTH).getHref());
-        }
-        execution.setVariable(CONTEXT, context);
+        logResolver.log("initiatePayment response: {}", paymentInit);
+        return paymentInit;
     }
 
     @Service
     public static class Extractor extends PathHeadersBodyMapperTemplate<Xs2aPisContext,
-                                                                                   Xs2aInitialPaymentParameters,
-                                                                               PaymentInitiateHeaders,
-                                                                               PaymentInitiateBody,
-                                                                               SinglePaymentInitiationBody> {
+            Xs2aInitialPaymentParameters,
+            PaymentInitiateHeaders,
+            PaymentInitiateBody,
+            PaymentInitiationJson> {
 
         public Extractor(
                 DtoMapper<Xs2aPisContext, PaymentInitiateBody> toValidatableBody,
-                DtoMapper<PaymentInitiateBody, SinglePaymentInitiationBody> toBody,
+                DtoMapper<PaymentInitiateBody, PaymentInitiationJson> toBody,
                 DtoMapper<Xs2aPisContext, PaymentInitiateHeaders> toHeaders,
                 DtoMapper<Xs2aPisContext, Xs2aInitialPaymentParameters> toParameters) {
 

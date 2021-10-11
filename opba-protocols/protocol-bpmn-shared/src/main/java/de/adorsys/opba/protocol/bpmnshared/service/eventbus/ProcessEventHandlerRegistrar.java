@@ -3,7 +3,7 @@ package de.adorsys.opba.protocol.bpmnshared.service.eventbus;
 import de.adorsys.opba.protocol.bpmnshared.dto.messages.ConsentAcquired;
 import de.adorsys.opba.protocol.bpmnshared.dto.messages.ProcessResponse;
 import de.adorsys.opba.protocol.bpmnshared.dto.messages.Redirect;
-import de.adorsys.opba.protocol.bpmnshared.dto.messages.InternalReturnableProcessError;
+import de.adorsys.opba.protocol.bpmnshared.dto.messages.InternalReturnableConsentGoneProcessError;
 import de.adorsys.opba.protocol.bpmnshared.dto.messages.ValidationProblem;
 import de.adorsys.opba.protocol.bpmnshared.outcome.OutcomeMapper;
 import lombok.RequiredArgsConstructor;
@@ -35,8 +35,8 @@ public class ProcessEventHandlerRegistrar {
         handler.add(
                 processId,
                 procResult -> {
-                    if (procResult instanceof InternalReturnableProcessError) {
-                        mapper.onReturnableProcessError((InternalReturnableProcessError) procResult);
+                    if (procResult instanceof InternalReturnableConsentGoneProcessError) {
+                        mapper.onReturnableProcessError((InternalReturnableConsentGoneProcessError) procResult);
                     } else if (procResult instanceof ProcessResponse) {
                         mapper.onSuccess((ProcessResponse) procResult);
                     } else if (procResult instanceof Redirect) {

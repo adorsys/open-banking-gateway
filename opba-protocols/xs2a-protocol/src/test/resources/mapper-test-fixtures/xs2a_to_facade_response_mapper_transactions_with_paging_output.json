@@ -1,0 +1,191 @@
+{
+  "transactions": {
+    "booked": [
+      {
+        "transactionId": "q0q2qXf6Q_Yi_7CbtR4KT0",
+        "entryReference": null,
+        "endToEndId": "20180617T181000",
+        "mandateId": null,
+        "checkId": null,
+        "creditorId": null,
+        "bookingDate": "2020-02-27",
+        "valueDate": "2020-02-27",
+        "transactionAmount": {
+          "currency": "EUR",
+          "amount": "-1280.00"
+        },
+        "creditorName": "Marion Mueller",
+        "creditorAccount": {
+          "iban": "DE69760700240340283600",
+          "bban": null,
+          "pan": null,
+          "maskedPan": null,
+          "msisdn": null,
+          "currency": "EUR"
+        },
+        "ultimateCreditor": null,
+        "debtorName": null,
+        "debtorAccount": {
+          "iban": "DE38760700240320465700",
+          "bban": null,
+          "pan": null,
+          "maskedPan": null,
+          "msisdn": null,
+          "currency": "EUR"
+        },
+        "ultimateDebtor": null,
+        "remittanceInformationUnstructured": "Payment",
+        "remittanceInformationStructured": null,
+        "proprietaryBankTransactionCode": null
+      },
+      {
+        "transactionId": "dR12Hs77QTwvLSRLmyvGoM",
+        "entryReference": null,
+        "endToEndId": "20180614T110000",
+        "mandateId": null,
+        "checkId": null,
+        "creditorId": null,
+        "bookingDate": "2020-02-27",
+        "valueDate": "2020-02-27",
+        "transactionAmount": {
+          "currency": "EUR",
+          "amount": "-2300.00"
+        },
+        "creditorName": "Anton Brueckner",
+        "creditorAccount": {
+          "iban": "DE80760700240271232400",
+          "bban": null,
+          "pan": null,
+          "maskedPan": null,
+          "msisdn": null,
+          "currency": "EUR"
+        },
+        "ultimateCreditor": null,
+        "debtorName": null,
+        "debtorAccount": {
+          "iban": "DE38760700240320465700",
+          "bban": null,
+          "pan": null,
+          "maskedPan": null,
+          "msisdn": null,
+          "currency": "EUR"
+        },
+        "ultimateDebtor": null,
+        "remittanceInformationUnstructured": "Payment",
+        "remittanceInformationStructured": null,
+        "proprietaryBankTransactionCode": null
+      },
+      {
+        "transactionId": "bFSdGJXJTzIrUSriipR8iw",
+        "entryReference": null,
+        "endToEndId": "20180601T131000",
+        "mandateId": null,
+        "checkId": null,
+        "creditorId": null,
+        "bookingDate": "2020-02-27",
+        "valueDate": "2020-02-27",
+        "transactionAmount": {
+          "currency": "EUR",
+          "amount": "700.00"
+        },
+        "creditorName": "Max Musterman",
+        "creditorAccount": {
+          "iban": "DE38760700240320465700",
+          "bban": null,
+          "pan": null,
+          "maskedPan": null,
+          "msisdn": null,
+          "currency": "EUR"
+        },
+        "ultimateCreditor": null,
+        "debtorName": null,
+        "debtorAccount": {
+          "iban": "DE80760700240271232400",
+          "bban": null,
+          "pan": null,
+          "maskedPan": null,
+          "msisdn": null,
+          "currency": "EUR"
+        },
+        "ultimateDebtor": null,
+        "remittanceInformationUnstructured": "Payment",
+        "remittanceInformationStructured": null,
+        "proprietaryBankTransactionCode": null
+      },
+      {
+        "transactionId": "PZCgDv4LS1klo1RJ6mkp2Q",
+        "entryReference": null,
+        "endToEndId": "20180601T20180601",
+        "mandateId": null,
+        "checkId": null,
+        "creditorId": null,
+        "bookingDate": "2020-02-27",
+        "valueDate": "2020-02-27",
+        "transactionAmount": {
+          "currency": "EUR",
+          "amount": "3000"
+        },
+        "creditorName": "Max Musterman",
+        "creditorAccount": {
+          "iban": "DE38760700240320465700",
+          "bban": null,
+          "pan": null,
+          "maskedPan": null,
+          "msisdn": null,
+          "currency": "EUR"
+        },
+        "ultimateCreditor": null,
+        "debtorName": null,
+        "debtorAccount": {
+          "iban": "DE69760700240340283600",
+          "bban": null,
+          "pan": null,
+          "maskedPan": null,
+          "msisdn": null,
+          "currency": "EUR"
+        },
+        "ultimateDebtor": null,
+        "remittanceInformationUnstructured": "Payment",
+        "remittanceInformationStructured": null,
+        "proprietaryBankTransactionCode": null
+      },
+      {
+        "transactionId": "Z3fLeZ_RT6UkVlGnuL-3yc",
+        "entryReference": null,
+        "endToEndId": "L5xudnesSWolPxkUqWKEP8",
+        "mandateId": null,
+        "checkId": null,
+        "creditorId": null,
+        "bookingDate": "2020-02-27",
+        "valueDate": "2020-02-27",
+        "transactionAmount": {
+          "currency": "EUR",
+          "amount": "10000.00"
+        },
+        "creditorName": null,
+        "creditorAccount": {
+          "iban": "DE38760700240320465700",
+          "bban": null,
+          "pan": null,
+          "maskedPan": null,
+          "msisdn": null,
+          "currency": "EUR"
+        },
+        "ultimateCreditor": null,
+        "debtorName": null,
+        "debtorAccount": null,
+        "ultimateDebtor": null,
+        "remittanceInformationUnstructured": null,
+        "remittanceInformationStructured": null,
+        "proprietaryBankTransactionCode": null
+      }
+    ],
+    "pending": null
+  },
+
+  "paging": {
+    "page": "1",
+    "pageSize":  "10",
+    "pageCount": "197"
+  }
+}

@@ -1,0 +1,50 @@
+{
+  "id" : "e567958d-d81f-479e-ae97-75707fbd30df",
+  "name" : "v1_consents_8117230618090020246psdde-bafin-911360co4960jj_authorisations_0942330618090020247psdde-bafin-911360au4960jj",
+  "requiredScenarioState": "ScaMethodSelected",
+  "newScenarioState": "Finalised",
+  "request" : {
+    "urlPattern" : "/v1/consents/.+/authorisations/.+",
+    "method" : "PUT",
+    "headers" : {
+      "X-Request-ID" : {
+        "matches" : ".+"
+      },
+      "Digest" : {
+        "matches" : ".+"
+      },
+      "PSU-ID" : {
+        "equalTo" : "max.musterman"
+      },
+      "Signature" : {
+        "matches" : ".+"
+      },
+      "TPP-Signature-Certificate" : {
+        "matches" : ".+"
+      },
+      "Content-Type" : {
+        "equalTo" : "application/json; charset=UTF-8"
+      }
+    },
+    "bodyPatterns" : [ {
+      "equalToJson" : "{\"scaAuthenticationData\":\"123456\"}",
+      "ignoreArrayOrder" : true,
+      "ignoreExtraElements" : true
+    } ]
+  },
+  "response" : {
+    "status" : 200,
+    "body" : "{\"scaStatus\":\"finalised\"}",
+    "headers" : {
+      "Date" : "Tue, 08 Sep 2020 14:03:45 GMT",
+      "Server" : "Webserver",
+      "X-Request-ID" : "54aa301a-71e5-4921-ae56-86366c39e1f1",
+      "Content-Language" : "de",
+      "Content-Type" : "application/json;charset=UTF-8",
+      "Keep-Alive" : "timeout=15, max=97"
+    }
+  },
+  "uuid" : "e567958d-d81f-479e-ae97-75707fbd30df",
+  "persistent" : true,
+  "insertionIndex" : 15
+}

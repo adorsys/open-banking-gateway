@@ -17,6 +17,7 @@ import de.adorsys.opba.protocol.hbci.context.AccountListHbciContext;
 import de.adorsys.opba.protocol.hbci.context.HbciContext;
 import de.adorsys.opba.protocol.hbci.service.consent.HbciScaRequiredUtil;
 import de.adorsys.opba.protocol.hbci.service.protocol.ais.dto.AisListAccountsResult;
+import de.adorsys.opba.protocol.hbci.util.logresolver.HbciLogResolver;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.flowable.engine.delegate.DelegateExecution;
@@ -36,15 +37,19 @@ public class HbciAccountListing extends ValidatedExecution<AccountListHbciContex
     private static final int BLZ_LEN = 8;
     private static final int ACCOUNT_NUMBER_LEN = 10;
     private final OnlineBankingService onlineBankingService;
+    private final HbciLogResolver logResolver = new HbciLogResolver(getClass());
 
     @Override
+    @SuppressWarnings("CPD-START")
     protected void doRealExecution(DelegateExecution execution, AccountListHbciContext context) {
-
+        logResolver.log("doRealExecution: execution ({}) with context ({})", execution, context);
         HbciConsent consent = context.getHbciDialogConsent();
         TransactionRequest<LoadAccounts> request = create(new LoadAccounts(), new BankApiUser(), new BankAccess(), context.getBank(), consent);
+        logResolver.log("loadBankAccounts request: {}", request);
         AccountInformationResponse response = onlineBankingService.loadBankAccounts(request);
+        logResolver.log("loadBankAccounts response: {}", response);
         boolean postScaRequired = HbciScaRequiredUtil.extraCheckIfScaRequired(response);
-
+        logResolver.log("AuthorisationCodeResponse is empty: {}, postScaRequired: {}", response.getAuthorisationCodeResponse() == null, postScaRequired);
         if (null == response.getAuthorisationCodeResponse() && !postScaRequired) {
             ContextUtil.getAndUpdateContext(
                     execution,
@@ -61,7 +66,6 @@ public class HbciAccountListing extends ValidatedExecution<AccountListHbciContex
                         ctx.setTanChallengeRequired(false);
                     }
             );
-
             return;
         }
 
@@ -73,6 +77,7 @@ public class HbciAccountListing extends ValidatedExecution<AccountListHbciContex
                 (HbciContext ctx) -> {
                     ctx.setHbciDialogConsent((HbciConsent) response.getBankApiConsentData());
                     ctx.setTanChallengeRequired(true);
+                    ctx.setChallengeData(response.getAuthorisationCodeResponse().getUpdateAuthResponse().getChallenge());
                 }
         );
     }

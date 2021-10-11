@@ -4,6 +4,7 @@ import com.google.common.collect.Iterables;
 import de.adorsys.opba.protocol.api.dto.ValidationIssue;
 import de.adorsys.opba.protocol.api.dto.codes.FieldCode;
 import de.adorsys.opba.protocol.api.dto.codes.TypeCode;
+import de.adorsys.opba.protocol.api.errors.ReturnableException;
 import de.adorsys.opba.protocol.api.services.scoped.validation.FieldsToIgnoreLoader;
 import de.adorsys.opba.protocol.api.services.scoped.validation.IgnoreValidationRule;
 import de.adorsys.opba.protocol.bpmnshared.dto.context.BaseContext;
@@ -150,11 +151,11 @@ public class Xs2aValidator {
         Field fieldValue = ReflectionUtils.findField(violation.getLeafBean().getClass(), name);
 
         if (null == fieldValue) {
-            throw new IllegalStateException("Validated field not found " + name);
+            throw new ReturnableException("Validated field not found " + name);
         }
 
         if (!fieldValue.isAnnotationPresent(ValidationInfo.class)) {
-            throw new IllegalStateException("Field " + name + " not annotated with @ValidationInfo");
+            throw new ReturnableException("Field " + name + " not annotated with @ValidationInfo");
         }
 
         return fieldValue.getAnnotationsByType(ValidationInfo.class)[0];

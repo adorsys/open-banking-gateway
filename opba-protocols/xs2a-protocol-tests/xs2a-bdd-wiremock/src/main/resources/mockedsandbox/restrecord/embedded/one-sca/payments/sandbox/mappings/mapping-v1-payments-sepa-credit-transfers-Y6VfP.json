@@ -1,0 +1,42 @@
+{
+  "id" : "c5829503-1f12-30fb-925f-762098bfc483",
+  "scenarioName": "PaymentInitializationUsingOneScaEmbedded",
+  "newScenarioState": "InitPayment",
+  "request" : {
+    "url" : "/v1/payments/sepa-credit-transfers",
+    "method" : "POST",
+    "headers" : {
+      "X-Request-ID" : {
+        "matches": "[0-9a-zA-z\\-]+"
+      },
+      "PSU-ID" : {
+        "equalTo" : "anton.brueckner"
+      },
+      "PSU-IP-Address" : {
+        "equalTo": "1.1.1.1"
+      },
+      "Content-Type" : {
+        "equalTo" : "application/json; charset=UTF-8"
+      }
+    },
+    "bodyPatterns" : [ {
+      "equalToJson" : "{\n  \"creditorAccount\": {\n    \"currency\": \"EUR\",\n    \"iban\": \"DE80760700240271232400\"\n  },\n  \"creditorAddress\": {\n    \"buildingNumber\": \"56\",\n    \"townName\": \"Nürnberg\",\n    \"country\": \"DE\",\n    \"postCode\": \"90543\",\n    \"streetName\": \"WBG Straße\"\n  },\n  \"creditorAgent\": \"AAAADEBBXXX\",\n  \"creditorName\": \"WBG\",\n  \"debtorAccount\": {\n    \"currency\": \"EUR\",\n    \"iban\": \"DE80760700240271232400\"\n  },\n  \"endToEndIdentification\": \"WBG-123456789\",\n  \"instructedAmount\": {\n    \"currency\": \"EUR\",\n    \"amount\": \"1.03\"\n  },\n  \"remittanceInformationUnstructured\": \"Ref. Number WBG-1222\"\n}",
+      "ignoreArrayOrder" : true,
+      "ignoreExtraElements" : true
+    } ]
+  },
+  "response" : {
+    "status" : 201,
+    "bodyFileName" : "body-v1-payments-sepa-credit-transfers-Y6VfP.json",
+    "headers" : {
+      "Vary" : [ "Origin", "Access-Control-Request-Method", "Access-Control-Request-Headers" ],
+      "Aspsp-Sca-Approach" : "REDIRECT",
+      "Location" : "http://127.0.0.1:20014/v1/payments/sepa-credit-transfers/QY__AVEz7_jSBQ7DoVT5RUK-MXSZq_LdvJpCrILSc1q_T9itf-ZHujfO-sPZAfNFcgftJbETkzvNvu5mZQqWcA==_=_psGLvQpt9Q",
+      "X-Request-Id" : "2ff37428-32cf-47df-a0f2-f089f3e7ae87",
+      "Content-Type" : "application/json",
+      "Date" : "Mon, 04 Oct 2021 16:38:46 GMT",
+      "Keep-Alive" : "timeout=60"
+    }
+  },
+  "uuid" : "c5829503-1f12-30fb-925f-762098bfc483"
+}

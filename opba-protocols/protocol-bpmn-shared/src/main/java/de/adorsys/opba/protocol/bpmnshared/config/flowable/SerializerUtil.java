@@ -2,7 +2,6 @@ package de.adorsys.opba.protocol.bpmnshared.config.flowable;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
-// import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.ImmutableMap;
 import de.adorsys.opba.protocol.api.services.scoped.RequestScoped;
 import de.adorsys.opba.protocol.api.services.scoped.RequestScopedServicesProvider;
@@ -45,7 +44,7 @@ public class SerializerUtil {
     }
 
     @SneakyThrows
-    public Object deserialize(@NotNull byte[] bytes, @NotNull ObjectMapper mapper, @NotNull List<String> allowOnlyClassesWithPrefix,
+    public Object deserialize(byte[] bytes, @NotNull ObjectMapper mapper, @NotNull List<String> allowOnlyClassesWithPrefix,
                               @NotNull RequestScopedServicesProvider requestScoped) {
         JsonNode value = mapper.readTree(bytes);
         Map.Entry<String, JsonNode> classNameAndValue = value.fields().next();

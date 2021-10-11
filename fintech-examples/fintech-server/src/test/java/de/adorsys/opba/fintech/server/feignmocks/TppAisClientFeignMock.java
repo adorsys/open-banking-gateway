@@ -3,7 +3,9 @@ package de.adorsys.opba.fintech.server.feignmocks;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import de.adorsys.opba.fintech.impl.tppclients.TppAisClient;
 import de.adorsys.opba.tpp.ais.api.model.generated.AccountList;
+import de.adorsys.opba.tpp.ais.api.model.generated.SessionStatusDetails;
 import de.adorsys.opba.tpp.ais.api.model.generated.TransactionsResponse;
+import de.adorsys.opba.tpp.ais.api.model.generated.UpdateAisExternalSessionStatus;
 import org.springframework.http.ResponseEntity;
 
 import javax.servlet.http.HttpServletRequest;
@@ -24,10 +26,15 @@ public class TppAisClientFeignMock implements TppAisClient {
             String xTimestampUTC,
             String xRequestSignature,
             String fintechId,
-            String bankID,
+            UUID bankProfileID,
+            Boolean xPsuAuthenticationRequired,
             UUID serviceSessionID,
-            Boolean useObgCache,
-            Boolean withBalance
+            String createConsentIfNone,
+            String importUserData,
+            Boolean computePsuIpAddress,
+            String psuIpAddress,
+            Boolean withBalance,
+            Boolean online
     ) {
         return null;
     }
@@ -43,14 +50,22 @@ public class TppAisClientFeignMock implements TppAisClient {
             String xTimestampUTC,
             String xRequestSignature,
             String fintechId,
-            String bankID,
+            UUID bankProfileID,
+            Boolean xPsuAuthenticationRequired,
             UUID serviceSessionID,
+            String createConsentIfNone,
+            String importUserData,
+            Boolean computePsuIpAddress,
+            String psuIpAddress,
             LocalDate dateFrom,
             @Valid LocalDate dateTo,
             String entryReferenceFrom,
             @Valid String bookingStatus,
             @Valid Boolean deltaList,
-            Boolean online
+            Boolean online,
+            Boolean analytics,
+            Integer page,
+            Integer pageSize
     ) {
         return null;
     }
@@ -65,14 +80,38 @@ public class TppAisClientFeignMock implements TppAisClient {
             String xTimestampUTC,
             String xRequestSignature,
             String fintechID,
-            String bankID,
+            UUID bankProfileID,
+            Boolean xPsuAuthenticationRequired,
             UUID serviceSessionID,
+            String createConsentIfNone,
+            String importUserData,
+            Boolean computePsuIpAddress,
+            String psuIpAddress,
             LocalDate dateFrom,
             LocalDate dateTo,
             String entryReferenceFrom,
             String bookingStatus,
-            Boolean deltaList
+            Boolean deltaList,
+            Integer page,
+            Integer pageSize
     ) {
+        return null;
+    }
+
+    @Override
+    public ResponseEntity<Void> deleteConsent(UUID serviceSessionID, String serviceSessionPassword, UUID xRequestID,
+                                              String xTimestampUTC, String xRequestSignature, String fintechID, Boolean deleteAll) {
+        return null;
+    }
+
+    @Override
+    public ResponseEntity<SessionStatusDetails> getAisSessionStatus(UUID serviceSessionID, String serviceSessionPassword,
+                                                                    UUID xRequestID, String xTimestampUTC, String xRequestSignature, String fintechID) {
+        return null;
+    }
+
+    @Override
+    public ResponseEntity<UpdateAisExternalSessionStatus> updateExternalAisSession(UUID serviceSessionID, String serviceSessionPassword, UUID xRequestID, String xTimestampUTC, String xRequestSignature, String fintechID) {
         return null;
     }
 

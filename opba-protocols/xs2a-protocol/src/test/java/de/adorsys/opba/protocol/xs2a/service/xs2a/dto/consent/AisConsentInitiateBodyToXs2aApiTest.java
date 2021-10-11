@@ -4,8 +4,8 @@ import de.adorsys.opba.protocol.xs2a.config.MapperTestConfig;
 import de.adorsys.opba.protocol.xs2a.context.ais.AccountListXs2aContext;
 import de.adorsys.opba.protocol.xs2a.context.ais.Xs2aAisContext;
 import de.adorsys.opba.protocol.xs2a.util.FixtureProvider;
-import de.adorsys.xs2a.adapter.service.model.AccountAccess;
-import de.adorsys.xs2a.adapter.service.model.Consents;
+import de.adorsys.xs2a.adapter.api.model.AccountAccess;
+import de.adorsys.xs2a.adapter.api.model.Consents;
 import lombok.SneakyThrows;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -44,10 +44,10 @@ public class AisConsentInitiateBodyToXs2aApiTest {
     public void accountsTest_success() {
         // Given
         String mappingInput = ALL_ACCOUNTS.getApiName();
-        AccountAccess.AvailableAccountsEnum expected = AccountAccess.AvailableAccountsEnum.ALLACCOUNTS;
+        AccountAccess.AvailableAccounts expected = AccountAccess.AvailableAccounts.ALLACCOUNTS;
 
         // When
-        AccountAccess.AvailableAccountsEnum actual = mapper.accounts(mappingInput);
+        AccountAccess.AvailableAccounts actual = mapper.accounts(mappingInput);
 
         // Then
         assertThat(expected).isEqualTo(actual);
@@ -58,10 +58,10 @@ public class AisConsentInitiateBodyToXs2aApiTest {
     public void accountsTest_null_result() {
         // Given
         String mappingInput = "WRONG_VALUE";
-        AccountAccess.AvailableAccountsEnum expected = null;
+        AccountAccess.AvailableAccounts expected = null;
 
         // When
-        AccountAccess.AvailableAccountsEnum actual = mapper.accounts(mappingInput);
+        AccountAccess.AvailableAccounts actual = mapper.accounts(mappingInput);
 
         // Then
         assertThat(expected).isEqualTo(actual);
@@ -100,10 +100,10 @@ public class AisConsentInitiateBodyToXs2aApiTest {
     public void allPsd2Test_success() {
         // Given
         String mappingInput = ALL_ACCOUNTS.getApiName();
-        AccountAccess.AllPsd2Enum expected = AccountAccess.AllPsd2Enum.ALLACCOUNTS;
+        AccountAccess.AllPsd2 expected = AccountAccess.AllPsd2.ALLACCOUNTS;
 
         // When
-        AccountAccess.AllPsd2Enum actual = mapper.allPsd2(mappingInput);
+        AccountAccess.AllPsd2 actual = mapper.allPsd2(mappingInput);
 
         // Then
         assertThat(expected).isEqualTo(actual);
@@ -114,10 +114,10 @@ public class AisConsentInitiateBodyToXs2aApiTest {
     public void allPsd2Test_null_result() {
         // Given
         String mappingInput = "WRONG_VALUE";
-        AccountAccess.AllPsd2Enum expected = null;
+        AccountAccess.AllPsd2 expected = null;
 
         // When
-        AccountAccess.AllPsd2Enum actual = mapper.allPsd2(mappingInput);
+        AccountAccess.AllPsd2 actual = mapper.allPsd2(mappingInput);
 
         // Then
         assertThat(expected).isEqualTo(actual);

@@ -1,4 +1,5 @@
 import { Injectable } from '@angular/core';
+import {ConsentAuth} from '../api';
 
 @Injectable({
   providedIn: 'root'
@@ -35,6 +36,18 @@ export class SessionService {
 
   public setFintechName(authorizationId: string, fintechName: string) {
     sessionStorage.setItem(authorizationId + Session.FINTECH_NAME, fintechName);
+  }
+
+  public getConsentTypesSupported(authorizationId: string): ConsentAuth.SupportedConsentTypesEnum[] {
+    const supportedTypes = sessionStorage.getItem(authorizationId + Session.CONSENT_TYPES_SUPPORTED);
+    if (!supportedTypes) {
+      return null;
+    }
+    return JSON.parse(supportedTypes);
+  }
+
+  public setConsentTypesSupported(authorizationId: string, consentTypes: ConsentAuth.SupportedConsentTypesEnum[]) {
+    sessionStorage.setItem(authorizationId + Session.CONSENT_TYPES_SUPPORTED, !consentTypes ? null : JSON.stringify(consentTypes));
   }
 
   public getBankName(authorizationId: string): string {
@@ -108,6 +121,7 @@ enum Session {
   PAYMENT_OBJECT = ':PAYMENT_OBJECT',
   PAYMENT_STATE = ':PAYMENT_STATE',
   FINTECH_NAME = ':FINTECH_NAME',
+  CONSENT_TYPES_SUPPORTED = ':CONSENT_TYPES_SUPPORTED',
   BANK_NAME = ':BANK_NAME',
   XSRF_TOKEN = 'XSRF_TOKEN',
   COOKIE_TTL = 'Cookie-TTL',

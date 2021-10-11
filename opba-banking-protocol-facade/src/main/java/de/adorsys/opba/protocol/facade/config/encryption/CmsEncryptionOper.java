@@ -24,6 +24,15 @@ public class CmsEncryptionOper {
 
     private final CmsEncSpec cmsEncSpec;
 
+    public EncryptionService encryptionService(String keyId, PrivateKey privateKey, PublicKey publicKey) {
+        return new CmsEncryption(
+                keyId,
+                cmsEncSpec.getCipherAlgo(),
+                publicKey,
+                privateKey
+        );
+    }
+
     public EncryptionService encryptionService(String keyId, PrivateKey privateKey) {
         return new CmsEncryption(
                 keyId,
@@ -62,6 +71,10 @@ public class CmsEncryptionOper {
         @Override
         @SneakyThrows
         public byte[] encrypt(byte[] data) {
+            if (null == data) {
+                return new byte[0];
+            }
+
             CMSEnvelopedDataGenerator generator = new CMSEnvelopedDataGenerator();
             generator.addRecipientInfoGenerator(new JceKeyTransRecipientInfoGenerator(encryptionKeyId.getBytes(StandardCharsets.UTF_8), publicKey));
             return generator.generate(
@@ -72,6 +85,10 @@ public class CmsEncryptionOper {
         @Override
         @SneakyThrows
         public byte[] decrypt(byte[] data) {
+            if (null == data || 0 == data.length) {
+                return null;
+            }
+
             CMSEnvelopedDataParser parser = new CMSEnvelopedDataParser(data);
             return parser.getRecipientInfos().iterator().next().getContent(new JceKeyTransEnvelopedRecipient(privateKey));
         }

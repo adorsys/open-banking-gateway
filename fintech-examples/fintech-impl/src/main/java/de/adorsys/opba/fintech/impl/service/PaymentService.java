@@ -32,6 +32,7 @@ import java.util.UUID;
 import static de.adorsys.opba.fintech.impl.tppclients.Consts.COMPUTE_FINTECH_ID;
 import static de.adorsys.opba.fintech.impl.tppclients.Consts.COMPUTE_X_REQUEST_SIGNATURE;
 import static de.adorsys.opba.fintech.impl.tppclients.Consts.COMPUTE_X_TIMESTAMP_UTC;
+import static de.adorsys.opba.fintech.impl.tppclients.Consts.HEADER_COMPUTE_PSU_IP_ADDRESS;
 
 @Slf4j
 @Service
@@ -51,7 +52,7 @@ public class PaymentService {
     private final HandleAcceptedService handleAcceptedService;
     private final PaymentRepository paymentRepository;
 
-    public ResponseEntity<Void> initiateSinglePayment(String bankId, String accountId, SinglePaymentInitiationRequest singlePaymentInitiationRequest,
+    public ResponseEntity<Void> initiateSinglePayment(String bankProfileId, String accountId, SinglePaymentInitiationRequest singlePaymentInitiationRequest,
                                                       String fintechOkUrl, String fintechNOkUrl, Boolean xPisPsuAuthenticationRequired) {
         log.info("fill paramemeters for payment");
         final String fintechRedirectCode = UUID.randomUUID().toString();
@@ -76,21 +77,23 @@ public class PaymentService {
                 COMPUTE_X_TIMESTAMP_UTC,
                 COMPUTE_X_REQUEST_SIGNATURE,
                 COMPUTE_FINTECH_ID,
-                bankId,
-                xPisPsuAuthenticationRequired);
+                UUID.fromString(bankProfileId),
+                xPisPsuAuthenticationRequired,
+                HEADER_COMPUTE_PSU_IP_ADDRESS,
+                null);
         if (responseOfTpp.getStatusCode() != HttpStatus.ACCEPTED) {
             throw new RuntimeException("Did expect status 202 from tpp, but got " + responseOfTpp.getStatusCodeValue());
         }
         redirectHandlerService.registerRedirectStateForSession(fintechRedirectCode, fintechOkUrl, fintechNOkUrl);
-        return handleAcceptedService.handleAccepted(paymentRepository, ConsentType.PIS, bankId, accountId, fintechRedirectCode, sessionEntity,
+        return handleAcceptedService.handleAccepted(paymentRepository, ConsentType.PIS, bankProfileId, accountId, fintechRedirectCode, sessionEntity,
                 responseOfTpp.getHeaders());
     }
 
-    public ResponseEntity<List<PaymentInitiationWithStatusResponse>> retrieveAllSinglePayments(String bankId, String accountId) {
+    public ResponseEntity<List<PaymentInitiationWithStatusResponse>> retrieveAllSinglePayments(String bankProfileID, String accountId) {
         SessionEntity sessionEntity = sessionLogicService.getSession();
         // TODO https://app.zenhub.com/workspaces/open-banking-gateway-5dd3b3daf010250001260675/issues/adorsys/open-banking-gateway/812
         // TODO https://app.zenhub.com/workspaces/open-banking-gateway-5dd3b3daf010250001260675/issues/adorsys/open-banking-gateway/794
-        List<PaymentEntity> payments = paymentRepository.findByUserEntityAndBankIdAndAccountIdAndPaymentConfirmed(sessionEntity.getUserEntity(), bankId, accountId, true);
+        List<PaymentEntity> payments = paymentRepository.findByUserEntityAndBankIdAndAccountIdAndPaymentConfirmed(sessionEntity.getUserEntity(), bankProfileID, accountId, true);
         if (payments.isEmpty()) {
             return new ResponseEntity<>(new ArrayList<>(), HttpStatus.OK);
         }
@@ -98,13 +101,12 @@ public class PaymentService {
 
         for (PaymentEntity payment : payments) {
             PaymentInformationResponse body = tppPisPaymentStatusClient.getPaymentInformation(tppProperties.getServiceSessionPassword(),
-                    sessionEntity.getUserEntity().getFintechUserId(),
                     UUID.fromString(restRequestContext.getRequestId()),
                     paymentProduct,
                     COMPUTE_X_TIMESTAMP_UTC,
                     COMPUTE_X_REQUEST_SIGNATURE,
                     COMPUTE_FINTECH_ID,
-                    bankId,
+                    UUID.fromString(bankProfileID),
                     payment.getTppServiceSessionId()).getBody();
             PaymentInitiationWithStatusResponse paymentInitiationWithStatusResponse = Mappers
                     .getMapper(PaymentInitiationWithStatusResponseMapper.class)

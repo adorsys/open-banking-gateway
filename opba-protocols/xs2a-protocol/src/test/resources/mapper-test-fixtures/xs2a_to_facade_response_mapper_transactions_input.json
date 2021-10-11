@@ -1,5 +1,5 @@
 {
-  "accountReference": null,
+  "account": null,
   "transactions": {
     "booked": [
       {
@@ -181,16 +181,34 @@
         "proprietaryBankTransactionCode": null
       }
     ],
-    "pending": null
+    "pending": null,
+    "_links": {
+      "account": {
+        "href": "http://localhost:20014/v1/accounts/MXp18v3aQCQsatLYCBsUjM"
+      }
+    }
   },
+  "balances": [
+    {
+      "balanceAmount": {
+        "currency": "EUR",
+        "amount": "10120.00"
+      },
+      "balanceType": "interimAvailable",
+      "lastCommittedTransaction": null
+    },
+    {
+      "balanceAmount": {
+        "currency": "EUR",
+        "amount": "10120.00"
+      },
+      "balanceType": "closingBooked",
+      "lastCommittedTransaction": null
+    }
+  ],
   "_links": {
-    "account": {
-      "href": "http://localhost:20014/v1/accounts/MXp18v3aQCQsatLYCBsUjM"
+    "download": {
+      "href": "http://localhost:20014/v1/accounts/MXp18v3aQCQsatLYCBsUjM/transactions/download/ZG93bmxvYWRJZA=="
     }
   }
-},"balances":[
-{"balanceAmount": {"currency": "EUR", "amount":"10120.00"}, "balanceType": "interimAvailable", "lastChangeDateTime": {"offset": {"totalSeconds": 3600, "id": "+01:00", "rules": {"fixedOffset": true, "transitions":[], "transitionRules":[]}}, "year": 2020, "monthValue": 2, "month": "FEBRUARY", "dayOfMonth": 27, "dayOfYear": 58, "dayOfWeek": "THURSDAY", "hour": 11, "minute": 49, "second": 39, "nano": 500000000}, "referenceDate": {"year": 2020, "month": "FEBRUARY", "chronology": {"id":"ISO", "calendarType": "iso8601"}, "era": "CE", "monthValue": 2, "dayOfMonth": 27, "dayOfYear": 58, "dayOfWeek": "THURSDAY", "leapYear": true}, "lastCommittedTransaction": null}, {"balanceAmount":{"currency": "EUR", "amount": "10120.00"},"balanceType": "closingBooked", "lastChangeDateTime": {"offset": {"totalSeconds": 3600, "id": "+01:00", "rules":{"fixedOffset": true, "transitions":[], "transitionRules":[]}}, "year": 2020, "monthValue": 2, "month": "FEBRUARY", "dayOfMonth": 27, "dayOfYear": 58, "dayOfWeek": "THURSDAY", "hour": 11, "minute": 49, "second": 39, "nano": 500000000}, "referenceDate": {"year": 2020, "month": "FEBRUARY", "chronology": {"id":"ISO", "calendarType": "iso8601"}, "era": "CE", "monthValue": 2, "dayOfMonth": 27, "dayOfYear": 58, "dayOfWeek": "THURSDAY", "leapYear": true}, "lastCommittedTransaction": null}
-], "_links": {"download": {"href": "http://localhost:20014/v1/accounts/MXp18v3aQCQsatLYCBsUjM/transactions/download/ZG93bmxvYWRJZA=="
-}
-}
 }

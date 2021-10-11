@@ -5,7 +5,7 @@
     <parent>
         <groupId>de.adorsys.opba</groupId>
         <artifactId>xs2a-protocol-tests</artifactId>
-        <version>0.30.0.1</version>
+        <version>1.0.0</version>
     </parent>
 
     <!-- BDD Tests for protocol running on top of Wiremock-based response-request fixtures -->
@@ -37,7 +37,11 @@
             <artifactId>xs2a-bdd-tests-common</artifactId>
             <version>${project.version}</version>
         </dependency>
-
+        <dependency>
+            <groupId>commons-io</groupId>
+            <artifactId>commons-io</artifactId>
+            <version>${commons-io.version}</version>
+        </dependency>
         <dependency>
             <groupId>org.junit.jupiter</groupId>
             <artifactId>junit-jupiter</artifactId>

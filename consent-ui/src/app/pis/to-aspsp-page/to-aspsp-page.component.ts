@@ -1,14 +1,14 @@
-import { Component, OnInit } from '@angular/core';
-import { StubUtil } from '../../common/utils/stub-util';
-import { Action } from '../../common/utils/action';
-import { Location } from '@angular/common';
-import { ActivatedRoute } from '@angular/router';
-import { SessionService } from '../../common/session.service';
-import { AuthStateConsentAuthorizationService, DenyRequest, UpdateConsentAuthorizationService } from '../../api';
-import { ApiHeaders } from '../../api/api.headers';
-import { PaymentUtil } from '../common/payment-util';
-import { PisPayment } from '../common/models/pis-payment.model';
-import { combineLatest } from 'rxjs';
+import {Component, OnInit} from '@angular/core';
+import {StubUtil} from '../../common/utils/stub-util';
+import {Action} from '../../common/utils/action';
+import {Location} from '@angular/common';
+import {ActivatedRoute} from '@angular/router';
+import {SessionService} from '../../common/session.service';
+import {AuthStateConsentAuthorizationService, UpdateConsentAuthorizationService} from '../../api';
+import {ApiHeaders} from '../../api/api.headers';
+import {PaymentUtil} from '../common/payment-util';
+import {PisPayment} from '../common/models/pis-payment.model';
+import {combineLatest} from 'rxjs';
 
 @Component({
   selector: 'consent-app-to-aspsp-page',
@@ -56,8 +56,6 @@ export class ToAspspPageComponent implements OnInit {
       .denyUsingPOST(
         this.authorizationId,
         StubUtil.X_REQUEST_ID, // TODO: real values instead of stubs
-        StubUtil.X_XSRF_TOKEN, // TODO: real values instead of stubs
-        {} as DenyRequest,
         'response'
       )
       .subscribe((res) => {
@@ -69,7 +67,7 @@ export class ToAspspPageComponent implements OnInit {
     this.authStateConsentAuthorizationService
       .authUsingGET(this.authorizationId, this.sessionService.getRedirectCode(this.authorizationId), 'response')
       .subscribe((res) => {
-        this.sessionService.setRedirectCode(this.authorizationId, res.headers.get(ApiHeaders.REDIRECT_CODE));
+        this.sessionService.setRedirectCode(this.authorizationId, res.headers.get(ApiHeaders.X_XSRF_TOKEN));
         this.redirectTo = res.headers.get(ApiHeaders.LOCATION);
       });
   }

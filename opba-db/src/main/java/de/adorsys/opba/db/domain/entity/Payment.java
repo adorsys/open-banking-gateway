@@ -62,7 +62,7 @@ public class Payment {
     private Psu psu;
 
     /**
-     * If the payment encryption key can be identified by Key ID stored in FinTech keystore.
+     * If the payment encryption key can be identified by Key ID stored in FinTech keystore (anonymous payment).
      */
     @ManyToOne(fetch = FetchType.LAZY)
     private FintechPubKey fintechPubKey;

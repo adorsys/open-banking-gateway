@@ -1,0 +1,40 @@
+{
+  "scenarioName": "AccountsListUsingPostbankEmbedded",
+  "newScenarioState": "AuthorizationUpdated",
+  "request" : {
+    "urlPattern" : "/v1/consents/.+/authorisations/.+",
+    "method" : "PUT",
+    "headers" : {
+      "X-Request-ID" : {
+        "matches" : ".+"
+      },
+      "PSU-ID" : {
+        "equalTo" : "max.musterman"
+      }
+    },
+    "bodyPatterns" : [ {
+      "equalToJson" : "{\"psuData\":{\"password\":\"12345\"}}",
+      "ignoreArrayOrder" : true,
+      "ignoreExtraElements" : true
+    } ]
+  },
+  "response" : {
+    "status" : 200,
+    "body" : "{\"scaStatus\":\"psuAuthenticated\",\"scaMethods\":[{\"authenticationVersion\":\"v1.2\",\"name\":\"TAN2go\",\"authenticationType\":\"PUSH_OTP\",\"explanation\":\"Sandbox PSD2-SCA Methods\",\"authenticationMethodId\":\"photoOTP\"},{\"authenticationVersion\":\"v1.2\",\"name\":\"SMS OTP on phone +49160 xxxxx 28\",\"authenticationType\":\"SMS_OTP\",\"explanation\":\"Sandbox PSD2-SCA Methods\",\"authenticationMethodId\":\"smsOTP\"}],\"_links\":{\"scaStatus\":{\"href\":\"https://simulator-xs2a.db.com/ais/DE/SB-DB/v1/consents/17501be7-1dcd-4ad5-ab30-6d02b170e31a/authorisations/9cd38df2-1315-41d4-9602-5f63149aacaf\"},\"selectAuthenticationMethod\":{\"href\":\"https://simulator-xs2a.db.com/ais/DE/SB-DB/v1/consents/17501be7-1dcd-4ad5-ab30-6d02b170e31a/authorisations/9cd38df2-1315-41d4-9602-5f63149aacaf\"}}}",
+    "headers" : {
+      "Date" : "Mon, 01 Mar 2021 16:19:25 GMT",
+      "Server" : "Apache",
+      "glue2gExit" : "2021-03-01T16:19:26.460",
+      "X-Request-ID" : "bd472dfa-878d-4f80-90b3-40120ba2865b",
+      "ASPSP-SCA-Approach" : "EMBEDDED",
+      "bffEntry" : "2021-03-01T16:19:26.139",
+      "bffExit" : "2021-03-01T16:19:26.460",
+      "Content-Type" : "application/json;charset=utf-8",
+      "glue2gEntry" : "2021-03-01T16:19:26.139",
+      "Keep-Alive" : "timeout=5, max=100"
+    }
+  },
+  "uuid" : "b9f0367d-301c-489e-8961-20702b99d619",
+  "persistent" : true,
+  "insertionIndex" : 2
+}

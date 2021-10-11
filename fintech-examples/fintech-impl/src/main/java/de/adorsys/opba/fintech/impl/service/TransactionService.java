@@ -1,5 +1,6 @@
 package de.adorsys.opba.fintech.impl.service;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import de.adorsys.opba.fintech.impl.config.FintechUiConfig;
 import de.adorsys.opba.fintech.impl.controller.utils.LoTRetrievalInformation;
 import de.adorsys.opba.fintech.impl.controller.utils.RestRequestContext;
@@ -13,6 +14,7 @@ import de.adorsys.opba.fintech.impl.tppclients.ConsentType;
 import de.adorsys.opba.fintech.impl.tppclients.TppAisClient;
 import de.adorsys.opba.tpp.ais.api.model.generated.TransactionsResponse;
 import lombok.RequiredArgsConstructor;
+import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -25,12 +27,14 @@ import java.util.UUID;
 import static de.adorsys.opba.fintech.impl.tppclients.Consts.COMPUTE_FINTECH_ID;
 import static de.adorsys.opba.fintech.impl.tppclients.Consts.COMPUTE_X_REQUEST_SIGNATURE;
 import static de.adorsys.opba.fintech.impl.tppclients.Consts.COMPUTE_X_TIMESTAMP_UTC;
+import static de.adorsys.opba.fintech.impl.tppclients.Consts.HEADER_COMPUTE_PSU_IP_ADDRESS;
 
 
 @Service
 @Slf4j
 @RequiredArgsConstructor
 public class TransactionService {
+
     private final FintechUiConfig uiConfig;
     private final TppAisClient tppAisClient;
     private final RestRequestContext restRequestContext;
@@ -38,24 +42,27 @@ public class TransactionService {
     private final RedirectHandlerService redirectHandlerService;
     private final ConsentRepository consentRepository;
     private final HandleAcceptedService handleAcceptedService;
+    private final ObjectMapper mapper;
 
-    public ResponseEntity listTransactions(SessionEntity sessionEntity, String fintechOkUrl, String fintechNOkUrl, String bankId,
-                                           String accountId, LocalDate dateFrom, LocalDate dateTo, String entryReferenceFrom,
+    @SuppressWarnings("checkstyle:MethodLength") //  FIXME - It is just too many lines of text
+    @SneakyThrows
+    public ResponseEntity listTransactions(SessionEntity sessionEntity, String fintechOkUrl, String fintechNOkUrl, String bankProfileID,
+                                           String accountId, String createConsentIfNone, LocalDate dateFrom, LocalDate dateTo, String entryReferenceFrom,
                                            String bookingStatus, Boolean deltaList, LoTRetrievalInformation loTRetrievalInformation,
-                                           Boolean online) {
+                                           Boolean psuAuthenticationRequired, Boolean online) {
         log.info("LoT {}", loTRetrievalInformation);
         String fintechRedirectCode = UUID.randomUUID().toString();
         Optional<ConsentEntity> optionalConsent = Optional.empty();
         if (loTRetrievalInformation.equals(LoTRetrievalInformation.FROM_TPP_WITH_AVAILABLE_CONSENT)) {
             optionalConsent = consentRepository.findFirstByUserEntityAndBankIdAndConsentTypeAndConsentConfirmedOrderByCreationTimeDesc(sessionEntity.getUserEntity(),
-                bankId, ConsentType.AIS, Boolean.TRUE);
+                bankProfileID, ConsentType.AIS, Boolean.TRUE);
         }
         if (optionalConsent.isPresent()) {
             log.info("LoT found valid {} consent for user {} bank {} from {}",
                 optionalConsent.get().getConsentType(), optionalConsent.get().getUserEntity().getLoginUserName(),
                 optionalConsent.get().getBankId(), optionalConsent.get().getCreationTime());
         } else {
-            log.info("LoT no valid ais consent for user {} bank {} available", sessionEntity.getUserEntity().getLoginUserName(), bankId);
+            log.info("LoT no valid ais consent for user {} bank {} available", sessionEntity.getUserEntity().getLoginUserName(), bankProfileID);
         }
         ResponseEntity<TransactionsResponse> transactions = tppAisClient.getTransactions(
             accountId, tppProperties.getServiceSessionPassword(),
@@ -65,16 +72,31 @@ public class TransactionService {
             UUID.fromString(restRequestContext.getRequestId()),
             COMPUTE_X_TIMESTAMP_UTC,
             COMPUTE_X_REQUEST_SIGNATURE,
-            COMPUTE_FINTECH_ID, bankId,
+            COMPUTE_FINTECH_ID,
+            UUID.fromString(bankProfileID),
+            psuAuthenticationRequired,
             optionalConsent.map(ConsentEntity::getTppServiceSessionId).orElse(null),
-            dateFrom, dateTo, entryReferenceFrom, bookingStatus, deltaList, online);
+            createConsentIfNone,
+            null,
+            HEADER_COMPUTE_PSU_IP_ADDRESS,
+            null,
+            dateFrom,
+            dateTo,
+            entryReferenceFrom,
+            bookingStatus,
+            deltaList,
+            online,
+            true,
+            null,
+            null
+        );
         switch (transactions.getStatusCode()) {
             case OK:
                 return new ResponseEntity<>(ManualMapper.fromTppToFintech(transactions.getBody()), HttpStatus.OK);
             case ACCEPTED:
                 log.info("create redirect entity for lot for redirectcode {}", fintechRedirectCode);
                 redirectHandlerService.registerRedirectStateForSession(fintechRedirectCode, fintechOkUrl, fintechNOkUrl);
-                return handleAcceptedService.handleAccepted(consentRepository, ConsentType.AIS, bankId, fintechRedirectCode, sessionEntity, transactions.getHeaders());
+                return handleAcceptedService.handleAccepted(consentRepository, ConsentType.AIS, bankProfileID, fintechRedirectCode, sessionEntity, transactions.getHeaders());
             case UNAUTHORIZED:
                 return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
             default:

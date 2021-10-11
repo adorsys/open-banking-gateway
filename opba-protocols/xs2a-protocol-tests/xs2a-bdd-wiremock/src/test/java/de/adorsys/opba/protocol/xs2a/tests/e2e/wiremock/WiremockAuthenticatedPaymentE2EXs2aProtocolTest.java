@@ -8,6 +8,7 @@ import de.adorsys.opba.protocol.xs2a.tests.e2e.stages.PaymentResult;
 import de.adorsys.opba.protocol.xs2a.tests.e2e.wiremock.mocks.MockServers;
 import de.adorsys.opba.protocol.xs2a.tests.e2e.wiremock.mocks.WiremockPaymentRequest;
 import de.adorsys.opba.protocol.xs2a.tests.e2e.wiremock.mocks.Xs2aProtocolApplication;
+import de.adorsys.xs2a.adapter.api.model.TransactionStatus;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.io.TempDir;
@@ -25,6 +26,10 @@ import java.util.UUID;
 
 import static de.adorsys.opba.protocol.xs2a.tests.TestProfiles.MOCKED_SANDBOX;
 import static de.adorsys.opba.protocol.xs2a.tests.TestProfiles.ONE_TIME_POSTGRES_RAMFS;
+import static de.adorsys.opba.protocol.xs2a.tests.e2e.stages.StagesCommonUtil.CONSORS_BANK_BANK_PROFILE_ID;
+import static de.adorsys.opba.protocol.xs2a.tests.e2e.stages.StagesCommonUtil.DKB_BANK_PROFILE_ID;
+import static de.adorsys.opba.protocol.xs2a.tests.e2e.stages.StagesCommonUtil.POSTBANK_BANK_PROFILE_ID;
+import static de.adorsys.opba.protocol.xs2a.tests.e2e.stages.StagesCommonUtil.SANTANDER_BANK_PROFILE_ID;
 import static de.adorsys.opba.protocol.xs2a.tests.e2e.wiremock.Const.PIS_OAUTH2_CODE;
 import static org.springframework.boot.test.context.SpringBootTest.WebEnvironment.RANDOM_PORT;
 
@@ -68,7 +73,7 @@ public class WiremockAuthenticatedPaymentE2EXs2aProtocolTest extends SpringScena
                 .fintech_calls_initiate_payment_for_anton_brueckner();
 
         then()
-            .user_logged_in_into_opba_as_anonymous_user_with_credentials_using_fintech_supplied_url_is_forbidden();
+                .user_logged_in_into_opba_as_anonymous_user_with_credentials_using_fintech_supplied_url_is_forbidden();
     }
 
     @ParameterizedTest
@@ -121,6 +126,33 @@ public class WiremockAuthenticatedPaymentE2EXs2aProtocolTest extends SpringScena
                 .open_banking_has_stored_payment()
                 .fintech_calls_payment_activation_for_current_authorization_id()
                 .fintech_calls_payment_status();
+    }
+
+
+    @ParameterizedTest
+    @EnumSource(Approach.class)
+    void testConsorsBankPaymentInitializationUsingRedirectWithTppRedirectPreferredTrue(Approach expectedApproach) {
+        given()
+                .redirect_mock_of_consorsbank_for_anton_brueckner_payments_running()
+                .set_tpp_redirect_preferred_true()
+                .preferred_sca_approach_selected_for_all_banks_in_opba(expectedApproach)
+                .rest_assured_points_to_opba_server_with_fintech_signer_on_banking_api()
+                .user_registered_in_opba_with_credentials(OPBA_LOGIN, OPBA_PASSWORD);
+
+        when()
+                .fintech_calls_initiate_payment_for_anton_brueckner(CONSORS_BANK_BANK_PROFILE_ID)
+                .and()
+                .user_logged_in_into_opba_pis_as_opba_user_with_credentials_using_fintech_supplied_url(OPBA_LOGIN, OPBA_PASSWORD)
+                .and()
+                .user_anton_brueckner_provided_initial_parameters_to_authorize_initiation_payment()
+                .and()
+                .user_anton_brueckner_sees_that_he_needs_to_be_redirected_to_aspsp_and_redirects_to_aspsp(CONSORS_BANK_BANK_PROFILE_ID)
+                .and()
+                .open_banking_redirect_from_aspsp_ok_webhook_called_for_api_test();
+        then()
+                .open_banking_has_stored_payment()
+                .fintech_calls_payment_activation_for_current_authorization_id()
+                .fintech_calls_payment_status(CONSORS_BANK_BANK_PROFILE_ID);
     }
 
 
@@ -286,6 +318,56 @@ public class WiremockAuthenticatedPaymentE2EXs2aProtocolTest extends SpringScena
                 .fintech_calls_payment_status();
     }
 
+    @Test
+    void testDkbPaymentInitializationUsingEmbedded() {
+        given()
+                .embedded_pre_step_mock_of_dkb_for_max_musterman_payments_running()
+                .rest_assured_points_to_opba_server_with_fintech_signer_on_banking_api()
+                .user_registered_in_opba_with_credentials(OPBA_LOGIN, OPBA_PASSWORD);
+
+        when()
+                .fintech_calls_initiate_payment_for_max_musterman(DKB_BANK_PROFILE_ID)
+                .and()
+                .user_logged_in_into_opba_pis_as_opba_user_with_credentials_using_fintech_supplied_url(OPBA_LOGIN, OPBA_PASSWORD)
+                .and()
+                .user_max_musterman_provided_initial_parameters_to_make_payment()
+                .and()
+                .user_max_musterman_provided_password_to_embedded_authorization()
+                .and()
+                .user_max_musterman_selected_sca_challenge_type_push_otp_to_embedded_authorization()
+                .and()
+                .user_max_musterman_provided_sca_challenge_result_to_embedded_authorization_and_sees_redirect_to_fintech_ok("/PUSH_OTP");
+        then()
+                .open_banking_has_stored_payment()
+                .fintech_calls_payment_activation_for_current_authorization_id()
+                .fintech_calls_payment_status(DKB_BANK_PROFILE_ID, TransactionStatus.ACCP.name());
+    }
+
+    @Test
+    void testPostbankPaymentInitializationUsingEmbedded() {
+        given()
+                .embedded_pre_step_mock_of_postbank_for_max_musterman_payments_running()
+                .rest_assured_points_to_opba_server_with_fintech_signer_on_banking_api()
+                .user_registered_in_opba_with_credentials(OPBA_LOGIN, OPBA_PASSWORD);
+
+        when()
+                .fintech_calls_initiate_payment_for_max_musterman(POSTBANK_BANK_PROFILE_ID)
+                .and()
+                .user_logged_in_into_opba_pis_as_opba_user_with_credentials_using_fintech_supplied_url(OPBA_LOGIN, OPBA_PASSWORD)
+                .and()
+                .user_max_musterman_provided_initial_parameters_to_make_payment()
+                .and()
+                .user_max_musterman_provided_password_to_embedded_authorization()
+                .and()
+                .user_max_musterman_selected_sca_challenge_type_push_otp_to_embedded_authorization()
+                .and()
+                .user_max_musterman_provided_sca_challenge_result_to_embedded_authorization_and_sees_redirect_to_fintech_ok("/PUSH_OTP");
+        then()
+                .open_banking_has_stored_payment()
+                .fintech_calls_payment_activation_for_current_authorization_id()
+                .fintech_calls_payment_status(POSTBANK_BANK_PROFILE_ID, TransactionStatus.ACTC.name());
+    }
+
     @ParameterizedTest
     @EnumSource(Approach.class)
     void testPaymentInitializationUsingEmbeddedWithPhotoOtp(Approach expectedApproach) {
@@ -310,6 +392,33 @@ public class WiremockAuthenticatedPaymentE2EXs2aProtocolTest extends SpringScena
                 .ui_can_read_image_data_from_obg(OPBA_LOGIN)
                 .and()
                 .user_max_musterman_provided_sca_challenge_result_to_embedded_authorization_and_sees_redirect_to_fintech_ok("/PHOTO_OTP");
+        then()
+                .open_banking_has_stored_payment()
+                .fintech_calls_payment_activation_for_current_authorization_id()
+                .fintech_calls_payment_status();
+    }
+
+    @ParameterizedTest
+    @EnumSource(Approach.class)
+    void testPaymentInitializationUsingOneScaEmbedded(Approach expectedApproach) {
+        given()
+                .embedded_mock_of_sandbox_for_anton_brueckner_payments_running()
+                .set_default_preferred_approach()
+                .preferred_sca_approach_selected_for_all_banks_in_opba(expectedApproach)
+                .rest_assured_points_to_opba_server_with_fintech_signer_on_banking_api()
+                .user_registered_in_opba_with_credentials(OPBA_LOGIN, OPBA_PASSWORD);
+
+        when()
+                .fintech_calls_initiate_payment_for_anton_brueckner()
+                .and()
+                .user_logged_in_into_opba_pis_as_opba_user_with_credentials_using_fintech_supplied_url(OPBA_LOGIN, OPBA_PASSWORD)
+                .and()
+                .user_anton_brueckner_provided_initial_parameters_to_make_payment()
+                .and()
+                .user_anton_brueckner_provided_password_to_embedded_authorization()
+                .and()
+                .user_max_musterman_provided_sca_challenge_result_to_embedded_authorization_and_sees_redirect_to_fintech_ok();
+
         then()
                 .open_banking_has_stored_payment()
                 .fintech_calls_payment_activation_for_current_authorization_id()
@@ -384,6 +493,31 @@ public class WiremockAuthenticatedPaymentE2EXs2aProtocolTest extends SpringScena
 
         when()
                 .fintech_calls_initiate_payment_for_anton_brueckner()
+                .and()
+                .user_logged_in_into_opba_pis_as_opba_user_with_credentials_using_fintech_supplied_url(OPBA_LOGIN, OPBA_PASSWORD)
+                .and()
+                .user_anton_brueckner_provided_initial_parameters_to_authorize_initiation_payment()
+                .and()
+                .user_anton_brueckner_sees_that_he_needs_to_be_redirected_to_aspsp_and_redirects_to_aspsp()
+                .and()
+                .open_banking_redirect_from_aspsp_with_static_oauth2_code_to_exchange_to_token(PIS_OAUTH2_CODE);
+        then()
+                .open_banking_has_stored_payment()
+                .fintech_calls_payment_activation_for_current_authorization_id()
+                .fintech_calls_payment_status();
+    }
+
+
+    @Test
+    void testSantanderPaymentInitializationUsingOAuth2Integrated(@TempDir Path tempDir) {
+        given()
+                .oauth2_integrated_mock_of_santander_for_anton_brueckner_payments_running(tempDir)
+                .preferred_sca_approach_selected_for_all_banks_in_opba(Approach.REDIRECT)
+                .rest_assured_points_to_opba_server_with_fintech_signer_on_banking_api()
+                .user_registered_in_opba_with_credentials(OPBA_LOGIN, OPBA_PASSWORD);
+
+        when()
+                .fintech_calls_initiate_payment_for_anton_brueckner(SANTANDER_BANK_PROFILE_ID)
                 .and()
                 .user_logged_in_into_opba_pis_as_opba_user_with_credentials_using_fintech_supplied_url(OPBA_LOGIN, OPBA_PASSWORD)
                 .and()

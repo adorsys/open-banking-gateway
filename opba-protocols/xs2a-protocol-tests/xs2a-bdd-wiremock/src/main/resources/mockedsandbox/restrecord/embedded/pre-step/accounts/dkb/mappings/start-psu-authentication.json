@@ -1,0 +1,47 @@
+{
+  "scenarioName": "AccountsListUsingDkbEmbeddedPreStep",
+  "requiredScenarioState": "CreateConsent",
+  "newScenarioState": "PsuAuthorisationStarted",
+  "priority": 5,
+  "request" : {
+    "url": "/v1/consents/VALID_CONSENT_ID/authorisations",
+    "method" : "POST",
+    "headers" : {
+      "X-GTW-ASPSP-ID" : {
+        "equalTo": "83c24dcf-2cfb-4c43-9812-013e32ab53b1"
+      },
+      "X-Request-ID" : {
+        "matches" : ".+"
+      },
+      "PSU-ID" : {
+        "matches" : "max.musterman"
+      },
+      "PSD2-AUTHORIZATION": {
+        "equalTo": "Bearer VALID_TOKEN"
+      }
+    },
+    "bodyPatterns" : [ {
+      "equalToJson" : "{}",
+      "ignoreArrayOrder" : true,
+      "ignoreExtraElements" : true
+    } ]
+  },
+  "response" : {
+    "status" : 201,
+    "bodyFileName": "start-psu-authentication-response-body.json",
+    "headers" : {
+      "Date" : "Mon, 05 Jul 2021 11:59:59 GMT",
+      "Server" : "Apache",
+      "Content-Type" : "application/json; charset=utf-8",
+      "ASPSP-SCA-Approach" : "EMBEDDED",
+      "X-Request-ID" : "665a5b2c-c020-4fd5-8082-b34995c5b600",
+      "Location" : "/v1/consents/VALID_CONSENT_ID/authorisations/123456",
+      "Strict-Transport-Security" : "max-age=31536000",
+      "X-Content-Type-Options" : "nosniff",
+      "Keep-Alive" : "timeout=15, max=100"
+    }
+  },
+  "uuid" : "182237c0-2a86-4433-8bb4-53f4f5616b04",
+  "persistent" : true,
+  "insertionIndex" : 2
+}

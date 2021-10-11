@@ -16,6 +16,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.util.Map;
+import java.util.Objects;
 import java.util.concurrent.CompletableFuture;
 
 import static de.adorsys.opba.protocol.api.dto.parameters.ScaConst.PSU_PASSWORD;
@@ -84,10 +85,13 @@ public class Xs2aUpdateAuthorization implements UpdateAuthorization {
 
         if (null != scaChallenges.get(SCA_CHALLENGE_ID)) {
             context.setUserSelectScaId(scaChallenges.get(SCA_CHALLENGE_ID));
-            context.setSelectedScaType(context.getAvailableSca().stream()
-                    .filter(it -> context.getUserSelectScaId().equals(it.getKey()))
-                    .map(ScaMethod::getType)
-                    .findFirst().orElse(null));
+            context.setSelectedScaType(context.getAvailableSca().stream().filter(it ->
+                            context.getUserSelectScaId().equals(it.getKey()))
+                            .map(ScaMethod::getType)
+                            .filter(Objects::nonNull)
+                            .findFirst()
+                            .orElse(null)
+            );
         }
     }
 }

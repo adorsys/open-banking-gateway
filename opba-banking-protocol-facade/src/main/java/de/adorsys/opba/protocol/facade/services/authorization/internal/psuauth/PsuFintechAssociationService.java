@@ -12,7 +12,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.EntityManager;
-import java.security.PrivateKey;
 import java.security.PublicKey;
 import java.util.UUID;
 
@@ -28,7 +27,7 @@ public class PsuFintechAssociationService {
 
     @Transactional
     public void sharePsuAspspSecretKeyWithFintech(String psuPassword, AuthSession session) {
-        PrivateKey psuAspspKey = psuVault.getOrCreateKeyFromPrivateForAspsp(
+        var psuAspspKey = psuVault.getOrCreateKeyFromPrivateForAspsp(
                 psuPassword::toCharArray,
                 session,
                 this::storePublicKey
@@ -39,7 +38,7 @@ public class PsuFintechAssociationService {
 
     @Transactional
     public void shareAnonymousUserSecretKeyWithFintech(String psuPassword, AuthSession session) {
-        PrivateKey psuAspspKey = psuVault.getOrCreateKeyFromPrivateForAspsp(
+        var psuAspspKey = psuVault.getOrCreateKeyFromPrivateForAspsp(
                 psuPassword::toCharArray,
                 session,
                 this::storePublicKey

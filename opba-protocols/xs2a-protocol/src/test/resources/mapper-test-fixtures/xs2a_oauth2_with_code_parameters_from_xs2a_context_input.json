@@ -1,0 +1,41 @@
+{
+  "psuId": "1111-1111",
+  "contentType": "application/json",
+  "psuIpAddress": "1.1.1.1",
+  "aspspScaApproach": "sms",
+  "startScaProcessResponse": null,
+  "consentId": "2222-2222",
+  "authorizationId": "3333-3333",
+  "scaStatus": "started",
+  "availableSca": [],
+  "userSelectScaId": "4444-4444",
+  "scaSelected": {
+    "authenticationType": "sms",
+    "authenticationVersion": "1.0",
+    "authenticationMethodId": "SCA_SMS",
+    "name": "mobile",
+    "explanation": "Authentication via mobile phone"
+  },
+  "lastScaChallenge": "test last sca challenge",
+  "psuPassword": "1234",
+  "redirectUriOk": "http://localhost:5500/from-aspsp/v1/consent/c86feb1e-9ba8-4407-918f-8183143df295/fromAspsp/STUB_STATE/ok?redirectCode=a5001521-edd8-4d99-b72d-30670b839d06",
+  "redirectUriNok": "http://localhost:5500/from-aspsp/v1/consent/c86feb1e-9ba8-4407-918f-8183143df295/fromAspsp/STUB_STATE/nok?redirectCode=a5001521-edd8-4d99-b72d-30670b839d06",
+  "redirectConsentOk": false,
+  "mode": "MOCK_REAL_CALLS",
+  "aspspId": "53c47f54-b9a4-465a-8f77-bc6cd5f0cf46",
+  "action": "LIST_ACCOUNTS",
+  "flowByAction": {
+    "LIST_ACCOUNTS": "xs2a-list-accounts",
+    "LIST_TRANSACTIONS": "xs2a-list-transactions",
+    "SINGLE_PAYMENT": "xs2a-single-payments"
+  },
+  "sagaId": "d02f7f97-6780-11ea-9989-acde48001122",
+  "serviceSessionId": "0b28b549-de36-4b67-8ef0-ca3f5acd19bb",
+  "authorizationSessionIdIfOpened": "0b28b549-de36-4b67-8ef0-ca3f5acd19bb",
+  "redirectCodeIfAuthContinued": "29aec65a-6a14-46b7-91e3-220e086ebc03",
+  "aspspRedirectCode": "8c357bc0-b120-4551-b346-7e335db318c3",
+  "violations": [],
+  "lastRedirection": null,
+  "oauth2Code": "Oauth2-code",
+  "oauth2RedirectBackLink": "http://example.com/back"
+}

@@ -1,0 +1,9 @@
+version: "3.3"
+services:
+  wiremock:
+    image: "rodolpheche/wiremock"
+    ports:
+      - "18080:8080"
+    volumes:
+      - ${WIREMOCK_STUBS_DIR}:/home/wiremock
+

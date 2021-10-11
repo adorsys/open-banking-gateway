@@ -63,7 +63,7 @@ public class HbciSandboxPaymentService {
         if (null != payment.getRemittanceUnstructured() && payment.getRemittanceUnstructured().contains(MAGIC_FLAG_TO_ACCEPT_PAYMENT_IMMEDIATELY)) {
             payment.setStatus(PaymentStatus.ACSC); // save not needed as is managed entity
         } else {
-            payment.setStatus(PaymentStatus.PDNG); // save not needed as is managed entity
+            payment.setStatus(PaymentStatus.ACTC); // save not needed as is managed entity
         }
     }
 
@@ -77,7 +77,7 @@ public class HbciSandboxPaymentService {
     @Transactional
     @Scheduled(fixedDelayString = "${hbci.payment-schedule}")
     public void acceptPayments() {
-        paymentRepository.findByStatus(PaymentStatus.PDNG).forEach(it -> {
+        paymentRepository.findByStatus(PaymentStatus.ACTC).forEach(it -> {
             it.setStatus(PaymentStatus.ACSC); // save not needed as is managed entity
         });
     }

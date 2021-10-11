@@ -10,7 +10,7 @@ import de.adorsys.opba.db.domain.entity.psu.Psu;
 import de.adorsys.opba.db.repository.jpa.psu.PsuRepository;
 import de.adorsys.opba.protocol.facade.config.auth.FacadeAuthConfig;
 import de.adorsys.opba.protocol.facade.config.encryption.impl.psu.PsuSecureStorage;
-import de.adorsys.opba.protocol.facade.services.authorization.PsuLoginForAisService;
+import de.adorsys.opba.protocol.facade.services.authorization.PsuLoginService;
 import de.adorsys.opba.protocol.facade.services.psu.PsuAuthService;
 import de.adorsys.opba.tppauthapi.config.ApplicationTest;
 import de.adorsys.opba.tppauthapi.model.generated.PsuAuthBody;
@@ -32,6 +32,7 @@ import static de.adorsys.opba.restapi.shared.HttpHeaders.X_REQUEST_ID;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
 import static org.springframework.http.MediaType.APPLICATION_JSON;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.asyncDispatch;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.header;
@@ -56,7 +57,7 @@ public class PsuAuthControllerTest {
     private PsuSecureStorage psuSecureStorage;
     @MockBean
     @SuppressWarnings("PMD.UnusedPrivateField") // Injecting into Spring context
-    private PsuLoginForAisService psuLoginForAisService;
+    private PsuLoginService psuLoginService;
     @MockBean
     private PsuAuthService psuAuthService;
     @MockBean
@@ -97,14 +98,16 @@ public class PsuAuthControllerTest {
         );
 
         String xRequestId = UUID.randomUUID().toString();
-        mockMvc.perform(post(TPP_AUTH_API_REGISTRATION_URL)
+        var result = mockMvc.perform(post(TPP_AUTH_API_REGISTRATION_URL)
                 .header(X_REQUEST_ID, xRequestId)
                 .content(new Gson().toJson(getPsuAuthBody()))
                 .contentType(APPLICATION_JSON))
+                .andReturn();
+
+        mockMvc.perform(asyncDispatch(result))
                 .andExpect(status().isCreated())
                 .andExpect(header().string("Location", REDIRECT_TO))
-                .andDo(print())
-                .andReturn();
+                .andDo(print());
     }
 
     @Test
@@ -114,10 +117,13 @@ public class PsuAuthControllerTest {
         when(privateSpace.read(any())).thenReturn(null);
 
         String xRequestId = UUID.randomUUID().toString();
-        mockMvc.perform(post(TPP_AUTH_API_LOGIN_URL)
+        var result = mockMvc.perform(post(TPP_AUTH_API_LOGIN_URL)
                 .header(X_REQUEST_ID, xRequestId)
                 .content(new Gson().toJson(getPsuAuthBody()))
                 .contentType(APPLICATION_JSON))
+                .andReturn();
+
+        mockMvc.perform(asyncDispatch(result))
                 .andExpect(status().isAccepted())
                 .andExpect(header().exists("Set-Cookie"))
                 .andDo(print())

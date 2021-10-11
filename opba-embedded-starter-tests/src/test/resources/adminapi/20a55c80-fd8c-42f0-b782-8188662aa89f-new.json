@@ -5,7 +5,8 @@
     "bic": "ADORSYS+HA",
     "bankCode": "10000001"
   },
-  "profile": {
+  "profiles": [{
+    "uuid": "701bfd5d-f47a-460b-a038-2d440b2bc3ad",
     "url": "http://localhost:8090/hbci-mock/2",
     "adapterId": "hbci-adapter",
     "preferredApproach": "REDIRECT",
@@ -30,7 +31,7 @@
             "subProtocolBeanName": "hbciUpdateAuthorization-1345"
           },
           {
-            "protocolAction": "from-aspsp",
+            "protocolAction": "from-aspsp-redirect",
             "subProtocolBeanName": "hbciFromAspspRedirect-888"
           }
         ]
@@ -39,5 +40,5 @@
     "bankCode": "10000001",
     "bic": "ADORSYS+HA",
     "name": "adorsys HBCI no SCA-222"
-  }
+  }]
 }
