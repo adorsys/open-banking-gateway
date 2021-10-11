@@ -1,0 +1,42 @@
+{
+  "scenarioName": "AccountsListUsingDkbEmbeddedPreStep",
+  "priority": 5,
+  "newScenarioState": "Authenticated",
+  "request" : {
+    "urlPattern": ".*/pre-auth/psd2-auth/v1/auth/token",
+    "method" : "POST",
+    "headers" : {
+      "Content-Type" : {
+        "equalTo" : "application/json"
+      }
+    },
+    "bodyPatterns" : [
+      {
+        "equalToJson": "{\"username\":\"max.musterman\",\"password\":\"12345\"}",
+        "ignoreArrayOrder": true,
+        "ignoreExtraElements": true
+      }
+    ]
+  },
+  "response" : {
+    "status" : 201,
+    "body" : "{\n  \"returnCode\":\"CORRECT\",\n  \"accessToken\":\"VALID_TOKEN\"\n}",
+    "headers" : {
+      "Server" : "nginx",
+      "Date" : "Mon, 05 Jul 2021 11:59:59 GMT",
+      "Content-Type" : "application/json;charset=UTF-8",
+      "Strict-Transport-Security" : [ "max-age=31536000 ; includeSubDomains", "max-age=15768000; includeSubDomains" ],
+      "X-Content-Type-Options" : "nosniff",
+      "X-XSS-Protection" : "1; mode=block",
+      "Pragma" : "no-cache",
+      "Expires" : "0",
+      "X-Frame-Options" : "DENY",
+      "Cache-Control" : "no-store, no-cache",
+      "Content-Security-Policy" : "default-src 'self'; script-src 'self' 'unsafe-eval'; img-src 'self'; style-src 'self' 'unsafe-inline' https://*.googleapis.com; font-src 'self' https://*.gstatic.com; object-src 'none'",
+      "Referrer-Policy" : "strict-origin"
+    }
+  },
+  "uuid" : "eeda0067-864c-4f53-905b-754165fd4d3d",
+  "persistent" : true,
+  "insertionIndex" : 31
+}

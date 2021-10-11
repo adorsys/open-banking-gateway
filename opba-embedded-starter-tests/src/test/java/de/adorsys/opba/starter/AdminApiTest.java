@@ -35,7 +35,7 @@ import static org.springframework.http.HttpHeaders.AUTHORIZATION;
 @SpringBootTest(classes = {OpenBankingEmbeddedApplication.class, FintechRequestSigningTestConfig.class}, webEnvironment = RANDOM_PORT)
 class AdminApiTest {
 
-    private static final String ADMIN_API = "/admin/";
+    private static final String ADMIN_API = "/admin/v1/";
     private static final String BASIC_AUTH = "Basic QWxhZGRpbjpPcGVuU2VzYW1l";
 
     @LocalServerPort
@@ -60,20 +60,20 @@ class AdminApiTest {
                     .body("size", equalTo(20))
                     .body("number", equalTo(0))
                     .body("totalElements", greaterThan(0))
-                    .body("content.uuid", hasItem(hasToString("918d80fa-f7fd-4c9f-a6bd-7a9e12aeee76")));
+                    .body("content.uuid", hasItem(hasToString("adadadad-1000-0000-0000-b0b0b0b0b0b0")));
     }
 
     @Test
     void getAdminBanksById() throws Exception {
         String body = withBasic
-                    .get(ADMIN_API + "banks/918d80fa-f7fd-4c9f-a6bd-7a9e12aeee76")
+                    .get(ADMIN_API + "banks/adadadad-1000-0000-0000-b0b0b0b0b0b0")
                 .then()
                     .statusCode(HttpStatus.OK.value())
                     .extract()
                     .body()
                     .asString();
 
-        JSONAssert.assertEquals(fixture("918d80fa-f7fd-4c9f-a6bd-7a9e12aeee76"), body, JSONCompareMode.LENIENT);
+        JSONAssert.assertEquals(fixture("adadadad-1000-0000-0000-b0b0b0b0b0b0"), body, JSONCompareMode.LENIENT);
     }
 
     @SneakyThrows

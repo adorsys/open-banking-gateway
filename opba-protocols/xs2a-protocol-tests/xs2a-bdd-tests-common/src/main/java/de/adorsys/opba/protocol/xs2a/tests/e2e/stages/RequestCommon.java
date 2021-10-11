@@ -4,6 +4,7 @@ import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import com.google.common.collect.ImmutableMap;
+import com.jayway.jsonpath.JsonPath;
 import com.tngtech.jgiven.Stage;
 import com.tngtech.jgiven.annotation.ProvidedScenarioState;
 import com.tngtech.jgiven.annotation.ScenarioState;
@@ -22,6 +23,7 @@ import io.restassured.response.Response;
 import lombok.Getter;
 import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
+import org.assertj.core.util.Strings;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -38,9 +40,9 @@ import static de.adorsys.opba.protocol.xs2a.tests.e2e.stages.StagesCommonUtil.AU
 import static de.adorsys.opba.protocol.xs2a.tests.e2e.stages.StagesCommonUtil.GET_CONSENT_AUTH_STATE;
 import static de.adorsys.opba.protocol.xs2a.tests.e2e.stages.StagesCommonUtil.LOGIN;
 import static de.adorsys.opba.protocol.xs2a.tests.e2e.stages.StagesCommonUtil.PASSWORD;
-import static de.adorsys.opba.restapi.shared.HttpHeaders.REDIRECT_CODE;
 import static de.adorsys.opba.restapi.shared.HttpHeaders.SERVICE_SESSION_ID;
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.springframework.http.HttpStatus.ACCEPTED;
 
 @Slf4j
 @JGivenStage
@@ -53,6 +55,7 @@ public abstract class RequestCommon<SELF extends RequestCommon<SELF>> extends St
                .enable(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES);
 
     public static final String REDIRECT_CODE_QUERY = "redirectCode";
+    public static final String X_XSRF_TOKEN_QUERY = "xXsrfToken";
 
     @ProvidedScenarioState
     protected String authSessionCookie;
@@ -106,10 +109,28 @@ public abstract class RequestCommon<SELF extends RequestCommon<SELF>> extends St
             .when()
                 .post(path, serviceSessionId)
             .then()
-                .statusCode(HttpStatus.ACCEPTED.value())
+                .statusCode(ACCEPTED.value())
                 .extract();
 
         this.authSessionCookie = response.cookie(AUTHORIZATION_SESSION_KEY);
+        return self();
+    }
+
+    public SELF user_max_musterman_polling_api_to_check_sca_status(HttpStatus httpStatus, String expectedConsentStatus) {
+        return user_max_musterman_polling_api_to_check_sca_status(httpStatus, expectedConsentStatus, serviceSessionId);
+    }
+
+    public SELF user_max_musterman_polling_api_to_check_payment_sca_status(HttpStatus httpStatus, String expectedConsentStatus) {
+        return user_max_musterman_polling_api_to_check_sca_status(httpStatus, expectedConsentStatus, paymentServiceSessionId);
+    }
+
+    public SELF fintech_calls_ais_authorization_session_state(String expectedSessionState, String expectedAuthSessionState) {
+        RequestStatusUtil.fintechCallsAisAuthorizationSessionState(expectedSessionState, expectedAuthSessionState, serviceSessionId);
+        return self();
+    }
+
+    public SELF fintech_calls_pis_authorization_session_state(String expectedSessionState, String expectedAuthSessionState) {
+        RequestStatusUtil.fintechCallsAisAuthorizationSessionState(expectedSessionState, expectedAuthSessionState, paymentServiceSessionId);
         return self();
     }
 
@@ -117,7 +138,7 @@ public abstract class RequestCommon<SELF extends RequestCommon<SELF>> extends St
         return provideParametersToBankingProtocolWithBody(
                 AUTHORIZE_CONSENT_ENDPOINT,
                 readResource("restrecord/tpp-ui-input/params/max-musterman-sca-challenge-result.json"),
-                HttpStatus.ACCEPTED
+                ACCEPTED
         );
     }
 
@@ -125,19 +146,29 @@ public abstract class RequestCommon<SELF extends RequestCommon<SELF>> extends St
         return provideParametersToBankingProtocolWithBody(
                 AUTHORIZE_CONSENT_ENDPOINT,
                 readResource("restrecord/tpp-ui-input/params/new-user-sca-challenge-result.json"),
-                HttpStatus.ACCEPTED
+                ACCEPTED
         );
     }
 
     protected abstract ExtractableResponse<Response> provideParametersToBankingProtocolWithBody(String uriPath, String body, HttpStatus status);
 
     protected ExtractableResponse<Response> provideParametersToBankingProtocolWithBody(String uriPath, String body, HttpStatus status, String serviceSessionId) {
-        ExtractableResponse<Response> response = RestAssured
+        ExtractableResponse<Response> response = consentApiPost(uriPath, body, status, serviceSessionId);
+
+        this.responseContent = response.body().asString();
+        this.redirectUriToGetUserParams = LocationExtractorUtil.getLocation(response);
+        updateRedirectCode(response);
+        return response;
+    }
+
+    protected ExtractableResponse<Response> consentApiPost(String uriPath, String body, HttpStatus status, String serviceSessionId) {
+        return RestAssured
             .given()
                 .header(X_REQUEST_ID, UUID.randomUUID().toString())
                 .header(X_XSRF_TOKEN, UUID.randomUUID().toString())
                 .cookie(AUTHORIZATION_SESSION_KEY, authSessionCookie)
                 .queryParam(REDIRECT_CODE_QUERY, redirectCode)
+                .queryParam(X_XSRF_TOKEN_QUERY, redirectCode)
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
                 .body(body)
             .when()
@@ -145,11 +176,6 @@ public abstract class RequestCommon<SELF extends RequestCommon<SELF>> extends St
             .then()
                 .statusCode(status.value())
                 .extract();
-
-        this.responseContent = response.body().asString();
-        this.redirectUriToGetUserParams = LocationExtractorUtil.getLocation(response);
-        updateRedirectCode(response);
-        return response;
     }
 
     protected ExtractableResponse<Response> startInitialInternalConsentAuthorization(String uriPath, String resourceData, HttpStatus status) {
@@ -160,7 +186,7 @@ public abstract class RequestCommon<SELF extends RequestCommon<SELF>> extends St
 
     protected void startInitialInternalConsentAuthorizationWithCookieValidation(String uriPath, String resourceData) {
         ExtractableResponse<Response> response =
-                startInitialInternalConsentAuthorization(uriPath, resourceData, HttpStatus.ACCEPTED);
+                startInitialInternalConsentAuthorization(uriPath, resourceData, ACCEPTED);
         Cookie detailedCookie = response.response().getDetailedCookie(AUTHORIZATION_SESSION_KEY);
 
         assertThat(detailedCookie.getMaxAge()).isEqualTo(cookieProperties.getRedirectMaxAge().getSeconds());
@@ -168,6 +194,17 @@ public abstract class RequestCommon<SELF extends RequestCommon<SELF>> extends St
 
         updateServiceSessionId(response);
         updateRedirectCode(response);
+    }
+
+    protected SELF user_max_musterman_polling_api_to_check_sca_status(HttpStatus httpStatus, String expectedConsentStatus, String sessionId) {
+        ExtractableResponse<Response> response = consentApiPost(AUTHORIZE_CONSENT_ENDPOINT, "{}", httpStatus, sessionId);
+        this.responseContent = response.body().asString();
+        updateRedirectCodeIfAvailable(response);
+        this.redirectUriToGetUserParams = httpStatus == ACCEPTED ? LocationExtractorUtil.getLocation(response) : this.redirectUriToGetUserParams;
+        if (null != expectedConsentStatus) {
+            assertThat(JsonPath.parse(responseContent).read("scaStatus", String.class)).isEqualTo(expectedConsentStatus);
+        }
+        return self();
     }
 
     protected void updateNextConsentAuthorizationUrl(ExtractableResponse<Response> response) {
@@ -179,13 +216,24 @@ public abstract class RequestCommon<SELF extends RequestCommon<SELF>> extends St
     }
 
     protected void updateRedirectCode(ExtractableResponse<Response> response) {
-        this.redirectCode = response.header(REDIRECT_CODE);
+        this.redirectCode = response.header(X_XSRF_TOKEN);
+    }
+
+    protected void updateRedirectCodeIfAvailable(ExtractableResponse<Response> response) {
+        this.redirectCode = Strings.isNullOrEmpty(response.header(X_XSRF_TOKEN)) ? this.redirectCode : response.header(X_XSRF_TOKEN);
     }
 
     protected ExtractableResponse<Response> max_musterman_provides_password() {
         return startInitialInternalConsentAuthorization(
                 AUTHORIZE_CONSENT_ENDPOINT,
                 readResource("restrecord/tpp-ui-input/params/max-musterman-password.json")
+        );
+    }
+
+    protected ExtractableResponse<Response> anton_brueckner_provides_password() {
+        return startInitialInternalConsentAuthorization(
+                AUTHORIZE_CONSENT_ENDPOINT,
+                readResource("restrecord/tpp-ui-input/params/anton-brueckner-password.json")
         );
     }
 
@@ -199,9 +247,7 @@ public abstract class RequestCommon<SELF extends RequestCommon<SELF>> extends St
     @SneakyThrows
     protected void updateAvailableScas() {
         ExtractableResponse<Response> response = provideGetConsentAuthStateRequest();
-        ConsentAuth parsedValue = JSON_MAPPER
-                .readValue(response.body().asString(), ConsentAuth.class);
-
+        ConsentAuth parsedValue = JSON_MAPPER.readValue(response.body().asString(), ConsentAuth.class);
         this.availableScas = parsedValue.getScaMethods();
         updateRedirectCode(response);
     }
@@ -224,7 +270,7 @@ public abstract class RequestCommon<SELF extends RequestCommon<SELF>> extends St
                 .header(X_REQUEST_ID, UUID.randomUUID().toString())
                 .header(X_XSRF_TOKEN, UUID.randomUUID().toString())
                 .cookie(AUTHORIZATION_SESSION_KEY, authSessionCookie)
-                .queryParam(REDIRECT_CODE_QUERY, redirectCode)
+                .queryParam(X_XSRF_TOKEN_QUERY, redirectCode)
             .when()
                 .get(GET_CONSENT_AUTH_STATE, serviceSessionId)
                 .then()

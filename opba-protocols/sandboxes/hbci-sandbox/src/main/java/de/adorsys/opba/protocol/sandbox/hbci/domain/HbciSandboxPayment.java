@@ -65,18 +65,18 @@ public class HbciSandboxPayment {
     @LastModifiedDate
     private Instant modifiedAt;
 
-    @SuppressWarnings("checkstyle:MagicNumber") // It is magic number mapped to enum
+    @SuppressWarnings("checkstyle:MagicNumber") // It is magic number mapped to enum (see InstantPaymentStatusJob class of multibanking)
     public int getHbciStatus() {
         switch (getStatus()) {
             case CANC:
                 return 1;
             case RJCT:
                 return 2;
-            case PDNG:
+            case ACTC:
                 return 3;
-            case ACCC:
-                return 4;
             case ACSC:
+                return 4;
+            case ACCC:
                 return 7;
             default:
                 throw new IllegalStateException("Unmappable payment status: " + getStatus());

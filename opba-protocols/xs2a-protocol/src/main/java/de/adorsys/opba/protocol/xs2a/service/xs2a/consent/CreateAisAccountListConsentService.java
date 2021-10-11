@@ -1,20 +1,18 @@
 package de.adorsys.opba.protocol.xs2a.service.xs2a.consent;
 
 import de.adorsys.opba.protocol.bpmnshared.service.context.ContextUtil;
-import de.adorsys.opba.protocol.bpmnshared.service.exec.ValidatedExecution;
 import de.adorsys.opba.protocol.xs2a.config.protocol.ProtocolUrlsConfiguration;
 import de.adorsys.opba.protocol.xs2a.context.ais.AccountListXs2aContext;
-import de.adorsys.opba.protocol.xs2a.service.dto.ValidatedHeadersBody;
+import de.adorsys.opba.protocol.xs2a.service.dto.ValidatedPathHeadersBody;
 import de.adorsys.opba.protocol.xs2a.service.xs2a.dto.consent.ConsentInitiateHeaders;
+import de.adorsys.opba.protocol.xs2a.service.xs2a.dto.consent.ConsentInitiateParameters;
 import de.adorsys.opba.protocol.xs2a.service.xs2a.validation.Xs2aValidator;
-import de.adorsys.xs2a.adapter.service.AccountInformationService;
-import de.adorsys.xs2a.adapter.service.model.Consents;
+import de.adorsys.xs2a.adapter.api.AccountInformationService;
+import de.adorsys.xs2a.adapter.api.model.Consents;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.flowable.engine.delegate.DelegateExecution;
 import org.springframework.stereotype.Service;
-
-import java.util.UUID;
 
 import static de.adorsys.opba.protocol.xs2a.constant.GlobalConst.CONTEXT;
 
@@ -25,7 +23,7 @@ import static de.adorsys.opba.protocol.xs2a.constant.GlobalConst.CONTEXT;
 @Slf4j
 @Service("xs2aAccountListConsentInitiate")
 @RequiredArgsConstructor
-public class CreateAisAccountListConsentService extends ValidatedExecution<AccountListXs2aContext> {
+public class CreateAisAccountListConsentService extends BaseCreateAisConsentService<AccountListXs2aContext> {
 
     private final AisConsentInitiateExtractor extractor;
     private final AccountInformationService ais;
@@ -33,7 +31,6 @@ public class CreateAisAccountListConsentService extends ValidatedExecution<Accou
     private final ProtocolUrlsConfiguration urlsConfiguration;
     private final CreateConsentOrPaymentPossibleErrorHandler handler;
     private final CreateAisConsentService createAisConsentService;
-
 
     @Override
     protected void doPrepareContext(DelegateExecution execution, AccountListXs2aContext context) {
@@ -47,18 +44,23 @@ public class CreateAisAccountListConsentService extends ValidatedExecution<Accou
 
     @Override
     protected void doValidate(DelegateExecution execution, AccountListXs2aContext context) {
+        logResolver.log("doValidate: execution ({}) with context ({})", execution, context);
+
         validator.validate(execution, context, this.getClass(), extractor.forValidation(context));
     }
 
     @Override
     protected void doRealExecution(DelegateExecution execution, AccountListXs2aContext context) {
-        ValidatedHeadersBody<ConsentInitiateHeaders, Consents> params = extractor.forExecution(context);
-        handler.tryCreateAndHandleErrors(execution, () -> createAisConsentService.createConsent(ais, execution, context, params));
-    }
+        logResolver.log("doRealExecution: execution ({}) with context ({})", execution, context);
 
-    @Override
-    protected void doMockedExecution(DelegateExecution execution, AccountListXs2aContext context) {
-        context.setConsentId("MOCK-" + UUID.randomUUID().toString());
-        execution.setVariable(CONTEXT, context);
+        ValidatedPathHeadersBody<ConsentInitiateParameters, ConsentInitiateHeaders, Consents> params = extractor.forExecution(context);
+        var result = handler.tryCreateAndHandleErrors(execution, () -> createAisConsentService.createConsent(ais, context, params));
+        if (null == result) {
+            execution.setVariable(CONTEXT, context);
+            log.warn("Consent creation failed");
+            return;
+        }
+
+        postHandleCreatedConsent(result, execution, context);
     }
 }

@@ -25,12 +25,13 @@ import static de.adorsys.opba.protocol.xs2a.tests.e2e.stages.StagesCommonUtil.AI
 import static de.adorsys.opba.protocol.xs2a.tests.e2e.stages.StagesCommonUtil.ANTON_BRUECKNER;
 import static de.adorsys.opba.protocol.xs2a.tests.e2e.stages.StagesCommonUtil.AUTHORIZE_CONSENT_ENDPOINT;
 import static de.adorsys.opba.protocol.xs2a.tests.e2e.stages.StagesCommonUtil.withAccountsHeaders;
+import static de.adorsys.opba.protocol.xs2a.tests.e2e.stages.StagesCommonUtil.withAccountsHeadersComputeIpAddress;
 import static de.adorsys.opba.protocol.xs2a.tests.e2e.stages.StagesCommonUtil.withSignatureHeaders;
 import static de.adorsys.opba.restapi.shared.HttpHeaders.COMPUTE_PSU_IP_ADDRESS;
 import static de.adorsys.opba.restapi.shared.HttpHeaders.SERVICE_SESSION_ID;
-import static de.adorsys.opba.restapi.shared.HttpHeaders.UserAgentContext.PSU_IP_ADDRESS;
-import static de.adorsys.xs2a.adapter.service.RequestHeaders.TPP_NOK_REDIRECT_URI;
-import static de.adorsys.xs2a.adapter.service.RequestHeaders.TPP_REDIRECT_URI;
+import static de.adorsys.xs2a.adapter.api.RequestHeaders.PSU_IP_ADDRESS;
+import static de.adorsys.xs2a.adapter.api.RequestHeaders.TPP_NOK_REDIRECT_URI;
+import static de.adorsys.xs2a.adapter.api.RequestHeaders.TPP_REDIRECT_URI;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.awaitility.Awaitility.await;
 
@@ -67,7 +68,7 @@ public class WiremockAccountInformationRequest<SELF extends WiremockAccountInfor
                 .given()
                     .cookie(AUTHORIZATION_SESSION_KEY, authSessionCookie)
                 .when()
-                    .get(redirectOkUri + "&code=" + code)
+                    .get(redirectOkUri + "?code=" + code)
                 .then()
                     .statusCode(HttpStatus.SEE_OTHER.value())
                 .extract();
@@ -97,7 +98,7 @@ public class WiremockAccountInformationRequest<SELF extends WiremockAccountInfor
     }
 
     public SELF fintech_calls_list_accounts_for_anton_brueckner_ip_address_compute() {
-        ExtractableResponse<Response> response = withAccountsHeaders(ANTON_BRUECKNER) // FIX HEADERS
+        ExtractableResponse<Response> response = withAccountsHeadersComputeIpAddress(ANTON_BRUECKNER)
                     .header(SERVICE_SESSION_ID, UUID.randomUUID().toString())
                     .header(COMPUTE_PSU_IP_ADDRESS, true)
                 .when()
@@ -134,7 +135,7 @@ public class WiremockAccountInformationRequest<SELF extends WiremockAccountInfor
                      .header(X_REQUEST_ID, UUID.randomUUID().toString())
                      .header(X_XSRF_TOKEN, UUID.randomUUID().toString())
                      .cookie(AUTHORIZATION_SESSION_KEY, authSessionCookie)
-                     .queryParam(REDIRECT_CODE_QUERY, redirectCode)
+                     .queryParam(X_XSRF_TOKEN_QUERY, redirectCode)
                      .contentType(MediaType.APPLICATION_JSON_VALUE)
                      .body(body)
                  .when()
@@ -178,7 +179,7 @@ public class WiremockAccountInformationRequest<SELF extends WiremockAccountInfor
                     .header(X_REQUEST_ID, UUID.randomUUID().toString())
                     .header(X_XSRF_TOKEN, UUID.randomUUID().toString())
                     .cookie(AUTHORIZATION_SESSION_KEY, authSessionCookie)
-                    .queryParam(REDIRECT_CODE_QUERY, redirectCode)
+                    .queryParam(X_XSRF_TOKEN_QUERY, redirectCode)
                     .contentType(MediaType.APPLICATION_JSON_VALUE)
                     .body(body)
                  .when()
@@ -211,7 +212,7 @@ public class WiremockAccountInformationRequest<SELF extends WiremockAccountInfor
                  .given()
                      .header(X_REQUEST_ID, UUID.randomUUID().toString())
                      .header(X_XSRF_TOKEN, UUID.randomUUID().toString())
-                     .queryParam(REDIRECT_CODE_QUERY, redirectCode)
+                     .queryParam(X_XSRF_TOKEN_QUERY, redirectCode)
                      .cookie(AUTHORIZATION_SESSION_KEY, authSessionCookie)
                      .contentType(MediaType.APPLICATION_JSON_VALUE)
                      .body(body)

@@ -2,6 +2,7 @@ package de.adorsys.opba.protocol.sandbox.hbci.protocol.common;
 
 import de.adorsys.opba.protocol.sandbox.hbci.config.HbciConfig;
 import de.adorsys.opba.protocol.sandbox.hbci.protocol.context.HbciSandboxContext;
+import de.adorsys.opba.protocol.sandbox.hbci.util.logresolver.HbciSandboxLogResolver;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.logging.log4j.util.Strings;
@@ -17,15 +18,20 @@ import static de.adorsys.opba.protocol.sandbox.hbci.protocol.Const.CONTEXT;
 public class ExtractBankAndUserIfAvailable implements JavaDelegate {
 
     private final HbciConfig config;
+    private final HbciSandboxLogResolver logResolver = new HbciSandboxLogResolver(getClass());
 
     @Override
     public void execute(DelegateExecution execution) {
         HbciSandboxContext context = (HbciSandboxContext) execution.getVariable(CONTEXT);
 
+        logResolver.log("execute: execution ({}) with context ({})", execution, context);
+
         updateBankIfNeeded(context, context.getRequestBankBlz());
         updateUserIfNeeded(context, context.getRequestUserLogin());
 
         execution.setVariable(CONTEXT, context);
+
+        logResolver.log("done execution ({}) with context ({})", execution, context);
     }
 
     private void updateBankIfNeeded(HbciSandboxContext context, String bankBlz) {

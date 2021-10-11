@@ -5,6 +5,8 @@ import de.adorsys.opba.protocol.api.ais.ListTransactions;
 import de.adorsys.opba.protocol.api.common.ProtocolAction;
 import de.adorsys.opba.protocol.api.dto.ValidationIssue;
 import de.adorsys.opba.protocol.api.dto.context.ServiceContext;
+import de.adorsys.opba.protocol.api.dto.parameters.ExtraRequestParam;
+import de.adorsys.opba.protocol.api.dto.request.authorization.AisConsent;
 import de.adorsys.opba.protocol.api.dto.request.transactions.ListTransactionsRequest;
 import de.adorsys.opba.protocol.api.dto.result.body.TransactionsResponseBody;
 import de.adorsys.opba.protocol.api.dto.result.body.ValidationError;
@@ -16,6 +18,7 @@ import de.adorsys.opba.protocol.xs2a.entrypoint.ExtendWithServiceContext;
 import de.adorsys.opba.protocol.xs2a.entrypoint.Xs2aOutcomeMapper;
 import de.adorsys.opba.protocol.xs2a.entrypoint.Xs2aResultBodyExtractor;
 import de.adorsys.opba.protocol.xs2a.entrypoint.helpers.Xs2aUuidMapper;
+import de.adorsys.opba.protocol.xs2a.service.xs2a.dto.consent.AisConsentInitiateBody;
 import lombok.RequiredArgsConstructor;
 import org.flowable.engine.RuntimeService;
 import org.flowable.engine.runtime.ProcessInstance;
@@ -23,6 +26,7 @@ import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.springframework.stereotype.Service;
 
+import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ConcurrentHashMap;
@@ -59,7 +63,7 @@ public class Xs2aListTransactionsEntrypoint implements ListTransactions {
 
         registrar.addHandler(
                 instance.getProcessInstanceId(),
-                new Xs2aOutcomeMapper<>(result, extractor::extractTransactionsReport, errorMapper)
+                new Xs2aOutcomeMapper<>(result, res -> extractor.extractTransactionsReport(res, serviceContext), errorMapper)
         );
 
         return result;
@@ -80,11 +84,22 @@ public class Xs2aListTransactionsEntrypoint implements ListTransactions {
 
         @Mapping(source = "accountId", target = "resourceId")
         @Mapping(source = "facadeServiceable.requestId", target = "requestId")
-        @Mapping(source = "facadeServiceable.bankId", target = "aspspId")
+        @Mapping(source = "facadeServiceable.bankProfileId", target = "aspspId")
         @Mapping(source = "facadeServiceable.uaContext.psuIpAddress", target = "psuIpAddress")
         @Mapping(source = "facadeServiceable.fintechRedirectUrlOk", target = "fintechRedirectUriOk")
         @Mapping(source = "facadeServiceable.fintechRedirectUrlNok", target = "fintechRedirectUriNok")
         @Mapping(source = "facadeServiceable.uaContext.psuAccept", target = "contentType", nullValuePropertyMappingStrategy = IGNORE)
+        @Mapping(source = "facadeServiceable.online", target = "online")
+        @Mapping(source = "extras", target = "aisConsent")
         TransactionListXs2aContext map(ListTransactionsRequest ctx);
+
+        default AisConsentInitiateBody map(Map<ExtraRequestParam, Object> extras) {
+            if (extras == null || !extras.containsKey(ExtraRequestParam.CONSENT)) {
+                return new AisConsentInitiateBody();
+            }
+            return map((AisConsent) extras.get(ExtraRequestParam.CONSENT));
+        }
+
+        AisConsentInitiateBody map(AisConsent consent);
     }
 }

@@ -1,0 +1,1 @@
+{"debtorName":"Mocked debtor name from ASPSP","debtorAccount":{"iban":"DE80760700240271232400","currency":"EUR"},"instructedAmount":{"currency":"EUR","amount":"12.34"},"creditorAccount":{"iban":"AL90208110080000001039531801","currency":"EUR"},"creditorName":"Netflix TV","remittanceInformationUnstructured":"Netflix payment (demo)","transactionStatus":"ACSP"}

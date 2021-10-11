@@ -22,7 +22,6 @@ spring:
     change-log: classpath:migration/master.xml
     parameters:
       table-prefix: opb_
-      fill-with-mock-data: true
 
 facade:
   urls:
@@ -77,6 +76,7 @@ protocol:
           select-sca-method: ${facade.urls.embedded-ui-base-url}/ais${protocol.xs2a.urls.common.parameters.select-sca-method}
           report-sca-result: ${facade.urls.embedded-ui-base-url}/ais${protocol.xs2a.urls.common.parameters.report-sca-result}
           provide-psu-iban: ${facade.urls.embedded-ui-base-url}/ais${protocol.xs2a.urls.common.parameters.provide-psu-iban}
+          wait-decoupled-sca: ${facade.urls.embedded-ui-base-url}/ais${protocol.xs2a.urls.common.parameters.wait-decoupled-sca}
       pis:
         to-aspsp: ${facade.urls.embedded-ui-base-url}/pis${protocol.xs2a.urls.common.to-aspsp}
         web-hooks:
@@ -89,11 +89,12 @@ protocol:
           select-sca-method: ${facade.urls.embedded-ui-base-url}/pis${protocol.xs2a.urls.common.parameters.select-sca-method}
           report-sca-result: ${facade.urls.embedded-ui-base-url}/pis${protocol.xs2a.urls.common.parameters.report-sca-result}
           provide-psu-iban: ${facade.urls.embedded-ui-base-url}/pis${protocol.xs2a.urls.common.parameters.provide-psu-iban}
+          wait-decoupled-sca: ${facade.urls.embedded-ui-base-url}/pis${protocol.xs2a.urls.common.parameters.wait-decoupled-sca}
       common:
         to-aspsp: /{authSessionId}/to-aspsp-redirection?redirectCode={redirectCode}
         web-hooks:
-          ok: ${facade.urls.embedded-ui-base-url}/embedded-server/v1/consent/{authSessionId}/fromAspsp/STUB_STATE/ok?redirectCode={aspspRedirectCode}
-          nok: ${facade.urls.embedded-ui-base-url}/embedded-server/v1/consent/{authSessionId}/fromAspsp/STUB_STATE/nok?redirectCode={aspspRedirectCode}
+          ok: ${facade.urls.embedded-ui-base-url}/embedded-server/v1/consent/{authSessionId}/fromAspsp/STUB_STATE/ok/{aspspRedirectCode}
+          nok: ${facade.urls.embedded-ui-base-url}/embedded-server/v1/consent/{authSessionId}/fromAspsp/STUB_STATE/nok/{aspspRedirectCode}
           result: /{authSessionId}/consent-result?redirectCode={redirectCode}
         parameters:
           provide-more: /{authSessionId}?redirectCode={redirectCode}
@@ -101,10 +102,17 @@ protocol:
           select-sca-method: /{authSessionId}/select-sca-method
           report-sca-result: /{authSessionId}/sca-result/{selectedScaType}?wrong={isWrongCreds}
           provide-psu-iban: /{authSessionId}/entry-consent-transactions/dedicated-account-access?wrong={isWrongCreds}
+          wait-decoupled-sca: /{authSessionId}/wait-sca-finalization?redirectCode={redirectCode}
     aspspmessages:
       invalid-credentials: PSU_CREDENTIALS_INVALID
       invalid-consent: FORMAT_ERROR
-      missing-oauth2-token: UNAUTHORIZED
+      missing-oauth2-token: TOKEN_INVALID
+      missing-oauth2-token-message: Please retrieve token first
+      consent-gone:
+        ACCESS_EXCEEDED: CONSENT_ACCESS_EXCEEDED_LIMIT
+        CONSENT_UNKNOWN: CONSENT_UNKNOWN
+        CONSENT_EXPIRED: CONSENT_EXPIRED
+        CONSENT_INVALID: CONSENT_INVALID
     pkcs12:
       keystore: sample-qwac.keystore
       password: password

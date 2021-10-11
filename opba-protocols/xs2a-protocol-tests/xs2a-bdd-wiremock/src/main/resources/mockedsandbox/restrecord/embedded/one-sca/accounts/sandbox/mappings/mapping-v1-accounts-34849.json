@@ -1,0 +1,32 @@
+{
+  "id" : "97613b8c-4be3-3d60-b83a-b48adca0644a",
+  "scenarioName": "AccountsListUsingEmbeddedWithOneSca",
+  "newScenarioState": "GetAccount",
+  "request" : {
+    "url" : "/v1/accounts",
+    "method" : "GET",
+    "headers" : {
+      "Accept" : {
+        "equalTo" : "application/json"
+      },
+      "X-Request-ID" : {
+        "matches": "[0-9a-zA-z\\-]+"
+      },
+      "PSU-ID" : {
+        "equalTo" : "anton.brueckner"
+      }
+    }
+  },
+  "response" : {
+    "status" : 200,
+    "bodyFileName" : "body-v1-accounts-34849.json",
+    "headers" : {
+      "Vary" : [ "Origin", "Access-Control-Request-Method", "Access-Control-Request-Headers" ],
+      "X-Request-Id" : "23a58af0-0d6d-4fde-a161-e049c29a4156",
+      "Content-Type" : "application/json",
+      "Date" : "Mon, 04 Oct 2021 14:24:28 GMT",
+      "Keep-Alive" : "timeout=60"
+    }
+  },
+  "uuid" : "97613b8c-4be3-3d60-b83a-b48adca0644a"
+}

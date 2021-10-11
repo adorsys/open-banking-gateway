@@ -1,0 +1,28 @@
+{
+  "facadeServiceable": {
+    "uaContext": {
+      "psuIpAddress": "1.1.1.1",
+      "psuIpPort": "5555",
+      "psuAccept": "application/json",
+      "psuAcceptCharset": null,
+      "psuAcceptEncoding": null,
+      "psuAcceptLanguage": null,
+      "psuDeviceId": null,
+      "psuUserAgent": null,
+      "psuGeoLocation": null,
+      "psuHttpMethod": null
+    },
+    "requestId": "cef0cbf3-6458-4f13-a418-ee4d7e750511",
+    "serviceSessionId": "cef0cbf3-6458-4f13-a418-ee4d7e7505dd",
+    "authorizationSessionId": "11111-11111",
+    "redirectCode": "123",
+    "authorization": "22222-22222",
+    "bankProfileId": "adadadad-4000-0000-0000-b0b0b0b0b0b0",
+    "fintechUserId": "localhost:2222",
+    "fintechRedirectUrlOk": "localhost:2222",
+    "fintechRedirectUrlNok": "localhost:3333",
+    "sessionPassword": "1234",
+    "online": false
+  },
+  "extras": {"CONSENT": "{\"access\":{\"allPsd2\":\"ALL_ACCOUNTS_WITH_BALANCES\"},\"frequencyPerDay\":4,\"validUntil\":\"2021-06-18\",\"recurringIndicator\":true,\"combinedServiceIndicator\":false}"}
+}

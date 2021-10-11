@@ -75,9 +75,9 @@ public class FintechPaymentSmokeE2ETest extends SpringScenarioTest<FintechServer
     void testUserAfterInitiatingAPaymentWantsToSeeItsTransactionsOnFintechRedirectMode(FirefoxDriver firefoxDriver) {
         given().create_new_user_in_sandbox_tpp_management(username, PIN)
                 .enabled_redirect_sandbox_mode(smokeConfig.getAspspProfileServerUri())
-                .fintech_points_to_fintechui_login_page(smokeConfig.getFintechServerUri());
+                .fintech_points_to_fintech_server(smokeConfig.getFintechServerUri());
 
-        when().user_authorizes_payment_in_redirect_mode(firefoxDriver, username, fintech_login, REDIRECT_MODE, username)
+        when().user_authorizes_payment_in_redirect_mode(firefoxDriver, username, fintech_login, ADORSYS_XS2A, username)
                 .and()
                 .user_navigates_to_page(firefoxDriver)
                 .and()
@@ -121,7 +121,7 @@ public class FintechPaymentSmokeE2ETest extends SpringScenarioTest<FintechServer
     void testUserAfterInitiatingAPaymentWantsToSeeItsTransactionsOnFintechEmbeddedMode(FirefoxDriver firefoxDriver) {
         given().create_new_user_in_sandbox_tpp_management(username, PIN)
                 .enabled_redirect_sandbox_mode(smokeConfig.getAspspProfileServerUri())
-                .fintech_points_to_fintechui_login_page(smokeConfig.getFintechServerUri());
+                .fintech_points_to_fintech_server(smokeConfig.getFintechServerUri());
 
         when().user_consent_authorization_in_embedded_mode(firefoxDriver, username, fintech_login, EMBEDDED_MODE, username)
                 .and()

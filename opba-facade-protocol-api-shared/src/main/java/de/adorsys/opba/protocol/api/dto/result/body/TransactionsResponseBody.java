@@ -7,18 +7,28 @@ import lombok.Value;
  * Transaction result list transactions result from protocol.
  */
 @Value
-@Builder
+@Builder(toBuilder = true)
 public class TransactionsResponseBody implements ResultBody {
 
   /**
    * Account on which the transactions happened.
    */
-  private AccountReference account;
+  AccountReference account;
 
   /**
    * List of the transactions.
    */
-  private AccountReport transactions;
+  AccountReport transactions;
+
+  /**
+   * Transaction categorization result, optional.
+   */
+  AnalyticsResult analytics;
+
+  /**
+   * Optional information for pagination
+   */
+  Paging paging;
 
   @Override
   public Object getBody() {

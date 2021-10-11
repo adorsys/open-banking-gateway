@@ -1,0 +1,47 @@
+{
+  "scenarioName": "PaymentInitializationUsingDbkEmbedded",
+  "requiredScenarioState": "Initiated",
+  "newScenarioState": "AuthorisationStarted",
+  "priority": 5,
+  "request": {
+    "url": "/v1/payments/sepa-credit-transfers/VALID_PAYMENT_ID/authorisations",
+    "method": "POST",
+    "headers": {
+      "PSD2-AUTHORIZATION": {
+        "equalTo": "Bearer VALID_TOKEN"
+      },
+      "X-Request-ID": {
+        "matches": ".+"
+      },
+      "PSU-ID": {
+        "equalTo": "max.musterman"
+      },
+      "Content-Type": {
+        "matches": "application/json.*"
+      }
+    },
+    "bodyPatterns": [
+      {
+        "equalToJson": "{}",
+        "ignoreArrayOrder": true,
+        "ignoreExtraElements": true
+      }
+    ]
+  },
+  "response": {
+    "status": 201,
+    "bodyFileName": "start-psu-authentication-response-body.json",
+    "headers": {
+      "Date": "Mon, 05 Jul 2021 11:59:59 GMT",
+      "Server": "Apache",
+      "Content-Type": "application/json; charset=utf-8",
+      "X-Request-ID": "662388a0-92f3-4d1d-bb95-b4c28fb19fbd",
+      "Strict-Transport-Security": "max-age=31536000",
+      "X-Content-Type-Options": "nosniff",
+      "Keep-Alive": "timeout=15, max=100"
+    }
+  },
+  "uuid": "3b9c5a95-1ede-40a3-a59a-aee21256a90f",
+  "persistent": true,
+  "insertionIndex": 11
+}

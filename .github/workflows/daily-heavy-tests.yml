@@ -7,7 +7,7 @@ on:
 
 jobs:
   build:
-    runs-on: ubuntu-18.04
+    runs-on: ubuntu-20.04
     steps:
       - uses: actions/checkout@v2
         with:
@@ -22,8 +22,17 @@ jobs:
         with:
           access_token: ${{ secrets.GITHUB_TOKEN }}
 
+      - name: Free disk space
+        run: |
+          sudo apt clean
+          docker rmi $(docker image ls -aq)
+          docker system prune -af
+          echo "Available space"
+          df -h
+
       - name: Build project and run default test suite
-        run: ./scripts/build_and_test.sh
+        run: |
+          ./scripts/build_and_test.sh
         env:
           MAVEN_OPTS: "-Dhttp.keepAlive=false -Dmaven.wagon.http.pool=false -Dmaven.wagon.httpconnectionManager.ttlSeconds=120" # Github-on-Azure tweaks - https://github.com/actions/virtual-environments/issues/1499
           ENABLE_HEAVY_TESTS: true

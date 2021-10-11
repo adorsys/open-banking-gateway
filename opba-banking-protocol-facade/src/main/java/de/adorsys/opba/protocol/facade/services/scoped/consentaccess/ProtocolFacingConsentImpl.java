@@ -24,6 +24,16 @@ public class ProtocolFacingConsentImpl implements ProtocolFacingConsent {
     }
 
     @Override
+    public String getConsentCache() {
+        return consent.getCache(encryptionService);
+    }
+
+    @Override
+    public void setConsentCache(String cache) {
+        consent.setCache(encryptionService, cache);
+    }
+
+    @Override
     public void setConsentId(String id) {
         consent.setConsentId(encryptionService, id);
     }

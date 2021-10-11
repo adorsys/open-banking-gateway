@@ -28,10 +28,10 @@ public class ViewController {
 
     @GetMapping("/consent-confirmed")
     public String confirmConsent(@RequestParam("redirectCode") String redirectCode, Model model) {
-        String bankId = consentService.confirmConsentAndGetBankId(redirectCode);
-        ResponseEntity<BankProfileResponse> bankProfile = bankSearch.bankProfileGET(UUID.randomUUID(), bankId, null, null, null);
+        UUID bankProfileId = consentService.confirmConsentAndGetBankProfileId(redirectCode);
+        ResponseEntity<BankProfileResponse> bankProfile = bankSearch.bankProfileGET(UUID.randomUUID(), bankProfileId, null, null, null, false);
         model.addAttribute("bankName", bankProfile.getBody().getBankProfileDescriptor().getBankName());
-        model.addAttribute("bankId", bankId);
+        model.addAttribute("bankProfileId", bankProfileId);
         return showFireflyUploaderScreen(model);
     }
 

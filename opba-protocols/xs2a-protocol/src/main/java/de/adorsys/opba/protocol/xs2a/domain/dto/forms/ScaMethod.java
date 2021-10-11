@@ -1,6 +1,6 @@
 package de.adorsys.opba.protocol.xs2a.domain.dto.forms;
 
-import de.adorsys.xs2a.adapter.service.model.AuthenticationObject;
+import de.adorsys.xs2a.adapter.api.model.AuthenticationObject;
 import lombok.Data;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
@@ -35,7 +35,7 @@ public class ScaMethod {
     @Mapper(componentModel = SPRING_KEYWORD)
     public interface FromAuthObject {
         @Mapping(source = "authenticationMethodId", target = "key")
-        @Mapping(target = "value", expression = "java(auth.getAuthenticationType() + ':' + auth.getName())")
+        @Mapping(target = "value", expression = "java(\"\" + auth.getAuthenticationType() + ':' + auth.getName())")
         @Mapping(source = "authenticationType", target = "type")
         ScaMethod map(AuthenticationObject auth);
     }

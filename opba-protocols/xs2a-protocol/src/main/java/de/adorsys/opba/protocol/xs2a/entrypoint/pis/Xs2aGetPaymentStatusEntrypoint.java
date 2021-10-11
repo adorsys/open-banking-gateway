@@ -16,9 +16,11 @@ import de.adorsys.opba.protocol.xs2a.service.dto.ValidatedPathHeaders;
 import de.adorsys.opba.protocol.xs2a.service.mapper.PathHeadersMapperTemplate;
 import de.adorsys.opba.protocol.xs2a.service.xs2a.dto.payment.PaymentStateHeaders;
 import de.adorsys.opba.protocol.xs2a.service.xs2a.dto.payment.PaymentStateParameters;
-import de.adorsys.xs2a.adapter.service.PaymentInitiationService;
-import de.adorsys.xs2a.adapter.service.Response;
-import de.adorsys.xs2a.adapter.service.model.PaymentInitiationStatus;
+import de.adorsys.xs2a.adapter.api.PaymentInitiationService;
+import de.adorsys.xs2a.adapter.api.Response;
+import de.adorsys.xs2a.adapter.api.model.PaymentInitiationStatusResponse200Json;
+import de.adorsys.xs2a.adapter.api.model.PaymentProduct;
+import de.adorsys.xs2a.adapter.api.model.PaymentService;
 import lombok.RequiredArgsConstructor;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
@@ -52,8 +54,9 @@ public class Xs2aGetPaymentStatusEntrypoint implements GetPaymentStatusState {
 
         ValidatedPathHeaders<PaymentStateParameters, PaymentStateHeaders> params = extractor.forExecution(prepareContext(context, payment));
 
-        Response<PaymentInitiationStatus> paymentStatus = pis.getSinglePaymentInitiationStatus(
-                context.getRequest().getPaymentProduct().toString(),
+        Response<PaymentInitiationStatusResponse200Json> paymentStatus = pis.getPaymentInitiationStatus(
+                PaymentService.PAYMENTS,
+                PaymentProduct.fromValue(context.getRequest().getPaymentProduct().toString()),
                 payment.getPaymentId(),
                 params.getHeaders().toHeaders(),
                 params.getPath().toParameters()
@@ -68,7 +71,7 @@ public class Xs2aGetPaymentStatusEntrypoint implements GetPaymentStatusState {
 
     @Mapper(componentModel = SPRING_KEYWORD, implementationPackage = XS2A_MAPPERS_PACKAGE)
     public interface PaymentStatusToBodyMapper {
-        PaymentStatusBody map(PaymentInitiationStatus paymentStatus);
+        PaymentStatusBody map(PaymentInitiationStatusResponse200Json paymentStatus);
     }
 
 
@@ -87,7 +90,7 @@ public class Xs2aGetPaymentStatusEntrypoint implements GetPaymentStatusState {
     @Mapper(componentModel = SPRING_KEYWORD, uses = Xs2aUuidMapper.class, implementationPackage = XS2A_MAPPERS_PACKAGE)
     public interface FromRequest extends DtoMapper<PaymentStatusRequest, Xs2aPisContext> {
 
-        @Mapping(source = "facadeServiceable.bankId", target = "aspspId")
+        @Mapping(source = "facadeServiceable.bankProfileId", target = "aspspId")
         @Mapping(source = "facadeServiceable.requestId", target = "requestId")
         Xs2aPisContext map(PaymentStatusRequest ctx);
     }

@@ -1,0 +1,12 @@
+<databaseChangeLog logicalFilePath="db.changelog-1.0.xml" xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+                   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                   xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.8.xsd">
+
+    <changeSet author="vbeex@adorsys.com.ua" id="2021-07-22-17">
+        <comment>Added consent cache</comment>
+        <addColumn tableName="${table-prefix}consent">
+            <column name="enc_cache" type="BLOB"/>
+        </addColumn>
+    </changeSet>
+
+</databaseChangeLog>

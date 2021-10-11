@@ -16,7 +16,7 @@ export interface AccountBalance {
     balanceAmount?: Amount;
     balanceType?: string;
     iban?: string;
-    lastChangeDateTime?: Date;
+    lastChangeDateTime?: string;
     lastCommittedTransaction?: string;
     referenceDate?: string;
 }

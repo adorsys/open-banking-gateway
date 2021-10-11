@@ -8,7 +8,7 @@ import de.adorsys.opba.protocol.api.dto.request.payments.InitiateSinglePaymentRe
 import de.adorsys.opba.protocol.api.services.scoped.consent.ProtocolFacingPayment;
 import de.adorsys.opba.protocol.bpmnshared.dto.DtoMapper;
 import de.adorsys.opba.protocol.hbci.HbciUuidMapper;
-import de.adorsys.opba.protocol.hbci.service.SafeCacheSerDeUtil;
+import de.adorsys.opba.protocol.bpmnshared.service.SafeCacheSerDeUtil;
 import de.adorsys.opba.protocol.hbci.context.PaymentHbciContext;
 import de.adorsys.opba.protocol.hbci.entrypoint.HbciExtendWithServiceContext;
 import lombok.RequiredArgsConstructor;
@@ -57,7 +57,7 @@ public class HbciPreparePaymentContext {
     @Mapper(componentModel = SPRING_KEYWORD, uses = HbciUuidMapper.class, implementationPackage = HBCI_MAPPERS_PACKAGE)
     public interface FromRequest extends DtoMapper<InitiateSinglePaymentRequest, PaymentHbciContext> {
 
-        @Mapping(source = "facadeServiceable.bankId", target = "aspspId")
+        @Mapping(source = "facadeServiceable.bankProfileId", target = "aspspId")
         @Mapping(source = "facadeServiceable.requestId", target = "requestId")
         @Mapping(source = "facadeServiceable.fintechRedirectUrlOk", target = "fintechRedirectUriOk")
         @Mapping(source = "facadeServiceable.fintechRedirectUrlNok", target = "fintechRedirectUriNok")

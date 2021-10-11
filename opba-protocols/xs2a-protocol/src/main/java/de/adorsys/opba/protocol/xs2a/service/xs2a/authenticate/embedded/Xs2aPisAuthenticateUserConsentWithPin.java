@@ -8,16 +8,20 @@ import de.adorsys.opba.protocol.xs2a.context.pis.Xs2aPisContext;
 import de.adorsys.opba.protocol.xs2a.domain.dto.forms.ScaMethod;
 import de.adorsys.opba.protocol.xs2a.service.dto.ValidatedPathHeadersBody;
 import de.adorsys.opba.protocol.xs2a.service.mapper.PathHeadersBodyMapperTemplate;
+import de.adorsys.opba.protocol.xs2a.service.xs2a.authenticate.ScaUtil;
 import de.adorsys.opba.protocol.xs2a.service.xs2a.dto.Xs2aAuthorizedPaymentParameters;
 import de.adorsys.opba.protocol.xs2a.service.xs2a.dto.Xs2aStandardHeaders;
 import de.adorsys.opba.protocol.xs2a.service.xs2a.dto.authenticate.embedded.ProvidePsuPasswordBody;
 import de.adorsys.opba.protocol.xs2a.service.xs2a.validation.Xs2aValidator;
-import de.adorsys.xs2a.adapter.service.PaymentInitiationService;
-import de.adorsys.xs2a.adapter.service.RequestParams;
-import de.adorsys.xs2a.adapter.service.Response;
-import de.adorsys.xs2a.adapter.service.model.ScaStatus;
-import de.adorsys.xs2a.adapter.service.model.UpdatePsuAuthentication;
-import de.adorsys.xs2a.adapter.service.model.UpdatePsuAuthenticationResponse;
+import de.adorsys.opba.protocol.xs2a.util.logresolver.Xs2aLogResolver;
+import de.adorsys.xs2a.adapter.api.PaymentInitiationService;
+import de.adorsys.xs2a.adapter.api.RequestParams;
+import de.adorsys.xs2a.adapter.api.Response;
+import de.adorsys.xs2a.adapter.api.model.PaymentProduct;
+import de.adorsys.xs2a.adapter.api.model.PaymentService;
+import de.adorsys.xs2a.adapter.api.model.ScaStatus;
+import de.adorsys.xs2a.adapter.api.model.UpdatePsuAuthentication;
+import de.adorsys.xs2a.adapter.api.model.UpdatePsuAuthenticationResponse;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.flowable.engine.delegate.DelegateExecution;
@@ -39,14 +43,19 @@ public class Xs2aPisAuthenticateUserConsentWithPin extends ValidatedExecution<Xs
     private final Xs2aValidator validator;
     private final PaymentInitiationService pis;
     private final AuthorizationPossibleErrorHandler errorSink;
+    private final Xs2aLogResolver logResolver = new Xs2aLogResolver(getClass());
 
     @Override
     protected void doValidate(DelegateExecution execution, Xs2aPisContext context) {
+        logResolver.log("doValidate: execution ({}) with context ({})", execution, context);
+
         validator.validate(execution, context, this.getClass(), extractor.forValidation(context));
     }
 
     @Override
     protected void doRealExecution(DelegateExecution execution, Xs2aPisContext context) {
+        logResolver.log("doRealExecution: execution ({}) with context ({})", execution, context);
+
         ValidatedPathHeadersBody<Xs2aAuthorizedPaymentParameters, Xs2aStandardHeaders, UpdatePsuAuthentication> params = extractor.forExecution(context);
 
         errorSink.handlePossibleAuthorizationError(
@@ -59,15 +68,19 @@ public class Xs2aPisAuthenticateUserConsentWithPin extends ValidatedExecution<Xs
             DelegateExecution execution,
             ValidatedPathHeadersBody<Xs2aAuthorizedPaymentParameters, Xs2aStandardHeaders, UpdatePsuAuthentication>  params) {
 
+        logResolver.log("updatePaymentPsuData with parameters: {}", params.getPath(), params.getHeaders(), params.getBody());
+
         Response<UpdatePsuAuthenticationResponse> authResponse = pis.updatePaymentPsuData(
-                params.getPath().getPaymentType().getValue(),
-                params.getPath().getPaymentProduct(),
+                PaymentService.fromValue(params.getPath().getPaymentType().getValue()),
+                PaymentProduct.fromValue(params.getPath().getPaymentProduct()),
                 params.getPath().getPaymentId(),
                 params.getPath().getAuthorizationId(),
                 params.getHeaders().toHeaders(),
                 RequestParams.empty(),
                 params.getBody()
         );
+
+        logResolver.log("updatePaymentPsuData response: {}", authResponse);
 
         ScaStatus scaStatus = authResponse.getBody().getScaStatus();
 
@@ -77,9 +90,10 @@ public class Xs2aPisAuthenticateUserConsentWithPin extends ValidatedExecution<Xs
                     ctx.setWrongAuthCredentials(false);
                     ctx.setPsuPassword(null); // eagerly destroy password, albeit it is not persisted
                     setScaAvailableMethodsIfCanBeChosen(authResponse, ctx);
-                    ctx.setScaSelected(authResponse.getBody().getChosenScaMethod());
+                    ctx.setScaSelected(ScaUtil.scaMethodSelected(authResponse.getBody()));
+                    ctx.setSelectedScaDecoupled(ScaUtil.isDecoupled(authResponse.getHeaders()));
                     ctx.setChallengeData(authResponse.getBody().getChallengeData());
-                    ctx.setScaStatus(null == scaStatus ? null : scaStatus.getValue());
+                    ctx.setScaStatus(null == scaStatus ? null : scaStatus.toString());
                 }
         );
     }

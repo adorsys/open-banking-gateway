@@ -11,6 +11,7 @@
  */
 import { AccountReference } from './accountReference';
 import { AccountReport } from './accountReport';
+import { AnalyticsReportDetails } from './analyticsReportDetails';
 
 
 /**
@@ -19,5 +20,9 @@ import { AccountReport } from './accountReport';
 export interface TransactionsResponse { 
     account?: AccountReference;
     transactions?: AccountReport;
+    /**
+     * Array of transaction details.
+     */
+    analytics?: Array<AnalyticsReportDetails>;
 }
 

@@ -1,12 +1,11 @@
-import { Component, OnInit } from '@angular/core';
-import { ActivatedRoute } from '@angular/router';
-import { SessionService } from '../../../../common/session.service';
-import { AuthStateConsentAuthorizationService } from '../../../../api';
-import { UpdateConsentAuthorizationService, DenyRequest } from '../../../../api';
-import { ApiHeaders } from '../../../../api/api.headers';
-import { StubUtil } from '../../../../common/utils/stub-util';
-import { AccountAccessLevel, AisConsentToGrant } from '../../../common/dto/ais-consent';
-import { ConsentUtil } from '../../../common/consent-util';
+import {Component, OnInit} from '@angular/core';
+import {ActivatedRoute} from '@angular/router';
+import {SessionService} from '../../../../common/session.service';
+import {AuthStateConsentAuthorizationService, UpdateConsentAuthorizationService} from '../../../../api';
+import {ApiHeaders} from '../../../../api/api.headers';
+import {StubUtil} from '../../../../common/utils/stub-util';
+import {AccountAccessLevel, AisConsentToGrant} from '../../../common/dto/ais-consent';
+import {ConsentUtil} from '../../../common/consent-util';
 
 @Component({
   selector: 'consent-app-consent-sharing',
@@ -45,7 +44,7 @@ export class ConsentSharingComponent implements OnInit {
     this.authStateConsentAuthorizationService
       .authUsingGET(this.authorizationId, redirectCode, 'response')
       .subscribe((res) => {
-        this.sessionService.setRedirectCode(this.authorizationId, res.headers.get(ApiHeaders.REDIRECT_CODE));
+        this.sessionService.setRedirectCode(this.authorizationId, res.headers.get(ApiHeaders.X_XSRF_TOKEN));
       });
     this.loadRedirectUri(this.authorizationId, redirectCode);
   }
@@ -59,8 +58,6 @@ export class ConsentSharingComponent implements OnInit {
       .denyUsingPOST(
         this.authorizationId,
         StubUtil.X_REQUEST_ID, // TODO: real values instead of stubs
-        StubUtil.X_XSRF_TOKEN, // TODO: real values instead of stubs
-        {} as DenyRequest,
         'response'
       )
       .subscribe((res) => {

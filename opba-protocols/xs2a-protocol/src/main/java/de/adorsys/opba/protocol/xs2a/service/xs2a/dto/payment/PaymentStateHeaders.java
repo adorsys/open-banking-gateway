@@ -4,7 +4,7 @@ import de.adorsys.opba.protocol.bpmnshared.dto.DtoMapper;
 import de.adorsys.opba.protocol.xs2a.context.pis.Xs2aPisContext;
 import de.adorsys.opba.protocol.xs2a.service.xs2a.dto.ResponseTokenMapper;
 import de.adorsys.opba.protocol.xs2a.service.xs2a.dto.WithBasicInfo;
-import de.adorsys.xs2a.adapter.service.RequestHeaders;
+import de.adorsys.xs2a.adapter.api.RequestHeaders;
 import org.mapstruct.Mapper;
 
 import java.util.Map;

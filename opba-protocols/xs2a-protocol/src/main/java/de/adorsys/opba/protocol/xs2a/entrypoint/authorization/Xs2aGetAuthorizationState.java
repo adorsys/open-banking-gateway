@@ -118,13 +118,14 @@ public class Xs2aGetAuthorizationState implements GetAuthorizationState {
         AuthRequestData authRequestData = AuthRequestData.builder()
                 .aisConsent(ctx instanceof Xs2aAisContext ? aisBodyMapper.map(((Xs2aAisContext) ctx).getAisConsent()) : null)
                 .singlePaymentBody(ctx instanceof Xs2aPisContext ? pisBodyMapper.map(((Xs2aPisContext) ctx).getPayment()) : null)
-                .bankName(ctx.getRequestScoped().aspspProfile().getName())
+                .bankName(ctx.getRequestScoped().aspspProfile().getBankName())
                 .fintechName(ctx.getRequestScoped().fintechProfile().getName())
                 .build();
 
         return new AuthStateBody(
                 action.name(),
                 violationsMapper.map(issues.getViolations()),
+                ctx.getRequestScoped().aspspProfile().getSupportedConsentTypes(),
                 scaMethodsMapper.map(scaMethods),
                 redirectTo,
                 authRequestData,
@@ -141,7 +142,7 @@ public class Xs2aGetAuthorizationState implements GetAuthorizationState {
     }
 
     @Mapper(componentModel = SPRING_KEYWORD, implementationPackage = XS2A_MAPPERS_PACKAGE)
-    public interface ChallengeDataMapper extends DtoMapper<de.adorsys.xs2a.adapter.service.model.ChallengeData, ChallengeData> {
+    public interface ChallengeDataMapper extends DtoMapper<de.adorsys.xs2a.adapter.api.model.ChallengeData, ChallengeData> {
     }
 
     @Mapper(componentModel = SPRING_KEYWORD, uses = Xs2aUuidMapper.class, implementationPackage = XS2A_MAPPERS_PACKAGE)

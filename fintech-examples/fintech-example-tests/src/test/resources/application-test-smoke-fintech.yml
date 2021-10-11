@@ -6,7 +6,7 @@ test:
   retry:
     max: 10
   webdriver:
-    timeout: PT10S
+    timeout: PT15S
   fintech:
     search:
       uri: https://obg-dev-fintechui.cloud.adorsys.de/search

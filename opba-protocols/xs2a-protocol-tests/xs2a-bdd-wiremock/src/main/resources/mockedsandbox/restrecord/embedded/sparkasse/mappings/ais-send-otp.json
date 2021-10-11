@@ -1,0 +1,38 @@
+{
+  "id" : "f78929d3-6c23-4b4e-b28d-34941546b4b3",
+  "name" : "v1_consents_e3d6fd32-8e41-498b-a20a-c643215e420c_authorisations_a7129418-87e2-43c3-ba57-38aa2e23093b",
+  "request" : {
+    "urlPattern" : "/v1/consents/.+/authorisations/.+",
+    "method" : "PUT",
+    "headers" : {
+      "X-Request-ID" : {
+        "matches" : ".+"
+      },
+      "PSU-ID" : {
+        "equalTo" : "max.musterman"
+      }
+    },
+    "bodyPatterns" : [ {
+      "equalToJson" : "{\"scaAuthenticationData\":\"123456\"}",
+      "ignoreArrayOrder" : true,
+      "ignoreExtraElements" : true
+    } ]
+  },
+  "response" : {
+    "status" : 200,
+    "body" : "{\"scaStatus\":\"finalised\",\"_links\":{\"scaStatus\":{\"href\":\"https://xs2a-sandbox.f-i-apim.de:8444/fixs2a-env/xs2a-api/12345678/v1/consents/e3d6fd32-8e41-498b-a20a-c643215e420c/authorisations/a7129418-87e2-43c3-ba57-38aa2e23093b\"}}}",
+    "headers" : {
+      "Date" : "Thu, 06 Aug 2020 09:03:50 GMT",
+      "Server" : "Apache",
+      "Content-Type" : "application/json; charset=utf-8",
+      "ASPSP-SCA-Approach" : "EMBEDDED",
+      "X-Request-ID" : "c6101e8e-c7b7-498c-809d-590fcc48fd82",
+      "Strict-Transport-Security" : "max-age=31536000",
+      "X-Content-Type-Options" : "nosniff",
+      "Keep-Alive" : "timeout=15, max=100"
+    }
+  },
+  "uuid" : "f78929d3-6c23-4b4e-b28d-34941546b4b3",
+  "persistent" : true,
+  "insertionIndex" : 4
+}

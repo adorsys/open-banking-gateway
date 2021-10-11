@@ -42,3 +42,9 @@ export enum LoTRetrievalInformation {
   FROM_TPP_WITH_AVAILABLE_CONSENT = 'FROM_TPP_WITH_AVAILABLE_CONSENT',
   FROM_TPP_WITH_NEW_CONSENT = 'FROM_TPP_WITH_NEW_CONSENT'
 }
+
+export enum ConsentSettingType {
+  NONE = 'NONE',
+  DEFAULT = 'DEFAULT',
+  CUSTOM = 'CUSTOM'
+}

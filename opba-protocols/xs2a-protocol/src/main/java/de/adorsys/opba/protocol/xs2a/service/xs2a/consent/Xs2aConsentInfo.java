@@ -1,8 +1,10 @@
 package de.adorsys.opba.protocol.xs2a.service.xs2a.consent;
 
+import com.google.common.base.Strings;
 import de.adorsys.opba.protocol.xs2a.context.Xs2aContext;
 import org.springframework.stereotype.Service;
 
+import static de.adorsys.opba.protocol.api.common.Approach.DECOUPLED;
 import static de.adorsys.opba.protocol.api.common.Approach.EMBEDDED;
 import static de.adorsys.opba.protocol.api.common.Approach.REDIRECT;
 import static de.adorsys.opba.protocol.xs2a.service.xs2a.consent.ConsentConst.CONSENT_FINALIZED;
@@ -20,11 +22,33 @@ public class Xs2aConsentInfo {
         return EMBEDDED.name().equalsIgnoreCase(ctx.getAspspScaApproach());
     }
 
+
+    /**
+     * Is the authorization already started.
+     */
+    public boolean isAuthorisationStarted(Xs2aContext ctx) {
+        return !Strings.isNullOrEmpty(ctx.getAuthorizationId());
+    }
+
     /**
      * Is the current consent authorization in REDIRECT mode.
      */
     public boolean isRedirect(Xs2aContext ctx) {
         return REDIRECT.name().equalsIgnoreCase(ctx.getAspspScaApproach());
+    }
+
+    /**
+     * If ASPSP needs startConsentAuthorization to be skipped.
+     */
+    public boolean isTrySkipStartConsentAuthorization(Xs2aContext ctx) {
+        return ctx.aspspProfile().isXs2aSkipConsentAuthorization();
+    }
+
+    /**
+     * If ASPSP needs startConsentAuthorization with User Password.
+     */
+    public boolean isStartConsentAuthorizationWithPin(Xs2aContext ctx) {
+        return ctx.aspspProfile().isXs2aStartConsentAuthorizationWithPin();
     }
 
     /**
@@ -38,7 +62,7 @@ public class Xs2aConsentInfo {
      * Is the current consent in OAUTH-Pre-step (authentication) mode.
      */
     public boolean isOauth2AuthenticationPreStep(Xs2aContext ctx) {
-        return ctx.isOauth2PreStepNeeded();
+        return ctx.isOauth2PreStepNeeded() || ctx.isEmbeddedPreAuthNeeded();
     }
 
     /**
@@ -49,11 +73,40 @@ public class Xs2aConsentInfo {
     }
 
     /**
+     * Is the Oauth2 pre-step or authorization required
+     */
+    public boolean isEmbeddedPreAuthNeeded(Xs2aContext ctx) {
+        return ctx.isEmbeddedPreAuthNeeded();
+    }
+
+    /**
      * Is the Oauth2 token available and ready to use (not expired)
      */
     public boolean isOauth2TokenAvailableAndReadyToUse(Xs2aContext ctx) {
         // FIXME - Token validity check
         return null != ctx.getOauth2Token();
+    }
+
+    public boolean isEmbeddedOrDecoupled(Xs2aContext ctx) {
+        return isEmbedded(ctx) || isDecoupled(ctx);
+    }
+
+    /**
+     * Is the current consent authorization in DECOUPLED mode.
+     */
+    public boolean isDecoupled(Xs2aContext ctx) {
+        return DECOUPLED.name().equalsIgnoreCase(ctx.getAspspScaApproach());
+    }
+
+    public boolean isDecoupledWithZeroSca(Xs2aContext ctx) {
+        return isDecoupled(ctx) && isZeroScaAvailable(ctx);
+    }
+
+    /**
+     * Is selected SCA method decoupled
+     */
+    public boolean isDecoupledScaSelected(Xs2aContext ctx) {
+        return ctx.isSelectedScaDecoupled();
     }
 
     /**
@@ -64,18 +117,40 @@ public class Xs2aConsentInfo {
     }
 
     /**
+     * Is decoupled SCA was finalised by PSU with mobile or other type of device
+     */
+    public boolean isDecoupledScaFinalizedByPSU(Xs2aContext ctx) {
+        return ctx.isDecoupledScaFinished();
+    }
+
+    /**
+     * Is decoupled SCA was failed (i.e. took too long)
+     */
+    public boolean isDecoupledScaFailed(Xs2aContext ctx) {
+        return false; // FIXME - check if authorization is taking too much time
+    }
+
+    /**
      * Is the current consent authorization using zero SCA flow
      */
     public boolean isZeroScaAvailable(Xs2aContext ctx) {
-        return null == ctx.getAvailableSca()
-                       || null != ctx.getAvailableSca() && ctx.getAvailableSca().isEmpty();
+        return (null == ctx.getAvailableSca()
+                || null != ctx.getAvailableSca() && ctx.getAvailableSca().isEmpty())
+                && null == ctx.getScaSelected();
     }
 
     /**
      * Is the PSU password present in the context.
      */
     public boolean isPasswordPresent(Xs2aContext ctx) {
-        return null != ctx.getPsuPassword();
+        return null != ctx.getPsuPassword() && !isOauthEmbeddedPreStepDone(ctx);
+    }
+
+    /**
+     * Is Oauth Embedded pre step already Done.
+     */
+    public boolean isOauthEmbeddedPreStepDone(Xs2aContext ctx) {
+        return ctx.isEmbeddedPreAuthDone();
     }
 
     /**

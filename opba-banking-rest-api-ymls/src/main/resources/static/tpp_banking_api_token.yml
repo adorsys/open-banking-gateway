@@ -91,22 +91,6 @@ components:
           schema:
             $ref: '#/components/schemas/PsuPaymentSessionResponse'
 
-  securitySchemes:
-    BearerAuthOAuth:
-      description: |
-        Bearer Token.
-      type: http
-      scheme: bearer
-    accessCode:
-      type: oauth2
-      flows:
-        authorizationCode:
-          authorizationUrl: 'http://example.com/oauth/auth'
-          tokenUrl: 'http://example.com/oauth/token'
-          scopes:
-            write: allows modifying resources
-            read: allows reading resources
-
   schemas:
     PsuConsentSessionResponse:
       type: object

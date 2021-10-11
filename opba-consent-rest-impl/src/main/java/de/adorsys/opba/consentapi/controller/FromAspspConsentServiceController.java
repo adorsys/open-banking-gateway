@@ -21,14 +21,13 @@ public class FromAspspConsentServiceController implements FromAspspConsentAuthor
     @Override
     public CompletableFuture fromAspspOkUsingGET(
             String authId,
-            String redirectState,
-            String redirectCode,
+            String fromAspspRedirectCode,
             String code) {
 
         return fromAspspRedirectHandler.execute(
                 FromAspspRequest.builder()
                         .facadeServiceable(serviceableTemplate.toBuilder()
-                                .redirectCode(redirectCode)
+                                .redirectCode(fromAspspRedirectCode)
                                 .authorizationSessionId(authId)
                                 .build()
                         )
@@ -41,13 +40,12 @@ public class FromAspspConsentServiceController implements FromAspspConsentAuthor
     @Override
     public CompletableFuture fromAspspNokUsingGET(
             String authId,
-            String redirectState,
-            String redirectCode) {
+            String fromAspspRedirectCode) {
 
         return fromAspspRedirectHandler.execute(
                 FromAspspRequest.builder()
                         .facadeServiceable(serviceableTemplate.toBuilder()
-                                .redirectCode(redirectCode)
+                                .redirectCode(fromAspspRedirectCode)
                                 .authorizationSessionId(authId)
                                 .build()
                         )

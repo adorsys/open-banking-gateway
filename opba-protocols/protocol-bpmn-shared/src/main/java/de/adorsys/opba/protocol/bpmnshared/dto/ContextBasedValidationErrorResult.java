@@ -19,7 +19,7 @@ public class ContextBasedValidationErrorResult<T> extends ValidationErrorResult<
     }
 
     @Override
-    public String authContext() {
+    public String getAuthContext() {
         return executionId;
     }
 }

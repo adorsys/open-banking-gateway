@@ -1,0 +1,37 @@
+{
+  "scenarioName": "AccountsListUsingPostbankEmbedded",
+  "newScenarioState": "GetAccountWithBalance",
+  "request" : {
+    "url" : "/ais/DE/Postbank/v1/accounts?withBalance=true",
+    "method" : "GET",
+    "headers" : {
+      "X-Request-ID" : {
+        "matches" : ".+"
+      },
+      "Consent-ID" : {
+        "matches" : ".+"
+      },
+      "Date" : {
+        "matches" : ".+"
+      }
+    }
+  },
+  "response" : {
+    "status" : 200,
+    "body" : "{\"accounts\":[{\"cashAccountType\":null,\"balances\":[{\"balanceType\":\"closingBooked\",\"balanceAmount\":{\"amount\":\"500.00\",\"currency\":\"EUR\"},\"referenceDate\":\"2017-10-25\"},{\"balanceType\":\"expected\",\"lastChangeDateTime\":\"2017-10-25T15:30:35.035Z\",\"balanceAmount\":{\"amount\":\"900.00\",\"currency\":\"EUR\"}},{\"balanceType\":\"closingBooked\",\"balanceAmount\":{\"amount\":\"350.00\",\"currency\":\"USD\"},\"referenceDate\":\"2017-10-25\"},{\"balanceType\":\"expected\",\"lastChangeDateTime\":\"2017-10-24T14:30:21Z\",\"balanceAmount\":{\"amount\":\"350.00\",\"currency\":\"USD\"}}],\"resourceId\":\"8724B81FA1BDDF1775B8C8354221849E\",\"product\":\"CUENTA A LA VISTA DB\",\"bban\":null,\"_links\":{\"balances\":{\"href\":\"https://simulator-xs2a.db.com/ais/DE/SB-DB/v1/accounts/8724B81FA1BDDF1775B8C8354221849E/balances\"},\"transactions\":{\"href\":\"https://simulator-xs2a.db.com/ais/DE/SB-DB/v1/accounts/8724B81FA1BDDF1775B8C8354221849E/transactions\"},\"account\":{\"href\":\"https://simulator-xs2a.db.com/ais/DE/SB-DB/v1/accounts/8724B81FA1BDDF1775B8C8354221849E\"}},\"iban\":\"DE76215730140403343700\",\"name\":\"JAVIER MARTIN ALAEZ\",\"currency\":\"EUR\",\"msisdn\":null,\"bic\":null}]}",
+    "headers" : {
+      "Date" : "Mon, 01 Mar 2021 16:19:38 GMT",
+      "Server" : "Apache",
+      "glue2gExit" : "2021-03-01T16:19:38.620",
+      "X-Request-ID" : "fd660897-6302-4ea4-9ce5-f699e978891d",
+      "bffEntry" : "2021-03-01T16:19:37.853",
+      "bffExit" : "2021-03-01T16:19:38.621",
+      "Content-Type" : "application/json;charset=utf-8",
+      "glue2gEntry" : "2021-03-01T16:19:37.853",
+      "Keep-Alive" : "timeout=5, max=100"
+    }
+  },
+  "uuid" : "2096a461-3393-4e2e-a56c-a6e7b9ee1af3",
+  "persistent" : true,
+  "insertionIndex" : 5
+}

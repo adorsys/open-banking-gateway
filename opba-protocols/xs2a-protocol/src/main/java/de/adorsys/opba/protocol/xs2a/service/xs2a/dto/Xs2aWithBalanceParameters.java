@@ -2,7 +2,7 @@ package de.adorsys.opba.protocol.xs2a.service.xs2a.dto;
 
 import de.adorsys.opba.protocol.bpmnshared.dto.DtoMapper;
 import de.adorsys.opba.protocol.xs2a.context.ais.Xs2aAisContext;
-import de.adorsys.xs2a.adapter.service.RequestParams;
+import de.adorsys.xs2a.adapter.api.RequestParams;
 import lombok.Data;
 import org.mapstruct.Mapper;
 

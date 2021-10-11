@@ -15,7 +15,6 @@ import de.adorsys.opba.protocol.facade.config.encryption.impl.fintech.FintechSec
 import lombok.RequiredArgsConstructor;
 
 import javax.persistence.EntityManager;
-import java.security.PrivateKey;
 import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
@@ -110,12 +109,12 @@ public class FintechPaymentAccess implements PaymentAccess {
             return null;
         }
 
-        PrivateKey psuAspspKey = fintechVault.psuAspspKeyFromPrivate(session, fintech, fintechPassword);
-        return encryptionService.forPrivateKey(psuAspspPrivateKey.get().getId(), psuAspspKey);
+        var psuAspspKey = fintechVault.psuAspspKeyFromPrivate(session, fintech, fintechPassword);
+        return encryptionService.forPrivateKey(psuAspspPrivateKey.get().getId(), psuAspspKey.getPrivateKey());
     }
 
     private EncryptionService anonymousEncryptionService(FintechPrvKey prvKey) {
-        PrivateKey psuAspspKey = fintechVault.fintechOnlyPrvKeyFromPrivate(prvKey, fintech, fintechPassword);
-        return encryptionService.forPrivateKey(prvKey.getId(), psuAspspKey);
+        var psuAspspKey = fintechVault.fintechOnlyPrvKeyFromPrivate(prvKey, fintech, fintechPassword);
+        return encryptionService.forPrivateKey(prvKey.getId(), psuAspspKey.getPrivateKey());
     }
 }

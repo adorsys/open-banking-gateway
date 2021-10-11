@@ -12,7 +12,7 @@ security:
   - basicAuth: []
 
 paths:
-  /admin/banks:
+  /admin/v1/banks:
     get:
       security:
         - basicAuth: []
@@ -39,7 +39,7 @@ paths:
             'application/json':
               schema:
                 $ref: '#/components/schemas/PageBankData'
-  /admin/banks/{bankId}:
+  /admin/v1/banks/{bankId}:
     get:
       security:
         - basicAuth: []
@@ -167,12 +167,15 @@ components:
           format: int64
         uuid:
           type: string
+          format: uuid
         name:
           type: string
         bic:
           type: string
         bankCode:
           type: string
+        isActive:
+          type: boolean
     BankAction:
       type: object
       properties:
@@ -181,14 +184,20 @@ components:
           enum:
             - list-accounts
             - list-transactions
+            - delete-consent
+            - get-consent-status
+            - get-ais-authorization-status
+            - update-external-ais-session
             - authorization
+            - on-login
             - get-authorization-state
             - update-authorization
             - deny-authorization
-            - from-aspsp
+            - from-aspsp-redirect
             - single-payment
             - get-payment-status
             - get-payment-information
+            - get-pis-authorization-status
         protocolBeanName:
           type: string
         consentSupported:
@@ -202,8 +211,10 @@ components:
       properties:
         bank:
           $ref: '#/components/schemas/Bank'
-        profile:
-          $ref: '#/components/schemas/BankProfile'
+        profiles:
+          type: array
+          items:
+            $ref: '#/components/schemas/BankProfile'
     BankProfile:
       type: object
       properties:
@@ -212,6 +223,9 @@ components:
           format: int64
         url:
           type: string
+        uuid:
+          type: string
+          format: uuid
         adapterId:
           type: string
         idpUrl:
@@ -223,11 +237,19 @@ components:
             enum:
               - REDIRECT
               - EMBEDDED
+              - DECOUPLED
         preferredApproach:
           type: string
           enum:
             - REDIRECT
             - EMBEDDED
+            - DECOUPLED
+        supportedConsentType:
+          type: string
+          enum:
+            - DEDICATED_ALL
+            - GLOBAL_ALL
+            - GLOBAL_ACCOUNTS
         tryToUsePreferredApproach:
           type: boolean
         uniquePaymentPurpose:
@@ -242,6 +264,17 @@ components:
           type: string
         name:
           type: string
+        externalId:
+          type: string
+        externalInterfaces:
+          type: string
+          description: Comma-separated external interfaces
+        protocolType:
+          type: string
+        isSandbox:
+          type: boolean
+        isActive:
+          type: boolean
     BankSubAction:
       type: object
       properties:
@@ -250,14 +283,20 @@ components:
           enum:
             - list-accounts
             - list-transactions
+            - delete-consent
+            - get-consent-status
+            - get-ais-authorization-status
+            - update-external-ais-session
             - authorization
+            - on-login
             - get-authorization-state
             - update-authorization
             - deny-authorization
-            - from-aspsp
+            - from-aspsp-redirect
             - single-payment
             - get-payment-status
             - get-payment-information
+            - get-pis-authorization-status
         subProtocolBeanName:
           type: string
     PageBankData:

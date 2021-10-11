@@ -21,6 +21,7 @@ import javax.persistence.Table;
 import javax.persistence.UniqueConstraint;
 import java.io.Serializable;
 import java.util.Collection;
+import java.util.UUID;
 
 @Entity
 @Getter
@@ -39,17 +40,22 @@ public class Bank implements Serializable {
     @SequenceGenerator(name = "bank_id_generator", sequenceName = "bank_id_sequence")
     private Long id;
 
-    String uuid;
-    String name;
-    String bic;
-    String bankCode;
+    private UUID uuid;
+    private String name;
+    private String bic;
+    private String bankCode;
+    private boolean active;
+
+    @OneToMany(mappedBy = "bank", cascade = CascadeType.ALL, orphanRemoval = true)
+    private Collection<BankProfile> profiles;
 
     @OneToMany(mappedBy = "aspsp", cascade = CascadeType.ALL, orphanRemoval = true)
     private Collection<Consent> consents;
 
-    @Mapper
+    @Mapper(uses = BankProfile.ToBankProfileDescriptor.class)
     public interface ToBankDescriptor {
         @Mapping(source = "name", target = "bankName")
+        @Mapping(source = "active", target = "isActive")
         BankDescriptor map(Bank bank);
     }
 }

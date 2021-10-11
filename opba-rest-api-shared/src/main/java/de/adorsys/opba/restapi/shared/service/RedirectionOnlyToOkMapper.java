@@ -7,9 +7,9 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import static de.adorsys.opba.restapi.shared.HttpHeaders.AUTHORIZATION_SESSION_ID;
-import static de.adorsys.opba.restapi.shared.HttpHeaders.REDIRECT_CODE;
 import static de.adorsys.opba.restapi.shared.HttpHeaders.SERVICE_SESSION_ID;
 import static de.adorsys.opba.restapi.shared.HttpHeaders.X_REQUEST_ID;
+import static de.adorsys.opba.restapi.shared.HttpHeaders.X_XSRF_TOKEN;
 import static org.springframework.http.HttpHeaders.LOCATION;
 import static org.springframework.http.HttpStatus.OK;
 
@@ -34,9 +34,10 @@ public class RedirectionOnlyToOkMapper {
     protected ResponseEntity.BodyBuilder responseForRedirection(FacadeResultRedirectable<?, ?> result, ResponseEntity.BodyBuilder response) {
          response
             .header(AUTHORIZATION_SESSION_ID, result.getAuthorizationSessionId())
-            .header(REDIRECT_CODE, result.getRedirectCode());
+            .header(X_XSRF_TOKEN, result.getRedirectCode());
 
-         if (null != result.getRedirectionTo()) {
+
+        if (null != result.getRedirectionTo()) {
              response.header(LOCATION, result.getRedirectionTo().toASCIIString());
          }
 

@@ -2,7 +2,7 @@ package de.adorsys.opba.protocol.hbci.tests.e2e.sandbox.hbcisteps;
 
 import com.tngtech.jgiven.integration.spring.JGivenStage;
 import de.adorsys.opba.protocol.xs2a.tests.e2e.stages.PaymentRequestCommon;
-import de.adorsys.xs2a.adapter.adapter.StandardPaymentProduct;
+import de.adorsys.xs2a.adapter.api.model.PaymentProduct;
 import io.restassured.response.ExtractableResponse;
 import io.restassured.response.Response;
 
@@ -69,7 +69,7 @@ public class HbciPaymentInitiationRequest<SELF extends HbciPaymentInitiationRequ
                 .contentType(APPLICATION_JSON_VALUE)
                 .body(body)
             .when()
-                .post(PIS_SINGLE_PAYMENT_ENDPOINT, StandardPaymentProduct.SEPA_CREDIT_TRANSFERS.getSlug())
+                .post(PIS_SINGLE_PAYMENT_ENDPOINT, PaymentProduct.SEPA_CREDIT_TRANSFERS.toString())
             .then()
                 .statusCode(ACCEPTED.value())
                 .extract();

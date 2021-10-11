@@ -1,0 +1,47 @@
+{
+  "scenarioName": "AccountsListUsingDkbEmbeddedPreStep",
+  "requiredScenarioState": "ScaMethodSelected",
+  "newScenarioState": "OtpSent",
+  "priority": 6,
+  "request" : {
+    "urlPattern" : ".*/v1/consents/VALID_CONSENT_ID/authorisations/.+",
+    "method" : "PUT",
+    "headers" : {
+      "X-GTW-ASPSP-ID" : {
+        "equalTo": "83c24dcf-2cfb-4c43-9812-013e32ab53b1"
+      },
+      "X-Request-ID" : {
+        "matches" : ".+"
+      },
+      "PSU-ID" : {
+        "matches" : "max.musterman"
+      },
+      "PSD2-AUTHORIZATION": {
+        "equalTo": "Bearer VALID_TOKEN"
+      }
+    },
+    "bodyPatterns" : [ {
+      "equalToJson" : "{\"scaAuthenticationData\":\"123456\"}",
+      "ignoreArrayOrder" : true,
+      "ignoreExtraElements" : true
+    } ]
+  },
+  "response" : {
+    "status" : 200,
+    "body" : "{\n  \"scaStatus\" : \"finalised\"\n}",
+    "headers" : {
+      "Date" : "Mon, 05 Jul 2021 11:59:59 GMT",
+      "Server" : "Apache",
+      "Content-Type" : "application/json; charset=utf-8",
+      "ASPSP-SCA-Approach" : "EMBEDDED",
+      "X-Request-ID" : "193cea26-e821-459f-808c-06cbc61417bc",
+      "Location" : "/v1/consents/VALID_CONSENT_ID/authorisations/123456",
+      "Strict-Transport-Security" : "max-age=31536000",
+      "X-Content-Type-Options" : "nosniff",
+      "Keep-Alive" : "timeout=15, max=100"
+    }
+  },
+  "uuid" : "e149cd1c-fe95-44c9-ab53-c95b91ec0631",
+  "persistent" : true,
+  "insertionIndex" : 4
+}

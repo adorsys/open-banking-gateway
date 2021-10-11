@@ -1,28 +1,17 @@
 package de.adorsys.opba.protocol.hbci.service.protocol.ais.dto;
 
 import de.adorsys.multibanking.hbci.model.HbciConsent;
+import de.adorsys.opba.protocol.bpmnshared.dto.context.ProtocolResultCache;
 import lombok.Data;
 
+import java.time.Instant;
 import java.util.Map;
 
-/**
- * Contains cached HBCI result values, since HBCI does not provide any kind of consent.
- */
 @Data
-public class HbciResultCache {
+public class HbciResultCache implements ProtocolResultCache<HbciConsent, AisListAccountsResult, AisListTransactionsResult> {
 
-    /**
-     * Last HBCI consent.
-     */
     private HbciConsent consent;
-
-    /**
-     * Last account list result.
-     */
     private AisListAccountsResult accounts;
-
-    /**
-     * Last transaction list result.
-     */
-    private Map<String, AisListTransactionsResult> transactionsByIban;
+    private Map<String, AisListTransactionsResult> transactionsById;
+    private Instant cachedAt;
 }

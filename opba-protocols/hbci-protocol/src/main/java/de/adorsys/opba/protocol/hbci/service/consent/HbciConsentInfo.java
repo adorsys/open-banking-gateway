@@ -94,8 +94,8 @@ public class HbciConsentInfo {
 
         Optional<HbciResultCache> cached = cachedResultAccessor.resultFromCache(ctx);
         return cached.map(
-                hbciResultCache -> null == hbciResultCache.getTransactionsByIban()
-                        || null == hbciResultCache.getTransactionsByIban().get(ctx.getAccountIban())
+                hbciResultCache -> null == hbciResultCache.getTransactionsById()
+                        || null == hbciResultCache.getTransactionsById().get(ctx.getAccountIban())
         ).orElse(true);
     }
 

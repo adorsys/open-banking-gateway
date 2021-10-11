@@ -1,0 +1,17 @@
+{
+  "chosenScaMethod": {
+    "name": "chipTAN QR | Kartennummer: ******0430chipTAN QR | Kartennummer: ******0430",
+    "explanation": "Übertragung der Auftragsdaten mittels QR-Code. Erfordert geeigneten TAN-Generator."
+  },
+  "challengeData": {
+    "data": [
+      "some challenge data"
+    ]
+  },
+  "scaStatus": "scaMethodSelected",
+  "_links": {
+    "authoriseTransaction": {
+      "href": "https://xs2a-sandbox.f-i-apim.de:8444/fixs2a-env/xs2a-api/12345678/v1/payments/sepa-credit-transfers/VALID_PAYMENT_ID/authorisations/c9ef5300-0091-47c6-9df9-2190313e8f03"
+    }
+  }
+}

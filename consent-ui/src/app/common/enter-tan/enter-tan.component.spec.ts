@@ -8,7 +8,7 @@ import { EnterTanComponent } from './enter-tan.component';
 import { StubUtilTests } from '../../ais/common/stub-util-tests';
 import { SessionService } from '../session.service';
 import { UpdateConsentAuthorizationService } from '../../api';
-import { ConsentAuthorizationService } from '../../api/api/consentAuthorization.service';
+import { AuthStateConsentAuthorizationService } from '../../api';
 
 describe('EnterTanComponent', () => {
   let component: EnterTanComponent;
@@ -34,7 +34,7 @@ describe('EnterTanComponent', () => {
     component = fixture.componentInstance;
     sessionService = TestBed.inject(SessionService);
     updateConsentAuthorizationService = TestBed.inject(UpdateConsentAuthorizationService);
-    consentAuthorizationService = TestBed.inject(ConsentAuthorizationService);
+    consentAuthorizationService = TestBed.inject(AuthStateConsentAuthorizationService);
     sessionServiceSpy = spyOn(sessionService, 'getRedirectCode').and.returnValue(StubUtilTests.REDIRECT_ID);
     updateConsentAuthorizationServiceSpy = spyOn(
       updateConsentAuthorizationService,

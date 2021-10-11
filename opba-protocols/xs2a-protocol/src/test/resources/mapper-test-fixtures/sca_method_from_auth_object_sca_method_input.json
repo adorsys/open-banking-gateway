@@ -1,5 +1,5 @@
 {
-  "authenticationType": "sms",
+  "authenticationType": "SMS_OTP",
   "authenticationVersion": "1.0",
   "authenticationMethodId": "SCA_SMS",
   "name": "mobile",

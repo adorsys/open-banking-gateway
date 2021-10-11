@@ -41,7 +41,7 @@ abstract class AbstractServiceSessionTest extends DbDropper {
     private static final String FINTECH_ID = "MY-SUPER-FINTECH";
     private static final String FINTECH_USER_ID = "user@fintech.com";
     private static final String PASSWORD = "password";
-    private static final String TEST_BANK_ID = "53c47f54-b9a4-465a-8f77-bc6cd5f0cf46";
+    private static final UUID TEST_BANK_PROFILE_ID = UUID.fromString("53c47f54-b9a4-465a-8f77-bc6cd5f0cf46");
     private static final UUID REQUEST_ID = UUID.fromString("e3865c6b-70f2-4c1e-ad31-d7c2ff160858");
     private static final String REDIRECT_URL_OK = "http://google.com";
     private static final String REDIRECT_URL_NO_OK = "http://microsoft.com";
@@ -167,7 +167,7 @@ abstract class AbstractServiceSessionTest extends DbDropper {
                        .facadeServiceable(FacadeServiceableRequest.builder()
                                .authorization(FINTECH_ID)
                                .sessionPassword(PASSWORD)
-                               .bankId(TEST_BANK_ID)
+                               .bankProfileId(TEST_BANK_PROFILE_ID)
                                .redirectCode(listAccountsResponse.getRedirectCode())
                                .authorizationSessionId(listAccountsResponse.getAuthorizationSessionId())
                                .fintechRedirectUrlNok(REDIRECT_URL_NO_OK)
@@ -181,7 +181,7 @@ abstract class AbstractServiceSessionTest extends DbDropper {
         return ListAccountsRequest.builder()
                        .facadeServiceable(
                                FacadeServiceableRequest.builder()
-                                       .bankId(TEST_BANK_ID)
+                                       .bankProfileId(TEST_BANK_PROFILE_ID)
                                        .requestId(REQUEST_ID)
                                        .serviceSessionId(SESSION_ID)
                                        .sessionPassword(PASSWORD)

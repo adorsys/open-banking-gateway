@@ -48,6 +48,42 @@ export class FinTechOauth2AuthenticationService {
 
 
 
+    private addToHttpParams(httpParams: HttpParams, value: any, key?: string): HttpParams {
+        if (typeof value === "object" && value instanceof Date === false) {
+            httpParams = this.addToHttpParamsRecursive(httpParams, value);
+        } else {
+            httpParams = this.addToHttpParamsRecursive(httpParams, value, key);
+        }
+        return httpParams;
+    }
+
+    private addToHttpParamsRecursive(httpParams: HttpParams, value?: any, key?: string): HttpParams {
+        if (value == null) {
+            return httpParams;
+        }
+
+        if (typeof value === "object") {
+            if (Array.isArray(value)) {
+                (value as any[]).forEach( elem => httpParams = this.addToHttpParamsRecursive(httpParams, elem, key));
+            } else if (value instanceof Date) {
+                if (key != null) {
+                    httpParams = httpParams.append(key,
+                        (value as Date).toISOString().substr(0, 10));
+                } else {
+                   throw Error("key may not be null if value is Date");
+                }
+            } else {
+                Object.keys(value).forEach( k => httpParams = this.addToHttpParamsRecursive(
+                    httpParams, value[k], key != null ? `${key}.${k}` : k));
+            }
+        } else if (key != null) {
+            httpParams = httpParams.append(key, value);
+        } else {
+            throw Error("key may not be null if value is not object or array");
+        }
+        return httpParams;
+    }
+
     /**
      * Identifies the PSU in the Realm of the FinTechApi using his Gmail or other IDP provider account.
      * Use Oauth2 for Gmail users\&#39; account to identify him 
@@ -56,10 +92,10 @@ export class FinTechOauth2AuthenticationService {
      * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
      * @param reportProgress flag to report request and response progress.
      */
-    public oauthLoginPOST(xRequestID: string, idpProvider: 'gmail', observe?: 'body', reportProgress?: boolean): Observable<any>;
-    public oauthLoginPOST(xRequestID: string, idpProvider: 'gmail', observe?: 'response', reportProgress?: boolean): Observable<HttpResponse<any>>;
-    public oauthLoginPOST(xRequestID: string, idpProvider: 'gmail', observe?: 'events', reportProgress?: boolean): Observable<HttpEvent<any>>;
-    public oauthLoginPOST(xRequestID: string, idpProvider: 'gmail', observe: any = 'body', reportProgress: boolean = false ): Observable<any> {
+    public oauthLoginPOST(xRequestID: string, idpProvider: 'gmail', observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: undefined}): Observable<any>;
+    public oauthLoginPOST(xRequestID: string, idpProvider: 'gmail', observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: undefined}): Observable<HttpResponse<any>>;
+    public oauthLoginPOST(xRequestID: string, idpProvider: 'gmail', observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: undefined}): Observable<HttpEvent<any>>;
+    public oauthLoginPOST(xRequestID: string, idpProvider: 'gmail', observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: undefined}): Observable<any> {
         if (xRequestID === null || xRequestID === undefined) {
             throw new Error('Required parameter xRequestID was null or undefined when calling oauthLoginPOST.');
         }
@@ -72,18 +108,27 @@ export class FinTechOauth2AuthenticationService {
             headers = headers.set('X-Request-ID', String(xRequestID));
         }
 
-        // to determine the Accept header
-        const httpHeaderAccepts: string[] = [
-        ];
-        const httpHeaderAcceptSelected: string | undefined = this.configuration.selectHeaderAccept(httpHeaderAccepts);
+        let httpHeaderAcceptSelected: string | undefined = options && options.httpHeaderAccept;
+        if (httpHeaderAcceptSelected === undefined) {
+            // to determine the Accept header
+            const httpHeaderAccepts: string[] = [
+            ];
+            httpHeaderAcceptSelected = this.configuration.selectHeaderAccept(httpHeaderAccepts);
+        }
         if (httpHeaderAcceptSelected !== undefined) {
             headers = headers.set('Accept', httpHeaderAcceptSelected);
         }
 
 
+        let responseType: 'text' | 'json' = 'json';
+        if(httpHeaderAcceptSelected && httpHeaderAcceptSelected.startsWith('text')) {
+            responseType = 'text';
+        }
+
         return this.httpClient.post<any>(`${this.configuration.basePath}/v1/oauth2/${encodeURIComponent(String(idpProvider))}/login`,
             null,
             {
+                responseType: <any>responseType,
                 withCredentials: this.configuration.withCredentials,
                 headers: headers,
                 observe: observe,

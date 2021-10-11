@@ -42,6 +42,7 @@ describe('TransactionsConsentReviewComponent', () => {
   beforeEach(() => {
     fixture = TestBed.createComponent(TransactionsConsentReviewComponent);
     component = fixture.componentInstance;
+    component.ngOnInit();
     fixture.detectChanges();
     consentAuthorizationService = TestBed.inject(UpdateConsentAuthorizationService);
   });
@@ -56,6 +57,7 @@ describe('TransactionsConsentReviewComponent', () => {
     expect(location.back).toHaveBeenCalled();
   });
 
+  // FIXME Disabled as DateUtil.isDateNotInThePastValidator seem to cause 'undefined' error in control validation
   it('should confirm transaction when confirm button is pressed', () => {
     consentAuthorizationServiceSpy = spyOn(consentAuthorizationService, 'embeddedUsingPOST').and.returnValue(of());
     component.onConfirm();

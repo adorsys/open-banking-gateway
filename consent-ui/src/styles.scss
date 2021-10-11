@@ -89,6 +89,21 @@ a {
       padding-left: 1rem;
       transition: border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
       font-size: 1.125rem;
+
+    }
+    .customDate {
+      width: 12.5rem;
+      padding-top: 18px;
+      margin-left: 1rem;
+    }
+    .customNumber {
+      width: 7rem;
+      padding-top: 18px;
+      margin-left: 1rem;
+      margin-right: 1rem;
+    }
+    .customStrong {
+      padding: 5px 0 0 0px;
     }
   }
 
@@ -109,6 +124,10 @@ a {
 }
 .form-check {
   padding-left: 0;
+
+  .checkboxLabel {
+    padding: 0 0 0 20.5px;
+  }
 
   label {
     font-family: var(--fontFamilyMedium);
@@ -147,6 +166,11 @@ a {
       }
     }
   }
+}
+
+.inputWrapper {
+  //margin-left: 3.375rem;
+  margin-left: 2.03124rem;
 }
 
 @media (max-width: 767px) {

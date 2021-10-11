@@ -1,0 +1,26 @@
+{
+  "scenarioName": "PaymentUsingSantanderOauthIntegrated",
+  "newScenarioState": "GetPaymentStatus",
+  "request": {
+    "url": "/v1/payments/sepa-credit-transfers/n2p3ojqm6ueavh_0wqdFfQbQa9XyPsnQOW2oFsPfDW3XCdoAx3AMFYiDbe-nvEQ3cgftJbETkzvNvu5mZQqWcA==_=_psGLvQpt9Q/status",
+    "method": "GET",
+    "headers": {
+      "X-Request-ID": {
+        "matches": "[0-9a-zA-z\\-]+"
+      },
+      "Authorization": {
+        "equalTo": "Bearer OAUTH_TOKEN"
+      }
+    }
+  },
+  "response": {
+    "status": 200,
+    "bodyFileName": "body-payment-status-response.json",
+    "headers": {
+      "X-Request-Id": "b575eefc-3232-11ea-b535-e2b5b1f1970b",
+      "Content-Type": "application/json;charset=UTF-8",
+      "Date": "Wed, 08 Jan 2020 16:20:30 GMT"
+    }
+  },
+  "uuid": "1d027a31-c466-3143-bd88-6e82a6f0f46f"
+}

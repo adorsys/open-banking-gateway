@@ -1,0 +1,36 @@
+{
+  "id" : "610c0212-885a-3a35-82cb-abbb27273fb0",
+  "scenarioName": "Decoupled max.musterman initiate consent",
+  "requiredScenarioState": "PsuIdentified",
+  "newScenarioState": "PsuAuthenticated",
+  "request" : {
+    "url" : "/v1/consents/gwSmVLCIfQVVPnSGg8v69gSd1H6_g0WCr7YU-RO9SHZnUzxbTouNENYOGkrGbXq1_9SxHzHaMr1NKEIFZyrivsz9MpaJIQIH3NJX8IHgetw=_=_psGLvQpt9Q/authorisations/392e5668-194e-4a11-b90f-815d8be5902a",
+    "method" : "PUT",
+    "headers" : {
+      "Accept" : {
+        "equalTo" : "application/json"
+      },
+      "X-Request-ID" : {
+        "matches" : "[=_0-9a-zA-z\\-]+"
+      }
+    },
+    "bodyPatterns" : [ {
+      "equalToJson" : "{\"psuData\":{\"password\":\"12345\"}}",
+      "ignoreArrayOrder" : true,
+      "ignoreExtraElements" : true
+    } ]
+  },
+  "response" : {
+    "status" : 200,
+    "bodyFileName" : "body-v1-consents-3258146603.json",
+    "headers" : {
+      "Vary" : [ "Origin", "Access-Control-Request-Method", "Access-Control-Request-Headers" ],
+      "Aspsp-Sca-Approach" : "DECOUPLED",
+      "X-Request-Id" : "ed503954-be7d-45f8-a8e8-f750cf8970f5",
+      "Content-Type" : "application/json",
+      "Date" : "Sat, 21 Aug 2021 15:45:16 GMT",
+      "Keep-Alive" : "timeout=60"
+    }
+  },
+  "uuid" : "610c0212-885a-3a35-82cb-abbb27273fb0"
+}

@@ -6,6 +6,7 @@ import lombok.RequiredArgsConstructor;
 
 import java.util.List;
 
+import static de.adorsys.opba.protocol.api.common.Approach.DECOUPLED;
 import static de.adorsys.opba.protocol.api.common.Approach.EMBEDDED;
 import static de.adorsys.opba.protocol.api.common.Approach.REDIRECT;
 
@@ -21,6 +22,7 @@ public class IgnoreValidationRuleImpl<T> implements IgnoreValidationRule {
                 .filter(it -> null == it.getEndpointClassCanonicalName()
                         || it.getEndpointClassCanonicalName().equals(invokerClass.getCanonicalName()))
                 .filter(it -> !(EMBEDDED.equals(approach) && it.isForEmbedded()))
+                .filter(it -> !(DECOUPLED.equals(approach) && it.isForDecoupled()))
                 .anyMatch(it -> !(REDIRECT.equals(approach) && it.isForRedirect()));
     }
 }

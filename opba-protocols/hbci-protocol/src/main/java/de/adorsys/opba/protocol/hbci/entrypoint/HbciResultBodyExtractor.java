@@ -2,9 +2,11 @@ package de.adorsys.opba.protocol.hbci.entrypoint;
 
 import de.adorsys.multibanking.domain.BalancesReport;
 import de.adorsys.multibanking.domain.BankAccount;
+import de.adorsys.opba.protocol.api.dto.context.ServiceContext;
 import de.adorsys.opba.protocol.api.dto.request.payments.PaymentInfoBody;
 import de.adorsys.opba.protocol.api.dto.request.payments.PaymentStatusBody;
 import de.adorsys.opba.protocol.api.dto.request.payments.SinglePaymentBody;
+import de.adorsys.opba.protocol.api.dto.request.transactions.ListTransactionsRequest;
 import de.adorsys.opba.protocol.api.dto.result.body.AccountListBody;
 import de.adorsys.opba.protocol.api.dto.result.body.AccountListDetailBody;
 import de.adorsys.opba.protocol.api.dto.result.body.Amount;
@@ -49,9 +51,9 @@ public class HbciResultBodyExtractor {
         return accountsToFacadeMapper.map(accountsResult);
     }
 
-    public TransactionsResponseBody extractTransactionsReport(ProcessResponse result) {
+    public TransactionsResponseBody extractTransactionsReport(ProcessResponse result, ServiceContext<ListTransactionsRequest> context) {
         AisListTransactionsResult transactionsResult = (AisListTransactionsResult) result.getResult();
-        return transactionsToFacadeMapper.map(transactionsResult);
+        return transactionsToFacadeMapper.map(transactionsResult, context);
     }
 
     public SinglePaymentBody extractSinglePaymentBody(ProcessResponse result) {

@@ -24,7 +24,7 @@ import static org.springframework.http.HttpHeaders.AUTHORIZATION;
 @SpringBootTest(classes = {OpenBankingEmbeddedApplication.class, FintechRequestSigningTestConfig.class}, webEnvironment = RANDOM_PORT)
 class AdminApiSecurityTest {
 
-    private static final String ADMIN_API = "/admin/";
+    private static final String ADMIN_API = "/admin/v1/";
     private static final String WRONG_BASIC_AUTH = "Basic QWxh";
 
     @LocalServerPort

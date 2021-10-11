@@ -8,22 +8,17 @@ import { FinTechAuthorizationService } from './api/finTechAuthorization.service'
 import { FinTechBankSearchService } from './api/finTechBankSearch.service';
 import { FinTechOauth2AuthenticationService } from './api/finTechOauth2Authentication.service';
 import { FintechRetrieveAllSinglePaymentsService } from './api/fintechRetrieveAllSinglePayments.service';
+import { FintechRetrieveConsentService } from './api/fintechRetrieveConsent.service';
 import { FintechSinglePaymentInitiationService } from './api/fintechSinglePaymentInitiation.service';
 
 @NgModule({
   imports:      [],
   declarations: [],
   exports:      [],
-  providers: [
-    FinTechAccountInformationService,
-    FinTechAuthorizationService,
-    FinTechBankSearchService,
-    FinTechOauth2AuthenticationService,
-    FintechRetrieveAllSinglePaymentsService,
-    FintechSinglePaymentInitiationService ]
+  providers: []
 })
 export class ApiModule {
-    public static forRoot(configurationFactory: () => Configuration): ModuleWithProviders {
+    public static forRoot(configurationFactory: () => Configuration): ModuleWithProviders<ApiModule> {
         return {
             ngModule: ApiModule,
             providers: [ { provide: Configuration, useFactory: configurationFactory } ]

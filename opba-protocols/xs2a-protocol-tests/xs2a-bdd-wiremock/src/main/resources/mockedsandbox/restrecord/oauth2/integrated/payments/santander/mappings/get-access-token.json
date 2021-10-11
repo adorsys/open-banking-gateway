@@ -1,0 +1,24 @@
+{
+  "scenarioName": "PaymentUsingSantanderOauthIntegrated",
+  "newScenarioState": "GetAccessToken",
+  "request": {
+    "url": "/v1/oauth_matls/token",
+    "method": "POST",
+    "headers": {
+    },
+    "bodyPatterns": [
+      {
+        "matches": "(.*&|^)grant_type=client_credentials($|&.*)"
+      }
+    ]
+  },
+  "response": {
+    "status": 200,
+    "body": "{\"access_token\":\"93b8fd33-5260-451f-8cb9-aa377e208452\",\"token_type\":\"bearer\",\"expires_in\":359,\"scope\":\"payments.write consents.write consents.read accounts.write accounts.read payments.read\"}",
+    "headers": {
+      "Content-Type": "application/json;charset=UTF-8",
+      "Date": "Wed, 08 Jan 2020 16:20:14 GMT"
+    }
+  },
+  "uuid": "49c02872-029b-3c8b-a29c-e8290789dcb1"
+}

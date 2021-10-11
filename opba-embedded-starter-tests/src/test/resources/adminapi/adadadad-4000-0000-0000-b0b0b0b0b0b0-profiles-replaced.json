@@ -1,0 +1,368 @@
+
+{
+  "bank": {
+    "uuid": "adadadad-4000-0000-0000-b0b0b0b0b0b0",
+    "name": "adorsys XS2A",
+    "bic": "ADORSYS XS",
+    "isActive": true
+  },
+  "profiles": [
+    {
+      "url": "http://localhost:20014",
+      "uuid": "45e6cda0-69a7-4731-90fc-2b13a42fd3bd",
+      "adapterId": "adorsys-adapter",
+      "idpUrl": "http://localhost:20015/oauth/authorization-server",
+      "tryToUsePreferredApproach": false,
+      "uniquePaymentPurpose": false,
+      "actions": {
+        "LIST_ACCOUNTS": {
+          "protocolAction": "list-accounts",
+          "protocolBeanName": "xs2aListAccounts",
+          "consentSupported": true
+        },
+        "LIST_TRANSACTIONS": {
+          "protocolAction": "list-transactions",
+          "protocolBeanName": "xs2aSandboxListTransactions",
+          "consentSupported": true
+        },
+        "GET_CONSENT_STATUS": {
+          "protocolAction": "get-consent-status",
+          "protocolBeanName": "xs2aGetConsentStatus",
+          "consentSupported": true
+        },
+        "GET_PAYMENT_INFORMATION": {
+          "protocolAction": "get-payment-information",
+          "protocolBeanName": "xs2aGetPaymentInfoState",
+          "consentSupported": true
+        },
+        "GET_PAYMENT_STATUS": {
+          "protocolAction": "get-payment-status",
+          "protocolBeanName": "xs2aGetPaymentStatusState",
+          "consentSupported": true
+        },
+        "SINGLE_PAYMENT": {
+          "protocolAction": "single-payment",
+          "protocolBeanName": "xs2aInitiateSinglePayment",
+          "consentSupported": true
+        },
+        "AUTHORIZATION": {
+          "protocolAction": "authorization",
+          "consentSupported": true,
+          "subProtocols": [
+            {
+              "protocolAction": "deny-authorization",
+              "subProtocolBeanName": "xs2aDenyAuthorization"
+            },
+            {
+              "protocolAction": "from-aspsp-redirect",
+              "subProtocolBeanName": "xs2aFromAspspRedirect"
+            },
+            {
+              "protocolAction": "get-authorization-state",
+              "subProtocolBeanName": "xs2aGetAuthorizationState"
+            },
+            {
+              "protocolAction": "update-authorization",
+              "subProtocolBeanName": "xs2aUpdateAuthorization"
+            }
+          ]
+        },
+        "DELETE_CONSENT": {
+          "protocolAction": "delete-consent",
+          "protocolBeanName": "xs2aDeleteConsent",
+          "consentSupported": true
+        }
+      },
+      "bic": "ADORSYS XS",
+      "name": "oauth-prestep",
+      "protocolType": "XS2A",
+      "isActive": true
+    },
+    {
+      "url": "http://localhost:20014",
+      "uuid": "867a53d8-4cca-4365-a393-7febb0bbd38e",
+      "adapterId": "adorsys-adapter",
+      "idpUrl": "http://localhost:20015/oauth/authorization-server",
+      "tryToUsePreferredApproach": false,
+      "uniquePaymentPurpose": false,
+      "actions": {
+        "LIST_ACCOUNTS": {
+          "protocolAction": "list-accounts",
+          "protocolBeanName": "xs2aListAccounts",
+          "consentSupported": true
+        },
+        "LIST_TRANSACTIONS": {
+          "protocolAction": "list-transactions",
+          "protocolBeanName": "xs2aSandboxListTransactions",
+          "consentSupported": true
+        },
+        "GET_CONSENT_STATUS": {
+          "protocolAction": "get-consent-status",
+          "protocolBeanName": "xs2aGetConsentStatus",
+          "consentSupported": true
+        },
+        "GET_PAYMENT_INFORMATION": {
+          "protocolAction": "get-payment-information",
+          "protocolBeanName": "xs2aGetPaymentInfoState",
+          "consentSupported": true
+        },
+        "GET_PAYMENT_STATUS": {
+          "protocolAction": "get-payment-status",
+          "protocolBeanName": "xs2aGetPaymentStatusState",
+          "consentSupported": true
+        },
+        "SINGLE_PAYMENT": {
+          "protocolAction": "single-payment",
+          "protocolBeanName": "xs2aInitiateSinglePayment",
+          "consentSupported": true
+        },
+        "AUTHORIZATION": {
+          "protocolAction": "authorization",
+          "consentSupported": true,
+          "subProtocols": [
+            {
+              "protocolAction": "deny-authorization",
+              "subProtocolBeanName": "xs2aDenyAuthorization"
+            },
+            {
+              "protocolAction": "from-aspsp-redirect",
+              "subProtocolBeanName": "xs2aFromAspspRedirect"
+            },
+            {
+              "protocolAction": "get-authorization-state",
+              "subProtocolBeanName": "xs2aGetAuthorizationState"
+            },
+            {
+              "protocolAction": "update-authorization",
+              "subProtocolBeanName": "xs2aUpdateAuthorization"
+            }
+          ]
+        },
+        "DELETE_CONSENT": {
+          "protocolAction": "delete-consent",
+          "protocolBeanName": "xs2aDeleteConsent",
+          "consentSupported": true
+        }
+      },
+      "bic": "ADORSYS XS",
+      "name": "oauth-integrated",
+      "protocolType": "XS2A",
+      "isActive": true
+    },
+    {
+      "url": "http://localhost:20014",
+      "uuid": "2d8b3e75-9e3e-4fd2-b79c-063556ad9ecc",
+      "adapterId": "adorsys-adapter",
+      "idpUrl": "http://localhost:20015/oauth/authorization-server",
+      "preferredApproach": "REDIRECT",
+      "tryToUsePreferredApproach": true,
+      "uniquePaymentPurpose": false,
+      "actions": {
+        "LIST_ACCOUNTS": {
+          "protocolAction": "list-accounts",
+          "protocolBeanName": "xs2aListAccounts",
+          "consentSupported": true
+        },
+        "LIST_TRANSACTIONS": {
+          "protocolAction": "list-transactions",
+          "protocolBeanName": "xs2aSandboxListTransactions",
+          "consentSupported": true
+        },
+        "GET_CONSENT_STATUS": {
+          "protocolAction": "get-consent-status",
+          "protocolBeanName": "xs2aGetConsentStatus",
+          "consentSupported": true
+        },
+        "GET_PAYMENT_INFORMATION": {
+          "protocolAction": "get-payment-information",
+          "protocolBeanName": "xs2aGetPaymentInfoState",
+          "consentSupported": true
+        },
+        "GET_PAYMENT_STATUS": {
+          "protocolAction": "get-payment-status",
+          "protocolBeanName": "xs2aGetPaymentStatusState",
+          "consentSupported": true
+        },
+        "SINGLE_PAYMENT": {
+          "protocolAction": "single-payment",
+          "protocolBeanName": "xs2aInitiateSinglePayment",
+          "consentSupported": true
+        },
+        "AUTHORIZATION": {
+          "protocolAction": "authorization",
+          "consentSupported": true,
+          "subProtocols": [
+            {
+              "protocolAction": "deny-authorization",
+              "subProtocolBeanName": "xs2aDenyAuthorization"
+            },
+            {
+              "protocolAction": "from-aspsp-redirect",
+              "subProtocolBeanName": "xs2aFromAspspRedirect"
+            },
+            {
+              "protocolAction": "get-authorization-state",
+              "subProtocolBeanName": "xs2aGetAuthorizationState"
+            },
+            {
+              "protocolAction": "update-authorization",
+              "subProtocolBeanName": "xs2aUpdateAuthorization"
+            }
+          ]
+        },
+        "DELETE_CONSENT": {
+          "protocolAction": "delete-consent",
+          "protocolBeanName": "xs2aDeleteConsent",
+          "consentSupported": true
+        }
+      },
+      "bic": "ADORSYS XS",
+      "name": "redirect",
+      "protocolType": "XS2A",
+      "isActive": true
+    },
+    {
+      "url": "http://localhost:20014",
+      "uuid": "aa750320-2958-455e-9926-e9fca5ddfa92",
+      "adapterId": "adorsys-adapter",
+      "idpUrl": "http://localhost:20015/oauth/authorization-server",
+      "preferredApproach": "EMBEDDED",
+      "tryToUsePreferredApproach": true,
+      "uniquePaymentPurpose": false,
+      "actions": {
+        "LIST_ACCOUNTS": {
+          "protocolAction": "list-accounts",
+          "protocolBeanName": "xs2aListAccounts",
+          "consentSupported": true
+        },
+        "LIST_TRANSACTIONS": {
+          "protocolAction": "list-transactions",
+          "protocolBeanName": "xs2aSandboxListTransactions",
+          "consentSupported": true
+        },
+        "GET_CONSENT_STATUS": {
+          "protocolAction": "get-consent-status",
+          "protocolBeanName": "xs2aGetConsentStatus",
+          "consentSupported": true
+        },
+        "GET_PAYMENT_INFORMATION": {
+          "protocolAction": "get-payment-information",
+          "protocolBeanName": "xs2aGetPaymentInfoState",
+          "consentSupported": true
+        },
+        "GET_PAYMENT_STATUS": {
+          "protocolAction": "get-payment-status",
+          "protocolBeanName": "xs2aGetPaymentStatusState",
+          "consentSupported": true
+        },
+        "SINGLE_PAYMENT": {
+          "protocolAction": "single-payment",
+          "protocolBeanName": "xs2aInitiateSinglePayment",
+          "consentSupported": true
+        },
+        "AUTHORIZATION": {
+          "protocolAction": "authorization",
+          "consentSupported": true,
+          "subProtocols": [
+            {
+              "protocolAction": "deny-authorization",
+              "subProtocolBeanName": "xs2aDenyAuthorization"
+            },
+            {
+              "protocolAction": "from-aspsp-redirect",
+              "subProtocolBeanName": "xs2aFromAspspRedirect"
+            },
+            {
+              "protocolAction": "get-authorization-state",
+              "subProtocolBeanName": "xs2aGetAuthorizationState"
+            },
+            {
+              "protocolAction": "update-authorization",
+              "subProtocolBeanName": "xs2aUpdateAuthorization"
+            }
+          ]
+        },
+        "DELETE_CONSENT": {
+          "protocolAction": "delete-consent",
+          "protocolBeanName": "xs2aDeleteConsent",
+          "consentSupported": true
+        }
+      },
+      "bic": "ADORSYS XS",
+      "name": "embedded",
+      "protocolType": "XS2A",
+      "isActive": true
+    },
+    {
+      "url": "http://localhost:20014",
+      "uuid": "53c47f54-b9a4-465a-8f77-bc6cd5f0cf46",
+      "adapterId": "adorsys-adapter",
+      "idpUrl": "http://localhost:20015/oauth/authorization-server",
+      "tryToUsePreferredApproach": false,
+      "uniquePaymentPurpose": false,
+      "actions": {
+        "LIST_ACCOUNTS": {
+          "protocolAction": "list-accounts",
+          "protocolBeanName": "xs2aListAccounts",
+          "consentSupported": true
+        },
+        "LIST_TRANSACTIONS": {
+          "protocolAction": "list-transactions",
+          "protocolBeanName": "xs2aSandboxListTransactions",
+          "consentSupported": true
+        },
+        "GET_CONSENT_STATUS": {
+          "protocolAction": "get-consent-status",
+          "protocolBeanName": "xs2aGetConsentStatus",
+          "consentSupported": true
+        },
+        "GET_PAYMENT_INFORMATION": {
+          "protocolAction": "get-payment-information",
+          "protocolBeanName": "xs2aGetPaymentInfoState",
+          "consentSupported": true
+        },
+        "GET_PAYMENT_STATUS": {
+          "protocolAction": "get-payment-status",
+          "protocolBeanName": "xs2aGetPaymentStatusState",
+          "consentSupported": true
+        },
+        "SINGLE_PAYMENT": {
+          "protocolAction": "single-payment",
+          "protocolBeanName": "xs2aInitiateSinglePayment",
+          "consentSupported": true
+        },
+        "AUTHORIZATION": {
+          "protocolAction": "authorization",
+          "consentSupported": true,
+          "subProtocols": [
+            {
+              "protocolAction": "deny-authorization",
+              "subProtocolBeanName": "xs2aDenyAuthorization"
+            },
+            {
+              "protocolAction": "from-aspsp-redirect",
+              "subProtocolBeanName": "xs2aFromAspspRedirect"
+            },
+            {
+              "protocolAction": "get-authorization-state",
+              "subProtocolBeanName": "xs2aGetAuthorizationState"
+            },
+            {
+              "protocolAction": "update-authorization",
+              "subProtocolBeanName": "xs2aUpdateAuthorization"
+            }
+          ]
+        },
+        "DELETE_CONSENT": {
+          "protocolAction": "delete-consent",
+          "protocolBeanName": "xs2aDeleteConsent",
+          "consentSupported": true
+        }
+      },
+      "bic": "ADORSYS XS",
+      "name": "no-preference xs2a",
+      "protocolType": "XS2A",
+      "isActive": true
+    }
+  ]
+}

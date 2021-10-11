@@ -72,11 +72,11 @@ public class ServiceContextProviderTest extends DbDropper {
     @SneakyThrows
     void saveSessionTest() {
         UUID sessionId = UUID.randomUUID();
-        String testBankID = "53c47f54-b9a4-465a-8f77-bc6cd5f0cf46";
+        UUID testBankID = UUID.fromString("53c47f54-b9a4-465a-8f77-bc6cd5f0cf46");
         ListAccountsRequest request = ListAccountsRequest.builder()
                 .facadeServiceable(
                         FacadeServiceableRequest.builder()
-                                .bankId(testBankID)
+                                .bankProfileId(testBankID)
                                 .requestId(UUID.randomUUID())
                                 .serviceSessionId(sessionId)
                                 .sessionPassword(PASSWORD)
@@ -90,7 +90,7 @@ public class ServiceContextProviderTest extends DbDropper {
         InternalContext<FacadeServiceableGetter, Action<ListAccountsRequest, AccountListBody>> ctxWithoutProtocol = serviceContextProvider.provide(request);
         Map<String, ListAccounts> actionBeans = Collections.singletonMap("xs2aListAccounts", listAccounts);
         InternalContext<FacadeServiceableGetter, Action<ListAccountsRequest, AccountListBody>> context =
-                protocolSelector.selectProtocolFor(ctxWithoutProtocol, ProtocolAction.LIST_ACCOUNTS, actionBeans);
+                protocolSelector.requireProtocolFor(ctxWithoutProtocol, ProtocolAction.LIST_ACCOUNTS, actionBeans);
         ServiceContext<FacadeServiceableGetter> providedContext = serviceContextProvider.provideRequestScoped(request, context);
         URI redirectionTo = new URI("/");
         Result<URI> result = new ConsentAcquiredResult<>(redirectionTo, null);
@@ -110,7 +110,7 @@ public class ServiceContextProviderTest extends DbDropper {
                 .facadeServiceable(
                         FacadeServiceableRequest.builder()
                                 .serviceSessionId(sessionId)
-                                .bankId(testBankID)
+                                .bankProfileId(testBankID)
                                 .sessionPassword(PASSWORD)
                                 .authorization("SUPER-FINTECH-ID")
                                 .fintechUserId("user1@fintech.com")

@@ -16,10 +16,11 @@ public class TppBankSearchClientFeignMock implements TppBankSearchClient {
 
     @Override
     public ResponseEntity<BankProfileResponse> bankProfileGET(UUID xRequestID,
-                                                              @NotNull @Valid String bankId,
+                                                              @NotNull @Valid UUID bankProfileID,
                                                               String xTimestampUTC,
                                                               String xRequestSignature,
-                                                              String fintechId) {
+                                                              String fintechId,
+                                                              Boolean onlyActive) {
         return null;
     }
 
@@ -31,7 +32,8 @@ public class TppBankSearchClientFeignMock implements TppBankSearchClient {
             String xRequestSignature,
             String fintechId,
             @Valid Integer start,
-            @Valid Integer max) {
+            @Valid Integer max,
+            Boolean onlyActive) {
 
         return null;
     }

@@ -1,0 +1,11 @@
+<databaseChangeLog logicalFilePath="db.changelog-1.0.xml" xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+                   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                   xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.8.xsd">
+
+    <changeSet id="set_content_type_xml_sparkasse" author="mhr">
+        <sql dbms="postgresql" stripComments="true">
+            UPDATE ${table-prefix}bank_profile SET content_type_transactions = 'application/xml' WHERE adapter_id = 'sparkasse-adapter';
+        </sql>
+    </changeSet>
+
+</databaseChangeLog>

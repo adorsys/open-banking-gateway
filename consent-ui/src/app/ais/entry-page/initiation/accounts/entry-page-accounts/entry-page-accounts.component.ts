@@ -1,8 +1,8 @@
-import { Component, OnInit } from '@angular/core';
-import { Access } from '../../common/initial-consent/consent-account-access-selection.component';
-import { AccountsConsentReviewComponent } from '../accounts-consent-review/accounts-consent-review.component';
-import { DedicatedAccessComponent } from '../../common/dedicated-access/dedicated-access.component';
-import { AccountAccessLevel } from '../../../../common/dto/ais-consent';
+import {Component, OnInit} from '@angular/core';
+import {Access} from '../../common/initial-consent/consent-account-access-selection.component';
+import {AccountsConsentReviewComponent} from '../accounts-consent-review/accounts-consent-review.component';
+import {DedicatedAccessComponent} from '../../common/dedicated-access/dedicated-access.component';
+import {AccountAccessLevel} from '../../../../common/dto/ais-consent';
 
 @Component({
   selector: 'consent-app-entry-page-accounts',

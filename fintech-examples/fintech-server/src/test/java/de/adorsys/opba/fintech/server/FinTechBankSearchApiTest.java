@@ -122,7 +122,7 @@ class FinTechBankSearchApiTest extends FinTechApiBaseTest {
         final Integer start = 1;
         final Integer max = 2;
 
-        when(tppBankSearchClientFeignMock.bankSearchGET(any(), eq(keyword), any(), any(), any(), eq(start), eq(max)))
+        when(tppBankSearchClientFeignMock.bankSearchGET(any(), any(), any(), any(), eq(keyword), eq(start), eq(max), any()))
                 .thenReturn(ResponseEntity.ok(GSON.fromJson(readFile(getFilenameBankSearch(keyword, start, max)), BankSearchResponse.class)));
 
         LoginBody loginBody = new LoginBody("peter", "1234");
@@ -156,7 +156,7 @@ class FinTechBankSearchApiTest extends FinTechApiBaseTest {
     @NoArgsConstructor
     static class BankProfileTestResult {
         String sessionCookieValue = null;
-        String bankUUID = null;
+        UUID bankUUID = null;
         List<String> services = null;
 
     }
@@ -177,7 +177,7 @@ class FinTechBankSearchApiTest extends FinTechApiBaseTest {
             final Integer max = 2;
             log.info("DO Bank Search ({}, {}, {}) ==============================", keyword, start, max);
 
-            when(tppBankSearchClientFeignMock.bankSearchGET(any(), eq(keyword), any(), any(), any(), eq(start), eq(max)))
+            when(tppBankSearchClientFeignMock.bankSearchGET(any(), any(), any(), any(), eq(keyword), eq(start), eq(max), any()))
                     .thenReturn(ResponseEntity.ok(GSON.fromJson(readFile(getFilenameBankSearch(keyword, start, max)), BankSearchResponse.class)));
 
             result.setBankUUID(bankSearchOk(keyword, start, max));
@@ -185,7 +185,7 @@ class FinTechBankSearchApiTest extends FinTechApiBaseTest {
 
         {
             log.info("DO Bank Profile ({}) ============================== ", result.getBankUUID());
-            when(tppBankSearchClientFeignMock.bankProfileGET(any(), eq(result.getBankUUID()), any(), any(), any()))
+            when(tppBankSearchClientFeignMock.bankProfileGET(any(), eq(result.getBankUUID()), any(), any(), any(), any()))
                     .thenReturn(ResponseEntity.ok(GSON.fromJson(readFile(getFilenameBankProfile(result.getBankUUID())), BankProfileResponse.class)));
 
             result.setServices(bankProfile(result.getBankUUID()));
@@ -196,16 +196,16 @@ class FinTechBankSearchApiTest extends FinTechApiBaseTest {
     }
 
     /**
-     * @param bankUUID
+     * @param bankProfileUUID
      * @return List of Services of Bank
      */
     @SneakyThrows
-    List<String> bankProfile(String bankUUID) {
+    List<String> bankProfile(UUID bankProfileUUID) {
         MvcResult mvcResult = this.mvc
                 .perform(get(FIN_TECH_BANK_PROFILE_URL)
                         .header(Consts.HEADER_X_REQUEST_ID, UUID.randomUUID().toString())
                         .header(Consts.HEADER_XSRF_TOKEN, restRequestContext.getXsrfTokenHeaderField())
-                        .param("bankId", bankUUID))
+                        .param("bankProfileId", bankProfileUUID.toString()))
                 .andDo(print())
                 .andExpect(status().isOk())
                 .andReturn();
@@ -276,10 +276,10 @@ class FinTechBankSearchApiTest extends FinTechApiBaseTest {
      * @return first BankUUID of found list
      */
     @SneakyThrows
-    String bankSearchOk(String keyword, Integer start, Integer max) {
+    UUID bankSearchOk(String keyword, Integer start, Integer max) {
         MvcResult result = plainBankSearch(keyword, start, max);
         assertEquals(HttpStatus.OK.value(), result.getResponse().getStatus());
-        return new JSONObject(result.getResponse().getContentAsString()).getJSONArray("bankDescriptor").getJSONObject(0).get("uuid").toString();
+        return UUID.fromString(new JSONObject(result.getResponse().getContentAsString()).getJSONArray("bankDescriptor").getJSONObject(0).get("uuid").toString());
     }
 
     @SneakyThrows

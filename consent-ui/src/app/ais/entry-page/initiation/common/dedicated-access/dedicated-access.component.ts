@@ -61,14 +61,7 @@ export class DedicatedAccessComponent implements OnInit {
   }
 
   onBack() {
-    const consentObj = ConsentUtil.getOrDefault(this.authorizationId, this.sessionService);
-    consentObj.consent.access.availableAccounts = null;
-    consentObj.consent.access.allPsd2 = null;
-    consentObj.consent.access.accounts = null;
-    consentObj.consent.access.balances = null;
-    consentObj.consent.access.transactions = null;
-    this.sessionService.setConsentObject(this.authorizationId, consentObj);
-
+    ConsentUtil.rollbackConsent(this.authorizationId, this.sessionService);
     this.location.back();
   }
 

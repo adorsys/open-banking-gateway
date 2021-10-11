@@ -2,10 +2,11 @@ package de.adorsys.opba.protocol.xs2a.service.xs2a.consent;
 
 import de.adorsys.opba.protocol.bpmnshared.dto.DtoMapper;
 import de.adorsys.opba.protocol.xs2a.context.ais.Xs2aAisContext;
-import de.adorsys.opba.protocol.xs2a.service.mapper.HeadersBodyMapperTemplate;
+import de.adorsys.opba.protocol.xs2a.service.mapper.PathHeadersBodyMapperTemplate;
 import de.adorsys.opba.protocol.xs2a.service.xs2a.dto.consent.AisConsentInitiateBody;
 import de.adorsys.opba.protocol.xs2a.service.xs2a.dto.consent.ConsentInitiateHeaders;
-import de.adorsys.xs2a.adapter.service.model.Consents;
+import de.adorsys.opba.protocol.xs2a.service.xs2a.dto.consent.ConsentInitiateParameters;
+import de.adorsys.xs2a.adapter.api.model.Consents;
 import org.springframework.stereotype.Service;
 
 /**
@@ -13,8 +14,9 @@ import org.springframework.stereotype.Service;
  * usable request parameters.
  */
 @Service
-public class AisConsentInitiateExtractor extends HeadersBodyMapperTemplate<
+public class AisConsentInitiateExtractor extends PathHeadersBodyMapperTemplate<
     Xs2aAisContext,
+    ConsentInitiateParameters,
     ConsentInitiateHeaders,
     AisConsentInitiateBody,
     Consents> {
@@ -22,7 +24,8 @@ public class AisConsentInitiateExtractor extends HeadersBodyMapperTemplate<
     public AisConsentInitiateExtractor(
             DtoMapper<Xs2aAisContext, AisConsentInitiateBody> toValidatableBody,
             DtoMapper<AisConsentInitiateBody, Consents> toBody,
-            DtoMapper<Xs2aAisContext, ConsentInitiateHeaders> toHeaders) {
-        super(toValidatableBody, toBody, toHeaders);
+            DtoMapper<Xs2aAisContext, ConsentInitiateHeaders> toHeaders,
+            DtoMapper<Xs2aAisContext, ConsentInitiateParameters> toParameters) {
+        super(toValidatableBody, toBody, toHeaders, toParameters);
     }
 }

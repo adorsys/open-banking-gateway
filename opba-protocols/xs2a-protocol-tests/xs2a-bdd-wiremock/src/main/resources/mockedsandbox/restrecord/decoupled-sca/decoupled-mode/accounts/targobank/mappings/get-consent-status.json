@@ -1,0 +1,30 @@
+{
+  "scenarioName": "AccountsListUsingTargoBankDecoupled",
+  "newScenarioState": "GetConsentStatus",
+  "requiredScenarioState": "GetScaFinalisedStatus",
+  "request" : {
+    "urlPattern" : "/v1/consents/.+/status",
+    "method" : "GET",
+    "headers" : {
+      "X-Request-ID" : {
+        "matches" : ".+"
+      },
+      "Date" : {
+        "matches" : ".+"
+      }
+    }
+  },
+  "response" : {
+    "status" : 200,
+    "body" : "{\"consentStatus\":\"valid\"}",
+    "headers" : {
+      "Date" : "Mon, 01 Mar 2021 16:19:53 GMT",
+      "Server" : "Apache",
+      "X-Request-ID" : "da4c829a-355a-4d5e-854c-3b7c2e765a31",
+      "Content-Type" : "application/json;charset=utf-8"
+    }
+  },
+  "uuid" : "96f5dbd8-0def-4ca0-9aa5-3ee061adc195",
+  "persistent" : true,
+  "insertionIndex" : 9
+}

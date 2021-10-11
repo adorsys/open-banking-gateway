@@ -9,10 +9,11 @@ import lombok.Value;
 @Value
 @Builder
 public class AccountReference {
-    private String iban;
-    private String bban;
-    private String pan;
-    private String maskedPan;
-    private String msisdn;
-    private String currency;
+    String externalResourceId;
+    String iban;
+    String bban;
+    String pan;
+    String maskedPan;
+    String msisdn;
+    String currency;
 }

@@ -13,10 +13,15 @@ public class AccountReport {
   /**
    * Transactions that were already processed.
    */
-  private TransactionListBody booked;
+  TransactionListBody booked;
 
   /**
    * Transactions that are to be processed.
    */
-  private TransactionListBody pending;
+  TransactionListBody pending;
+
+  /**
+   * Raw bank response as String
+   */
+  String rawTransactions;
 }

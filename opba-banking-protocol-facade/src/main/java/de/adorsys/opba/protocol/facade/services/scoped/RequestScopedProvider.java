@@ -58,12 +58,12 @@ public class RequestScopedProvider implements RequestScopedServicesProvider {
             Fintech fintech,
             BankProfile profile,
             ServiceSession session,
-            long bankProtocolId,
+            Long bankProtocolId,
             ConsentAuthorizationEncryptionServiceProvider encryptionServiceProvider,
             SecretKeyWithIv futureAuthorizationSessionKey,
             Supplier<char[]> fintechPassword
     ) {
-        ConsentAccess consentAccess = consentAccessProvider.consentForFintech(fintech, session, fintechPassword);
+        ConsentAccess consentAccess = consentAccessProvider.consentForFintech(fintech, profile.getBank(), session, fintechPassword);
         PaymentAccess paymentAccess = paymentAccessProvider.paymentForFintech(fintech, session, fintechPassword);
 
         EncryptionService authorizationSessionEncService = sessionEncryption(encryptionServiceProvider, futureAuthorizationSessionKey);
@@ -80,7 +80,7 @@ public class RequestScopedProvider implements RequestScopedServicesProvider {
     public RequestScoped registerForPsuSession(
             AuthSession authSession,
             ConsentAuthorizationEncryptionServiceProvider encryptionServiceProvider,
-            long bankProtocolId,
+            Long bankProtocolId,
             SecretKeyWithIv key
     ) {
         EncryptionService sessionEncryption = sessionEncryption(encryptionServiceProvider, key);
@@ -100,7 +100,15 @@ public class RequestScopedProvider implements RequestScopedServicesProvider {
 
     private ConsentAccess getPsuConsentAccess(AuthSession authSession) {
         if (authSession.isPsuAnonymous()) {
-            return null;
+            if (null != authSession.getPsu()) {
+                throw new IllegalStateException("Expected anonymous session");
+            }
+
+            return consentAccessProvider.consentForAnonymousPsu(
+                    authSession.getFintechUser().getFintech(),
+                    authSession.getAction().getBankProfile().getBank(),
+                    authSession.getParent()
+            );
         }
 
         return consentAccessProvider.consentForPsuAndAspsp(
@@ -130,6 +138,10 @@ public class RequestScopedProvider implements RequestScopedServicesProvider {
 
     public InternalRequestScoped deregister(RequestScoped requestScoped) {
         return memoizedProviders.remove(requestScoped.getEncryptionKeyId());
+    }
+
+    public InternalRequestScoped getInternalRequestScoped(RequestScoped requestScoped) {
+        return memoizedProviders.get(requestScoped.getEncryptionKeyId());
     }
 
     @Override

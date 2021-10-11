@@ -1,23 +1,25 @@
 package de.adorsys.opba.protocol.xs2a.config.xs2aadapter;
 
 import com.google.common.io.Resources;
-import de.adorsys.xs2a.adapter.adapter.link.identity.IdentityLinksRewriter;
-import de.adorsys.xs2a.adapter.http.ApacheHttpClientFactory;
-import de.adorsys.xs2a.adapter.http.HttpClientFactory;
-import de.adorsys.xs2a.adapter.mapper.PaymentInitiationScaStatusResponseMapper;
-import de.adorsys.xs2a.adapter.service.AccountInformationService;
-import de.adorsys.xs2a.adapter.service.AspspReadOnlyRepository;
-import de.adorsys.xs2a.adapter.service.DownloadService;
-import de.adorsys.xs2a.adapter.service.Oauth2Service;
-import de.adorsys.xs2a.adapter.service.PaymentInitiationService;
-import de.adorsys.xs2a.adapter.service.Pkcs12KeyStore;
-import de.adorsys.xs2a.adapter.service.impl.AccountInformationServiceImpl;
-import de.adorsys.xs2a.adapter.service.impl.DownloadServiceImpl;
-import de.adorsys.xs2a.adapter.service.impl.PaymentInitiationServiceImpl;
-import de.adorsys.xs2a.adapter.service.link.LinksRewriter;
-import de.adorsys.xs2a.adapter.service.loader.AdapterDelegatingOauth2Service;
-import de.adorsys.xs2a.adapter.service.loader.AdapterServiceLoader;
-import de.adorsys.xs2a.adapter.service.loader.Psd2AdapterServiceLoader;
+import de.adorsys.xs2a.adapter.api.AccountInformationService;
+import de.adorsys.xs2a.adapter.api.AspspReadOnlyRepository;
+import de.adorsys.xs2a.adapter.api.DownloadService;
+import de.adorsys.xs2a.adapter.api.Oauth2Service;
+import de.adorsys.xs2a.adapter.api.PaymentInitiationService;
+import de.adorsys.xs2a.adapter.api.Pkcs12KeyStore;
+import de.adorsys.xs2a.adapter.api.http.HttpClientConfig;
+import de.adorsys.xs2a.adapter.api.http.HttpClientFactory;
+import de.adorsys.xs2a.adapter.api.link.LinksRewriter;
+import de.adorsys.xs2a.adapter.impl.http.ApacheHttpClientFactory;
+import de.adorsys.xs2a.adapter.impl.http.BaseHttpClientConfig;
+import de.adorsys.xs2a.adapter.impl.http.Xs2aHttpLogSanitizer;
+import de.adorsys.xs2a.adapter.impl.link.identity.IdentityLinksRewriter;
+import de.adorsys.xs2a.adapter.serviceloader.AccountInformationServiceImpl;
+import de.adorsys.xs2a.adapter.serviceloader.AdapterDelegatingOauth2Service;
+import de.adorsys.xs2a.adapter.serviceloader.AdapterServiceLoader;
+import de.adorsys.xs2a.adapter.serviceloader.DownloadServiceImpl;
+import de.adorsys.xs2a.adapter.serviceloader.EmbeddedPreAuthorisationServiceImpl;
+import de.adorsys.xs2a.adapter.serviceloader.PaymentInitiationServiceImpl;
 import lombok.SneakyThrows;
 import org.apache.http.impl.client.HttpClientBuilder;
 import org.springframework.beans.factory.annotation.Value;
@@ -45,11 +47,6 @@ public class Xs2aAdapterConfiguration {
     }
 
     @Bean
-    PaymentInitiationScaStatusResponseMapper xs2aPaymentInitiationScaStatusResponseMapper() {
-        return new PaymentInitiationScaStatusResponseMapper();
-    }
-
-    @Bean
     AccountInformationService xs2aaccountInformationService(AdapterServiceLoader adapterServiceLoader) {
         return new AccountInformationServiceImpl(adapterServiceLoader);
     }
@@ -61,14 +58,19 @@ public class Xs2aAdapterConfiguration {
 
     @Bean
     AdapterServiceLoader xs2aadapterServiceLoader(AspspReadOnlyRepository aspspRepository,
-                                                  LinksRewriter linksRewriter, Pkcs12KeyStore keyStore,
+                                                  LinksRewriter linksRewriter,
                                                   HttpClientFactory httpClientFactory) {
-        return new Psd2AdapterServiceLoader(aspspRepository, keyStore, httpClientFactory, linksRewriter, linksRewriter, chooseFirstFromMultipleAspsps);
+        return new AdapterServiceLoader(aspspRepository, httpClientFactory, linksRewriter, linksRewriter, chooseFirstFromMultipleAspsps);
     }
 
     @Bean
-    HttpClientFactory xs2aHttpClientFactory(HttpClientBuilder httpClientBuilder, Pkcs12KeyStore pkcs12KeyStore) {
-        return new ApacheHttpClientFactory(httpClientBuilder, pkcs12KeyStore);
+    HttpClientFactory xs2aHttpClientFactory(HttpClientBuilder httpClientBuilder, HttpClientConfig httpClientConfig) {
+        return new ApacheHttpClientFactory(httpClientBuilder, httpClientConfig);
+    }
+
+    @Bean
+    HttpClientConfig httpClientConfig(Pkcs12KeyStore keyStore) {
+        return new BaseHttpClientConfig(new Xs2aHttpLogSanitizer(), keyStore, null);
     }
 
     @Bean
@@ -88,6 +90,10 @@ public class Xs2aAdapterConfiguration {
     Oauth2Service xs2aOauth2Service(AdapterServiceLoader adapterServiceLoader) {
         return new AdapterDelegatingOauth2Service(adapterServiceLoader);
     }
+    @Bean
+    EmbeddedPreAuthorisationServiceImpl embeddedPreAuthorisationServiceImpl(AdapterServiceLoader adapterServiceLoader) {
+        return new EmbeddedPreAuthorisationServiceImpl(adapterServiceLoader);
+    }
 
     /**
      * The keystore for QWAC and QSEAL certificates.
@@ -100,12 +106,13 @@ public class Xs2aAdapterConfiguration {
             @Value("${" + XS2A_PROTOCOL_CONFIG_PREFIX + "pkcs12.keystore}") String keystorePath,
             @Value("${" + XS2A_PROTOCOL_CONFIG_PREFIX + "pkcs12.password}") char[] keystorePassword
     ) {
-        return new Pkcs12KeyStore(
-                Paths.get(keystorePath).toFile().exists()
-                        ? Paths.get(keystorePath).toAbsolutePath().toString()
-                        : Paths.get(Resources.getResource(keystorePath).toURI()).toAbsolutePath().toString(),
-                keystorePassword
-        );
+        if (Paths.get(keystorePath).toFile().exists()) {
+            return new Pkcs12KeyStore(Paths.get(keystorePath).toAbsolutePath().toString(), keystorePassword);
+        }
+
+        try (var is = Resources.getResource(keystorePath).openStream()) {
+            return new Pkcs12KeyStore(is, keystorePassword, "default_qwac", "default_qseal");
+        }
     }
 
     /**
