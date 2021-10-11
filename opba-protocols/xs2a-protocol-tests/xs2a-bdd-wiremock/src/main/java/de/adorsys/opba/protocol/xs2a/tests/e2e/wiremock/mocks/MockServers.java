@@ -62,7 +62,7 @@ public class MockServers<SELF extends MockServers<SELF>> extends CommonGivenStag
     @ProvidedScenarioState
     private WireMockServer sandbox;
 
-    private Consumer<BankProfile> defaultBankProfileConfigurer = it -> {
+    private final Consumer<BankProfile> defaultBankProfileConfigurer = it -> {
         it.setUrl("http://localhost:" + sandbox.port());
         it.setIdpUrl("http://localhost:" + sandbox.port() + "/oauth/authorization-server");
     };
@@ -261,7 +261,7 @@ public class MockServers<SELF extends MockServers<SELF>> extends CommonGivenStag
         return self();
     }
 
-    public SELF embedded_pre_step_mock_of_dkb_sandbox_for_max_musterman_accounts_running() {
+    public SELF embedded_pre_step_mock_of_dkb_for_max_musterman_accounts_running() {
         WireMockConfiguration config = WireMockConfiguration.options().dynamicPort()
                 .usingFilesUnderClasspath("mockedsandbox/restrecord/embedded/pre-step/accounts/dkb/");
         startWireMock(config, DKB_BANK_ID, defaultBankProfileConfigurer);
@@ -324,7 +324,7 @@ public class MockServers<SELF extends MockServers<SELF>> extends CommonGivenStag
         return self();
     }
 
-    public SELF embedded_pre_step_mock_of_dkb_sandbox_for_max_musterman_payments_running() {
+    public SELF embedded_pre_step_mock_of_dkb_for_max_musterman_payments_running() {
         WireMockConfiguration config = WireMockConfiguration.options().dynamicPort()
                 .usingFilesUnderClasspath("mockedsandbox/restrecord/embedded/pre-step/payments/dkb/");
         startWireMock(config, DKB_BANK_ID, defaultBankProfileConfigurer);
@@ -332,7 +332,7 @@ public class MockServers<SELF extends MockServers<SELF>> extends CommonGivenStag
         return self();
     }
 
-    public SELF embedded_pre_step_mock_of_postbank_sandbox_for_max_musterman_payments_running() {
+    public SELF embedded_pre_step_mock_of_postbank_for_max_musterman_payments_running() {
         WireMockConfiguration config = WireMockConfiguration.options().dynamicPort()
                 .usingFilesUnderClasspath("mockedsandbox/restrecord/embedded/multi-sca/payments/postbank/");
         startWireMock(config, POSTBANK_BANK_ID, it -> it.setUrl("http://localhost:" + sandbox.port() + "/{Service Group}/DE/Postbank"));
