@@ -13,7 +13,7 @@
 	<artifactId>fireflyexporter</artifactId>
 	<name>fireflyexporter</name>
 	<description>OpenBanking to FireFly III exporter</description>
-	<version>1.0.0</version>
+	<version>1.0.1-SNAPSHOT</version>
 
 	<properties>
 		<java.version>8</java.version>
