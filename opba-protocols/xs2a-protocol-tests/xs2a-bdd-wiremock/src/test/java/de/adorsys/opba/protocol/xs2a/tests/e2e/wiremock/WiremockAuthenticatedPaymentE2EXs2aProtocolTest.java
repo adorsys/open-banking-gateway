@@ -321,7 +321,7 @@ public class WiremockAuthenticatedPaymentE2EXs2aProtocolTest extends SpringScena
     @Test
     void testDkbPaymentInitializationUsingEmbedded() {
         given()
-                .embedded_pre_step_mock_of_dkb_sandbox_for_max_musterman_payments_running()
+                .embedded_pre_step_mock_of_dkb_for_max_musterman_payments_running()
                 .rest_assured_points_to_opba_server_with_fintech_signer_on_banking_api()
                 .user_registered_in_opba_with_credentials(OPBA_LOGIN, OPBA_PASSWORD);
 
@@ -346,7 +346,7 @@ public class WiremockAuthenticatedPaymentE2EXs2aProtocolTest extends SpringScena
     @Test
     void testPostbankPaymentInitializationUsingEmbedded() {
         given()
-                .embedded_pre_step_mock_of_postbank_sandbox_for_max_musterman_payments_running()
+                .embedded_pre_step_mock_of_postbank_for_max_musterman_payments_running()
                 .rest_assured_points_to_opba_server_with_fintech_signer_on_banking_api()
                 .user_registered_in_opba_with_credentials(OPBA_LOGIN, OPBA_PASSWORD);
 

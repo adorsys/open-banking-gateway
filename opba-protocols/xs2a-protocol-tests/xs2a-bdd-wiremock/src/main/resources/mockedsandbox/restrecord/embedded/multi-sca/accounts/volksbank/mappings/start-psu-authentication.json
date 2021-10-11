@@ -1,0 +1,51 @@
+{
+  "id" : "d7a83703-ca5c-4490-a9de-1def361ff6e8",
+  "name" : "v1_consents_8117230618090020246psdde-bafin-911360co4960jj_authorisations",
+  "requiredScenarioState": "Received",
+  "newScenarioState": "PsuIdentified",
+  "request" : {
+    "urlPattern" : "/v1/consents/.+/authorisations",
+    "method" : "POST",
+    "headers" : {
+      "X-Request-ID" : {
+        "matches" : ".+"
+      },
+      "Digest" : {
+        "matches" : ".+"
+      },
+      "PSU-ID" : {
+        "equalTo" : "max.musterman"
+      },
+      "Signature" : {
+        "matches" : ".+"
+      },
+      "TPP-Signature-Certificate" : {
+        "matches" : ".+"
+      },
+      "Content-Type" : {
+        "equalTo" : "application/json; charset=UTF-8"
+      }
+    },
+    "bodyPatterns" : [ {
+      "equalToJson" : "{\"psuData\":{\"password\":\"12345\"}}",
+      "ignoreArrayOrder" : true,
+      "ignoreExtraElements" : true
+    } ]
+  },
+  "response" : {
+    "status" : 201,
+    "bodyFileName": "response-body-start-psu-authentication.json",
+    "headers" : {
+      "Date" : "Tue, 08 Sep 2020 14:03:31 GMT",
+      "Server" : "Webserver",
+      "X-Request-ID" : "b1ef4e0c-89ac-4a87-81b2-a6404eae41c6",
+      "ASPSP-SCA-Approach" : "EMBEDDED",
+      "Content-Language" : "de",
+      "Content-Type" : "application/json;charset=UTF-8",
+      "Keep-Alive" : "timeout=15, max=99"
+    }
+  },
+  "uuid" : "d7a83703-ca5c-4490-a9de-1def361ff6e8",
+  "persistent" : true,
+  "insertionIndex" : 13
+}

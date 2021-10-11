@@ -247,9 +247,7 @@ public abstract class RequestCommon<SELF extends RequestCommon<SELF>> extends St
     @SneakyThrows
     protected void updateAvailableScas() {
         ExtractableResponse<Response> response = provideGetConsentAuthStateRequest();
-        ConsentAuth parsedValue = JSON_MAPPER
-                .readValue(response.body().asString(), ConsentAuth.class);
-
+        ConsentAuth parsedValue = JSON_MAPPER.readValue(response.body().asString(), ConsentAuth.class);
         this.availableScas = parsedValue.getScaMethods();
         updateRedirectCode(response);
     }

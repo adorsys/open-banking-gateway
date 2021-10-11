@@ -34,6 +34,7 @@ import static de.adorsys.opba.protocol.xs2a.tests.e2e.stages.StagesCommonUtil.PO
 import static de.adorsys.opba.protocol.xs2a.tests.e2e.stages.StagesCommonUtil.SANDBOX_BANK_PROFILE_ID;
 import static de.adorsys.opba.protocol.xs2a.tests.e2e.stages.StagesCommonUtil.SANTANDER_BANK_PROFILE_ID;
 import static de.adorsys.opba.protocol.xs2a.tests.e2e.stages.StagesCommonUtil.SPARKASSE_BANK_PROFILE_ID;
+import static de.adorsys.opba.protocol.xs2a.tests.e2e.stages.StagesCommonUtil.VOLKSBANK_BANK_PROFILE_ID;
 import static de.adorsys.opba.protocol.xs2a.tests.e2e.wiremock.mocks.WiremockConst.ANTON_BRUECKNER_RESOURCE_ID;
 import static de.adorsys.opba.protocol.xs2a.tests.e2e.wiremock.mocks.WiremockConst.BOTH_BOOKING;
 import static de.adorsys.opba.protocol.xs2a.tests.e2e.wiremock.mocks.WiremockConst.DATE_FROM;
@@ -104,7 +105,7 @@ class WiremockConsentE2EXs2aProtocolTest extends SpringScenarioTest<MockServers,
     @Test
     void testPostbankAccountsListWithConsentUsingEmbedded() {
         given()
-                .embedded_mock_of_postbank_for_anton_brueckner_accounts_running()
+                .embedded_mock_of_postbank_for_max_musterman_accounts_running()
                 .set_default_preferred_approach()
                 .preferred_sca_approach_selected_for_all_banks_in_opba(Approach.EMBEDDED)
                 .rest_assured_points_to_opba_server_with_fintech_signer_on_banking_api()
@@ -152,6 +153,35 @@ class WiremockConsentE2EXs2aProtocolTest extends SpringScenarioTest<MockServers,
                 .open_banking_has_consent_for_anton_brueckner_account_list()
                 .fintech_calls_consent_activation_for_current_authorization_id()
                 .open_banking_can_read_anton_brueckner_account_data_using_consent_bound_to_service_session();
+    }
+
+    @Test
+    void testVolksbankAccountsAndTransactionListWithConsentUsingEmbedded() {
+        given()
+            .embedded_mock_of_volksbank_for_max_musterman_accounts_running()
+            .set_default_preferred_approach()
+            .rest_assured_points_to_opba_server_with_fintech_signer_on_banking_api()
+            .user_registered_in_opba_with_credentials(OPBA_LOGIN, OPBA_PASSWORD);
+
+        when()
+            .fintech_calls_list_accounts_for_max_musterman(VOLKSBANK_BANK_PROFILE_ID)
+            .and()
+            .user_logged_in_into_opba_as_opba_user_with_credentials_using_fintech_supplied_url(OPBA_LOGIN, OPBA_PASSWORD)
+            .and()
+            .user_max_musterman_provided_initial_parameters_to_list_accounts_dedicated_accounts_consent()
+            .and()
+            .user_max_musterman_provided_password_to_embedded_authorization()
+            .and()
+            .user_max_musterman_selected_sca_challenge_type_sms_otp_to_embedded_authorization()
+            .and()
+            .user_max_musterman_provided_sca_challenge_result_to_embedded_authorization_and_sees_redirect_to_fintech_ok("/SMS_OTP");
+        then()
+            .open_banking_has_consent_for_max_musterman_account_list()
+            .fintech_calls_consent_activation_for_current_authorization_id()
+            .open_banking_can_read_volksbank_account_data_using_consent_bound_to_service_session(true)
+            .open_banking_can_read_max_musterman_transactions_data_using_consent_bound_to_service_session_volksbank(
+            MAX_MUSTERMAN_RESOURCE_ID, DATE_FROM, DATE_TO, "booked", true
+        );
     }
 
     @ParameterizedTest
@@ -471,7 +501,7 @@ class WiremockConsentE2EXs2aProtocolTest extends SpringScenarioTest<MockServers,
     @Test
     void testDkbAccountsListWithConsentUsingEmbeddedPreStep() {
         given()
-                .embedded_pre_step_mock_of_dkb_sandbox_for_max_musterman_accounts_running()
+                .embedded_pre_step_mock_of_dkb_for_max_musterman_accounts_running()
                 .rest_assured_points_to_opba_server_with_fintech_signer_on_banking_api()
                 .user_registered_in_opba_with_credentials(OPBA_LOGIN, OPBA_PASSWORD);
 

@@ -59,13 +59,11 @@ public class StartConsentAuthorization extends ValidatedExecution<Xs2aContext> {
         params.getHeaders().setTppRedirectPreferred(tppRedirectPreferredResolver.isRedirectApproachPreferred(config));
 
         logResolver.log("startConsentAuthorisation with parameters: {}", params.getPath(), params.getHeaders());
-
         Response<StartScaprocessResponse> scaStart = ais.startConsentAuthorisation(
-                params.getPath().getConsentId(),
-                params.getHeaders().toHeaders(),
-                params.getPath().toParameters()
+            params.getPath().getConsentId(),
+            params.getHeaders().toHeaders(),
+            params.getPath().toParameters()
         );
-
         logResolver.log("startConsentAuthorisation response: {}", scaStart);
 
         String aspspSelectedApproach = scaStart.getHeaders().getHeader(ASPSP_SCA_APPROACH);
