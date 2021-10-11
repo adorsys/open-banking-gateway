@@ -1,0 +1,171 @@
+{
+  "account": null,
+  "transactions": {
+    "booked": [
+      {
+        "transactionId": null,
+        "externalResourceId": null,
+        "entryReference": null,
+        "endToEndId": "OLPAYMENTTAN.1.56230",
+        "mandateId": null,
+        "checkId": null,
+        "creditorId": null,
+        "bookingDate": [2019, 3, 6],
+        "valueDate": [2019, 3, 6],
+        "transactionAmount": {
+          "currency": "EUR",
+          "amount": "7537.02"
+        },
+        "creditorName": "Minni Mouse",
+        "creditorAccount": {
+          "externalResourceId": null,
+          "iban": "DE51250400903312345678",
+          "bban": null,
+          "pan": null,
+          "maskedPan": null,
+          "msisdn": null,
+          "currency": "EUR"
+        },
+        "ultimateCreditor": null,
+        "debtorName": "Minni Mouse",
+        "debtorAccount": {
+          "externalResourceId": null,
+          "iban": "DE88250400900085213697",
+          "bban": null,
+          "pan": null,
+          "maskedPan": null,
+          "msisdn": null,
+          "currency": "EUR"
+        },
+        "ultimateDebtor": null,
+        "remittanceInformationUnstructured": "348525,  7.369,51,348573,    167,51",
+        "remittanceInformationStructured": null,
+        "proprietaryBankTransactionCode": null
+      },
+      {
+        "transactionId": null,
+        "externalResourceId": null,
+        "entryReference": null,
+        "endToEndId": "003320190306OEM0201902380851",
+        "mandateId": null,
+        "checkId": null,
+        "creditorId": null,
+        "bookingDate": [2019, 3, 6],
+        "valueDate": [2019, 3, 6],
+        "transactionAmount": {
+          "currency": "EUR",
+          "amount": "381.60"
+        },
+        "creditorName": "Micky Mouse",
+        "creditorAccount": {
+          "externalResourceId": null,
+          "iban": "DE51250400903312345678",
+          "bban": null,
+          "pan": null,
+          "maskedPan": null,
+          "msisdn": null,
+          "currency": "EUR"
+        },
+        "ultimateCreditor": null,
+        "debtorName": "Micky Mouse",
+        "debtorAccount": {
+          "externalResourceId": null,
+          "iban": "DE88250400900085213697",
+          "bban": null,
+          "pan": null,
+          "maskedPan": null,
+          "msisdn": null,
+          "currency": "EUR"
+        },
+        "ultimateDebtor": null,
+        "remittanceInformationUnstructured": "INV 3347993 ENERRE",
+        "remittanceInformationStructured": null,
+        "proprietaryBankTransactionCode": null
+      },
+      {
+        "transactionId": null,
+        "externalResourceId": null,
+        "entryReference": null,
+        "endToEndId": "/VS348098/SS/KS",
+        "mandateId": null,
+        "checkId": null,
+        "creditorId": null,
+        "bookingDate": [2019, 3, 6],
+        "valueDate": [2019, 3, 6],
+        "transactionAmount": {
+          "currency": "EUR",
+          "amount": "53.75"
+        },
+        "creditorName": "KONTUR, S.R.O.",
+        "creditorAccount": {
+          "externalResourceId": null,
+          "iban": "DE51250400903312345678",
+          "bban": null,
+          "pan": null,
+          "maskedPan": null,
+          "msisdn": null,
+          "currency": "EUR"
+        },
+        "ultimateCreditor": null,
+        "debtorName": "KONTUR, S.R.O.",
+        "debtorAccount": {
+          "externalResourceId": null,
+          "iban": "DE88250400900085213697",
+          "bban": null,
+          "pan": null,
+          "maskedPan": null,
+          "msisdn": null,
+          "currency": "EUR"
+        },
+        "ultimateDebtor": null,
+        "remittanceInformationUnstructured": "NAME ORIGINATOR",
+        "remittanceInformationStructured": null,
+        "proprietaryBankTransactionCode": null
+      },
+      {
+        "transactionId": null,
+        "externalResourceId": null,
+        "entryReference": null,
+        "endToEndId": "0000046646",
+        "mandateId": null,
+        "checkId": null,
+        "creditorId": null,
+        "bookingDate": [2019, 3, 6],
+        "valueDate": [2019, 3, 6],
+        "transactionAmount": {
+          "currency": "EUR",
+          "amount": "14142.93"
+        },
+        "creditorName": "L-SHOP-TEAM GMBH",
+        "creditorAccount": {
+          "externalResourceId": null,
+          "iban": "DE51250400903312345678",
+          "bban": null,
+          "pan": null,
+          "maskedPan": null,
+          "msisdn": null,
+          "currency": "EUR"
+        },
+        "ultimateCreditor": null,
+        "debtorName": "L-SHOP-TEAM GMBH",
+        "debtorAccount": {
+          "externalResourceId": null,
+          "iban": "DE88250400900085213697",
+          "bban": null,
+          "pan": null,
+          "maskedPan": null,
+          "msisdn": null,
+          "currency": "EUR"
+        },
+        "ultimateDebtor": null,
+        "remittanceInformationUnstructured": "SIEHE BEGLEITSCHREIBEN 05.03.2019",
+        "remittanceInformationStructured": null,
+        "proprietaryBankTransactionCode": null
+      }
+    ],
+    "pending": null,
+    "rawTransactions": null
+  },
+  "analytics": null,
+  "paging": null
+}
