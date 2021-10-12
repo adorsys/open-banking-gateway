@@ -31,7 +31,7 @@ services:
       - FACADE_ENCRYPTION_KEYSETPATH=/keysetpath/example-keyset.json
       - FACADE_URLS_EMBEDDED-UI-BASE-URL=http://localhost:14200
       - PROTOCOL_GATEWAY-BASE-URL=http://localhost:18085
-    image: "adorsys/open-banking-gateway-open-banking-gateway:0.30.0.1"
+    image: "adorsys/open-banking-gateway-open-banking-gateway:1.0.0"
     ports:
       - "18085:8085"
     volumes:
@@ -46,7 +46,7 @@ services:
     environment:
       - BACKEND_URL=http://fintech-server:8086
     restart: on-failure
-    image: "adorsys/open-banking-gateway-fintech-ui:0.30.0.1"
+    image: "adorsys/open-banking-gateway-fintech-ui:1.0.0"
     ports:
       - "24200:4200"
     depends_on:
@@ -61,7 +61,7 @@ services:
 
       - FINTECH-UI_HOST=http://localhost:24200
 
-    image: "adorsys/open-banking-gateway-fintech-server:0.30.0.1"
+    image: "adorsys/open-banking-gateway-fintech-server:1.0.0"
     ports:
       - "18086:8086"
     depends_on:
@@ -73,7 +73,7 @@ services:
     environment:
       - BACKEND_URL=http://open-banking-gateway:8085
     restart: on-failure
-    image: "adorsys/open-banking-gateway-consent-ui:0.30.0.1"
+    image: "adorsys/open-banking-gateway-consent-ui:1.0.0"
     ports:
       - "14200:4200"
     depends_on:
@@ -83,7 +83,7 @@ services:
 
   hbci-sandbox-server:
     restart: on-failure
-    image: "adorsys/open-banking-gateway-hbci-sandbox-server:0.30.0.1"
+    image: "adorsys/open-banking-gateway-hbci-sandbox-server:1.0.0"
     ports:
       - "18090:8090"
     networks:
