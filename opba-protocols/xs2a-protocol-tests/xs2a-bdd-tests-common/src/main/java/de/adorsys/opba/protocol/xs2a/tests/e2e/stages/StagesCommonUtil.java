@@ -71,6 +71,7 @@ public class StagesCommonUtil {
     public static final String CONSORS_BANK_BANK_PROFILE_ID = "a9f7a345-9921-4c5c-93d6-b2f5af31a4cd";
     public static final String POSTBANK_BANK_PROFILE_ID = "e431a602-15ab-48b8-8c9b-ce381d2034c4";
     public static final String SPARKASSE_BANK_PROFILE_ID = "f31a87dd-5d3e-41b8-924a-0d85b10288bc";
+    public static final String COMMERZ_BANK_PROFILE_ID = "3052c28c-705d-4951-b37a-f91f7888d9dd";
     public static final String SANTANDER_BANK_PROFILE_ID = "ca18cc3a-d242-4acf-8043-61d8b57fb615";
     public static final String TARGO_BANK_PROFILE_ID = "b915ceba-8ec2-4492-97ef-912c8c9244d8";
     public static final String VOLKSBANK_BANK_PROFILE_ID = "c24afe1b-56a4-418d-ba39-28fc5ca54bb4";
