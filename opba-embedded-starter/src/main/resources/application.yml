@@ -1,15 +1,23 @@
 server:
+  # Port to use when starting application
   port: 8085
 spring:
+  # Datasource connection properties
   datasource:
+    # Database URL
     url: jdbc:postgresql://localhost:5432/open_banking?currentSchema=banking_protocol
+    # Database credentials
     username: postgres
     password: docker
+    # JDBC connection pool
     type: com.zaxxer.hikari.HikariDataSource
+    # Database connection pool properties
     driver-class-name: org.postgresql.Driver
     hikari:
+      # Database schema name
       schema: banking_protocol
 
+  # Hibernate JPA properties
   jpa:
     hibernate:
       naming:
@@ -17,14 +25,21 @@ spring:
       # DDL is handled by Liquibase
       ddl-auto: validate
     open-in-view: false
+
+  # Liquibase properties (Database migration)
   liquibase:
+    # Enables Liquibase
     enabled: true
+    # Path to Liquibase DB change log
     change-log: classpath:migration/master.xml
     parameters:
+      # Prefix for OBG tables in database
       table-prefix: opb_
+      # Sandbox URLs
       adorsys-sandbox-url: http://localhost:20014
       adorsys-sandbox-oauth-server-url: http://localhost:20015/oauth/authorization-server
       adorsys-hbci-sandbox-url: http://localhost:8090/hbci-mock/
+    # Which migrations types to apply (pre-load bank data into database)
     contexts: dev,mock-banks
 
 # Actuator:
@@ -36,17 +51,23 @@ management:
 # Application configuration
 api:
   banking:
+    # Admin API properties
     admin-api:
       security:
+        # Admin API credentials
         login: Aladdin
         password: OpenSesame
+        # URL-patterns to be protected
         url-patterns-to-protect:
           - /admin/*
 
     # Bank-search API properties
     bank-search:
+      # The index of the first result
       start: 0
+      # Maximum number of entries in the response
       max: 10
+      # Query to search banks by parameters in DB
       query:
         "SELECT id, uuid, name, bic, bank_code, active, word_similarity(:keyword, name) as sml
         FROM opb_bank WHERE ((word_similarity(:keyword, name) >= 0.6) AND (NOT :onlyActive OR active))
@@ -62,7 +83,9 @@ api:
     # Signature-based security of FinTech consumable API
     security:
       verification:
+        # Signature validity time (how long request signature will be valid)
         request-validity-window: 5m
+        # Use this claim name in the Jwt
         claim-name-key: sign-data
         urls-to-be-validated:
           # templates for web filter
@@ -87,13 +110,15 @@ api:
 
   # Common cookie template
   cookie:
+    # Default org.springframework.http.ResponseCookie parameters
     secure: false # localhost-only - TODO application-dev.yml for dev env?
     max-age: ${api.security.token-validity-duration} # PLEASE SYNC api.security.token-validity-duration, api.cookie.max-age and facade.expirable.expire-after-write
     redirect-max-age: ${api.security.redirect-token-validity-duration}
     http-only: true
     path: /
-    redirect-path-template: ${facade.urls.authorization-session-key.cookie.redirect-path-template}
     same-site: Lax
+    # Template for building redirect URL from ASPSP
+    redirect-path-template: ${facade.urls.authorization-session-key.cookie.redirect-path-template}
     urls-to-be-validated:
       # templates for web filter
       - /v1/psu/*
@@ -104,23 +129,30 @@ api:
 
 facade:
   urls:
+    # Consent UI URL
     embedded-ui-base-url: http://localhost:4200
     redirect:
       # Redirection URL for consent association
       consent-login:
+        # URLs of Consent UI start pages for AIS and PIS flows
         page:
           for-ais: ${facade.urls.embedded-ui-base-url}/auth/ais/{authorizationSessionId}/login?redirectCode={fintechUserTempPassword}
           for-pis: ${facade.urls.embedded-ui-base-url}/auth/pis/{authorizationSessionId}/login?redirectCode={fintechUserTempPassword}
           for-ais-anonymous: ${facade.urls.embedded-ui-base-url}/auth/ais/{authorizationSessionId}/anonymous?redirectCode={fintechUserTempPassword}
           for-pis-anonymous: ${facade.urls.embedded-ui-base-url}/auth/pis/{authorizationSessionId}/anonymous?redirectCode={fintechUserTempPassword}
+        # Password config
         password:
+          # Password size in bytes (minimal value - at least 8 bytes of entropy)
           byte-size: 8
     # Consent authorization cookie key path
     authorization-session-key:
       cookie:
+        # Templates for web filter
         path-templates: /embedded-server/v1/consent/{authorizationSessionId}, /embedded-server/v1/psu/ais/{authorizationSessionId}/renewal-authorization-session-key
+        # Template for building redirect URL
         redirect-path-template: /embedded-server/v1/consent/{authorizationSessionId}/fromAspsp/*
   expirable:
+    # Protocol data cache lifetime
     expire-after-write: PT5M # PLEASE SYNC api.security.token-validity-duration, api.cookie.max-age and facade.expirable.expire-after-write
 
   encryption:
@@ -185,35 +217,65 @@ facade:
     cms:
       algo: AES128_GCM
 
+# Properties of OBG protocols
 protocol:
+  # XS2A protocol
   xs2a:
+    # XS2A service URLs
     urls:
+      # AIS related URLs
       ais:
+        # To ASPSP redirection page (for Redirect SCA)
         to-aspsp: ${facade.urls.embedded-ui-base-url}/ais${protocol.xs2a.urls.common.to-aspsp}
+        # Consent related URLs that will be provided to ASPSP to get results of operation
         web-hooks:
+          # URL that represents page saying that consent creation was OK (comes before consent result page) or acts as redirect-back URI for OAuth2
           ok: ${protocol.xs2a.urls.common.web-hooks.ok}
+          # URL that represents page saying that consent creation was not OK (comes before consent result page)
           nok: ${protocol.xs2a.urls.common.web-hooks.nok}
+          # URL that represents consent acquisition result
           result: ${facade.urls.embedded-ui-base-url}/ais${protocol.xs2a.urls.common.web-hooks.result}
+        # Generic parameters input urls - i.e. password page.
         parameters:
+          # Page with generic consent input form and other parameters like PSU ID, can be thought as landing page for consent data input
           provide-more: ${facade.urls.embedded-ui-base-url}/ais${protocol.xs2a.urls.common.parameters.provide-more}
+          # Page where the user provides his PIN or ASPSP password
           provide-psu-password: ${facade.urls.embedded-ui-base-url}/ais${protocol.xs2a.urls.common.parameters.provide-psu-password}
+          # Page where the user can select multiple SCA methods (SMS, email) for 2FA or multifactor authorization
           select-sca-method: ${facade.urls.embedded-ui-base-url}/ais${protocol.xs2a.urls.common.parameters.select-sca-method}
+          # Page where user reports SCA challenge result (i.e. SMS secret code from ASPSP)
           report-sca-result: ${facade.urls.embedded-ui-base-url}/ais${protocol.xs2a.urls.common.parameters.report-sca-result}
+          # Page where the user can provide IBAN list for dedicated consent
           provide-psu-iban: ${facade.urls.embedded-ui-base-url}/ais${protocol.xs2a.urls.common.parameters.provide-psu-iban}
+          # Page where the user waits until decoupled SCA is finalized with the external device
           wait-decoupled-sca: ${facade.urls.embedded-ui-base-url}/ais${protocol.xs2a.urls.common.parameters.wait-decoupled-sca}
+      # PIS related URLs
       pis:
+        # To ASPSP redirection page (for Redirect SCA)
         to-aspsp: ${facade.urls.embedded-ui-base-url}/pis${protocol.xs2a.urls.common.to-aspsp}
+        # Consent related URLs that will be provided to ASPSP to get results of operation
         web-hooks:
+          # URL that represents page saying that consent creation was OK (comes before consent result page) or acts as redirect-back URI for OAuth2
           ok: ${protocol.xs2a.urls.common.web-hooks.ok}
+          # URL that represents page saying that consent creation was not OK (comes before consent result page)
           nok: ${protocol.xs2a.urls.common.web-hooks.nok}
+          # URL that represents consent acquisition result
           result: ${facade.urls.embedded-ui-base-url}/pis${protocol.xs2a.urls.common.web-hooks.result}
+        # Generic parameters input urls - i.e. password page.
         parameters:
+          # Page with generic consent input form and other parameters like PSU ID, can be thought as landing page for consent data input
           provide-more: ${facade.urls.embedded-ui-base-url}/pis${protocol.xs2a.urls.common.parameters.provide-more}
+          # Page where the user provides his PIN or ASPSP password
           provide-psu-password: ${facade.urls.embedded-ui-base-url}/pis${protocol.xs2a.urls.common.parameters.provide-psu-password}
+          # Page where the user can select multiple SCA methods (SMS, email) for 2FA or multifactor authorization
           select-sca-method: ${facade.urls.embedded-ui-base-url}/pis${protocol.xs2a.urls.common.parameters.select-sca-method}
+          # Page where user reports SCA challenge result (i.e. SMS secret code from ASPSP)
           report-sca-result: ${facade.urls.embedded-ui-base-url}/pis${protocol.xs2a.urls.common.parameters.report-sca-result}
+          # Page where the user can provide IBAN list for dedicated consent
           provide-psu-iban: ${facade.urls.embedded-ui-base-url}/pis${protocol.xs2a.urls.common.parameters.provide-psu-iban}
+          # Page where the user waits until decoupled SCA is finalized with the external device
           wait-decoupled-sca: ${facade.urls.embedded-ui-base-url}/pis${protocol.xs2a.urls.common.parameters.wait-decoupled-sca}
+      # Common for AIS and PIS flows URL patterns
       common:
         to-aspsp: /{authSessionId}/to-aspsp-redirection?redirectCode={redirectCode}
         web-hooks:
@@ -227,6 +289,7 @@ protocol:
           report-sca-result: /{authSessionId}/sca-result/{selectedScaType}?wrong={isWrongCreds}
           provide-psu-iban: /{authSessionId}/entry-consent-transactions/dedicated-account-access?wrong={isWrongCreds}
           wait-decoupled-sca: /{authSessionId}/wait-sca-finalization?redirectCode={redirectCode}
+    # Message codes that can be received from ASPSP
     aspspmessages:
       invalid-credentials: PSU_CREDENTIALS_INVALID
       invalid-consent: FORMAT_ERROR
@@ -237,46 +300,77 @@ protocol:
         CONSENT_UNKNOWN: CONSENT_UNKNOWN
         CONSENT_EXPIRED: CONSENT_EXPIRED
         CONSENT_INVALID: CONSENT_INVALID
+    # XS2A protocol qwac-keystore credentials
     pkcs12:
       keystore: sample-qwac.keystore
       password: password
+  # HBCI protocol
   hbci:
     adapter:
       # hbci-product: product - Your product ID here
       # hbci-version: 300 - Your HBCI ID here
+      # Bank codes of mock HBCI banks
       adorsys-mock-banks-blz:
         - 10000001
         - 20000002
         - 30000003
+    # HBCI service URLs
     urls:
+      # AIS related URLs
       ais:
+        # Redirect links for UI screens - i.e. which screen to use for password input
         redirect:
+          # To ASPSP redirection page (for Redirect SCA)
           to-aspsp: ${facade.urls.embedded-ui-base-url}/ais/{authSessionId}/to-aspsp-redirection
+          # Consent related URLs that will be provided to ASPSP to get results of operation
           web-hooks:
+            # URL that represents page saying that consent creation was OK (comes before consent result page)
             ok: ${facade.urls.embedded-ui-base-url}/embedded-server/v1/consent/{authSessionId}/fromAspsp/{aspspRedirectCode}/ok
+            # URL that represents page saying that consent creation was not OK (comes before consent result page)
             nok: ${facade.urls.embedded-ui-base-url}/embedded-server/v1/consent/{authSessionId}/fromAspsp/{aspspRedirectCode}/nok
+            # URL that represents consent acquisition result
             result: ${facade.urls.embedded-ui-base-url}/ais/{authSessionId}/consent-result?redirectCode={redirectCode}
+          # Generic parameters input urls - i.e. password page.
           parameters:
             max-array-size: 32
+            # Page with generic consent input form and other parameters like PSU ID, can be thought as landing page for consent data input
             provide-more: ${facade.urls.embedded-ui-base-url}/ais/{authSessionId}?redirectCode={redirectCode}
+            # Page where the user provides his PIN or ASPSP password
             provide-psu-password: ${facade.urls.embedded-ui-base-url}/ais/{authSessionId}/authenticate?wrong={isWrongCreds}
+            # Page where the user can select multiple SCA methods (SMS, email) for 2FA or multifactor authorization
             select-sca-method: ${facade.urls.embedded-ui-base-url}/ais/{authSessionId}/select-sca-method
+            # Page where user reports SCA challenge result (i.e. SMS secret code from ASPSP)
             report-sca-result: ${facade.urls.embedded-ui-base-url}/ais/{authSessionId}/sca-result/{selectedScaType}?wrong={isWrongCreds}
+            # Page where the user can provide IBAN list for dedicated consent
             provide-psu-iban: ${facade.urls.embedded-ui-base-url}/ais/{authSessionId}/entry-consent-transactions/dedicated-account-access?wrong={isWrongCreds}
+      # PIS related URLs
       pis:
+        # Redirect links for UI screens - i.e. which screen to use for password input
         redirect:
+          # To ASPSP redirection page (for Redirect SCA)
           to-aspsp: ${facade.urls.embedded-ui-base-url}/pis/{authSessionId}/to-aspsp-redirection
+          # Consent related URLs that will be provided to ASPSP to get results of operation
           web-hooks:
+            # URL that represents page saying that consent creation was OK (comes before consent result page)
             ok: ${facade.urls.embedded-ui-base-url}/embedded-server/v1/consent/{authSessionId}/fromAspsp/{aspspRedirectCode}/ok
+            # URL that represents page saying that consent creation was not OK (comes before consent result page)
             nok: ${facade.urls.embedded-ui-base-url}/embedded-server/v1/consent/{authSessionId}/fromAspsp/{aspspRedirectCode}/nok
+            # URL that represents consent acquisition result
             result: ${facade.urls.embedded-ui-base-url}/pis/{authSessionId}/consent-result?redirectCode={redirectCode}
+          # Generic parameters input urls - i.e. password page.
           parameters:
             max-array-size: 32
+            # Page with generic consent input form and other parameters like PSU ID, can be thought as landing page for consent data input
             provide-more: ${facade.urls.embedded-ui-base-url}/pis/{authSessionId}?redirectCode={redirectCode}
+            # Page where the user provides his PIN or ASPSP password
             provide-psu-password: ${facade.urls.embedded-ui-base-url}/pis/{authSessionId}/authenticate?wrong={isWrongCreds}
+            # Page where the user can select multiple SCA methods (SMS, email) for 2FA or multifactor authorization
             select-sca-method: ${facade.urls.embedded-ui-base-url}/pis/{authSessionId}/select-sca-method
+            # Page where user reports SCA challenge result (i.e. SMS secret code from ASPSP)
             report-sca-result: ${facade.urls.embedded-ui-base-url}/pis/{authSessionId}/sca-result/{selectedScaType}?wrong={isWrongCreds}
+            # Page where the user can provide IBAN list for dedicated consent
             provide-psu-iban: ${facade.urls.embedded-ui-base-url}/pis/{authSessionId}/entry-consent-transactions/dedicated-account-access?wrong={isWrongCreds}
+    # HBCI protocol SCA types
     sca:
       authentication-types:
         SMS: "SMS_OTP"
@@ -287,18 +381,38 @@ protocol:
         EMAIL: "SMTP_OTP"
   # Is an optional protocol from extensions
   finapi:
+    # FinApi service's URLs
     api-url: https://sandbox.finapi.io
     token-url: ${protocol.finapi.api-url}/oauth/token
     banks-url: ${protocol.finapi.api-url}/api/v1/banks
+    # Requested from FinApi token-scope
     token-scope: all
+    # FinApi client's credentials
     client-id: dummy
     client-secret: dummy
+    # FinApi client's cache properties
     client-api-cache-size: 100
     client-api-expire-after-access: PT30M
+    # URL to redirect after ASPSP flow
     from-aspsp-url: ${facade.urls.embedded-ui-base-url}/embedded-server/v1/consent/{authSessionId}/fromAspsp/{aspspRedirectCode}/ok
+
     bank-service:
+      # Enables auto-updating of FinApi banks cache
+      auto-update-banks-cache: false
+      # Enables updating banks in database from the banks cache
+      update-bank-data-in-db: false
+      # If enabled deprecated banks will get status "active" = false
+      make-deprecated-bank-data-inactive: false
+
+      # URL to download list of common OBG banks
       obg-banks-url: https://raw.githubusercontent.com/adorsys/open-banking-gateway/develop/opba-db/src/main/resources/migration/migrations/csv/v0/0-banks.csv
+
+      # Path to store downloaded FinApi banks
       finapi-bank-data-path: /tmp
+
+      # FinApi banking database update scheduler settings (every day at 00:00 by default)
+      cron:
+        expression: 0 0 0 * * *
 
 # Flowable comes for all protocols shared
 bpmnshared:
