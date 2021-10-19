@@ -1,7 +1,8 @@
 server:
+  # Port to use when starting application
   port: 8085
 spring:
-  # Datasource properties
+  # Datasource connection properties
   datasource:
     # Database URL
     url: jdbc:postgresql://localhost:5432/open_banking?currentSchema=banking_protocol
@@ -10,7 +11,7 @@ spring:
     password: docker
     # JDBC connection pool
     type: com.zaxxer.hikari.HikariDataSource
-    # Datasource DB driver
+    # Database connection pool properties
     driver-class-name: org.postgresql.Driver
     hikari:
       # Database schema name
@@ -25,7 +26,7 @@ spring:
       ddl-auto: validate
     open-in-view: false
 
-  # Liquibase properties
+  # Liquibase properties (Database migration)
   liquibase:
     # Enables Liquibase
     enabled: true
@@ -38,7 +39,7 @@ spring:
       adorsys-sandbox-url: http://localhost:20014
       adorsys-sandbox-oauth-server-url: http://localhost:20015/oauth/authorization-server
       adorsys-hbci-sandbox-url: http://localhost:8090/hbci-mock/
-    # Liquibase contexts will be loaded when OBG starts
+    # Which migrations types to apply (pre-load bank data into database)
     contexts: dev,mock-banks
 
 # Actuator:
@@ -62,7 +63,7 @@ api:
 
     # Bank-search API properties
     bank-search:
-      # The index of the forst result
+      # The index of the first result
       start: 0
       # Maximum number of entries in the response
       max: 10
@@ -82,7 +83,7 @@ api:
     # Signature-based security of FinTech consumable API
     security:
       verification:
-        # The timestamp range of valid request
+        # Signature validity time (how long request signature will be valid)
         request-validity-window: 5m
         # Use this claim name in the Jwt
         claim-name-key: sign-data
@@ -116,7 +117,7 @@ api:
     http-only: true
     path: /
     same-site: Lax
-    # Template for building redirect URL
+    # Template for building redirect URL from ASPSP
     redirect-path-template: ${facade.urls.authorization-session-key.cookie.redirect-path-template}
     urls-to-be-validated:
       # templates for web filter
@@ -133,7 +134,7 @@ facade:
     redirect:
       # Redirection URL for consent association
       consent-login:
-        # URLs of Coucent UI start pages for AIS and PIS flows
+        # URLs of Consent UI start pages for AIS and PIS flows
         page:
           for-ais: ${facade.urls.embedded-ui-base-url}/auth/ais/{authorizationSessionId}/login?redirectCode={fintechUserTempPassword}
           for-pis: ${facade.urls.embedded-ui-base-url}/auth/pis/{authorizationSessionId}/login?redirectCode={fintechUserTempPassword}
@@ -151,7 +152,7 @@ facade:
         # Template for building redirect URL
         redirect-path-template: /embedded-server/v1/consent/{authorizationSessionId}/fromAspsp/*
   expirable:
-    # Cashe lifetime
+    # Protocol data cache lifetime
     expire-after-write: PT5M # PLEASE SYNC api.security.token-validity-duration, api.cookie.max-age and facade.expirable.expire-after-write
 
   encryption:
