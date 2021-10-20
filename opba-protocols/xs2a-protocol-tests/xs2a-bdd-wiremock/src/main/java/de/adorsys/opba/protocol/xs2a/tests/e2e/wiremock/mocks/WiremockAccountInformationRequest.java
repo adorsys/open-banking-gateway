@@ -15,6 +15,7 @@ import org.springframework.http.MediaType;
 
 import java.util.UUID;
 
+import static com.github.tomakehurst.wiremock.client.WireMock.getRequestedFor;
 import static com.github.tomakehurst.wiremock.client.WireMock.postRequestedFor;
 import static com.github.tomakehurst.wiremock.client.WireMock.urlMatching;
 import static de.adorsys.opba.api.security.external.domain.HttpHeaders.AUTHORIZATION_SESSION_KEY;
@@ -72,6 +73,21 @@ public class WiremockAccountInformationRequest<SELF extends WiremockAccountInfor
                 .then()
                     .statusCode(HttpStatus.SEE_OTHER.value())
                 .extract();
+
+        updateRedirectCode(response);
+        return self();
+    }
+
+    public SELF open_banking_redirect_from_aspsp_with_static_oauth2_code_to_exchange_to_token_ing(String code) {
+        extractRedirectOkUriSentByOpbaFromWiremockIng();
+        ExtractableResponse<Response> response = RestAssured
+            .given()
+            .cookie(AUTHORIZATION_SESSION_KEY, authSessionCookie)
+            .when()
+            .get(redirectOkUri + "?code=" + code)
+            .then()
+            .statusCode(HttpStatus.SEE_OTHER.value())
+            .extract();
 
         updateRedirectCode(response);
         return self();
@@ -254,5 +270,13 @@ public class WiremockAccountInformationRequest<SELF extends WiremockAccountInfor
                         wireMock.findAll(postRequestedFor(urlMatching("/v1/consents.*"))), it -> !it.isEmpty()
                 ).get(consentCreationRequestIndex);
         this.redirectOkUri = consentInitiateRequest.getHeader(TPP_REDIRECT_URI);
+    }
+
+    private void extractRedirectOkUriSentByOpbaFromWiremockIng() {
+        LoggedRequest consentInitiateRequest = await().atMost(Durations.TEN_SECONDS)
+            .until(() ->
+                       wireMock.findAll(getRequestedFor(urlMatching("/oauth2/authorization-server-url.*"))), it -> !it.isEmpty()
+            ).get(0);
+        this.redirectOkUri = consentInitiateRequest.getQueryParams().get("redirect_uri").firstValue();
     }
 }

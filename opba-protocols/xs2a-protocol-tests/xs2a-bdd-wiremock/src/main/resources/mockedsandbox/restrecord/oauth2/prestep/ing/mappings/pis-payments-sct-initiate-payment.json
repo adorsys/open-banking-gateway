@@ -1,0 +1,60 @@
+{
+  "id" : "fc7dd561-519f-4e30-9623-4d14fb77c364",
+  "name" : "v1_payments_sepa-credit-transfers",
+  "request" : {
+    "url" : "/v1/payments/sepa-credit-transfers",
+    "method" : "POST",
+    "headers" : {
+      "X-Request-ID" : {
+        "matches" : ".*"
+      },
+      "Digest" : {
+        "matches" : ".*"
+      },
+      "TPP-Redirect-URI" : {
+        "matches" : ".*"
+      },
+      "Date" : {
+        "matches" : ".*"
+      },
+      "Signature" : {
+        "matches" : ".*"
+      },
+      "TPP-Signature-Certificate" : {
+        "matches" : ".*"
+      },
+      "PSU-IP-Address" : {
+        "matches" : ".*"
+      },
+      "Content-Type" : {
+        "equalTo" : "application/json; charset=UTF-8"
+      },
+      "Authorization" : {
+        "equalTo" : "Bearer eyJhbGciOiJkaXIiLCJlbmMiOiJBMjU2Q0JDLUhTNTEyIiwia2lkIjoidHN0LTRjOGI1Mzk3LTFhYjgtNDFhOC1hNTViLWE3MTk5MTJiODNkMiIsImN0eSI6IkpXVCJ9..H0SSrP36iLRmXssIOelZdw.MYdx5k5OwPdzK9RgN84dRKu4b0L8xdgv8NLm9dk0lxO-KOkS4TNNyPy9llpNq8GgLBJ2bkNQbXELONc-FhAPJUYL_IpKsAmJJszEPgL8qX8TEknqteOjgF5znwP1RCEABsOiGTXnSSM39qa5njn5xO37KY32VGoyka9uuBlNztziC-qiXazXfADmz4yYblfGcJw7FfRmmICKt3WgQXDUUkpAzdUnsH-CqLGRasmNv2ntNLY4r5bOWBqEWEbeSQiBUxoeuwDFT1nftfiGBw-jxj5tB9fs9EaXClv2iLpq4FeTpbMXEPOLug1xu7L5hrDf5q2zhZ--djH4jBwZNkXhP_pcKPSu6qbSwDvBxvw8Sn_FJnSj-AvFScTj4p1uULCmokHC5H7Fa0FLESujotZZp8COOZrvMBwHdnmraKAxahZf-YQb4F6gtSs8pRXfedp3QllHD1ukatY-IzGr3jFDKbORmrhyKRfUZpjSxiTkgrJCaFdSGjQYtu8j1yssrRm1ksZogtRLoGRn-5wUR-8yj_PznqoX69j9OKEGJ43r-NX0nE7ut5OISRRmHh_4_bY_YH5Z9cbQ5CuCSrYhGA-PcqJdnSFfvxxTKg5rEaioqNtrTmebcE4jhzOuuAXEtKg3LKJ_2orRuwgUJYE3laAXABBXIY5N1dZL0q8-LamclRnxEEY8Rxhgb0aH5Xc-O8zmVq3lrJqqk3ZRC5SGQWj96YlKtPvVESYcy7BpjHUinWu-GQjIzW7b6ZNHcl-DhSndwjoSN5be0t5ajB-ku0zcjmVmgXVynyroA63bOXU1PdkRbaG6tvsLoxMt8_gjJyRdJD1MiP--voBQRSy-ssjuQEnzrJqIaT8JnO_84O05XDQbU3YLe_30J7V3SNdK2VFZ31uY2W8soh1rxZxu7lbrLiciuDP6_w-ta-thCgdE-6sQOo-L8B9TyIGeFhQSlz3609OaQBcehq5hOvG2Re-dh2hEdi1MIvP6BeQ_WGPC6l3wuBsI9b2XDq8WWrSnRHzG1IHPpLlzzTsa03ecfdH62i5KAGT8tG1kxrKQuYdnUnQkKGPJ7jviHDaKzlC6KI9n0_KXzhhxV-hM6u3yC3JQ_MShhYr2GSXu6Aqg6-12oeQuPp1ByUP3wzdm4oEa7UcLAQp9Ph3Ds6eddMFP6BSA2kcMLKWU9LfV-4jQ_RhfJOCgx44oWes2KD_IgdSCcTO18nvfQOZBAixKntEPFW9TWeXo15_gkWwNnz2QY7yGgU3HVwfJw1Q-0HamYpMMb_wL4PmpKTZB88NE42UYEnp6SzxSSIkr_IdF-V7mjhRYM60Do1KIa0JBzgvU79DLoTUDHKKTw9FMWfpqNvJNYdXt0xD34egAb5F07tlWiWjX2uHOxVBnHy_z5oEaKu7DTHfBcRUyHCjEvSJCD5OseEj4oFBluJHtZIcgPcAaccp_vJ4-5joTcwOZKw6m3EQqBtlWePwmShecJ-Ocyu27mbTQby4zXCH9W5NN8mUGa7Ct42LCaIVpYkh5JQ2x2s0wuO2eunBP5vCQa983vmpgtnaJICtT3iOpTm5jUk9wPWIWXGSD6jJNs4qLcomAjtQuPNjrAxuJXqfhqtDE-778GsZ7tKHCUv_TGO1Hdv8b6CjMvmODUrgRYuqT99rYMeva8AQPkhTJpJJwW36dl6hZ4MNw3cgZtCdkuE307NbwdhmHa_4H_ZCryR-fBL7UkwuTd4svC0ZjYAQio8BkhRKLk8BWLx-0YNMIGt2JsUaQFQIsJ4Ws5G7659bwKO1PJg5kVn3UsHM2e_B17vFCBOUEXwqcE40c0GwuqnxUr0wG_C_bfTOA-quJGGm15Cc8KYJXgMLBSr7i1vp46RPrFzz-3aj0Ro41FNw6W8PInOVZJPGOqfBuYuGXDubUarQOOSfOKm4OFAdkjhcqjsiF4jS5myUCJG3hlA5S73aEUPp9hRfrYvpFljbGuz_XxuvD_n-ebwzOCchGvEDILutL2FeEA_AwFgImOQShMgmXXtoJkyX9twMfKKattWeJMdwlPBNJvXiPpxgosVQZQ2MExq6BWAjdsxKycRhpJHLe8Po8m2IaHBNyvqwV4Rrph5ydMJ5h2jjpObtXU7IToYMn7SBe50i6QFPm_BBJ08-helzJ3suGcn74HJoAe9mdkSn1jgkA-1UbR-FYbu2QyOS76XAcZpZcRe6phS9mXU7speGGzEObWZaJaZxgkLlgut802JTZn76ON26Bm42tzbIA3yhK_RwcJ3ocKxkyqsf-OclvX1nLRmLecKAdMx3-KfQ7apKwFzdd-lB3ZyUySMg0weY0er092w.LCdGLmXx-QZO17_JDDdquJv_FKmYFgI7kpepbQjhqlI"
+      }
+    },
+    "bodyPatterns" : [ {
+      "equalToJson" : "{\"instructedAmount\":{\"amount\":\"1\",\"currency\":\"EUR\"},\"creditorAccount\":{\"iban\":\"AT861921125678901234\"},\"creditorName\":\"Laura Musterfrau\"}",
+      "ignoreArrayOrder" : true,
+      "ignoreExtraElements" : true
+    } ]
+  },
+  "response" : {
+    "status" : 201,
+    "body" : "{\"transactionStatus\":\"RCVD\",\"_links\":{\"scaRedirect\":\"http://localhost:{{request.port}}/redirect\",\"self\":\"https://api.ing.com/v1/payments/sepa-credit-transfers/111be84f-a62b-469b-b964-792da2840afb\",\"status\":\"https://api.ing.com/v1/payments/sepa-credit-transfers/111be84f-a62b-469b-b964-792da2840afb/status\"},\"paymentId\":\"111be84f-a62b-469b-b964-792da2840afb\"}",
+    "headers" : {
+      "Date" : "Fri, 14 Aug 2020 11:23:53 GMT",
+      "Content-Type" : "application/json;charset=UTF-8",
+      "ASPSP-SCA-Approach" : "REDIRECT",
+      "X-ING-Response-ID" : "6d46a060-e1a2-4a49-843d-12947e0dd48b",
+      "Content-Security-Policy" : "default-src 'self'; prefetch-src 'none'; base-uri 'self'; object-src 'none'; frame-ancestors 'none'; form-action 'self'; upgrade-insecure-requests; block-all-mixed-content; connect-src 'self'; style-src 'self' 'unsafe-inline' data:; img-src https: data:; script-src 'self' data: 'unsafe-inline' 'unsafe-eval'",
+      "Strict-Transport-Security" : "max-age=31622400; includeSubDomains",
+      "X-Content-Type-Options" : "nosniff",
+      "X-Frame-Options" : "deny",
+      "X-XSS-Protection" : "1; mode=block"
+    }
+  },
+  "uuid" : "fc7dd561-519f-4e30-9623-4d14fb77c364",
+  "persistent" : true,
+  "insertionIndex" : 9
+}

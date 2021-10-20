@@ -1,0 +1,17 @@
+{
+  "id" : "6934db76-5bd6-4fe1-abc6-dab92161b8c3",
+  "name" : "oauth2_authorization-server-url",
+  "request" : {
+    "urlPath" : "/granting/c712eb70-c8aa-4077-b0cf-a2b3ddcf2a1e",
+    "method" : "GET"
+  },
+  "response" : {
+    "status" : 302,
+    "headers" : {
+      "Location" : "http://localhost:8080/redirect?code=36719100-3228-4020-a368-ad0f989cf1f9"
+    }
+  },
+  "uuid" : "6934db76-5bd6-4fe1-abc6-dab92161b8c3",
+  "persistent" : true,
+  "insertionIndex" : 2
+}
