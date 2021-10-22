@@ -81,13 +81,13 @@ public class WiremockAccountInformationRequest<SELF extends WiremockAccountInfor
     public SELF open_banking_redirect_from_aspsp_with_static_oauth2_code_to_exchange_to_token_ing(String code) {
         extractRedirectOkUriSentByOpbaFromWiremockIng();
         ExtractableResponse<Response> response = RestAssured
-            .given()
-            .cookie(AUTHORIZATION_SESSION_KEY, authSessionCookie)
-            .when()
-            .get(redirectOkUri + "?code=" + code)
-            .then()
-            .statusCode(HttpStatus.SEE_OTHER.value())
-            .extract();
+                    .given()
+                        .cookie(AUTHORIZATION_SESSION_KEY, authSessionCookie)
+                    .when()
+                        .get(redirectOkUri + "?code=" + code)
+                    .then()
+                        .statusCode(HttpStatus.SEE_OTHER.value())
+                        .extract();
 
         updateRedirectCode(response);
         return self();
