@@ -1,0 +1,45 @@
+{
+  "id" : "6ff0bd09-3176-471f-9c70-aa08596586bd",
+  "name" : "v3_accounts",
+  "request" : {
+    "url" : "/v3/accounts",
+    "method" : "GET",
+    "headers" : {
+      "X-Request-ID" : {
+        "matches": ".*"
+      },
+      "Digest" : {
+        "matches": ".*"
+      },
+      "Date" : {
+        "matches": ".*"
+      },
+      "Signature" : {
+        "matches": ".*"
+      },
+      "TPP-Signature-Certificate" : {
+        "matches": ".*"
+      },
+      "Authorization" : {
+        "equalTo" : "Bearer eyJhbGciOiJkaXIiLCJlbmMiOiJBMjU2Q0JDLUhTNTEyIiwia2lkIjoidHN0LTRjOGI1Mzk3LTFhYjgtNDFhOC1hNTViLWE3MTk5MTJiODNkMiIsImN0eSI6IkpXVCJ9..8wfUQuDwkwGFKqNOQEhNUw.wb-8kRZh0RfiIObcOQ1bj3hB-5EeYfgpH4AiyvwXoYE6Gp8oDoZ6xzHE5gTm-_OCLwhE7oMx7Jab3426wpolSsDlVfR1iShAhgrfY7sR11v2pGOxpFyM1ALdytFWSjQG--ZcklhF9ATJSjJGcqVHvQi58ZQwnSFcYUxFRUe2T2yOrscSwyTbay4xloKQH3s249QrXWRKGFMJeZ4PtgZeyCKr4vNOH9goMfN0-ryI9hhpj_TPpkUdY4PuWDNbnMPZkyJuf5-fGwHUp8lGKHjHS7SmfLF5KSflI_0ZceMVC_gTOZXqa_FTc9YOClgYv0YvUZJe_b4vUxJlihnrFHoflqBTf70sIWypfsQcgyevA0G3rFmI5zo8cSReK7kcyH5d0w7m9_Yg2dWYbS58Qb88RtomWyDgHMjFQFcnSfK7_eJQRDs5J7tjU2FPJcYyWHfjazKnkTDqNkR5A_jEW0hX6xeBAjnD-xCI33XYkQz7h3VZ8EGhZk0vcZ7LYVG-ulGrExSAtr77DeUTxhL11JpwMtN7v_YR2mcfM0kX1lxkK13lRTq6jO9l5KgyOzfXQ3R7g1d4XxIl3NXnd6xeFUHSP6azxwPoc7wtKwp6Etwi5i5bx16ok8SN7I-mpZCVfzwx59IoxMD5BKdEPWZmNWBDE_QKlh4_Rwxkl37XkprPlcGb_wMYOQEh0L4zCD8SPAoipzYxIxNqcQaKTVGLSSWtdQYniStLj56--BFFQ9us-nTwMj9u4e0mLx522NkHXCZWpJuxcqpDBRytAyARDuXQErmXKu5eKNZdxFJl6mWXte9lUo9OO58JtueFkMkcsmijkLJV-2BkscfOU_GdCa4HdpPF4hgFkVgqrmPnwV9ZyPwkWzjsAjnUwAfaHsdpnFmTv-xMN-kbxlwtyMC-ldn6JXZYjOfLqqXom9O1lsOfQot2gqUcQ6hvtMg5MhCGFAn5zYewDZGb1P0OhUOz4WFvswQoM3qUHD_59Fhx1OnOj0k2d0BTLGH7p-PcRWIIwYHfH-TBxmvwluoilcsnOI6Gm7qozdn3iPQKMoBS3eQycFWX_qxq9t-vCgw0Dwo6sBfg3aEz6GL3Y4b3NETOR2YjIjJPqLK3S2j_RhdDcipY6QsCZ5EhHDrqKJYD-oQSISb5Ct7w-hWKuCcydngj3Km_0WJOpNZduyDsXCVfbXgmZ7pBNuH-1hSXaD6CPAPKDHMfw3tGtzJW_JNlsMVOug8opM7XFOrx5SUtz0VUWZENcleUfizhoz1D5FDE4OMzepkLfT6HrauI_Co945keBqlfZf3SeZ7KyzUZxQwW-JA1pdBBg-A7GzA0kxueE_Tci7AMW5WxbMVYUTVvzFZ_rbhQrU0RySfTzj6ug4Jbzhvq3ZKS3F_HeKBU7wuuyIy4WEtxfQQl51z-ymZzHC6sGGkpuLmIypv5oHwU1HCZQi74EXEiQgN0yenD02ND0f2uxtYIRViDIZhB9KrXIHsojewL1YIheOjnyqBWI7icBmEaPedc-ecMiYxQRY1yHpSkjEepiBFdHpYq9SIHLM7m4R8kai7-ELAzVjUN9j5e0lBvfpnL9ynTDWdt3vs2TUzwNUEvEaE5y4U6c5C6ucSY1joBTA5Uwz7T9RuyDVpzHgRtyIKfIVxkiwI2fixtXufKUZod9NsjvwC3BZfNpn94sC4d06xpu_Zjn-uQ3H_KoHSDuFjsJVSUxxr48hU477U8UvF-5aNPc4MIurk1FqGJUVupcGYvia-_sCK6nwe4xrE7aj5u_mnRflj8RdPUci8SKwGcJYIQuVpJvmILrieiHs1-oqM231VmFXbWiUZKLOE-lxt7LtgT5zgjV6c2it-2mk3jOWz-54--r5e9-x4zyAZIHve3OeALVVhB6Jrj8vwf16SUUBj6n0gr5GMG-DQrOd_9eD2p-2P8G04d3P62PB6NuILBr50YXuqHgv2gV9KByrJN5Y12yQ41ywpr8XxsBrACwPTaTSqgRfYBUbwWyxje4352JoOSIFbFgPQJpH8fuawcZc2NRjhx6cECMAefBMbx2QDKBnnNSVN697XOCgWAq0ENKoJPNIK5m7VzuPlr4LASTr3kc_vDNRKyixRFiWWLaesRdZNhrNvB9PkbdQ0jHmyfno5H86l_bH82GOkh286_IcsQsMuH_8VnGZUfgtShJq8t3eMXfc3tTwzaL3lAwW-EpiRFrNVPm29VlxNUGJDl13dzGl5X0pdseSqmthOyiB8n2mhl5eZVocejEFXTWDbpRyIURpBYUk3ReU9XyjWbGJcC_ysm89wCHY69XmC8EyIxN7caIifDT4nhuLVrAqWi8jg3ONJNh4ux-WbxA6zcHnzy3Be4T9z29VC93B-D855YZwSn995u50VVeThQIwGz8g79fRBXwdNU9oW8rJA460dFQFaVO5cSf8YBdBYcSM21Gj5ce9ECf7vBljlu3wGj2T-Qm77n6mmH1TqK9t696Quh6OdgfVie_XW3WPM2lC1jdiauwoJjOtOT7E28kY4M4VnruPwdLpNNL2_2sF4mjQaKywRKmckRqRV8sfJNJ3wSaXQZb3PvzhOXqgExD5VLoL5YqhyVnanqDT9_Wx8s8j4NGuELt6peeowvGaotGeWmN4z4V0LZcPp66h7bnciW2125Cz80S7NCIT9ijulJ1NSGc2PAd_hUAj4Oru8Cm2XrV7yTztcQOvL9wMhSVFCDbSNFOf6iJXyjVZLw5sOR-Sth3TlxR1tZXYpGuOQ_TmtPZjt_DPrgUwHD6qOrhDg3x_l0TU9jJuoVAQg6NShqsAPLCpOADnuWTzDmb-_OvhTz3AOirAQNqlzETmidVBFi49LCVu9Eh3lTteKj7IjlOn5GJswgbcs5OtyzqN4mG_yHkDqZ62v2AtNpp5VdcThoolk0irqqW8jIWVsTAp0.JXrH-FBGrIS4y4W9H8IXxkYZjGYta2bm22Wrwk_JupM"
+      }
+    }
+  },
+  "response" : {
+    "status" : 200,
+    "bodyFileName" : "ais-get-accounts-response-body.json",
+    "headers" : {
+      "Date" : "Wed, 12 Aug 2020 07:36:42 GMT",
+      "Content-Type" : "application/json;charset=UTF-8",
+      "X-ING-Response-ID" : "38ba5c17-1fc1-4816-b5d7-1afb9789b0a1",
+      "Content-Security-Policy" : "default-src 'self'; prefetch-src 'none'; base-uri 'self'; object-src 'none'; frame-ancestors 'none'; form-action 'self'; upgrade-insecure-requests; block-all-mixed-content; connect-src 'self'; style-src 'self' 'unsafe-inline' data:; img-src https: data:; script-src 'self' data: 'unsafe-inline' 'unsafe-eval'",
+      "Strict-Transport-Security" : "max-age=31622400; includeSubDomains",
+      "X-Content-Type-Options" : "nosniff",
+      "X-Frame-Options" : "deny",
+      "X-XSS-Protection" : "1; mode=block"
+    }
+  },
+  "uuid" : "6ff0bd09-3176-471f-9c70-aa08596586bd",
+  "persistent" : true,
+  "insertionIndex" : 6
+}
