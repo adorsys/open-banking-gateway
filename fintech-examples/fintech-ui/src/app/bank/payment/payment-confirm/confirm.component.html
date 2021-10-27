@@ -38,6 +38,11 @@
           <label>Amount:</label>
           <p class="text-bold">{{ roundToTwoDigitsAfterComma(confirmData.paymentRequest.amount) }} EUR</p>
         </div>
+
+        <div class="form-group col-md-6 pl">
+          <label>End To End Identification</label>
+          <p class="text-bold">{{ confirmData.paymentRequest.endToEndIdentification }}</p>
+        </div>
       </div>
     </section>
 
