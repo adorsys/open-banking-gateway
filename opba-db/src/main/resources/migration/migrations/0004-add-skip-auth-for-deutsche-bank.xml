@@ -7,7 +7,7 @@
         <update tableName="${table-prefix}bank_profile">
             <column name="xs2a_skip_consent_authorization" value="true"/>
             <where>
-                adapter_id = 'deutsche-bank-adapter' OR adapter_id = 'consors-bank-adapter'
+                adapter_id = 'deutsche-bank-adapter' OR adapter_id = 'consors-bank-adapter' OR adapter_id = 'ing-adapter'
             </where>
         </update>
     </changeSet>

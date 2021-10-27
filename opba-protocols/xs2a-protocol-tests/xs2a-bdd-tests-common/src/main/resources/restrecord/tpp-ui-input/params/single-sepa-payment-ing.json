@@ -1,0 +1,14 @@
+{
+  "instructedAmount" : {
+    "amount" : "1",
+    "currency" : "EUR"
+  },
+  "creditorAccount" : {
+    "iban" : "AT861921125678901234"
+  },
+  "debtorAccount": {
+    "currency": "EUR",
+    "iban": "DE80760700240271232400"
+  },
+  "creditorName" : "Laura Musterfrau"
+}

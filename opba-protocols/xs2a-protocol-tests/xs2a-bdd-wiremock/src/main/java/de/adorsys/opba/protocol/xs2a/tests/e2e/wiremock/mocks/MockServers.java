@@ -217,6 +217,15 @@ public class MockServers<SELF extends MockServers<SELF>> extends CommonGivenStag
         return self();
     }
 
+    public SELF oauth2_prestep_mock_of_ing_for_anton_brueckner_payments_running() {
+        WireMockConfiguration config = WireMockConfiguration.options().dynamicPort()
+            .usingFilesUnderClasspath("mockedsandbox/restrecord/oauth2/prestep/ing")
+            .extensions(new ResponseTemplateTransformer(false));
+        startWireMock(config, ING_BANK_ID, ingBankProfileConfigurer);
+
+        return self();
+    }
+
     public SELF oauth2_integrated_mock_of_santander_for_anton_brueckner_payments_running(Path tempDir) {
 
         mergeWireMockFixtures(
