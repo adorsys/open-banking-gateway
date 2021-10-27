@@ -1102,6 +1102,8 @@ components:
           type: string
         debitorIban:
           type: string
+        endToEndIdentification:
+          type: string
         amount:
           type: string
         purpose:

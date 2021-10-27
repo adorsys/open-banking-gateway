@@ -57,6 +57,7 @@ export class InitiateComponent implements OnInit {
       creditorIban: ['AL90208110080000001039531801', [ValidatorService.validateIban, Validators.required]],
       amount: ['12.34', [Validators.pattern('^[1-9]\\d*(\\.\\d{1,2})?$'), Validators.required]],
       purpose: [testPayment.purpose],
+      endToEndIdentification: ['Test end to end identification 129303', [Validators.required]],
       instantPayment: false
     });
   }

@@ -41,7 +41,14 @@
           </div>
           <div class="form-group col-md-6" *ngIf="!accountId">
             <label class="text-secondary" for="debtorIban">Your IBAN:</label><br />
-            <input class="form-control" id="debtorIban" name="creditorIban" type="text" value="{{debtorIban}}" disabled/>
+            <input
+              class="form-control"
+              id="debtorIban"
+              name="creditorIban"
+              type="text"
+              value="{{ debtorIban }}"
+              disabled
+            />
           </div>
           <div class="form-group col-md-6">
             <label class="text-secondary" for="purpose">Purpose of payment:</label><br />
@@ -75,6 +82,24 @@
             </div>
             <div *ngIf="paymentForm.controls['amount'].errors?.pattern" class="invalid-feedback">
               The amount should be more than 0 or doesn't fit the pattern ##.##
+            </div>
+          </div>
+          <div class="form-group col-md-6">
+            <label class="text-secondary" for="endToEndIdentification">End To End Identification:</label><br />
+            <input
+              [ngClass]="{
+                'is-invalid':
+                  paymentForm.controls['endToEndIdentification'].dirty &&
+                  paymentForm.controls['endToEndIdentification'].errors
+              }"
+              class="form-control"
+              formControlName="endToEndIdentification"
+              id="endToEndIdentification"
+              name="endToEndIdentification"
+              type="text"
+            />
+            <div *ngIf="paymentForm.controls['endToEndIdentification'].errors?.required" class="invalid-feedback">
+              End To End Identification is required
             </div>
           </div>
           <div class="form-group col-md-12">
