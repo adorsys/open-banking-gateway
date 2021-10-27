@@ -39,7 +39,6 @@ import java.util.UUID;
 import java.util.stream.Collectors;
 
 import static de.adorsys.opba.adminapi.config.Const.DISABLED_ON_NO_ADMIN_API;
-import static de.adorsys.opba.restapi.shared.GlobalConst.SPRING_KEYWORD;
 import static java.util.function.Function.identity;
 
 @Profile(DISABLED_ON_NO_ADMIN_API)
@@ -48,6 +47,7 @@ import static java.util.function.Function.identity;
 public class AdminApiService {
 
     private static final String ADMIN_MAPPERS_PACKAGE = "de.adorsys.opba.adminapi.service.mappers";
+    private static final String SPRING_KEYWORD = "spring";
 
     private final BankRepository bankRepository;
     private final BankProfileJpaRepository bankProfileJpaRepository;
