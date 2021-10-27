@@ -9,6 +9,7 @@ import de.adorsys.xs2a.adapter.api.PaymentInitiationService;
 import de.adorsys.xs2a.adapter.api.Pkcs12KeyStore;
 import de.adorsys.xs2a.adapter.api.http.HttpClientConfig;
 import de.adorsys.xs2a.adapter.api.http.HttpClientFactory;
+import de.adorsys.xs2a.adapter.api.http.HttpLogSanitizer;
 import de.adorsys.xs2a.adapter.api.link.LinksRewriter;
 import de.adorsys.xs2a.adapter.impl.http.ApacheHttpClientFactory;
 import de.adorsys.xs2a.adapter.impl.http.BaseHttpClientConfig;
@@ -28,6 +29,7 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Profile;
 
 import java.nio.file.Paths;
+import java.util.Arrays;
 
 import static de.adorsys.opba.protocol.xs2a.config.ConfigConst.XS2A_PROTOCOL_CONFIG_PREFIX;
 
@@ -69,8 +71,8 @@ public class Xs2aAdapterConfiguration {
     }
 
     @Bean
-    HttpClientConfig httpClientConfig(Pkcs12KeyStore keyStore) {
-        return new BaseHttpClientConfig(new Xs2aHttpLogSanitizer(), keyStore, null);
+    HttpClientConfig httpClientConfig(Pkcs12KeyStore keyStore, HttpLogSanitizer httpLogSanitizer) {
+        return new BaseHttpClientConfig(httpLogSanitizer, keyStore, null);
     }
 
     @Bean
@@ -126,5 +128,14 @@ public class Xs2aAdapterConfiguration {
     private static HttpClientBuilder xs2aHttpClientBuilderWithSharedConfiguration() {
         return HttpClientBuilder.create()
                 .disableDefaultUserAgent();
+    }
+
+    @Bean
+    HttpLogSanitizer xs2aHttpLogSanitizer() {
+        return new Xs2aHttpLogSanitizer(Arrays.asList("recurringIndicator", "validUntil", "frequencyPerDay",
+            "combinedServiceIndicator", "Authorization", "iban", "currency", "amount", "creditorName",
+            "remittanceInformationUnstructured", "scope", "access_token", "token_type", "expires_in", "client_id",
+            "Digest", "Signature", "TPP-Signature-Certificate", "transactionStatus", "paymentId", "scaRedirect", "self",
+            "status", "delete"));
     }
 }
