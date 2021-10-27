@@ -23,19 +23,19 @@ setting:
       bankOfferedConsentSupported: TRUE
       globalConsentSupported: TRUE
       availableAccountsConsentSupported: TRUE
-      accountAccessFrequencyPerDay: 4
+      accountAccessFrequencyPerDay: 100
       notConfirmedConsentExpirationTimeMs: 86400000
-      maxConsentValidityDays: 90
+      maxConsentValidityDays: 0
       accountOwnerInformationSupported: false
       trustedBeneficiariesSupported: false
     redirectLinkToOnlineBanking:
       aisRedirectUrlToAspsp: http://localhost:4400/account-information/login?encryptedConsentId={encrypted-consent-id}&redirectId={redirect-id}
     transactionParameters:
       availableBookingStatuses:
+        - BOTH
         - BOOKED
         - PENDING
-        - BOTH
-      transactionsWithoutBalancesSupported: TRUE
+      transactionsWithoutBalancesSupported: FALSE
       supportedTransactionApplicationTypes:
         - application/json
     deltaReportSettings:
@@ -49,19 +49,6 @@ setting:
       SINGLE:
         - sepa-credit-transfers
         - instant-sepa-credit-transfers
-        - target-2-payments
-        - cross-border-credit-transfers
-      PERIODIC:
-        - sepa-credit-transfers
-        - instant-sepa-credit-transfers
-        - target-2-payments
-        - cross-border-credit-transfers
-      BULK:
-        - sepa-credit-transfers
-        - instant-sepa-credit-transfers
-        - target-2-payments
-        - cross-border-credit-transfers
-        - pain.001-sepa-credit-transfers
     maxTransactionValidityDays: 0
     notConfirmedPaymentExpirationTimeMs: 86400000
     paymentCancellationAuthorisationMandated: FALSE
@@ -73,7 +60,7 @@ setting:
     supportedTransactionStatusFormats:
       - application/json
   piis:
-    piisConsentSupported: TPP_CONSENT_SUPPORTED
+    piisConsentSupported: NOT_SUPPORTED
     redirectLinkToOnlineBanking:
       piisRedirectUrlToAspsp: http://localhost:4400/account-information/login?encryptedConsentId={encrypted-consent-id}&redirectId={redirect-id}
   sb:
@@ -82,8 +69,8 @@ setting:
     notConfirmedSigningBasketExpirationTimeMs: 86400000
   common:
     scaApproachesSupported:
-      - EMBEDDED
       - REDIRECT
+      - EMBEDDED
       - DECOUPLED
     scaRedirectFlow: REDIRECT
     oauthConfigurationUrl: http://localhost:8090/oauth/authorization-server
