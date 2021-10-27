@@ -41,6 +41,7 @@ public class PaymentService {
     // FIXME: https://github.com/adorsys/open-banking-gateway/issues/316
     private String currency = "EUR";
     private String paymentProduct = "sepa-credit-transfers";
+    private String instantPaymentProduct = "instant-sepa-credit-transfers";
 
     private final TppPisSinglePaymentClient tppPisSinglePaymentClient;
     private final TppPisPaymentStatusClient tppPisPaymentStatusClient;
@@ -86,8 +87,11 @@ public class PaymentService {
             throw new RuntimeException("Did expect status 202 from tpp, but got " + responseOfTpp.getStatusCodeValue());
         }
         redirectHandlerService.registerRedirectStateForSession(fintechRedirectCode, fintechOkUrl, fintechNOkUrl);
+
+        var acceptedPaymentProduct = singlePaymentInitiationRequest.isInstantPayment() ? instantPaymentProduct : paymentProduct;
+
         return handleAcceptedService.handleAccepted(paymentRepository, ConsentType.PIS, bankProfileId, accountId, fintechRedirectCode, sessionEntity,
-                responseOfTpp.getHeaders());
+                responseOfTpp.getHeaders(), acceptedPaymentProduct);
     }
 
     public ResponseEntity<List<PaymentInitiationWithStatusResponse>> retrieveAllSinglePayments(String bankProfileID, String accountId) {
@@ -103,7 +107,7 @@ public class PaymentService {
         for (PaymentEntity payment : payments) {
             PaymentInformationResponse body = tppPisPaymentStatusClient.getPaymentInformation(tppProperties.getServiceSessionPassword(),
                     UUID.fromString(restRequestContext.getRequestId()),
-                    paymentProduct,
+                    payment.getPaymentProduct(),
                     COMPUTE_X_TIMESTAMP_UTC,
                     COMPUTE_X_REQUEST_SIGNATURE,
                     COMPUTE_FINTECH_ID,
