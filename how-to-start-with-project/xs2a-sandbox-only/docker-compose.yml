@@ -147,8 +147,7 @@ services:
     # Keycloak as IDP
   ledgers-keycloak:
     image: adorsys/ledgers-keycloak:${LEDGERS_VERSION}
-    container_name: ledgers-keycloak
-    restart: unless-stopped
+    restart: on-failure
     networks:
       - opba-net
     ports:
