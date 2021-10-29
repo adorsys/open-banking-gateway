@@ -45,7 +45,7 @@ services:
       - opba-net
 
   xs2a-sandbox-onlinebankingui:
-    image: adorsys/xs2a-online-banking-ui:4.8
+    image: adorsys/xs2a-online-banking-ui:${SANDBOX_VERSION}
     environment:
       ONLINE_BANKING_SERVER_URL: http://xs2a-sandbox-onlinebanking:8090
     ports:
@@ -56,7 +56,7 @@ services:
       - opba-net
 
   xs2a-sandbox-tpprest:
-    image: adorsys/xs2a-tpp-rest-server:4.8
+    image: adorsys/xs2a-tpp-rest-server:${SANDBOX_VERSION}
     environment:
       <<: *sandbox-hosts
       SPRING_PROFILES_INCLUDE: test-db-local-postgres,test-common,test-tpp-rest
@@ -73,7 +73,7 @@ services:
       - opba-net
 
   xs2a-sandbox-tpp-ui:
-    image: adorsys/xs2a-bank-tpp-ui:4.8
+    image: adorsys/xs2a-bank-tpp-ui:${SANDBOX_VERSION}
     environment:
       <<: *sandbox-hosts
       TPP_REST_SERVER_URL: http://xs2a-sandbox-tpprest:8093
@@ -88,25 +88,27 @@ services:
       - xs2a-sandbox-tpprest
 
   xs2a-sandbox-onlinebanking:
-    image: adorsys/xs2a-online-banking:4.8
+    image: adorsys/xs2a-online-banking:${SANDBOX_VERSION}
     environment:
       <<: *sandbox-hosts
       SPRING_PROFILES_INCLUDE: test-db-local-postgres,test-common,test-online-banking
       SPRING_CONFIG_LOCATION: classpath:/,/configs/application-test-common.yml,/configs/application-test-db-local-postgres.yml,/configs/application-test-online-banking.yml
       DB_HOST_AND_PORT: xs2a-sandbox-postgres:5432
+      KEYCLOAK_AUTH_SERVER_URL: http://ledgers-keycloak:8080/auth
     ports:
       - 20015:8090
     depends_on:
       - xs2a-sandbox-postgres
       - xs2a-sandbox-ledgersapp
       - xs2a-sandbox-ledgersgateway
+      - ledgers-keycloak
     volumes:
       - ../../opba-protocols/sandboxes/xs2a-sandbox/src/main/resources/sandbox:/configs
     networks:
       - opba-net
 
   xs2a-sandbox-ledgersgateway:
-    image: adorsys/xs2a-connector-examples:8.11
+    image: adorsys/xs2a-connector-examples:${XS2A_ONLINE_BANKING_GATEWAY}
     environment:
       <<: *sandbox-hosts
       SPRING_PROFILES_INCLUDE: test-db-local-postgres,test-common,test-ledgers-gateway,postgres,mock-qwac,remote
@@ -124,23 +126,38 @@ services:
       - opba-net
 
   xs2a-sandbox-ledgersapp:
-    image: adorsys/ledgers:3.13
+    image: adorsys/ledgers:${LEDGERS_VERSION}
     environment:
       <<: *sandbox-hosts
       SPRING_PROFILES_INCLUDE: test-db-local-postgres,test-common,test-ledgers-app,develop,sandbox
       SPRING_CONFIG_LOCATION: classpath:/,/configs/application-test-common.yml,/configs/application-test-db-local-postgres.yml,/configs/application-test-ledgers-app.yml
       DB_HOST_AND_PORT: xs2a-sandbox-postgres:5432
+      KEYCLOAK_AUTH_SERVER_URL: http://ledgers-keycloak:8080/auth
+      LEDGERS_SCA_AUTHCODE_APP_OTP_SOCKET_SERVICE_URL: http://xs2a-online-banking:8090/api/v1/decoupled/message
     ports:
       - 20013:8088
     depends_on:
       - xs2a-sandbox-postgres
+      - ledgers-keycloak
     volumes:
       - ../../opba-protocols/sandboxes/xs2a-sandbox/src/main/resources/sandbox:/configs
     networks:
       - opba-net
 
+    # Keycloak as IDP
+  ledgers-keycloak:
+    image: adorsys/ledgers-keycloak:${LEDGERS_VERSION}
+    restart: on-failure
+    networks:
+      - opba-net
+    ports:
+      - "8080:8080"
+    environment:
+      - KEYCLOAK_USER=admin
+      - KEYCLOAK_PASSWORD=admin
+
   xs2a-sandbox-consentmgmt:
-    image: adorsys/xs2a-consent-management:8.11
+    image: adorsys/xs2a-consent-management:${XS2A_CONSENT_MANAGEMENT_VERSION}
     environment:
       <<: *sandbox-hosts
       SPRING_PROFILES_INCLUDE: test-db-local-postgres,test-common,test-consent-mgmt
@@ -156,7 +173,7 @@ services:
       - opba-net
 
   xs2a-sandbox-certgenerator:
-    image: adorsys/xs2a-certificate-generator:8.11
+    image: adorsys/xs2a-certificate-generator:${XS2A_CERTIFICATE_GENERATOR}
     environment:
       <<: *sandbox-hosts
       SPRING_PROFILES_INCLUDE: test-db-local-postgres,test-common,test-cert-generator
@@ -172,7 +189,7 @@ services:
       - opba-net
 
   xs2a-sandbox-aspspprofile:
-    image: adorsys/xs2a-aspsp-profile:8.11
+    image: adorsys/xs2a-aspsp-profile:${XS2A_ASPSP_PROFILE_VERSION}
     environment:
       <<: *sandbox-hosts
       PRIMARY_PROFILE: /configs/application-test-aspsp-profile.yml

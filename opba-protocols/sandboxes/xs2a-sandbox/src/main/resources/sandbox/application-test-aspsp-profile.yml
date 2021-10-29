@@ -61,14 +61,20 @@ setting:
       - application/json
   piis:
     piisConsentSupported: NOT_SUPPORTED
+    redirectLinkToOnlineBanking:
+      piisRedirectUrlToAspsp: http://localhost:4400/account-information/login?encryptedConsentId={encrypted-consent-id}&redirectId={redirect-id}
+  sb:
+    signingBasketSupported: FALSE
+    signingBasketMaxEntries: 10
+    notConfirmedSigningBasketExpirationTimeMs: 86400000
   common:
     scaApproachesSupported:
       - REDIRECT
       - EMBEDDED
+      - DECOUPLED
     scaRedirectFlow: REDIRECT
-    oauthConfigurationUrl: http://localhost:20015/oauth/authorization-server
+    oauthConfigurationUrl: http://localhost:8090/oauth/authorization-server
     startAuthorisationMode: auto
-    # TODO https://github.com/adorsys/open-banking-gateway/issues/980
     tppSignatureRequired: FALSE
     psuInInitialRequestMandated: FALSE
     redirectUrlExpirationTimeMs: 600000
@@ -79,7 +85,6 @@ setting:
       - IBAN
     multicurrencyAccountLevelSupported: SUBACCOUNT
     aisPisSessionsSupported: FALSE
-    signingBasketSupported: FALSE
     checkTppRolesFromCertificateSupported: TRUE
     aspspNotificationsSupported:
       - NONE
@@ -87,3 +92,5 @@ setting:
     authorisationConfirmationCheckByXs2a: FALSE
     checkUriComplianceToDomainSupported: FALSE
     tppUriComplianceResponse: WARNING
+    psuInInitialRequestIgnored: FALSE
+    ibanValidationDisabled: FALSE

@@ -1106,6 +1106,8 @@ components:
           type: string
         purpose:
           type: string
+        endToEndIdentification:
+          type: string
         instantPayment:
           type: boolean
 
