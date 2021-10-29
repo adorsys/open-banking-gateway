@@ -23,4 +23,5 @@
     <include relativeToChangelogFile="true" file="migrations/0017-add-consent-type-support.xml"/>
     <include relativeToChangelogFile="true" file="migrations/0018-add-skip-psu-auth-for-verlag-bank.xml"/>
     <include relativeToChangelogFile="true" file="migrations/0019-set-start-consent-auth-with-pin-fiducia.xml"/>
+    <include relativeToChangelogFile="true" file="migrations/0020-add-skip-auth-for-ing.xml"/>
 </databaseChangeLog>

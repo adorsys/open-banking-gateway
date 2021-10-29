@@ -304,6 +304,9 @@ protocol:
     pkcs12:
       keystore: sample-qwac.keystore
       password: password
+    xs2a-adapter:
+      sanitizer:
+        whitelist: recurringIndicator, validUntil, frequencyPerDay, combinedServiceIndicator
   # HBCI protocol
   hbci:
     adapter:

@@ -29,7 +29,7 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Profile;
 
 import java.nio.file.Paths;
-import java.util.Arrays;
+import java.util.List;
 
 import static de.adorsys.opba.protocol.xs2a.config.ConfigConst.XS2A_PROTOCOL_CONFIG_PREFIX;
 
@@ -42,6 +42,9 @@ public class Xs2aAdapterConfiguration {
 
     @Value("${" + XS2A_PROTOCOL_CONFIG_PREFIX + "xs2a-adapter.loader.choose-first-from-multiple-aspsps:false}")
     private boolean chooseFirstFromMultipleAspsps;
+
+    @Value("${" + XS2A_PROTOCOL_CONFIG_PREFIX + "xs2a-adapter.sanitizer.whitelist}")
+    private List<String> sanitizerWhitelist;
 
     @Bean
     PaymentInitiationService xs2aPaymentInitiationService(AdapterServiceLoader adapterServiceLoader) {
@@ -132,10 +135,6 @@ public class Xs2aAdapterConfiguration {
 
     @Bean
     HttpLogSanitizer xs2aHttpLogSanitizer() {
-        return new Xs2aHttpLogSanitizer(Arrays.asList("recurringIndicator", "validUntil", "frequencyPerDay",
-            "combinedServiceIndicator", "Authorization", "iban", "currency", "amount", "creditorName",
-            "remittanceInformationUnstructured", "scope", "access_token", "token_type", "expires_in", "client_id",
-            "Digest", "Signature", "TPP-Signature-Certificate", "transactionStatus", "paymentId", "scaRedirect", "self",
-            "status", "delete"));
+        return new Xs2aHttpLogSanitizer(sanitizerWhitelist);
     }
 }
