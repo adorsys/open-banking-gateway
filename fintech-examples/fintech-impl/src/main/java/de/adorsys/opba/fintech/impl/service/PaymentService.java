@@ -39,9 +39,9 @@ import static de.adorsys.opba.fintech.impl.tppclients.Consts.HEADER_COMPUTE_PSU_
 @RequiredArgsConstructor
 public class PaymentService {
     // FIXME: https://github.com/adorsys/open-banking-gateway/issues/316
-    private String currency = "EUR";
-    private String paymentProduct = "sepa-credit-transfers";
-    private String instantPaymentProduct = "instant-sepa-credit-transfers";
+    private static final String SEPA_PAYMENT_PRODUCT = "sepa-credit-transfers";
+    private static final String INSTANT_SEPA_PAYMENT_PRODUCT = "instant-sepa-credit-transfers";
+    private static final String CURRENCY = "EUR";
 
     private final TppPisSinglePaymentClient tppPisSinglePaymentClient;
     private final TppPisPaymentStatusClient tppPisPaymentStatusClient;
@@ -68,6 +68,7 @@ public class PaymentService {
         payment.instantPayment(singlePaymentInitiationRequest.isInstantPayment());
         payment.setEndToEndIdentification(singlePaymentInitiationRequest.getEndToEndIdentification());
         log.info("start call for payment {} {}", fintechOkUrl, fintechNOkUrl);
+        var paymentProduct = singlePaymentInitiationRequest.isInstantPayment() ? INSTANT_SEPA_PAYMENT_PRODUCT : SEPA_PAYMENT_PRODUCT;
         ResponseEntity<PaymentInitiationResponse> responseOfTpp = tppPisSinglePaymentClient.initiatePayment(
                 payment,
                 tppProperties.getServiceSessionPassword(),
@@ -88,10 +89,8 @@ public class PaymentService {
         }
         redirectHandlerService.registerRedirectStateForSession(fintechRedirectCode, fintechOkUrl, fintechNOkUrl);
 
-        var acceptedPaymentProduct = singlePaymentInitiationRequest.isInstantPayment() ? instantPaymentProduct : paymentProduct;
-
         return handleAcceptedService.handleAccepted(paymentRepository, ConsentType.PIS, bankProfileId, accountId, fintechRedirectCode, sessionEntity,
-                responseOfTpp.getHeaders(), acceptedPaymentProduct);
+                responseOfTpp.getHeaders(), paymentProduct);
     }
 
     public ResponseEntity<List<PaymentInitiationWithStatusResponse>> retrieveAllSinglePayments(String bankProfileID, String accountId) {
@@ -129,7 +128,7 @@ public class PaymentService {
 
     private Amount getAmountWithCurrency(String amountWihthoutCurrency) {
         Amount amount = new Amount();
-        amount.setCurrency(currency);
+        amount.setCurrency(CURRENCY);
         amount.setAmount(amountWihthoutCurrency);
         return amount;
     }

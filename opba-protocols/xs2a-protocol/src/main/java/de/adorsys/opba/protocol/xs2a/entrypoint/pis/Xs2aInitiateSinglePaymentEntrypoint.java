@@ -97,18 +97,9 @@ public class Xs2aInitiateSinglePaymentEntrypoint implements SinglePayment {
         @Mapping(source = "facadeServiceable.uaContext.psuAccept", target = "contentType", nullValuePropertyMappingStrategy = IGNORE)
         @Mapping(source = "singlePayment", target = "payment", nullValuePropertyMappingStrategy = IGNORE)
         @Mapping(source = "singlePayment.paymentId", target = "paymentId")
-        @Mapping(expression = "java(mapStandardPaymentProductToString(resolvePaymentProductFromContext(ctx)))", target = "paymentProduct")
+        @Mapping(expression = "java(mapStandardPaymentProductToString(ctx.getSinglePayment().getPaymentProduct()))", target = "paymentProduct")
         @Mapping(source = "singlePayment.creditorAddress", target = "payment.creditorAddress")
         SinglePaymentXs2aContext map(InitiateSinglePaymentRequest ctx);
-
-        default PaymentProductDetails resolvePaymentProductFromContext(InitiateSinglePaymentRequest ctx) {
-            var paymentBody = ctx.getSinglePayment();
-            var paymentProduct = paymentBody.getPaymentProduct();
-
-            return PaymentProductDetails.SEPA.equals(paymentProduct) && paymentBody.isInstantPayment()
-                    ? PaymentProductDetails.INSTANT_SEPA
-                    : paymentProduct;
-        }
 
         default String mapStandardPaymentProductToString(PaymentProductDetails from) {
             if (null == from) {

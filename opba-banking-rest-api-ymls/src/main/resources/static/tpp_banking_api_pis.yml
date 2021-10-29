@@ -204,8 +204,6 @@ components:
           format: date
         requestedExecutionTime:
           type: string
-        instantPayment:
-          type: boolean
 
     paymentInitiationResponse:
       description: Body of the response for a successful payment initiation request.

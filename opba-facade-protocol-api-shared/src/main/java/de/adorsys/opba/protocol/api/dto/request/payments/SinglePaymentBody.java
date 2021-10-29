@@ -32,7 +32,6 @@ public class SinglePaymentBody implements ResultBody {
     private String remittanceInformationUnstructured;
     private LocalDate requestedExecutionDate;
     private String requestedExecutionTime;
-    private boolean instantPayment;
 
     @Override
     public Object getBody() {
