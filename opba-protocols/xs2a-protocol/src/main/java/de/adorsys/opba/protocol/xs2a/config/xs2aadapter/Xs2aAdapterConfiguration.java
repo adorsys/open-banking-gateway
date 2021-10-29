@@ -43,7 +43,7 @@ public class Xs2aAdapterConfiguration {
     @Value("${" + XS2A_PROTOCOL_CONFIG_PREFIX + "xs2a-adapter.loader.choose-first-from-multiple-aspsps:false}")
     private boolean chooseFirstFromMultipleAspsps;
 
-    @Value("${" + XS2A_PROTOCOL_CONFIG_PREFIX + "xs2a-adapter.sanitizer.whitelist}")
+    @Value("${" + XS2A_PROTOCOL_CONFIG_PREFIX + "xs2a-adapter.sanitizer.whitelist:}")
     private List<String> sanitizerWhitelist;
 
     @Bean
@@ -134,7 +134,14 @@ public class Xs2aAdapterConfiguration {
     }
 
     @Bean
+    @Profile("dev")
     HttpLogSanitizer xs2aHttpLogSanitizer() {
         return new Xs2aHttpLogSanitizer(sanitizerWhitelist);
+    }
+
+    @Bean
+    @Profile("!dev")
+    HttpLogSanitizer xs2aHttpLogSanitizerWithDefaultWhiteList() {
+        return new Xs2aHttpLogSanitizer();
     }
 }
