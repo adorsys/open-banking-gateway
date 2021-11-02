@@ -65,7 +65,6 @@ public class PaymentService {
         payment.setCreditorName(singlePaymentInitiationRequest.getName());
         payment.setInstructedAmount(getAmountWithCurrency(singlePaymentInitiationRequest.getAmount()));
         payment.remittanceInformationUnstructured(singlePaymentInitiationRequest.getPurpose());
-        payment.instantPayment(singlePaymentInitiationRequest.isInstantPayment());
         payment.setEndToEndIdentification(singlePaymentInitiationRequest.getEndToEndIdentification());
         log.info("start call for payment {} {}", fintechOkUrl, fintechNOkUrl);
         var paymentProduct = singlePaymentInitiationRequest.isInstantPayment() ? INSTANT_SEPA_PAYMENT_PRODUCT : SEPA_PAYMENT_PRODUCT;
