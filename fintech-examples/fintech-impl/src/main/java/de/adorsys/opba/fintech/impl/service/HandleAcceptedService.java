@@ -62,7 +62,7 @@ public class HandleAcceptedService {
     }
 
     ResponseEntity handleAccepted(PaymentRepository paymentRepository, ConsentType consentType, String bankId, String accountId,
-                                  String fintechRedirectCode, SessionEntity sessionEntity, HttpHeaders headers) {
+                                  String fintechRedirectCode, SessionEntity sessionEntity, HttpHeaders headers, String paymentProduct) {
         String authId = validateSession(headers);
 
         PaymentEntity payment = paymentRepository.findByTppAuthId(authId)
@@ -73,6 +73,7 @@ public class HandleAcceptedService {
                                 .accountId(accountId)
                                 .tppAuthId(authId)
                                 .tppServiceSessionId(UUID.fromString(headers.getFirst(SERVICE_SESSION_ID)))
+                                .paymentProduct(paymentProduct)
 
                         .build()
                 ));

@@ -42,6 +42,7 @@
             <column name="payment_confirmed" type="BOOLEAN">
                 <constraints nullable="false"/>
             </column>
+            <column name="payment_product" type="VARCHAR(255)"/>
             <column name="creation_time" type="TIMESTAMP">
                 <constraints nullable="false"/>
             </column>

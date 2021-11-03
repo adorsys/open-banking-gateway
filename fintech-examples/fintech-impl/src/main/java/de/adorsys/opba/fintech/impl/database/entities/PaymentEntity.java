@@ -35,6 +35,7 @@ public class PaymentEntity {
     private String accountId;
     private String tppAuthId;
     private UUID tppServiceSessionId;
+    private String paymentProduct;
 
     @Builder.Default
     @Column(nullable = false)

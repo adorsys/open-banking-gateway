@@ -39,8 +39,9 @@ import static de.adorsys.opba.fintech.impl.tppclients.Consts.HEADER_COMPUTE_PSU_
 @RequiredArgsConstructor
 public class PaymentService {
     // FIXME: https://github.com/adorsys/open-banking-gateway/issues/316
-    private String currency = "EUR";
-    private String paymentProduct = "sepa-credit-transfers";
+    private static final String SEPA_PAYMENT_PRODUCT = "sepa-credit-transfers";
+    private static final String INSTANT_SEPA_PAYMENT_PRODUCT = "instant-sepa-credit-transfers";
+    private static final String CURRENCY = "EUR";
 
     private final TppPisSinglePaymentClient tppPisSinglePaymentClient;
     private final TppPisPaymentStatusClient tppPisPaymentStatusClient;
@@ -64,9 +65,9 @@ public class PaymentService {
         payment.setCreditorName(singlePaymentInitiationRequest.getName());
         payment.setInstructedAmount(getAmountWithCurrency(singlePaymentInitiationRequest.getAmount()));
         payment.remittanceInformationUnstructured(singlePaymentInitiationRequest.getPurpose());
-        payment.instantPayment(singlePaymentInitiationRequest.isInstantPayment());
         payment.setEndToEndIdentification(singlePaymentInitiationRequest.getEndToEndIdentification());
         log.info("start call for payment {} {}", fintechOkUrl, fintechNOkUrl);
+        var paymentProduct = singlePaymentInitiationRequest.isInstantPayment() ? INSTANT_SEPA_PAYMENT_PRODUCT : SEPA_PAYMENT_PRODUCT;
         ResponseEntity<PaymentInitiationResponse> responseOfTpp = tppPisSinglePaymentClient.initiatePayment(
                 payment,
                 tppProperties.getServiceSessionPassword(),
@@ -86,8 +87,9 @@ public class PaymentService {
             throw new RuntimeException("Did expect status 202 from tpp, but got " + responseOfTpp.getStatusCodeValue());
         }
         redirectHandlerService.registerRedirectStateForSession(fintechRedirectCode, fintechOkUrl, fintechNOkUrl);
+
         return handleAcceptedService.handleAccepted(paymentRepository, ConsentType.PIS, bankProfileId, accountId, fintechRedirectCode, sessionEntity,
-                responseOfTpp.getHeaders());
+                responseOfTpp.getHeaders(), paymentProduct);
     }
 
     public ResponseEntity<List<PaymentInitiationWithStatusResponse>> retrieveAllSinglePayments(String bankProfileID, String accountId) {
@@ -103,7 +105,7 @@ public class PaymentService {
         for (PaymentEntity payment : payments) {
             PaymentInformationResponse body = tppPisPaymentStatusClient.getPaymentInformation(tppProperties.getServiceSessionPassword(),
                     UUID.fromString(restRequestContext.getRequestId()),
-                    paymentProduct,
+                    payment.getPaymentProduct(),
                     COMPUTE_X_TIMESTAMP_UTC,
                     COMPUTE_X_REQUEST_SIGNATURE,
                     COMPUTE_FINTECH_ID,
@@ -125,7 +127,7 @@ public class PaymentService {
 
     private Amount getAmountWithCurrency(String amountWihthoutCurrency) {
         Amount amount = new Amount();
-        amount.setCurrency(currency);
+        amount.setCurrency(CURRENCY);
         amount.setAmount(amountWihthoutCurrency);
         return amount;
     }
