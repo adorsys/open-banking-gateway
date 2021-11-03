@@ -41,7 +41,7 @@
   },
   "response" : {
     "status" : 201,
-    "body" : "{\"transactionStatus\":\"RCVD\",\"_links\":{\"scaRedirect\":\"http://localhost:{{request.port}}/redirect\",\"self\":\"https://api.ing.com/v1/periodic-payments/sepa-credit-transfers/111be84f-a62b-469b-b964-792ea2847abd\",\"status\":\"https://api.ing.com/v1/periodic-payments/sepa-credit-transfers/111be84f-a62b-469b-b964-792ea2847abd/status\"},\"paymentId\":\"111be84f-a62b-469b-b964-792ea2847abd\"}",
+    "body" : "{\"transactionStatus\":\"RCVD\",\"_links\":{\"scaRedirect\":\"http://localhost:8080/redirect\",\"self\":\"https://api.ing.com/v1/periodic-payments/sepa-credit-transfers/111be84f-a62b-469b-b964-792ea2847abd\",\"status\":\"https://api.ing.com/v1/periodic-payments/sepa-credit-transfers/111be84f-a62b-469b-b964-792ea2847abd/status\"},\"paymentId\":\"111be84f-a62b-469b-b964-792ea2847abd\"}",
     "headers" : {
       "Date" : "Mon, 17 Aug 2020 05:24:06 GMT",
       "Content-Type" : "application/json;charset=UTF-8",

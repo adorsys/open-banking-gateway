@@ -1,0 +1,15 @@
+<databaseChangeLog logicalFilePath="db.changelog-1.0.xml" xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+                   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                   xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.8.xsd">
+
+    <changeSet author="vbeex@adorsys.com.ua" id="2021-10-29">
+        <comment>Updates xs2a_skip_consent_authorization for DeutscheBank</comment>
+        <update tableName="${table-prefix}bank_profile">
+            <column name="xs2a_skip_consent_authorization" value="true"/>
+            <where>
+                adapter_id = 'ing-adapter'
+            </where>
+        </update>
+    </changeSet>
+
+</databaseChangeLog>
