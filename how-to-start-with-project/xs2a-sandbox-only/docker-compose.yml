@@ -45,7 +45,7 @@ services:
       - opba-net
 
   xs2a-sandbox-onlinebankingui:
-    image: adorsys/xs2a-online-banking-ui:${SANDBOX_VERSION}
+    image: adorsys/xs2a-online-banking-ui:5.14
     environment:
       ONLINE_BANKING_SERVER_URL: http://xs2a-sandbox-onlinebanking:8090
     ports:
@@ -56,7 +56,7 @@ services:
       - opba-net
 
   xs2a-sandbox-tpprest:
-    image: adorsys/xs2a-tpp-rest-server:${SANDBOX_VERSION}
+    image: adorsys/xs2a-tpp-rest-server:5.14
     environment:
       <<: *sandbox-hosts
       SPRING_PROFILES_INCLUDE: test-db-local-postgres,test-common,test-tpp-rest
@@ -73,7 +73,7 @@ services:
       - opba-net
 
   xs2a-sandbox-tpp-ui:
-    image: adorsys/xs2a-bank-tpp-ui:${SANDBOX_VERSION}
+    image: adorsys/xs2a-bank-tpp-ui:5.14
     environment:
       <<: *sandbox-hosts
       TPP_REST_SERVER_URL: http://xs2a-sandbox-tpprest:8093
@@ -88,7 +88,7 @@ services:
       - xs2a-sandbox-tpprest
 
   xs2a-sandbox-onlinebanking:
-    image: adorsys/xs2a-online-banking:${SANDBOX_VERSION}
+    image: adorsys/xs2a-online-banking:5.14
     environment:
       <<: *sandbox-hosts
       SPRING_PROFILES_INCLUDE: test-db-local-postgres,test-common,test-online-banking
@@ -108,7 +108,7 @@ services:
       - opba-net
 
   xs2a-sandbox-ledgersgateway:
-    image: adorsys/xs2a-connector-examples:${XS2A_ONLINE_BANKING_GATEWAY}
+    image: adorsys/xs2a-connector-examples:11.7
     environment:
       <<: *sandbox-hosts
       SPRING_PROFILES_INCLUDE: test-db-local-postgres,test-common,test-ledgers-gateway,postgres,mock-qwac,remote
@@ -126,7 +126,7 @@ services:
       - opba-net
 
   xs2a-sandbox-ledgersapp:
-    image: adorsys/ledgers:${LEDGERS_VERSION}
+    image: adorsys/ledgers:4.14
     environment:
       <<: *sandbox-hosts
       SPRING_PROFILES_INCLUDE: test-db-local-postgres,test-common,test-ledgers-app,develop,sandbox
@@ -146,7 +146,7 @@ services:
 
     # Keycloak as IDP
   ledgers-keycloak:
-    image: adorsys/ledgers-keycloak:${LEDGERS_VERSION}
+    image: adorsys/ledgers-keycloak:4.14
     restart: on-failure
     networks:
       - opba-net
@@ -157,7 +157,7 @@ services:
       - KEYCLOAK_PASSWORD=admin
 
   xs2a-sandbox-consentmgmt:
-    image: adorsys/xs2a-consent-management:${XS2A_CONSENT_MANAGEMENT_VERSION}
+    image: adorsys/xs2a-consent-management:11.7
     environment:
       <<: *sandbox-hosts
       SPRING_PROFILES_INCLUDE: test-db-local-postgres,test-common,test-consent-mgmt
@@ -173,7 +173,7 @@ services:
       - opba-net
 
   xs2a-sandbox-certgenerator:
-    image: adorsys/xs2a-certificate-generator:${XS2A_CERTIFICATE_GENERATOR}
+    image: adorsys/xs2a-certificate-generator:11.7
     environment:
       <<: *sandbox-hosts
       SPRING_PROFILES_INCLUDE: test-db-local-postgres,test-common,test-cert-generator
@@ -189,7 +189,7 @@ services:
       - opba-net
 
   xs2a-sandbox-aspspprofile:
-    image: adorsys/xs2a-aspsp-profile:${XS2A_ASPSP_PROFILE_VERSION}
+    image: adorsys/xs2a-aspsp-profile:11.7
     environment:
       <<: *sandbox-hosts
       PRIMARY_PROFILE: /configs/application-test-aspsp-profile.yml
