@@ -5,7 +5,6 @@ import de.adorsys.datasafe.business.impl.service.DefaultDatasafeServices;
 import de.adorsys.datasafe.directory.api.config.DFSConfig;
 import de.adorsys.datasafe.types.api.actions.ReadRequest;
 import de.adorsys.datasafe.types.api.actions.WriteRequest;
-import de.adorsys.datasafe.types.api.resource.BasePrivateResource;
 import de.adorsys.opba.db.domain.entity.fintech.Fintech;
 import de.adorsys.opba.db.domain.entity.fintech.FintechPrvKey;
 import de.adorsys.opba.db.domain.entity.sessions.AuthSession;
