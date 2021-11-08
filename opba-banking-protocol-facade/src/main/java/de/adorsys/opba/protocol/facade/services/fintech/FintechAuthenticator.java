@@ -31,9 +31,8 @@ public class FintechAuthenticator {
         }
 
         Supplier<char[]> finTechPassword = () -> request.getSessionPassword().toCharArray();
-        Fintech fintech = fintechRepository.findByGlobalId(fintechId)
-                .orElseGet(() -> fintechRegistrar.registerFintech(fintechId, finTechPassword));
-        fintechSecureStorage.validatePassword(fintech, finTechPassword);
-        return fintech;
+        var dbFintech = fintechRepository.findByGlobalId(fintechId);
+        dbFintech.ifPresent(fintech -> fintechSecureStorage.validatePassword(fintech, finTechPassword));
+        return dbFintech.orElseGet(() -> fintechRegistrar.registerFintech(fintechId, finTechPassword));
     }
 }
