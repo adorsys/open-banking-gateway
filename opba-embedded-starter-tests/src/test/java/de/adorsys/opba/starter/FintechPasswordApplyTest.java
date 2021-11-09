@@ -47,8 +47,8 @@ import static org.springframework.boot.test.context.SpringBootTest.WebEnvironmen
  * This is a very basic test to ensure application starts up and components are bundled properly.
  * Protocols are tested in their own packages exhaustively.
  */
-@ActiveProfiles("test")
 @Transactional(propagation = Propagation.NOT_SUPPORTED)
+@ActiveProfiles(profiles = {"test", "test-separate-db"})  // Use clean DB as may collide
 @SpringBootTest(classes = {OpenBankingEmbeddedApplication.class, FintechRequestSigningTestConfig.class}, webEnvironment = RANDOM_PORT)
 class FintechPasswordApplyTest {
 
