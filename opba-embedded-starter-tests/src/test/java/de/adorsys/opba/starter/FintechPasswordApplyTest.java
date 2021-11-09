@@ -91,13 +91,13 @@ class FintechPasswordApplyTest {
     private static RequestSpecification headersWithoutIpAddress(String fintechUserId, String bankProfileId, UUID xRequestId, Instant xTimestampUtc, String fintechPassword) {
         return RestAssured
                 .given()
-                .header(BANK_PROFILE_ID, bankProfileId)
-                .header(FINTECH_REDIRECT_URL_OK, FINTECH_REDIR_OK)
-                .header(FINTECH_REDIRECT_URL_NOK, FINTECH_REDIR_NOK)
-                .header(SERVICE_SESSION_PASSWORD, fintechPassword)
-                .header(FINTECH_USER_ID, fintechUserId)
-                .header(FINTECH_ID, DEFAULT_FINTECH_ID)
-                .header(X_REQUEST_ID, xRequestId.toString())
-                .header(X_TIMESTAMP_UTC, xTimestampUtc.toString());
+                    .header(BANK_PROFILE_ID, bankProfileId)
+                    .header(FINTECH_REDIRECT_URL_OK, FINTECH_REDIR_OK)
+                    .header(FINTECH_REDIRECT_URL_NOK, FINTECH_REDIR_NOK)
+                    .header(SERVICE_SESSION_PASSWORD, fintechPassword)
+                    .header(FINTECH_USER_ID, fintechUserId)
+                    .header(FINTECH_ID, DEFAULT_FINTECH_ID)
+                    .header(X_REQUEST_ID, xRequestId.toString())
+                    .header(X_TIMESTAMP_UTC, xTimestampUtc.toString());
     }
 }
