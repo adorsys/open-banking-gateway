@@ -22,6 +22,11 @@ public class BankingGenericControllerAdvice {
                     .build();
         }
 
+        if (ex instanceof IllegalArgumentException) {
+            return ResponseEntity
+                    .status(HttpStatus.BAD_REQUEST)
+                    .body(List.of(ex.getMessage()));
+        }
         return ResponseEntity
                 .status(HttpStatus.INTERNAL_SERVER_ERROR)
                 .build();
