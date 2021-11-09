@@ -184,8 +184,8 @@ public class AccountInformationResult<SELF extends AccountInformationResult<SELF
                 .when()
                      .get(AIS_ACCOUNTS_ENDPOINT)
                 .then()
-                     .statusCode(HttpStatus.INTERNAL_SERVER_ERROR.value())
-                     .body("message", equalTo("No bank profile for bank: " + SANDBOX_BANK_PROFILE_ID))
+                     .statusCode(HttpStatus.BAD_REQUEST.value())
+                     .body("[0]", equalTo("No bank profile for bank: " + SANDBOX_BANK_PROFILE_ID))
                 .extract();
     }
 

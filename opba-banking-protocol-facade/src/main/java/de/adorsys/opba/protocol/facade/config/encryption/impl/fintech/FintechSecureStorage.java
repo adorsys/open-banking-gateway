@@ -20,6 +20,7 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.util.UUID;
 import java.util.function.Supplier;
+import java.util.stream.Collectors;
 
 import static de.adorsys.opba.protocol.facade.config.encryption.impl.fintech.FintechDatasafeStorage.FINTECH_ONLY_KEYS_ID;
 
@@ -41,10 +42,17 @@ public class FintechSecureStorage {
     }
 
     public void validatePassword(Fintech fintech, Supplier<char[]> password) {
-        this.userProfile().updateReadKeyPassword(
-                fintech.getUserIdAuth(password),
-                fintech.getUserIdAuth(password).getReadKeyPassword()
-        );
+        if (fintech.getFintechOnlyPrvKeys().isEmpty()) {
+            throw new IllegalStateException("FinTech has no private keys");
+        }
+
+        var keys = fintech.getFintechOnlyPrvKeys().stream()
+                .map(it -> this.fintechOnlyPrvKeyFromPrivate(it, fintech, password))
+                .collect(Collectors.toList());
+
+        if (keys.isEmpty()) {
+            throw new IllegalStateException("Failed to extract FintTech keys");
+        }
     }
 
     @SneakyThrows
