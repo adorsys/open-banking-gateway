@@ -2,6 +2,7 @@ PUML_URLS_PATTERN=/develop/
 PUML_URLS_REPLACE=/${TRAVIS_TAG}/
 #PUML_URLS_PATTERN=http://www\.plantuml\.com.*develop/docs/\(.*\).puml&fmt=svg&vvv=1&sanitize=true
 #PUML_URLS_REPLACE=../../\1.png
+#haha
 
 
 .PHONY : all
