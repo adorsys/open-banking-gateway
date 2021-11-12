@@ -1,5 +1,5 @@
 import { Component, Input, OnDestroy, OnInit } from '@angular/core';
-import {AbstractControl, FormControl, FormGroup, Validators} from '@angular/forms';
+import {FormControl, FormGroup, Validators} from '@angular/forms';
 import * as uuid from 'uuid';
 import { Subscription } from 'rxjs';
 import { ValidatorService } from 'angular-iban';
