@@ -114,6 +114,7 @@ services:
       SPRING_PROFILES_INCLUDE: test-db-local-postgres,test-common,test-ledgers-gateway,postgres,mock-qwac,remote
       SPRING_CONFIG_LOCATION: classpath:/,/configs/application-test-common.yml,/configs/application-test-db-local-postgres.yml,/configs/application-test-ledgers-gateway.yml
       DB_HOST_AND_PORT: xs2a-sandbox-postgres:5432
+      KEYCLOAK_AUTH_SERVER_URL: http://ledgers-keycloak:8080/auth
     ports:
       - 20014:8089
     depends_on:
