@@ -78,6 +78,8 @@ class SandboxE2EProtocolAisOauth2Test extends SandboxCommonTest<
                 .and()
                 .sandbox_anton_brueckner_navigates_to_bank_auth_page(firefoxDriver)
                 .and()
+                .sandbox_anton_brueckner_inputs_username_and_password_for_oauth2_form(firefoxDriver) // FIXME The step introduced with Sandbox 5.14, it is not clear why
+                .and()
                 .sandbox_anton_brueckner_confirms_consent_information(firefoxDriver)
                 .and()
                 .sandbox_anton_brueckner_selects_sca_method(firefoxDriver)
