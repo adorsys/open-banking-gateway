@@ -1,0 +1,219 @@
+version: "3.4"
+
+networks:
+  opba-net:
+
+x-sandbox-hosts: &sandbox-hosts
+  COMMON_APPS_LOCAL_ASPSPPROFILE_HOST: xs2a-sandbox-aspspprofile
+  COMMON_APPS_LOCAL_ASPSPPROFILE_PORT: 8080
+  COMMON_APPS_LOCAL_CERTGENERATOR_HOST: xs2a-sandbox-certgenerator
+  COMMON_APPS_LOCAL_CERTGENERATOR_PORT: 8092
+  COMMON_APPS_LOCAL_CONSENTMGMT_HOST: xs2a-sandbox-consentmgmt
+  COMMON_APPS_LOCAL_CONSENTMGMT_PORT: 8080
+  COMMON_APPS_LOCAL_LEDGERSAPP_HOST: xs2a-sandbox-ledgersapp
+  COMMON_APPS_LOCAL_LEDGERSAPP_PORT: 8088
+  COMMON_APPS_LOCAL_LEDGERSGATEWAY_HOST: xs2a-sandbox-ledgersgateway
+  COMMON_APPS_LOCAL_LEDGERSGATEWAY_PORT: 8089
+  COMMON_APPS_MAPPING_ONLINEBANKINGSELF: http://localhost:20015
+  COMMON_APPS_LOCAL_ONLINEBANKING_HOST: xs2a-sandbox-onlinebanking
+  COMMON_APPS_LOCAL_ONLINEBANKING_PORT: 8090
+  COMMON_APPS_LOCAL_TPPREST_HOST: xs2a-sandbox-tpprest
+  COMMON_APPS_LOCAL_TPPREST_PORT: 8093
+  COMMON_APPS_LOCAL_TPP_UI_HOST: xs2a-sandbox-tpp-ui
+  COMMON_APPS_LOCAL_TPP_UI_PORT: 4205
+  COMMON_APPS_LOCAL_ONLINEBANKINGUI_HOST: localhost # This container is launched in the host network
+  COMMON_APPS_LOCAL_ONLINEBANKINGUI_PORT: 4400 # this port seem to be used in lot of places, hard to change
+
+services:
+  #
+  #
+  #          ========================= SANDBOX ==================================
+  #
+  #
+  xs2a-sandbox-postgres:
+    image: postgres:12.6
+    environment:
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=docker
+      - POSTGRES_DB=sandbox_apps
+    ports:
+      #HOST:CONTAINER
+      - 25432:5432
+    volumes:
+      - ../../opba-protocols/sandboxes/xs2a-sandbox/src/main/resources/sandbox/prepare-postgres.sql:/docker-entrypoint-initdb.d/init.sql
+    networks:
+      - opba-net
+
+  xs2a-sandbox-onlinebankingui:
+    image: adorsys/xs2a-online-banking-ui:5.14
+    environment:
+      ONLINE_BANKING_SERVER_URL: http://xs2a-sandbox-onlinebanking:8090
+    ports:
+      - 4400:4400
+    depends_on:
+      - xs2a-sandbox-onlinebanking
+    networks:
+      - opba-net
+
+  xs2a-sandbox-tpprest:
+    image: adorsys/xs2a-tpp-rest-server:5.14
+    environment:
+      <<: *sandbox-hosts
+      SPRING_PROFILES_INCLUDE: test-db-local-postgres,test-common,test-tpp-rest
+      SPRING_CONFIG_LOCATION: classpath:/,/configs/application-test-common.yml,/configs/application-test-db-local-postgres.yml,/configs/application-test-tpp-rest.yml
+      DB_HOST_AND_PORT: xs2a-sandbox-postgres:5432
+      JAVA_TOOL_OPTIONS: -agentlib:jdwp=transport=dt_socket,server=y,suspend=n,address=*:5005
+    ports:
+      - 20016:8093
+      - 50056:5005
+    depends_on:
+      - xs2a-sandbox-onlinebankingui
+      - xs2a-sandbox-ledgersapp
+    volumes:
+      - ../../opba-protocols/sandboxes/xs2a-sandbox/src/main/resources/sandbox:/configs
+    networks:
+      - opba-net
+
+  xs2a-sandbox-tpp-ui:
+    image: adorsys/xs2a-bank-tpp-ui:5.14
+    environment:
+      <<: *sandbox-hosts
+      TPP_REST_SERVER_URL: http://xs2a-sandbox-tpprest:8093
+      CERT_GEN_URL: http://xs2a-sandbox-certgenerator:8092
+      CERT_GEN_ENABLED: "true"
+    ports:
+      - 4205:4205
+    networks:
+      - opba-net
+    depends_on:
+      - xs2a-sandbox-certgenerator
+      - xs2a-sandbox-tpprest
+
+  xs2a-sandbox-onlinebanking:
+    image: adorsys/xs2a-online-banking:5.14
+    environment:
+      <<: *sandbox-hosts
+      SPRING_PROFILES_INCLUDE: test-db-local-postgres,test-common,test-online-banking
+      SPRING_CONFIG_LOCATION: classpath:/,/configs/application-test-common.yml,/configs/application-test-db-local-postgres.yml,/configs/application-test-online-banking.yml
+      DB_HOST_AND_PORT: xs2a-sandbox-postgres:5432
+      KEYCLOAK_AUTH_SERVER_URL: http://ledgers-keycloak:8080/auth
+      JAVA_TOOL_OPTIONS: -agentlib:jdwp=transport=dt_socket,server=y,suspend=n,address=*:5005
+    ports:
+      - 20015:8090
+      - 50055:5005
+    depends_on:
+      - xs2a-sandbox-postgres
+      - xs2a-sandbox-ledgersapp
+      - xs2a-sandbox-ledgersgateway
+      - ledgers-keycloak
+    volumes:
+      - ../../opba-protocols/sandboxes/xs2a-sandbox/src/main/resources/sandbox:/configs
+    networks:
+      - opba-net
+
+  xs2a-sandbox-ledgersgateway:
+    image: adorsys/xs2a-connector-examples:11.7
+    environment:
+      <<: *sandbox-hosts
+      SPRING_PROFILES_INCLUDE: test-db-local-postgres,test-common,test-ledgers-gateway,postgres,mock-qwac,remote
+      SPRING_CONFIG_LOCATION: classpath:/,/configs/application-test-common.yml,/configs/application-test-db-local-postgres.yml,/configs/application-test-ledgers-gateway.yml
+      DB_HOST_AND_PORT: xs2a-sandbox-postgres:5432
+      KEYCLOAK_AUTH_SERVER_URL: http://ledgers-keycloak:8080/auth
+      JAVA_TOOL_OPTIONS: -agentlib:jdwp=transport=dt_socket,server=y,suspend=n,address=*:5005
+    ports:
+      - 20014:8089
+      - 50054:5005
+    depends_on:
+      - xs2a-sandbox-ledgersapp
+      - xs2a-sandbox-aspspprofile
+      - xs2a-sandbox-consentmgmt
+    volumes:
+      - ../../opba-protocols/sandboxes/xs2a-sandbox/src/main/resources/sandbox:/configs
+    networks:
+      - opba-net
+
+  xs2a-sandbox-ledgersapp:
+    image: adorsys/ledgers:4.14
+    environment:
+      <<: *sandbox-hosts
+      SPRING_PROFILES_INCLUDE: test-db-local-postgres,test-common,test-ledgers-app,develop,sandbox
+      SPRING_CONFIG_LOCATION: classpath:/,/configs/application-test-common.yml,/configs/application-test-db-local-postgres.yml,/configs/application-test-ledgers-app.yml
+      DB_HOST_AND_PORT: xs2a-sandbox-postgres:5432
+      KEYCLOAK_AUTH_SERVER_URL: http://ledgers-keycloak:8080/auth
+      LEDGERS_SCA_AUTHCODE_APP_OTP_SOCKET_SERVICE_URL: http://xs2a-online-banking:8090/api/v1/decoupled/message
+      JAVA_TOOL_OPTIONS: -agentlib:jdwp=transport=dt_socket,server=y,suspend=n,address=*:5005
+    ports:
+      - 20013:8088
+      - 50053:5005
+    depends_on:
+      - xs2a-sandbox-postgres
+      - ledgers-keycloak
+    volumes:
+      - ../../opba-protocols/sandboxes/xs2a-sandbox/src/main/resources/sandbox:/configs
+    networks:
+      - opba-net
+
+    # Keycloak as IDP
+  ledgers-keycloak:
+    image: adorsys/ledgers-keycloak:4.14
+    restart: on-failure
+    networks:
+      - opba-net
+    ports:
+      - "8080:8080"
+    environment:
+      - KEYCLOAK_USER=admin
+      - KEYCLOAK_PASSWORD=admin
+
+  xs2a-sandbox-consentmgmt:
+    image: adorsys/xs2a-consent-management:11.7
+    environment:
+      <<: *sandbox-hosts
+      SPRING_PROFILES_INCLUDE: test-db-local-postgres,test-common,test-consent-mgmt
+      SPRING_CONFIG_LOCATION: classpath:/,/configs/application-test-common.yml,/configs/application-test-db-local-postgres.yml,/configs/application-test-consent-mgmt.yml
+      DB_HOST_AND_PORT: xs2a-sandbox-postgres:5432
+      JAVA_TOOL_OPTIONS: -agentlib:jdwp=transport=dt_socket,server=y,suspend=n,address=*:5005
+    ports:
+      - 20012:8080
+      - 50052:5005
+    depends_on:
+      - xs2a-sandbox-postgres
+    volumes:
+      - ../../opba-protocols/sandboxes/xs2a-sandbox/src/main/resources/sandbox:/configs
+    networks:
+      - opba-net
+
+  xs2a-sandbox-certgenerator:
+    image: adorsys/xs2a-certificate-generator:11.7
+    environment:
+      <<: *sandbox-hosts
+      SPRING_PROFILES_INCLUDE: test-db-local-postgres,test-common,test-cert-generator
+      SPRING_CONFIG_LOCATION: classpath:/,/configs/application-test-common.yml,/configs/application-test-db-local-postgres.yml,/configs/application-test-cert-generator.yml
+      DB_HOST_AND_PORT: xs2a-sandbox-postgres:5432
+    ports:
+      - 20011:8092
+    depends_on:
+      - xs2a-sandbox-postgres
+    volumes:
+      - ../../opba-protocols/sandboxes/xs2a-sandbox/src/main/resources/sandbox:/configs
+    networks:
+      - opba-net
+
+  xs2a-sandbox-aspspprofile:
+    image: adorsys/xs2a-aspsp-profile:11.7
+    environment:
+      <<: *sandbox-hosts
+      PRIMARY_PROFILE: /configs/application-test-aspsp-profile.yml
+      SPRING_PROFILES_INCLUDE: test-db-local-postgres,test-common,test-aspsp-profile,debug_mode
+      SPRING_CONFIG_LOCATION: classpath:/,/configs/application-test-common.yml,/configs/application-test-db-local-postgres.yml,/configs/application-test-aspsp-profile.yml
+      DB_HOST_AND_PORT: xs2a-sandbox-postgres:5432
+      JAVA_TOOL_OPTIONS: -agentlib:jdwp=transport=dt_socket,server=y,suspend=n,address=*:5005
+    ports:
+      - 20010:8080
+      - 50050:5005
+    depends_on:
+      - xs2a-sandbox-postgres
+    volumes:
+      - ../../opba-protocols/sandboxes/xs2a-sandbox/src/main/resources/sandbox:/configs
+    networks:
+      - opba-net
