@@ -113,9 +113,14 @@ You can use our DEV environment (without signature check) if you import [this Po
  with code navigation, refactoring and other stuff for **Flowable BPMN engine**. It will make your work a lot easier
  as you don't need to leave IntelliJ to change diagram or to see what class is used at which step.
  
+ - Running local tests faster. To avoid Postgres TestContainer slow initialization one can use following environment variables:
+ `TESTCONTAINERS_REUSE_ENABLE=true;TESTCONTAINERS_RYUK_DISABLED=true;SPRING_DATASOURCE_URL=jdbc:tc:postgresql:12:////open_banking?TC_DAEMON=true&?TC_TMPFS=/testtmpfs:rw&TC_INITSCRIPT=init.sql&TC_REUSABLE=true`
+  this will keep Postgres TestContainer started and migrated after 1st run, significantly reducing next tests startup time.
+  Note, that it will introduce shared state across tests, which is mostly OK but for some tests may cause failures.
+
  - Starting with project: [How to start with project](https://github.com/adorsys/open-banking-gateway/tree/develop/how-to-start-with-project) 
  
-  - Populating database with bank data: [How to fill database with bank data](https://github.com/adorsys/open-banking-gateway/tree/develop/opba-db/README.md) 
+ - Populating database with bank data: [How to fill database with bank data](https://github.com/adorsys/open-banking-gateway/tree/develop/opba-db/README.md) 
 
 ## Documentation
 
