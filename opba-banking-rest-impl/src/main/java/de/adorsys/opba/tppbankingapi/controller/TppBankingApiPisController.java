@@ -68,6 +68,49 @@ public class TppBankingApiPisController implements TppBankingApiSinglePaymentPis
         ).thenApply((FacadeResult<SinglePaymentBody> result) -> mapper.translate(result, paymentResponseMapper));
     }
 
+    @Override
+    public CompletableFuture initiatePaymentV2(PaymentInitiation body, String serviceSessionPassword,
+                                               String fintechUserID,
+                                               String fintechRedirectURLOK,
+                                               String fintechRedirectURLNOK,
+                                               UUID xRequestID,
+                                               String paymentProduct,
+                                               String xTimestampUTC,
+                                               String xRequestSignature,
+                                               String fintechID,
+                                               UUID bankProfileID,
+                                               Boolean xPsuAuthenticationRequired,
+                                               Boolean computePSUIPAddress,
+                                               String psUIPAddress,
+                                               Boolean tpPDecoupledPreferred,
+                                               String tpPBrandLoggingInformation,
+                                               String tpPNotificationURI,
+                                               String tpPNotificationContentPreferred) {
+        return payments.execute(
+                InitiateSinglePaymentRequest.builder()
+                        .facadeServiceable(FacadeServiceableRequest.builder()
+                                // Get rid of CGILIB here by copying:
+                                .uaContext(userAgentContext.toBuilder().build())
+                                .authorization(fintechID)
+                                .sessionPassword(serviceSessionPassword)
+                                .fintechUserId(fintechUserID)
+                                .fintechRedirectUrlOk(fintechRedirectURLOK)
+                                .fintechRedirectUrlNok(fintechRedirectURLNOK)
+                                .requestId(xRequestID)
+                                .bankProfileId(bankProfileID)
+                                .anonymousPsu(null != xPsuAuthenticationRequired && !xPsuAuthenticationRequired)
+                                .tppDecoupledPreferred(null != tpPDecoupledPreferred && !tpPDecoupledPreferred)
+                                .tppBrandLoggingInformation(tpPBrandLoggingInformation)
+                                .tppNotificationURI(tpPNotificationURI)
+                                .tppNotificationContentPreferred(tpPNotificationContentPreferred)
+                                .build()
+                        )
+                        .singlePayment(pisSinglePaymentMapper.map(body, PaymentProductDetails.fromValue(paymentProduct)))
+                        .build()
+        ).thenApply((FacadeResult<SinglePaymentBody> result) -> mapper.translate(result, paymentResponseMapper));
+
+    }
+
     @Mapper(componentModel = SPRING_KEYWORD, implementationPackage = API_MAPPERS_PACKAGE)
     public interface PaymentRestRequestBodyToSinglePaymentMapper {
         @Mapping(source = "body.creditorAddress.townName", target = "creditorAddress.city")

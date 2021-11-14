@@ -97,4 +97,25 @@ public class FacadeServiceableRequest {
      * For transaction listing requests triggers transaction analyzers to enrich online result.
      */
     private final boolean withAnalytics;
+
+
+    /**
+     * This header might be used by TPPs to inform the ASPSP about the brand used by the TPP towards the PSU.
+     */
+    private final String tppBrandLoggingInformation;
+
+    /**
+     *  URI for the Endpoint of the TPP-API to which the status of the payment initiation should be sent.
+     */
+    private final String tppNotificationURI;
+
+    /**
+     * The string has the formstatus=X1, ..., Xn where Xi is one of the constants SCA, PROCESS, LAST and where constants are not repeated.
+     */
+    private final String tppNotificationContentPreferred;
+
+    /**
+     * If it equals "true", the TPP prefers a decoupled SCA approach
+     */
+    private final boolean tppDecoupledPreferred;
 }
