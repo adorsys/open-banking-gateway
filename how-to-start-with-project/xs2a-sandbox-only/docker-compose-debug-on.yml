@@ -62,8 +62,10 @@ services:
       SPRING_PROFILES_INCLUDE: test-db-local-postgres,test-common,test-tpp-rest
       SPRING_CONFIG_LOCATION: classpath:/,/configs/application-test-common.yml,/configs/application-test-db-local-postgres.yml,/configs/application-test-tpp-rest.yml
       DB_HOST_AND_PORT: xs2a-sandbox-postgres:5432
+      JAVA_TOOL_OPTIONS: -agentlib:jdwp=transport=dt_socket,server=y,suspend=n,address=*:5005
     ports:
       - 20016:8093
+      - 50056:5005
     depends_on:
       - xs2a-sandbox-onlinebankingui
       - xs2a-sandbox-ledgersapp
@@ -95,8 +97,10 @@ services:
       SPRING_CONFIG_LOCATION: classpath:/,/configs/application-test-common.yml,/configs/application-test-db-local-postgres.yml,/configs/application-test-online-banking.yml
       DB_HOST_AND_PORT: xs2a-sandbox-postgres:5432
       KEYCLOAK_AUTH_SERVER_URL: http://ledgers-keycloak:8080/auth
+      JAVA_TOOL_OPTIONS: -agentlib:jdwp=transport=dt_socket,server=y,suspend=n,address=*:5005
     ports:
       - 20015:8090
+      - 50055:5005
     depends_on:
       - xs2a-sandbox-postgres
       - xs2a-sandbox-ledgersapp
@@ -115,8 +119,10 @@ services:
       SPRING_CONFIG_LOCATION: classpath:/,/configs/application-test-common.yml,/configs/application-test-db-local-postgres.yml,/configs/application-test-ledgers-gateway.yml
       DB_HOST_AND_PORT: xs2a-sandbox-postgres:5432
       KEYCLOAK_AUTH_SERVER_URL: http://ledgers-keycloak:8080/auth
+      JAVA_TOOL_OPTIONS: -agentlib:jdwp=transport=dt_socket,server=y,suspend=n,address=*:5005
     ports:
       - 20014:8089
+      - 50054:5005
     depends_on:
       - xs2a-sandbox-ledgersapp
       - xs2a-sandbox-aspspprofile
@@ -135,8 +141,10 @@ services:
       DB_HOST_AND_PORT: xs2a-sandbox-postgres:5432
       KEYCLOAK_AUTH_SERVER_URL: http://ledgers-keycloak:8080/auth
       LEDGERS_SCA_AUTHCODE_APP_OTP_SOCKET_SERVICE_URL: http://xs2a-online-banking:8090/api/v1/decoupled/message
+      JAVA_TOOL_OPTIONS: -agentlib:jdwp=transport=dt_socket,server=y,suspend=n,address=*:5005
     ports:
       - 20013:8088
+      - 50053:5005
     depends_on:
       - xs2a-sandbox-postgres
       - ledgers-keycloak
@@ -164,8 +172,10 @@ services:
       SPRING_PROFILES_INCLUDE: test-db-local-postgres,test-common,test-consent-mgmt
       SPRING_CONFIG_LOCATION: classpath:/,/configs/application-test-common.yml,/configs/application-test-db-local-postgres.yml,/configs/application-test-consent-mgmt.yml
       DB_HOST_AND_PORT: xs2a-sandbox-postgres:5432
+      JAVA_TOOL_OPTIONS: -agentlib:jdwp=transport=dt_socket,server=y,suspend=n,address=*:5005
     ports:
       - 20012:8080
+      - 50052:5005
     depends_on:
       - xs2a-sandbox-postgres
     volumes:
@@ -197,8 +207,10 @@ services:
       SPRING_PROFILES_INCLUDE: test-db-local-postgres,test-common,test-aspsp-profile,debug_mode
       SPRING_CONFIG_LOCATION: classpath:/,/configs/application-test-common.yml,/configs/application-test-db-local-postgres.yml,/configs/application-test-aspsp-profile.yml
       DB_HOST_AND_PORT: xs2a-sandbox-postgres:5432
+      JAVA_TOOL_OPTIONS: -agentlib:jdwp=transport=dt_socket,server=y,suspend=n,address=*:5005
     ports:
       - 20010:8080
+      - 50050:5005
     depends_on:
       - xs2a-sandbox-postgres
     volumes:

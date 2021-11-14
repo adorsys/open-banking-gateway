@@ -31,45 +31,8 @@ public class TppBankingApiPisController implements TppBankingApiSinglePaymentPis
     private final SinglePaymentService payments;
     private final PaymentRestRequestBodyToSinglePaymentMapper pisSinglePaymentMapper;
     private final PaymentFacadeResponseBodyToRestBodyMapper paymentResponseMapper;
-
     @Override
-    public CompletableFuture initiatePayment(PaymentInitiation body,
-                                             String serviceSessionPassword,
-                                             String fintechUserID,
-                                             String fintechRedirectURLOK,
-                                             String fintechRedirectURLNOK,
-                                             UUID xRequestID,
-                                             String paymentProduct,
-                                             String xTimestampUTC,
-                                             String xRequestSignature,
-                                             String fintechID,
-                                             UUID bankProfileID,
-                                             Boolean xPsuAuthenticationRequired,
-                                             Boolean computePsuIpAddress,
-                                             String psuIpAddress
-    ) {
-        return payments.execute(
-                InitiateSinglePaymentRequest.builder()
-                        .facadeServiceable(FacadeServiceableRequest.builder()
-                                                   // Get rid of CGILIB here by copying:
-                                                   .uaContext(userAgentContext.toBuilder().build())
-                                                   .authorization(fintechID)
-                                                   .sessionPassword(serviceSessionPassword)
-                                                   .fintechUserId(fintechUserID)
-                                                   .fintechRedirectUrlOk(fintechRedirectURLOK)
-                                                   .fintechRedirectUrlNok(fintechRedirectURLNOK)
-                                                   .requestId(xRequestID)
-                                                   .bankProfileId(bankProfileID)
-                                                   .anonymousPsu(null != xPsuAuthenticationRequired && !xPsuAuthenticationRequired)
-                                                   .build()
-                        )
-                        .singlePayment(pisSinglePaymentMapper.map(body, PaymentProductDetails.fromValue(paymentProduct)))
-                        .build()
-        ).thenApply((FacadeResult<SinglePaymentBody> result) -> mapper.translate(result, paymentResponseMapper));
-    }
-
-    @Override
-    public CompletableFuture initiatePaymentV2(PaymentInitiation body, String serviceSessionPassword,
+    public CompletableFuture initiatePayment(PaymentInitiation body, String serviceSessionPassword,
                                                String fintechUserID,
                                                String fintechRedirectURLOK,
                                                String fintechRedirectURLNOK,
@@ -82,10 +45,10 @@ public class TppBankingApiPisController implements TppBankingApiSinglePaymentPis
                                                Boolean xPsuAuthenticationRequired,
                                                Boolean computePSUIPAddress,
                                                String psUIPAddress,
-                                               Boolean tpPDecoupledPreferred,
-                                               String tpPBrandLoggingInformation,
-                                               String tpPNotificationURI,
-                                               String tpPNotificationContentPreferred) {
+                                               Boolean tppDecoupledPreferred,
+                                               String tppBrandLoggingInformation,
+                                               String tppNotificationURI,
+                                               String tppNotificationContentPreferred) {
         return payments.execute(
                 InitiateSinglePaymentRequest.builder()
                         .facadeServiceable(FacadeServiceableRequest.builder()
@@ -99,10 +62,10 @@ public class TppBankingApiPisController implements TppBankingApiSinglePaymentPis
                                 .requestId(xRequestID)
                                 .bankProfileId(bankProfileID)
                                 .anonymousPsu(null != xPsuAuthenticationRequired && !xPsuAuthenticationRequired)
-                                .tppDecoupledPreferred(null != tpPDecoupledPreferred && !tpPDecoupledPreferred)
-                                .tppBrandLoggingInformation(tpPBrandLoggingInformation)
-                                .tppNotificationURI(tpPNotificationURI)
-                                .tppNotificationContentPreferred(tpPNotificationContentPreferred)
+                                .tppDecoupledPreferred(null != tppDecoupledPreferred && !tppDecoupledPreferred)
+                                .tppBrandLoggingInformation(tppBrandLoggingInformation)
+                                .tppNotificationURI(tppNotificationURI)
+                                .tppNotificationContentPreferred(tppNotificationContentPreferred)
                                 .build()
                         )
                         .singlePayment(pisSinglePaymentMapper.map(body, PaymentProductDetails.fromValue(paymentProduct)))

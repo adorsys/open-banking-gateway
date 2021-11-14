@@ -97,13 +97,17 @@ export class FintechSinglePaymentInitiationService {
      * @param fintechRedirectURLNOK 
      * @param singlePaymentInitiationRequest Single payment initiation request
      * @param xPsuAuthenticationRequired If false, login form to OPBA will not be displayed as there might be nothing to share for payments, so that authentication is not necessary. If absent or true - login form for payments will be displayed. 
+     * @param fintechDecoupledPreferred 
+     * @param fintechBrandLoggingInformation 
+     * @param fintechNotificationURI 
+     * @param fintechRedirectNotificationContentPreferred 
      * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
      * @param reportProgress flag to report request and response progress.
      */
-    public initiateSinglePayment(bankId: string, accountId: string, xRequestID: string, xXSRFTOKEN: string, fintechRedirectURLOK: string, fintechRedirectURLNOK: string, singlePaymentInitiationRequest: SinglePaymentInitiationRequest, xPsuAuthenticationRequired?: boolean, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<any>;
-    public initiateSinglePayment(bankId: string, accountId: string, xRequestID: string, xXSRFTOKEN: string, fintechRedirectURLOK: string, fintechRedirectURLNOK: string, singlePaymentInitiationRequest: SinglePaymentInitiationRequest, xPsuAuthenticationRequired?: boolean, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<HttpResponse<any>>;
-    public initiateSinglePayment(bankId: string, accountId: string, xRequestID: string, xXSRFTOKEN: string, fintechRedirectURLOK: string, fintechRedirectURLNOK: string, singlePaymentInitiationRequest: SinglePaymentInitiationRequest, xPsuAuthenticationRequired?: boolean, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<HttpEvent<any>>;
-    public initiateSinglePayment(bankId: string, accountId: string, xRequestID: string, xXSRFTOKEN: string, fintechRedirectURLOK: string, fintechRedirectURLNOK: string, singlePaymentInitiationRequest: SinglePaymentInitiationRequest, xPsuAuthenticationRequired?: boolean, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: 'application/json'}): Observable<any> {
+    public initiateSinglePayment(bankId: string, accountId: string, xRequestID: string, xXSRFTOKEN: string, fintechRedirectURLOK: string, fintechRedirectURLNOK: string, singlePaymentInitiationRequest: SinglePaymentInitiationRequest, xPsuAuthenticationRequired?: boolean, fintechDecoupledPreferred?: boolean, fintechBrandLoggingInformation?: string, fintechNotificationURI?: string, fintechRedirectNotificationContentPreferred?: string, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<any>;
+    public initiateSinglePayment(bankId: string, accountId: string, xRequestID: string, xXSRFTOKEN: string, fintechRedirectURLOK: string, fintechRedirectURLNOK: string, singlePaymentInitiationRequest: SinglePaymentInitiationRequest, xPsuAuthenticationRequired?: boolean, fintechDecoupledPreferred?: boolean, fintechBrandLoggingInformation?: string, fintechNotificationURI?: string, fintechRedirectNotificationContentPreferred?: string, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<HttpResponse<any>>;
+    public initiateSinglePayment(bankId: string, accountId: string, xRequestID: string, xXSRFTOKEN: string, fintechRedirectURLOK: string, fintechRedirectURLNOK: string, singlePaymentInitiationRequest: SinglePaymentInitiationRequest, xPsuAuthenticationRequired?: boolean, fintechDecoupledPreferred?: boolean, fintechBrandLoggingInformation?: string, fintechNotificationURI?: string, fintechRedirectNotificationContentPreferred?: string, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<HttpEvent<any>>;
+    public initiateSinglePayment(bankId: string, accountId: string, xRequestID: string, xXSRFTOKEN: string, fintechRedirectURLOK: string, fintechRedirectURLNOK: string, singlePaymentInitiationRequest: SinglePaymentInitiationRequest, xPsuAuthenticationRequired?: boolean, fintechDecoupledPreferred?: boolean, fintechBrandLoggingInformation?: string, fintechNotificationURI?: string, fintechRedirectNotificationContentPreferred?: string, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: 'application/json'}): Observable<any> {
         if (bankId === null || bankId === undefined) {
             throw new Error('Required parameter bankId was null or undefined when calling initiateSinglePayment.');
         }
@@ -141,6 +145,18 @@ export class FintechSinglePaymentInitiationService {
         }
         if (fintechRedirectURLNOK !== undefined && fintechRedirectURLNOK !== null) {
             headers = headers.set('Fintech-Redirect-URL-NOK', String(fintechRedirectURLNOK));
+        }
+        if (fintechDecoupledPreferred !== undefined && fintechDecoupledPreferred !== null) {
+            headers = headers.set('Fintech-Decoupled-Preferred', String(fintechDecoupledPreferred));
+        }
+        if (fintechBrandLoggingInformation !== undefined && fintechBrandLoggingInformation !== null) {
+            headers = headers.set('Fintech-Brand-Logging-Information', String(fintechBrandLoggingInformation));
+        }
+        if (fintechNotificationURI !== undefined && fintechNotificationURI !== null) {
+            headers = headers.set('Fintech-Notification-URI', String(fintechNotificationURI));
+        }
+        if (fintechRedirectNotificationContentPreferred !== undefined && fintechRedirectNotificationContentPreferred !== null) {
+            headers = headers.set('Fintech-Redirect-Notification-Content-Preferred', String(fintechRedirectNotificationContentPreferred));
         }
 
         let httpHeaderAcceptSelected: string | undefined = options && options.httpHeaderAccept;

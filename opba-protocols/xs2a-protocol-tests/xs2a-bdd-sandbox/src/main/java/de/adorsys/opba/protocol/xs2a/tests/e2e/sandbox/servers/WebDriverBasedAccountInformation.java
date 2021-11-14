@@ -337,10 +337,7 @@ public class WebDriverBasedAccountInformation<SELF extends WebDriverBasedAccount
         waitForPageLoad(driver);
         add_open_banking_auth_session_key_cookie_to_selenium(driver, authSessionCookie);
         try {
-            String redirect = driver.findElement(By.className("btn-primary"))
-                    .getAttribute("href")
-                    .replaceAll("oauth2=false", "oauth2=true");
-            swallowReachedErrorPageException(() -> driver.navigate().to(redirect));
+            clickOnButton(driver, By.className("btn-primary"), true);
         } finally {
             driver.manage().deleteCookieNamed(AUTHORIZATION_SESSION_KEY);
         }

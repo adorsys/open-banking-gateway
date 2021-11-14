@@ -1,14 +1,14 @@
-import { Component, OnInit } from '@angular/core';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { HttpResponse } from '@angular/common/http';
-import { Location } from '@angular/common';
-import { ActivatedRoute, Router } from '@angular/router';
-import { ValidatorService } from 'angular-iban';
-import { FintechSinglePaymentInitiationService, SinglePaymentInitiationRequest } from '../../../api';
-import { Consts, HeaderConfig } from '../../../models/consts';
-import { RedirectStruct, RedirectType } from '../../redirect-page/redirect-struct';
-import { StorageService } from '../../../services/storage.service';
-import { ConfirmData } from '../payment-confirm/confirm.data';
+import {Component, OnInit} from '@angular/core';
+import {FormBuilder, FormGroup, Validators} from '@angular/forms';
+import {HttpResponse} from '@angular/common/http';
+import {Location} from '@angular/common';
+import {ActivatedRoute, Router} from '@angular/router';
+import {ValidatorService} from 'angular-iban';
+import {FintechSinglePaymentInitiationService, SinglePaymentInitiationRequest} from '../../../api';
+import {Consts, HeaderConfig} from '../../../models/consts';
+import {RedirectStruct, RedirectType} from '../../redirect-page/redirect-struct';
+import {StorageService} from '../../../services/storage.service';
+import {ConfirmData} from '../payment-confirm/confirm.data';
 
 class TestPayment {
   constructor(public referenceName: string, public purpose: string) {}
@@ -92,6 +92,10 @@ export class InitiateComponent implements OnInit {
         notOkUrl,
         paymentRequest,
         this.storageService.getSettings().paymentRequiresAuthentication,
+        null,
+        null,
+        null,
+        null,
         'response'
       )
       .subscribe((response) => {

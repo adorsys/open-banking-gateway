@@ -28,7 +28,11 @@ public class FintechSinglePaymentInitiationImpl implements FintechSinglePaymentI
             String fintechRedirectURLNOK,
             String bankId,
             String accountId,
-            Boolean xPisPsuAuthenticationRequired) {
+            Boolean xPisPsuAuthenticationRequired,
+            Boolean fintechDecoupledPreferred,
+            String fintechBrandLoggingInformation,
+            String fintechNotificationURI,
+            String fintechRedirectNotificationContentPreferred) {
         log.debug("got initiate payment requrest");
 
         if (!sessionLogicService.isSessionAuthorized()) {
@@ -38,7 +42,9 @@ public class FintechSinglePaymentInitiationImpl implements FintechSinglePaymentI
 
         return sessionLogicService.addSessionMaxAgeToHeader(
                 paymentService.initiateSinglePayment(bankId, accountId, body,
-                        fintechRedirectURLOK, fintechRedirectURLNOK, xPisPsuAuthenticationRequired)
+                        fintechRedirectURLOK, fintechRedirectURLNOK, xPisPsuAuthenticationRequired,
+                        fintechDecoupledPreferred, fintechBrandLoggingInformation, fintechNotificationURI,
+                        fintechRedirectNotificationContentPreferred)
         );
     }
 }
