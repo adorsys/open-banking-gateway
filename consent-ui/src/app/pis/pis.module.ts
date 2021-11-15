@@ -14,6 +14,7 @@ import { ConsentPaymentAccessSelectionComponent } from './consent-payment-access
 import { DynamicInputsComponent } from './dynamic-inputs/dynamic-inputs.component';
 import { PaymentInfoComponent } from './payment-info/payment-info.component';
 import {WaitForDecoupled} from "./wait-for-decoupled/wait-for-decoupled";
+import { RestoreSessionPageComponent } from './restore-session-page/restore-session-page.component';
 
 @NgModule({
   declarations: [
@@ -29,7 +30,8 @@ import {WaitForDecoupled} from "./wait-for-decoupled/wait-for-decoupled";
     ConsentPaymentAccessSelectionComponent,
     DynamicInputsComponent,
     PaymentInfoComponent,
-    WaitForDecoupled
+    WaitForDecoupled,
+    RestoreSessionPageComponent
   ],
   imports: [SharedModule, PisRoutingModule]
 })
