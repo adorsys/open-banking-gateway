@@ -7,6 +7,8 @@ import { Component, OnInit } from '@angular/core';
 })
 export class RestoreSessionPageComponent implements OnInit {
 
+  public static ROUTE = 'restore-session';
+
   constructor() { }
 
   ngOnInit(): void {

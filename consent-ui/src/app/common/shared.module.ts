@@ -15,18 +15,19 @@ import { RestoreSessionComponent } from './restore-session/restore-session.compo
 @NgModule({
   declarations: [EnterTanComponent, EnterPinComponent, SelectScaComponent, ToAspspComponent, ResultComponent, RestoreSessionComponent],
   imports: [CommonModule, ReactiveFormsModule, HttpClientModule, InfoModule, QRCodeModule, NgxChiptanModule],
-  exports: [
-    CommonModule,
-    ReactiveFormsModule,
-    HttpClientModule,
-    InfoModule,
-    QRCodeModule,
-    NgxChiptanModule,
-    EnterTanComponent,
-    EnterPinComponent,
-    SelectScaComponent,
-    ToAspspComponent,
-    ResultComponent
-  ]
+    exports: [
+        CommonModule,
+        ReactiveFormsModule,
+        HttpClientModule,
+        InfoModule,
+        QRCodeModule,
+        NgxChiptanModule,
+        EnterTanComponent,
+        EnterPinComponent,
+        SelectScaComponent,
+        ToAspspComponent,
+        ResultComponent,
+        RestoreSessionComponent
+    ]
 })
 export class SharedModule {}
