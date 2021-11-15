@@ -67,8 +67,8 @@ protocol:
       ais:
         to-aspsp: ${facade.urls.embedded-ui-base-url}/ais${protocol.xs2a.urls.common.to-aspsp}
         web-hooks:
-          ok: ${protocol.xs2a.urls.common.web-hooks.ok}
-          nok: ${protocol.xs2a.urls.common.web-hooks.nok}
+          ok: ${facade.urls.embedded-ui-base-url}/ais/{authSessionId}/restore-session?state=ok&aspspRedirectCode={aspspRedirectCode}
+          nok: ${facade.urls.embedded-ui-base-url}/ais/{authSessionId}/restore-session?state=nok&aspspRedirectCode={aspspRedirectCode}
           result: ${facade.urls.embedded-ui-base-url}/ais${protocol.xs2a.urls.common.web-hooks.result}
         parameters:
           provide-more: ${facade.urls.embedded-ui-base-url}/ais${protocol.xs2a.urls.common.parameters.provide-more}
@@ -80,8 +80,8 @@ protocol:
       pis:
         to-aspsp: ${facade.urls.embedded-ui-base-url}/pis${protocol.xs2a.urls.common.to-aspsp}
         web-hooks:
-          ok: ${protocol.xs2a.urls.common.web-hooks.ok}
-          nok: ${protocol.xs2a.urls.common.web-hooks.nok}
+          ok: ${facade.urls.embedded-ui-base-url}/pis/{authSessionId}/restore-session?state=ok&aspspRedirectCode={aspspRedirectCode}
+          nok: ${facade.urls.embedded-ui-base-url}/pis/{authSessionId}/restore-session?state=nok&aspspRedirectCode={aspspRedirectCode}
           result: ${facade.urls.embedded-ui-base-url}/pis${protocol.xs2a.urls.common.web-hooks.result}
         parameters:
           provide-more: ${facade.urls.embedded-ui-base-url}/pis${protocol.xs2a.urls.common.parameters.provide-more}
@@ -93,8 +93,6 @@ protocol:
       common:
         to-aspsp: /{authSessionId}/to-aspsp-redirection?redirectCode={redirectCode}
         web-hooks:
-          ok: ${facade.urls.embedded-ui-base-url}/embedded-server/v1/consent/{authSessionId}/fromAspsp/STUB_STATE/ok/{aspspRedirectCode}
-          nok: ${facade.urls.embedded-ui-base-url}/embedded-server/v1/consent/{authSessionId}/fromAspsp/STUB_STATE/nok/{aspspRedirectCode}
           result: /{authSessionId}/consent-result?redirectCode={redirectCode}
         parameters:
           provide-more: /{authSessionId}?redirectCode={redirectCode}
