@@ -67,8 +67,8 @@ protocol:
       ais:
         to-aspsp: ${facade.urls.embedded-ui-base-url}/ais${protocol.xs2a.urls.common.to-aspsp}
         web-hooks:
-          ok: ${facade.urls.embedded-ui-base-url}/ais/{authSessionId}/restore-session?state=ok&aspspRedirectCode={aspspRedirectCode}
-          nok: ${facade.urls.embedded-ui-base-url}/ais/{authSessionId}/restore-session?state=nok&aspspRedirectCode={aspspRedirectCode}
+          ok: ${facade.urls.embedded-ui-base-url}/ais/{authSessionId}/restore-session/{aspspRedirectCode}/ok
+          nok: ${facade.urls.embedded-ui-base-url}/ais/{authSessionId}/restore-session/{aspspRedirectCode}/nok
           result: ${facade.urls.embedded-ui-base-url}/ais${protocol.xs2a.urls.common.web-hooks.result}
         parameters:
           provide-more: ${facade.urls.embedded-ui-base-url}/ais${protocol.xs2a.urls.common.parameters.provide-more}

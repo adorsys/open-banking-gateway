@@ -279,8 +279,8 @@ protocol:
       common:
         to-aspsp: /{authSessionId}/to-aspsp-redirection?redirectCode={redirectCode}
         web-hooks:
-          ok: ${facade.urls.embedded-ui-base-url}/ais/{authSessionId}/restore-session?state=ok&aspspRedirectCode={aspspRedirectCode}
-          nok: ${facade.urls.embedded-ui-base-url}/ais/{authSessionId}/restore-session?state=nok&aspspRedirectCode={aspspRedirectCode}
+          ok: ${facade.urls.embedded-ui-base-url}/ais/{authSessionId}/restore-session/{aspspRedirectCode}/ok
+          nok: ${facade.urls.embedded-ui-base-url}/ais/{authSessionId}/restore-session/{aspspRedirectCode}/nok
           result: /{authSessionId}/consent-result?redirectCode={redirectCode}
         parameters:
           provide-more: /{authSessionId}?redirectCode={redirectCode}
@@ -325,9 +325,9 @@ protocol:
           # Consent related URLs that will be provided to ASPSP to get results of operation
           web-hooks:
             # URL that represents page saying that consent creation was OK (comes before consent result page)
-            ok: ${facade.urls.embedded-ui-base-url}/ais/{authSessionId}/restore-session?state=ok&aspspRedirectCode={aspspRedirectCode}
+            ok: ${facade.urls.embedded-ui-base-url}/ais/{authSessionId}/restore-session/{aspspRedirectCode}/ok
             # URL that represents page saying that consent creation was not OK (comes before consent result page)
-            nok: ${facade.urls.embedded-ui-base-url}/ais/{authSessionId}/restore-session?state=nok&aspspRedirectCode={aspspRedirectCode}
+            nok: ${facade.urls.embedded-ui-base-url}/ais/{authSessionId}/restore-session/{aspspRedirectCode}/nok
             # URL that represents consent acquisition result
             result: ${facade.urls.embedded-ui-base-url}/ais/{authSessionId}/consent-result?redirectCode={redirectCode}
           # Generic parameters input urls - i.e. password page.
@@ -394,7 +394,7 @@ protocol:
     client-api-cache-size: 100
     client-api-expire-after-access: PT30M
     # URL to redirect after ASPSP flow
-    from-aspsp-url: ${facade.urls.embedded-ui-base-url}/ais/{authSessionId}/restore-session?state=ok&aspspRedirectCode={aspspRedirectCode}
+    from-aspsp-url: ${facade.urls.embedded-ui-base-url}/ais/{authSessionId}/restore-session/{aspspRedirectCode}/ok
 
     bank-service:
       # Enables auto-updating of FinApi banks cache

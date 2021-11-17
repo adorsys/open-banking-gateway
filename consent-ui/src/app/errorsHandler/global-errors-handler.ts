@@ -30,6 +30,10 @@ export class GlobalErrorHandler implements ErrorHandler {
       message = errorService.getClientMessage(error); // Client Error
     }
 
+    if (!message && error.status === 401) {
+      message = 'Unauthorized, please use same browser tab or session has expired'
+    }
+
     this.zone.run(() => {
       infoService.openFeedback(message, {
         severity: 'error'
