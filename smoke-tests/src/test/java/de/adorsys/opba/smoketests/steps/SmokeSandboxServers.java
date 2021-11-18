@@ -127,14 +127,14 @@ public class SmokeSandboxServers<SELF extends SmokeSandboxServers<SELF>> extends
     private SELF create_account_for_user_in_sandbox_tpp_management(String auth, String userId, String accountBody) {
         RestAssured
                 .given()
-                .contentType(MediaType.APPLICATION_JSON_VALUE)
-                .header(TPP_MANAGEMENT_AUTH_HEADER, auth)
-                .queryParam(TPP_MANAGEMENT_USER_ID_QUERY, userId)
-                .body(accountBody)
+                    .contentType(MediaType.APPLICATION_JSON_VALUE)
+                    .header(TPP_MANAGEMENT_AUTH_HEADER, auth)
+                    .queryParam(TPP_MANAGEMENT_USER_ID_QUERY, userId)
+                    .body(accountBody)
                 .when()
-                .post(config.getSandboxTppManagementServerUrl() + TPP_MANAGEMENT_CREATE_ACCOUNT_ENDPOINT)
+                    .post(config.getSandboxTppManagementServerUrl() + TPP_MANAGEMENT_CREATE_ACCOUNT_ENDPOINT)
                 .then()
-                .statusCode(HttpStatus.OK.value());
+                    .statusCode(HttpStatus.OK.value());
 
         return self();
     }
@@ -169,13 +169,13 @@ public class SmokeSandboxServers<SELF extends SmokeSandboxServers<SELF>> extends
     private SELF deposit_to_sandbox_tpp_management_user_account(String auth, String accountId, String body) {
         RestAssured
                 .given()
-                .contentType(MediaType.APPLICATION_JSON_VALUE)
-                .header(TPP_MANAGEMENT_AUTH_HEADER, auth)
-                .body(body)
+                    .contentType(MediaType.APPLICATION_JSON_VALUE)
+                    .header(TPP_MANAGEMENT_AUTH_HEADER, auth)
+                    .body(body)
                 .when()
-                .post(config.getSandboxTppManagementServerUrl() + TPP_MANAGEMENT_DEPOSIT_CASH_ENDPOINT, accountId)
+                    .post(config.getSandboxTppManagementServerUrl() + TPP_MANAGEMENT_DEPOSIT_CASH_ENDPOINT, accountId)
                 .then()
-                .statusCode(HttpStatus.ACCEPTED.value());
+                    .statusCode(HttpStatus.ACCEPTED.value());
 
         return self();
     }

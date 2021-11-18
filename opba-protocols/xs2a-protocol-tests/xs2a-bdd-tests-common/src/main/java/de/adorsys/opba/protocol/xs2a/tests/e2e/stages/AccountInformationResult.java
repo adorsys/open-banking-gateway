@@ -204,16 +204,16 @@ public class AccountInformationResult<SELF extends AccountInformationResult<SELF
             String user, boolean validateResourceId, String currency
     ) {
         ExtractableResponse<Response> response = withAccountsHeaders(user)
-                .header(SERVICE_SESSION_ID, serviceSessionId)
+                     .header(SERVICE_SESSION_ID, serviceSessionId)
                 .when()
-                .get(AIS_ACCOUNTS_ENDPOINT)
+                     .get(AIS_ACCOUNTS_ENDPOINT)
                 .then()
-                .statusCode(HttpStatus.OK.value())
-                .body("accounts[0].iban", equalTo(iban))
-                .body("accounts[0].resourceId", validateResourceId ? equalTo(accountResourceId) : instanceOf(String.class))
-                .body("accounts[0].currency", equalTo(currency))
-                .body("accounts[0].name", equalTo(user))
-                .body("accounts", hasSize(1))
+                     .statusCode(HttpStatus.OK.value())
+                     .body("accounts[0].iban", equalTo(iban))
+                     .body("accounts[0].resourceId", validateResourceId ? equalTo(accountResourceId) : instanceOf(String.class))
+                     .body("accounts[0].currency", equalTo(currency))
+                     .body("accounts[0].name", equalTo(user))
+                     .body("accounts", hasSize(1))
                 .extract();
 
         this.responseContent = response.body().asString();
