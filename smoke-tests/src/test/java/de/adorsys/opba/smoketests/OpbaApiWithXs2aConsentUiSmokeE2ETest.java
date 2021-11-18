@@ -40,7 +40,7 @@ import static org.springframework.boot.test.context.SpringBootTest.WebEnvironmen
 @ExtendWith({SeleniumExtension.class, WebDriverErrorReportAspectAndWatcher.class})
 @SpringBootTest(classes = {JGivenConfig.class, SmokeConfig.class, FintechRequestSigningTestConfig.class, SmokeSandboxServers.class}, webEnvironment = NONE)
 // Use @ActiveProfiles(profiles = {SMOKE_TEST, "test-smoke-local"}) to run the test on local env.
-@ActiveProfiles(profiles = {SMOKE_TEST, "test-smoke-local"})
+@ActiveProfiles(profiles = {SMOKE_TEST})
 class OpbaApiWithXs2aConsentUiSmokeE2ETest extends SpringScenarioTest<SmokeSandboxServers, WebDriverBasedAccountInformation<? extends WebDriverBasedAccountInformation<?>>, AccountInformationResult> {
     private static final String ADDITIONAL_CURRENCY = "USD";
 
