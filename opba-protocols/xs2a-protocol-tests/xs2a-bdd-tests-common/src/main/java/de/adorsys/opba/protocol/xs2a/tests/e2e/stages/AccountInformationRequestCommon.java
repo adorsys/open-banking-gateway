@@ -56,6 +56,9 @@ public class AccountInformationRequestCommon<SELF extends AccountInformationRequ
     @ExpectedScenarioState
     protected String iban;
 
+    @ExpectedScenarioState
+    protected String currency;
+
     public SELF fintech_calls_list_accounts_for_anton_brueckner() {
         return fintech_calls_list_accounts_for_anton_brueckner(SANDBOX_BANK_PROFILE_ID);
     }

@@ -36,12 +36,16 @@ public class SmokeSandboxServers<SELF extends SmokeSandboxServers<SELF>> extends
     private static final String PASSWORD_PLACEHOLDER = "%password%";
     private static final String EMAIL_PLACEHOLDER = "%email%";
     private static final String IBAN_PLACEHOLDER = "%iban%";
+    private static final String CURRENCY_PLACEHOLDER = "%currency%";
 
     @Autowired
     private SmokeConfig config;
 
     @ProvidedScenarioState
     protected String iban;
+
+    @ProvidedScenarioState
+    protected String currency;
 
     @ProvidedScenarioState
     protected String accountResourceId;
@@ -55,6 +59,16 @@ public class SmokeSandboxServers<SELF extends SmokeSandboxServers<SELF>> extends
         String accountId = get_account_id_by_iban_in_sandbox_tpp_management(auth, iban);
 
         return deposit_to_sandbox_tpp_management_user_account(auth, accountId);
+    }
+
+    @SneakyThrows
+    public SELF create_new_user_in_sandbox_tpp_management(String login, String password, String currency) {
+        String auth = login_into_tpp_management();
+        String userId = do_create_new_user_in_sandbox_tpp_management(login, password, auth);
+        create_account_with_currency_for_user_in_sandbox_tpp_management(auth, userId, currency);
+        String accountId = get_account_id_by_iban_in_sandbox_tpp_management(auth, iban);
+
+        return deposit_with_currency_to_sandbox_tpp_management_user_account(auth, accountId);
     }
 
     private String login_into_tpp_management() {
@@ -97,16 +111,30 @@ public class SmokeSandboxServers<SELF extends SmokeSandboxServers<SELF>> extends
         String body = readResource("restrecord/tpp-ui-input/params/new-user-new-account-registration.json")
                               .replace(IBAN_PLACEHOLDER, iban);
 
+        return create_account_for_user_in_sandbox_tpp_management(auth, userId, body);
+    }
+
+    private SELF create_account_with_currency_for_user_in_sandbox_tpp_management(String auth, String userId, String currency) {
+        this.iban = Iban.random(CountryCode.DE).toString();
+        this.currency = currency;
+        String body = readResource("restrecord/tpp-ui-input/params/new-user-new-account-with-custom-currency-registration.json")
+                .replace(IBAN_PLACEHOLDER, iban)
+                .replace(CURRENCY_PLACEHOLDER, currency);
+
+       return create_account_for_user_in_sandbox_tpp_management(auth, userId, body);
+    }
+
+    private SELF create_account_for_user_in_sandbox_tpp_management(String auth, String userId, String accountBody) {
         RestAssured
                 .given()
-                    .contentType(MediaType.APPLICATION_JSON_VALUE)
-                    .header(TPP_MANAGEMENT_AUTH_HEADER, auth)
-                    .queryParam(TPP_MANAGEMENT_USER_ID_QUERY, userId)
-                    .body(body)
+                .contentType(MediaType.APPLICATION_JSON_VALUE)
+                .header(TPP_MANAGEMENT_AUTH_HEADER, auth)
+                .queryParam(TPP_MANAGEMENT_USER_ID_QUERY, userId)
+                .body(accountBody)
                 .when()
-                    .post(config.getSandboxTppManagementServerUrl() + TPP_MANAGEMENT_CREATE_ACCOUNT_ENDPOINT)
+                .post(config.getSandboxTppManagementServerUrl() + TPP_MANAGEMENT_CREATE_ACCOUNT_ENDPOINT)
                 .then()
-                    .statusCode(HttpStatus.OK.value());
+                .statusCode(HttpStatus.OK.value());
 
         return self();
     }
@@ -130,17 +158,26 @@ public class SmokeSandboxServers<SELF extends SmokeSandboxServers<SELF>> extends
 
     private SELF deposit_to_sandbox_tpp_management_user_account(String auth, String accountId) {
         String body = readResource("restrecord/tpp-ui-input/params/new-user-deposit-account.json");
+        return deposit_to_sandbox_tpp_management_user_account(auth, accountId, body);
+    }
 
+    private SELF deposit_with_currency_to_sandbox_tpp_management_user_account(String auth, String accountId) {
+        String body = readResource("restrecord/tpp-ui-input/params/new-user-deposit-account-custom-currency.json").replace(CURRENCY_PLACEHOLDER, currency);
+        return deposit_to_sandbox_tpp_management_user_account(auth, accountId, body);
+    }
+
+    private SELF deposit_to_sandbox_tpp_management_user_account(String auth, String accountId, String body) {
         RestAssured
                 .given()
-                    .contentType(MediaType.APPLICATION_JSON_VALUE)
-                    .header(TPP_MANAGEMENT_AUTH_HEADER, auth)
-                    .body(body)
+                .contentType(MediaType.APPLICATION_JSON_VALUE)
+                .header(TPP_MANAGEMENT_AUTH_HEADER, auth)
+                .body(body)
                 .when()
-                    .post(config.getSandboxTppManagementServerUrl() + TPP_MANAGEMENT_DEPOSIT_CASH_ENDPOINT, accountId)
+                .post(config.getSandboxTppManagementServerUrl() + TPP_MANAGEMENT_DEPOSIT_CASH_ENDPOINT, accountId)
                 .then()
-                    .statusCode(HttpStatus.ACCEPTED.value());
+                .statusCode(HttpStatus.ACCEPTED.value());
 
         return self();
+
     }
 }
