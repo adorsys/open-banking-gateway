@@ -178,6 +178,5 @@ public class SmokeSandboxServers<SELF extends SmokeSandboxServers<SELF>> extends
                 .statusCode(HttpStatus.ACCEPTED.value());
 
         return self();
-
     }
 }
