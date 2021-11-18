@@ -33,7 +33,8 @@ describe('AccountsReferenceComponent', () => {
 
   it('should call removeAccount', () => {
     const account: InternalAccountReference = {
-      id: '12345',
+      ibanId: '12345',
+      currencyId: '12345',
       iban: 'DE12344313232222',
       currency: 'EUR'
     };
