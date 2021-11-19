@@ -77,6 +77,9 @@ public class AccountInformationResult<SELF extends AccountInformationResult<SELF
     protected String iban;
 
     @ExpectedScenarioState
+    protected String currency;
+
+    @ExpectedScenarioState
     protected String accountResourceId;
 
     @Autowired
@@ -193,6 +196,13 @@ public class AccountInformationResult<SELF extends AccountInformationResult<SELF
     public SELF open_banking_can_read_user_account_data_using_consent_bound_to_service_session(
             String user, boolean validateResourceId
     ) {
+        return open_banking_can_read_user_account_data_using_consent_bound_to_service_session(user, validateResourceId, "EUR");
+    }
+
+    @SneakyThrows
+    public SELF open_banking_can_read_user_account_data_using_consent_bound_to_service_session(
+            String user, boolean validateResourceId, String currency
+    ) {
         ExtractableResponse<Response> response = withAccountsHeaders(user)
                      .header(SERVICE_SESSION_ID, serviceSessionId)
                 .when()
@@ -201,7 +211,7 @@ public class AccountInformationResult<SELF extends AccountInformationResult<SELF
                      .statusCode(HttpStatus.OK.value())
                      .body("accounts[0].iban", equalTo(iban))
                      .body("accounts[0].resourceId", validateResourceId ? equalTo(accountResourceId) : instanceOf(String.class))
-                     .body("accounts[0].currency", equalTo("EUR"))
+                     .body("accounts[0].currency", equalTo(currency))
                      .body("accounts[0].name", equalTo(user))
                      .body("accounts", hasSize(1))
                 .extract();

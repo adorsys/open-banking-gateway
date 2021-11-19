@@ -104,14 +104,22 @@ public class WebDriverBasedAccountInformation<SELF extends WebDriverBasedAccount
 
     public SELF user_provided_to_consent_ui_account_iban_for_dedicated_accounts_consent(WebDriver driver) {
         waitForPageLoadAndUrlEndsWithPath(driver, "entry-consent-accounts/dedicated-account-access");
-        sendText(driver, By.cssSelector("[id^=account-reference]"), iban);
+        sendText(driver, By.cssSelector("[id$=iban]"), iban);
+        clickOnButton(driver, By.id(SUBMIT_ID));
+        return self();
+    }
+
+    public SELF user_provided_to_consent_ui_account_iban_with_currency_for_dedicated_accounts_consent(WebDriver driver) {
+        waitForPageLoadAndUrlEndsWithPath(driver, "entry-consent-accounts/dedicated-account-access");
+        sendText(driver, By.cssSelector("[id$=iban]"), iban);
+        sendText(driver, By.cssSelector("[id$=currency]"), currency);
         clickOnButton(driver, By.id(SUBMIT_ID));
         return self();
     }
 
     public SELF user_provided_to_consent_ui_account_iban_for_dedicated_transactions_consent(WebDriver driver) {
         waitForPageLoadAndUrlEndsWithPath(driver, "entry-consent-transactions/dedicated-account-access");
-        sendText(driver, By.cssSelector("[id^=account-reference]"), iban);
+        sendText(driver, By.cssSelector("[id$=iban]"), iban);
         clickOnButton(driver, By.id(SUBMIT_ID));
         return self();
     }
