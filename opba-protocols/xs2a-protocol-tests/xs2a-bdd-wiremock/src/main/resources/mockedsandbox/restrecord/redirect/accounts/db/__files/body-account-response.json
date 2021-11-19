@@ -1,0 +1,49 @@
+{
+  "accounts" : [ {
+    "resourceId" : "640C6CEAA12923AABCD11EC1AFC40EF5",
+    "iban" : "DE80760700240271232400",
+    "currency" : "EUR",
+    "name" : "anton.brueckner",
+    "product" : "CUENTA A LA VISTA DB",
+    "balances" : [ {
+      "balanceAmount" : {
+        "currency" : "EUR",
+        "amount" : "500.00"
+      },
+      "balanceType" : "closingBooked",
+      "referenceDate" : "2017-10-25"
+    }, {
+      "balanceAmount" : {
+        "currency" : "EUR",
+        "amount" : "900.00"
+      },
+      "balanceType" : "expected",
+      "lastChangeDateTime" : "2017-10-25T15:30:35.035Z"
+    }, {
+      "balanceAmount" : {
+        "currency" : "USD",
+        "amount" : "350.00"
+      },
+      "balanceType" : "closingBooked",
+      "referenceDate" : "2017-10-25"
+    }, {
+      "balanceAmount" : {
+        "currency" : "USD",
+        "amount" : "350.00"
+      },
+      "balanceType" : "expected",
+      "lastChangeDateTime" : "2017-10-24T14:30:21Z"
+    } ],
+    "_links" : {
+      "balances" : {
+        "href" : "https://simulator-xs2a.db.com/ais/DE/SB-DB/v1/accounts/640C6CEAA12923AABCD11EC1AFC40EF5/balances"
+      },
+      "transactions" : {
+        "href" : "https://simulator-xs2a.db.com/ais/DE/SB-DB/v1/accounts/640C6CEAA12923AABCD11EC1AFC40EF5/transactions"
+      },
+      "account" : {
+        "href" : "https://simulator-xs2a.db.com/ais/DE/SB-DB/v1/accounts/640C6CEAA12923AABCD11EC1AFC40EF5"
+      }
+    }
+  } ]
+}
