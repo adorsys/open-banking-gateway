@@ -21,10 +21,10 @@ public class TppBankingPaymentConfirmationController implements PaymentConfirmat
     @Override
     public ResponseEntity<PsuPaymentSessionResponse> confirmPayment(String authId,
                                                                     UUID xRequestID,
-                                                                    String serviceSessionPassword,
                                                                     String xTimestampUTC,
                                                                     String xRequestSignature,
                                                                     String fintechID,
+                                                                    String serviceSessionPassword,
                                                                     String fintechDataPassword) {
         UUID authorizationSessionId = UUID.fromString(authId);
 
