@@ -34,7 +34,6 @@ public class TppBankingApiPisController implements TppBankingApiSinglePaymentPis
 
     @Override
     public CompletableFuture initiatePayment(PaymentInitiation body,
-                                             String serviceSessionPassword,
                                              String fintechUserID,
                                              String fintechRedirectURLOK,
                                              String fintechRedirectURLNOK,
@@ -43,6 +42,8 @@ public class TppBankingApiPisController implements TppBankingApiSinglePaymentPis
                                              String xTimestampUTC,
                                              String xRequestSignature,
                                              String fintechID,
+                                             String serviceSessionPassword,
+                                             String fintechDataPassword,
                                              UUID bankProfileID,
                                              Boolean xPsuAuthenticationRequired,
                                              Boolean computePsuIpAddress,
@@ -54,7 +55,7 @@ public class TppBankingApiPisController implements TppBankingApiSinglePaymentPis
                                                    // Get rid of CGILIB here by copying:
                                                    .uaContext(userAgentContext.toBuilder().build())
                                                    .authorization(fintechID)
-                                                   .sessionPassword(serviceSessionPassword)
+                                                   .sessionPassword(PasswordExtractingUtil.getDataProtectionPassword(serviceSessionPassword, fintechDataPassword))
                                                    .fintechUserId(fintechUserID)
                                                    .fintechRedirectUrlOk(fintechRedirectURLOK)
                                                    .fintechRedirectUrlNok(fintechRedirectURLNOK)

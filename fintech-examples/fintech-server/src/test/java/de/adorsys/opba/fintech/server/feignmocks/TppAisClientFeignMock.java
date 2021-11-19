@@ -18,7 +18,6 @@ public class TppAisClientFeignMock implements TppAisClient {
 
     @Override
     public ResponseEntity<AccountList> getAccounts(
-            String serviceSessionPassword,
             String fintechUserID,
             String fintechRedirectURLOK,
             String fintechRedirectURLNOK,
@@ -26,6 +25,8 @@ public class TppAisClientFeignMock implements TppAisClient {
             String xTimestampUTC,
             String xRequestSignature,
             String fintechId,
+            String serviceSessionPassword,
+            String fintechDataPassword,
             UUID bankProfileID,
             Boolean xPsuAuthenticationRequired,
             UUID serviceSessionID,
@@ -42,7 +43,6 @@ public class TppAisClientFeignMock implements TppAisClient {
     @Override
     public ResponseEntity<TransactionsResponse> getTransactions(
             String accountId,
-            String serviceSessionPassword,
             String fintechUserID,
             String fintechRedirectURLOK,
             String fintechRedirectURLNOK,
@@ -50,6 +50,8 @@ public class TppAisClientFeignMock implements TppAisClient {
             String xTimestampUTC,
             String xRequestSignature,
             String fintechId,
+            String serviceSessionPassword,
+            String fintechDataPassword,
             UUID bankProfileID,
             Boolean xPsuAuthenticationRequired,
             UUID serviceSessionID,
@@ -72,7 +74,6 @@ public class TppAisClientFeignMock implements TppAisClient {
 
     @Override
     public ResponseEntity<TransactionsResponse> getTransactionsWithoutAccountId(
-            String serviceSessionPassword,
             String fintechUserID,
             String fintechRedirectURLOK,
             String fintechRedirectURLNOK,
@@ -80,6 +81,8 @@ public class TppAisClientFeignMock implements TppAisClient {
             String xTimestampUTC,
             String xRequestSignature,
             String fintechID,
+            String serviceSessionPassword,
+            String fintechDataPassword,
             UUID bankProfileID,
             Boolean xPsuAuthenticationRequired,
             UUID serviceSessionID,
@@ -99,19 +102,20 @@ public class TppAisClientFeignMock implements TppAisClient {
     }
 
     @Override
-    public ResponseEntity<Void> deleteConsent(UUID serviceSessionID, String serviceSessionPassword, UUID xRequestID,
-                                              String xTimestampUTC, String xRequestSignature, String fintechID, Boolean deleteAll) {
+    public ResponseEntity<Void> deleteConsent(UUID serviceSessionID, UUID xRequestID,
+                                              String xTimestampUTC, String xRequestSignature, String fintechID, String serviceSessionPassword, String fintechDataPassword, Boolean deleteAll) {
         return null;
     }
 
     @Override
-    public ResponseEntity<SessionStatusDetails> getAisSessionStatus(UUID serviceSessionID, String serviceSessionPassword,
-                                                                    UUID xRequestID, String xTimestampUTC, String xRequestSignature, String fintechID) {
+    public ResponseEntity<SessionStatusDetails> getAisSessionStatus(UUID serviceSessionID, UUID xRequestID, String xTimestampUTC, String xRequestSignature, String fintechID,
+                                                                    String serviceSessionPassword, String fintechDataPassword) {
         return null;
     }
 
     @Override
-    public ResponseEntity<UpdateAisExternalSessionStatus> updateExternalAisSession(UUID serviceSessionID, String serviceSessionPassword, UUID xRequestID, String xTimestampUTC, String xRequestSignature, String fintechID) {
+    public ResponseEntity<UpdateAisExternalSessionStatus> updateExternalAisSession(UUID serviceSessionID, UUID xRequestID, String xTimestampUTC, String xRequestSignature, String fintechID,
+                                                                                   String serviceSessionPassword, String fintechDataPassword) {
         return null;
     }
 

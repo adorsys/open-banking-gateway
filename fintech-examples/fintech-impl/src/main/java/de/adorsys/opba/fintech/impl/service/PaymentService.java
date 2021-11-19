@@ -70,7 +70,6 @@ public class PaymentService {
         var paymentProduct = singlePaymentInitiationRequest.isInstantPayment() ? INSTANT_SEPA_PAYMENT_PRODUCT : SEPA_PAYMENT_PRODUCT;
         ResponseEntity<PaymentInitiationResponse> responseOfTpp = tppPisSinglePaymentClient.initiatePayment(
                 payment,
-                tppProperties.getServiceSessionPassword(),
                 sessionEntity.getUserEntity().getFintechUserId(),
                 RedirectUrlsEntity.buildPaymentOkUrl(uiConfig, fintechRedirectCode),
                 RedirectUrlsEntity.buildPaymentNokUrl(uiConfig, fintechRedirectCode),
@@ -79,6 +78,8 @@ public class PaymentService {
                 COMPUTE_X_TIMESTAMP_UTC,
                 COMPUTE_X_REQUEST_SIGNATURE,
                 COMPUTE_FINTECH_ID,
+                null,
+                tppProperties.getServiceSessionPassword(),
                 UUID.fromString(bankProfileId),
                 xPisPsuAuthenticationRequired,
                 HEADER_COMPUTE_PSU_IP_ADDRESS,
@@ -103,12 +104,14 @@ public class PaymentService {
         List<PaymentInitiationWithStatusResponse> result = new ArrayList<>();
 
         for (PaymentEntity payment : payments) {
-            PaymentInformationResponse body = tppPisPaymentStatusClient.getPaymentInformation(tppProperties.getServiceSessionPassword(),
+            PaymentInformationResponse body = tppPisPaymentStatusClient.getPaymentInformation(
                     UUID.fromString(restRequestContext.getRequestId()),
                     payment.getPaymentProduct(),
                     COMPUTE_X_TIMESTAMP_UTC,
                     COMPUTE_X_REQUEST_SIGNATURE,
                     COMPUTE_FINTECH_ID,
+                    null,
+                    tppProperties.getServiceSessionPassword(),
                     UUID.fromString(bankProfileID),
                     payment.getTppServiceSessionId()).getBody();
             PaymentInitiationWithStatusResponse paymentInitiationWithStatusResponse = Mappers
