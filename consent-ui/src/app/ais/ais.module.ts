@@ -24,6 +24,7 @@ import { ConsentInfoComponent } from './components/consent-info/consent-info.com
 import { ConsentSharingComponent } from './entry-page/initiation/consent-sharing/consent-sharing.component';
 import { SharedModule } from '../common/shared.module';
 import { WaitForDecoupled } from "./wait-for-decoupled/wait-for-decoupled";
+import { RestoreSessionPageComponent } from './restore-session-page/restore-session-page.component';
 
 @NgModule({
   declarations: [
@@ -47,7 +48,8 @@ import { WaitForDecoupled } from "./wait-for-decoupled/wait-for-decoupled";
     ToAspspRedirectionComponent,
     ConsentInfoComponent,
     ConsentSharingComponent,
-    WaitForDecoupled
+    WaitForDecoupled,
+    RestoreSessionPageComponent
   ],
   imports: [SharedModule, AisRoutingModule, AngularIbanModule]
 })

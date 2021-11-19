@@ -70,18 +70,6 @@ public class HbciProtocolConfiguration {
             public static class WebHooks {
 
                 /**
-                 * URL that represents page saying that consent creation was OK (comes before consent result page).
-                 */
-                @NotBlank
-                private String ok;
-
-                /**
-                 * URL that represents page saying that consent creation was not OK (comes before consent result page).
-                 */
-                @NotBlank
-                private String nok;
-
-                /**
                  * URL that represents consent acquisition result.
                  */
                 @NotBlank

@@ -55,7 +55,7 @@ public class WiremockAccountInformationRequest<SELF extends WiremockAccountInfor
                 .when()
                     .get(redirectOkUri)
                 .then()
-                    .statusCode(HttpStatus.SEE_OTHER.value())
+                    .statusCode(HttpStatus.ACCEPTED.value())
                     .extract();
 
         assertThat(LocationExtractorUtil.getLocation(response)).contains("ais").contains("consent-result");
@@ -71,7 +71,7 @@ public class WiremockAccountInformationRequest<SELF extends WiremockAccountInfor
                 .when()
                     .get(redirectOkUri + "?code=" + code)
                 .then()
-                    .statusCode(HttpStatus.SEE_OTHER.value())
+                    .statusCode(HttpStatus.ACCEPTED.value())
                 .extract();
 
         updateRedirectCode(response);
@@ -86,7 +86,7 @@ public class WiremockAccountInformationRequest<SELF extends WiremockAccountInfor
                     .when()
                         .get(redirectOkUri + "?code=" + code)
                     .then()
-                        .statusCode(HttpStatus.SEE_OTHER.value())
+                        .statusCode(HttpStatus.ACCEPTED.value())
                         .extract();
 
         updateRedirectCode(response);
@@ -105,7 +105,7 @@ public class WiremockAccountInformationRequest<SELF extends WiremockAccountInfor
                     .when()
                         .get(redirectNotOkUri)
                     .then()
-                        .statusCode(HttpStatus.SEE_OTHER.value())
+                        .statusCode(HttpStatus.ACCEPTED.value())
                         .extract();
 
         assertThat(LocationExtractorUtil.getLocation(response)).contains("redirect-after-consent-denied");

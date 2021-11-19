@@ -15,6 +15,7 @@ import { TransactionsConsentReviewComponent } from './entry-page/initiation/tran
 import { ToAspspRedirectionComponent } from './to-aspsp-page/to-aspsp-redirection.component';
 import { ConsentSharingComponent } from './entry-page/initiation/consent-sharing/consent-sharing.component';
 import { WaitForDecoupled } from "./wait-for-decoupled/wait-for-decoupled";
+import { RestoreSessionPageComponent } from "./restore-session-page/restore-session-page.component";
 
 const routes: Routes = [
   {
@@ -42,6 +43,7 @@ const routes: Routes = [
       { path: ToAspspRedirectionComponent.ROUTE, component: ToAspspRedirectionComponent },
       { path: WaitForDecoupled.ROUTE, component: WaitForDecoupled },
       { path: ResultPageComponent.ROUTE, component: ResultPageComponent },
+      { path: RestoreSessionPageComponent.ROUTE, component: RestoreSessionPageComponent },
       {
         path: 'authenticate',
         component: EnterPinPageComponent

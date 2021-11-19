@@ -40,7 +40,7 @@ public class WiremockPaymentRequest<SELF extends WiremockPaymentRequest<SELF>> e
                         .when()
                             .get(redirectOkUri)
                         .then()
-                             .statusCode(HttpStatus.SEE_OTHER.value())
+                             .statusCode(HttpStatus.ACCEPTED.value())
                              .extract();
 
         assertThat(LocationExtractorUtil.getLocation(response)).contains("pis").contains("consent-result");
@@ -69,7 +69,7 @@ public class WiremockPaymentRequest<SELF extends WiremockPaymentRequest<SELF>> e
                 .when()
                     .get(redirectOkUri + "?code=" + code)
                 .then()
-                    .statusCode(HttpStatus.SEE_OTHER.value())
+                    .statusCode(HttpStatus.ACCEPTED.value())
                 .extract();
 
         updateRedirectCode(response);

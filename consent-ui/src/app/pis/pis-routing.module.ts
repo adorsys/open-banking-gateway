@@ -10,6 +10,7 @@ import { ResultPageComponent } from './result-page/result-page.component';
 import { EntryPagePaymentsComponent } from './entry-page-payments/entry-page-payments.component';
 import { PaymentsConsentReviewComponent } from './payments-consent-review/payments-consent-review.component';
 import { WaitForDecoupled } from './wait-for-decoupled/wait-for-decoupled';
+import { RestoreSessionPageComponent } from "./restore-session-page/restore-session-page.component";
 
 const routes: Routes = [
   {
@@ -22,6 +23,7 @@ const routes: Routes = [
       { path: ToAspspPageComponent.ROUTE, component: ToAspspPageComponent },
       { path: WaitForDecoupled.ROUTE, component: WaitForDecoupled },
       { path: ResultPageComponent.ROUTE, component: ResultPageComponent },
+      { path: RestoreSessionPageComponent.ROUTE, component: RestoreSessionPageComponent },
       {
         path: EntryPagePaymentsComponent.ROUTE,
         children: [
