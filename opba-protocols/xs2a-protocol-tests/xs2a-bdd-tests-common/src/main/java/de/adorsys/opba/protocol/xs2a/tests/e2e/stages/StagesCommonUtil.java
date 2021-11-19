@@ -68,7 +68,7 @@ public class StagesCommonUtil {
     public static final String COMPUTE_IP_ADDRESS = "false";
     public static final String IP_ADDRESS = "1.1.1.1";
     public static final String DKB_BANK_PROFILE_ID = "83c24dcf-2cfb-4c43-9812-013e32ab53b1";
-    public static final String CONSORS_BANK_BANK_PROFILE_ID = "a9f7a345-9921-4c5c-93d6-b2f5af31a4cd";
+    public static final String CONSORS_BANK_PROFILE_ID = "a9f7a345-9921-4c5c-93d6-b2f5af31a4cd";
     public static final String POSTBANK_BANK_PROFILE_ID = "e431a602-15ab-48b8-8c9b-ce381d2034c4";
     public static final String SPARKASSE_BANK_PROFILE_ID = "f31a87dd-5d3e-41b8-924a-0d85b10288bc";
     public static final String COMMERZ_BANK_PROFILE_ID = "3052c28c-705d-4951-b37a-f91f7888d9dd";
@@ -76,6 +76,7 @@ public class StagesCommonUtil {
     public static final String TARGO_BANK_PROFILE_ID = "b915ceba-8ec2-4492-97ef-912c8c9244d8";
     public static final String VOLKSBANK_BANK_PROFILE_ID = "c24afe1b-56a4-418d-ba39-28fc5ca54bb4";
     public static final String ING_BANK_PROFILE_ID = "e91f4df5-5ec4-497a-9243-996f0ffcb61b";
+    public static final String DEUTSCHE_BANK_PROFILE_ID = "b7245bab-db31-49ca-8c29-a29c7d0450c4";
 
     public static final String ADMIN_API = "/admin/v1/";
     public static final String BASIC_AUTH = "Basic QWxhZGRpbjpPcGVuU2VzYW1l";
