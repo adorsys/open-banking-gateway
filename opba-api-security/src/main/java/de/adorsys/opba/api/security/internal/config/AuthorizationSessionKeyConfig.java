@@ -29,7 +29,7 @@ public class AuthorizationSessionKeyConfig {
     @Bean
     @Scope(scopeName = WebApplicationContext.SCOPE_REQUEST, proxyMode = ScopedProxyMode.TARGET_CLASS)
     public AuthorizationSessionKeyFromHttpRequest getAuthorizationSessionKeyFromHttpRequest(HttpServletRequest httpServletRequest) {
-        log.debug("Incomming request {}", httpServletRequest.getRequestURI());
+        log.debug("Incoming request {}", httpServletRequest.getRequestURI());
         String authCookieValue = Arrays.stream(httpServletRequest.getCookies())
                 .filter(it -> AUTHORIZATION_SESSION_KEY.equals(it.getName()))
                 .findFirst()
