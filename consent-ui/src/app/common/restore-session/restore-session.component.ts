@@ -14,6 +14,7 @@ export class RestoreSessionComponent implements OnInit {
   @Input() authId: string;
   @Input() aspspRedirectCode: string;
   @Input() result: string;
+  @Input() oauthCode: string;
 
   message = '';
 
@@ -22,7 +23,7 @@ export class RestoreSessionComponent implements OnInit {
   ngOnInit(): void {
     let sessionRestore: Observable<HttpResponse<ConsentAuth>>;
     if (this.result === 'ok') {
-      sessionRestore = this.fromAspsp.fromAspspOkUsingGET(this.authId, this.aspspRedirectCode, '', "response")
+      sessionRestore = this.fromAspsp.fromAspspOkUsingGET(this.authId, this.aspspRedirectCode, this.oauthCode, "response")
     } else if (this.result === 'nok') {
       sessionRestore = this.fromAspsp.fromAspspNokUsingGET(this.authId, this.aspspRedirectCode, "response")
     } else {
