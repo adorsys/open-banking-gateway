@@ -36,7 +36,6 @@ public class ConsentService {
         UUID serviceSessionId = UUID.randomUUID();
 
         ResponseEntity<TransactionsResponse> apiResponse = aisApi.getTransactionsWithoutAccountId(
-                bankingConfig.getDataProtectionPassword(),
                 bankingConfig.getUserId(),
                 apiConfig.getRedirectOkUri(redirectCode.toString()),
                 apiConfig.getRedirectNokUri(),
@@ -44,6 +43,8 @@ public class ConsentService {
                 null,
                 null,
                 null,
+                null,
+                bankingConfig.getDataProtectionPassword(),
                 bankProfileId,
                 null,
                 serviceSessionId,
@@ -82,10 +83,11 @@ public class ConsentService {
         ResponseEntity<PsuConsentSessionResponse> response = tppConsentClient.confirmConsent(
                 state.getAuthorizationSessionId(),
                 UUID.randomUUID(),
-                bankingConfig.getDataProtectionPassword(),
                 null,
                 null,
-                null
+                null,
+                null,
+                bankingConfig.getDataProtectionPassword()
         );
 
         if (HttpStatus.OK != response.getStatusCode()) {
