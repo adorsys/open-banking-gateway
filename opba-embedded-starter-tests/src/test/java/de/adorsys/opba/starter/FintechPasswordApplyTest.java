@@ -22,11 +22,11 @@ import java.time.Instant;
 import java.util.UUID;
 
 import static de.adorsys.opba.protocol.xs2a.tests.HeaderNames.BANK_PROFILE_ID;
+import static de.adorsys.opba.protocol.xs2a.tests.HeaderNames.FINTECH_DATA_PASSWORD;
 import static de.adorsys.opba.protocol.xs2a.tests.HeaderNames.FINTECH_ID;
 import static de.adorsys.opba.protocol.xs2a.tests.HeaderNames.FINTECH_REDIRECT_URL_NOK;
 import static de.adorsys.opba.protocol.xs2a.tests.HeaderNames.FINTECH_REDIRECT_URL_OK;
 import static de.adorsys.opba.protocol.xs2a.tests.HeaderNames.FINTECH_USER_ID;
-import static de.adorsys.opba.protocol.xs2a.tests.HeaderNames.FINTECH_DATA_PASSWORD;
 import static de.adorsys.opba.protocol.xs2a.tests.HeaderNames.X_REQUEST_ID;
 import static de.adorsys.opba.protocol.xs2a.tests.HeaderNames.X_TIMESTAMP_UTC;
 import static de.adorsys.opba.protocol.xs2a.tests.e2e.stages.StagesCommonUtil.AIS_ACCOUNTS_ENDPOINT;
@@ -89,7 +89,7 @@ class FintechPasswordApplyTest {
     }
 
     private void xs2aAccountListUsingServiceSessionPassword(HttpStatus expected, String fintechPassword) {
-        headersWithoutIpAddress(ANTON_BRUECKNER, SANDBOX_BANK_PROFILE_ID, UUID.randomUUID(), Instant.now(), fintechPassword)
+        headersWithoutIpAddress(ANTON_BRUECKNER, SANDBOX_BANK_PROFILE_ID, UUID.randomUUID(), Instant.now())
                     .header(SERVICE_SESSION_ID, UUID.randomUUID().toString())
                     .header("Service-Session-Password", fintechPassword)
                 .when()
@@ -99,7 +99,7 @@ class FintechPasswordApplyTest {
     }
 
     private void xs2aAccountList(HttpStatus expected, String fintechPassword) {
-        headersWithoutIpAddress(ANTON_BRUECKNER, SANDBOX_BANK_PROFILE_ID, UUID.randomUUID(), Instant.now(), fintechPassword)
+        headersWithoutIpAddress(ANTON_BRUECKNER, SANDBOX_BANK_PROFILE_ID, UUID.randomUUID(), Instant.now())
                     .header(SERVICE_SESSION_ID, UUID.randomUUID().toString())
                     .header(FINTECH_DATA_PASSWORD, fintechPassword)
                 .when()
@@ -108,7 +108,7 @@ class FintechPasswordApplyTest {
                     .statusCode(expected.value());
     }
 
-    private static RequestSpecification headersWithoutIpAddress(String fintechUserId, String bankProfileId, UUID xRequestId, Instant xTimestampUtc, String fintechPassword) {
+    private static RequestSpecification headersWithoutIpAddress(String fintechUserId, String bankProfileId, UUID xRequestId, Instant xTimestampUtc) {
         return RestAssured
                 .given()
                     .header(BANK_PROFILE_ID, bankProfileId)
