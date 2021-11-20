@@ -9,5 +9,5 @@ import org.springframework.context.annotation.Configuration;
 @ConfigurationProperties(prefix = "tpp")
 public class TppProperties {
     private String fintechID;
-    private String serviceSessionPassword;
+    private String fintechDataProtectionPassword;
 }

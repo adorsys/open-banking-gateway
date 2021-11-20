@@ -126,8 +126,8 @@
       </bpmdi:BPMNEdge>
       <bpmdi:BPMNEdge xmlns:bpmdi="http://www.omg.org/spec/BPMN/20100524/DI" id="sid-09ef6de0-2adb-4e47-a0eb-b993cdc9f2ec" bpmnElement="sid-7b377a8a-138c-4325-87c3-fd113dc3693d">
         <omgdi:waypoint x="778.02246" y="438.34912"/>
-        <omgdi:waypoint x="778.02246" y="329.16608"/>
-        <omgdi:waypoint x="696.0001" y="329.16608"/>
+        <omgdi:waypoint x="778.02246" y="329.16605"/>
+        <omgdi:waypoint x="696.0" y="329.16605"/>
       </bpmdi:BPMNEdge>
     </bpmndi:BPMNPlane>
   </bpmndi:BPMNDiagram>

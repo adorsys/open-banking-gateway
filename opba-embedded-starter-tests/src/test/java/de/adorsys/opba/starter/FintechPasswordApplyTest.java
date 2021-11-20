@@ -26,7 +26,7 @@ import static de.adorsys.opba.protocol.xs2a.tests.HeaderNames.FINTECH_ID;
 import static de.adorsys.opba.protocol.xs2a.tests.HeaderNames.FINTECH_REDIRECT_URL_NOK;
 import static de.adorsys.opba.protocol.xs2a.tests.HeaderNames.FINTECH_REDIRECT_URL_OK;
 import static de.adorsys.opba.protocol.xs2a.tests.HeaderNames.FINTECH_USER_ID;
-import static de.adorsys.opba.protocol.xs2a.tests.HeaderNames.SERVICE_SESSION_PASSWORD;
+import static de.adorsys.opba.protocol.xs2a.tests.HeaderNames.FINTECH_DATA_PASSWORD;
 import static de.adorsys.opba.protocol.xs2a.tests.HeaderNames.X_REQUEST_ID;
 import static de.adorsys.opba.protocol.xs2a.tests.HeaderNames.X_TIMESTAMP_UTC;
 import static de.adorsys.opba.protocol.xs2a.tests.e2e.stages.StagesCommonUtil.AIS_ACCOUNTS_ENDPOINT;
@@ -81,7 +81,7 @@ class FintechPasswordApplyTest {
     private void xs2aAccountList(HttpStatus expected, String fintechPassword) {
         headersWithoutIpAddress(ANTON_BRUECKNER, SANDBOX_BANK_PROFILE_ID, UUID.randomUUID(), Instant.now(), fintechPassword)
                     .header(SERVICE_SESSION_ID, UUID.randomUUID().toString())
-                    .header(SERVICE_SESSION_PASSWORD, fintechPassword)
+                    .header(FINTECH_DATA_PASSWORD, fintechPassword)
                 .when()
                     .get(AIS_ACCOUNTS_ENDPOINT)
                 .then()
@@ -94,7 +94,7 @@ class FintechPasswordApplyTest {
                     .header(BANK_PROFILE_ID, bankProfileId)
                     .header(FINTECH_REDIRECT_URL_OK, FINTECH_REDIR_OK)
                     .header(FINTECH_REDIRECT_URL_NOK, FINTECH_REDIR_NOK)
-                    .header(SERVICE_SESSION_PASSWORD, fintechPassword)
+                    .header(FINTECH_DATA_PASSWORD, fintechPassword)
                     .header(FINTECH_USER_ID, fintechUserId)
                     .header(FINTECH_ID, DEFAULT_FINTECH_ID)
                     .header(X_REQUEST_ID, xRequestId.toString())

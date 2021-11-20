@@ -26,7 +26,7 @@ import java.util.Collections;
 import java.util.UUID;
 
 import static de.adorsys.opba.api.security.external.domain.HttpHeaders.AUTHORIZATION_SESSION_KEY;
-import static de.adorsys.opba.protocol.xs2a.tests.HeaderNames.SERVICE_SESSION_PASSWORD;
+import static de.adorsys.opba.protocol.xs2a.tests.HeaderNames.FINTECH_DATA_PASSWORD;
 import static de.adorsys.opba.protocol.xs2a.tests.HeaderNames.X_REQUEST_ID;
 import static de.adorsys.opba.protocol.xs2a.tests.HeaderNames.X_XSRF_TOKEN;
 import static de.adorsys.opba.protocol.xs2a.tests.e2e.ResourceUtil.readResource;
@@ -530,7 +530,7 @@ public class AccountInformationResult<SELF extends AccountInformationResult<SELF
     public SELF fintech_calls_consent_activation_for_current_authorization_id(String serviceSessionId, HttpStatus status) {
         withSignatureHeaders(RestAssured
                 .given()
-                    .header(SERVICE_SESSION_PASSWORD, SESSION_PASSWORD)
+                    .header(FINTECH_DATA_PASSWORD, SESSION_PASSWORD)
                     .contentType(MediaType.APPLICATION_JSON_VALUE))
                 .when()
                     .post(CONFIRM_CONSENT_ENDPOINT, serviceSessionId)

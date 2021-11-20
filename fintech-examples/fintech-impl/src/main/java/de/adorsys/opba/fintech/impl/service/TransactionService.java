@@ -72,7 +72,7 @@ public class TransactionService {
             UUID.fromString(restRequestContext.getRequestId()),
             COMPUTE_X_TIMESTAMP_UTC,
             COMPUTE_X_REQUEST_SIGNATURE,
-            COMPUTE_FINTECH_ID, null, tppProperties.getServiceSessionPassword(),
+            COMPUTE_FINTECH_ID, null, tppProperties.getFintechDataProtectionPassword(),
             UUID.fromString(bankProfileID),
             psuAuthenticationRequired,
             optionalConsent.map(ConsentEntity::getTppServiceSessionId).orElse(null),

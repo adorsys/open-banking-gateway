@@ -79,7 +79,7 @@ public class PaymentService {
                 COMPUTE_X_REQUEST_SIGNATURE,
                 COMPUTE_FINTECH_ID,
                 null,
-                tppProperties.getServiceSessionPassword(),
+                tppProperties.getFintechDataProtectionPassword(),
                 UUID.fromString(bankProfileId),
                 xPisPsuAuthenticationRequired,
                 HEADER_COMPUTE_PSU_IP_ADDRESS,
@@ -111,7 +111,7 @@ public class PaymentService {
                     COMPUTE_X_REQUEST_SIGNATURE,
                     COMPUTE_FINTECH_ID,
                     null,
-                    tppProperties.getServiceSessionPassword(),
+                    tppProperties.getFintechDataProtectionPassword(),
                     UUID.fromString(bankProfileID),
                     payment.getTppServiceSessionId()).getBody();
             PaymentInitiationWithStatusResponse paymentInitiationWithStatusResponse = Mappers
