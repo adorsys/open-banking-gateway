@@ -20,7 +20,7 @@ public class AisErrorDecoder implements ErrorDecoder {
             if (first.isPresent()) {
                 return new ConsentException(response.status(), first.get());
             }
-            log.error("Error during error handling. Excpeted headerfield wih {}", X_ERROR_CODE);
+            log.error("Error during error handling. Expected header with {}", X_ERROR_CODE);
         }
         return defaultErrorDecoder.decode(methodKey, response);
     }
