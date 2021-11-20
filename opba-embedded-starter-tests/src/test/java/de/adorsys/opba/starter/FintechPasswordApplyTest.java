@@ -78,6 +78,26 @@ class FintechPasswordApplyTest {
         verify(xs2aListAccountsEntrypoint, times(2)).execute(any());
     }
 
+    @Test
+    @Deprecated // To be removed with Service-Session-Password header
+    void testFintechPasswordIsValidatedWithServiceSessionPassword() {
+        xs2aAccountListUsingServiceSessionPassword(HttpStatus.ACCEPTED, "qwerty");
+        xs2aAccountListUsingServiceSessionPassword(HttpStatus.ACCEPTED, "qwerty");
+        xs2aAccountListUsingServiceSessionPassword(HttpStatus.UNAUTHORIZED, "not-qwerty");
+
+        verify(xs2aListAccountsEntrypoint, times(2)).execute(any());
+    }
+
+    private void xs2aAccountListUsingServiceSessionPassword(HttpStatus expected, String fintechPassword) {
+        headersWithoutIpAddress(ANTON_BRUECKNER, SANDBOX_BANK_PROFILE_ID, UUID.randomUUID(), Instant.now(), fintechPassword)
+                    .header(SERVICE_SESSION_ID, UUID.randomUUID().toString())
+                    .header("Service-Session-Password", fintechPassword)
+                .when()
+                    .get(AIS_ACCOUNTS_ENDPOINT)
+                .then()
+                    .statusCode(expected.value());
+    }
+
     private void xs2aAccountList(HttpStatus expected, String fintechPassword) {
         headersWithoutIpAddress(ANTON_BRUECKNER, SANDBOX_BANK_PROFILE_ID, UUID.randomUUID(), Instant.now(), fintechPassword)
                     .header(SERVICE_SESSION_ID, UUID.randomUUID().toString())
@@ -94,7 +114,6 @@ class FintechPasswordApplyTest {
                     .header(BANK_PROFILE_ID, bankProfileId)
                     .header(FINTECH_REDIRECT_URL_OK, FINTECH_REDIR_OK)
                     .header(FINTECH_REDIRECT_URL_NOK, FINTECH_REDIR_NOK)
-                    .header(FINTECH_DATA_PASSWORD, fintechPassword)
                     .header(FINTECH_USER_ID, fintechUserId)
                     .header(FINTECH_ID, DEFAULT_FINTECH_ID)
                     .header(X_REQUEST_ID, xRequestId.toString())
