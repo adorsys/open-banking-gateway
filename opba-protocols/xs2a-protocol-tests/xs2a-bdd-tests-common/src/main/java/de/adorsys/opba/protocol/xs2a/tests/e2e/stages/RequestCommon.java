@@ -29,12 +29,14 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.web.util.UriComponentsBuilder;
 
+import java.net.URI;
 import java.util.List;
 import java.util.UUID;
 
 import static de.adorsys.opba.api.security.external.domain.HttpHeaders.AUTHORIZATION_SESSION_KEY;
 import static de.adorsys.opba.protocol.xs2a.tests.HeaderNames.X_REQUEST_ID;
 import static de.adorsys.opba.protocol.xs2a.tests.HeaderNames.X_XSRF_TOKEN;
+import static de.adorsys.opba.protocol.xs2a.tests.e2e.LocationExtractorUtil.getLocation;
 import static de.adorsys.opba.protocol.xs2a.tests.e2e.ResourceUtil.readResource;
 import static de.adorsys.opba.protocol.xs2a.tests.e2e.stages.StagesCommonUtil.AUTHORIZE_CONSENT_ENDPOINT;
 import static de.adorsys.opba.protocol.xs2a.tests.e2e.stages.StagesCommonUtil.GET_CONSENT_AUTH_STATE;
@@ -194,6 +196,8 @@ public abstract class RequestCommon<SELF extends RequestCommon<SELF>> extends St
 
         updateServiceSessionId(response);
         updateRedirectCode(response);
+        assertThat(URI.create(getLocation(response))).hasParameter("redirectCode");
+        assertThat(URI.create(getLocation(response))).hasPath(String.format("/ais/%s/to-aspsp-redirection", serviceSessionId));
     }
 
     protected SELF user_max_musterman_polling_api_to_check_sca_status(HttpStatus httpStatus, String expectedConsentStatus, String sessionId) {

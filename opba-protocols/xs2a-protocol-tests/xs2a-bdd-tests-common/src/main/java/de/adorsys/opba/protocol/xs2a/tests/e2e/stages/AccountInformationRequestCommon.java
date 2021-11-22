@@ -4,7 +4,6 @@ import com.google.common.collect.ImmutableMap;
 import com.tngtech.jgiven.annotation.ExpectedScenarioState;
 import com.tngtech.jgiven.integration.spring.JGivenStage;
 import de.adorsys.opba.consentapi.model.generated.AuthViolation;
-import de.adorsys.opba.protocol.xs2a.tests.e2e.LocationExtractorUtil;
 import io.restassured.RestAssured;
 import io.restassured.response.ExtractableResponse;
 import io.restassured.response.Response;
@@ -13,12 +12,14 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.util.UriComponentsBuilder;
 
+import java.net.URI;
 import java.util.UUID;
 
 import static de.adorsys.opba.api.security.external.domain.HttpHeaders.AUTHORIZATION_SESSION_KEY;
 import static de.adorsys.opba.protocol.xs2a.tests.HeaderNames.X_PSU_AUTHENTICATION_REQUIRED;
 import static de.adorsys.opba.protocol.xs2a.tests.HeaderNames.X_REQUEST_ID;
 import static de.adorsys.opba.protocol.xs2a.tests.HeaderNames.X_XSRF_TOKEN;
+import static de.adorsys.opba.protocol.xs2a.tests.e2e.LocationExtractorUtil.getLocation;
 import static de.adorsys.opba.protocol.xs2a.tests.e2e.ResourceUtil.readResource;
 import static de.adorsys.opba.protocol.xs2a.tests.e2e.stages.AccountInformationResult.ONLINE;
 import static de.adorsys.opba.protocol.xs2a.tests.e2e.stages.PaymentStagesCommonUtil.PIS_ANONYMOUS_LOGIN_USER_ENDPOINT;
@@ -89,6 +90,8 @@ public class AccountInformationRequestCommon<SELF extends AccountInformationRequ
         updateServiceSessionId(response);
         updateRedirectCode(response);
         updateNextConsentAuthorizationUrl(response);
+        assertThat(URI.create(getLocation(response))).hasParameter("redirectCode");
+        assertThat(URI.create(getLocation(response))).hasPath(String.format("/auth/ais/%s/anonymous", serviceSessionId));
         return self();
     }
 
@@ -273,6 +276,8 @@ public class AccountInformationRequestCommon<SELF extends AccountInformationRequ
                 .extract();
 
         this.authSessionCookie = response.cookie(AUTHORIZATION_SESSION_KEY);
+        assertThat(URI.create(getLocation(response))).hasParameter("redirectCode");
+        assertThat(URI.create(getLocation(response))).hasPath(String.format("/ais/%s", serviceSessionId));
         return self();
     }
 
@@ -325,7 +330,7 @@ public class AccountInformationRequestCommon<SELF extends AccountInformationRequ
                 .statusCode(ACCEPTED.value())
             .extract();
 
-        assertThat(LocationExtractorUtil.getLocation(response)).isEqualTo(FINTECH_REDIR_NOK);
+        assertThat(getLocation(response)).isEqualTo(FINTECH_REDIR_NOK);
         return self();
     }
 
@@ -343,9 +348,12 @@ public class AccountInformationRequestCommon<SELF extends AccountInformationRequ
                 .statusCode(OK.value())
                 .extract();
 
-        this.redirectUriToGetUserParams = LocationExtractorUtil.getLocation(response);
+        this.redirectUriToGetUserParams = getLocation(response);
         updateServiceSessionId(response);
         updateRedirectCode(response);
+        // The URI should point to Sandbox
+        assertThat(URI.create(getLocation(response))).hasHost("localhost");
+        assertThat(URI.create(getLocation(response))).hasPort(4400);
         return self();
     }
 
@@ -388,10 +396,13 @@ public class AccountInformationRequestCommon<SELF extends AccountInformationRequ
     }
 
     public SELF user_max_musterman_provided_initial_parameters_to_list_accounts_all_accounts_consent() {
-        startInitialInternalConsentAuthorization(
+        var response = startInitialInternalConsentAuthorization(
                 AUTHORIZE_CONSENT_ENDPOINT,
                 readResource("restrecord/tpp-ui-input/params/max-musterman-account-all-accounts-consent.json")
         );
+
+        assertThat(URI.create(getLocation(response))).hasParameter("wrong", "false");
+        assertThat(URI.create(getLocation(response))).hasPath(String.format("/ais/%s/authenticate", serviceSessionId));
         return self();
     }
 
@@ -522,7 +533,7 @@ public class AccountInformationRequestCommon<SELF extends AccountInformationRequ
                 ACCEPTED
         );
 
-        assertThat(LocationExtractorUtil.getLocation(response)).contains("authenticate").contains("wrong=true");
+        assertThat(getLocation(response)).contains("authenticate").contains("wrong=true");
         return self();
     }
 
@@ -536,11 +547,13 @@ public class AccountInformationRequestCommon<SELF extends AccountInformationRequ
     }
 
     public SELF user_max_musterman_selected_sca_challenge_type_email2_to_embedded_authorization() {
-        provideParametersToBankingProtocolWithBody(
+        var response = provideParametersToBankingProtocolWithBody(
                 AUTHORIZE_CONSENT_ENDPOINT,
             selectedScaBody("EMAIL:max.musterman2@mail.de"),
             ACCEPTED
         );
+
+        assertThat(URI.create(getLocation(response))).hasPath(String.format("/ais/%s/sca-result", serviceSessionId));
         return self();
     }
 
@@ -608,14 +621,16 @@ public class AccountInformationRequestCommon<SELF extends AccountInformationRequ
     public SELF user_max_musterman_provided_correct_sca_challenge_result_after_wrong_to_embedded_authorization_and_sees_redirect_to_fintech_ok(String challengeType) {
         assertThat(this.redirectUriToGetUserParams).contains("sca-result").contains(challengeType).contains("wrong=true");
         ExtractableResponse<Response> response = max_musterman_provides_sca_challenge_result();
-        assertThat(LocationExtractorUtil.getLocation(response)).contains("ais").contains("consent-result");
+        assertThat(getLocation(response)).contains("ais").contains("consent-result");
         return self();
     }
 
     public SELF user_max_musterman_provided_sca_challenge_result_to_embedded_authorization_and_sees_redirect_to_fintech_ok(String challengeType) {
         assertThat(this.redirectUriToGetUserParams).contains("sca-result").contains(challengeType).doesNotContain("wrong=true");
         ExtractableResponse<Response> response = max_musterman_provides_sca_challenge_result();
-        assertThat(LocationExtractorUtil.getLocation(response)).contains("ais").contains("consent-result");
+        assertThat(getLocation(response)).contains("ais").contains("consent-result");
+        assertThat(URI.create(getLocation(response))).hasParameter("redirectCode");
+        assertThat(URI.create(getLocation(response))).hasPath(String.format("/ais/%s/consent-result", serviceSessionId));
         return self();
     }
 
@@ -626,7 +641,7 @@ public class AccountInformationRequestCommon<SELF extends AccountInformationRequ
     public void user_provided_sca_challenge_result_to_embedded_authorization_and_sees_redirect_to_fintech_ok() {
         assertThat(this.redirectUriToGetUserParams).contains("sca-result").contains("/EMAIL").doesNotContain("wrong=true");
         ExtractableResponse<Response> response = user_provides_sca_challenge_result();
-        assertThat(LocationExtractorUtil.getLocation(response)).contains("ais").contains("consent-result");
+        assertThat(getLocation(response)).contains("ais").contains("consent-result");
     }
 
     public SELF user_max_musterman_provided_wrong_sca_challenge_result_to_embedded_authorization_and_stays_on_sca_page() {
@@ -636,7 +651,7 @@ public class AccountInformationRequestCommon<SELF extends AccountInformationRequ
                 ACCEPTED
         );
 
-        assertThat(LocationExtractorUtil.getLocation(response)).contains("sca-result").contains("/EMAIL").contains("wrong=true");
+        assertThat(getLocation(response)).contains("sca-result").contains("/EMAIL").contains("wrong=true");
         return self();
     }
 
@@ -647,7 +662,7 @@ public class AccountInformationRequestCommon<SELF extends AccountInformationRequ
                 ACCEPTED
         );
 
-        assertThat(LocationExtractorUtil.getLocation(response)).contains("select-sca-method");
+        assertThat(getLocation(response)).contains("select-sca-method");
         return self();
     }
 
@@ -746,7 +761,6 @@ public class AccountInformationRequestCommon<SELF extends AccountInformationRequ
                 startInitialInternalConsentAuthorization(uriPath, resourceData, ACCEPTED);
         updateServiceSessionId(response);
         updateRedirectCode(response);
-
         return response;
     }
 
