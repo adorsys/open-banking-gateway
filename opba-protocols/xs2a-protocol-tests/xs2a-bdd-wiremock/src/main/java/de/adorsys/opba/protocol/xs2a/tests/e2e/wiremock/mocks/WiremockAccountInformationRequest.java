@@ -13,6 +13,7 @@ import org.awaitility.Durations;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 
+import java.net.URI;
 import java.util.UUID;
 
 import static com.github.tomakehurst.wiremock.client.WireMock.getRequestedFor;
@@ -21,6 +22,7 @@ import static com.github.tomakehurst.wiremock.client.WireMock.urlMatching;
 import static de.adorsys.opba.api.security.external.domain.HttpHeaders.AUTHORIZATION_SESSION_KEY;
 import static de.adorsys.opba.protocol.xs2a.tests.HeaderNames.X_REQUEST_ID;
 import static de.adorsys.opba.protocol.xs2a.tests.HeaderNames.X_XSRF_TOKEN;
+import static de.adorsys.opba.protocol.xs2a.tests.e2e.LocationExtractorUtil.getLocation;
 import static de.adorsys.opba.protocol.xs2a.tests.e2e.ResourceUtil.readResource;
 import static de.adorsys.opba.protocol.xs2a.tests.e2e.stages.StagesCommonUtil.AIS_ACCOUNTS_ENDPOINT;
 import static de.adorsys.opba.protocol.xs2a.tests.e2e.stages.StagesCommonUtil.ANTON_BRUECKNER;
@@ -59,7 +61,8 @@ public class WiremockAccountInformationRequest<SELF extends WiremockAccountInfor
                     .extract();
 
         assertThat(LocationExtractorUtil.getLocation(response)).contains("ais").contains("consent-result");
-
+        assertThat(URI.create(getLocation(response))).hasParameter("redirectCode");
+        assertThat(URI.create(getLocation(response))).hasPath(String.format("/ais/%s/consent-result", serviceSessionId));
         return self();
     }
 
