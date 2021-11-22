@@ -21,13 +21,14 @@ public class TppBankingConsentConfirmationController implements ConsentConfirmat
     @Override
     public ResponseEntity<PsuConsentSessionResponse> confirmConsent(String authId,
                                                                     UUID xRequestID,
-                                                                    String serviceSessionPassword,
                                                                     String xTimestampUTC,
                                                                     String xRequestSignature,
-                                                                    String fintechID) {
+                                                                    String fintechID,
+                                                                    String serviceSessionPassword,
+                                                                    String fintechDataPassword) {
         UUID authorizationSessionId = UUID.fromString(authId);
 
-        if (!consentConfirmationService.confirmConsent(authorizationSessionId, serviceSessionPassword)) {
+        if (!consentConfirmationService.confirmConsent(authorizationSessionId, PasswordExtractingUtil.getDataProtectionPassword(serviceSessionPassword, fintechDataPassword))) {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
 

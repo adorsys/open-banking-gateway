@@ -114,7 +114,6 @@ public class FireFlyTransactionExporter {
     ) {
         ResponseEntity<TransactionsResponse> transactions = aisApi.getTransactions(
                 accountIdToExport,
-                bankingConfig.getDataProtectionPassword(),
                 bankingConfig.getUserId(),
                 apiConfig.getRedirectOkUri(UUID.randomUUID().toString()),
                 apiConfig.getRedirectNokUri(),
@@ -122,6 +121,8 @@ public class FireFlyTransactionExporter {
                 null,
                 null,
                 null,
+                null,
+                bankingConfig.getDataProtectionPassword(),
                 bankProfileId,
                 null,
                 consentRepository.findFirstByBankProfileUuidOrderByModifiedAtDesc(bankProfileId).map(BankConsent::getConsentId).orElse(null),

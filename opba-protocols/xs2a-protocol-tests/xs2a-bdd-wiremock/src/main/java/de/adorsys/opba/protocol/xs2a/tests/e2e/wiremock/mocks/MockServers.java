@@ -52,6 +52,7 @@ public class MockServers<SELF extends MockServers<SELF>> extends CommonGivenStag
     public static final String COMMERZ_BANK_ID = "22aa42be-c41a-4616-a2e7-6682d96ae64f";
     public static final String TARGO_BANK_ID = "d1eab9f5-1746-4629-b961-bf6df48ff4d6";
     public static final String ING_BANK_ID = "4c47e75a-760f-4d99-8d88-490221b39f98";
+    public static final String DEUTSCHE_BANK_ID = "850edbfe-2e08-4c2b-ab74-a1c2152e1578";
 
 
     @Autowired
@@ -100,6 +101,14 @@ public class MockServers<SELF extends MockServers<SELF>> extends CommonGivenStag
         WireMockConfiguration config = WireMockConfiguration.options().dynamicPort()
                 .usingFilesUnderClasspath("mockedsandbox/restrecord/redirect/accounts/consorsbank/");
         startWireMock(config, CONSORS_BANK_ID, defaultBankProfileConfigurer);
+
+        return self();
+    }
+
+    public SELF redirect_mock_of_deutschebank_for_anton_brueckner_accounts_running() {
+        WireMockConfiguration config = WireMockConfiguration.options().dynamicPort()
+            .usingFilesUnderClasspath("mockedsandbox/restrecord/redirect/accounts/db/");
+        startWireMock(config, DEUTSCHE_BANK_ID, defaultBankProfileConfigurer);
 
         return self();
     }

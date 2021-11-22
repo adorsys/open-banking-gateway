@@ -31,31 +31,35 @@ public class TppBankingApiPisController implements TppBankingApiSinglePaymentPis
     private final SinglePaymentService payments;
     private final PaymentRestRequestBodyToSinglePaymentMapper pisSinglePaymentMapper;
     private final PaymentFacadeResponseBodyToRestBodyMapper paymentResponseMapper;
+
     @Override
-    public CompletableFuture initiatePayment(PaymentInitiation body, String serviceSessionPassword,
-                                               String fintechUserID,
-                                               String fintechRedirectURLOK,
-                                               String fintechRedirectURLNOK,
-                                               UUID xRequestID,
-                                               String paymentProduct,
-                                               String xTimestampUTC,
-                                               String xRequestSignature,
-                                               String fintechID,
-                                               UUID bankProfileID,
-                                               Boolean xPsuAuthenticationRequired,
-                                               Boolean computePSUIPAddress,
-                                               String psUIPAddress,
-                                               Boolean tppDecoupledPreferred,
-                                               String tppBrandLoggingInformation,
-                                               String tppNotificationURI,
-                                               String tppNotificationContentPreferred) {
+    public CompletableFuture initiatePayment(PaymentInitiation body,
+                                             String fintechUserID,
+                                             String fintechRedirectURLOK,
+                                             String fintechRedirectURLNOK,
+                                             UUID xRequestID,
+                                             String paymentProduct,
+                                             String xTimestampUTC,
+                                             String xRequestSignature,
+                                             String fintechID,
+                                             String serviceSessionPassword,
+                                             String fintechDataPassword,
+                                             UUID bankProfileID,
+                                             Boolean xPsuAuthenticationRequired,
+                                             Boolean computePsuIpAddress,
+                                             String psuIpAddress,
+                                             Boolean tppDecoupledPreferred,
+                                             String tppBrandLoggingInformation,
+                                             String tppNotificationURI,
+                                             String tppNotificationContentPreferred
+    ) {
         return payments.execute(
                 InitiateSinglePaymentRequest.builder()
                         .facadeServiceable(FacadeServiceableRequest.builder()
                                 // Get rid of CGILIB here by copying:
                                 .uaContext(userAgentContext.toBuilder().build())
                                 .authorization(fintechID)
-                                .sessionPassword(serviceSessionPassword)
+                                .sessionPassword(PasswordExtractingUtil.getDataProtectionPassword(serviceSessionPassword, fintechDataPassword))
                                 .fintechUserId(fintechUserID)
                                 .fintechRedirectUrlOk(fintechRedirectURLOK)
                                 .fintechRedirectUrlNok(fintechRedirectURLNOK)
@@ -71,7 +75,6 @@ public class TppBankingApiPisController implements TppBankingApiSinglePaymentPis
                         .singlePayment(pisSinglePaymentMapper.map(body, PaymentProductDetails.fromValue(paymentProduct)))
                         .build()
         ).thenApply((FacadeResult<SinglePaymentBody> result) -> mapper.translate(result, paymentResponseMapper));
-
     }
 
     @Mapper(componentModel = SPRING_KEYWORD, implementationPackage = API_MAPPERS_PACKAGE)

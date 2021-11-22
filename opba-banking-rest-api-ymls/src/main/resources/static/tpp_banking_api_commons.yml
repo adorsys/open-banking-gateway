@@ -65,9 +65,22 @@ components:
     ServiceSessionPassword:
       name: Service-Session-Password
       in: header
-      required: true
+      required: false
+      deprecated: true
       description: |
-        Password to encrypt users' context
+        Password to encrypt Fintech data. **Deprecated**, use `Fintech-Data-Password` instead - same semantics.
+        Note either `Service-Session-Password` or `Fintech-Data-Password` is required.
+      example: "qwerty"
+      schema:
+        type: string
+
+    FintechDataPassword:
+      name: Fintech-Data-Password
+      in: header
+      required: false
+      description: |
+        Password to encrypt Fintech data. Will become mandatory(required) after `Service-Session-Password` is removed.
+        Note either `Service-Session-Password` or `Fintech-Data-Password` is required.
       example: "qwerty"
       schema:
         type: string

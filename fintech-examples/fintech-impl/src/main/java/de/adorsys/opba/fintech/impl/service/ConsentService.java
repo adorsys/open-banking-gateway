@@ -31,10 +31,11 @@ public class ConsentService {
         HttpStatus statusCode = tppConsentClient.confirmConsent(
                 authId,
                 xRequestId,
-                tppProperties.getServiceSessionPassword(),
                 COMPUTE_X_TIMESTAMP_UTC,
                 COMPUTE_X_REQUEST_SIGNATURE,
-                COMPUTE_FINTECH_ID
+                COMPUTE_FINTECH_ID,
+                null,
+                tppProperties.getFintechDataProtectionPassword()
         ).getStatusCode();
         log.debug("consent confirmation response code: {}", statusCode);
         return statusCode.is2xxSuccessful();
@@ -44,10 +45,11 @@ public class ConsentService {
         HttpStatus statusCode = tppPaymentClient.confirmPayment(
                 authId,
                 xRequestId,
-                tppProperties.getServiceSessionPassword(),
                 COMPUTE_X_TIMESTAMP_UTC,
                 COMPUTE_X_REQUEST_SIGNATURE,
-                COMPUTE_FINTECH_ID
+                COMPUTE_FINTECH_ID,
+                null,
+                tppProperties.getFintechDataProtectionPassword()
         ).getStatusCode();
         log.debug("consent confirmation response code: {}", statusCode);
         return statusCode.is2xxSuccessful();

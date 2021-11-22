@@ -15,6 +15,7 @@ export class RestoreSessionPageComponent implements OnInit {
   authId: string;
   aspspRedirectCode: string;
   result: string;
+  oauthCode: string;
 
   constructor(
     private activatedRoute: ActivatedRoute
@@ -26,5 +27,6 @@ export class RestoreSessionPageComponent implements OnInit {
     this.authId = this.route.parent.params.authId;
     this.aspspRedirectCode = this.route.params.aspspRedirectCode;
     this.result = this.route.params.state;
+    this.oauthCode = this.route.queryParams.code;
   }
 }

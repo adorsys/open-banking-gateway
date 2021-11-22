@@ -65,7 +65,6 @@ public class TppBankingApiAisController implements TppBankingApiAccountInformati
     @Override
     @SneakyThrows
     public CompletableFuture getAccounts(
-        String serviceSessionPassword,
         String fintechUserID,
         String fintechRedirectURLOK,
         String fintechRedirectURLNOK,
@@ -73,6 +72,8 @@ public class TppBankingApiAisController implements TppBankingApiAccountInformati
         String xTimestampUTC,
         String xRequestSignature,
         String fintechId,
+        String serviceSessionPassword,
+        String fintechDataPassword,
         UUID bankProfileID,
         Boolean xPsuAuthenticationRequired,
         UUID serviceSessionId,
@@ -89,7 +90,7 @@ public class TppBankingApiAisController implements TppBankingApiAccountInformati
                     // Get rid of CGILIB here by copying:
                     .uaContext(userAgentContext.toBuilder().build())
                     .authorization(fintechId)
-                    .sessionPassword(serviceSessionPassword)
+                    .sessionPassword(PasswordExtractingUtil.getDataProtectionPassword(serviceSessionPassword, fintechDataPassword))
                     .fintechUserId(fintechUserID)
                     .fintechRedirectUrlOk(fintechRedirectURLOK)
                     .fintechRedirectUrlNok(fintechRedirectURLNOK)
@@ -110,7 +111,6 @@ public class TppBankingApiAisController implements TppBankingApiAccountInformati
     @SneakyThrows
     public CompletableFuture getTransactions(
         String accountId,
-        String serviceSessionPassword,
         String fintechUserID,
         String fintechRedirectURLOK,
         String fintechRedirectURLNOK,
@@ -118,6 +118,8 @@ public class TppBankingApiAisController implements TppBankingApiAccountInformati
         String xTimestampUTC,
         String xRequestSignature,
         String fintechId,
+        String serviceSessionPassword,
+        String fintechDataPassword,
         UUID bankProfileID,
         Boolean xPsuAuthenticationRequired,
         UUID serviceSessionId,
@@ -141,7 +143,7 @@ public class TppBankingApiAisController implements TppBankingApiAccountInformati
                     // Get rid of CGILIB here by copying:
                     .uaContext(userAgentContext.toBuilder().build())
                     .authorization(fintechId)
-                    .sessionPassword(serviceSessionPassword)
+                    .sessionPassword(PasswordExtractingUtil.getDataProtectionPassword(serviceSessionPassword, fintechDataPassword))
                     .fintechUserId(fintechUserID)
                     .fintechRedirectUrlOk(fintechRedirectURLOK)
                     .fintechRedirectUrlNok(fintechRedirectURLNOK)
@@ -169,7 +171,6 @@ public class TppBankingApiAisController implements TppBankingApiAccountInformati
     @Override
     @SneakyThrows
     public CompletableFuture getTransactionsWithoutAccountId(
-        String serviceSessionPassword,
         String fintechUserId,
         String fintechRedirectURLOK,
         String fintechRedirectURLNOK,
@@ -177,6 +178,8 @@ public class TppBankingApiAisController implements TppBankingApiAccountInformati
         String xTimestampUTC,
         String xRequestSignature,
         String fintechId,
+        String serviceSessionPassword,
+        String fintechDataPassword,
         UUID bankProfileID,
         Boolean xPsuAuthenticationRequired,
         UUID serviceSessionId,
@@ -198,7 +201,7 @@ public class TppBankingApiAisController implements TppBankingApiAccountInformati
                     // Get rid of CGILIB here by copying:
                     .uaContext(userAgentContext.toBuilder().build())
                     .authorization(fintechId)
-                    .sessionPassword(serviceSessionPassword)
+                    .sessionPassword(PasswordExtractingUtil.getDataProtectionPassword(serviceSessionPassword, fintechDataPassword))
                     .fintechUserId(fintechUserId)
                     .fintechRedirectUrlOk(fintechRedirectURLOK)
                     .fintechRedirectUrlNok(fintechRedirectURLNOK)
@@ -222,14 +225,15 @@ public class TppBankingApiAisController implements TppBankingApiAccountInformati
 
     @Override
     @SuppressWarnings("unchecked")
-    public CompletableFuture<ResponseEntity<Void>> deleteConsent(UUID serviceSessionId, String serviceSessionPassword, UUID xRequestID,
-                                                                 String xTimestampUTC, String xRequestSignature, String fintechId, Boolean deleteAll) {
+    public CompletableFuture<ResponseEntity<Void>> deleteConsent(UUID serviceSessionId, UUID xRequestID,
+                                                                 String xTimestampUTC, String xRequestSignature, String fintechId,
+                                                                 String serviceSessionPassword, String fintechDataPassword, Boolean deleteAll) {
         return deleteConsent.execute(
                 DeleteConsentRequest.builder()
                         .facadeServiceable(FacadeServiceableRequest.builder()
                                 // Get rid of CGILIB here by copying:
                                 .authorization(fintechId)
-                                .sessionPassword(serviceSessionPassword)
+                                .sessionPassword(PasswordExtractingUtil.getDataProtectionPassword(serviceSessionPassword, fintechDataPassword))
                                 .serviceSessionId(serviceSessionId)
                                 .requestId(xRequestID)
                                 .build()
@@ -241,15 +245,16 @@ public class TppBankingApiAisController implements TppBankingApiAccountInformati
 
     @Override
     public CompletableFuture getAisSessionStatus(UUID serviceSessionId,
-                                                 String serviceSessionPassword,
                                                  UUID xRequestID,
                                                  String xTimestampUTC,
                                                  String xRequestSignature,
-                                                 String fintechId) {
+                                                 String fintechId,
+                                                 String serviceSessionPassword,
+                                                 String fintechDataPassword) {
         return aisSessionStatus.execute(AisAuthorizationStatusRequest.builder()
                 .facadeServiceable(FacadeServiceableRequest.builder()
                         .authorization(fintechId)
-                        .sessionPassword(serviceSessionPassword)
+                        .sessionPassword(PasswordExtractingUtil.getDataProtectionPassword(serviceSessionPassword, fintechDataPassword))
                         .serviceSessionId(serviceSessionId)
                         .requestId(xRequestID)
                         .build()
@@ -259,15 +264,16 @@ public class TppBankingApiAisController implements TppBankingApiAccountInformati
 
     @Override
     public CompletableFuture updateExternalAisSession(UUID serviceSessionId,
-                                                      String serviceSessionPassword,
                                                       UUID xRequestID,
                                                       String xTimestampUTC,
                                                       String xRequestSignature,
-                                                      String fintechId) {
+                                                      String fintechId,
+                                                      String serviceSessionPassword,
+                                                      String fintechDataPassword) {
         return updateExternalAis.execute(UpdateExternalAisSessionRequest.builder()
                 .facadeServiceable(FacadeServiceableRequest.builder()
                         .authorization(fintechId)
-                        .sessionPassword(serviceSessionPassword)
+                        .sessionPassword(PasswordExtractingUtil.getDataProtectionPassword(serviceSessionPassword, fintechDataPassword))
                         .serviceSessionId(serviceSessionId)
                         .requestId(xRequestID)
                         .build()

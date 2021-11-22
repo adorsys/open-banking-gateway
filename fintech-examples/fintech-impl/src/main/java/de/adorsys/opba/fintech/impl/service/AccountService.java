@@ -109,7 +109,6 @@ public class AccountService {
         log.info("do LOA for bank {} {} consent", bankProfileID, optionalConsent.isPresent() ? "with" : "without");
         UUID serviceSessionID = optionalConsent.map(ConsentEntity::getTppServiceSessionId).orElse(null);
         return tppAisClient.getAccounts(
-            tppProperties.getServiceSessionPassword(),
             sessionEntity.getUserEntity().getFintechUserId(),
             RedirectUrlsEntity.buildOkUrl(uiConfig, redirectCode),
             RedirectUrlsEntity.buildNokUrl(uiConfig, redirectCode),
@@ -117,6 +116,8 @@ public class AccountService {
             COMPUTE_X_TIMESTAMP_UTC,
             COMPUTE_X_REQUEST_SIGNATURE,
             COMPUTE_FINTECH_ID,
+            null,
+            tppProperties.getFintechDataProtectionPassword(),
             UUID.fromString(bankProfileID),
             psuAuthenticationRequired,
             serviceSessionID,
@@ -134,7 +135,6 @@ public class AccountService {
         log.info("do LOT (instead of loa) for bank {} {} consent", bankProfileID, optionalConsent.isPresent() ? "with" : "without");
         UUID serviceSessionID = optionalConsent.map(ConsentEntity::getTppServiceSessionId).orElse(null);
         var response = tppAisClient.getTransactionsWithoutAccountId(
-            tppProperties.getServiceSessionPassword(),
             sessionEntity.getUserEntity().getFintechUserId(),
             RedirectUrlsEntity.buildOkUrl(uiConfig, redirectCode),
             RedirectUrlsEntity.buildNokUrl(uiConfig, redirectCode),
@@ -142,6 +142,8 @@ public class AccountService {
             COMPUTE_X_TIMESTAMP_UTC,
             COMPUTE_X_REQUEST_SIGNATURE,
             COMPUTE_FINTECH_ID,
+            null,
+            tppProperties.getFintechDataProtectionPassword(),
             UUID.fromString(bankProfileID),
             psuAuthenticationRequired,
             serviceSessionID,
@@ -152,8 +154,7 @@ public class AccountService {
             null,
             null,
             null,
-            null,
-            null, null, null
+            null, null, null, null
         );
         if (response.getStatusCode() != HttpStatus.OK) {
             return response;

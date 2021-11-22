@@ -1,6 +1,6 @@
 {
 	"info": {
-		"_postman_id": "5d332e32-f05e-4031-98e2-dfee040349d7",
+		"_postman_id": "1658a3de-363b-47d0-8313-9e9e1ee66b48",
 		"name": "OPBA-AIS-HBCI-2-SCA-METHODS",
 		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
 	},
@@ -126,8 +126,8 @@
 						"type": "text"
 					},
 					{
-						"key": "Service-Session-Password",
-						"value": "{{service-session-password}}",
+						"key": "Fintech-Data-Password",
+						"value": "{{fintech-data-password}}",
 						"type": "text"
 					},
 					{
@@ -215,7 +215,7 @@
 							"})",
 							"",
 							"// Unfortunately pm.response.cookies is empty, so parsing manually - getting 'Authorization-Session-Key cookie' value",
-							"var cookie = pm.response.headers.filter(it => it.key == 'set-cookie' && it.value.startsWith('Authorization-Session-Key'))[0].value.split(';')[0];",
+							"var cookie = pm.response.headers.filter(it => it.key.toLowerCase() == 'set-cookie' && it.value.startsWith('Authorization-Session-Key'))[0].value.split(';')[0];",
 							"",
 							"pm.environment.set(\"session-cookie\", cookie)"
 						],
@@ -704,9 +704,9 @@
 						"value": "{{x-request-signature}}"
 					},
 					{
-						"key": "Service-Session-Password",
+						"key": "Fintech-Data-Password",
 						"type": "text",
-						"value": "{{service-session-password}}"
+						"value": "{{fintech-data-password}}"
 					}
 				],
 				"url": {
@@ -786,9 +786,9 @@
 						"value": "{{fintech-user-id}}"
 					},
 					{
-						"key": "Service-Session-Password",
+						"key": "Fintech-Data-Password",
 						"type": "text",
-						"value": "{{service-session-password}}"
+						"value": "{{fintech-data-password}}"
 					},
 					{
 						"key": "Bank-ID",
@@ -886,9 +886,9 @@
 						"value": "{{fintech-user-id}}"
 					},
 					{
-						"key": "Service-Session-Password",
+						"key": "Fintech-Data-Password",
 						"type": "text",
-						"value": "{{service-session-password}}"
+						"value": "{{fintech-data-password}}"
 					},
 					{
 						"key": "Bank-ID",
@@ -949,7 +949,7 @@
 							"})",
 							"",
 							"// Unfortunately pm.response.cookies is empty, so parsing manually",
-							"var cookie = pm.response.headers.filter(it => it.key == 'set-cookie' && it.value.startsWith('Authorization-Session-Key'))[0].value.split(';')[0];",
+							"var cookie = pm.response.headers.filter(it => it.key.toLowerCase() == 'set-cookie' && it.value.startsWith('Authorization-Session-Key'))[0].value.split(';')[0];",
 							"",
 							"pm.environment.set(\"session-cookie\", cookie)"
 						],
@@ -1514,9 +1514,9 @@
 						"value": "{{x-request-signature}}"
 					},
 					{
-						"key": "Service-Session-Password",
+						"key": "Fintech-Data-Password",
 						"type": "text",
-						"value": "{{service-session-password}}"
+						"value": "{{fintech-data-password}}"
 					}
 				],
 				"url": {
@@ -1593,9 +1593,9 @@
 						"value": "{{fintech-user-id}}"
 					},
 					{
-						"key": "Service-Session-Password",
+						"key": "Fintech-Data-Password",
 						"type": "text",
-						"value": "{{service-session-password}}"
+						"value": "{{fintech-data-password}}"
 					},
 					{
 						"key": "Bank-ID",
@@ -1710,9 +1710,9 @@
 						"value": "{{fintech-user-id}}"
 					},
 					{
-						"key": "Service-Session-Password",
+						"key": "Fintech-Data-Password",
 						"type": "text",
-						"value": "{{service-session-password}}"
+						"value": "{{fintech-data-password}}"
 					},
 					{
 						"key": "Bank-ID",
