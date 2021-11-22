@@ -32,7 +32,7 @@ tpp:
   # local testing
   # url: http://localhost:18085
   fintechID: MY-SUPER-FINTECH-ID
-  serviceSessionPassword: qwerty
+  fintechDataProtectionPassword: qwerty
 
 spring:
   datasource:

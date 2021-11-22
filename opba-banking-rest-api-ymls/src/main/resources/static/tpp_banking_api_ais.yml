@@ -32,6 +32,7 @@ paths:
         - $ref: "./tpp_banking_api_commons.yml#/components/parameters/X-Request-Signature"
         - $ref: "./tpp_banking_api_commons.yml#/components/parameters/Fintech-ID"
         - $ref: "./tpp_banking_api_commons.yml#/components/parameters/ServiceSessionPassword"
+        - $ref: "./tpp_banking_api_commons.yml#/components/parameters/FintechDataPassword"
         - $ref: "./tpp_banking_api_commons.yml#/components/parameters/Bank-Profile-ID"
         - $ref: "./tpp_banking_api_commons.yml#/components/parameters/X-Psu-Authentication-Required"
         - $ref: "./tpp_banking_api_commons.yml#/components/parameters/Fintech-User-ID"
@@ -77,6 +78,7 @@ paths:
         - $ref: "./tpp_banking_api_commons.yml#/components/parameters/X-Request-Signature"
         - $ref: "./tpp_banking_api_commons.yml#/components/parameters/Fintech-ID"
         - $ref: "./tpp_banking_api_commons.yml#/components/parameters/ServiceSessionPassword"
+        - $ref: "./tpp_banking_api_commons.yml#/components/parameters/FintechDataPassword"
         - $ref: "./tpp_banking_api_commons.yml#/components/parameters/Bank-Profile-ID"
         - $ref: "./tpp_banking_api_commons.yml#/components/parameters/X-Psu-Authentication-Required"
         - $ref: "./tpp_banking_api_commons.yml#/components/parameters/Fintech-User-ID"
@@ -122,6 +124,7 @@ paths:
         - $ref: "./tpp_banking_api_commons.yml#/components/parameters/X-Request-Signature"
         - $ref: "./tpp_banking_api_commons.yml#/components/parameters/Fintech-ID"
         - $ref: "./tpp_banking_api_commons.yml#/components/parameters/ServiceSessionPassword"
+        - $ref: "./tpp_banking_api_commons.yml#/components/parameters/FintechDataPassword"
         - $ref: "./tpp_banking_api_commons.yml#/components/parameters/Bank-Profile-ID"
         - $ref: "./tpp_banking_api_commons.yml#/components/parameters/X-Psu-Authentication-Required"
         - $ref: "./tpp_banking_api_commons.yml#/components/parameters/Fintech-User-ID"
@@ -169,6 +172,7 @@ paths:
         - $ref: "./tpp_banking_api_commons.yml#/components/parameters/X-Request-Signature"
         - $ref: "./tpp_banking_api_commons.yml#/components/parameters/Fintech-ID"
         - $ref: "./tpp_banking_api_commons.yml#/components/parameters/ServiceSessionPassword"
+        - $ref: "./tpp_banking_api_commons.yml#/components/parameters/FintechDataPassword"
         - $ref: "./tpp_banking_api_commons.yml#/components/parameters/X-Request-ID"
         #query
         - $ref: "#/components/parameters/deleteAll"
@@ -197,6 +201,7 @@ paths:
         - $ref: "./tpp_banking_api_commons.yml#/components/parameters/X-Request-Signature"
         - $ref: "./tpp_banking_api_commons.yml#/components/parameters/Fintech-ID"
         - $ref: "./tpp_banking_api_commons.yml#/components/parameters/ServiceSessionPassword"
+        - $ref: "./tpp_banking_api_commons.yml#/components/parameters/FintechDataPassword"
         - $ref: "./tpp_banking_api_commons.yml#/components/parameters/X-Request-ID"
       responses:
         "200":
@@ -226,6 +231,7 @@ paths:
         - $ref: "./tpp_banking_api_commons.yml#/components/parameters/X-Request-Signature"
         - $ref: "./tpp_banking_api_commons.yml#/components/parameters/Fintech-ID"
         - $ref: "./tpp_banking_api_commons.yml#/components/parameters/ServiceSessionPassword"
+        - $ref: "./tpp_banking_api_commons.yml#/components/parameters/FintechDataPassword"
         - $ref: "./tpp_banking_api_commons.yml#/components/parameters/X-Request-ID"
       responses:
         "200":

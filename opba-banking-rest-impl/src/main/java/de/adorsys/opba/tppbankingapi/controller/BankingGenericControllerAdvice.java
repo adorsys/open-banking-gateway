@@ -22,6 +22,12 @@ public class BankingGenericControllerAdvice {
                     .build();
         }
 
+        if (ex instanceof MissingDataProtectionPassword) {
+            return ResponseEntity
+                    .status(HttpStatus.UNAUTHORIZED)
+                    .body(List.of(ex.getMessage()));
+        }
+
         if (ex instanceof IllegalArgumentException) {
             return ResponseEntity
                     .status(HttpStatus.BAD_REQUEST)

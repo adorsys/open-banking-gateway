@@ -9,7 +9,7 @@ import java.time.Instant;
 import java.util.UUID;
 
 import static de.adorsys.opba.protocol.xs2a.tests.HeaderNames.FINTECH_ID;
-import static de.adorsys.opba.protocol.xs2a.tests.HeaderNames.SERVICE_SESSION_PASSWORD;
+import static de.adorsys.opba.protocol.xs2a.tests.HeaderNames.FINTECH_DATA_PASSWORD;
 import static de.adorsys.opba.protocol.xs2a.tests.HeaderNames.X_REQUEST_ID;
 import static de.adorsys.opba.protocol.xs2a.tests.HeaderNames.X_TIMESTAMP_UTC;
 import static de.adorsys.opba.protocol.xs2a.tests.e2e.stages.PaymentStagesCommonUtil.DEFAULT_FINTECH_ID;
@@ -30,7 +30,7 @@ public class RequestStatusUtil {
     static void fintechCallsAisAuthorizationSessionState(String expectedSessionState, String expectedAuthSessionState, String serviceSessionId) {
         ExtractableResponse<Response> response = RestAssured
                 .given()
-                    .header(SERVICE_SESSION_PASSWORD, SESSION_PASSWORD)
+                    .header(FINTECH_DATA_PASSWORD, SESSION_PASSWORD)
                     .header(FINTECH_ID, DEFAULT_FINTECH_ID)
                     .header(X_REQUEST_ID, UUID.randomUUID().toString())
                     .header(X_TIMESTAMP_UTC, Instant.now().toString())
@@ -47,7 +47,7 @@ public class RequestStatusUtil {
     static void fintechCallsPisAuthorizationSessionState(String expectedSessionState, String expectedAuthSessionState, String serviceSessionId) {
         ExtractableResponse<Response> response = RestAssured
                 .given()
-                    .header(SERVICE_SESSION_PASSWORD, SESSION_PASSWORD)
+                    .header(FINTECH_DATA_PASSWORD, SESSION_PASSWORD)
                     .header(FINTECH_ID, DEFAULT_FINTECH_ID)
                     .header(X_REQUEST_ID, UUID.randomUUID().toString())
                     .header(X_TIMESTAMP_UTC, Instant.now().toString())

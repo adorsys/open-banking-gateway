@@ -19,7 +19,7 @@ import java.time.ZoneOffset;
 import java.time.ZonedDateTime;
 import java.util.UUID;
 
-import static de.adorsys.opba.protocol.xs2a.tests.HeaderNames.SERVICE_SESSION_PASSWORD;
+import static de.adorsys.opba.protocol.xs2a.tests.HeaderNames.FINTECH_DATA_PASSWORD;
 import static de.adorsys.opba.protocol.xs2a.tests.HeaderNames.X_REQUEST_ID;
 import static de.adorsys.opba.protocol.xs2a.tests.e2e.stages.PaymentStagesCommonUtil.PIS_ANONYMOUS_LOGIN_USER_ENDPOINT;
 import static de.adorsys.opba.protocol.xs2a.tests.e2e.stages.PaymentStagesCommonUtil.withPaymentInfoHeaders;
@@ -222,7 +222,7 @@ public class PaymentResult<SELF extends PaymentResult<SELF>> extends Stage<SELF>
     public SELF fintech_calls_payment_activation_for_current_authorization_id(String serviceSessionId) {
         withSignatureHeaders(RestAssured
             .given()
-                .header(SERVICE_SESSION_PASSWORD, SESSION_PASSWORD)
+                .header(FINTECH_DATA_PASSWORD, SESSION_PASSWORD)
                 .contentType(APPLICATION_JSON_VALUE))
             .when()
                 .post(CONFIRM_PAYMENT_ENDPOINT, serviceSessionId)

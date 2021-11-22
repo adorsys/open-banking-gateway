@@ -1,6 +1,6 @@
 {
 	"info": {
-		"_postman_id": "499c2fdf-70a7-4757-bf6c-be5b514cac34",
+		"_postman_id": "30b8beb3-13cf-480a-a34c-c28329cfdf15",
 		"name": "OPBA-AIS-XS2A-EMBEDDED-2-SCA-METHODS",
 		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
 	},
@@ -126,8 +126,8 @@
 						"type": "text"
 					},
 					{
-						"key": "Service-Session-Password",
-						"value": "{{service-session-password}}",
+						"key": "Fintech-Data-Password",
+						"value": "{{fintech-data-password}}",
 						"type": "text"
 					},
 					{
@@ -215,7 +215,7 @@
 							"})",
 							"",
 							"// Unfortunately pm.response.cookies is empty, so parsing manually - getting 'Authorization-Session-Key cookie' value",
-							"var cookie = pm.response.headers.filter(it => it.key == 'set-cookie' && it.value.startsWith('Authorization-Session-Key'))[0].value.split(';')[0];",
+							"var cookie = pm.response.headers.filter(it => it.key.toLowerCase() == 'set-cookie' && it.value.startsWith('Authorization-Session-Key'))[0].value.split(';')[0];",
 							"",
 							"pm.environment.set(\"session-cookie\", cookie)"
 						],
@@ -856,9 +856,9 @@
 						"value": "{{x-request-signature}}"
 					},
 					{
-						"key": "Service-Session-Password",
+						"key": "Fintech-Data-Password",
 						"type": "text",
-						"value": "{{service-session-password}}"
+						"value": "{{fintech-data-password}}"
 					}
 				],
 				"url": {
@@ -938,9 +938,9 @@
 						"value": "{{fintech-user-id}}"
 					},
 					{
-						"key": "Service-Session-Password",
+						"key": "Fintech-Data-Password",
 						"type": "text",
-						"value": "{{service-session-password}}"
+						"value": "{{fintech-data-password}}"
 					},
 					{
 						"key": "Bank-ID",
@@ -1027,9 +1027,9 @@
 						"value": "{{fintech-user-id}}"
 					},
 					{
-						"key": "Service-Session-Password",
+						"key": "Fintech-Data-Password",
 						"type": "text",
-						"value": "{{service-session-password}}"
+						"value": "{{fintech-data-password}}"
 					},
 					{
 						"key": "Bank-ID",
@@ -1136,9 +1136,9 @@
 						"value": "{{fintech-user-id}}"
 					},
 					{
-						"key": "Service-Session-Password",
+						"key": "Fintech-Data-Password",
 						"type": "text",
-						"value": "{{service-session-password}}"
+						"value": "{{fintech-data-password}}"
 					},
 					{
 						"key": "Bank-ID",
