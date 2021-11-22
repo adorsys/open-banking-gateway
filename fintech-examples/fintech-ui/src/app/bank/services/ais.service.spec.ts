@@ -3,6 +3,7 @@ import { TestBed } from '@angular/core/testing';
 import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { AisService } from './ais.service';
 import { LoARetrievalInformation, LoTRetrievalInformation } from '../../models/consts';
+import {StorageService} from "../../services/storage.service";
 
 describe('AisService', () => {
   let finTechAccountInformationService: FinTechAccountInformationService;
@@ -38,7 +39,9 @@ describe('AisService', () => {
       LoTRetrievalInformation.FROM_TPP_WITH_AVAILABLE_CONSENT,
       '',
       false,
-      true
+      true,
+      '1970-01-01',
+      StorageService.isoDate(new Date())
     );
     expect(getTransactionsSpy).toHaveBeenCalled();
   });
