@@ -15,7 +15,6 @@ import de.adorsys.opba.consentapi.model.generated.ChallengeData;
 import de.adorsys.opba.consentapi.model.generated.ConsentAuth;
 import de.adorsys.opba.consentapi.model.generated.ScaUserData;
 import de.adorsys.opba.protocol.facade.config.auth.UriExpandConst;
-import de.adorsys.opba.protocol.xs2a.tests.e2e.LocationExtractorUtil;
 import io.restassured.RestAssured;
 import io.restassured.http.Cookie;
 import io.restassured.response.ExtractableResponse;
@@ -158,7 +157,7 @@ public abstract class RequestCommon<SELF extends RequestCommon<SELF>> extends St
         ExtractableResponse<Response> response = consentApiPost(uriPath, body, status, serviceSessionId);
 
         this.responseContent = response.body().asString();
-        this.redirectUriToGetUserParams = LocationExtractorUtil.getLocation(response);
+        this.redirectUriToGetUserParams = getLocation(response);
         updateRedirectCode(response);
         return response;
     }
@@ -204,7 +203,7 @@ public abstract class RequestCommon<SELF extends RequestCommon<SELF>> extends St
         ExtractableResponse<Response> response = consentApiPost(AUTHORIZE_CONSENT_ENDPOINT, "{}", httpStatus, sessionId);
         this.responseContent = response.body().asString();
         updateRedirectCodeIfAvailable(response);
-        this.redirectUriToGetUserParams = httpStatus == ACCEPTED ? LocationExtractorUtil.getLocation(response) : this.redirectUriToGetUserParams;
+        this.redirectUriToGetUserParams = httpStatus == ACCEPTED ? getLocation(response) : this.redirectUriToGetUserParams;
         if (null != expectedConsentStatus) {
             assertThat(JsonPath.parse(responseContent).read("scaStatus", String.class)).isEqualTo(expectedConsentStatus);
         }
@@ -212,7 +211,7 @@ public abstract class RequestCommon<SELF extends RequestCommon<SELF>> extends St
     }
 
     protected void updateNextConsentAuthorizationUrl(ExtractableResponse<Response> response) {
-        this.redirectUriToGetUserParams = LocationExtractorUtil.getLocation(response);
+        this.redirectUriToGetUserParams = getLocation(response);
     }
 
     protected void updateServiceSessionId(ExtractableResponse<Response> response) {
