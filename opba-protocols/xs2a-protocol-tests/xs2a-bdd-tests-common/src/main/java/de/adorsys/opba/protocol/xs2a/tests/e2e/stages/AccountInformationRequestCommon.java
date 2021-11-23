@@ -51,6 +51,7 @@ import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
 @JGivenStage
 @SuppressWarnings("checkstyle:MethodName") // Jgiven prettifies snake-case names not camelCase
 public class AccountInformationRequestCommon<SELF extends AccountInformationRequestCommon<SELF>> extends RequestCommon<SELF> {
+    private static final int EXPECTED_SANDBOX_PORT = 4400;
     private static final String TPP_SERVER_USERNAME_PLACEHOLDER = "%user%";
     private static final String TPP_SERVER_IBAN_PLACEHOLDER = "%iban%";
 
@@ -359,7 +360,7 @@ public class AccountInformationRequestCommon<SELF extends AccountInformationRequ
             assertThat(redirectUri.getPath()).contains("redirect_uri");
         } else {
             assertThat(redirectUri).hasHost("localhost");
-            assertThat(redirectUri).hasPort(4400);
+            assertThat(redirectUri).hasPort(EXPECTED_SANDBOX_PORT);
         }
         return self();
     }
