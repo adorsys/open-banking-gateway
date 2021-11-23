@@ -340,6 +340,10 @@ public class AccountInformationRequestCommon<SELF extends AccountInformationRequ
     }
 
     public SELF user_sees_that_he_needs_to_be_redirected_to_aspsp_and_redirects_to_aspsp(String user) {
+        return user_sees_that_he_needs_to_be_redirected_to_aspsp_and_redirects_to_aspsp(user, "localhost", EXPECTED_SANDBOX_PORT);
+    }
+
+    public SELF user_sees_that_he_needs_to_be_redirected_to_aspsp_and_redirects_to_aspsp(String user, String expectedHost, Integer expectedPort) {
         ExtractableResponse<Response> response = withDefaultHeaders(user)
                 .cookie(AUTHORIZATION_SESSION_KEY, authSessionCookie)
                 .queryParam(X_XSRF_TOKEN_QUERY, redirectCode)
@@ -355,12 +359,9 @@ public class AccountInformationRequestCommon<SELF extends AccountInformationRequ
 
         // The URI should point to Sandbox
         var redirectUri = URI.create(getLocation(response));
-        if (redirectUri.getPath().contains("granting")) {
-            assertThat(redirectUri).hasHost("localhost");
-            assertThat(redirectUri.getPath()).contains("/granting/");
-        } else {
-            assertThat(redirectUri).hasHost("localhost");
-            assertThat(redirectUri).hasPort(EXPECTED_SANDBOX_PORT);
+        assertThat(redirectUri).hasHost(expectedHost);
+        if (null != expectedPort) {
+            assertThat(redirectUri).hasPort(expectedPort);
         }
         return self();
     }
