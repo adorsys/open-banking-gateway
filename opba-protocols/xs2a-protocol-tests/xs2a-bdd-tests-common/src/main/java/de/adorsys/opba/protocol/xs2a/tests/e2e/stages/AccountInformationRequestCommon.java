@@ -357,7 +357,7 @@ public class AccountInformationRequestCommon<SELF extends AccountInformationRequ
         var redirectUri = URI.create(getLocation(response));
         if (redirectUri.getPath().contains("granting")) {
             assertThat(redirectUri).hasHost("localhost");
-            assertThat(redirectUri.getPath()).contains("redirect_uri");
+            assertThat(redirectUri.getPath()).contains("/granting/");
         } else {
             assertThat(redirectUri).hasHost("localhost");
             assertThat(redirectUri).hasPort(EXPECTED_SANDBOX_PORT);
