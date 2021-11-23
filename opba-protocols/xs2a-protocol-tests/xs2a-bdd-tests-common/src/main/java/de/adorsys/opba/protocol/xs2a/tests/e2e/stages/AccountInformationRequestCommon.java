@@ -91,7 +91,7 @@ public class AccountInformationRequestCommon<SELF extends AccountInformationRequ
         updateRedirectCode(response);
         updateNextConsentAuthorizationUrl(response);
         assertThat(URI.create(getLocation(response))).hasParameter("redirectCode");
-        assertThat(URI.create(getLocation(response))).hasPath(String.format("/auth/ais/%s/anonymous", serviceSessionId));
+        assertThat(URI.create(getLocation(response))).hasPath(String.format("/auth/ais/%s/%s", serviceSessionId, anonymous ? "anonymous" : "login"));
         return self();
     }
 
@@ -351,9 +351,16 @@ public class AccountInformationRequestCommon<SELF extends AccountInformationRequ
         this.redirectUriToGetUserParams = getLocation(response);
         updateServiceSessionId(response);
         updateRedirectCode(response);
+
         // The URI should point to Sandbox
-        assertThat(URI.create(getLocation(response))).hasHost("localhost");
-        assertThat(URI.create(getLocation(response))).hasPort(4400);
+        var redirectUri = URI.create(getLocation(response));
+        if (redirectUri.getPath().contains("granting")) {
+            assertThat(redirectUri).hasHost("localhost");
+            assertThat(redirectUri.getPath()).contains("redirect_uri");
+        } else {
+            assertThat(redirectUri).hasHost("localhost");
+            assertThat(redirectUri).hasPort(4400);
+        }
         return self();
     }
 
@@ -401,7 +408,7 @@ public class AccountInformationRequestCommon<SELF extends AccountInformationRequ
                 readResource("restrecord/tpp-ui-input/params/max-musterman-account-all-accounts-consent.json")
         );
 
-        assertThat(URI.create(getLocation(response))).hasParameter("wrong", "false");
+        assertThat(URI.create(getLocation(response))).hasParameter("wrong");
         assertThat(URI.create(getLocation(response))).hasPath(String.format("/ais/%s/authenticate", serviceSessionId));
         return self();
     }
@@ -553,7 +560,7 @@ public class AccountInformationRequestCommon<SELF extends AccountInformationRequ
             ACCEPTED
         );
 
-        assertThat(URI.create(getLocation(response))).hasPath(String.format("/ais/%s/sca-result", serviceSessionId));
+        assertThat(URI.create(getLocation(response))).hasPath(String.format("/ais/%s/sca-result/EMAIL", serviceSessionId));
         return self();
     }
 
