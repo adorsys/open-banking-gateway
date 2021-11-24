@@ -11,7 +11,6 @@
       <conditionExpression xsi:type="tFormalExpression"/>
     </sequenceFlow>
     <serviceTask id="oauth2ExchangeCodeToToken" flowable:exclusive="true" name="Exchange Oauth2 code to token. Expecting PKCE" flowable:async="true" flowable:triggerable="false" flowable:delegateExpression="${xs2aOauth2ExchangeCodeToToken}"/>
-    <sequenceFlow id="sid-64007d67-937b-4d29-9404-e47c84b3c5cd" sourceRef="redirectUserToOauth2AuthorizationServer" targetRef="oauth2ExchangeCodeToToken"/>
     <sequenceFlow id="oauth2Required" sourceRef="sid-ef5a15f0-fbfd-48ac-b35a-f64d250e0f9d" targetRef="checkThatOauth2TokenIsPresentAndNotExpired" name="Oauth2 required">
       <conditionExpression xsi:type="tFormalExpression">#{xs2aConsentInfo.isOauth2Required(CONTEXT)}</conditionExpression>
     </sequenceFlow>
@@ -44,6 +43,14 @@
       <conditionExpression xsi:type="tFormalExpression">#{xs2aConsentInfo.isWrongPassword(CONTEXT)}</conditionExpression>
     </sequenceFlow>
     <sequenceFlow id="sid-526fc8ad-ecb2-451d-9a9a-2912cb08c47f" sourceRef="embeddedOauth2ExchangeCodeToToken" targetRef="sid-49888494-cd28-4bc7-9070-40c3dfda930f"/>
+    <exclusiveGateway id="sid-0f4e5f10-4c3f-469f-b6ee-3671a13f70b1" default="sid-01e6ebac-699d-49ab-9b54-126e5772ed32" name="isOk"/>
+    <sequenceFlow id="sid-cf9047bc-6775-4f71-b397-d6182455d9bd" sourceRef="sid-0f4e5f10-4c3f-469f-b6ee-3671a13f70b1" targetRef="oauth2ExchangeCodeToToken" name="isOK">
+      <conditionExpression xsi:type="tFormalExpression">#{xs2aConsentInfo.isOkRedirectConsent(CONTEXT)}</conditionExpression>
+    </sequenceFlow>
+    <sequenceFlow id="sid-01e6ebac-699d-49ab-9b54-126e5772ed32" sourceRef="sid-0f4e5f10-4c3f-469f-b6ee-3671a13f70b1" targetRef="sid-e0dbf285-c6c2-4571-ac5e-9038fcbf8448" name="isNOK">
+      <conditionExpression xsi:type="tFormalExpression"/>
+    </sequenceFlow>
+    <sequenceFlow id="sid-cee5f56d-5265-4079-b7d4-ccc950f3b01f" sourceRef="redirectUserToOauth2AuthorizationServer" targetRef="sid-0f4e5f10-4c3f-469f-b6ee-3671a13f70b1"/>
   </process>
   <bpmndi:BPMNDiagram id="BPMNDiagram_xs2a-oauth2-step">
     <bpmndi:BPMNPlane bpmnElement="if-needed-xs2a-oauth2-step" id="BPMNPlane_xs2a-oauth2-step">
@@ -72,10 +79,6 @@
       <bpmdi:BPMNShape xmlns:bpmdi="http://www.omg.org/spec/BPMN/20100524/DI" id="shape-d4d0bf3e-d657-467e-a4eb-d729d72845c9" bpmnElement="oauth2ExchangeCodeToToken">
         <omgdc:Bounds x="875.34607" y="97.57038" width="100.0" height="80.0"/>
       </bpmdi:BPMNShape>
-      <bpmdi:BPMNEdge xmlns:bpmdi="http://www.omg.org/spec/BPMN/20100524/DI" id="edge-02115c9e-2da8-4d5c-981a-63aa8021f356" bpmnElement="sid-64007d67-937b-4d29-9404-e47c84b3c5cd">
-        <omgdi:waypoint x="715.4425" y="137.57039"/>
-        <omgdi:waypoint x="875.34607" y="137.57037"/>
-      </bpmdi:BPMNEdge>
       <bpmdi:BPMNEdge xmlns:bpmdi="http://www.omg.org/spec/BPMN/20100524/DI" id="edge-1c3a0e08-d400-4b2b-b871-02f172e924c1" bpmnElement="oauth2Required">
         <omgdi:waypoint x="257.36002" y="244.0"/>
         <omgdi:waypoint x="256.16" y="137.57037"/>
@@ -144,6 +147,22 @@
       <bpmdi:BPMNEdge xmlns:bpmdi="http://www.omg.org/spec/BPMN/20100524/DI" id="edge-eca8e3dd-4f69-484a-a997-4c86d5ed5d14" bpmnElement="sid-526fc8ad-ecb2-451d-9a9a-2912cb08c47f">
         <omgdi:waypoint x="936.5621" y="-1.4754715"/>
         <omgdi:waypoint x="1031.144" y="-1.4754715"/>
+      </bpmdi:BPMNEdge>
+      <bpmdi:BPMNShape xmlns:bpmdi="http://www.omg.org/spec/BPMN/20100524/DI" id="shape-afb2b72b-e6eb-4dd0-b69f-cc425d0d2767" bpmnElement="sid-0f4e5f10-4c3f-469f-b6ee-3671a13f70b1">
+        <omgdc:Bounds x="783.5918" y="117.57039" width="40.0" height="40.0"/>
+      </bpmdi:BPMNShape>
+      <bpmdi:BPMNEdge xmlns:bpmdi="http://www.omg.org/spec/BPMN/20100524/DI" id="edge-a4a992ec-d67d-463e-937f-c45cf3e5035b" bpmnElement="sid-cf9047bc-6775-4f71-b397-d6182455d9bd">
+        <omgdi:waypoint x="823.5918" y="137.57039"/>
+        <omgdi:waypoint x="875.34607" y="137.57037"/>
+      </bpmdi:BPMNEdge>
+      <bpmdi:BPMNEdge xmlns:bpmdi="http://www.omg.org/spec/BPMN/20100524/DI" id="edge-e3337972-7736-4c59-ade4-2a2616b332a2" bpmnElement="sid-01e6ebac-699d-49ab-9b54-126e5772ed32">
+        <omgdi:waypoint x="803.5918" y="157.57039"/>
+        <omgdi:waypoint x="803.59186" y="210.93251"/>
+        <omgdi:waypoint x="1036.144" y="256.5"/>
+      </bpmdi:BPMNEdge>
+      <bpmdi:BPMNEdge xmlns:bpmdi="http://www.omg.org/spec/BPMN/20100524/DI" id="edge-114b4d98-cc98-4a94-b0ca-455b8c9654e8" bpmnElement="sid-cee5f56d-5265-4079-b7d4-ccc950f3b01f">
+        <omgdi:waypoint x="715.4425" y="137.57039"/>
+        <omgdi:waypoint x="783.5918" y="137.57039"/>
       </bpmdi:BPMNEdge>
     </bpmndi:BPMNPlane>
   </bpmndi:BPMNDiagram>
