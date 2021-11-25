@@ -28,6 +28,8 @@ import java.util.UUID;
 
 import static de.adorsys.opba.protocol.xs2a.tests.TestProfiles.MOCKED_SANDBOX;
 import static de.adorsys.opba.protocol.xs2a.tests.TestProfiles.ONE_TIME_POSTGRES_RAMFS;
+import static de.adorsys.opba.protocol.xs2a.tests.e2e.stages.StagesCommonUtil.ANTON_BRUECKNER;
+import static de.adorsys.opba.protocol.xs2a.tests.e2e.stages.StagesCommonUtil.COMMERZBANK_PORT;
 import static de.adorsys.opba.protocol.xs2a.tests.e2e.stages.StagesCommonUtil.COMMERZ_BANK_PROFILE_ID;
 import static de.adorsys.opba.protocol.xs2a.tests.e2e.stages.StagesCommonUtil.CONSORS_BANK_PROFILE_ID;
 import static de.adorsys.opba.protocol.xs2a.tests.e2e.stages.StagesCommonUtil.DEUTSCHE_BANK_PROFILE_ID;
@@ -120,7 +122,7 @@ class WiremockConsentE2EXs2aProtocolTest extends SpringScenarioTest<MockServers,
             .and()
             .user_anton_brueckner_provided_initial_parameters_to_list_accounts_with_all_accounts_consent()
             .and()
-            .user_anton_brueckner_sees_that_he_needs_to_be_redirected_to_aspsp_and_redirects_to_aspsp()
+            .user_sees_that_he_needs_to_be_redirected_to_aspsp_and_redirects_to_aspsp(ANTON_BRUECKNER, "localhost", 54724)
             .and()
             .open_banking_redirect_from_aspsp_with_static_oauth2_code_to_exchange_to_token_ing(OAUTH2_CODE_ING);
         then()
@@ -276,7 +278,7 @@ class WiremockConsentE2EXs2aProtocolTest extends SpringScenarioTest<MockServers,
             .and()
             .user_anton_brueckner_provided_initial_parameters_to_list_accounts_with_dedicated_consent()
             .and()
-            .user_anton_brueckner_sees_that_he_needs_to_be_redirected_to_aspsp_and_redirects_to_aspsp()
+            .user_sees_that_he_needs_to_be_redirected_to_aspsp_and_redirects_to_aspsp(ANTON_BRUECKNER, "simulator-xs2a.db.com", null)
             .and()
             .open_banking_redirect_from_aspsp_ok_webhook_called_for_api_test();
         then()
@@ -300,7 +302,7 @@ class WiremockConsentE2EXs2aProtocolTest extends SpringScenarioTest<MockServers,
                 .and()
                 .user_anton_brueckner_provided_initial_parameters_to_list_accounts_with_dedicated_consent()
                 .and()
-                .user_anton_brueckner_sees_that_he_needs_to_be_redirected_to_aspsp_and_redirects_to_aspsp()
+                .user_sees_that_he_needs_to_be_redirected_to_aspsp_and_redirects_to_aspsp(ANTON_BRUECKNER, "api.santander.de",null)
                 .and()
                 .open_banking_redirect_from_aspsp_with_static_oauth2_code_to_exchange_to_token(OAUTH2_CODE);
         then()
@@ -325,7 +327,7 @@ class WiremockConsentE2EXs2aProtocolTest extends SpringScenarioTest<MockServers,
                 .and()
                 .user_anton_brueckner_provided_initial_parameters_to_list_accounts_with_dedicated_consent()
                 .and()
-                .user_anton_brueckner_sees_that_he_needs_to_be_redirected_to_aspsp_and_redirects_to_aspsp()
+                .user_sees_that_he_needs_to_be_redirected_to_aspsp_and_redirects_to_aspsp(ANTON_BRUECKNER, "localhost", COMMERZBANK_PORT)
                 .and()
                 .open_banking_redirect_from_aspsp_with_static_oauth2_code_to_exchange_to_token(OAUTH2_CODE);
         then()

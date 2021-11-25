@@ -4,7 +4,6 @@ import com.github.tomakehurst.wiremock.WireMockServer;
 import com.github.tomakehurst.wiremock.verification.LoggedRequest;
 import com.tngtech.jgiven.annotation.ExpectedScenarioState;
 import com.tngtech.jgiven.integration.spring.JGivenStage;
-import de.adorsys.opba.protocol.xs2a.tests.e2e.LocationExtractorUtil;
 import de.adorsys.opba.protocol.xs2a.tests.e2e.stages.AdminUtil;
 import de.adorsys.opba.protocol.xs2a.tests.e2e.stages.PaymentRequestCommon;
 import io.restassured.RestAssured;
@@ -13,9 +12,12 @@ import io.restassured.response.Response;
 import org.awaitility.Durations;
 import org.springframework.http.HttpStatus;
 
+import java.net.URI;
+
 import static com.github.tomakehurst.wiremock.client.WireMock.postRequestedFor;
 import static com.github.tomakehurst.wiremock.client.WireMock.urlMatching;
 import static de.adorsys.opba.api.security.external.domain.HttpHeaders.AUTHORIZATION_SESSION_KEY;
+import static de.adorsys.opba.protocol.xs2a.tests.e2e.LocationExtractorUtil.getLocation;
 import static de.adorsys.opba.protocol.xs2a.tests.e2e.stages.StagesCommonUtil.withSignatureHeaders;
 import static de.adorsys.xs2a.adapter.api.RequestHeaders.TPP_REDIRECT_URI;
 import static org.assertj.core.api.Assertions.assertThat;
@@ -43,8 +45,9 @@ public class WiremockPaymentRequest<SELF extends WiremockPaymentRequest<SELF>> e
                              .statusCode(HttpStatus.ACCEPTED.value())
                              .extract();
 
-        assertThat(LocationExtractorUtil.getLocation(response)).contains("pis").contains("consent-result");
-
+        assertThat(getLocation(response)).contains("pis").contains("consent-result");
+        assertThat(URI.create(getLocation(response))).hasParameter("redirectCode");
+        assertThat(URI.create(getLocation(response))).hasPath(String.format("/pis/%s/consent-result", paymentServiceSessionId));
         return self();
     }
 
