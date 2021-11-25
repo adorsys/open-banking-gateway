@@ -91,7 +91,11 @@ public class AccountInformationRequestCommon<SELF extends AccountInformationRequ
         updateRedirectCode(response);
         updateNextConsentAuthorizationUrl(response);
         assertThat(URI.create(getLocation(response))).hasParameter("redirectCode");
-        assertThat(URI.create(getLocation(response))).hasPath(String.format("/auth/ais/%s/anonymous", serviceSessionId));
+        if (anonymous) {
+            assertThat(URI.create(getLocation(response))).hasPath(String.format("/auth/ais/%s/anonymous", serviceSessionId));
+        } else {
+            assertThat(URI.create(getLocation(response))).hasPath(String.format("/auth/ais/%s/login", serviceSessionId));
+        }
         return self();
     }
 
@@ -336,6 +340,21 @@ public class AccountInformationRequestCommon<SELF extends AccountInformationRequ
 
     public SELF user_anton_brueckner_sees_that_he_needs_to_be_redirected_to_aspsp_and_redirects_to_aspsp() {
         return user_sees_that_he_needs_to_be_redirected_to_aspsp_and_redirects_to_aspsp(ANTON_BRUECKNER);
+    }
+
+    public SELF user_sees_that_he_needs_to_be_redirected_to_aspsp_and_redirects_to_aspsp_without_host_assert(String user) {
+        ExtractableResponse<Response> response = withDefaultHeaders(user)
+                    .cookie(AUTHORIZATION_SESSION_KEY, authSessionCookie)
+                    .queryParam(X_XSRF_TOKEN_QUERY, redirectCode)
+                .when()
+                    .get(GET_CONSENT_AUTH_STATE, serviceSessionId)
+                .then()
+                    .statusCode(OK.value())
+                    .extract();
+        this.redirectUriToGetUserParams = getLocation(response);
+        updateServiceSessionId(response);
+        updateRedirectCode(response);
+        return self();
     }
 
     public SELF user_sees_that_he_needs_to_be_redirected_to_aspsp_and_redirects_to_aspsp(String user) {
