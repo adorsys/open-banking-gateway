@@ -359,7 +359,9 @@ public class AccountInformationRequestCommon<SELF extends AccountInformationRequ
 
         // The URI should point to Sandbox
         var redirectUri = URI.create(getLocation(response));
-        assertThat(redirectUri).hasHost(expectedHost);
+        if (null != expectedHost) {
+            assertThat(redirectUri).hasHost(expectedHost);
+        }
         if (null != expectedPort) {
             assertThat(redirectUri).hasPort(expectedPort);
         }
