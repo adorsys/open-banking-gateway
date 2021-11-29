@@ -7,6 +7,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.Profile;
 import org.springframework.context.annotation.Scope;
 import org.springframework.context.annotation.ScopedProxyMode;
 import org.springframework.web.context.WebApplicationContext;
@@ -27,16 +28,33 @@ public class AuthorizationSessionKeyConfig {
     private final TokenBasedAuthService authService;
 
     @Bean
+    @Profile("!security-bypass")
     @Scope(scopeName = WebApplicationContext.SCOPE_REQUEST, proxyMode = ScopedProxyMode.TARGET_CLASS)
     public AuthorizationSessionKeyFromHttpRequest getAuthorizationSessionKeyFromHttpRequest(HttpServletRequest httpServletRequest) {
         log.debug("Incoming request {}", httpServletRequest.getRequestURI());
+        String authCookieValue = getAuthCookieValue(httpServletRequest);
+
+        return new AuthorizationSessionKeyFromHttpRequest(authService.validateTokenAndGetSubject(authCookieValue));
+    }
+
+    @Bean
+    @Profile("security-bypass")
+    @Scope(scopeName = WebApplicationContext.SCOPE_REQUEST, proxyMode = ScopedProxyMode.TARGET_CLASS)
+    public AuthorizationSessionKeyFromHttpRequest getAuthorizationSessionKeyFromHttpRequestWithoutValidation(HttpServletRequest httpServletRequest) {
+        log.debug("Incoming request {}", httpServletRequest.getRequestURI());
+        String authCookieValue = getAuthCookieValue(httpServletRequest);
+
+        return new AuthorizationSessionKeyFromHttpRequest(authService.getSubject(authCookieValue));
+    }
+
+    private String getAuthCookieValue(HttpServletRequest httpServletRequest) {
         String authCookieValue = Arrays.stream(httpServletRequest.getCookies())
                 .filter(it -> AUTHORIZATION_SESSION_KEY.equals(it.getName()))
                 .findFirst()
                 .map(Cookie::getValue)
                 .orElseThrow(() -> new RuntimeException("programming error: no cookie supplied, filter must be wrong "
                         + httpServletRequest.getMethod() + " " + httpServletRequest.getRequestURI()));
-        return new AuthorizationSessionKeyFromHttpRequest(authService.validateTokenAndGetSubject(authCookieValue));
+        return authCookieValue;
     }
 
     @RequiredArgsConstructor

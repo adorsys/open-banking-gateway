@@ -39,7 +39,7 @@ public class RequestVerifyingConfig {
     private Set<@NotBlank String> urlsToBeValidated;
 
     @Bean
-    @Profile("!no-signature-filter")
+    @Profile("!(no-signature-filter | security-bypass)")
     public FilterRegistrationBean<RequestSignatureValidationFilter> requestSignatureValidationFilter(
             ApiConsumerConfig consumers) {
 

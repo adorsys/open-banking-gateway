@@ -23,7 +23,6 @@ import lombok.RequiredArgsConstructor;
 import lombok.SneakyThrows;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Objects;
@@ -33,7 +32,7 @@ import java.util.stream.Collectors;
 /**
  * Base class for service context provider necessary to serve request for underlying protocols.
  */
-@Service(ServiceContextProviderForFintech.FINTECH_CONTEXT_PROVIDER)
+//@Service(ServiceContextProviderForFintech.FINTECH_CONTEXT_PROVIDER)
 @RequiredArgsConstructor
 public class ServiceContextProviderForFintech implements ServiceContextProvider {
 

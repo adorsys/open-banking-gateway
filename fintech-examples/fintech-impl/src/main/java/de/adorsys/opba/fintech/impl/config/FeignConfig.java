@@ -46,7 +46,7 @@ public class FeignConfig {
     }
 
     @Bean
-    @Profile("!no-signature-filter")
+    @Profile("!no-signature-filter | !security-bypass")
     public RequestInterceptor requestInterceptorWithSigning() {
         // This allows OPBA Consent API to compute PSU IP address itself.
         return requestTemplate -> {
@@ -56,7 +56,7 @@ public class FeignConfig {
     }
 
     @Bean
-    @Profile("no-signature-filter")
+    @Profile("no-signature-filter | security-bypass")
     public RequestInterceptor requestInterceptorWithoutSigning() {
         // This allows OPBA Consent API to compute PSU IP address itself.
         return requestTemplate -> {
