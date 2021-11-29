@@ -187,6 +187,7 @@
         <feign-http-client.version>10.7.4</feign-http-client.version>
         <postgresql.version>42.2.11</postgresql.version>
         <compile-testing.version>0.18</compile-testing.version>
+        <semver4j.version>3.1.0</semver4j.version>
         <!-- JavaDoc -->
         <javax.interceptor.api.version>1.2.2</javax.interceptor.api.version>
         <commons-codec.version>1.14</commons-codec.version>

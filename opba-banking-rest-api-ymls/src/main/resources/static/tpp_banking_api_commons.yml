@@ -254,50 +254,54 @@ components:
       schema:
         type: string
 
-    TPP-Decoupled-Preferred:
-      name: TPP-Decoupled-Preferred
+    Fintech-Decoupled-Preferred:
+      name: Fintech-Decoupled-Preferred
       in: header
       description: |
-        If it equals "true", the TPP prefers a decoupled SCA approach.If it equals "false", the TPP prefers not to use the decoupled approach for SCA.
-        The ASPSP will then choose betweenthe embedded or the redirect SCA approach, depending on the choice of the SCA procedure by the TPP/PSU.
-        If the parameter is not used, the ASPSP will choose the SCA approach to be applied depending on the parameterTPP-Redirect-Preferred and the SCA method chosen by the TPP/PSU.The parameter might be ignored by the ASPSP.
-        If both parameters TPP-Redirect-Preferred and TPP-Decoupled-Preferred are present and true, the request is still notrejected, but it is up to the ASPSP, which approach will actually be used.
+        If it equals "true", the Fintech prefers a decoupled SCA approach.If it equals "false", the Fintech prefers not to use the decoupled approach for SCA.
+        The ASPSP will then choose betweenthe embedded or the redirect SCA approach, depending on the choice of the SCA procedure by the Fintech/PSU.
+        If the parameter is not used, the ASPSP will choose the SCA approach to be applied depending on the parameter Fintech-Redirect-Preferred and the SCA method chosen by the Fintech/PSU.The parameter might be ignored by the ASPSP.
+        If both parameters Fintech-Redirect-Preferred and Fintech-Decoupled-Preferred are present and true, the request is still notrejected, but it is up to the ASPSP, which approach will actually be used.
         **Remark for Future:**
-        TPP-Redirect-Preferred and TPP-Decoupled-Preferred will be revised in future versions, maybe merged.
+        Fintech-Redirect-Preferred and Fintech-Decoupled-Preferred will be revised in future versions, maybe merged.
         Currently keptseparate for downward compatibility.
       schema:
         type: boolean
       required: false
 
-    TPP-Brand-Logging-Information:
-      name: TPP-Brand-Logging-Information
+    Fintech-Brand-Logging-Information:
+      name: Fintech-Brand-Logging-Information
       in: header
       description: |
-        This header might be used by TPPs to inform the ASPSP about the brand used by the TPP towards the PSU.This information is meant for logging entries to enhance communication between ASPSP and PSU or ASPSP and TPP.
+        This header might be used by Fintechs to inform the ASPSP about the brand used by the Fintech towards the PSU.
+        This information is meant for logging entries to enhance communication between ASPSP and PSU or ASPSP and Fintech.
         This header might be ignored by the ASPSP.
       schema:
         type: string
       required: false
 
-    TPP-Notification-URI:
-      name: TPP-Notification-URI
+    Fintech-Notification-URI:
+      name: Fintech-Notification-URI
       in: header
       description: |
-        URI for the Endpoint of the TPP-API to which the status of the payment initiation should be sent.This header field may by ignored by the ASPSP.For security reasons,
-        it shall be ensured that the TPP-Notification-URI as introduced above is secured by the TPPeIDAS QWAC used for identification of the TPP.
-        The following applies:URIs which are provided by TPPs in TPP-Notification-URI shall comply with the domain secured by the eIDAS QWACcertificate of the TPP in the field CN or SubjectAltName of the certificate.
-        Please note that in case ofexample-TPP.com as certificate entry TPP- Notification-URI likewww.example-TPP.com/xs2a-client/v1/ASPSPidentifcation/mytransaction- id/notifications ornotifications.example-TPP.com/xs2a-client/v1/ASPSPidentifcation/mytransaction- id/notifications would be compliant.
+        URI for the Endpoint of the Fintech-API to which the status of the payment initiation should be sent.This header field may by ignored by the ASPSP.For security reasons,
+        it shall be ensured that the Fintech-Notification-URI as introduced above is secured by the Fintech eIDAS QWAC used for identification of the Fintech.
+        The following applies:URIs which are provided by Fintechs in Fintech-Notification-URI shall comply with the domain secured by the eIDAS QWACcertificate of the Fintech in the field CN or SubjectAltName of the certificate.
+        Please note that in case of example-Fintech.com as certificate entry Fintech- Notification-URI like www.example-Fintech.com/xs2a-client/v1/ASPSPidentifcation/mytransaction- id/notifications ornotifications.example-Fintech.com/xs2a-client/v1/ASPSPidentifcation/mytransaction- id/notifications would be compliant.
         Wildcard definitions shall be taken into account for compliance checks by the ASPSP.
         ASPSPs may respond with ASPSP-Notification-Support set to false, if the provided URIs do not comply.
       schema:
         type: string
       required: false
 
-    TPP-Notification-Content-Preferred:
-      name: TPP-Notification-Content-Preferred
+    Fintech-Notification-Content-Preferred:
+      name: Fintech-Notification-Content-Preferred
       in: header
       description: |
-        The string has the formstatus=X1, ..., Xn where Xi is one of the constants SCA, PROCESS, LAST and where constants are notrepeated.The usage of the constants supports the of following semantics:SCA: A notification on every change of the scaStatus attribute for all related authorisation processes ispreferred by the TPP.PROCESS: A notification on all changes of consentStatus or transactionStatus attributes is preferred by the TPP.LAST: Only a notification on the last consentStatus or transactionStatus as available in the XS2A interface ispreferred by the TPP.This header field may be ignored, if the ASPSP does not support resource notification services for the related TPP.
+        The string has the formstatus=X1, ..., Xn where Xi is one of the constants SCA, PROCESS, LAST and where constants are notrepeated.The usage of the constants supports the of following semantics:SCA: A notification on every change of the scaStatus attribute for all related authorisation processes ispreferred by the Fintech.
+        PROCESS: A notification on all changes of consentStatus or transactionStatus attributes is preferred by the Fintech.
+        LAST: Only a notification on the last consentStatus or transactionStatus as available in the XS2A interface ispreferred by the Fintech.
+        This header field may be ignored, if the ASPSP does not support resource notification services for the related Fintech.
       schema:
         type: string
       required: false

@@ -48,10 +48,10 @@ public class TppBankingApiPisController implements TppBankingApiSinglePaymentPis
                                              Boolean xPsuAuthenticationRequired,
                                              Boolean computePsuIpAddress,
                                              String psuIpAddress,
-                                             Boolean tppDecoupledPreferred,
-                                             String tppBrandLoggingInformation,
-                                             String tppNotificationURI,
-                                             String tppNotificationContentPreferred
+                                             Boolean fintechDecoupledPreferred,
+                                             String fintechBrandLoggingInformation,
+                                             String fintechNotificationURI,
+                                             String fintechNotificationContentPreferred
     ) {
         return payments.execute(
                 InitiateSinglePaymentRequest.builder()
@@ -66,10 +66,10 @@ public class TppBankingApiPisController implements TppBankingApiSinglePaymentPis
                                 .requestId(xRequestID)
                                 .bankProfileId(bankProfileID)
                                 .anonymousPsu(null != xPsuAuthenticationRequired && !xPsuAuthenticationRequired)
-                                .tppDecoupledPreferred(null != tppDecoupledPreferred && !tppDecoupledPreferred)
-                                .tppBrandLoggingInformation(tppBrandLoggingInformation)
-                                .tppNotificationURI(tppNotificationURI)
-                                .tppNotificationContentPreferred(tppNotificationContentPreferred)
+                                .fintechDecoupledPreferred(null != fintechDecoupledPreferred && !fintechDecoupledPreferred)
+                                .fintechBrandLoggingInformation(fintechBrandLoggingInformation)
+                                .fintechNotificationURI(fintechNotificationURI)
+                                .fintechNotificationContentPreferred(fintechNotificationContentPreferred)
                                 .build()
                         )
                         .singlePayment(pisSinglePaymentMapper.map(body, PaymentProductDetails.fromValue(paymentProduct)))

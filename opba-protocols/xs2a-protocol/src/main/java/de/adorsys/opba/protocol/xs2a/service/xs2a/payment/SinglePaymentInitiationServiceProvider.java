@@ -9,9 +9,11 @@ import java.util.Set;
 @RequiredArgsConstructor
 @Component
 public class SinglePaymentInitiationServiceProvider {
-    private final Set<SinglePaymentInitiationService> paymentInitiationExecutors;
+
+    private final Set<SinglePaymentInitiationService> paymentInitiationServices;
+
     public SinglePaymentInitiationService instance(Xs2aPisContext context) {
-        return paymentInitiationExecutors.stream()
+        return paymentInitiationServices.stream()
                 .filter(it -> it.isXs2aApiVersionSupported(context.aspspProfile().getSupportedXs2aApiVersion()))
                 .findAny().orElseThrow();
     }

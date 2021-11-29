@@ -27,11 +27,9 @@ class Xs2aInitiateSinglePaymentEntrypointFromRequestTest {
     public void xs2aInitiateSinglePaymentEntrypointFromRequestMapperTest() {
         // Given
         InitiateSinglePaymentRequest mappingInput = fixtureProvider.getFromFile(REQUEST_INPUT, InitiateSinglePaymentRequest.class);
-       SinglePaymentXs2aContext expected = fixtureProvider.getFromFile(REQUEST_OUTPUT, SinglePaymentXs2aContext.class);
-
+        SinglePaymentXs2aContext expected = fixtureProvider.getFromFile(REQUEST_OUTPUT, SinglePaymentXs2aContext.class);
         // When
         SinglePaymentXs2aContext actual = mapper.map(mappingInput);
-
         // Then
         assertThat(actual).isEqualToComparingFieldByFieldRecursively(expected);
     }

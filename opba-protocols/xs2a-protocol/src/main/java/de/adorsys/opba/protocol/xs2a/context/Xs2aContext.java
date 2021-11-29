@@ -213,24 +213,24 @@ public class Xs2aContext extends BaseContext {
 
 
     /**
-     * This header might be used by TPPs to inform the ASPSP about the brand used by the TPP towards the PSU.
+     * This header might be used by FinTechs to inform the ASPSP about the brand used by the FinTech towards the PSU.
      */
-    private  String tppBrandLoggingInformation;
+    private  String fintechBrandLoggingInformation;
 
     /**
-     *  URI for the Endpoint of the TPP-API to which the status of the payment initiation should be sent.
+     *  URI for the Endpoint of the FinTech-API to which the status of the payment initiation should be sent.
      */
-    private  String tppNotificationURI;
+    private  String fintechNotificationURI;
 
     /**
      * The string has the formstatus=X1, ..., Xn where Xi is one of the constants SCA, PROCESS, LAST and where constants are not repeated.
      */
-    private  String tppNotificationContentPreferred;
+    private  String fintechNotificationContentPreferred;
 
     /**
-     * If it equals "true", the TPP prefers a decoupled SCA approach
+     * If it equals "true", the FinTech prefers a decoupled SCA approach
      */
-    private boolean tppDecoupledPreferred;
+    private boolean fintechDecoupledPreferred;
 
     @JsonIgnore
     public String getPsuPassword() {

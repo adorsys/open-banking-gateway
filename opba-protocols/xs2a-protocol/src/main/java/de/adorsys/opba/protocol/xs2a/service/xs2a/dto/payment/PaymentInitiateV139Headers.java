@@ -17,24 +17,24 @@ import static de.adorsys.opba.protocol.xs2a.constant.GlobalConst.XS2A_MAPPERS_PA
 @SuppressWarnings("PMD")
 public class PaymentInitiateV139Headers extends PaymentInitiateHeaders {
     /**
-     * This header might be used by TPPs to inform the ASPSP about the brand used by the TPP towards the PSU.
+     * This header might be used by Fintechs to inform the ASPSP about the brand used by the Fintech towards the PSU.
      */
-    private  String tppBrandLoggingInformation;
+    private  String fintechBrandLoggingInformation;
 
     /**
-     *  URI for the Endpoint of the TPP-API to which the status of the payment initiation should be sent.
+     *  URI for the Endpoint of the Fintech-API to which the status of the payment initiation should be sent.
      */
-    private  String tppNotificationURI;
+    private  String fintechNotificationURI;
 
     /**
      * The string has the formstatus=X1, ..., Xn where Xi is one of the constants SCA, PROCESS, LAST and where constants are not repeated.
      */
-    private  String tppNotificationContentPreferred;
+    private  String fintechNotificationContentPreferred;
 
     /**
-     * If it equals "true", the TPP prefers a decoupled SCA approach
+     * If it equals "true", the Fintech prefers a decoupled SCA approach
      */
-    private  boolean tppDecoupledPreferred;
+    private  boolean fintechDecoupledPreferred;
 
 
     @Override
@@ -45,9 +45,7 @@ public class PaymentInitiateV139Headers extends PaymentInitiateHeaders {
 
     @Mapper(componentModel = SPRING_KEYWORD, implementationPackage = XS2A_MAPPERS_PACKAGE, uses = ResponseTokenMapper.class)
     public interface FromPisCtx extends DtoMapper<Xs2aPisContext, PaymentInitiateV139Headers> {
-
         PaymentInitiateV139Headers map(Xs2aPisContext ctx);
-
     }
 
 

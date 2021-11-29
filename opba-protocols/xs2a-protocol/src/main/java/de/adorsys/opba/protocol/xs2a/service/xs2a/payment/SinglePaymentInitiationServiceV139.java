@@ -1,5 +1,6 @@
 package de.adorsys.opba.protocol.xs2a.service.xs2a.payment;
 
+import com.vdurmont.semver4j.Semver;
 import de.adorsys.opba.protocol.bpmnshared.dto.DtoMapper;
 import de.adorsys.opba.protocol.xs2a.context.pis.Xs2aPisContext;
 import de.adorsys.opba.protocol.xs2a.service.mapper.PathHeadersBodyMapperTemplate;
@@ -19,6 +20,7 @@ import de.adorsys.xs2a.adapter.api.model.PaymentInitiationJson;
 import de.adorsys.xs2a.adapter.api.model.PaymentService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.logging.log4j.util.Strings;
 import org.flowable.engine.delegate.DelegateExecution;
 import org.springframework.stereotype.Service;
 
@@ -26,7 +28,9 @@ import org.springframework.stereotype.Service;
 @RequiredArgsConstructor
 @Service
 public class SinglePaymentInitiationServiceV139 implements SinglePaymentInitiationService {
-    private static final String XS2A_API_VERSION = "1.3.9";
+
+    private static final Semver XS2A_API_VERSION = new Semver("1.3.9");
+
     private final Xs2aValidator validator;
     private final PaymentInitiationService pis;
     private final CreateConsentOrPaymentPossibleErrorHandler handler;
@@ -52,7 +56,8 @@ public class SinglePaymentInitiationServiceV139 implements SinglePaymentInitiati
 
     @Override
     public boolean isXs2aApiVersionSupported(String apiVersion) {
-        return XS2A_API_VERSION.equals(apiVersion);
+
+     return Strings.isNotBlank(apiVersion) && !VERSION_DIFFS.contains(XS2A_API_VERSION.diff(apiVersion));
     }
 
     private Response<PaymentInitationRequestResponse201> initiatePayment(

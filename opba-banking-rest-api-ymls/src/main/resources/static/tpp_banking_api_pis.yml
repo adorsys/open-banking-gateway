@@ -30,10 +30,10 @@ paths:
         - $ref: "./tpp_banking_api_commons.yml#/components/parameters/X-Request-ID"
         - $ref: "./tpp_banking_api_commons.yml#/components/parameters/Compute-PSU-IP-Address"
         - $ref: "./tpp_banking_api_commons.yml#/components/parameters/PSU-IP-Address"
-        - $ref: "./tpp_banking_api_commons.yml#/components/parameters/TPP-Decoupled-Preferred"
-        - $ref: "./tpp_banking_api_commons.yml#/components/parameters/TPP-Brand-Logging-Information"
-        - $ref: "./tpp_banking_api_commons.yml#/components/parameters/TPP-Notification-URI"
-        - $ref: "./tpp_banking_api_commons.yml#/components/parameters/TPP-Notification-Content-Preferred"
+        - $ref: "./tpp_banking_api_commons.yml#/components/parameters/Fintech-Decoupled-Preferred"
+        - $ref: "./tpp_banking_api_commons.yml#/components/parameters/Fintech-Brand-Logging-Information"
+        - $ref: "./tpp_banking_api_commons.yml#/components/parameters/Fintech-Notification-URI"
+        - $ref: "./tpp_banking_api_commons.yml#/components/parameters/Fintech-Notification-Content-Preferred"
         #path
         - $ref: "#/components/parameters/PaymentProduct"
       requestBody:

@@ -100,22 +100,22 @@ public class FacadeServiceableRequest {
 
 
     /**
-     * This header might be used by TPPs to inform the ASPSP about the brand used by the TPP towards the PSU.
+     * This header might be used by Fintechs to inform the ASPSP about the brand used by the Fintech towards the PSU.
      */
-    private final String tppBrandLoggingInformation;
+    private final String fintechBrandLoggingInformation;
 
     /**
-     *  URI for the Endpoint of the TPP-API to which the status of the payment initiation should be sent.
+     *  URI for the Endpoint of the Fintech-API to which the status of the payment initiation should be sent.
      */
-    private final String tppNotificationURI;
+    private final String fintechNotificationURI;
 
     /**
      * The string has the formstatus=X1, ..., Xn where Xi is one of the constants SCA, PROCESS, LAST and where constants are not repeated.
      */
-    private final String tppNotificationContentPreferred;
+    private final String fintechNotificationContentPreferred;
 
     /**
-     * If it equals "true", the TPP prefers a decoupled SCA approach
+     * If it equals "true", the Fintech prefers a decoupled SCA approach
      */
-    private final boolean tppDecoupledPreferred;
+    private final boolean fintechDecoupledPreferred;
 }
