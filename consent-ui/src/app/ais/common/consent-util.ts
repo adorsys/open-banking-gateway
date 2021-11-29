@@ -29,7 +29,7 @@ export class ConsentUtil {
     // FIXME: These fields MUST be initialized by FinTech through API and user can only adjust it.
     aisConsent.consent = new AisConsentImpl();
     aisConsent.consent.access = new AccountAccess();
-    aisConsent.consent.frequencyPerDay = 4;
+    aisConsent.consent.frequencyPerDay = 10;
     aisConsent.consent.recurringIndicator = true;
     aisConsent.consent.validUntil = ConsentUtil.futureDate().toISOString().split('T')[0];
     return aisConsent;
@@ -38,7 +38,7 @@ export class ConsentUtil {
   // TODO: should be removed when form is filled by FinTech
   private static futureDate(): Date {
     const result = new Date();
-    result.setDate(result.getDate() + 1);
+    result.setDate(result.getDate() + 90);
     return result;
   }
 }

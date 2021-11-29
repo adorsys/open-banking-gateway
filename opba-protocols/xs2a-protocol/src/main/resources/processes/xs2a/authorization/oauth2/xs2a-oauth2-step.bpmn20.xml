@@ -47,7 +47,7 @@
     <sequenceFlow id="sid-cf9047bc-6775-4f71-b397-d6182455d9bd" sourceRef="sid-0f4e5f10-4c3f-469f-b6ee-3671a13f70b1" targetRef="oauth2ExchangeCodeToToken" name="isOK">
       <conditionExpression xsi:type="tFormalExpression">#{xs2aConsentInfo.isOkRedirectConsent(CONTEXT)}</conditionExpression>
     </sequenceFlow>
-    <sequenceFlow id="sid-01e6ebac-699d-49ab-9b54-126e5772ed32" sourceRef="sid-0f4e5f10-4c3f-469f-b6ee-3671a13f70b1" targetRef="sid-e0dbf285-c6c2-4571-ac5e-9038fcbf8448" name="isNOK">
+    <sequenceFlow id="sid-01e6ebac-699d-49ab-9b54-126e5772ed32" sourceRef="sid-0f4e5f10-4c3f-469f-b6ee-3671a13f70b1" targetRef="if-needed-xs2a-oauth2-step" name="isNOK">
       <conditionExpression xsi:type="tFormalExpression"/>
     </sequenceFlow>
     <sequenceFlow id="sid-cee5f56d-5265-4079-b7d4-ccc950f3b01f" sourceRef="redirectUserToOauth2AuthorizationServer" targetRef="sid-0f4e5f10-4c3f-469f-b6ee-3671a13f70b1"/>
@@ -157,8 +157,8 @@
       </bpmdi:BPMNEdge>
       <bpmdi:BPMNEdge xmlns:bpmdi="http://www.omg.org/spec/BPMN/20100524/DI" id="edge-e3337972-7736-4c59-ade4-2a2616b332a2" bpmnElement="sid-01e6ebac-699d-49ab-9b54-126e5772ed32">
         <omgdi:waypoint x="803.5918" y="157.57039"/>
-        <omgdi:waypoint x="803.59186" y="210.93251"/>
-        <omgdi:waypoint x="1036.144" y="256.5"/>
+        <omgdi:waypoint x="803.5918" y="210.9325"/>
+        <omgdi:waypoint x="1051.144" y="210.9325"/>
       </bpmdi:BPMNEdge>
       <bpmdi:BPMNEdge xmlns:bpmdi="http://www.omg.org/spec/BPMN/20100524/DI" id="edge-114b4d98-cc98-4a94-b0ca-455b8c9654e8" bpmnElement="sid-cee5f56d-5265-4079-b7d4-ccc950f3b01f">
         <omgdi:waypoint x="715.4425" y="137.57039"/>
