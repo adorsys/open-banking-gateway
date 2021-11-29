@@ -290,6 +290,11 @@ public class AccountInformationRequestCommon<SELF extends AccountInformationRequ
         return self();
     }
 
+    public SELF set_auth_session_key_in_wiremock_transformer(RedirectCapturingTransformer transformer) {
+        transformer.setAuthCookie(this.authSessionCookie);
+        return self();
+    }
+
     public SELF user_anton_brueckner_provided_initial_parameters_to_list_accounts_with_all_accounts_consent_without_cookie_validation() {
         startInitialInternalConsentAuthorization(
                 AUTHORIZE_CONSENT_ENDPOINT,
