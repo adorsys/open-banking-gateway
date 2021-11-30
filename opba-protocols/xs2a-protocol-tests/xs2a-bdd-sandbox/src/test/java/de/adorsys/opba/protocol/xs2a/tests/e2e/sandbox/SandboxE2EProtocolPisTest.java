@@ -123,54 +123,6 @@ public class SandboxE2EProtocolPisTest extends SandboxCommonTest<
      * Not using {@code ParameterizedTest} as OAuth2 is the special case of REDIRECT (to reduce pipeline runtime).
      */
     @Test
-    public void testSinglePaymentWithConsentUsingOAuth2PreStep(FirefoxDriver firefoxDriver) {
-        given()
-                .enabled_oauth2_pre_step_sandbox_mode()
-                .rest_assured_points_to_opba_server_with_fintech_signer_on_banking_api()
-                .user_registered_in_opba_with_credentials(OPBA_LOGIN, OPBA_PASSWORD);
-
-        when()
-                .fintech_calls_initiate_payment_for_anton_brueckner()
-                .and()
-                .user_logged_in_into_opba_pis_as_opba_user_with_credentials_using_fintech_supplied_url(OPBA_LOGIN, OPBA_PASSWORD)
-                .and()
-                .user_anton_brueckner_provided_initial_parameters_to_authorize_initiation_payment()
-                .and()
-                .user_anton_brueckner_sees_that_he_needs_to_be_redirected_to_aspsp_and_redirects_to_aspsp()
-                .and()
-                .sandbox_anton_brueckner_navigates_to_bank_auth_page(firefoxDriver)
-                .and()
-                .add_open_banking_auth_session_key_cookie_to_selenium(firefoxDriver)
-                .and()
-                .sandbox_anton_brueckner_inputs_username_and_password_for_oauth2_form(firefoxDriver)
-                .and()
-                .update_redirect_code_from_browser_url(firefoxDriver)
-                .and()
-                .user_anton_brueckner_sees_that_he_needs_to_be_redirected_to_aspsp_and_redirects_to_aspsp()
-                .and()
-                .sandbox_anton_brueckner_navigates_to_bank_auth_page(firefoxDriver)
-                .and()
-                .sandbox_anton_brueckner_inputs_username_and_password_for_oauth2_form(firefoxDriver) // FIXME The step introduced with Sandbox 5.14, it is not clear why
-                .and()
-                .sandbox_anton_brueckner_confirms_consent_information(firefoxDriver)
-                .and()
-                .sandbox_anton_brueckner_selects_sca_method(firefoxDriver)
-                .and()
-                .sandbox_anton_brueckner_provides_sca_challenge_result(firefoxDriver)
-                .and()
-                .sandbox_anton_brueckner_clicks_redirect_back_to_tpp_button_api_localhost_cookie_only(firefoxDriver);
-
-        then()
-                .open_banking_has_stored_payment()
-                .fintech_calls_payment_activation_for_current_authorization_id()
-                .fintech_calls_payment_status()
-                .fintech_calls_payment_information_iban_400();
-    }
-
-    /**
-     * Not using {@code ParameterizedTest} as OAuth2 is the special case of REDIRECT (to reduce pipeline runtime).
-     */
-    @Test
     public void testSinglePaymentWithConsentUsingOAuth2Integrated(FirefoxDriver firefoxDriver) {
         given()
                 .enabled_redirect_sandbox_mode()

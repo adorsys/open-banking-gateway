@@ -245,6 +245,11 @@ public class PaymentRequestCommon<SELF extends PaymentRequestCommon<SELF>> exten
         return self();
     }
 
+    public SELF set_auth_session_key_in_wiremock_transformer(RedirectCapturingTransformer transformer) {
+        transformer.setAuthCookie(this.authSessionCookie);
+        return self();
+    }
+
     @SneakyThrows
     public SELF user_anton_brueckner_sees_that_he_needs_to_be_redirected_to_aspsp_and_redirects_to_aspsp() {
         return user_anton_brueckner_sees_that_he_needs_to_be_redirected_to_aspsp_and_redirects_to_aspsp(
