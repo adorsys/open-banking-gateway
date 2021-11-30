@@ -29,6 +29,12 @@ public class FacadeAuthConfig {
     @Validated
     public static class Redirect {
 
+        /**
+         * Allows to have single redirect code across session - improves application behavior in unstable network
+         * conditions.
+         */
+        private boolean sessionWideRedirectCode;
+
         private ConsentLogin consentLogin;
 
         @Data
