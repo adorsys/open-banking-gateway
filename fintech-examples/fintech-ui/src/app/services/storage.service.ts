@@ -13,6 +13,11 @@ import { SettingsData } from '../bank/settings/settings.component';
   providedIn: 'root'
 })
 export class StorageService {
+
+  static isoDate(toConvert: Date) {
+    return toConvert.toISOString().split('T')[0];
+  }
+
   public getXsrfToken(): string {
     return localStorage.getItem(Session.XSRF_TOKEN);
   }
@@ -170,7 +175,9 @@ export class StorageService {
         consentRequiresAuthentication: true,
         paymentRequiresAuthentication: false,
         consentSettingType: ConsentSettingType.NONE,
-        consent: null
+        consent: null,
+        dateFrom: '1970-01-01',
+        dateTo: StorageService.isoDate(new Date())
       };
     }
     return JSON.parse(setting);

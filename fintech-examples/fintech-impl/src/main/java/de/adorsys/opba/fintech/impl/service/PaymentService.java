@@ -124,6 +124,7 @@ public class PaymentService {
 
     private AccountReference getAccountReference(String iban) {
         AccountReference account = new AccountReference();
+        account.setCurrency(CURRENCY);
         account.setIban(iban);
         return account;
     }

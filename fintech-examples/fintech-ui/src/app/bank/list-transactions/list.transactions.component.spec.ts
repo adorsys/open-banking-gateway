@@ -62,10 +62,10 @@ describe('ListTransactionsComponent', () => {
     const loTRetrievalInformation: LoTRetrievalInformation = LoTRetrievalInformation.FROM_TPP_WITH_AVAILABLE_CONSENT;
 
     spyOn(aisService, 'getTransactions')
-      .withArgs(bankId, accountId, loTRetrievalInformation, '', true, true)
+      .withArgs(bankId, accountId, loTRetrievalInformation, '', true, true, '1970-01-01', StorageService.isoDate(new Date()))
       .and.returnValue(of(mockTransactions));
     expect(component.bankId).toEqual(bankId);
-    aisService.getTransactions(bankId, accountId, loTRetrievalInformation, '', true, true).subscribe((res) => {
+    aisService.getTransactions(bankId, accountId, loTRetrievalInformation, '', true, true, '1970-01-01', StorageService.isoDate(new Date())).subscribe((res) => {
       expect(res).toEqual(mockTransactions);
     });
   });
