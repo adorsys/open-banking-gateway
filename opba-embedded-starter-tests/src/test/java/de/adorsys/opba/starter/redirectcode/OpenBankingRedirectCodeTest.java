@@ -2,7 +2,6 @@ package de.adorsys.opba.starter.redirectcode;
 
 import de.adorsys.opba.api.security.external.service.RequestSigningService;
 import de.adorsys.opba.api.security.requestsigner.OpenBankingDataToSignProvider;
-import de.adorsys.opba.protocol.xs2a.entrypoint.ais.Xs2aListAccountsEntrypoint;
 import de.adorsys.opba.protocol.xs2a.tests.e2e.stages.CommonGivenStages;
 import de.adorsys.opba.starter.OpenBankingEmbeddedApplication;
 import de.adorsys.opba.starter.config.FintechRequestSigningTestConfig;
@@ -12,7 +11,6 @@ import org.jetbrains.annotations.Nullable;
 import org.junit.jupiter.api.BeforeEach;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.boot.test.mock.mockito.SpyBean;
 import org.springframework.boot.web.server.LocalServerPort;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -53,9 +51,6 @@ import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
 @Transactional(propagation = Propagation.NOT_SUPPORTED)
 @SpringBootTest(classes = {OpenBankingEmbeddedApplication.class, FintechRequestSigningTestConfig.class}, webEnvironment = RANDOM_PORT)
 abstract class OpenBankingRedirectCodeTest {
-
-    @SpyBean
-    private Xs2aListAccountsEntrypoint xs2aListAccountsEntrypoint;
 
     @Autowired
     private RequestSigningService signingService;
@@ -104,7 +99,7 @@ abstract class OpenBankingRedirectCodeTest {
                     .header(X_REQUEST_ID, UUID.randomUUID().toString())
                     .cookie(AUTHORIZATION_SESSION_KEY, authCookie)
                     .queryParam(X_XSRF_TOKEN_QUERY, redirectCode)
-                    .contentType(MediaType.APPLICATION_JSON_VALUE)
+                    .contentType(APPLICATION_JSON_VALUE)
                     .body(body)
                 .when()
                     .post(AUTHORIZE_CONSENT_ENDPOINT, serviceSessionId)
