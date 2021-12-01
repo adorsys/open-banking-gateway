@@ -7,7 +7,6 @@ import de.adorsys.opba.protocol.xs2a.service.mapper.PathHeadersBodyMapperTemplat
 import de.adorsys.opba.protocol.xs2a.service.xs2a.consent.CreateConsentOrPaymentPossibleErrorHandler;
 import de.adorsys.opba.protocol.xs2a.service.xs2a.dto.Xs2aInitialPaymentParameters;
 import de.adorsys.opba.protocol.xs2a.service.xs2a.dto.payment.PaymentInitiateBody;
-import de.adorsys.opba.protocol.xs2a.service.xs2a.dto.payment.PaymentInitiateHeaders;
 import de.adorsys.opba.protocol.xs2a.service.xs2a.dto.payment.PaymentInitiateV139Headers;
 import de.adorsys.opba.protocol.xs2a.service.xs2a.quirks.QuirkUtil;
 import de.adorsys.opba.protocol.xs2a.service.xs2a.validation.Xs2aValidator;
@@ -63,10 +62,8 @@ public class SinglePaymentInitiationServiceV139 implements SinglePaymentInitiati
     private Response<PaymentInitationRequestResponse201> initiatePayment(
             Xs2aPisContext context,
             Xs2aInitialPaymentParameters path,
-            PaymentInitiateHeaders headers,
+            PaymentInitiateV139Headers headers,
             PaymentInitiationJson body) {
-
-        logResolver.log("initiatePayment with parameters: {}", path, headers, body);
 
         Response<PaymentInitationRequestResponse201> paymentInit = pis.initiatePayment(PaymentService.PAYMENTS,
                 path.getPaymentProduct(),

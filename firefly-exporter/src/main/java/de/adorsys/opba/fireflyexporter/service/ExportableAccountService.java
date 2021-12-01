@@ -55,6 +55,10 @@ public class ExportableAccountService {
                 null,
                 true,
                 null,
+                null,
+                null,
+                null,
+                null,
                 true,
                 null
         );

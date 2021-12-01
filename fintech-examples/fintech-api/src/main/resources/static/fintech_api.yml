@@ -261,6 +261,10 @@ paths:
         - $ref: "#/components/parameters/Fintech-Redirect-URL-NOK"
         - $ref: "#/components/parameters/LoARetrievalInformation"
         - $ref: "#/components/parameters/X-Create-Consent-If-None"
+        - $ref: "#/components/parameters/Fintech-Decoupled-Preferred"
+        - $ref: "#/components/parameters/Fintech-Brand-Logging-Information"
+        - $ref: "#/components/parameters/Fintech-Notification-URI"
+        - $ref: "#/components/parameters/Fintech-Redirect-Notification-Content-Preferred"
         #query
         - $ref: "#/components/parameters/withBalance"
         - $ref: "#/components/parameters/online"

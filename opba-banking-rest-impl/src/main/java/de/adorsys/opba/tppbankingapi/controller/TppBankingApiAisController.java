@@ -65,161 +65,169 @@ public class TppBankingApiAisController implements TppBankingApiAccountInformati
     @Override
     @SneakyThrows
     public CompletableFuture getAccounts(
-        String fintechUserID,
-        String fintechRedirectURLOK,
-        String fintechRedirectURLNOK,
-        UUID xRequestID,
-        String xTimestampUTC,
-        String xRequestSignature,
-        String fintechId,
-        String serviceSessionPassword,
-        String fintechDataPassword,
-        UUID bankProfileID,
-        Boolean xPsuAuthenticationRequired,
-        UUID serviceSessionId,
-        String createConsentIfNone,
-        String importUserData,
-        Boolean computePsuIpAddress,
-        String psuIpAddress,
-        Boolean withBalance,
-        Boolean online
+            String fintechUserID,
+            String fintechRedirectURLOK,
+            String fintechRedirectURLNOK,
+            UUID xRequestID,
+            String xTimestampUTC,
+            String xRequestSignature,
+            String fintechId,
+            String serviceSessionPassword,
+            String fintechDataPassword,
+            UUID bankProfileID,
+            Boolean xPsuAuthenticationRequired,
+            UUID serviceSessionId,
+            String createConsentIfNone,
+            String importUserData,
+            Boolean computePsuIpAddress,
+            String psuIpAddress,
+            Boolean fintechDecoupledPreferred,
+            String fintechBrandLoggingInformation,
+            String fintechNotificationURI,
+            String fintechNotificationContentPreferred,
+            Boolean withBalance,
+            Boolean online
     ) {
         return accounts.execute(
-            ListAccountsRequest.builder()
-                .facadeServiceable(FacadeServiceableRequest.builder()
-                    // Get rid of CGILIB here by copying:
-                    .uaContext(userAgentContext.toBuilder().build())
-                    .authorization(fintechId)
-                    .sessionPassword(PasswordExtractingUtil.getDataProtectionPassword(serviceSessionPassword, fintechDataPassword))
-                    .fintechUserId(fintechUserID)
-                    .fintechRedirectUrlOk(fintechRedirectURLOK)
-                    .fintechRedirectUrlNok(fintechRedirectURLNOK)
-                    .serviceSessionId(serviceSessionId)
-                    .requestId(xRequestID)
-                    .bankProfileId(bankProfileID)
-                    .anonymousPsu(null != xPsuAuthenticationRequired && !xPsuAuthenticationRequired)
-                    .online(online)
-                    .build()
-                )
-                .withBalance(withBalance)
-                .extras(getExtras(createConsentIfNone, importUserData))
-                .build()
+                ListAccountsRequest.builder()
+                        .facadeServiceable(FacadeServiceableRequest.builder()
+                                // Get rid of CGILIB here by copying:
+                                .uaContext(userAgentContext.toBuilder().build())
+                                .authorization(fintechId)
+                                .sessionPassword(PasswordExtractingUtil.getDataProtectionPassword(serviceSessionPassword, fintechDataPassword))
+                                .fintechUserId(fintechUserID)
+                                .fintechRedirectUrlOk(fintechRedirectURLOK)
+                                .fintechRedirectUrlNok(fintechRedirectURLNOK)
+                                .serviceSessionId(serviceSessionId)
+                                .requestId(xRequestID)
+                                .bankProfileId(bankProfileID)
+                                .anonymousPsu(null != xPsuAuthenticationRequired && !xPsuAuthenticationRequired)
+                                .fintechDecoupledPreferred(null != fintechDecoupledPreferred && !fintechDecoupledPreferred)
+                                .fintechBrandLoggingInformation(fintechBrandLoggingInformation)
+                                .fintechNotificationURI(fintechNotificationURI)
+                                .fintechNotificationContentPreferred(fintechNotificationContentPreferred)
+                                .online(online)
+                                .build()
+                        )
+                        .withBalance(withBalance)
+                        .extras(getExtras(createConsentIfNone, importUserData))
+                        .build()
         ).thenApply((FacadeResult<AccountListBody> result) -> mapper.translate(result, accountListRestMapper));
     }
 
     @Override
     @SneakyThrows
     public CompletableFuture getTransactions(
-        String accountId,
-        String fintechUserID,
-        String fintechRedirectURLOK,
-        String fintechRedirectURLNOK,
-        UUID xRequestID,
-        String xTimestampUTC,
-        String xRequestSignature,
-        String fintechId,
-        String serviceSessionPassword,
-        String fintechDataPassword,
-        UUID bankProfileID,
-        Boolean xPsuAuthenticationRequired,
-        UUID serviceSessionId,
-        String createConsentIfNone,
-        String importUserData,
-        Boolean computePsuIpAddress,
-        String psuIpAddress,
-        LocalDate dateFrom,
-        LocalDate dateTo,
-        String entryReferenceFrom,
-        String bookingStatus,
-        Boolean deltaList,
-        Boolean online,
-        Boolean analytics,
-        Integer page,
-        Integer pageSize
+            String accountId,
+            String fintechUserID,
+            String fintechRedirectURLOK,
+            String fintechRedirectURLNOK,
+            UUID xRequestID,
+            String xTimestampUTC,
+            String xRequestSignature,
+            String fintechId,
+            String serviceSessionPassword,
+            String fintechDataPassword,
+            UUID bankProfileID,
+            Boolean xPsuAuthenticationRequired,
+            UUID serviceSessionId,
+            String createConsentIfNone,
+            String importUserData,
+            Boolean computePsuIpAddress,
+            String psuIpAddress,
+            LocalDate dateFrom,
+            LocalDate dateTo,
+            String entryReferenceFrom,
+            String bookingStatus,
+            Boolean deltaList,
+            Boolean online,
+            Boolean analytics,
+            Integer page,
+            Integer pageSize
     ) {
         return transactions.execute(
-            ListTransactionsRequest.builder()
-                .facadeServiceable(FacadeServiceableRequest.builder()
-                    // Get rid of CGILIB here by copying:
-                    .uaContext(userAgentContext.toBuilder().build())
-                    .authorization(fintechId)
-                    .sessionPassword(PasswordExtractingUtil.getDataProtectionPassword(serviceSessionPassword, fintechDataPassword))
-                    .fintechUserId(fintechUserID)
-                    .fintechRedirectUrlOk(fintechRedirectURLOK)
-                    .fintechRedirectUrlNok(fintechRedirectURLNOK)
-                    .serviceSessionId(serviceSessionId)
-                    .requestId(xRequestID)
-                    .bankProfileId(bankProfileID)
-                    .anonymousPsu(null != xPsuAuthenticationRequired && !xPsuAuthenticationRequired)
-                    .online(online)
-                    .withAnalytics(analytics)
-                    .build()
-                )
-                .accountId(accountId)
-                .dateFrom(dateFrom)
-                .dateTo(dateTo)
-                .entryReferenceFrom(entryReferenceFrom)
-                .bookingStatus(bookingStatus)
-                .deltaList(deltaList)
-                .page(page)
-                .pageSize(pageSize)
-                .extras(getExtras(createConsentIfNone, importUserData))
-                .build()
+                ListTransactionsRequest.builder()
+                        .facadeServiceable(FacadeServiceableRequest.builder()
+                                // Get rid of CGILIB here by copying:
+                                .uaContext(userAgentContext.toBuilder().build())
+                                .authorization(fintechId)
+                                .sessionPassword(PasswordExtractingUtil.getDataProtectionPassword(serviceSessionPassword, fintechDataPassword))
+                                .fintechUserId(fintechUserID)
+                                .fintechRedirectUrlOk(fintechRedirectURLOK)
+                                .fintechRedirectUrlNok(fintechRedirectURLNOK)
+                                .serviceSessionId(serviceSessionId)
+                                .requestId(xRequestID)
+                                .bankProfileId(bankProfileID)
+                                .anonymousPsu(null != xPsuAuthenticationRequired && !xPsuAuthenticationRequired)
+                                .online(online)
+                                .withAnalytics(analytics)
+                                .build()
+                        )
+                        .accountId(accountId)
+                        .dateFrom(dateFrom)
+                        .dateTo(dateTo)
+                        .entryReferenceFrom(entryReferenceFrom)
+                        .bookingStatus(bookingStatus)
+                        .deltaList(deltaList)
+                        .page(page)
+                        .pageSize(pageSize)
+                        .extras(getExtras(createConsentIfNone, importUserData))
+                        .build()
         ).thenApply((FacadeResult<TransactionsResponseBody> result) -> mapper.translate(result, transactionsRestMapper));
     }
 
     @Override
     @SneakyThrows
     public CompletableFuture getTransactionsWithoutAccountId(
-        String fintechUserId,
-        String fintechRedirectURLOK,
-        String fintechRedirectURLNOK,
-        UUID xRequestID,
-        String xTimestampUTC,
-        String xRequestSignature,
-        String fintechId,
-        String serviceSessionPassword,
-        String fintechDataPassword,
-        UUID bankProfileID,
-        Boolean xPsuAuthenticationRequired,
-        UUID serviceSessionId,
-        String createConsentIfNone,
-        String importUserData,
-        Boolean computePsuIpAddress,
-        String psuIpAddress,
-        LocalDate dateFrom,
-        LocalDate dateTo,
-        String entryReferenceFrom,
-        String bookingStatus,
-        Boolean deltaList,
-        Integer page,
-        Integer pageSize
+            String fintechUserId,
+            String fintechRedirectURLOK,
+            String fintechRedirectURLNOK,
+            UUID xRequestID,
+            String xTimestampUTC,
+            String xRequestSignature,
+            String fintechId,
+            String serviceSessionPassword,
+            String fintechDataPassword,
+            UUID bankProfileID,
+            Boolean xPsuAuthenticationRequired,
+            UUID serviceSessionId,
+            String createConsentIfNone,
+            String importUserData,
+            Boolean computePsuIpAddress,
+            String psuIpAddress,
+            LocalDate dateFrom,
+            LocalDate dateTo,
+            String entryReferenceFrom,
+            String bookingStatus,
+            Boolean deltaList,
+            Integer page,
+            Integer pageSize
     ) {
         return transactions.execute(
-            ListTransactionsRequest.builder()
-                .facadeServiceable(FacadeServiceableRequest.builder()
-                    // Get rid of CGILIB here by copying:
-                    .uaContext(userAgentContext.toBuilder().build())
-                    .authorization(fintechId)
-                    .sessionPassword(PasswordExtractingUtil.getDataProtectionPassword(serviceSessionPassword, fintechDataPassword))
-                    .fintechUserId(fintechUserId)
-                    .fintechRedirectUrlOk(fintechRedirectURLOK)
-                    .fintechRedirectUrlNok(fintechRedirectURLNOK)
-                    .serviceSessionId(serviceSessionId)
-                    .requestId(xRequestID)
-                    .bankProfileId(bankProfileID)
-                    .anonymousPsu(null != xPsuAuthenticationRequired && !xPsuAuthenticationRequired)
-                    .build()
-                )
-                .dateFrom(dateFrom)
-                .dateTo(dateTo)
-                .entryReferenceFrom(entryReferenceFrom)
-                .bookingStatus(bookingStatus)
-                .deltaList(deltaList)
-                .page(page)
-                .pageSize(pageSize)
-                .extras(getExtras(createConsentIfNone, importUserData))
-                .build()
+                ListTransactionsRequest.builder()
+                        .facadeServiceable(FacadeServiceableRequest.builder()
+                                // Get rid of CGILIB here by copying:
+                                .uaContext(userAgentContext.toBuilder().build())
+                                .authorization(fintechId)
+                                .sessionPassword(PasswordExtractingUtil.getDataProtectionPassword(serviceSessionPassword, fintechDataPassword))
+                                .fintechUserId(fintechUserId)
+                                .fintechRedirectUrlOk(fintechRedirectURLOK)
+                                .fintechRedirectUrlNok(fintechRedirectURLNOK)
+                                .serviceSessionId(serviceSessionId)
+                                .requestId(xRequestID)
+                                .bankProfileId(bankProfileID)
+                                .anonymousPsu(null != xPsuAuthenticationRequired && !xPsuAuthenticationRequired)
+                                .build()
+                        )
+                        .dateFrom(dateFrom)
+                        .dateTo(dateTo)
+                        .entryReferenceFrom(entryReferenceFrom)
+                        .bookingStatus(bookingStatus)
+                        .deltaList(deltaList)
+                        .page(page)
+                        .pageSize(pageSize)
+                        .extras(getExtras(createConsentIfNone, importUserData))
+                        .build()
         ).thenApply((FacadeResult<TransactionsResponseBody> result) -> mapper.translate(result, transactionsRestMapper));
     }
 
