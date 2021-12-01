@@ -92,7 +92,7 @@ public class ServiceContextProviderForFintech implements ServiceContextProvider 
     }
 
     private UUID generateRedirectCode(AuthSession session) {
-        if (authConfig.getRedirect().isSessionWideRedirectCode() && null != session.getRedirectCode()) {
+        if (authConfig.getRedirect().isSessionWideRedirectCode() && null != session && null != session.getRedirectCode()) {
             return UUID.fromString(session.getRedirectCode());
         }
 
