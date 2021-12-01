@@ -34,6 +34,10 @@ public class TppAisClientFeignMock implements TppAisClient {
             String importUserData,
             Boolean computePsuIpAddress,
             String psuIpAddress,
+            Boolean fintechDecoupledPreferred,
+            String fintechBrandLoggingInformation,
+            String fintechNotificationURI,
+            String fintechNotificationContentPreferred,
             Boolean withBalance,
             Boolean online
     ) {
