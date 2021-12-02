@@ -24,6 +24,9 @@ import java.util.stream.Collectors;
 
 import static de.adorsys.opba.protocol.facade.config.encryption.impl.fintech.FintechDatasafeStorage.FINTECH_ONLY_KEYS_ID;
 
+/**
+ * Helper class that aggregates top-level FinTech related operations.
+ */
 @RequiredArgsConstructor
 public class FintechSecureStorage {
 
@@ -33,6 +36,11 @@ public class FintechSecureStorage {
     private final DFSConfig config;
     private final EncryptionKeySerde serde;
 
+    /**
+     * Registers FinTech in Datasafe and DB.
+     * @param fintech new FinTech to register
+     * @param password FinTechs' KeyStore password.
+     */
     public void registerFintech(Fintech fintech, Supplier<char[]> password) {
         this.userProfile()
                 .createDocumentKeystore(
@@ -41,6 +49,11 @@ public class FintechSecureStorage {
                 );
     }
 
+    /**
+     * Validates FinTechs' Datasafe/KeyStore password
+     * @param fintech Target FinTech to check password for
+     * @param password Password to validate
+     */
     public void validatePassword(Fintech fintech, Supplier<char[]> password) {
         if (fintech.getFintechOnlyPrvKeys().isEmpty()) {
             throw new IllegalStateException("FinTech has no private keys");
@@ -55,6 +68,11 @@ public class FintechSecureStorage {
         }
     }
 
+    /**
+     * Sends PSU/Fintech user private key to FinTechs' inbox at the consent confirmation.
+     * @param authSession Authorization session for this PSU/Fintech user
+     * @param psuKey Private Key to send to FinTechs' inbox
+     */
     @SneakyThrows
     public void psuAspspKeyToInbox(AuthSession authSession, PubAndPrivKey psuKey) {
         try (OutputStream os = datasafeServices.inboxService().write(
@@ -66,6 +84,12 @@ public class FintechSecureStorage {
         }
     }
 
+    /**
+     * Retrieves PSU/FinTech users' private key from FinTechs' inbox.
+     * @param authSession Authorization session for this PSU/Fintech user
+     * @param password Fintechs' Datasafe/KeyStore password
+     * @return Keys to access PSU/FinTech users' key to read consent and its data
+     */
     @SneakyThrows
     public PubAndPrivKey psuAspspKeyFromInbox(AuthSession authSession, Supplier<char[]> password) {
         try (InputStream is = datasafeServices.inboxService().read(
@@ -77,6 +101,13 @@ public class FintechSecureStorage {
         }
     }
 
+    /**
+     * Sends PSU/Fintechs' to FinTechs' private storage.
+     * @param authSession Authorization session for this PSU/Fintech user
+     * @param fintech FinTech to store to
+     * @param psuKey Key to store
+     * @param password FinTechs Datasafe/Keystore password
+     */
     @SneakyThrows
     public void psuAspspKeyToPrivate(AuthSession authSession, Fintech fintech, PubAndPrivKey psuKey, Supplier<char[]> password) {
         try (OutputStream os = datasafeServices.privateService().write(
@@ -88,6 +119,13 @@ public class FintechSecureStorage {
         }
     }
 
+    /**
+     * Reads PSU/Fintechs' user private key from FinTechs' private storage.
+     * @param session Service session with which consent is associated.
+     * @param fintech Owner of the private storage.
+     * @param password FinTechs' Datasafe/KeyStore password.
+     * @return PSU/Fintechs' user consent protection key.
+     */
     @SneakyThrows
     public PubAndPrivKey psuAspspKeyFromPrivate(ServiceSession session, Fintech fintech, Supplier<char[]> password) {
         try (InputStream is = datasafeServices.privateService().read(
@@ -99,18 +137,32 @@ public class FintechSecureStorage {
         }
     }
 
+    /**
+     * Register Fintech private key in FinTechs' private Datasafe storage
+     * @param id Key ID
+     * @param key Key to store
+     * @param fintech Owner of the key
+     * @param password Keystore/Datasafe protection password
+     */
     @SneakyThrows
-    public void fintechOnlyPrvKeyToPrivate(UUID id, PubAndPrivKey psuKey, Fintech fintech, Supplier<char[]> password) {
+    public void fintechOnlyPrvKeyToPrivate(UUID id, PubAndPrivKey key, Fintech fintech, Supplier<char[]> password) {
         try (OutputStream os = datasafeServices.privateService().write(
                 WriteRequest.forPrivate(
                         fintech.getUserIdAuth(password),
                         FINTECH_ONLY_KEYS_ID,
                         new FintechOnlyPrvKeyTuple(fintech.getId(), id).toDatasafePathWithoutParent()))
         ) {
-            serde.writeKey(psuKey.getPublicKey(), psuKey.getPrivateKey(), os);
+            serde.writeKey(key.getPublicKey(), key.getPrivateKey(), os);
         }
     }
 
+    /**
+     * Reads Fintechs' private key from its private Datasafe storage
+     * @param prvKey Private key definition to tead
+     * @param fintech Private key owner
+     * @param password Keystore/Datasafe protection password
+     * @return FinTechs' private key
+     */
     @SneakyThrows
     public PubAndPrivKey fintechOnlyPrvKeyFromPrivate(FintechPrvKey prvKey, Fintech fintech, Supplier<char[]> password) {
         try (InputStream is = datasafeServices.privateService().read(

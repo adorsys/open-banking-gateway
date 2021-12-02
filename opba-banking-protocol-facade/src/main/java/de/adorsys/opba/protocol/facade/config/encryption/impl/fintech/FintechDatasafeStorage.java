@@ -21,6 +21,9 @@ import javax.persistence.EntityManager;
 import java.net.URI;
 import java.util.Optional;
 
+/**
+ * Datasafe storage for FinTech related data (consents, keys, etc.)
+ */
 @Component
 public class FintechDatasafeStorage extends BaseDatasafeDbStorageService {
 
@@ -49,6 +52,9 @@ public class FintechDatasafeStorage extends BaseDatasafeDbStorageService {
         return URI.create(value).getHost();
     }
 
+    /**
+     * Private keys of the FinTech storage.
+     */
     @Component
     public static class FintechOnlyPrvKeyStorage extends DatasafeDataStorage<FintechPrvKey> {
 
@@ -72,6 +78,9 @@ public class FintechDatasafeStorage extends BaseDatasafeDbStorageService {
         }
     }
 
+    /**
+     * Psu-Aspsp key storage of keys shared by FinTech user/PSU with a given FinTech.
+     */
     @Component
     public static class FintechPsuAspspPrvKeyStorage extends DatasafeDataStorage<FintechPsuAspspPrvKey> {
 
@@ -96,6 +105,9 @@ public class FintechDatasafeStorage extends BaseDatasafeDbStorageService {
         }
     }
 
+    /**
+     * Psu-Aspsp inbox storage for FinTech user/PSU to share his private data with a given FinTech.
+     */
     @Component
     public static class FintechPsuAspspPrvKeyInboxStorage extends DatasafeDataStorage<FintechPsuAspspPrvKeyInbox> {
 
@@ -120,6 +132,9 @@ public class FintechDatasafeStorage extends BaseDatasafeDbStorageService {
         }
     }
 
+    /**
+     * FinTech KeyStore storage (with keys to access data shared by PSU/Fintech user with FinTech).
+     */
     @Component
     public static class FintechKeystoreStorage extends DatasafeMetadataStorage<Fintech> {
 
@@ -128,6 +143,9 @@ public class FintechDatasafeStorage extends BaseDatasafeDbStorageService {
         }
     }
 
+    /**
+     * FinTech public keys storage for PSU/FinTech user to share private data with the FinTech.
+     */
     @Component
     public static class FintechPubKeysStorage extends DatasafeMetadataStorage<Fintech> {
 

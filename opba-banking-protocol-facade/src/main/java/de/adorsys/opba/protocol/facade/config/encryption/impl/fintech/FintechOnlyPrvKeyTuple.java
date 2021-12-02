@@ -8,6 +8,9 @@ import lombok.Data;
 import javax.persistence.EntityManager;
 import java.util.UUID;
 
+/**
+ * Fintech - private key ID tuple that embeds the way how to store FinTechs' private key in DB.
+ */
 @Data
 @AllArgsConstructor
 public class FintechOnlyPrvKeyTuple {
