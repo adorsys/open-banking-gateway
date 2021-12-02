@@ -1,6 +1,6 @@
 package de.adorsys.opba.protocol.facade.services.password;
 
-import de.adorsys.opba.protocol.facade.config.auth.FacadeAuthConfig;
+import de.adorsys.opba.protocol.facade.config.auth.ConsentAuthConfig;
 import de.adorsys.opba.protocol.facade.config.auth.PasswordGenRandomConfig;
 import lombok.RequiredArgsConstructor;
 import lombok.SneakyThrows;
@@ -15,12 +15,12 @@ public class FintechUserPasswordGenerator {
 
     private final PasswordGenRandomConfig.FintechUserPasswordGenRandom passwordGenRandom;
 
-    private final FacadeAuthConfig facadeAuthConfig;
+    private final ConsentAuthConfig consentAuthConfig;
 
     @SneakyThrows
     public String generate() {
         SecureRandom random = passwordGenRandom.getRandom();
-        byte[] bytes = new byte[facadeAuthConfig.getRedirect().getConsentLogin().getPassword().getByteSize()];
+        byte[] bytes = new byte[consentAuthConfig.getRedirect().getConsentLogin().getPassword().getByteSize()];
         random.nextBytes(bytes);
         return Base64.getUrlEncoder().encodeToString(bytes);
     }

@@ -15,7 +15,7 @@ import de.adorsys.opba.protocol.api.dto.context.ServiceContext;
 import de.adorsys.opba.protocol.api.dto.request.FacadeServiceableGetter;
 import de.adorsys.opba.protocol.api.dto.request.FacadeServiceableRequest;
 import de.adorsys.opba.protocol.api.dto.request.payments.InitiateSinglePaymentRequest;
-import de.adorsys.opba.protocol.facade.config.auth.FacadeAuthConfig;
+import de.adorsys.opba.protocol.facade.config.auth.ConsentAuthConfig;
 import de.adorsys.opba.protocol.facade.config.encryption.SecretKeyWithIv;
 import de.adorsys.opba.protocol.facade.config.encryption.impl.fintech.FintechConsentSpecSecureStorage;
 import de.adorsys.opba.protocol.facade.dto.result.torest.redirectable.FacadeResultRedirectable;
@@ -38,7 +38,7 @@ import static de.adorsys.opba.protocol.facade.config.auth.UriExpandConst.FINTECH
 @RequiredArgsConstructor
 public class AuthSessionHandler {
 
-    private final FacadeAuthConfig facadeAuthConfig;
+    private final ConsentAuthConfig consentAuthConfig;
     private final BankActionRepository bankActionRepository;
     private final FintechUserPasswordGenerator passwordGenerator;
     private final FintechRepository fintechs;
@@ -160,13 +160,13 @@ public class AuthSessionHandler {
         FacadeServiceableRequest request = ((FacadeServiceableGetter) context.getRequest()).getFacadeServiceable();
 
         String url = request.isAnonymousPsu()
-                ? facadeAuthConfig.getRedirect().getConsentLogin().getPage().getForAisAnonymous()
-                : facadeAuthConfig.getRedirect().getConsentLogin().getPage().getForAis();
+                ? consentAuthConfig.getRedirect().getConsentLogin().getPage().getForAisAnonymous()
+                : consentAuthConfig.getRedirect().getConsentLogin().getPage().getForAis();
 
         if (context.getRequest() instanceof InitiateSinglePaymentRequest) {
             url = request.isAnonymousPsu()
-                    ? facadeAuthConfig.getRedirect().getConsentLogin().getPage().getForPisAnonymous()
-                    : facadeAuthConfig.getRedirect().getConsentLogin().getPage().getForPis();
+                    ? consentAuthConfig.getRedirect().getConsentLogin().getPage().getForPisAnonymous()
+                    : consentAuthConfig.getRedirect().getConsentLogin().getPage().getForPis();
         }
 
         result.setRedirectionTo(

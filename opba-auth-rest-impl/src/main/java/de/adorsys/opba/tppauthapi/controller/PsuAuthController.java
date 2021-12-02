@@ -8,7 +8,7 @@ import de.adorsys.opba.api.security.internal.config.TppTokenProperties;
 import de.adorsys.opba.api.security.internal.service.CookieBuilderTemplate;
 import de.adorsys.opba.api.security.internal.service.TokenBasedAuthService;
 import de.adorsys.opba.db.domain.entity.psu.Psu;
-import de.adorsys.opba.protocol.facade.config.auth.FacadeAuthConfig;
+import de.adorsys.opba.protocol.facade.config.auth.ConsentAuthConfig;
 import de.adorsys.opba.protocol.facade.config.auth.UriExpandConst;
 import de.adorsys.opba.protocol.facade.services.authorization.PsuLoginService;
 import de.adorsys.opba.protocol.facade.services.psu.PsuAuthService;
@@ -50,7 +50,7 @@ public class PsuAuthController implements PsuAuthenticationApi, PsuAuthenticatio
     private final PsuLoginService loginService;
     private final PsuAuthService psuAuthService;
     private final TokenBasedAuthService authService;
-    private final FacadeAuthConfig authConfig;
+    private final ConsentAuthConfig authConfig;
     private final AuthorizationSessionKeyConfig.AuthorizationSessionKeyFromHttpRequest authorizationKeyFromHttpRequest;
     private final CookieBuilderTemplate cookieBuilderTemplate;
     private final CookieProperties cookieProperties;
