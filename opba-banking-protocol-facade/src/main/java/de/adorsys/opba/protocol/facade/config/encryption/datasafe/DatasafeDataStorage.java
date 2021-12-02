@@ -9,6 +9,10 @@ import java.util.UUID;
 import java.util.function.BiConsumer;
 import java.util.function.Function;
 
+/**
+ * Base class for Datasafe protected files storage in DB (encrypted data).
+ * @param <T> Target entity that contains data
+ */
 @RequiredArgsConstructor
 public abstract class DatasafeDataStorage<T> implements BaseDatasafeDbStorageService.StorageActions {
     protected final CrudRepository<T, UUID> repository;
@@ -18,6 +22,11 @@ public abstract class DatasafeDataStorage<T> implements BaseDatasafeDbStorageSer
     private final BiConsumer<T, byte[]> setData;
     private final TransactionOperations txOper;
 
+    /**
+     * Updates encrypted database entry
+     * @param path Path to the entry
+     * @param data New entry value
+     */
     @Override
     public void update(String path, byte[] data) {
         txOper.execute(callback -> {
@@ -35,11 +44,19 @@ public abstract class DatasafeDataStorage<T> implements BaseDatasafeDbStorageSer
         });
     }
 
+    /**
+     * Reads encrypted database entry
+     * @param path Path to the entry
+     */
     @Override
     public Optional<byte[]> read(String path) {
         return txOper.execute(callback -> find.apply(path).map(getData));
     }
 
+    /**
+     * Removes encrypted database entry
+     * @param path Path to the entry
+     */
     @Override
     public void delete(String path) {
         throw new IllegalStateException("Not allowed");
