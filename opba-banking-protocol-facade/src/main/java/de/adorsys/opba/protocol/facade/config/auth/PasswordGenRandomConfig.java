@@ -7,6 +7,9 @@ import org.springframework.context.annotation.Configuration;
 
 import java.security.SecureRandom;
 
+/**
+ * Configuration for Fintech-User random Keystore password generation.
+ */
 @Configuration
 public class PasswordGenRandomConfig {
 
@@ -15,6 +18,9 @@ public class PasswordGenRandomConfig {
         return new FintechUserPasswordGenRandom(new SecureRandom());
     }
 
+    /**
+     * Fintech user (intermediate) password generator.
+     */
     @Getter
     @RequiredArgsConstructor
     public static class FintechUserPasswordGenRandom {
