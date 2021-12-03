@@ -4,6 +4,9 @@ import lombok.Data;
 
 import javax.crypto.SecretKey;
 
+/**
+ * Wrapper for secret key and initialization vector.
+ */
 @Data
 public class SecretKeyWithIv {
 
