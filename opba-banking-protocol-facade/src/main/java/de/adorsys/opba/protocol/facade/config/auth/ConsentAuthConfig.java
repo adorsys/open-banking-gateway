@@ -46,6 +46,12 @@ public class ConsentAuthConfig {
          */
         private ConsentLogin consentLogin;
 
+        /**
+         * Allows to have single redirect code across session - improves application behavior in unstable network
+         * conditions.
+         */
+        private boolean sessionWideRedirectCode;
+
         @Data
         @Validated
         public static class ConsentLogin {

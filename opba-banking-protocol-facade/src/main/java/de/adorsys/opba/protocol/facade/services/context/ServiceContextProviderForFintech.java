@@ -13,6 +13,7 @@ import de.adorsys.opba.protocol.api.dto.context.ServiceContext;
 import de.adorsys.opba.protocol.api.dto.request.FacadeServiceableGetter;
 import de.adorsys.opba.protocol.api.dto.request.FacadeServiceableRequest;
 import de.adorsys.opba.protocol.api.services.scoped.RequestScoped;
+import de.adorsys.opba.protocol.facade.config.auth.FacadeAuthConfig;
 import de.adorsys.opba.protocol.facade.config.encryption.ConsentAuthorizationEncryptionServiceProvider;
 import de.adorsys.opba.protocol.facade.services.EncryptionKeySerde;
 import de.adorsys.opba.protocol.facade.services.InternalContext;
@@ -37,6 +38,7 @@ public class ServiceContextProviderForFintech implements ServiceContextProvider 
 
     protected final AuthorizationSessionRepository authSessions;
 
+    private final FacadeAuthConfig authConfig;
     private final FintechAuthenticator authenticator;
     private final BankProfileJpaRepository profileJpaRepository;
     private final ConsentAuthorizationEncryptionServiceProvider consentAuthorizationEncryptionServiceProvider;
@@ -61,9 +63,9 @@ public class ServiceContextProviderForFintech implements ServiceContextProvider 
                         .authSessionId(null == authSession ? null : authSession.getId())
                         .authContext(null == authSession ? null : authSession.getAuthSessionContext())
                         .associatedAuthSessionIds(authSessions.findByParentId(session.getId()).map(AuthSession::getId).stream().collect(Collectors.toSet()))
-                        // Currently 1-1 auth-session to service session
+                        // Currently, 1-1 auth-session to service session
                         .futureAuthSessionId(session.getId())
-                        .futureRedirectCode(UUID.randomUUID())
+                        .futureRedirectCode(generateRedirectCode(authSession))
                         .futureAspspRedirectCode(UUID.randomUUID())
                         .request(request)
                         .build()
@@ -87,6 +89,14 @@ public class ServiceContextProviderForFintech implements ServiceContextProvider 
         if (!Objects.equals(session.getRedirectCode(), request.getFacadeServiceable().getRedirectCode())) {
             throw new IllegalArgumentException("Wrong redirect code");
         }
+    }
+
+    private UUID generateRedirectCode(AuthSession session) {
+        if (authConfig.getRedirect().isSessionWideRedirectCode() && null != session && null != session.getRedirectCode()) {
+            return UUID.fromString(session.getRedirectCode());
+        }
+
+        return UUID.randomUUID();
     }
 
     private <REQUEST extends FacadeServiceableGetter> AuthSession readAndValidateAuthSession(REQUEST request) {
