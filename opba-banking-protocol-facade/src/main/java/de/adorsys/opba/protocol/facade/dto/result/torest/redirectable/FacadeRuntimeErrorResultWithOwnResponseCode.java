@@ -11,6 +11,10 @@ import org.mapstruct.factory.Mappers;
 
 import static de.adorsys.opba.protocol.api.dto.headers.ResponseHeaders.X_ERROR_CODE;
 
+/**
+ * Facade result that indicates some error has occurred and implies certain HttpStatus code.
+ * @param <T> Error body
+ */
 @Slf4j
 @Getter
 @Setter

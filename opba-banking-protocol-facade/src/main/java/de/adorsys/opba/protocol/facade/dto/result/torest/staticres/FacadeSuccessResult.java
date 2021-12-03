@@ -8,6 +8,10 @@ import org.mapstruct.factory.Mappers;
 
 import java.util.UUID;
 
+/**
+ * Generic success result used for i.e. ListAccounts response.
+ * @param <T> Response body
+ */
 @Data
 public class FacadeSuccessResult<T> implements FacadeResult<T> {
 

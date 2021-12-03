@@ -4,8 +4,8 @@ import de.adorsys.datasafe.encrypiton.api.types.UserIDAuth;
 import de.adorsys.opba.db.domain.entity.psu.Psu;
 import de.adorsys.opba.db.repository.jpa.psu.PsuRepository;
 import de.adorsys.opba.protocol.facade.config.encryption.impl.psu.PsuSecureStorage;
-import de.adorsys.opba.protocol.facade.exceptions.PsuAuthenticationException;
-import de.adorsys.opba.protocol.facade.exceptions.PsuAuthorizationException;
+import de.adorsys.opba.protocol.facade.exceptions.PsuDoesNotExist;
+import de.adorsys.opba.protocol.facade.exceptions.PsuWrongCredentials;
 import de.adorsys.opba.protocol.facade.exceptions.PsuRegisterException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -21,10 +21,10 @@ public class PsuAuthService {
     private final PsuSecureStorage psuSecureStorage;
 
     @Transactional
-    public Psu tryAuthenticateUser(String login, String password) throws PsuAuthorizationException {
+    public Psu tryAuthenticateUser(String login, String password) throws PsuWrongCredentials {
         Optional<Psu> psu = psuRepository.findByLogin(login);
         if (!psu.isPresent()) {
-            throw new PsuAuthenticationException("User not found: " + login);
+            throw new PsuDoesNotExist("User not found: " + login);
         }
         UserIDAuth idAuth = new UserIDAuth(psu.get().getId().toString(), password::toCharArray);
         enableDatasafeAuthentication(idAuth);
@@ -42,11 +42,11 @@ public class PsuAuthService {
         return newPsu;
     }
 
-    private void enableDatasafeAuthentication(UserIDAuth idAuth) throws PsuAuthorizationException {
+    private void enableDatasafeAuthentication(UserIDAuth idAuth) throws PsuWrongCredentials {
         try {
             psuSecureStorage.userProfile().updateReadKeyPassword(idAuth, idAuth.getReadKeyPassword());
         } catch (Exception e) {
-            throw new PsuAuthorizationException(e.getMessage(), e);
+            throw new PsuWrongCredentials(e.getMessage(), e);
         }
     }
 }

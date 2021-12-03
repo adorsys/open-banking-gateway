@@ -14,6 +14,11 @@ import java.util.Map;
 import static de.adorsys.opba.protocol.api.dto.headers.ResponseHeaders.X_ERROR_CODE;
 import static de.adorsys.opba.protocol.api.dto.headers.ResponseHeaders.X_ERROR_MESSAGE;
 
+/**
+ * The result that indicate error has happened and user should be redirected somewhere.
+ * @param <T> Result body type
+ * @param <C> Authorization state
+ */
 @Data
 @EqualsAndHashCode(callSuper = true)
 public class FacadeRedirectErrorResult<T, C extends AuthStateBody> extends FacadeResultRedirectable<T, C> {
