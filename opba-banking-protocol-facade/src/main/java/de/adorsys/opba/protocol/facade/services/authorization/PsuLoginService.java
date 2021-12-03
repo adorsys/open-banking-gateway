@@ -21,6 +21,9 @@ import java.net.URI;
 import java.util.UUID;
 import java.util.concurrent.CompletableFuture;
 
+/**
+ * Service responsible for PSU logging into OBG - verifying credentials and other.
+ */
 @Service
 @RequiredArgsConstructor
 public class PsuLoginService {

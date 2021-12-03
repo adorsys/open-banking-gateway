@@ -16,6 +16,9 @@ import java.util.Map;
 import static de.adorsys.opba.protocol.api.common.ProtocolAction.UPDATE_AUTHORIZATION;
 import static de.adorsys.opba.protocol.facade.services.context.ServiceContextProviderForFintech.FINTECH_CONTEXT_PROVIDER;
 
+/**
+ * Action responsible for updating Authorization session - i.e. passing users' PIN or login, etc.
+ */
 @Service
 public class UpdateAuthorizationService extends FacadeService<AuthorizationRequest, UpdateAuthBody, UpdateAuthorization> {
 

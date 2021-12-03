@@ -16,6 +16,9 @@ import java.util.Map;
 import static de.adorsys.opba.protocol.api.common.ProtocolAction.LIST_ACCOUNTS;
 import static de.adorsys.opba.protocol.facade.services.context.ServiceContextProviderForFintech.FINTECH_CONTEXT_PROVIDER;
 
+/**
+ * List accounts action handler
+ */
 @Service
 public class ListAccountsService extends FacadeService<ListAccountsRequest, AccountListBody, ListAccounts> {
 

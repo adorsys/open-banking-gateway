@@ -15,6 +15,9 @@ import javax.persistence.EntityManager;
 import java.security.PublicKey;
 import java.util.UUID;
 
+/**
+ * Associates the consent granted to PSU/Fintech user with the requesting Fintech (on consent confirmation by FinTech)
+ */
 @Service
 @RequiredArgsConstructor
 public class PsuFintechAssociationService {
@@ -25,6 +28,11 @@ public class PsuFintechAssociationService {
     private final PsuSecureStorage psuVault;
     private final FintechConsentSpecSecureStorage vault;
 
+    /**
+     * Share PSUs' ASPSP encryption key with the FinTech - sends the key to INBOX.
+     * @param psuPassword PSU password
+     * @param session Session where consent granting was executed
+     */
     @Transactional
     public void sharePsuAspspSecretKeyWithFintech(String psuPassword, AuthSession session) {
         var psuAspspKey = psuVault.getOrCreateKeyFromPrivateForAspsp(
@@ -36,17 +44,12 @@ public class PsuFintechAssociationService {
         fintechVault.psuAspspKeyToInbox(session, psuAspspKey);
     }
 
-    @Transactional
-    public void shareAnonymousUserSecretKeyWithFintech(String psuPassword, AuthSession session) {
-        var psuAspspKey = psuVault.getOrCreateKeyFromPrivateForAspsp(
-                psuPassword::toCharArray,
-                session,
-                this::storePublicKey
-        );
-
-        fintechVault.psuAspspKeyToInbox(session, psuAspspKey);
-    }
-
+    /**
+     * Allows to read consent specification that was required by the FinTech
+     * @param session Authorization session for the consent grant
+     * @param fintechUserPassword PSU/Fintech users' password
+     * @return Consent specification
+     */
     @Transactional
     public FintechConsentSpecSecureStorage.FinTechUserInboxData readInboxFromFinTech(AuthSession session, String fintechUserPassword) {
         return vault.fromInboxForAuth(

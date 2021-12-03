@@ -20,6 +20,9 @@ import java.util.concurrent.CompletableFuture;
 import static de.adorsys.opba.protocol.api.common.ProtocolAction.ON_LOGIN;
 import static de.adorsys.opba.protocol.facade.services.context.ServiceContextProviderForFintech.FINTECH_CONTEXT_PROVIDER;
 
+/**
+ * Action executed on PSU/Fintech user login into Consent UI (as a last login action in Facade scope besides checking credentials).
+ */
 @Service
 public class OnLoginService extends FacadeOptionalService<OnLoginRequest, UpdateAuthBody, OnLogin> {
 
