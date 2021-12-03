@@ -132,6 +132,8 @@ facade:
     # Consent UI URL
     embedded-ui-base-url: http://localhost:4200
     redirect:
+      # Xsrf redirect code will be kept same for entire authorization session. Improves application behavior in unstable network conditions
+      session-wide-redirect-code: false
       # Redirection URL for consent association
       consent-login:
         # URLs of Consent UI start pages for AIS and PIS flows
