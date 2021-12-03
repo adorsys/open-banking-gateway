@@ -13,6 +13,9 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Optional;
 
+/**
+ * PSU authentication service.
+ */
 @Service
 @RequiredArgsConstructor
 public class PsuAuthService {
@@ -20,6 +23,13 @@ public class PsuAuthService {
     private final PsuRepository psuRepository;
     private final PsuSecureStorage psuSecureStorage;
 
+    /**
+     * Try to authenticate PSU give login and password
+     * @param login PSU login
+     * @param password PSU password
+     * @return PSU entity if user was successfully authenticated
+     * @throws PsuWrongCredentials Exception indicating user has provided wrong name or password.
+     */
     @Transactional
     public Psu tryAuthenticateUser(String login, String password) throws PsuWrongCredentials {
         Optional<Psu> psu = psuRepository.findByLogin(login);
@@ -31,6 +41,12 @@ public class PsuAuthService {
         return psu.get();
     }
 
+    /**
+     * Create new PSU if it does not exists yet.
+     * @param login PSU login
+     * @param password PSU password
+     * @return New PSU
+     */
     @Transactional
     public Psu createPsuIfNotExist(String login, String password) {
         Optional<Psu> psu = psuRepository.findByLogin(login);

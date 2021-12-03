@@ -24,6 +24,9 @@ import java.util.UUID;
 import java.util.function.Supplier;
 import java.util.stream.Collectors;
 
+/**
+ * Consent access service (consent itself for i.e. ListAccounts) for FinTech.
+ */
 @RequiredArgsConstructor
 public class FintechConsentAccessImpl implements FintechConsentAccess {
 

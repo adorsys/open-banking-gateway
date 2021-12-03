@@ -9,6 +9,9 @@ import org.springframework.stereotype.Service;
 import java.security.SecureRandom;
 import java.util.Base64;
 
+/**
+ * Generates passwords for FinTechs' users.
+ */
 @Service
 @RequiredArgsConstructor
 public class FintechUserPasswordGenerator {

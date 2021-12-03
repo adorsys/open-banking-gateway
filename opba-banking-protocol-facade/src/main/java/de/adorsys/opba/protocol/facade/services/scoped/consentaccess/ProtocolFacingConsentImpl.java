@@ -6,6 +6,9 @@ import de.adorsys.opba.protocol.api.services.scoped.consent.ProtocolFacingConsen
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 
+/**
+ * Consent encryption supporting wrapper, to be passed to protocol.
+ */
 @Getter
 @RequiredArgsConstructor
 public class ProtocolFacingConsentImpl implements ProtocolFacingConsent {
