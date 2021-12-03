@@ -3,6 +3,7 @@ package de.adorsys.opba.protocol.facade.config;
 import de.adorsys.opba.db.repository.jpa.AuthorizationSessionRepository;
 import de.adorsys.opba.db.repository.jpa.BankProfileJpaRepository;
 import de.adorsys.opba.db.repository.jpa.ServiceSessionRepository;
+import de.adorsys.opba.protocol.facade.config.auth.FacadeAuthConfig;
 import de.adorsys.opba.protocol.facade.config.encryption.ConsentAuthorizationEncryptionServiceProvider;
 import de.adorsys.opba.protocol.facade.services.EncryptionKeySerde;
 import de.adorsys.opba.protocol.facade.services.context.ServiceContextProviderForAspsp;
@@ -22,6 +23,7 @@ public class SecurityConfig {
     @Bean(ServiceContextProviderForAspsp.ASPSP_CONTEXT_PROVIDER)
     ServiceContextProviderForFintech serviceContextProviderForAspsp(
             AuthorizationSessionRepository authSessions,
+            FacadeAuthConfig authConfig,
             FintechAuthenticator authenticator,
             BankProfileJpaRepository profileJpaRepository,
             ConsentAuthorizationEncryptionServiceProvider consentAuthorizationEncryptionServiceProvider,
@@ -29,13 +31,14 @@ public class SecurityConfig {
             EncryptionKeySerde encryptionKeySerde,
             ServiceSessionRepository serviceSessions
     ) {
-        return new ServiceContextProviderForAspsp(authSessions, authenticator, profileJpaRepository,
+        return new ServiceContextProviderForAspsp(authSessions, authConfig, authenticator, profileJpaRepository,
                 consentAuthorizationEncryptionServiceProvider, provider, encryptionKeySerde, serviceSessions);
     }
 
     @Bean(ServiceContextProviderForFintech.FINTECH_CONTEXT_PROVIDER)
     ServiceContextProviderForFintech serviceContextProviderForFintech(
             AuthorizationSessionRepository authSessions,
+            FacadeAuthConfig authConfig,
             FintechAuthenticator authenticator,
             BankProfileJpaRepository profileJpaRepository,
             ConsentAuthorizationEncryptionServiceProvider consentAuthorizationEncryptionServiceProvider,
@@ -43,7 +46,7 @@ public class SecurityConfig {
             EncryptionKeySerde encryptionKeySerde,
             ServiceSessionRepository serviceSessions
     ) {
-        return new ServiceContextProviderForFintech(authSessions, authenticator, profileJpaRepository,
+        return new ServiceContextProviderForFintech(authSessions, authConfig, authenticator, profileJpaRepository,
                 consentAuthorizationEncryptionServiceProvider, provider, encryptionKeySerde, serviceSessions);
     }
 }
