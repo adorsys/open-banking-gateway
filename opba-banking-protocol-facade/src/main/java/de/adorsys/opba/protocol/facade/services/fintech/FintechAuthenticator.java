@@ -13,6 +13,9 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.function.Supplier;
 
+/**
+ * Authenticates FinTech requests.
+ */
 @Slf4j
 @Service
 @RequiredArgsConstructor
@@ -22,6 +25,12 @@ public class FintechAuthenticator {
     private final FintechSecureStorage fintechSecureStorage;
     private final FintechRepository fintechRepository;
 
+    /**
+     * Authenticates or creates new FinTech if it is missing in DB.
+     * @param request FinTechs' request
+     * @param session Currently served service session
+     * @return New or existing FinTech
+     */
     @Transactional
     public Fintech authenticateOrCreateFintech(FacadeServiceableRequest request, ServiceSession session) {
         String fintechId = request.getAuthorization();
