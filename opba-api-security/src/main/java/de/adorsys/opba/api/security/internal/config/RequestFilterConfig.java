@@ -11,6 +11,8 @@ import org.springframework.context.annotation.Profile;
 
 import java.util.Set;
 
+import static de.adorsys.opba.api.security.GlobalConst.ENABLED_SECURITY_PROFILE;
+
 @Slf4j
 @Configuration
 @RequiredArgsConstructor
@@ -26,7 +28,7 @@ public class RequestFilterConfig {
     }
 
     @Bean
-    @Profile("!security-bypass")
+    @Profile(ENABLED_SECURITY_PROFILE)
     public FilterRegistrationBean<RequestCookieFilter> cookieValidationFilter(CookieProperties cookieProperties) {
         Set<String> urlsToBeValidated = cookieProperties.getUrlsToBeValidated();
 

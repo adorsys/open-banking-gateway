@@ -16,6 +16,8 @@ import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import java.util.Arrays;
 
+import static de.adorsys.opba.api.security.GlobalConst.DISABLED_SECURITY_PROFILE;
+import static de.adorsys.opba.api.security.GlobalConst.ENABLED_SECURITY_PROFILE;
 import static de.adorsys.opba.api.security.external.domain.HttpHeaders.AUTHORIZATION_SESSION_KEY;
 
 @Configuration
@@ -28,7 +30,7 @@ public class AuthorizationSessionKeyConfig {
     private final TokenBasedAuthService authService;
 
     @Bean
-    @Profile("!security-bypass")
+    @Profile(ENABLED_SECURITY_PROFILE)
     @Scope(scopeName = WebApplicationContext.SCOPE_REQUEST, proxyMode = ScopedProxyMode.TARGET_CLASS)
     public AuthorizationSessionKeyFromHttpRequest getAuthorizationSessionKeyFromHttpRequest(HttpServletRequest httpServletRequest) {
         log.debug("Incoming request {}", httpServletRequest.getRequestURI());
@@ -38,7 +40,7 @@ public class AuthorizationSessionKeyConfig {
     }
 
     @Bean
-    @Profile("security-bypass")
+    @Profile(DISABLED_SECURITY_PROFILE)
     @Scope(scopeName = WebApplicationContext.SCOPE_REQUEST, proxyMode = ScopedProxyMode.TARGET_CLASS)
     public AuthorizationSessionKeyFromHttpRequest getAuthorizationSessionKeyFromHttpRequestWithoutValidation(HttpServletRequest httpServletRequest) {
         log.debug("Incoming request {}", httpServletRequest.getRequestURI());

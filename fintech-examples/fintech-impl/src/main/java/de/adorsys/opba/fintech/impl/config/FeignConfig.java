@@ -22,6 +22,8 @@ import java.util.Collection;
 import java.util.Map;
 import java.util.stream.Collectors;
 
+import static de.adorsys.opba.api.security.GlobalConst.DISABLED_SECURITY_AND_SIGNATURE_FILTER_PROFILE;
+import static de.adorsys.opba.api.security.GlobalConst.ENABLED_SECURITY_AND_SIGNATURE_FILTER_PROFILE;
 import static de.adorsys.opba.fintech.impl.tppclients.HeaderFields.COMPUTE_PSU_IP_ADDRESS;
 import static de.adorsys.opba.fintech.impl.tppclients.HeaderFields.FINTECH_ID;
 import static de.adorsys.opba.fintech.impl.tppclients.HeaderFields.X_REQUEST_SIGNATURE;
@@ -46,7 +48,7 @@ public class FeignConfig {
     }
 
     @Bean
-    @Profile("!no-signature-filter | !security-bypass")
+    @Profile(ENABLED_SECURITY_AND_SIGNATURE_FILTER_PROFILE)
     public RequestInterceptor requestInterceptorWithSigning() {
         // This allows OPBA Consent API to compute PSU IP address itself.
         return requestTemplate -> {
@@ -56,7 +58,7 @@ public class FeignConfig {
     }
 
     @Bean
-    @Profile("no-signature-filter | security-bypass")
+    @Profile(DISABLED_SECURITY_AND_SIGNATURE_FILTER_PROFILE)
     public RequestInterceptor requestInterceptorWithoutSigning() {
         // This allows OPBA Consent API to compute PSU IP address itself.
         return requestTemplate -> {

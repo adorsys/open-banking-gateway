@@ -38,7 +38,7 @@ public class TokenBasedAuthService {
 
     @SneakyThrows
     public String validateTokenAndGetSubject(String token) {
-        var jwt = getAndVerifySignedJwtFromString(token);
+        var jwt = parseAndValidateTokenWithoutExpirationCheck(token);
 
         if (Instant.now().isAfter(jwt.getJWTClaimsSet().getExpirationTime().toInstant())) {
             throw new IllegalArgumentException("Expired token");
@@ -49,13 +49,13 @@ public class TokenBasedAuthService {
 
     @SneakyThrows
     public String getSubject(String token) {
-        var jwt = getAndVerifySignedJwtFromString(token);
+        var jwt = parseAndValidateTokenWithoutExpirationCheck(token);
 
         return jwt.getJWTClaimsSet().getSubject();
     }
 
     @SneakyThrows
-    private SignedJWT getAndVerifySignedJwtFromString(String token) {
+    private SignedJWT parseAndValidateTokenWithoutExpirationCheck(String token) {
         if (token == null || "".equals(token)) {
             throw new IllegalArgumentException("Missing token");
         }
