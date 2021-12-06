@@ -33,6 +33,9 @@ import static de.adorsys.opba.protocol.api.common.ProtocolAction.AUTHORIZATION;
 import static de.adorsys.opba.protocol.facade.config.auth.UriExpandConst.AUTHORIZATION_SESSION_ID;
 import static de.adorsys.opba.protocol.facade.config.auth.UriExpandConst.FINTECH_USER_TEMP_PASSWORD;
 
+/**
+ * Handles authorization session creation and continuation.
+ */
 // FIXME - this class needs refactoring - some other class should handle FinTech user registration
 @Service
 @RequiredArgsConstructor
@@ -47,10 +50,18 @@ public class AuthSessionHandler {
     private final AuthorizationSessionRepository authenticationSessions;
     private final EntityManager entityManager;
 
+    /**
+     * Creates new authorization session associated with the request.
+     * @param request Request to associate session with.
+     * @param sessionKey Authorization session encryption key.
+     * @param context Service context for the request
+     * @param result Protocol response that required to open the session
+     * @param <O> Outcome class
+     * @return New authorization session
+     */
     @NotNull
     @SneakyThrows
     @Transactional
-    @SuppressWarnings("checkstyle:MethodLength") //  FIXME - https://github.com/adorsys/open-banking-gateway/issues/555
     public <O> AuthSession createNewAuthSessionAndEnhanceResult(
             FacadeServiceableRequest request,
             SecretKeyWithIv sessionKey,
@@ -60,10 +71,18 @@ public class AuthSessionHandler {
         return fillAuthSessionData(request, context, sessionKey, result);
     }
 
+    /**
+     * Continues already existing authorization session associated with the request.
+     * @param authSession Authorization session to continue
+     * @param sessionKey Encryption key for the authorization session
+     * @param context Service context for the request
+     * @param result Protocol response that required to continue the session
+     * @param <O> Outcome class
+     * @return Authorization session to reuse
+     */
     @NotNull
     @SneakyThrows
     @Transactional
-    @SuppressWarnings("checkstyle:MethodLength") //  FIXME - https://github.com/adorsys/open-banking-gateway/issues/555
     public <O> AuthSession reuseAuthSessionAndEnhanceResult(
             AuthSession authSession,
             SecretKeyWithIv sessionKey,

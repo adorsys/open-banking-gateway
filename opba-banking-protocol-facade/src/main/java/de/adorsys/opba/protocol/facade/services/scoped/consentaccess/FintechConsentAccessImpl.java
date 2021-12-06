@@ -25,7 +25,7 @@ import java.util.function.Supplier;
 import java.util.stream.Collectors;
 
 /**
- * Consent access service (consent itself for i.e. ListAccounts) for FinTech.
+ * Consent access service (shared consent itself for i.e. ListAccounts) for FinTech.
  */
 @RequiredArgsConstructor
 public class FintechConsentAccessImpl implements FintechConsentAccess {
@@ -40,25 +40,40 @@ public class FintechConsentAccessImpl implements FintechConsentAccess {
     private final Supplier<char[]> fintechPassword;
     private final AnonymousPsuConsentAccess anonymousPsuConsentAccess;
 
+    /**
+     * Creates consent template, but does not persist it
+     */
     public ProtocolFacingConsent createAnonymousConsentNotPersist() {
         return anonymousPsuConsentAccess.createDoNotPersist();
     }
 
+    /**
+     * Saves consent to the database.
+     */
     @Override
     public void save(ProtocolFacingConsent consent) {
         consents.save(((ProtocolFacingConsentImpl) consent).getConsent());
     }
 
+    /**
+     * Deletes consent from the database.
+     */
     @Override
     public void delete(ProtocolFacingConsent consent) {
         consents.delete(((ProtocolFacingConsentImpl) consent).getConsent());
     }
 
+    /**
+     * Finds the most recent granted consent for the current service session.
+     */
     @Override
     public Optional<ProtocolFacingConsent> findSingleByCurrentServiceSession() {
         return ConsentAccessUtil.getProtocolFacingConsent(findByCurrentServiceSessionOrderByModifiedDesc());
     }
 
+    /**
+     * Lists all consents that are associated with current service session.
+     */
     @Override
     public List<ProtocolFacingConsent> findByCurrentServiceSessionOrderByModifiedDesc() {
         ServiceSession serviceSession = entityManager.find(ServiceSession.class, serviceSessionId);
@@ -86,6 +101,9 @@ public class FintechConsentAccessImpl implements FintechConsentAccess {
         return consent.stream().map(it -> new ProtocolFacingConsentImpl(it, enc)).collect(Collectors.toList());
     }
 
+    /**
+     * Returns available consents to the PSU (not FinTech).
+     */
     @Override
     public Collection<ProtocolFacingConsent> getAvailableConsentsForCurrentPsu() {
         return Collections.emptyList();

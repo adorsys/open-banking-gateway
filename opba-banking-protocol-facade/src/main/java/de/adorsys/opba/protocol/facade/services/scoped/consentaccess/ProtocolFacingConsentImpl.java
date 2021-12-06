@@ -16,31 +16,49 @@ public class ProtocolFacingConsentImpl implements ProtocolFacingConsent {
     private final Consent consent;
     private final EncryptionService encryptionService;
 
+    /**
+     * Consent ID that is to be used to communicate with ASPSP.
+     */
     @Override
     public String getConsentId() {
         return consent.getConsentId(encryptionService);
     }
 
+    /**
+     * Description of the parameters associated with this consent, i.e. list of IBANs that this consent applies to.
+     */
     @Override
     public String getConsentContext() {
         return consent.getContext(encryptionService);
     }
 
+    /**
+     * Returns cached data (i.e. transaction list) related to the consent.
+     */
     @Override
     public String getConsentCache() {
         return consent.getCache(encryptionService);
     }
 
+    /**
+     * Set cached data (i.e. cached transaction list) related to the consent.
+     */
     @Override
     public void setConsentCache(String cache) {
         consent.setCache(encryptionService, cache);
     }
 
+    /**
+     * Set consent ID that is to be used to communicate with ASPSP.
+     */
     @Override
     public void setConsentId(String id) {
         consent.setConsentId(encryptionService, id);
     }
 
+    /**
+     * Set description of the parameters associated with this consent, i.e. list of IBANs that this consent applies to.
+     */
     @Override
     public void setConsentContext(String context) {
         consent.setContext(encryptionService, context);

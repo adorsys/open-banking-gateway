@@ -32,6 +32,9 @@ import java.util.function.Supplier;
 
 import static de.adorsys.opba.protocol.facade.config.FacadeTransientDataConfig.FACADE_CACHE_BUILDER;
 
+/**
+ * Provides request scoped services (i.e. encryption and consent access) to the protocols.
+ */
 @Service
 public class RequestScopedProvider implements RequestScopedServicesProvider {
 
@@ -54,6 +57,18 @@ public class RequestScopedProvider implements RequestScopedServicesProvider {
         this.fintechConfig = fintechConfig;
     }
 
+    /**
+     * Registers scoped services for the FinTech request.
+     * @param fintech FinTech to provide services for.
+     * @param profile ASPSP profile (i.e. FinTS or Xs2a)
+     * @param session Owning session for current scoped services
+     * @param bankProtocolId Bank protocol id to scope the services more precisely
+     * @param encryptionServiceProvider Consent encryption services for the FinTech
+     * @param futureAuthorizationSessionKey Authorization session key that is going to be used (if the session is not opened yet)
+     *                                      or current session key if it is already opened
+     * @param fintechPassword Fintech Datasafe/KeyStore access password
+     * @return Request scoped services for FinTech
+     */
     public RequestScoped registerForFintechSession(
             Fintech fintech,
             BankProfile profile,
