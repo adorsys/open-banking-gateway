@@ -18,7 +18,13 @@ import org.slf4j.LoggerFactory;
 
 import static de.adorsys.opba.protocol.api.Constants.NULL;
 
-
+/**
+ * Logging helper for the facade.
+ * @param <REQUEST> Served request
+ * @param <RESULT> Result from protocol
+ * @param <RESULTBODY> Result body from protcol
+ * @param <ACTION> Action associated with the protocol
+ */
 public class FacadeLogResolver<REQUEST extends FacadeServiceableGetter, RESULT extends Result, RESULTBODY extends ResultBody, ACTION extends Action<REQUEST, RESULTBODY>> {
 
     private final Logger log;

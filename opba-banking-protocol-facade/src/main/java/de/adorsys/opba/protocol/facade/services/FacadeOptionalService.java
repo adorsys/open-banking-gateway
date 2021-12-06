@@ -13,6 +13,13 @@ import org.springframework.transaction.support.TransactionTemplate;
 import java.util.Map;
 import java.util.concurrent.CompletableFuture;
 
+/**
+ * Facade service that does not require underlying protocol. Invoking such service without registered protocol, won't
+ * cause an exception.
+ * @param <REQUEST> Request to execute
+ * @param <RESULT> Result of the request
+ * @param <ACTION> Associated action
+ */
 public abstract class FacadeOptionalService<REQUEST extends FacadeServiceableGetter, RESULT extends ResultBody, ACTION extends Action<REQUEST, RESULT>>
         extends FacadeService<REQUEST, RESULT, ACTION>  {
 
@@ -21,6 +28,12 @@ public abstract class FacadeOptionalService<REQUEST extends FacadeServiceableGet
         super(action, actionProviders, selector, provider, handler, txTemplate);
     }
 
+    /**
+     * Execute the request by passing it to protocol if available, or default to no protocol result, if protocol
+     * is missing.
+     * @param request Request to execute
+     * @return Result of request execution
+     */
     @Override
     public CompletableFuture<FacadeResult<RESULT>> execute(REQUEST request) {
         ProtocolWithCtx<ACTION, REQUEST> protocolWithCtx = createContextAndFindProtocol(request);
