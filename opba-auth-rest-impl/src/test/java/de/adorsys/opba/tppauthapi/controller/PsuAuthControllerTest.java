@@ -8,7 +8,7 @@ import de.adorsys.opba.api.security.internal.config.TppTokenProperties;
 import de.adorsys.opba.api.security.internal.service.TokenBasedAuthService;
 import de.adorsys.opba.db.domain.entity.psu.Psu;
 import de.adorsys.opba.db.repository.jpa.psu.PsuRepository;
-import de.adorsys.opba.protocol.facade.config.auth.ConsentAuthConfig;
+import de.adorsys.opba.protocol.facade.config.auth.FacadeConsentAuthConfig;
 import de.adorsys.opba.protocol.facade.config.encryption.impl.psu.PsuSecureStorage;
 import de.adorsys.opba.protocol.facade.services.authorization.PsuLoginService;
 import de.adorsys.opba.protocol.facade.services.psu.PsuAuthService;
@@ -61,7 +61,7 @@ public class PsuAuthControllerTest {
     @MockBean
     private PsuAuthService psuAuthService;
     @MockBean
-    private ConsentAuthConfig consentAuthConfig;
+    private FacadeConsentAuthConfig consentAuthConfig;
     @MockBean
     private TokenBasedAuthService authService;
     @Autowired
@@ -76,9 +76,9 @@ public class PsuAuthControllerTest {
         MockitoAnnotations.initMocks(this);
 
         when(psuSecureStorage.privateService()).thenReturn(privateSpace);
-        ConsentAuthConfig.Redirect redir = new ConsentAuthConfig.Redirect();
-        redir.setConsentLogin(new ConsentAuthConfig.Redirect.ConsentLogin());
-        redir.getConsentLogin().setPage(new ConsentAuthConfig.Redirect.ConsentLogin.Page());
+        FacadeConsentAuthConfig.Redirect redir = new FacadeConsentAuthConfig.Redirect();
+        redir.setConsentLogin(new FacadeConsentAuthConfig.Redirect.ConsentLogin());
+        redir.getConsentLogin().setPage(new FacadeConsentAuthConfig.Redirect.ConsentLogin.Page());
         redir.getConsentLogin().getPage().setForAis(REDIRECT_TO);
         when(consentAuthConfig.getRedirect()).thenReturn(redir);
         when(authService.generateToken(LOGIN, tppTokenProperties.getTokenValidityDuration())).thenReturn("token");

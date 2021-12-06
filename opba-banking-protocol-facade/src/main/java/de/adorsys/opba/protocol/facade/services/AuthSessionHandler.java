@@ -15,7 +15,7 @@ import de.adorsys.opba.protocol.api.dto.context.ServiceContext;
 import de.adorsys.opba.protocol.api.dto.request.FacadeServiceableGetter;
 import de.adorsys.opba.protocol.api.dto.request.FacadeServiceableRequest;
 import de.adorsys.opba.protocol.api.dto.request.payments.InitiateSinglePaymentRequest;
-import de.adorsys.opba.protocol.facade.config.auth.ConsentAuthConfig;
+import de.adorsys.opba.protocol.facade.config.auth.FacadeConsentAuthConfig;
 import de.adorsys.opba.protocol.facade.config.encryption.SecretKeyWithIv;
 import de.adorsys.opba.protocol.facade.config.encryption.impl.fintech.FintechConsentSpecSecureStorage;
 import de.adorsys.opba.protocol.facade.dto.result.torest.redirectable.FacadeResultRedirectable;
@@ -41,7 +41,7 @@ import static de.adorsys.opba.protocol.facade.config.auth.UriExpandConst.FINTECH
 @RequiredArgsConstructor
 public class AuthSessionHandler {
 
-    private final ConsentAuthConfig consentAuthConfig;
+    private final FacadeConsentAuthConfig consentAuthConfig;
     private final BankActionRepository bankActionRepository;
     private final FintechUserPasswordGenerator passwordGenerator;
     private final FintechRepository fintechs;

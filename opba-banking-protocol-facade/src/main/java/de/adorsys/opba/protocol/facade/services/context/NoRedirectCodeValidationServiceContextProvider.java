@@ -5,7 +5,7 @@ import de.adorsys.opba.db.repository.jpa.AuthorizationSessionRepository;
 import de.adorsys.opba.db.repository.jpa.BankProfileJpaRepository;
 import de.adorsys.opba.db.repository.jpa.ServiceSessionRepository;
 import de.adorsys.opba.protocol.api.dto.request.FacadeServiceableGetter;
-import de.adorsys.opba.protocol.facade.config.auth.ConsentAuthConfig;
+import de.adorsys.opba.protocol.facade.config.auth.FacadeConsentAuthConfig;
 import de.adorsys.opba.protocol.facade.config.encryption.ConsentAuthorizationEncryptionServiceProvider;
 import de.adorsys.opba.protocol.facade.services.EncryptionKeySerde;
 import de.adorsys.opba.protocol.facade.services.fintech.FintechAuthenticator;
@@ -22,7 +22,7 @@ public class NoRedirectCodeValidationServiceContextProvider extends ServiceConte
 
     public NoRedirectCodeValidationServiceContextProvider(
             AuthorizationSessionRepository authSessions,
-            ConsentAuthConfig authConfig,
+            FacadeConsentAuthConfig authConfig,
             FintechAuthenticator authenticator,
             BankProfileJpaRepository profileJpaRepository,
             ConsentAuthorizationEncryptionServiceProvider consentAuthorizationEncryptionServiceProvider,

@@ -20,7 +20,7 @@ import static de.adorsys.opba.protocol.facade.config.ConfigConst.FACADE_CONFIG_P
 @Validated
 @Configuration
 @ConfigurationProperties(FACADE_CONFIG_PREFIX + "urls")
-public class ConsentAuthConfig {
+public class FacadeConsentAuthConfig {
 
     /**
      * Redirection for Consent-UI login configuration.
