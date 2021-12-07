@@ -13,6 +13,9 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.transaction.annotation.Transactional;
 
+/**
+ * Datasafe encryption configuration (persisted in database or in configuration file).
+ */
 @Slf4j
 @Configuration
 @RequiredArgsConstructor
@@ -29,6 +32,11 @@ public class EncryptionConfigurationConfig {
         return new MutableEncryptionConfig();
     }
 
+    /**
+     * Datasafe configuration, persisted in DB
+     * @param config Encryption configuration default values
+     * @return Current Datasafe encryption config
+     */
     @Bean
     @SneakyThrows
     @Transactional

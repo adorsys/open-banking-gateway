@@ -13,7 +13,7 @@ import de.adorsys.opba.protocol.api.dto.context.ServiceContext;
 import de.adorsys.opba.protocol.api.dto.request.FacadeServiceableGetter;
 import de.adorsys.opba.protocol.api.dto.request.FacadeServiceableRequest;
 import de.adorsys.opba.protocol.api.services.scoped.RequestScoped;
-import de.adorsys.opba.protocol.facade.config.auth.FacadeAuthConfig;
+import de.adorsys.opba.protocol.facade.config.auth.FacadeConsentAuthConfig;
 import de.adorsys.opba.protocol.facade.config.encryption.ConsentAuthorizationEncryptionServiceProvider;
 import de.adorsys.opba.protocol.facade.services.EncryptionKeySerde;
 import de.adorsys.opba.protocol.facade.services.InternalContext;
@@ -30,6 +30,9 @@ import java.util.Objects;
 import java.util.UUID;
 import java.util.stream.Collectors;
 
+/**
+ * Base class for service context provider necessary to serve request for underlying protocols.
+ */
 @Service(ServiceContextProviderForFintech.FINTECH_CONTEXT_PROVIDER)
 @RequiredArgsConstructor
 public class ServiceContextProviderForFintech implements ServiceContextProvider {
@@ -38,7 +41,7 @@ public class ServiceContextProviderForFintech implements ServiceContextProvider 
 
     protected final AuthorizationSessionRepository authSessions;
 
-    private final FacadeAuthConfig authConfig;
+    private final FacadeConsentAuthConfig authConfig;
     private final FintechAuthenticator authenticator;
     private final BankProfileJpaRepository profileJpaRepository;
     private final ConsentAuthorizationEncryptionServiceProvider consentAuthorizationEncryptionServiceProvider;
@@ -81,6 +84,12 @@ public class ServiceContextProviderForFintech implements ServiceContextProvider 
         return ServiceContext.<REQUEST>builder().ctx(ctx.getServiceCtx()).requestScoped(requestScoped).build();
     }
 
+    /**
+     * Validates redirect code (Xsrf protection) for current request
+     * @param request Request to validate for
+     * @param session Service session that has expected redirect code value
+     * @param <REQUEST> Request class
+     */
     protected <REQUEST extends FacadeServiceableGetter> void validateRedirectCode(REQUEST request, AuthSession session) {
         if (Strings.isNullOrEmpty(request.getFacadeServiceable().getRedirectCode())) {
             throw new IllegalArgumentException("Missing redirect code");

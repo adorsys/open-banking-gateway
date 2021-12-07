@@ -23,6 +23,9 @@ import java.io.OutputStream;
 import java.net.URI;
 import java.util.function.Supplier;
 
+/**
+ * DB-backed Datasafe storage for Fintech-sourced consent specification (dedicated account list, validity date, etc.).
+ */
 @RequiredArgsConstructor
 public class FintechConsentSpecSecureStorage {
 
@@ -32,6 +35,11 @@ public class FintechConsentSpecSecureStorage {
     private final DFSConfig config;
     private final ObjectMapper mapper;
 
+    /**
+     * Registers FinTech user
+     * @param user User entity
+     * @param password Datasafe password for the user
+     */
     public void registerFintechUser(FintechUser user, Supplier<char[]> password) {
         this.userProfile()
                 .createDocumentKeystore(
@@ -40,6 +48,11 @@ public class FintechConsentSpecSecureStorage {
                 );
     }
 
+    /**
+     * Sends FinTech user keys to FinTech public key storage.
+     * @param authSession Authorization session associated with this user
+     * @param data FinTech users' private keys and other
+     */
     @SneakyThrows
     public void toInboxForAuth(AuthSession authSession, FinTechUserInboxData data) {
         try (OutputStream os = datasafeServices.inboxService().write(
@@ -51,6 +64,12 @@ public class FintechConsentSpecSecureStorage {
         }
     }
 
+    /**
+     * Get data from FinTechs' inbox associated with the FinTech user.
+     * @param authSession Authorization session associated with this user
+     * @param password FinTech user password
+     * @return FinTechs' users' keys to access consent, spec. etc.
+     */
     @SneakyThrows
     public FinTechUserInboxData fromInboxForAuth(AuthSession authSession, Supplier<char[]> password) {
         try (InputStream is = datasafeServices.inboxService().read(
@@ -62,17 +81,29 @@ public class FintechConsentSpecSecureStorage {
         }
     }
 
+    /**
+     * FinTechs' user key for consent access and specification.
+     */
     @Data
     @NoArgsConstructor
     @AllArgsConstructor
     public static class FinTechUserInboxData {
 
+        /**
+         * Where to redirect user after he logs in to OBG consent UI.
+         */
         @NonNull
         private URI afterPsuIdentifiedRedirectTo;
 
+        /**
+         * FinTech users' private key to encrypt consent data.
+         */
         @NonNull
         private EncryptionKeySerde.SecretKeyWithIvContainer protocolKey;
 
+        /**
+         * Consent requirements as described by FinTech.
+         */
         private Object requirements;
     }
 }

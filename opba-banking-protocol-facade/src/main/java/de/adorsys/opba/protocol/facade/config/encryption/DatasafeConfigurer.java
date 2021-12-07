@@ -32,6 +32,9 @@ import java.util.function.Function;
 
 import static de.adorsys.opba.protocol.facade.config.ConfigConst.FACADE_CONFIG_PREFIX;
 
+/**
+ * Configures all Datasafe storages.
+ */
 @Slf4j
 @Configuration
 @RequiredArgsConstructor
@@ -45,6 +48,12 @@ public class DatasafeConfigurer {
     private final PsuDatasafeStorage psuStorage;
     private final FintechConsentSpecDatasafeStorage fintechUserStorage;
 
+    /**
+     * Fintech Datasafe storage.
+     * @param fintechReadStorePass Datasafe password to open keystore.
+     * @param serde Serialization/Deserialization handler
+     * @return FinTech Datasafe storage
+     */
     @Bean
     public FintechSecureStorage fintechDatasafeServices(
             @Value(ENCRYPTION_DATASAFE_READ_KEYSTORE_PREFIX + ".fintech}") String fintechReadStorePass,
@@ -66,6 +75,12 @@ public class DatasafeConfigurer {
         );
     }
 
+    /**
+     * PSU/FinTech user Datasafe storage.
+     * @param psuReadStorePass Datasafe password to open keystore.
+     * @param serde Serialization/Deserialization handler
+     * @return PSU/FinTech user Datasafe storage
+     */
     @Bean
     public PsuSecureStorage psuDatasafeServices(
             @Value(ENCRYPTION_DATASAFE_READ_KEYSTORE_PREFIX + ".psu}") String psuReadStorePass,
@@ -89,6 +104,11 @@ public class DatasafeConfigurer {
         );
     }
 
+    /**
+     * FinTech consent specification Datasafe storage.
+     * @param psuReadStorePass Datasafe password to open keystore.
+     * @return PSU/FinTech user Datasafe storage
+     */
     @Bean
     public FintechConsentSpecSecureStorage fintechUserDatasafeServices(
             @Value(ENCRYPTION_DATASAFE_READ_KEYSTORE_PREFIX + ".fintech-user}") String psuReadStorePass
@@ -109,6 +129,9 @@ public class DatasafeConfigurer {
         );
     }
 
+    /**
+     * Installs BouncyCastle as required by Datasafe.
+     */
     @PostConstruct
     void provideBouncyCastle() {
         if (null != Security.getProvider(BouncyCastleProvider.PROVIDER_NAME)) {
@@ -118,8 +141,9 @@ public class DatasafeConfigurer {
         Security.addProvider(new BouncyCastleProvider());
     }
 
-    // Path encryption that does not encrypt paths - as for use cases of OpenBanking we need to protect data
-    // not path to it.
+    /**
+     * Path encryption that does not encrypt paths - as for use cases of OpenBanking we need to protect data not path to it.
+     */
     class NoOpPathEncryptionImplOverridden extends PathEncryptionImpl {
 
         NoOpPathEncryptionImplOverridden(PathEncryptionImplRuntimeDelegatable.ArgumentsCaptor captor) {

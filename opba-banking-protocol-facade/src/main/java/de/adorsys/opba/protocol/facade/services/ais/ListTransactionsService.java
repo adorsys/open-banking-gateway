@@ -16,6 +16,9 @@ import java.util.Map;
 import static de.adorsys.opba.protocol.api.common.ProtocolAction.LIST_TRANSACTIONS;
 import static de.adorsys.opba.protocol.facade.services.context.ServiceContextProviderForFintech.FINTECH_CONTEXT_PROVIDER;
 
+/**
+ * List transaction action handler
+ */
 @Service
 public class ListTransactionsService extends FacadeService<ListTransactionsRequest, TransactionsResponseBody, ListTransactions> {
 

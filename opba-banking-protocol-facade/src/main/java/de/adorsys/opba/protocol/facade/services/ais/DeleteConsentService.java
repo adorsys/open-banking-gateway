@@ -16,6 +16,9 @@ import java.util.Map;
 import static de.adorsys.opba.protocol.api.common.ProtocolAction.DELETE_CONSENT;
 import static de.adorsys.opba.protocol.facade.services.context.ServiceContextProviderForFintech.FINTECH_CONTEXT_PROVIDER;
 
+/**
+ * Delete consent action handler.
+ */
 @Service
 public class DeleteConsentService extends FacadeService<DeleteConsentRequest, DeleteConsentBody, DeleteConsent> {
 

@@ -4,6 +4,9 @@ import lombok.RequiredArgsConstructor;
 
 import java.security.KeyPair;
 
+/**
+ * Fintech-only facing encryption service.
+ */
 @RequiredArgsConstructor
 public class FintechOnlyEncryptionServiceProvider {
 

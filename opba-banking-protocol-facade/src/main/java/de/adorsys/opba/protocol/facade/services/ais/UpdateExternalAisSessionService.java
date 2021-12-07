@@ -16,6 +16,9 @@ import java.util.Map;
 import static de.adorsys.opba.protocol.api.common.ProtocolAction.UPDATE_EXTERNAL_AIS_SESSION;
 import static de.adorsys.opba.protocol.facade.services.context.ServiceContextProviderForFintech.FINTECH_CONTEXT_PROVIDER;
 
+/**
+ * Action to force 3rd party service to read (re-import) data from ASPSP(bank), may require PSU authorization.
+ */
 @Service
 public class UpdateExternalAisSessionService extends FacadeOptionalService<UpdateExternalAisSessionRequest, UpdateExternalAisSessionBody, UpdateExternalAisSession> {
 

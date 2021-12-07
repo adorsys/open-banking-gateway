@@ -21,6 +21,13 @@ import org.springframework.transaction.support.TransactionTemplate;
 import java.util.Map;
 import java.util.concurrent.CompletableFuture;
 
+/**
+ * Facade service that requires underlying protocol to serve request. Invoking such service without registered protocol,
+ * will cause an exception.
+ * @param <REQUEST> Request to execute
+ * @param <RESULT> Result of the request
+ * @param <ACTION> Associated action
+ */
 @Slf4j
 @RequiredArgsConstructor
 public abstract class FacadeService<REQUEST extends FacadeServiceableGetter, RESULT extends ResultBody, ACTION extends Action<REQUEST, RESULT>> {
@@ -33,6 +40,11 @@ public abstract class FacadeService<REQUEST extends FacadeServiceableGetter, RES
     protected final TransactionTemplate txTemplate;
     protected final FacadeLogResolver logResolver = new FacadeLogResolver(getClass());
 
+    /**
+     * Execute the request by passing it to protocol, or throw if protocol is missing.
+     * @param request Request to execute
+     * @return Result of request execution
+     */
     public CompletableFuture<FacadeResult<RESULT>> execute(REQUEST request) {
         ProtocolWithCtx<ACTION, REQUEST> protocolWithCtx = createContextAndFindProtocol(request);
 

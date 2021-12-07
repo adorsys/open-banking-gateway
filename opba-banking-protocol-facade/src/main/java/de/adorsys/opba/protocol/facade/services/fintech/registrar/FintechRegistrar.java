@@ -18,6 +18,9 @@ import java.security.KeyPair;
 import java.util.UUID;
 import java.util.function.Supplier;
 
+/**
+ * Registers FinTech in the DB, note that it must exist in application.yml configuration.
+ */
 @Service
 @RequiredArgsConstructor
 public class FintechRegistrar {
@@ -29,6 +32,12 @@ public class FintechRegistrar {
     private final FintechOnlyKeyPairConfig fintechOnlyKeyPairConfig;
     private final FintechOnlyEncryptionServiceProvider fintechOnlyEncryptionServiceProvider;
 
+    /**
+     * Register Fintech in the OBG database.
+     * @param fintechId Fintech ID to register
+     * @param finTechPassword Fintechs' KeyStore password
+     * @return Newly created FinTech
+     */
     @Transactional
     public Fintech registerFintech(String fintechId, Supplier<char[]> finTechPassword) {
         Fintech fintech = fintechRepository.save(Fintech.builder().globalId(fintechId).build());

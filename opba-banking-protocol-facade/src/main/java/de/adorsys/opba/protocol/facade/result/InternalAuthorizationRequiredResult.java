@@ -6,6 +6,11 @@ import lombok.Getter;
 
 import java.net.URI;
 
+/**
+ * A result indicating redirection within Consent UI is necessary for authorization.
+ * @param <T> Response body
+ * @param <C> Authorization state
+ */
 @Getter
 public class InternalAuthorizationRequiredResult<T, C> extends RedirectionResult<T, C> {
 

@@ -16,6 +16,9 @@ import java.util.Map;
 import static de.adorsys.opba.protocol.api.common.ProtocolAction.DENY_AUTHORIZATION;
 import static de.adorsys.opba.protocol.facade.services.context.NoRedirectCodeValidationServiceContextProvider.NO_REDIRECT_CODE_VALIDATION;
 
+/**
+ * Action triggered when the PSU denies consent authorization.
+ */
 @Service
 public class DenyAuthorizationService extends FacadeService<DenyAuthorizationRequest, DenyAuthBody, DenyAuthorization> {
 

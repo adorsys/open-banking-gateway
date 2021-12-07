@@ -12,19 +12,31 @@ import javax.validation.constraints.NotNull;
 
 import static de.adorsys.opba.protocol.facade.config.ConfigConst.FACADE_CONFIG_PREFIX;
 
+/**
+ * PSU/Fintech user encryption key pair config.
+ */
 @Data
 @Validated
 @Configuration
 @ConfigurationProperties(FACADE_CONFIG_PREFIX + "encryption.psu.key-pair")
 public class PsuKeyPairConfig implements CmsEncSpec {
 
+    /**
+     * Key algorithm
+     */
     @NotBlank
     private String keyAlgo;
 
+    /**
+     * Key length, bits.
+     */
     @Min(64)
     @SuppressWarnings("checkstyle:MagicNumber") // Magic minimal value - at least 64 bit key
     private int len;
 
+    /**
+     * Cipher algorithm.
+     */
     @NotNull
     private ASN1ObjectIdentifier cipherAlgo;
 }

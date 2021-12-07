@@ -8,6 +8,9 @@ import lombok.Data;
 import javax.persistence.EntityManager;
 import java.util.UUID;
 
+/**
+ * Fintech to AuthSession relation tuple.
+ */
 @Data
 public class FintechUserAuthSessionTuple {
 
@@ -25,10 +28,20 @@ public class FintechUserAuthSessionTuple {
         this.authSessionId = session.getId();
     }
 
+    /**
+     * Computes current tuples' Datasafe storage path.
+     * @return Datasafe path corresponding to current tuple
+     */
     public String toDatasafePathWithoutParent() {
         return this.authSessionId.toString();
     }
 
+    /**
+     * Creates FinTech template requirements to the consent if any.
+     * @param path Datasafe path
+     * @param em Entity manager to persist to
+     * @return FinTech consent specification
+     */
     public static FintechConsentSpec buildFintechConsentSpec(String path, EntityManager em) {
         FintechUserAuthSessionTuple tuple = new FintechUserAuthSessionTuple(path);
         return FintechConsentSpec.builder()

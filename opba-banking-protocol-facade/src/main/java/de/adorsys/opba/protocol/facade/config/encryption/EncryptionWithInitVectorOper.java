@@ -11,19 +11,33 @@ import javax.crypto.spec.IvParameterSpec;
 import java.security.SecureRandom;
 import java.util.function.Supplier;
 
+/**
+ * Symmetric-key backed encryption providers.
+ */
 @RequiredArgsConstructor
 public class EncryptionWithInitVectorOper {
 
     private final SymmetricEncSpec encSpec;
 
+    /**
+     * Symmetric Key based encryption.
+     * @param keyId Key ID
+     * @param keyWithIv Key value
+     * @return Encryption service that encrypts data with symmetric key provided
+     */
     public EncryptionService encryptionService(String keyId, SecretKeyWithIv keyWithIv) {
-        return new SymmeticEncryption(
+        return new SymmetricEncryption(
                 keyId,
                 () -> encryption(keyWithIv),
                 () -> decryption(keyWithIv)
         );
     }
 
+    /**
+     * Encryption cipher
+     * @param keyWithIv Symmetric key and initialization vector
+     * @return Symmetric encryption cipher
+     */
     @SneakyThrows
     public Cipher encryption(SecretKeyWithIv keyWithIv) {
         Cipher cipher = Cipher.getInstance(encSpec.getCipherAlgo());
@@ -34,6 +48,11 @@ public class EncryptionWithInitVectorOper {
         return cipher;
     }
 
+    /**
+     * Decryption cipher
+     * @param keyWithIv Symmetric key and initialization vector
+     * @return Symmetric decryption cipher
+     */
     @SneakyThrows
     public Cipher decryption(SecretKeyWithIv keyWithIv) {
         Cipher cipher = Cipher.getInstance(encSpec.getCipherAlgo());
@@ -44,6 +63,10 @@ public class EncryptionWithInitVectorOper {
         return cipher;
     }
 
+    /**
+     * Generate random symmetric key with initialization vector (IV)
+     * @return Secret key with IV
+     */
     @SneakyThrows
     public SecretKeyWithIv generateKey() {
         byte[] iv = new byte[encSpec.getIvSize()];
@@ -55,9 +78,11 @@ public class EncryptionWithInitVectorOper {
         return new SecretKeyWithIv(iv, keyGen.generateKey());
     }
 
+    /**
+     * Symmetric encryption/decryption service.
+     */
     @RequiredArgsConstructor
-    public static class SymmeticEncryption implements EncryptionService {
-
+    public static class SymmetricEncryption implements EncryptionService {
 
         @Getter
         private final String encryptionKeyId;

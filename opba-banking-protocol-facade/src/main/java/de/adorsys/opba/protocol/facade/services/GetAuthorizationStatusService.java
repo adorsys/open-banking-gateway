@@ -19,6 +19,12 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
 
+/**
+ * Allows to get current authorization session status.
+ * @param <REQUEST> Request to execute
+ * @param <RESULT> Result of the request
+ * @param <ACTION> Associated action
+ */
 public abstract class GetAuthorizationStatusService<REQUEST extends FacadeServiceableGetter, RESULT extends ResultBody, ACTION extends Action<REQUEST, RESULT>>
         extends FacadeOptionalService<REQUEST, RESULT, ACTION> {
 

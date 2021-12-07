@@ -1,8 +1,8 @@
 package de.adorsys.opba.tppauthapi.controller;
 
 import de.adorsys.opba.protocol.facade.exceptions.NoProtocolRegisteredException;
-import de.adorsys.opba.protocol.facade.exceptions.PsuAuthenticationException;
-import de.adorsys.opba.protocol.facade.exceptions.PsuAuthorizationException;
+import de.adorsys.opba.protocol.facade.exceptions.PsuDoesNotExist;
+import de.adorsys.opba.protocol.facade.exceptions.PsuWrongCredentials;
 import de.adorsys.opba.protocol.facade.exceptions.PsuRegisterException;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
@@ -27,15 +27,15 @@ public class GenericControllerAdvice {
                 .body(Collections.singletonList(ex.getMessage()));
     }
 
-    @ExceptionHandler({PsuAuthenticationException.class})
-    public ResponseEntity<List<String>> handleUserDoesNotExistException(PsuAuthenticationException ex) {
+    @ExceptionHandler({PsuDoesNotExist.class})
+    public ResponseEntity<List<String>> handleUserDoesNotExistException(PsuDoesNotExist ex) {
         log.error("User does not exist exception: {}", ex.getMessage(), ex);
         return ResponseEntity
                 .status(HttpStatus.NOT_FOUND)
                 .body(Collections.singletonList(ex.getMessage()));
     }
 
-    @ExceptionHandler({PsuAuthorizationException.class})
+    @ExceptionHandler({PsuWrongCredentials.class})
     public ResponseEntity<List<String>> handleUnauthorizedException(Exception ex) {
         log.error("Unauthorized exception: {}", ex.getMessage(), ex);
         return ResponseEntity

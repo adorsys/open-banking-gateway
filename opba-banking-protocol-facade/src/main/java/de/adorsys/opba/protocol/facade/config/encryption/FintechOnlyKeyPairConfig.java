@@ -12,22 +12,37 @@ import javax.validation.constraints.NotNull;
 
 import static de.adorsys.opba.protocol.facade.config.ConfigConst.FACADE_CONFIG_PREFIX;
 
+/**
+ * Fintech-only encryption configuration.
+ */
 @Data
 @Validated
 @Configuration
 @ConfigurationProperties(FACADE_CONFIG_PREFIX + "encryption.fintech-only.key-pair")
 public class FintechOnlyKeyPairConfig implements CmsEncSpec {
 
+    /**
+     * Count of key-pairs in KeyStore.
+     */
     @Min(1)
     private int pairCount;
 
+    /**
+     * Key algorithm.
+     */
     @NotBlank
     private String keyAlgo;
 
+    /**
+     * Key length, bits.
+     */
     @Min(64)
     @SuppressWarnings("checkstyle:MagicNumber") // Magic minimal value - at least 64 bit key
     private int len;
 
+    /**
+     * Encryption/decryption algorithm.
+     */
     @NotNull
     private ASN1ObjectIdentifier cipherAlgo;
 }
