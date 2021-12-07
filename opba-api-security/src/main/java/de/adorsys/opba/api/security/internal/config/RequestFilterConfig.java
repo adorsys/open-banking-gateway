@@ -7,8 +7,11 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.boot.web.servlet.FilterRegistrationBean;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.Profile;
 
 import java.util.Set;
+
+import static de.adorsys.opba.api.security.GlobalConst.ENABLED_SECURITY_PROFILE;
 
 @Slf4j
 @Configuration
@@ -25,6 +28,7 @@ public class RequestFilterConfig {
     }
 
     @Bean
+    @Profile(ENABLED_SECURITY_PROFILE)
     public FilterRegistrationBean<RequestCookieFilter> cookieValidationFilter(CookieProperties cookieProperties) {
         Set<String> urlsToBeValidated = cookieProperties.getUrlsToBeValidated();
 

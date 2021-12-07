@@ -10,11 +10,9 @@ import de.adorsys.opba.protocol.facade.config.encryption.ConsentAuthorizationEnc
 import de.adorsys.opba.protocol.facade.services.EncryptionKeySerde;
 import de.adorsys.opba.protocol.facade.services.fintech.FintechAuthenticator;
 import de.adorsys.opba.protocol.facade.services.scoped.RequestScopedProvider;
-import org.springframework.stereotype.Service;
 
 import java.util.Objects;
 
-@Service(ServiceContextProviderForAspsp.ASPSP_CONTEXT_PROVIDER)
 public class ServiceContextProviderForAspsp extends ServiceContextProviderForFintech {
 
     public static final String ASPSP_CONTEXT_PROVIDER = "ASPSP_CONTEXT_PROVIDER";
