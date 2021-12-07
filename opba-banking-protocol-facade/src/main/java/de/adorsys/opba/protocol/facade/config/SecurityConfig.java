@@ -3,7 +3,7 @@ package de.adorsys.opba.protocol.facade.config;
 import de.adorsys.opba.db.repository.jpa.AuthorizationSessionRepository;
 import de.adorsys.opba.db.repository.jpa.BankProfileJpaRepository;
 import de.adorsys.opba.db.repository.jpa.ServiceSessionRepository;
-import de.adorsys.opba.protocol.facade.config.auth.FacadeAuthConfig;
+import de.adorsys.opba.protocol.facade.config.auth.FacadeConsentAuthConfig;
 import de.adorsys.opba.protocol.facade.config.encryption.ConsentAuthorizationEncryptionServiceProvider;
 import de.adorsys.opba.protocol.facade.services.EncryptionKeySerde;
 import de.adorsys.opba.protocol.facade.services.context.ServiceContextProviderForAspsp;
@@ -23,7 +23,7 @@ public class SecurityConfig {
     @Bean(ServiceContextProviderForAspsp.ASPSP_CONTEXT_PROVIDER)
     ServiceContextProviderForFintech serviceContextProviderForAspsp(
             AuthorizationSessionRepository authSessions,
-            FacadeAuthConfig authConfig,
+            FacadeConsentAuthConfig authConfig,
             FintechAuthenticator authenticator,
             BankProfileJpaRepository profileJpaRepository,
             ConsentAuthorizationEncryptionServiceProvider consentAuthorizationEncryptionServiceProvider,
@@ -38,7 +38,7 @@ public class SecurityConfig {
     @Bean(ServiceContextProviderForFintech.FINTECH_CONTEXT_PROVIDER)
     ServiceContextProviderForFintech serviceContextProviderForFintech(
             AuthorizationSessionRepository authSessions,
-            FacadeAuthConfig authConfig,
+            FacadeConsentAuthConfig authConfig,
             FintechAuthenticator authenticator,
             BankProfileJpaRepository profileJpaRepository,
             ConsentAuthorizationEncryptionServiceProvider consentAuthorizationEncryptionServiceProvider,
