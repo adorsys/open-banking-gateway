@@ -14,7 +14,7 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Profile;
 
-import static de.adorsys.opba.api.security.GlobalConst.ENABLED_SECURITY_PROFILE;
+import static de.adorsys.opba.api.security.SecurityGlobalConst.ENABLED_SECURITY_PROFILE;
 
 @Configuration
 @Profile(ENABLED_SECURITY_PROFILE)

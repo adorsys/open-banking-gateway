@@ -16,8 +16,8 @@ import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import java.util.Arrays;
 
-import static de.adorsys.opba.api.security.GlobalConst.DISABLED_SECURITY_PROFILE;
-import static de.adorsys.opba.api.security.GlobalConst.ENABLED_SECURITY_PROFILE;
+import static de.adorsys.opba.api.security.SecurityGlobalConst.DISABLED_SECURITY_PROFILE;
+import static de.adorsys.opba.api.security.SecurityGlobalConst.ENABLED_SECURITY_PROFILE;
 import static de.adorsys.opba.api.security.external.domain.HttpHeaders.AUTHORIZATION_SESSION_KEY;
 
 @Configuration
