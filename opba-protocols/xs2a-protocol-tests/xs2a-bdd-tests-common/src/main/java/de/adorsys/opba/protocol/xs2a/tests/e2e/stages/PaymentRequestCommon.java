@@ -4,7 +4,6 @@ import com.google.common.collect.ImmutableMap;
 import com.tngtech.jgiven.integration.spring.JGivenStage;
 import de.adorsys.opba.consentapi.model.generated.ConsentAuth;
 import de.adorsys.opba.consentapi.model.generated.SinglePayment;
-import de.adorsys.opba.protocol.xs2a.tests.e2e.LocationExtractorUtil;
 import de.adorsys.xs2a.adapter.api.model.PaymentProduct;
 import io.restassured.RestAssured;
 import io.restassured.response.ExtractableResponse;
@@ -14,11 +13,13 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.util.UriComponentsBuilder;
 
+import java.net.URI;
 import java.util.UUID;
 
 import static de.adorsys.opba.api.security.external.domain.HttpHeaders.AUTHORIZATION_SESSION_KEY;
 import static de.adorsys.opba.protocol.xs2a.tests.HeaderNames.X_REQUEST_ID;
 import static de.adorsys.opba.protocol.xs2a.tests.HeaderNames.X_XSRF_TOKEN;
+import static de.adorsys.opba.protocol.xs2a.tests.e2e.LocationExtractorUtil.getLocation;
 import static de.adorsys.opba.protocol.xs2a.tests.e2e.ResourceUtil.readResource;
 import static de.adorsys.opba.protocol.xs2a.tests.e2e.stages.PaymentStagesCommonUtil.ANTON_BRUECKNER;
 import static de.adorsys.opba.protocol.xs2a.tests.e2e.stages.PaymentStagesCommonUtil.AUTHORIZE_PAYMENT_ENDPOINT;
@@ -28,6 +29,7 @@ import static de.adorsys.opba.protocol.xs2a.tests.e2e.stages.PaymentStagesCommon
 import static de.adorsys.opba.protocol.xs2a.tests.e2e.stages.PaymentStagesCommonUtil.PASSWORD;
 import static de.adorsys.opba.protocol.xs2a.tests.e2e.stages.PaymentStagesCommonUtil.PIS_ANONYMOUS_LOGIN_USER_ENDPOINT;
 import static de.adorsys.opba.protocol.xs2a.tests.e2e.stages.PaymentStagesCommonUtil.PIS_LOGIN_USER_ENDPOINT;
+import static de.adorsys.opba.protocol.xs2a.tests.e2e.stages.PaymentStagesCommonUtil.SANDBOX_PORT;
 import static de.adorsys.opba.protocol.xs2a.tests.e2e.stages.PaymentStagesCommonUtil.SEPA_PAYMENT;
 import static de.adorsys.opba.protocol.xs2a.tests.e2e.stages.PaymentStagesCommonUtil.withPaymentHeaders;
 import static de.adorsys.opba.protocol.xs2a.tests.e2e.stages.PaymentStagesCommonUtil.withPaymentInfoHeaders;
@@ -89,6 +91,8 @@ public class PaymentRequestCommon<SELF extends PaymentRequestCommon<SELF>> exten
         updateServiceSessionId(response);
         updateRedirectCode(response);
         updateNextPaymentAuthorizationUrl(response);
+        assertThat(URI.create(getLocation(response))).hasParameter("redirectCode");
+        assertThat(URI.create(getLocation(response))).hasPath(String.format("/auth/pis/%s/login", paymentServiceSessionId));
         return self();
     }
 
@@ -106,6 +110,8 @@ public class PaymentRequestCommon<SELF extends PaymentRequestCommon<SELF>> exten
         updateServiceSessionId(response);
         updateRedirectCode(response);
         updateNextPaymentAuthorizationUrl(response);
+        assertThat(URI.create(getLocation(response))).hasParameter("redirectCode");
+        assertThat(URI.create(getLocation(response))).hasPath(String.format("/auth/pis/%s/anonymous", paymentServiceSessionId));
         return self();
     }
 
@@ -127,6 +133,8 @@ public class PaymentRequestCommon<SELF extends PaymentRequestCommon<SELF>> exten
         updateServiceSessionId(response);
         updateRedirectCode(response);
         updateNextPaymentAuthorizationUrl(response);
+        assertThat(URI.create(getLocation(response))).hasParameter("redirectCode");
+        assertThat(URI.create(getLocation(response))).hasPath(String.format("/auth/pis/%s/login", paymentServiceSessionId));
         return self();
     }
 
@@ -144,6 +152,8 @@ public class PaymentRequestCommon<SELF extends PaymentRequestCommon<SELF>> exten
         updateServiceSessionId(response);
         updateRedirectCode(response);
         updateNextPaymentAuthorizationUrl(response);
+        assertThat(URI.create(getLocation(response))).hasParameter("redirectCode");
+        assertThat(URI.create(getLocation(response))).hasPath(String.format("/auth/pis/%s/anonymous", paymentServiceSessionId));
         return self();
     }
 
@@ -165,6 +175,8 @@ public class PaymentRequestCommon<SELF extends PaymentRequestCommon<SELF>> exten
             .extract();
 
         this.authSessionCookie = response.cookie(AUTHORIZATION_SESSION_KEY);
+        assertThat(URI.create(getLocation(response))).hasParameter("redirectCode");
+        assertThat(URI.create(getLocation(response))).hasPath(String.format("/pis/%s", paymentServiceSessionId));
         return self();
     }
 
@@ -210,7 +222,8 @@ public class PaymentRequestCommon<SELF extends PaymentRequestCommon<SELF>> exten
         updateNextPaymentAuthorizationUrl(response);
         updateServiceSessionId(response);
         updateRedirectCode(response);
-
+        assertThat(URI.create(getLocation(response))).hasParameter("redirectCode");
+        assertThat(URI.create(getLocation(response))).hasPath(String.format("/pis/%s/to-aspsp-redirection", paymentServiceSessionId));
         return self();
     }
 
@@ -229,6 +242,11 @@ public class PaymentRequestCommon<SELF extends PaymentRequestCommon<SELF>> exten
         updateNextPaymentAuthorizationUrl(response);
         updateServiceSessionId(response);
         updateRedirectCode(response);
+        return self();
+    }
+
+    public SELF set_auth_session_key_in_wiremock_transformer(RedirectCapturingTransformer transformer) {
+        transformer.setAuthCookie(this.authSessionCookie);
         return self();
     }
 
@@ -259,13 +277,15 @@ public class PaymentRequestCommon<SELF extends PaymentRequestCommon<SELF>> exten
         updateNextPaymentAuthorizationUrl(response);
         updateServiceSessionId(response);
         updateRedirectCode(response);
+        assertThat(URI.create(getLocation(response))).hasHost("localhost");
+        assertThat(URI.create(getLocation(response))).hasPort(SANDBOX_PORT);
         return self();
     }
 
     public SELF user_max_musterman_provided_sca_challenge_result_to_embedded_authorization_and_sees_redirect_to_fintech_ok(String challengeType) {
         assertThat(this.redirectUriToGetUserParams).contains("sca-result").contains(challengeType).doesNotContain("wrong=true");
         ExtractableResponse<Response> response = max_musterman_provides_sca_challenge_result();
-        assertThat(LocationExtractorUtil.getLocation(response)).contains("pis").contains("consent-result");
+        assertThat(getLocation(response)).contains("pis").contains("consent-result");
         return self();
     }
 
@@ -280,6 +300,7 @@ public class PaymentRequestCommon<SELF extends PaymentRequestCommon<SELF>> exten
         );
 
         assertThat(response.header(LOCATION)).contains("/pis/");
+        assertThat(URI.create(getLocation(response))).hasPath(String.format("/pis/%s/authenticate", paymentServiceSessionId));
         return self();
     }
 
@@ -293,12 +314,31 @@ public class PaymentRequestCommon<SELF extends PaymentRequestCommon<SELF>> exten
         return self();
     }
 
-    public SELF user_max_musterman_provided_password_to_embedded_authorization() {
+    public SELF user_max_musterman_provided_password_to_embedded_authorization_decoupled() {
         assertThat(this.redirectUriToGetUserParams).contains("authenticate").doesNotContain("wrong=true");
-        max_musterman_provides_password();
+        var response = max_musterman_provides_password();
         updateAvailableScas();
+        assertThat(URI.create(getLocation(response))).hasParameter("redirectCode");
+        assertThat(URI.create(getLocation(response))).hasPath(String.format("/pis/%s/wait-sca-finalization", paymentServiceSessionId));
         return self();
     }
+
+    public SELF user_max_musterman_provided_password_to_embedded_authorization_zero_sca() {
+        assertThat(this.redirectUriToGetUserParams).contains("authenticate").doesNotContain("wrong=true");
+        var response = max_musterman_provides_password();
+        updateAvailableScas();
+        assertThat(URI.create(getLocation(response))).hasPath(String.format("/pis/%s/consent-result", paymentServiceSessionId));
+        return self();
+    }
+
+    public SELF user_max_musterman_provided_password_to_embedded_authorization() {
+        assertThat(this.redirectUriToGetUserParams).contains("authenticate").doesNotContain("wrong=true");
+        var response = max_musterman_provides_password();
+        updateAvailableScas();
+        assertThat(URI.create(getLocation(response))).hasPath(String.format("/pis/%s/select-sca-method", paymentServiceSessionId));
+        return self();
+    }
+
     public SELF user_anton_brueckner_provided_password_to_embedded_authorization() {
         assertThat(this.redirectUriToGetUserParams).contains("authenticate").doesNotContain("wrong=true");
         anton_brueckner_provides_password();
@@ -307,11 +347,14 @@ public class PaymentRequestCommon<SELF extends PaymentRequestCommon<SELF>> exten
     }
 
     public SELF user_max_musterman_selected_sca_challenge_type_email2_to_embedded_authorization() {
-        provideParametersToBankingProtocolWithBody(
+        var response = provideParametersToBankingProtocolWithBody(
                 AUTHORIZE_CONSENT_ENDPOINT,
                 selectedScaBody("EMAIL:max.musterman2@mail.de"),
                 ACCEPTED
         );
+
+        assertThat(URI.create(getLocation(response))).hasParameter("wrong", "false");
+        assertThat(URI.create(getLocation(response))).hasPath(String.format("/pis/%s/sca-result/EMAIL", paymentServiceSessionId));
         return self();
     }
 
@@ -396,7 +439,7 @@ public class PaymentRequestCommon<SELF extends PaymentRequestCommon<SELF>> exten
     }
 
     protected void updateNextPaymentAuthorizationUrl(ExtractableResponse<Response> response) {
-        this.redirectUriToGetUserParams = LocationExtractorUtil.getLocation(response);
+        this.redirectUriToGetUserParams = getLocation(response);
     }
 
     @SneakyThrows

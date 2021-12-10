@@ -33,6 +33,7 @@ public class PaymentStagesCommonUtil {
     public static final String SEPA_PAYMENT = "sepa-credit-transfers";
     public static final String LOGIN = "login";
     public static final String PASSWORD = "password";
+    public static final int SANDBOX_PORT = 4400;
 
     public static final String DEFAULT_FINTECH_ID = "MY-SUPER-FINTECH-ID";
     public static final String FINTECH_REDIR_OK = "http://localhost:4444/redirect-after-consent";

@@ -13,6 +13,7 @@ import de.adorsys.opba.protocol.api.dto.context.ServiceContext;
 import de.adorsys.opba.protocol.api.dto.request.FacadeServiceableGetter;
 import de.adorsys.opba.protocol.api.dto.request.FacadeServiceableRequest;
 import de.adorsys.opba.protocol.api.services.scoped.RequestScoped;
+import de.adorsys.opba.protocol.facade.config.auth.FacadeConsentAuthConfig;
 import de.adorsys.opba.protocol.facade.config.encryption.ConsentAuthorizationEncryptionServiceProvider;
 import de.adorsys.opba.protocol.facade.services.EncryptionKeySerde;
 import de.adorsys.opba.protocol.facade.services.InternalContext;
@@ -22,14 +23,15 @@ import lombok.RequiredArgsConstructor;
 import lombok.SneakyThrows;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Objects;
 import java.util.UUID;
 import java.util.stream.Collectors;
 
-@Service(ServiceContextProviderForFintech.FINTECH_CONTEXT_PROVIDER)
+/**
+ * Base class for service context provider necessary to serve request for underlying protocols.
+ */
 @RequiredArgsConstructor
 public class ServiceContextProviderForFintech implements ServiceContextProvider {
 
@@ -37,6 +39,7 @@ public class ServiceContextProviderForFintech implements ServiceContextProvider 
 
     protected final AuthorizationSessionRepository authSessions;
 
+    private final FacadeConsentAuthConfig authConfig;
     private final FintechAuthenticator authenticator;
     private final BankProfileJpaRepository profileJpaRepository;
     private final ConsentAuthorizationEncryptionServiceProvider consentAuthorizationEncryptionServiceProvider;
@@ -61,9 +64,9 @@ public class ServiceContextProviderForFintech implements ServiceContextProvider 
                         .authSessionId(null == authSession ? null : authSession.getId())
                         .authContext(null == authSession ? null : authSession.getAuthSessionContext())
                         .associatedAuthSessionIds(authSessions.findByParentId(session.getId()).map(AuthSession::getId).stream().collect(Collectors.toSet()))
-                        // Currently 1-1 auth-session to service session
+                        // Currently, 1-1 auth-session to service session
                         .futureAuthSessionId(session.getId())
-                        .futureRedirectCode(UUID.randomUUID())
+                        .futureRedirectCode(generateRedirectCode(authSession))
                         .futureAspspRedirectCode(UUID.randomUUID())
                         .request(request)
                         .build()
@@ -79,6 +82,12 @@ public class ServiceContextProviderForFintech implements ServiceContextProvider 
         return ServiceContext.<REQUEST>builder().ctx(ctx.getServiceCtx()).requestScoped(requestScoped).build();
     }
 
+    /**
+     * Validates redirect code (Xsrf protection) for current request
+     * @param request Request to validate for
+     * @param session Service session that has expected redirect code value
+     * @param <REQUEST> Request class
+     */
     protected <REQUEST extends FacadeServiceableGetter> void validateRedirectCode(REQUEST request, AuthSession session) {
         if (Strings.isNullOrEmpty(request.getFacadeServiceable().getRedirectCode())) {
             throw new IllegalArgumentException("Missing redirect code");
@@ -87,6 +96,14 @@ public class ServiceContextProviderForFintech implements ServiceContextProvider 
         if (!Objects.equals(session.getRedirectCode(), request.getFacadeServiceable().getRedirectCode())) {
             throw new IllegalArgumentException("Wrong redirect code");
         }
+    }
+
+    private UUID generateRedirectCode(AuthSession session) {
+        if (authConfig.getRedirect().isSessionWideRedirectCode() && null != session && null != session.getRedirectCode()) {
+            return UUID.fromString(session.getRedirectCode());
+        }
+
+        return UUID.randomUUID();
     }
 
     private <REQUEST extends FacadeServiceableGetter> AuthSession readAndValidateAuthSession(REQUEST request) {

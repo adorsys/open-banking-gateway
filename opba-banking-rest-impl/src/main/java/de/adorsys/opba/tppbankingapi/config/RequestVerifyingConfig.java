@@ -21,6 +21,7 @@ import java.util.Set;
 import java.util.concurrent.ConcurrentMap;
 import java.util.stream.Collectors;
 
+import static de.adorsys.opba.api.security.SecurityGlobalConst.ENABLED_SECURITY_AND_DISABLED_NO_SIGNATURE_FILTER_PROFILE;
 import static de.adorsys.opba.tppbankingapi.config.ConfigConst.BANKING_API_CONFIG_PREFIX;
 
 @Data
@@ -39,7 +40,7 @@ public class RequestVerifyingConfig {
     private Set<@NotBlank String> urlsToBeValidated;
 
     @Bean
-    @Profile("!no-signature-filter")
+    @Profile(ENABLED_SECURITY_AND_DISABLED_NO_SIGNATURE_FILTER_PROFILE)
     public FilterRegistrationBean<RequestSignatureValidationFilter> requestSignatureValidationFilter(
             ApiConsumerConfig consumers) {
 

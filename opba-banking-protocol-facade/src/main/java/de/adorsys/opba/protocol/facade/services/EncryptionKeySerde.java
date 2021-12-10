@@ -19,6 +19,9 @@ import java.security.PublicKey;
 import java.security.spec.PKCS8EncodedKeySpec;
 import java.security.spec.X509EncodedKeySpec;
 
+/**
+ * Allows serializing encryption keys to string/stream and back.
+ */
 @Service
 @RequiredArgsConstructor
 public class EncryptionKeySerde {
@@ -28,11 +31,21 @@ public class EncryptionKeySerde {
 
     private final ObjectMapper mapper;
 
+    /**
+     * Convert symmetric key with initialization vector to string.
+     * @param secretKeyWithIv Symmetric Key + IV
+     * @return Serialized key
+     */
     @SneakyThrows
     public String asString(SecretKeyWithIv secretKeyWithIv) {
         return mapper.writeValueAsString(new SecretKeyWithIvContainer(secretKeyWithIv));
     }
 
+    /**
+     * Convert string to symmetric key with initialization vector.
+     * @param fromString String to buld key from
+     * @return Deserialized key
+     */
     @SneakyThrows
     public SecretKeyWithIv fromString(String fromString) {
         SecretKeyWithIvContainer container = mapper.readValue(fromString, SecretKeyWithIvContainer.class);
@@ -42,6 +55,11 @@ public class EncryptionKeySerde {
         );
     }
 
+    /**
+     * Write symmetric key with initialization vector to output stream.
+     * @param value Key to write
+     * @param os Output stream to write to
+     */
     @SneakyThrows
     public void write(SecretKeyWithIv value, OutputStream os) {
         // Mapper may choose to close the stream if using stream interface, we don't want this
@@ -49,6 +67,11 @@ public class EncryptionKeySerde {
         os.write(mapper.writeValueAsBytes(new SecretKeyWithIvContainer(value)));
     }
 
+    /**
+     * Read symmetric key with initialization vector from input stream.
+     * @param is Stream with key
+     * @return Read key
+     */
     @SneakyThrows
     public SecretKeyWithIv read(InputStream is) {
         SecretKeyWithIvContainer container = mapper.readValue(is, SecretKeyWithIvContainer.class);
@@ -58,6 +81,12 @@ public class EncryptionKeySerde {
         );
     }
 
+    /**
+     * Write public-private key pair into OutputStream
+     * @param publicKey Public key of pair
+     * @param privKey Private key of pair
+     * @param os Output stream to write to
+     */
     @SneakyThrows
     public void writeKey(PublicKey publicKey, PrivateKey privKey, OutputStream os) {
         // Mapper may choose to close the stream if using stream interface, we don't want this
@@ -65,6 +94,11 @@ public class EncryptionKeySerde {
         os.write(mapper.writeValueAsBytes(new PubAndPrivKeyContainer(publicKey, privKey)));
     }
 
+    /**
+     * Read public-private key pair from InputStream
+     * @param is InputStream to read key from
+     * @return Read key pair
+     */
     @SneakyThrows
     public PubAndPrivKey readKey(InputStream is) {
         PubAndPrivKeyContainer container = mapper.readValue(is, PubAndPrivKeyContainer.class);
@@ -81,6 +115,9 @@ public class EncryptionKeySerde {
         return new PubAndPrivKey(pubKey, privKey);
     }
 
+    /**
+     * Container for the symmetric key and initialization vector.
+     */
     @Data
     @NoArgsConstructor
     @AllArgsConstructor
@@ -104,6 +141,9 @@ public class EncryptionKeySerde {
         }
     }
 
+    /**
+     * Container for public-private key pair
+     */
     @Data
     @NoArgsConstructor
     @AllArgsConstructor

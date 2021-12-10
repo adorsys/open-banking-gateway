@@ -15,6 +15,9 @@ import org.springframework.transaction.support.TransactionOperations;
 import javax.persistence.EntityManager;
 import java.net.URI;
 
+/**
+ * DB-backed Datasafe storage for granted consents.
+ */
 @Component
 public class FintechConsentSpecDatasafeStorage extends BaseDatasafeDbStorageService {
 
@@ -35,6 +38,9 @@ public class FintechConsentSpecDatasafeStorage extends BaseDatasafeDbStorageServ
         return URI.create(value).getHost();
     }
 
+    /**
+     * DB-backed Datasafe storage for granted consents description (accounts granted for, applicability).
+     */
     @Component
     public static class FintechConsentSpecStorage extends DatasafeDataStorage<FintechConsentSpec> {
 
@@ -50,6 +56,9 @@ public class FintechConsentSpecDatasafeStorage extends BaseDatasafeDbStorageServ
         }
     }
 
+    /**
+     * DB-backed Datasafe Fintech user (private keys) KeyStore storage
+     */
     @Component
     public static class FintechUserKeystoreStorage extends DatasafeMetadataStorage<FintechUser> {
 
@@ -58,6 +67,9 @@ public class FintechConsentSpecDatasafeStorage extends BaseDatasafeDbStorageServ
         }
     }
 
+    /**
+     * DB-backed Datasafe Fintech users' public key storage
+     */
     @Component
     public static class FintechUserPubKeysStorage extends DatasafeMetadataStorage<FintechUser> {
 

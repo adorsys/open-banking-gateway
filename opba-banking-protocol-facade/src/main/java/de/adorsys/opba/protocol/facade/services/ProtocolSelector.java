@@ -12,12 +12,24 @@ import java.util.Collection;
 import java.util.Map;
 import java.util.Optional;
 
+/**
+ * Selects protocol service to execute for the request served by {@link FacadeService}.
+ */
 @Service
 @RequiredArgsConstructor
 public class ProtocolSelector {
 
     private final BankActionRepository bankActionRepository;
 
+    /**
+     * Selects protocol service into internal context
+     * @param ctx Facade context
+     * @param protocolAction Protocol action to execute
+     * @param actionBeans Available beans for this action.
+     * @param <REQUEST> Request being executed
+     * @param <ACTION> Action associated
+     * @return Internal context with protocol service to handle the request.
+     */
     @Transactional
     public <REQUEST, ACTION> Optional<InternalContext<REQUEST, ACTION>> selectProtocolFor(
             InternalContext<REQUEST, ACTION> ctx,
@@ -45,6 +57,15 @@ public class ProtocolSelector {
                 });
     }
 
+    /**
+     * Selects protocol service into internal context, throws if none available.
+     * @param ctx Facade context
+     * @param protocolAction Protocol action to execute
+     * @param actionBeans Available beans for this action.
+     * @param <REQUEST> Request being executed
+     * @param <ACTION> Action associated
+     * @return Internal context with protocol service to handle the request.
+     */
     @Transactional
     public <REQUEST, ACTION> InternalContext<REQUEST, ACTION> requireProtocolFor(
         InternalContext<REQUEST, ACTION> ctx,

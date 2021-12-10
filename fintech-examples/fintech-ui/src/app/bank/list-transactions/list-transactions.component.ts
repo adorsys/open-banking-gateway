@@ -44,7 +44,9 @@ export class ListTransactionsComponent implements OnInit {
         settings.lot,
         JSON.stringify(settings.consent),
         online,
-        settings.consentRequiresAuthentication
+        settings.consentRequiresAuthentication,
+        settings.dateFrom,
+        settings.dateTo
       )
       .subscribe((response) => {
         switch (response.status) {

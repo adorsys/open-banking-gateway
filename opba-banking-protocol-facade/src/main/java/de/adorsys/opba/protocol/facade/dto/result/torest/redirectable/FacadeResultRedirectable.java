@@ -9,6 +9,11 @@ import java.util.Collections;
 import java.util.Map;
 import java.util.UUID;
 
+/**
+ * Base Facade result that indicates redirection is necessary for PSU/Fintech user.
+ * @param <T> Response result
+ * @param <C> Authorization state
+ */
 @Data
 public abstract class FacadeResultRedirectable<T, C extends AuthStateBody> implements FacadeResult<T> {
 

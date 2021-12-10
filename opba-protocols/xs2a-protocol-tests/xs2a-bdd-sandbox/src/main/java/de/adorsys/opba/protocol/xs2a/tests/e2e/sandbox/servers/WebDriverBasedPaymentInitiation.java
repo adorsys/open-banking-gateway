@@ -62,7 +62,7 @@ public class WebDriverBasedPaymentInitiation<SELF extends WebDriverBasedPaymentI
         return self();
     }
 
-    public SELF update_redirect_code_from_browser_url(WebDriver driver) {
+    public SELF update_redirect_code_from_browser_url_oauth2(WebDriver driver) {
         acc.update_redirect_code_from_browser_on_redirect_back_url(driver);
         this.redirectCode = acc.getRedirectCode();
         return self();

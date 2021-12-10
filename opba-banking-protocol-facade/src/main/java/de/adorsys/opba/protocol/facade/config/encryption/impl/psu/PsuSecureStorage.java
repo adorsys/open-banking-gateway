@@ -23,6 +23,9 @@ import java.util.UUID;
 import java.util.function.BiConsumer;
 import java.util.function.Supplier;
 
+/**
+ * Aggregated actions for PSU within OBG.
+ */
 @RequiredArgsConstructor
 public class PsuSecureStorage {
 
@@ -33,6 +36,11 @@ public class PsuSecureStorage {
     private final PsuEncryptionServiceProvider encryptionServiceProvider;
     private final EncryptionKeySerde serde;
 
+    /**
+     * Registers PSU in Datasafe
+     * @param psu PSU data
+     * @param password PSU KeyStore/Datasafe password.
+     */
     public void registerPsu(Psu psu, Supplier<char[]> password) {
         this.userProfile()
                 .createDocumentKeystore(
@@ -41,6 +49,13 @@ public class PsuSecureStorage {
                 );
     }
 
+    /**
+     * Gets or generates key from for PSU to ASPSP consent protection
+     * @param password Key protection password
+     * @param session Authorization session for current user
+     * @param storePublicKeyIfNeeded If public key needs to be stored
+     * @return Public and Private key pair to protect PSU and ASPSP consent grant
+     */
     @SneakyThrows
     public PubAndPrivKey getOrCreateKeyFromPrivateForAspsp(Supplier<char[]> password, AuthSession session, BiConsumer<UUID, PublicKey> storePublicKeyIfNeeded) {
         try (InputStream is = datasafeServices.privateService().read(

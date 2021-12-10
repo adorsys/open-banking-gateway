@@ -16,6 +16,10 @@ import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
+/**
+ * Consent access service (authorization process and consent itself) for Authenticated PSUs' (one that logs in into
+ * OBG)
+ */
 @RequiredArgsConstructor
 public class PsuConsentAccess implements ConsentAccess {
 

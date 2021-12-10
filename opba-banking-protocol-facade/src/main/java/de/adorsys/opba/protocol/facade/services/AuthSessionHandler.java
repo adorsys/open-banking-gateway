@@ -15,7 +15,7 @@ import de.adorsys.opba.protocol.api.dto.context.ServiceContext;
 import de.adorsys.opba.protocol.api.dto.request.FacadeServiceableGetter;
 import de.adorsys.opba.protocol.api.dto.request.FacadeServiceableRequest;
 import de.adorsys.opba.protocol.api.dto.request.payments.InitiateSinglePaymentRequest;
-import de.adorsys.opba.protocol.facade.config.auth.FacadeAuthConfig;
+import de.adorsys.opba.protocol.facade.config.auth.FacadeConsentAuthConfig;
 import de.adorsys.opba.protocol.facade.config.encryption.SecretKeyWithIv;
 import de.adorsys.opba.protocol.facade.config.encryption.impl.fintech.FintechConsentSpecSecureStorage;
 import de.adorsys.opba.protocol.facade.dto.result.torest.redirectable.FacadeResultRedirectable;
@@ -33,12 +33,15 @@ import static de.adorsys.opba.protocol.api.common.ProtocolAction.AUTHORIZATION;
 import static de.adorsys.opba.protocol.facade.config.auth.UriExpandConst.AUTHORIZATION_SESSION_ID;
 import static de.adorsys.opba.protocol.facade.config.auth.UriExpandConst.FINTECH_USER_TEMP_PASSWORD;
 
+/**
+ * Handles authorization session creation and continuation.
+ */
 // FIXME - this class needs refactoring - some other class should handle FinTech user registration
 @Service
 @RequiredArgsConstructor
 public class AuthSessionHandler {
 
-    private final FacadeAuthConfig facadeAuthConfig;
+    private final FacadeConsentAuthConfig consentAuthConfig;
     private final BankActionRepository bankActionRepository;
     private final FintechUserPasswordGenerator passwordGenerator;
     private final FintechRepository fintechs;
@@ -47,10 +50,18 @@ public class AuthSessionHandler {
     private final AuthorizationSessionRepository authenticationSessions;
     private final EntityManager entityManager;
 
+    /**
+     * Creates new authorization session associated with the request.
+     * @param request Request to associate session with.
+     * @param sessionKey Authorization session encryption key.
+     * @param context Service context for the request
+     * @param result Protocol response that required to open the session
+     * @param <O> Outcome class
+     * @return New authorization session
+     */
     @NotNull
     @SneakyThrows
     @Transactional
-    @SuppressWarnings("checkstyle:MethodLength") //  FIXME - https://github.com/adorsys/open-banking-gateway/issues/555
     public <O> AuthSession createNewAuthSessionAndEnhanceResult(
             FacadeServiceableRequest request,
             SecretKeyWithIv sessionKey,
@@ -60,10 +71,18 @@ public class AuthSessionHandler {
         return fillAuthSessionData(request, context, sessionKey, result);
     }
 
+    /**
+     * Continues already existing authorization session associated with the request.
+     * @param authSession Authorization session to continue
+     * @param sessionKey Encryption key for the authorization session
+     * @param context Service context for the request
+     * @param result Protocol response that required to continue the session
+     * @param <O> Outcome class
+     * @return Authorization session to reuse
+     */
     @NotNull
     @SneakyThrows
     @Transactional
-    @SuppressWarnings("checkstyle:MethodLength") //  FIXME - https://github.com/adorsys/open-banking-gateway/issues/555
     public <O> AuthSession reuseAuthSessionAndEnhanceResult(
             AuthSession authSession,
             SecretKeyWithIv sessionKey,
@@ -160,13 +179,13 @@ public class AuthSessionHandler {
         FacadeServiceableRequest request = ((FacadeServiceableGetter) context.getRequest()).getFacadeServiceable();
 
         String url = request.isAnonymousPsu()
-                ? facadeAuthConfig.getRedirect().getConsentLogin().getPage().getForAisAnonymous()
-                : facadeAuthConfig.getRedirect().getConsentLogin().getPage().getForAis();
+                ? consentAuthConfig.getRedirect().getConsentLogin().getPage().getForAisAnonymous()
+                : consentAuthConfig.getRedirect().getConsentLogin().getPage().getForAis();
 
         if (context.getRequest() instanceof InitiateSinglePaymentRequest) {
             url = request.isAnonymousPsu()
-                    ? facadeAuthConfig.getRedirect().getConsentLogin().getPage().getForPisAnonymous()
-                    : facadeAuthConfig.getRedirect().getConsentLogin().getPage().getForPis();
+                    ? consentAuthConfig.getRedirect().getConsentLogin().getPage().getForPisAnonymous()
+                    : consentAuthConfig.getRedirect().getConsentLogin().getPage().getForPis();
         }
 
         result.setRedirectionTo(

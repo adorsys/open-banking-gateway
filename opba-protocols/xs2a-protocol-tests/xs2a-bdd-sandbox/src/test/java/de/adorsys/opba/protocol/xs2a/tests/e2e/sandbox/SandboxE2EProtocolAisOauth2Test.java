@@ -1,12 +1,17 @@
 package de.adorsys.opba.protocol.xs2a.tests.e2e.sandbox;
 
+import com.github.tomakehurst.wiremock.WireMockServer;
+import de.adorsys.opba.protocol.xs2a.config.protocol.ProtocolUrlsConfiguration;
 import de.adorsys.opba.protocol.xs2a.tests.e2e.JGivenConfig;
 import de.adorsys.opba.protocol.xs2a.tests.e2e.sandbox.servers.SandboxServers;
 import de.adorsys.opba.protocol.xs2a.tests.e2e.sandbox.servers.WebDriverBasedAccountInformation;
 import de.adorsys.opba.protocol.xs2a.tests.e2e.sandbox.servers.config.RetryableConfig;
 import de.adorsys.opba.protocol.xs2a.tests.e2e.stages.AccountInformationResult;
+import de.adorsys.opba.protocol.xs2a.tests.e2e.stages.RedirectCapturingTransformer;
 import de.adorsys.psd2.sandbox.cms.starter.Xs2aCmsAutoConfiguration;
 import io.github.bonigarcia.seljup.SeleniumExtension;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.condition.EnabledIfEnvironmentVariable;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -20,6 +25,10 @@ import org.springframework.test.context.ActiveProfiles;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
+import static com.github.tomakehurst.wiremock.client.WireMock.aResponse;
+import static com.github.tomakehurst.wiremock.client.WireMock.get;
+import static com.github.tomakehurst.wiremock.client.WireMock.urlMatching;
+import static com.github.tomakehurst.wiremock.core.WireMockConfiguration.wireMockConfig;
 import static de.adorsys.opba.protocol.xs2a.tests.Const.ENABLE_HEAVY_TESTS;
 import static de.adorsys.opba.protocol.xs2a.tests.Const.TRUE_BOOL;
 import static de.adorsys.opba.protocol.xs2a.tests.TestProfiles.MOCKED_SANDBOX;
@@ -46,6 +55,32 @@ class SandboxE2EProtocolAisOauth2Test extends SandboxCommonTest<
         WebDriverBasedAccountInformation<? extends WebDriverBasedAccountInformation<?>>,
         AccountInformationResult<? extends AccountInformationResult<?>>> {
 
+    // Special hack to handle 202 when returning from ASPSP and replacing it with 303
+    private WireMockServer wireMockRedirectServer;
+    private final RedirectCapturingTransformer transformer = new RedirectCapturingTransformer();
+
+    // See https://github.com/spring-projects/spring-boot/issues/14879 for the 'why setting port'
+    @BeforeEach
+    void setBaseUrl() {
+        transformer.setObgPort(port);
+        wireMockRedirectServer = new WireMockServer(wireMockConfig().extensions(transformer).dynamicPort());
+        wireMockRedirectServer.start();
+        wireMockRedirectServer.stubFor(get(urlMatching(".*/fromAspsp/.*")).willReturn(aResponse().withStatus(200)));
+
+        ProtocolUrlsConfiguration.WebHooks aisUrls = urlsConfiguration.getAis().getWebHooks();
+        aisUrls.setOk(aisUrls.getOk().replaceAll("localhost:\\d+", "localhost:" + wireMockRedirectServer.port()));
+        aisUrls.setNok(aisUrls.getNok().replaceAll("localhost:\\d+", "localhost:" + wireMockRedirectServer.port()));
+
+        ProtocolUrlsConfiguration.WebHooks pisUrls = urlsConfiguration.getPis().getWebHooks();
+        pisUrls.setOk(pisUrls.getOk().replaceAll("localhost:\\d+", "localhost:" + wireMockRedirectServer.port()));
+        pisUrls.setNok(pisUrls.getNok().replaceAll("localhost:\\d+", "localhost:" + wireMockRedirectServer.port()));
+    }
+
+    @AfterEach
+    void stop303redirectWiremock() {
+        wireMockRedirectServer.stop();
+    }
+
     /**
      * In separate class as otherwise Sandbox is stuck in OAUTH mode.
      * Not using {@code ParameterizedTest} as OAuth2 is the special case of REDIRECT (to reduce pipeline runtime).
@@ -63,6 +98,8 @@ class SandboxE2EProtocolAisOauth2Test extends SandboxCommonTest<
                 .user_logged_in_into_opba_as_opba_user_with_credentials_using_fintech_supplied_url(OPBA_LOGIN, OPBA_PASSWORD)
                 .and()
                 .user_anton_brueckner_provided_initial_parameters_to_list_accounts_with_all_accounts_consent()
+                .and()
+                .set_auth_session_key_in_wiremock_transformer(transformer)
                 .and()
                 .user_anton_brueckner_sees_that_he_needs_to_be_redirected_to_aspsp_and_redirects_to_aspsp()
                 .and()

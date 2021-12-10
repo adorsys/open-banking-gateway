@@ -14,6 +14,10 @@ import java.util.UUID;
 import static de.adorsys.opba.protocol.api.dto.headers.ResponseHeaders.X_ERROR_CODE;
 import static de.adorsys.opba.protocol.api.dto.headers.ResponseHeaders.X_ERROR_MESSAGE;
 
+/**
+ * Facade result that indicates some error has occurred.
+ * @param <T> Error body
+ */
 @Data
 public class FacadeRuntimeErrorResult<T> implements FacadeResult<T> {
 

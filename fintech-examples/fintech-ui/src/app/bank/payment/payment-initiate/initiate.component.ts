@@ -55,7 +55,7 @@ export class InitiateComponent implements OnInit {
     this.paymentForm = this.formBuilder.group({
       name: [testPayment.referenceName, Validators.required],
       creditorIban: ['AL90208110080000001039531801', [ValidatorService.validateIban, Validators.required]],
-      amount: ['12.34', [Validators.pattern('^[1-9]\\d*(\\.\\d{1,2})?$'), Validators.required]],
+      amount: ['12.34', [Validators.pattern('^[0-9]\\d*(\\.\\d{1,2})?$'), Validators.required]],
       purpose: [testPayment.purpose],
       endToEndIdentification: ['Test end to end identification 123', [Validators.required, Validators.maxLength(35)]],
       instantPayment: false

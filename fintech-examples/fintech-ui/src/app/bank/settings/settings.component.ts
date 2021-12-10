@@ -53,7 +53,9 @@ export class SettingsComponent implements OnInit {
       frequencyPerDay: settingsData.consent === null ? null : settingsData.consent.frequencyPerDay,
       recurringIndicator: settingsData.consent === null ? null : settingsData.consent.recurringIndicator,
       validUntil: settingsData.consent === null ? null : settingsData.consent.validUntil,
-      combinedServiceIndicator: settingsData.consent === null ? null : settingsData.consent.combinedServiceIndicator
+      combinedServiceIndicator: settingsData.consent === null ? null : settingsData.consent.combinedServiceIndicator,
+      dateFrom: settingsData.dateFrom,
+      dateTo: settingsData.dateTo
     });
   }
 
@@ -77,7 +79,9 @@ export class SettingsComponent implements OnInit {
           recurringIndicator: data.recurringIndicator,
           validUntil: data.validUntil
         }
-      })
+      }),
+      dateFrom: data.dateFrom,
+      dateTo: data.dateTo
     });
     this.onNavigateBack();
   }
@@ -101,4 +105,6 @@ export class SettingsData {
   paymentRequiresAuthentication: boolean;
   consentSettingType: ConsentSettingType;
   consent: AisConsentRequest;
+  dateFrom: string;
+  dateTo: string;
 }

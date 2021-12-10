@@ -35,10 +35,10 @@ public class SandboxCommonTest<GIVEN, WHEN, THEN> extends SpringScenarioTest<GIV
     private static SandboxOper SANDBOX;
 
     @LocalServerPort
-    private int port;
+    protected int port;
 
     @Autowired
-    private ProtocolUrlsConfiguration urlsConfiguration;
+    protected ProtocolUrlsConfiguration urlsConfiguration;
 
     @BeforeAll
     @SneakyThrows

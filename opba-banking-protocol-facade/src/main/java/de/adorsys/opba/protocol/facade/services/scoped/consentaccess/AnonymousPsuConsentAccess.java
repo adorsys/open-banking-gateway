@@ -22,6 +22,10 @@ import java.util.Optional;
 import java.util.concurrent.ThreadLocalRandom;
 import java.util.stream.Collectors;
 
+/**
+ * Consent access service (authorization process and consent itself) for Anonymous PSUs' (one that does not require to
+ * login into OBG)
+ */
 @SuppressWarnings("CPD-START") // Acceptable duplication, as entities are quite different in their essence
 @RequiredArgsConstructor
 public class AnonymousPsuConsentAccess implements ConsentAccess {

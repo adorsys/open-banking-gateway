@@ -19,6 +19,10 @@ import java.security.KeyPairGenerator;
 import java.security.PrivateKey;
 import java.security.PublicKey;
 
+/**
+ * CMS (Cryptographic Message Syntax) Encryption operations, resembles similar Datasafe implementations. Used for
+ * secure sharing of consents and its secure storage.
+ */
 @RequiredArgsConstructor
 public class CmsEncryptionOper {
 

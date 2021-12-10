@@ -16,6 +16,9 @@ import java.util.Map;
 import static de.adorsys.opba.protocol.api.common.ProtocolAction.SINGLE_PAYMENT;
 import static de.adorsys.opba.protocol.facade.services.context.ServiceContextProviderForFintech.FINTECH_CONTEXT_PROVIDER;
 
+/**
+ * Single payment initiation action handler.
+ */
 @Service
 public class SinglePaymentService extends FacadeService<InitiateSinglePaymentRequest, SinglePaymentBody, SinglePayment> {
 

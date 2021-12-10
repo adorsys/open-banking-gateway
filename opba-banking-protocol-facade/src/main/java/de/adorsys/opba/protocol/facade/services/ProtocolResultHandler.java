@@ -48,6 +48,9 @@ import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
+/**
+ * Handles the result of protocol execution after it was selected by {@link FacadeService} to pass it to API layer.
+ */
 @Slf4j
 @Service
 public class ProtocolResultHandler {
@@ -78,6 +81,7 @@ public class ProtocolResultHandler {
     }
 
     /**
+     * Handles the result from protocol for the {@code FacadeService} to pass it to API.
      * This class must ensure that it is separate transaction - so it won't join any other as is used with
      * CompletableFuture.
      */

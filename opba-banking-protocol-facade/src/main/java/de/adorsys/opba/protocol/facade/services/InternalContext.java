@@ -7,6 +7,11 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.Value;
 
+/**
+ * Internal context for the facade processing.
+ * @param <REQUEST> Request to execute
+ * @param <ACTION> Associated action
+ */
 @Getter
 @Builder(toBuilder = true)
 @Value

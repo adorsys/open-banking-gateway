@@ -16,6 +16,9 @@ import java.util.Map;
 import static de.adorsys.opba.protocol.api.common.ProtocolAction.GET_PAYMENT_INFORMATION;
 import static de.adorsys.opba.protocol.facade.services.context.ServiceContextProviderForFintech.FINTECH_CONTEXT_PROVIDER;
 
+/**
+ * Get Payment information action handler.
+ */
 @Service
 public class GetPaymentInformationService extends FacadeService<PaymentInfoRequest, PaymentInfoBody, GetPaymentInfoState> {
     public GetPaymentInformationService(

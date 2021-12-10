@@ -8,6 +8,11 @@ import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.factory.Mappers;
 
+/**
+ * Facade result indicating Consent/Payment session authorization is necessary.
+ * @param <T> Result body
+ * @param <C> Authorization state
+ */
 @Data
 @EqualsAndHashCode(callSuper = true)
 public class FacadeStartAuthorizationResult<T, C extends AuthStateBody> extends FacadeResultRedirectable<T, C> {

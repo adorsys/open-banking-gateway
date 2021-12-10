@@ -8,10 +8,6 @@ import { FinTechAccountInformationService } from '../../api';
 export class AisService {
   constructor(private finTechAccountInformationService: FinTechAccountInformationService) {}
 
-  private static isoDate(toConvert: Date) {
-    return toConvert.toISOString().split('T')[0];
-  }
-
   getAccounts(
     bankId: string,
     loARetrievalInformation: LoARetrievalInformation,
@@ -44,7 +40,9 @@ export class AisService {
     loTRetrievalInformation: LoTRetrievalInformation,
     createConsentIfNone: string,
     online: boolean,
-    authenticatePsu: boolean
+    authenticatePsu: boolean,
+    dateFrom: string,
+    dateTo: string
   ) {
     const okurl = window.location.pathname;
     const notOkUrl = okurl.replace(/account.*/, 'accounts');
@@ -59,8 +57,8 @@ export class AisService {
       loTRetrievalInformation,
       authenticatePsu,
       createConsentIfNone,
-      '1970-01-01',
-      AisService.isoDate(new Date()),
+      dateFrom,
+      dateTo,
       null,
       'both',
       null,

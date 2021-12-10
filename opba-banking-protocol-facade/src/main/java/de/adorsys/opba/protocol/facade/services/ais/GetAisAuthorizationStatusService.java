@@ -25,6 +25,7 @@ import static de.adorsys.opba.protocol.api.common.ProtocolAction.GET_AIS_AUTHORI
 import static de.adorsys.opba.protocol.facade.services.context.ServiceContextProviderForFintech.FINTECH_CONTEXT_PROVIDER;
 
 /**
+ * Returns consent authorization status.
  * Unlike other types of Facade services, this one does not require protocol implementation available.
  */
 @Slf4j

@@ -77,6 +77,7 @@ public class StagesCommonUtil {
     public static final String VOLKSBANK_BANK_PROFILE_ID = "c24afe1b-56a4-418d-ba39-28fc5ca54bb4";
     public static final String ING_BANK_PROFILE_ID = "e91f4df5-5ec4-497a-9243-996f0ffcb61b";
     public static final String DEUTSCHE_BANK_PROFILE_ID = "b7245bab-db31-49ca-8c29-a29c7d0450c4";
+    public static final int COMMERZBANK_PORT = 8080;
 
     public static final String ADMIN_API = "/admin/v1/";
     public static final String BASIC_AUTH = "Basic QWxhZGRpbjpPcGVuU2VzYW1l";
