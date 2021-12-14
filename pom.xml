@@ -112,7 +112,7 @@
         <commit-id.version>4.0.0</commit-id.version>
         <guava.version>30.1.1-jre</guava.version>
         <apache.commons-lang3.version>3.12.0</apache.commons-lang3.version>
-        <fasterxml.version>2.12.2</fasterxml.version>
+        <fasterxml.version>2.13.0</fasterxml.version>
         <fasterxml-data-format.version>2.9.8</fasterxml-data-format.version>
         <swaggerv3.version>2.1.0</swaggerv3.version>
         <swagger.version>1.6.3</swagger.version>
