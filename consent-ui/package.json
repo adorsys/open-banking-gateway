@@ -41,7 +41,7 @@
     "ng2-simple-timer": "^9.1.0",
     "ngx-chiptan": "^0.1.4",
     "popper.js": "^1.16.1",
-    "rxjs": "^6.6.3",
+    "rxjs": "^6.6.7",
     "tslib": "^1.13.0",
     "uuidv4": "^6.2.3",
     "zone.js": "~0.10.3"
