@@ -39,7 +39,7 @@
     "ng-http-loader": "^7.0.0",
     "ng2-simple-timer": "^9.1.0",
     "popper.js": "^1.16.1",
-    "rxjs": "^6.6.3",
+    "rxjs": "^6.6.7",
     "tslib": "^1.13.0",
     "zone.js": "^0.10.3"
   },
