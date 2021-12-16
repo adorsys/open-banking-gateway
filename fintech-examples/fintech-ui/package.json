@@ -29,7 +29,7 @@
     "@angular/platform-browser-dynamic": "^9.1.12",
     "@angular/router": "^9.1.12",
     "@ng-bootstrap/ng-bootstrap": "^6.2.0",
-    "@ngtools/webpack": "^9.1.12",
+    "@ngtools/webpack": "^9.1.15",
     "angular-iban": "^2.0.4",
     "angular2-uuid": "^1.1.1",
     "bootstrap": "^4.6.1",
