@@ -21,7 +21,7 @@
 
 		<swagger-codegen-generators.version>1.0.19</swagger-codegen-generators.version>
 		<swagger-codegen-maven-plugin.version>3.0.19</swagger-codegen-maven-plugin.version>
-		<io.swagger.annotations.version>1.6.2</io.swagger.annotations.version>
+		<io.swagger.annotations.version>1.6.3</io.swagger.annotations.version>
 
 		<main.basedir>..</main.basedir>
 		<tpp-bank-search-location>
