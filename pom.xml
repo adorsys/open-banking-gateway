@@ -118,7 +118,7 @@
         <swagger.version>1.6.3</swagger.version>
         <swagger-codegen-generators.version>1.0.19</swagger-codegen-generators.version>
         <swagger-codegen-maven-plugin.version>3.0.19</swagger-codegen-maven-plugin.version>
-        <springdoc-openapi-ui.version>1.5.10</springdoc-openapi-ui.version> <!-- springfox replacement for OpenApi 3 -->
+        <springdoc-openapi-ui.version>1.5.12</springdoc-openapi-ui.version> <!-- springfox replacement for OpenApi 3 -->
         <springfox.version>2.9.2</springfox.version>
         <jetbrains.annotations.version>17.0.0</jetbrains.annotations.version>
         <lombok.version>1.18.22</lombok.version>
@@ -132,11 +132,11 @@
         <liquibase.version>4.4.0</liquibase.version>
         <mapstruct.version>1.4.2.Final</mapstruct.version>
         <hibernate.version>5.4.9.Final</hibernate.version> <!-- Currently only for bytecode enhancer plugin, can't inherit Spring BOM -->
-        <jjwt.version>0.11.1</jjwt.version>
+        <jjwt.version>0.11.2</jjwt.version>
         <nimbus.version>8.36.2</nimbus.version>
         <javapoet.version>1.13.0</javapoet.version>
         <swagger-parser.version>2.0.21</swagger-parser.version>
-        <jackson-yaml.version>2.12.1</jackson-yaml.version>
+        <jackson-yaml.version>2.13.0</jackson-yaml.version>
         <auto-service.version>1.0-rc7</auto-service.version>
 
         <!-- Flowable BPMN -->
@@ -151,7 +151,7 @@
         <hbci4j-adorsys.version>3.5.28</hbci4j-adorsys.version>
 
         <!-- Util libs -->
-        <iban.4j.version>3.2.1</iban.4j.version>
+        <iban.4j.version>3.2.3-RELEASE</iban.4j.version>
 
         <!-- Test libs -->
         <jacoco.version>0.8.5</jacoco.version>
