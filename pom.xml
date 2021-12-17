@@ -140,7 +140,7 @@
         <auto-service.version>1.0-rc7</auto-service.version>
 
         <!-- Flowable BPMN -->
-        <flowable.version>6.4.2</flowable.version>
+        <flowable.version>6.7.1</flowable.version>
 
         <!-- Special libs -->
         <maven.replacer.version>1.5.3</maven.replacer.version>
