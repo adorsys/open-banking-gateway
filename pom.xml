@@ -118,7 +118,7 @@
         <swagger.version>1.6.3</swagger.version>
         <swagger-codegen-generators.version>1.0.19</swagger-codegen-generators.version>
         <swagger-codegen-maven-plugin.version>3.0.19</swagger-codegen-maven-plugin.version>
-        <springdoc-openapi-ui.version>1.5.10</springdoc-openapi-ui.version> <!-- springfox replacement for OpenApi 3 -->
+        <springdoc-openapi-ui.version>1.5.12</springdoc-openapi-ui.version> <!-- springfox replacement for OpenApi 3 -->
         <springfox.version>2.9.2</springfox.version>
         <jetbrains.annotations.version>17.0.0</jetbrains.annotations.version>
         <lombok.version>1.18.22</lombok.version>
