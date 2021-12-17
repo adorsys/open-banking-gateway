@@ -151,7 +151,7 @@
         <hbci4j-adorsys.version>3.5.28</hbci4j-adorsys.version>
 
         <!-- Util libs -->
-        <iban.4j.version>3.2.1</iban.4j.version>
+        <iban.4j.version>3.2.3-RELEASE</iban.4j.version>
 
         <!-- Test libs -->
         <jacoco.version>0.8.5</jacoco.version>
