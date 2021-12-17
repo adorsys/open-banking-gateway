@@ -37,7 +37,7 @@
     "iban": "0.0.14",
     "jquery": "^3.5.1",
     "ng-http-loader": "^7.0.0",
-    "ng-swagger-gen": "^2.3.0",
+    "ng-swagger-gen": "^2.3.1",
     "ng2-simple-timer": "^9.1.0",
     "ngx-chiptan": "^0.1.4",
     "popper.js": "^1.16.1",
