@@ -35,7 +35,7 @@
     "angularx-qrcode": "^2.3.5",
     "bootstrap": "^4.6.1",
     "iban": "0.0.14",
-    "jquery": "^3.5.1",
+    "jquery": "^3.6.0",
     "ng-http-loader": "^7.0.0",
     "ng-swagger-gen": "^2.3.0",
     "ng2-simple-timer": "^9.1.0",
