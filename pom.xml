@@ -133,7 +133,7 @@
         <mapstruct.version>1.4.2.Final</mapstruct.version>
         <hibernate.version>5.4.9.Final</hibernate.version> <!-- Currently only for bytecode enhancer plugin, can't inherit Spring BOM -->
         <jjwt.version>0.11.1</jjwt.version>
-        <nimbus.version>8.18</nimbus.version>
+        <nimbus.version>8.36.2</nimbus.version>
         <javapoet.version>1.13.0</javapoet.version>
         <swagger-parser.version>2.0.21</swagger-parser.version>
         <jackson-yaml.version>2.12.1</jackson-yaml.version>
