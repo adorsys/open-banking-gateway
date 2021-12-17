@@ -184,7 +184,7 @@
         <glassfish.jersey-client.version>2.30</glassfish.jersey-client.version>
         <jersey-hk2.version>2.28</jersey-hk2.version>
         <h2.database.version>1.4.200</h2.database.version>
-        <spring-web.version>5.2.3.RELEASE</spring-web.version>
+        <spring-web.version>5.3.13</spring-web.version>
         <feign-http-client.version>10.7.4</feign-http-client.version>
         <postgresql.version>42.2.11</postgresql.version>
         <compile-testing.version>0.18</compile-testing.version>
