@@ -137,8 +137,7 @@
         <javapoet.version>1.13.0</javapoet.version>
         <swagger-parser.version>2.0.28</swagger-parser.version>
         <jackson-yaml.version>2.13.0</jackson-yaml.version>
-
-        <auto-service.version>1.0-rc7</auto-service.version>
+        <auto-service.version>1.0.1</auto-service.version>
 
         <!-- Flowable BPMN -->
         <flowable.version>6.4.2</flowable.version>
