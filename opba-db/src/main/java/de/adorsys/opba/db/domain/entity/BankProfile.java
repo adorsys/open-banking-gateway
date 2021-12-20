@@ -83,6 +83,13 @@ public class BankProfile implements Serializable, CurrentBankProfile {
     private String externalId;
     private String externalInterfaces;
     private String protocolType;
+
+    /**
+     * Customary profile-level protocol configuration. Allows to configure protocol-specific behavior (i.e.
+     * limiting account types to access).
+     */
+    private String protocolConfiguration;
+
     private boolean isSandbox;
     private boolean active;
 
