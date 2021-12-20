@@ -37,5 +37,6 @@ public class HbciAdapterProperties {
     private long updExpirationTimeMs;
 
     @Min(0)
+    @SuppressWarnings("checkstyle:MagicNumber") // Default value
     private long bpdExpirationTimeMs = 300_000;
 }
