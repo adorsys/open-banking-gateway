@@ -35,4 +35,7 @@ public class HbciAdapterProperties {
 
     @Min(0)
     private long updExpirationTimeMs;
+
+    @Min(0)
+    private long bpdExpirationTimeMs = 300_000;
 }
