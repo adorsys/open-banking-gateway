@@ -190,7 +190,7 @@
         <compile-testing.version>0.18</compile-testing.version>
         <!-- JavaDoc -->
         <javax.interceptor.api.version>1.2.2</javax.interceptor.api.version>
-        <commons-codec.version>1.14</commons-codec.version>
+        <commons-codec.version>1.15</commons-codec.version>
     </properties>
 
     <repositories>
