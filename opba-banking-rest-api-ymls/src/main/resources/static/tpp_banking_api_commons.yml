@@ -232,6 +232,17 @@ components:
           or credentials to re-use in 3rd party-service
         example: { "username": "jane.doe", "password": "secret", "createUser": true, "email": "foo@example.com", "phone": "+1234567", "isAutoUpdateEnabled": true }
 
+    X-Protocol-Configuration:
+      name: X-Protocol-Configuration
+      description: Optional, third party protocol configuration (i.e. account type to import)
+      required: false
+      in: header
+      schema:
+        type: string
+        description: |
+          Json representation of third party protocol configuration object
+        example: { "accountType": "jane.doe", "accountTypes": ["CREDIT_CARD","CHECKING"], "maxDaysForDownload": 90 }
+
     Compute-PSU-IP-Address:
       name: Compute-PSU-IP-Address
       in: header

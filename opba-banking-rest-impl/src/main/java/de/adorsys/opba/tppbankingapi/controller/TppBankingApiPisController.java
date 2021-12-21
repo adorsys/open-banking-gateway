@@ -46,6 +46,7 @@ public class TppBankingApiPisController implements TppBankingApiSinglePaymentPis
                                              String fintechDataPassword,
                                              UUID bankProfileID,
                                              Boolean xPsuAuthenticationRequired,
+                                             String xProtocolConfiguration,
                                              Boolean computePsuIpAddress,
                                              String psuIpAddress
     ) {

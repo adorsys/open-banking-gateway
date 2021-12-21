@@ -123,12 +123,14 @@ public class AccountService {
             serviceSessionID,
             createConsentIfNone,
             null,
+            null,
             HEADER_COMPUTE_PSU_IP_ADDRESS,
             null,
             withBalance,
             online);
     }
 
+    @SuppressWarnings("checkstyle:MethodLength") // Long method argument list written in column style for clarity
     private ResponseEntity consentNotYetAvailable(String bankProfileID, SessionEntity sessionEntity, String redirectCode, UUID xRequestId,
                                                   Boolean psuAuthenticationRequired, Optional<ConsentEntity> optionalConsent,
                                                   boolean withBalance, Boolean online, String createConsentIfNone) {
@@ -148,6 +150,7 @@ public class AccountService {
             psuAuthenticationRequired,
             serviceSessionID,
             createConsentIfNone,
+            null,
             null,
             HEADER_COMPUTE_PSU_IP_ADDRESS,
             null,

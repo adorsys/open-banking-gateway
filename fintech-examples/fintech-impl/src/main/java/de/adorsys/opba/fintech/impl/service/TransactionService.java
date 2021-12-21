@@ -78,6 +78,7 @@ public class TransactionService {
             optionalConsent.map(ConsentEntity::getTppServiceSessionId).orElse(null),
             createConsentIfNone,
             null,
+            null,
             HEADER_COMPUTE_PSU_IP_ADDRESS,
             null,
             dateFrom,
