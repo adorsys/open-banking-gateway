@@ -7,16 +7,18 @@ import de.adorsys.opba.db.repository.jpa.BankRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.transaction.annotation.Propagation;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.time.Instant;
-import java.util.Collections;
 import java.util.UUID;
 
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 
+@Transactional(propagation = Propagation.NOT_SUPPORTED)
 class TppBankSearchControllerFieldsNotRevealedTest extends BaseTppBankSearchControllerTest {
 
-    private static final String TEST_BANK_NAME = "A test bank for fields not revealed";
+    private static final String TEST_BANK_NAME = "A-test-bank-for-fields-not-revealed";
 
     @Autowired
     private BankRepository bankRepository;
@@ -28,9 +30,19 @@ class TppBankSearchControllerFieldsNotRevealedTest extends BaseTppBankSearchCont
     private BankProfile profile;
 
     @BeforeEach
-    void initData() {
-        bank.setProfiles(Collections.singletonList(profile));
-        bankRepository.save(bank);
+    @Transactional
+    public void initData() {
+        bank = new Bank();
+        bank.setUuid(UUID.randomUUID());
+        bank.setName(TEST_BANK_NAME);
+        bank.setActive(true);
+        profile = new BankProfile();
+        profile.setProtocolConfiguration("Configuration");
+        profile.setUuid(UUID.randomUUID());
+
+        bank = bankRepository.save(bank);
+        profile.setBank(bank);
+        bankProfileRepository.save(profile);
 
         bank = bankRepository.findById(bank.getId()).orElseThrow();
         profile = bankProfileRepository.findById(profile.getId()).orElseThrow();
@@ -42,11 +54,9 @@ class TppBankSearchControllerFieldsNotRevealedTest extends BaseTppBankSearchCont
         Instant xTimestampUtc = Instant.now();
 
         performBankSearchRequest(xRequestId, xTimestampUtc, TEST_BANK_NAME)
-                .andExpect(jsonPath("$.bankDescriptor.length()").value("10"))
-                .andExpect(jsonPath("$.bankDescriptor[0].bankName").value("Commerzbank"))
+                .andExpect(jsonPath("$.bankDescriptor.length()").value("1"))
+                .andExpect(jsonPath("$.bankDescriptor[0].bankName").value(TEST_BANK_NAME))
                 .andExpect(jsonPath("$.bankDescriptor[0].bic").value("COBADEFFXXX"))
-                .andExpect(jsonPath("$.bankDescriptor[0].bankCode").value("35640064"))
-                .andExpect(jsonPath("$.bankDescriptor[0].uuid").value("291b2ca1-b35f-463e-ad94-2a1a26c09304"))
                 .andReturn();
     }
 }
