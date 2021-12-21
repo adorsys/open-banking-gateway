@@ -6,5 +6,6 @@ package de.adorsys.opba.protocol.api.dto.parameters;
  */
 public enum ExtraRequestParam {
     CONSENT,
-    IMPORT_DATA
+    IMPORT_DATA,
+    PROTOCOL_CONFIGURATION
 }
