@@ -88,6 +88,11 @@ public interface CurrentBankProfile {
     String getExternalInterfaces();
 
     /**
+     * Returns protocol configuration (3rd party) to be used by default.
+     */
+    String getProtocolConfiguration();
+
+    /**
      * Expected result content type for this ASPSP.
      */
     ResultContentType getContentTypeTransactions();
