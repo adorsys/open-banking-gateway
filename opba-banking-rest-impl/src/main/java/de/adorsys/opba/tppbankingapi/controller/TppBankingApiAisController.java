@@ -79,6 +79,7 @@ public class TppBankingApiAisController implements TppBankingApiAccountInformati
         UUID serviceSessionId,
         String createConsentIfNone,
         String importUserData,
+        String protocolConfiguration,
         Boolean computePsuIpAddress,
         String psuIpAddress,
         Boolean withBalance,
@@ -102,7 +103,7 @@ public class TppBankingApiAisController implements TppBankingApiAccountInformati
                     .build()
                 )
                 .withBalance(withBalance)
-                .extras(getExtras(createConsentIfNone, importUserData))
+                .extras(getExtras(createConsentIfNone, importUserData, protocolConfiguration))
                 .build()
         ).thenApply((FacadeResult<AccountListBody> result) -> mapper.translate(result, accountListRestMapper));
     }
@@ -125,6 +126,7 @@ public class TppBankingApiAisController implements TppBankingApiAccountInformati
         UUID serviceSessionId,
         String createConsentIfNone,
         String importUserData,
+        String protocolConfiguration,
         Boolean computePsuIpAddress,
         String psuIpAddress,
         LocalDate dateFrom,
@@ -163,7 +165,7 @@ public class TppBankingApiAisController implements TppBankingApiAccountInformati
                 .deltaList(deltaList)
                 .page(page)
                 .pageSize(pageSize)
-                .extras(getExtras(createConsentIfNone, importUserData))
+                .extras(getExtras(createConsentIfNone, importUserData, protocolConfiguration))
                 .build()
         ).thenApply((FacadeResult<TransactionsResponseBody> result) -> mapper.translate(result, transactionsRestMapper));
     }
@@ -185,6 +187,7 @@ public class TppBankingApiAisController implements TppBankingApiAccountInformati
         UUID serviceSessionId,
         String createConsentIfNone,
         String importUserData,
+        String protocolConfiguration,
         Boolean computePsuIpAddress,
         String psuIpAddress,
         LocalDate dateFrom,
@@ -218,7 +221,7 @@ public class TppBankingApiAisController implements TppBankingApiAccountInformati
                 .deltaList(deltaList)
                 .page(page)
                 .pageSize(pageSize)
-                .extras(getExtras(createConsentIfNone, importUserData))
+                .extras(getExtras(createConsentIfNone, importUserData, protocolConfiguration))
                 .build()
         ).thenApply((FacadeResult<TransactionsResponseBody> result) -> mapper.translate(result, transactionsRestMapper));
     }
@@ -283,13 +286,16 @@ public class TppBankingApiAisController implements TppBankingApiAccountInformati
 
     @NotNull
     @SneakyThrows
-    private Map<ExtraRequestParam, Object> getExtras(String createConsentIfNone, String importUserData) {
+    private Map<ExtraRequestParam, Object> getExtras(String createConsentIfNone, String importUserData, String protocolConfiguration) {
         Map<ExtraRequestParam, Object> extras = new EnumMap<>(ExtraRequestParam.class);
         if (null != createConsentIfNone) {
             extras.put(ExtraRequestParam.CONSENT, objectMapper.readValue(createConsentIfNone, AisConsent.class));
         }
         if (null != importUserData) {
             extras.put(ExtraRequestParam.IMPORT_DATA, importUserData);
+        }
+        if (null != protocolConfiguration) {
+            extras.put(ExtraRequestParam.PROTOCOL_CONFIGURATION, protocolConfiguration);
         }
         return extras;
     }

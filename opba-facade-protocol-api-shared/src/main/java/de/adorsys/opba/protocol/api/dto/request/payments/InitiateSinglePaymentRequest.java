@@ -1,6 +1,6 @@
 package de.adorsys.opba.protocol.api.dto.request.payments;
 
-import de.adorsys.opba.protocol.api.dto.parameters.ExtraAuthRequestParam;
+import de.adorsys.opba.protocol.api.dto.parameters.ExtraRequestParam;
 import de.adorsys.opba.protocol.api.dto.request.FacadeServiceableGetter;
 import de.adorsys.opba.protocol.api.dto.request.FacadeServiceableRequest;
 import lombok.AllArgsConstructor;
@@ -37,5 +37,5 @@ public class InitiateSinglePaymentRequest implements FacadeServiceableGetter {
      * Additional (protocol-customary) request parameters.
      */
     @Builder.Default
-    private Map<ExtraAuthRequestParam, Object> extras = new EnumMap<>(ExtraAuthRequestParam.class);
+    private Map<ExtraRequestParam, Object> extras = new EnumMap<>(ExtraRequestParam.class);
 }
