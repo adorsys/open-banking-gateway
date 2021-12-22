@@ -1,7 +1,7 @@
 package de.adorsys.opba.smoketests.config;
 
 import io.restassured.RestAssured;
-import io.restassured.mapper.TypeRef;
+import io.restassured.common.mapper.TypeRef;
 import io.restassured.response.ExtractableResponse;
 import io.restassured.response.Response;
 import lombok.RequiredArgsConstructor;
@@ -25,7 +25,7 @@ public class SandboxConsentAuthApproachState {
                     .statusCode(HttpStatus.OK.value())
                 .extract();
 
-        this.memoizedApproaches = response.body().as(new TypeRef<List<String>>() {});
+        this.memoizedApproaches = response.body().as(new TypeRef<>() {});
     }
 
     public void restore() {
