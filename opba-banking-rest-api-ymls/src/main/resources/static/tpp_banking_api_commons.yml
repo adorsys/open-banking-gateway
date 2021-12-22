@@ -241,7 +241,7 @@ components:
         type: string
         description: |
           Json representation of third party protocol configuration object
-        example: { "accountType": "jane.doe", "accountTypes": ["CREDIT_CARD","CHECKING"], "maxDaysForDownload": 90 }
+        example: { "accountType": "jane.doe", "accountTypes": ["CREDIT_CARD","CHECKING"], "maxDaysForDownload": 90, "profileId": "c06bf92c-fffd-45c3-a7f9-e105d577ae51" }
 
     Compute-PSU-IP-Address:
       name: Compute-PSU-IP-Address
