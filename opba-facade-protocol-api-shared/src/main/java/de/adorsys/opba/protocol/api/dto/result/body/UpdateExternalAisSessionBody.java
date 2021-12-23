@@ -10,4 +10,5 @@ import lombok.Data;
 public class UpdateExternalAisSessionBody implements ResultBody {
 
     private String status;
+    private String updateSessionId;
 }

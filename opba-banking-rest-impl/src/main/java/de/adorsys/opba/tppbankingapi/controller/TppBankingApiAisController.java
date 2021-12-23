@@ -248,6 +248,7 @@ public class TppBankingApiAisController implements TppBankingApiAccountInformati
 
     @Override
     public CompletableFuture getAisSessionStatus(UUID serviceSessionId,
+                                                 String externalSessionId,
                                                  UUID xRequestID,
                                                  String xTimestampUTC,
                                                  String xRequestSignature,

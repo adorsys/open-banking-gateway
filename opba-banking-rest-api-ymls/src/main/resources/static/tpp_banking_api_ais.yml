@@ -198,6 +198,8 @@ paths:
       parameters:
         #path
         - $ref: "./tpp_banking_api_commons.yml#/components/parameters/Service-Session-ID-Path"
+        #query
+        - $ref: "./tpp_banking_api_commons.yml#/components/parameters/External-Session-ID"
         #header
         #common header parameter
         - $ref: "./tpp_banking_api_commons.yml#/components/parameters/X-Timestamp-UTC"
