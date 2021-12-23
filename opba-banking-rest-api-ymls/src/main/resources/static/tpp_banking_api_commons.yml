@@ -599,6 +599,10 @@ components:
         status:
           description: Resulting status of external status update call.
           type: string
+        updateSessionId:
+          description: ID of the 'update' session in 3rd party system. I.e. task ID for FinAPI
+          type: string
+          required: false
 
     sessionStatus:
       type: string
