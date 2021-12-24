@@ -111,7 +111,7 @@ public class TppAisClientFeignMock implements TppAisClient {
     }
 
     @Override
-    public ResponseEntity<SessionStatusDetails> getAisSessionStatus(UUID serviceSessionID, String externalSessionId, UUID xRequestID, String xTimestampUTC, String xRequestSignature, String fintechID,
+    public ResponseEntity<SessionStatusDetails> getAisSessionStatus(UUID serviceSessionID, UUID xRequestID, String externalSessionId, String xTimestampUTC, String xRequestSignature, String fintechID,
                                                                     String serviceSessionPassword, String fintechDataPassword) {
         return null;
     }
