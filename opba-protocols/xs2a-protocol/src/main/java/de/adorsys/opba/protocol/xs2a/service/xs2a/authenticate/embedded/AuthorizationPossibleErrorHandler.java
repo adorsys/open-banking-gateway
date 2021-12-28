@@ -3,7 +3,6 @@ package de.adorsys.opba.protocol.xs2a.service.xs2a.authenticate.embedded;
 import com.google.common.collect.Sets;
 import de.adorsys.opba.protocol.xs2a.config.aspspmessages.AspspMessages;
 import de.adorsys.xs2a.adapter.api.exception.ErrorResponseException;
-import de.adorsys.xs2a.adapter.api.model.MessageCode;
 import de.adorsys.xs2a.adapter.api.model.TppMessage;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -42,7 +41,7 @@ public class AuthorizationPossibleErrorHandler {
             throw ex;
         }
 
-        Set<MessageCode> tppMessageCodes = ex.getErrorResponse().get().getTppMessages().stream()
+        Set<String> tppMessageCodes = ex.getErrorResponse().get().getTppMessages().stream()
                 .map(TppMessage::getCode)
                 .collect(Collectors.toSet());
 

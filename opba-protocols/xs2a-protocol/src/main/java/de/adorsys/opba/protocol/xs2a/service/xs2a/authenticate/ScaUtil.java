@@ -1,5 +1,6 @@
 package de.adorsys.opba.protocol.xs2a.service.xs2a.authenticate;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import de.adorsys.xs2a.adapter.api.ResponseHeaders;
 import de.adorsys.xs2a.adapter.api.model.AuthenticationObject;
 import de.adorsys.xs2a.adapter.api.model.ScaStatus;
@@ -14,8 +15,10 @@ import static de.adorsys.xs2a.adapter.api.model.AspspScaApproach.DECOUPLED;
 public class ScaUtil {
 
     public AuthenticationObject scaMethodSelected(UpdatePsuAuthenticationResponse response) {
-        if (null != response.getChosenScaMethod()) {
-            return response.getChosenScaMethod();
+        var chosenScaMethod = response.getChosenScaMethod();
+
+        if (null != chosenScaMethod) {
+            return mapToAuthenticationObject(chosenScaMethod);
         }
 
         if (ScaStatus.SCAMETHODSELECTED == response.getScaStatus()) {
@@ -28,8 +31,10 @@ public class ScaUtil {
     }
 
     public AuthenticationObject scaMethodSelected(SelectPsuAuthenticationMethodResponse response) {
-        if (null != response.getChosenScaMethod()) {
-            return response.getChosenScaMethod();
+        var chosenScaMethod = response.getChosenScaMethod();
+
+        if (null != chosenScaMethod) {
+            return mapToAuthenticationObject(chosenScaMethod);
         }
 
         if (ScaStatus.SCAMETHODSELECTED == response.getScaStatus()) {
@@ -42,8 +47,10 @@ public class ScaUtil {
     }
 
     public AuthenticationObject scaMethodSelected(StartScaprocessResponse response) {
-        if (null != response.getChosenScaMethod()) {
-            return response.getChosenScaMethod();
+        var chosenScaMethod = response.getChosenScaMethod();
+
+        if (null != chosenScaMethod) {
+            return mapToAuthenticationObject(chosenScaMethod);
         }
 
         if (ScaStatus.SCAMETHODSELECTED == response.getScaStatus()) {
@@ -61,5 +68,11 @@ public class ScaUtil {
         }
 
         return DECOUPLED.name().equals(headers.getHeader(ResponseHeaders.ASPSP_SCA_APPROACH));
+    }
+
+    private AuthenticationObject mapToAuthenticationObject(Object object) {
+        ObjectMapper mapper = new ObjectMapper();
+
+        return mapper.convertValue(object, AuthenticationObject.class);
     }
 }

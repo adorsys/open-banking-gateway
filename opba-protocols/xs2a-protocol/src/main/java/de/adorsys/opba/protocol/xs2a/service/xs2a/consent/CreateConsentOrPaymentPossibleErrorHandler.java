@@ -7,7 +7,6 @@ import de.adorsys.opba.protocol.xs2a.context.Xs2aContext;
 import de.adorsys.xs2a.adapter.api.exception.ErrorResponseException;
 import de.adorsys.xs2a.adapter.api.exception.OAuthException;
 import de.adorsys.xs2a.adapter.api.exception.RequestAuthorizationValidationException;
-import de.adorsys.xs2a.adapter.api.model.MessageCode;
 import de.adorsys.xs2a.adapter.api.model.TppMessage;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -96,7 +95,7 @@ public class CreateConsentOrPaymentPossibleErrorHandler {
     }
 
     private boolean isPossiblyOauth2Error(ErrorResponseException ex) {
-        Set<MessageCode> tppMessageCodes = ex.getErrorResponse().get().getTppMessages().stream()
+        Set<String> tppMessageCodes = ex.getErrorResponse().get().getTppMessages().stream()
                 .map(TppMessage::getCode)
                 .collect(Collectors.toSet());
         Set<String> messages = ex.getErrorResponse().get().getTppMessages().stream()
@@ -110,7 +109,7 @@ public class CreateConsentOrPaymentPossibleErrorHandler {
     }
 
     private boolean isWrongIban(ErrorResponseException ex) {
-        Set<MessageCode> tppMessageCodes = ex.getErrorResponse().get().getTppMessages().stream()
+        Set<String> tppMessageCodes = ex.getErrorResponse().get().getTppMessages().stream()
                 .map(TppMessage::getCode)
                 .collect(Collectors.toSet());
 

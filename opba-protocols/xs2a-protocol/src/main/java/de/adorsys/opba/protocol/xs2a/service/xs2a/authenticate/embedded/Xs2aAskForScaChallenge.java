@@ -54,7 +54,7 @@ public class Xs2aAskForScaChallenge extends ValidatedExecution<Xs2aContext> {
 
     private String getSelectedAuthenticationType(Xs2aContext context) {
         if (CollectionUtils.isEmpty(context.getAvailableSca())) {
-            return context.getScaSelected().getAuthenticationType().toString();
+            return context.getScaSelected().getAuthenticationType();
         } else {
             return context.getAvailableSca().stream()
                 .filter(it -> context.getUserSelectScaId().equals(it.getKey()))

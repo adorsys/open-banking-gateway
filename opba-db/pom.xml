@@ -36,8 +36,9 @@
         <dependency>
             <groupId>de.adorsys.xs2a.adapter</groupId>
             <artifactId>adapters</artifactId>
-            <version>${xs2a-adapter.version}</version>
-            <type>pom</type>
+            <version>0.1.18-SNAPSHOT</version>
+            <scope>system</scope>
+            <systemPath>${project.basedir}/src/main/resources/adapters-0.1.18-SNAPSHOT-jar-with-dependencies.jar</systemPath>
         </dependency>
         <dependency>
             <groupId>de.adorsys</groupId>

@@ -5,7 +5,6 @@ import de.adorsys.opba.protocol.bpmnshared.dto.messages.ProcessResponse;
 import de.adorsys.opba.protocol.bpmnshared.service.context.ContextUtil;
 import de.adorsys.opba.protocol.xs2a.context.Xs2aContext;
 import de.adorsys.xs2a.adapter.api.model.AuthenticationObject;
-import de.adorsys.xs2a.adapter.api.model.AuthenticationType;
 import de.adorsys.xs2a.adapter.api.model.ScaStatus;
 import lombok.experimental.UtilityClass;
 import org.flowable.engine.delegate.DelegateExecution;
@@ -32,7 +31,7 @@ public class DecoupledUtil {
                         execution.getId(),
                         UpdateAuthBody.builder()
                                 .scaStatus(scaStatus.name())
-                                .scaAuthenticationType(scaSelectedOp.map(AuthenticationObject::getAuthenticationType).map(AuthenticationType::name).orElse(null))
+                                .scaAuthenticationType(scaSelectedOp.map(AuthenticationObject::getAuthenticationType).orElse(null))
                                 .scaExplanation(scaSelectedOp.map(AuthenticationObject::getExplanation).orElse(null))
                                 .build()
                 )
