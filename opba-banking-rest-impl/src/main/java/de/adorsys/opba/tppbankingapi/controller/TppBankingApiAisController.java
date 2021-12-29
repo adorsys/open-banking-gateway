@@ -262,7 +262,7 @@ public class TppBankingApiAisController implements TppBankingApiAccountInformati
                         .serviceSessionId(serviceSessionId)
                         .requestId(xRequestID)
                         .build()
-                ).build()
+                ).externalSessionId(externalSessionId).build()
         ).thenApply((FacadeResult<AisAuthorizationStatusBody> result) -> mapper.translate(result, sessionStatusToApiMapper));
     }
 
