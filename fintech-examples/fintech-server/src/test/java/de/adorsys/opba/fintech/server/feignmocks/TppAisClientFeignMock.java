@@ -32,6 +32,7 @@ public class TppAisClientFeignMock implements TppAisClient {
             UUID serviceSessionID,
             String createConsentIfNone,
             String importUserData,
+            String protocolConfiguration,
             Boolean computePsuIpAddress,
             String psuIpAddress,
             Boolean withBalance,
@@ -57,6 +58,7 @@ public class TppAisClientFeignMock implements TppAisClient {
             UUID serviceSessionID,
             String createConsentIfNone,
             String importUserData,
+            String protocolConfiguration,
             Boolean computePsuIpAddress,
             String psuIpAddress,
             LocalDate dateFrom,
@@ -88,6 +90,7 @@ public class TppAisClientFeignMock implements TppAisClient {
             UUID serviceSessionID,
             String createConsentIfNone,
             String importUserData,
+            String protocolConfiguration,
             Boolean computePsuIpAddress,
             String psuIpAddress,
             LocalDate dateFrom,
@@ -108,7 +111,7 @@ public class TppAisClientFeignMock implements TppAisClient {
     }
 
     @Override
-    public ResponseEntity<SessionStatusDetails> getAisSessionStatus(UUID serviceSessionID, UUID xRequestID, String xTimestampUTC, String xRequestSignature, String fintechID,
+    public ResponseEntity<SessionStatusDetails> getAisSessionStatus(UUID serviceSessionID, UUID xRequestID, String externalSessionId, String xTimestampUTC, String xRequestSignature, String fintechID,
                                                                     String serviceSessionPassword, String fintechDataPassword) {
         return null;
     }

@@ -1,6 +1,7 @@
 package de.adorsys.opba.tppbankingapi.controller;
 
 import de.adorsys.opba.protocol.api.dto.context.UserAgentContext;
+import de.adorsys.opba.protocol.api.dto.parameters.ExtraRequestParam;
 import de.adorsys.opba.protocol.api.dto.request.FacadeServiceableRequest;
 import de.adorsys.opba.protocol.api.dto.request.payments.InitiateSinglePaymentRequest;
 import de.adorsys.opba.protocol.api.dto.request.payments.SinglePaymentBody;
@@ -13,10 +14,13 @@ import de.adorsys.opba.tppbankingapi.pis.model.generated.PaymentInitiation;
 import de.adorsys.opba.tppbankingapi.pis.model.generated.PaymentInitiationResponse;
 import de.adorsys.opba.tppbankingapi.pis.resource.generated.TppBankingApiSinglePaymentPisApi;
 import lombok.RequiredArgsConstructor;
+import org.jetbrains.annotations.NotNull;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.util.EnumMap;
+import java.util.Map;
 import java.util.UUID;
 import java.util.concurrent.CompletableFuture;
 
@@ -46,6 +50,7 @@ public class TppBankingApiPisController implements TppBankingApiSinglePaymentPis
                                              String fintechDataPassword,
                                              UUID bankProfileID,
                                              Boolean xPsuAuthenticationRequired,
+                                             String xProtocolConfiguration,
                                              Boolean computePsuIpAddress,
                                              String psuIpAddress
     ) {
@@ -65,8 +70,18 @@ public class TppBankingApiPisController implements TppBankingApiSinglePaymentPis
                                                    .build()
                         )
                         .singlePayment(pisSinglePaymentMapper.map(body, PaymentProductDetails.fromValue(paymentProduct)))
+                        .extras(getExtras(xProtocolConfiguration))
                         .build()
         ).thenApply((FacadeResult<SinglePaymentBody> result) -> mapper.translate(result, paymentResponseMapper));
+    }
+
+    @NotNull
+    private Map<ExtraRequestParam, Object> getExtras(String protocolConfiguration) {
+        Map<ExtraRequestParam, Object> extras = new EnumMap<>(ExtraRequestParam.class);
+        if (null != protocolConfiguration) {
+            extras.put(ExtraRequestParam.PROTOCOL_CONFIGURATION, protocolConfiguration);
+        }
+        return extras;
     }
 
     @Mapper(componentModel = SPRING_KEYWORD, implementationPackage = API_MAPPERS_PACKAGE)

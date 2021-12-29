@@ -4,7 +4,6 @@ import com.google.common.collect.ImmutableMap;
 import de.adorsys.opba.protocol.api.common.ProtocolAction;
 import de.adorsys.opba.protocol.api.dto.ValidationIssue;
 import de.adorsys.opba.protocol.api.dto.context.ServiceContext;
-import de.adorsys.opba.protocol.api.dto.parameters.ExtraAuthRequestParam;
 import de.adorsys.opba.protocol.api.dto.request.payments.InitiateSinglePaymentRequest;
 import de.adorsys.opba.protocol.api.dto.request.payments.SinglePaymentBody;
 import de.adorsys.opba.protocol.api.dto.result.body.PaymentProductDetails;
@@ -25,7 +24,6 @@ import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.springframework.stereotype.Service;
 
-import java.util.Optional;
 import java.util.Set;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ConcurrentHashMap;
@@ -73,13 +71,6 @@ public class Xs2aInitiateSinglePaymentEntrypoint implements SinglePayment {
         SinglePaymentXs2aContext context = mapper.map(request);
         context.setAction(ProtocolAction.SINGLE_PAYMENT);
         extender.extend(context, serviceContext);
-
-        Optional<String> psuIdOptional = Optional.ofNullable(request.getExtras())
-                                                 .map(ex -> ex.get(ExtraAuthRequestParam.PSU_ID))
-                                                 .map(Object::toString);
-
-        psuIdOptional.ifPresent(context::setPsuId);
-
         return context;
     }
 

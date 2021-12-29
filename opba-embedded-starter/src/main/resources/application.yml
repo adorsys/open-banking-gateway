@@ -47,6 +47,10 @@ management:
   info:
     git:
       mode: full
+  endpoints:
+    web:
+      exposure:
+        include: info,health
 
 # Application configuration
 api:

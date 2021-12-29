@@ -22,4 +22,9 @@ public class AisAuthorizationStatusRequest implements FacadeServiceableGetter {
      * The request representation that is being serviced by facade.
      */
     private FacadeServiceableRequest facadeServiceable;
+
+    /**
+     * External session ID for i.e. FinAPI (Task ID for update connections).
+     */
+    private String externalSessionId;
 }

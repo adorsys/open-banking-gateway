@@ -129,6 +129,16 @@ components:
         type: string
         format: uuid
 
+    External-Session-ID:
+      name: External-Session-ID
+      in: query
+      required: false
+      description: |
+        Unique ID that identifies external session or taks. I.e. FinAPI task
+      example: "99391c7e-ad88-49ec-a2ad-99ddcb1f7721"
+      schema:
+        type: string
+
     X-Request-ID:
       name: X-Request-ID
       in: header
@@ -231,6 +241,17 @@ components:
           3rd party-service (username/password) with flag 'createUser' to specify that we need to create user explicitly,
           or credentials to re-use in 3rd party-service
         example: { "username": "jane.doe", "password": "secret", "createUser": true, "email": "foo@example.com", "phone": "+1234567", "isAutoUpdateEnabled": true }
+
+    X-Protocol-Configuration:
+      name: X-Protocol-Configuration
+      description: Optional, third party protocol configuration (i.e. account type to import)
+      required: false
+      in: header
+      schema:
+        type: string
+        description: |
+          Json representation of third party protocol configuration object
+        example: { "accountType": "jane.doe", "accountTypes": ["CREDIT_CARD","CHECKING"], "maxDaysForDownload": 90, "profileId": "c06bf92c-fffd-45c3-a7f9-e105d577ae51" }
 
     Compute-PSU-IP-Address:
       name: Compute-PSU-IP-Address
@@ -587,6 +608,9 @@ components:
       properties:
         status:
           description: Resulting status of external status update call.
+          type: string
+        updateSessionId:
+          description: ID of the 'update' session in 3rd party system. I.e. task ID for FinAPI
           type: string
 
     sessionStatus:
