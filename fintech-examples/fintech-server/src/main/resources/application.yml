@@ -28,7 +28,7 @@ server:
       # The lax value will only send cookies for TOP LEVEL navigation GET requests. This is sufficient for user tracking, but it will prevent many CSRF attacks.
 
 tpp:
-  url: http://localhost:8085
+  url: https://obg-dev-openbankinggateway.cloud.adorsys.de/
   # local testing
   # url: http://localhost:18085
   fintechID: MY-SUPER-FINTECH-ID
