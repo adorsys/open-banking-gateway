@@ -154,11 +154,11 @@
         <iban.4j.version>3.2.3-RELEASE</iban.4j.version>
 
         <!-- Test libs -->
-        <jacoco.version>0.8.5</jacoco.version>
+        <jacoco.version>0.8.7</jacoco.version>
         <jupiter.version>5.5.2</jupiter.version>
         <junit.platform.commons.version>1.5.2</junit.platform.commons.version>
-        <surefire.version>3.0.0-M3</surefire.version>
-        <failsafe.version>3.0.0-M3</failsafe.version>
+        <surefire.version>3.0.0-M5</surefire.version>
+        <failsafe.version>3.0.0-M5</failsafe.version>
         <assertj.version>3.12.2</assertj.version>
         <jgiven.version>1.1.0</jgiven.version>
         <wiremock.version>2.25.1</wiremock.version>
