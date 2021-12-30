@@ -1,5 +1,8 @@
 package de.adorsys.opba.protocol.xs2a.tests.e2e.sandbox;
 
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.dataformat.yaml.YAMLFactory;
 import com.tngtech.jgiven.integration.spring.junit5.SpringScenarioTest;
 import de.adorsys.opba.protocol.xs2a.config.protocol.ProtocolUrlsConfiguration;
 import io.github.bonigarcia.wdm.WebDriverManager;
@@ -13,9 +16,16 @@ import org.springframework.boot.web.server.LocalServerPort;
 import org.testcontainers.containers.DockerComposeContainer;
 
 import java.io.File;
+import java.io.IOException;
+import java.net.Socket;
 import java.security.Security;
+import java.time.Duration;
 import java.time.LocalDate;
+import java.util.Arrays;
 import java.util.UUID;
+import java.util.stream.StreamSupport;
+
+import static org.awaitility.Awaitility.await;
 
 public class SandboxCommonTest<GIVEN, WHEN, THEN> extends SpringScenarioTest<GIVEN, WHEN, THEN> {
 
@@ -72,6 +82,8 @@ public class SandboxCommonTest<GIVEN, WHEN, THEN> extends SpringScenarioTest<GIV
 
     private static class SandboxOper {
         private static final String DOCKER_COMPOSE_SANDBOX_YML = "./../../../how-to-start-with-project/xs2a-sandbox-only/docker-compose.yml";
+        private static final ObjectMapper YML = new ObjectMapper(new YAMLFactory());
+        private static final int MAX_WAIT_MINUTES = 10;
 
         private DockerComposeContainer sandboxEnvironment;
 
@@ -86,13 +98,49 @@ public class SandboxCommonTest<GIVEN, WHEN, THEN> extends SpringScenarioTest<GIV
                     .withLocalCompose(true)
                     .withTailChildContainers(true);
             sandboxEnvironment.start();
+            awaitAllStarted();
         }
 
 
         @SneakyThrows
         synchronized void stopSandbox() {
             sandboxEnvironment.stop();
+            awaitAllStopped();
             sandboxEnvironment = null;
+        }
+
+        private void awaitAllStarted() {
+            int[] portsToCheck = getDockerServicesPorts();
+
+            await().atMost(Duration.ofMinutes(MAX_WAIT_MINUTES)).until(
+                    () -> Arrays.stream(portsToCheck).map(port -> isPortListening(port) ? 1 : 0).sum() == portsToCheck.length
+            );
+        }
+
+        @SneakyThrows
+        private int[] getDockerServicesPorts() {
+            JsonNode appConfig = YML.readTree(new File(DOCKER_COMPOSE_SANDBOX_YML));
+            var dockerServices = appConfig.at("/services");
+            return StreamSupport.stream(dockerServices.spliterator(), false)
+                    .map(it -> Integer.parseInt(it.at("/ports/0").asText().split(":")[0]))
+                    .mapToInt(Integer::intValue)
+                    .toArray();
+        }
+
+        private void awaitAllStopped() {
+            int[] portsToCheck = getDockerServicesPorts();
+
+            await().atMost(Duration.ofMinutes(MAX_WAIT_MINUTES)).until(
+                    () -> Arrays.stream(portsToCheck).map(port -> isPortListening(port) ? 1 : 0).sum() == 0
+            );
+        }
+
+        private boolean isPortListening(int port) {
+            try (Socket ignored = new Socket("localhost", port)) {
+                return true;
+            } catch (IOException ex) {
+                return false;
+            }
         }
     }
 }
