@@ -74,41 +74,32 @@
         <dependency>
             <groupId>de.adorsys.xs2a.adapter</groupId>
             <artifactId>adapters</artifactId>
-            <version>0.1.18-SNAPSHOT</version>
-            <scope>system</scope>
-            <systemPath>${project.basedir}/src/main/resources/dependencies/adapters-0.1.18-SNAPSHOT-jar-with-dependencies.jar</systemPath>
+            <version>${xs2a-adapter.version}</version>
+            <type>pom</type>
         </dependency>
 
         <dependency>
             <groupId>de.adorsys.xs2a.adapter</groupId>
             <artifactId>xs2a-adapter-rest-impl</artifactId>
-            <version>0.1.18-SNAPSHOT</version>
-            <scope>system</scope>
-            <systemPath>${project.basedir}/src/main/resources/dependencies/xs2a-adapter-rest-impl-0.1.18-SNAPSHOT-jar-with-dependencies.jar</systemPath>
+            <version>${xs2a-adapter.version}</version>
         </dependency>
 
         <dependency>
             <groupId>de.adorsys.xs2a.adapter</groupId>
             <artifactId>xs2a-adapter-service-api</artifactId>
-            <version>0.1.18-SNAPSHOT</version>
-            <scope>system</scope>
-            <systemPath>${project.basedir}/src/main/resources/dependencies/xs2a-adapter-service-api-0.1.18-SNAPSHOT-jar-with-dependencies.jar</systemPath>
+            <version>${xs2a-adapter.version}</version>
         </dependency>
 
         <dependency>
             <groupId>de.adorsys.xs2a.adapter</groupId>
             <artifactId>xs2a-adapter-service-loader</artifactId>
-            <version>0.1.18-SNAPSHOT</version>
-            <scope>system</scope>
-            <systemPath>${project.basedir}/src/main/resources/dependencies/xs2a-adapter-service-loader-0.1.18-SNAPSHOT-jar-with-dependencies.jar</systemPath>
+            <version>${xs2a-adapter.version}</version>
         </dependency>
 
         <dependency>
             <groupId>de.adorsys.xs2a.adapter</groupId>
             <artifactId>xs2a-adapter-aspsp-registry</artifactId>
-            <version>0.1.18-SNAPSHOT</version>
-            <scope>system</scope>
-            <systemPath>${project.basedir}/src/main/resources/dependencies/xs2a-adapter-aspsp-registry-0.1.18-SNAPSHOT-jar-with-dependencies.jar</systemPath>
+            <version>${xs2a-adapter.version}</version>
         </dependency>
         <!-- XS2A Adapter END -->
 
