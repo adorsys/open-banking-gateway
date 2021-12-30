@@ -125,7 +125,9 @@ public class SandboxCommonTest<GIVEN, WHEN, THEN> extends SpringScenarioTest<GIV
             JsonNode appConfig = YML.readTree(new File(DOCKER_COMPOSE_SANDBOX_YML));
             var dockerServices = appConfig.at("/services");
             return StreamSupport.stream(dockerServices.spliterator(), false)
-                    .map(it -> Integer.parseInt(it.at("/ports/0").asText().split(":")[0]))
+                    .map(it -> it.at("/ports/0").asText())
+                    .filter(it -> !it.endsWith(":5432")) // Exclude Postgres from HTTP readiness check
+                    .map(it -> Integer.parseInt(it.split(":")[0]))
                     .mapToInt(Integer::intValue)
                     .toArray();
         }
