@@ -10,7 +10,7 @@ import de.adorsys.opba.smoketests.config.SandboxConsentAuthApproachState;
 import de.adorsys.opba.smoketests.config.SmokeConfig;
 import de.adorsys.opba.smoketests.config.WebDriverErrorReportAspectAndWatcher;
 import de.adorsys.opba.smoketests.steps.SmokeSandboxServers;
-import io.github.bonigarcia.seljup.SeleniumExtension;
+import io.github.bonigarcia.seljup.SeleniumJupiter;
 import io.github.bonigarcia.wdm.WebDriverManager;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeAll;
@@ -37,7 +37,7 @@ import static org.springframework.boot.test.context.SpringBootTest.WebEnvironmen
  * Happy-path smoke test to validate that OpenBanking environment with Consent UI is in sane state.
  */
 @EnabledIfEnvironmentVariable(named = ENABLE_SMOKE_TESTS, matches = TRUE_BOOL)
-@ExtendWith({SeleniumExtension.class, WebDriverErrorReportAspectAndWatcher.class})
+@ExtendWith({SeleniumJupiter.class, WebDriverErrorReportAspectAndWatcher.class})
 @SpringBootTest(classes = {JGivenConfig.class, SmokeConfig.class, FintechRequestSigningTestConfig.class, SmokeSandboxServers.class}, webEnvironment = NONE)
 // Use @ActiveProfiles(profiles = {SMOKE_TEST, "test-smoke-local"}) to run the test on local env.
 @ActiveProfiles(profiles = {SMOKE_TEST})
