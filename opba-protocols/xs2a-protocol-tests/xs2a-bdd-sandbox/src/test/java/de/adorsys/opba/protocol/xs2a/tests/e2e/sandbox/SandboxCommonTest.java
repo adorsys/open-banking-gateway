@@ -13,11 +13,14 @@ import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.web.server.LocalServerPort;
+import org.springframework.http.HttpStatus;
 import org.testcontainers.containers.DockerComposeContainer;
 
 import java.io.File;
 import java.io.IOException;
+import java.net.HttpURLConnection;
 import java.net.Socket;
+import java.net.URL;
 import java.security.Security;
 import java.time.Duration;
 import java.time.LocalDate;
@@ -137,8 +140,12 @@ public class SandboxCommonTest<GIVEN, WHEN, THEN> extends SpringScenarioTest<GIV
 
         private boolean isPortListening(int port) {
             try (Socket ignored = new Socket("localhost", port)) {
-                return true;
-            } catch (IOException ex) {
+                // Deeper check for docker-compose runtime as docker opens port always, Java-based stuff can simply return true
+                URL url = new URL("http://localhost:" + port);
+                HttpURLConnection http = (HttpURLConnection) url.openConnection();
+                int statusCode = http.getResponseCode();
+                return statusCode >= HttpStatus.OK.value(); // Assuming that if we got such status code app should be more or less ready
+            } catch (IOException ignored) {
                 return false;
             }
         }
