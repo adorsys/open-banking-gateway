@@ -7,6 +7,7 @@ import de.adorsys.opba.protocol.api.dto.request.FacadeServiceableRequest;
 import de.adorsys.opba.protocol.api.dto.request.accounts.AisAuthorizationStatusRequest;
 import de.adorsys.opba.protocol.api.dto.request.accounts.ListAccountsRequest;
 import de.adorsys.opba.protocol.api.dto.request.accounts.UpdateExternalAisSessionRequest;
+import de.adorsys.opba.protocol.api.dto.request.accounts.UpdateMetadataDetails;
 import de.adorsys.opba.protocol.api.dto.request.authorization.AisConsent;
 import de.adorsys.opba.protocol.api.dto.request.authorization.DeleteConsentRequest;
 import de.adorsys.opba.protocol.api.dto.request.transactions.ListTransactionsRequest;
@@ -23,11 +24,11 @@ import de.adorsys.opba.protocol.facade.services.ais.UpdateExternalAisSessionServ
 import de.adorsys.opba.restapi.shared.GlobalConst;
 import de.adorsys.opba.restapi.shared.mapper.FacadeResponseBodyToRestBodyMapper;
 import de.adorsys.opba.restapi.shared.service.FacadeResponseMapper;
-import de.adorsys.opba.tppbankingapi.Const;
 import de.adorsys.opba.tppbankingapi.ais.model.generated.AccountList;
 import de.adorsys.opba.tppbankingapi.ais.model.generated.SessionStatusDetails;
 import de.adorsys.opba.tppbankingapi.ais.model.generated.TransactionsResponse;
 import de.adorsys.opba.tppbankingapi.ais.model.generated.UpdateAisExternalSessionStatus;
+import de.adorsys.opba.tppbankingapi.ais.model.generated.UpdateMetadata;
 import de.adorsys.opba.tppbankingapi.ais.resource.generated.TppBankingApiAccountInformationServiceAisApi;
 import lombok.RequiredArgsConstructor;
 import lombok.SneakyThrows;
@@ -43,6 +44,7 @@ import java.util.Map;
 import java.util.UUID;
 import java.util.concurrent.CompletableFuture;
 
+import static de.adorsys.opba.tppbankingapi.Const.API_MAPPERS_PACKAGE;
 import static de.adorsys.opba.tppbankingapi.Const.SPRING_KEYWORD;
 
 @RestController
@@ -55,6 +57,7 @@ public class TppBankingApiAisController implements TppBankingApiAccountInformati
     private final ListTransactionsService transactions;
     private final GetAisAuthorizationStatusService aisSessionStatus;
     private final UpdateExternalAisSessionService updateExternalAis;
+    private final UpdateMetadataDetailsFromApiMapper updateMetadataDetailsFromApiMapper;
     private final FacadeResponseMapper mapper;
     private final AccountListFacadeResponseBodyToRestBodyMapper accountListRestMapper;
     private final TransactionsFacadeResponseBodyToRestBodyMapper transactionsRestMapper;
@@ -267,8 +270,9 @@ public class TppBankingApiAisController implements TppBankingApiAccountInformati
     }
 
     @Override
-    public CompletableFuture updateExternalAisSession(UUID serviceSessionId,
-                                                      UUID xRequestID,
+    public CompletableFuture updateExternalAisSession(UUID xRequestID,
+                                                      UUID serviceSessionId,
+                                                      UpdateMetadata body,
                                                       String xTimestampUTC,
                                                       String xRequestSignature,
                                                       String fintechId,
@@ -281,7 +285,7 @@ public class TppBankingApiAisController implements TppBankingApiAccountInformati
                         .serviceSessionId(serviceSessionId)
                         .requestId(xRequestID)
                         .build()
-                ).build()
+                ).details(updateMetadataDetailsFromApiMapper.map(body)).build()
         ).thenApply((FacadeResult<UpdateExternalAisSessionBody> result) -> mapper.translate(result, updateExternalAisSessionToApiMapper));
     }
 
@@ -301,25 +305,30 @@ public class TppBankingApiAisController implements TppBankingApiAccountInformati
         return extras;
     }
 
-    @Mapper(componentModel = SPRING_KEYWORD, implementationPackage = Const.API_MAPPERS_PACKAGE)
+    @Mapper(componentModel = SPRING_KEYWORD, implementationPackage = API_MAPPERS_PACKAGE)
     public interface AccountListFacadeResponseBodyToRestBodyMapper extends FacadeResponseBodyToRestBodyMapper<AccountList, AccountListBody> {
         AccountList map(AccountListBody facadeEntity);
     }
 
-    @Mapper(componentModel = SPRING_KEYWORD, implementationPackage = Const.API_MAPPERS_PACKAGE)
+    @Mapper(componentModel = SPRING_KEYWORD, implementationPackage = API_MAPPERS_PACKAGE)
     public interface TransactionsFacadeResponseBodyToRestBodyMapper extends FacadeResponseBodyToRestBodyMapper<TransactionsResponse, TransactionsResponseBody> {
 
         @Mapping(source = "analytics.bookings", target = "analytics")
         TransactionsResponse map(TransactionsResponseBody facadeEntity);
     }
 
-    @Mapper(componentModel = GlobalConst.SPRING_KEYWORD, implementationPackage = Const.API_MAPPERS_PACKAGE, uses = UuidMapper.class)
+    @Mapper(componentModel = GlobalConst.SPRING_KEYWORD, implementationPackage = API_MAPPERS_PACKAGE, uses = UuidMapper.class)
     public interface ConsentAuthorizationSessionStatusToApiMapper extends FacadeResponseBodyToRestBodyMapper<SessionStatusDetails, AisAuthorizationStatusBody> {
         SessionStatusDetails map(AisAuthorizationStatusBody facade);
     }
 
-    @Mapper(componentModel = GlobalConst.SPRING_KEYWORD, implementationPackage = Const.API_MAPPERS_PACKAGE, uses = UuidMapper.class)
+    @Mapper(componentModel = GlobalConst.SPRING_KEYWORD, implementationPackage = API_MAPPERS_PACKAGE, uses = UuidMapper.class)
     public interface UpdateExternalAisSessionToApiMapper extends FacadeResponseBodyToRestBodyMapper<UpdateAisExternalSessionStatus, UpdateExternalAisSessionBody> {
         UpdateAisExternalSessionStatus map(UpdateExternalAisSessionBody facade);
+    }
+
+    @Mapper(componentModel = GlobalConst.SPRING_KEYWORD, implementationPackage = API_MAPPERS_PACKAGE)
+    public interface UpdateMetadataDetailsFromApiMapper {
+        UpdateMetadataDetails map(UpdateMetadata body);
     }
 }

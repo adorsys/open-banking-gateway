@@ -5,6 +5,15 @@ info:
 paths: {}
 
 components:
+  requestBodies:
+    UpdateMetadata:
+      description: Update metadata for 3rd party service
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/UpdateMetadata"
+      required: false
+
   headers:
     Location:
       required: true
@@ -642,3 +651,12 @@ components:
         message:
           type: string
           example: "Error description message"
+
+    UpdateMetadata:
+      type: object
+      properties:
+        userMetadata:
+          description: PSU Agent metadata for 3rd party service
+          example: |
+            {"ipAddress": "1.1.1.1", "deviceOs": "Macintosh; Intel Mac OS X 10_15_7", "userAgent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/605.1.15 (KHTML, like Gecko)"}
+          type: string

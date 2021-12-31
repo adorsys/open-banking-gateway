@@ -238,6 +238,8 @@ paths:
         - $ref: "./tpp_banking_api_commons.yml#/components/parameters/ServiceSessionPassword"
         - $ref: "./tpp_banking_api_commons.yml#/components/parameters/FintechDataPassword"
         - $ref: "./tpp_banking_api_commons.yml#/components/parameters/X-Request-ID"
+      requestBody:
+        $ref: "./tpp_banking_api_commons.yml#/components/requestBodies/UpdateMetadata"
       responses:
         "200":
           $ref: "./tpp_banking_api_commons.yml#/components/responses/updateExternalAisSessionResponse"
