@@ -595,6 +595,9 @@ components:
           format: date-time
         status:
           $ref: "#/components/schemas/sessionStatus"
+        externalLinkForPsu:
+          description: The link to visit by PSU to continue process in 3rd party system
+          type: string
         externalStatus:
           description: External status (i.e. in 3rd party service)
           type: string

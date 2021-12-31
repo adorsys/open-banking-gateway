@@ -16,6 +16,7 @@ public class PisAuthorizationStatusBody implements AuthorizationStatusBody {
 
     private SessionStatus status;
     private Map<UUID, DetailedSessionStatus> detailedStatus;
+    private String externalLinkForPsu;
     private OffsetDateTime createdAt;
     private OffsetDateTime updatedAt;
 }
