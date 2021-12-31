@@ -5,8 +5,6 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.dataformat.yaml.YAMLFactory;
 import com.tngtech.jgiven.integration.spring.junit5.SpringScenarioTest;
 import de.adorsys.opba.protocol.xs2a.config.protocol.ProtocolUrlsConfiguration;
-import de.adorsys.opba.protocol.xs2a.testsandbox.SandboxAppsStarter;
-import de.adorsys.opba.protocol.xs2a.testsandbox.internal.SandboxApp;
 import io.github.bonigarcia.wdm.WebDriverManager;
 import lombok.SneakyThrows;
 import org.bouncycastle.jce.provider.BouncyCastleProvider;
@@ -15,13 +13,22 @@ import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.web.server.LocalServerPort;
+import org.springframework.http.HttpStatus;
 import org.testcontainers.containers.DockerComposeContainer;
-import org.testcontainers.shaded.com.google.common.collect.ImmutableMap;
 
 import java.io.File;
+import java.io.IOException;
+import java.net.HttpURLConnection;
+import java.net.Socket;
+import java.net.URL;
 import java.security.Security;
+import java.time.Duration;
 import java.time.LocalDate;
+import java.util.Arrays;
 import java.util.UUID;
+import java.util.stream.StreamSupport;
+
+import static org.awaitility.Awaitility.await;
 
 public class SandboxCommonTest<GIVEN, WHEN, THEN> extends SpringScenarioTest<GIVEN, WHEN, THEN> {
 
@@ -77,10 +84,10 @@ public class SandboxCommonTest<GIVEN, WHEN, THEN> extends SpringScenarioTest<GIV
     }
 
     private static class SandboxOper {
-        private static final ObjectMapper YML = new ObjectMapper(new YAMLFactory());
         private static final String DOCKER_COMPOSE_SANDBOX_YML = "./../../../how-to-start-with-project/xs2a-sandbox-only/docker-compose.yml";
+        private static final ObjectMapper YML = new ObjectMapper(new YAMLFactory());
+        private static final int MAX_WAIT_MINUTES = 10;
 
-        private SandboxAppsStarter starter;
         private DockerComposeContainer sandboxEnvironment;
 
         @SneakyThrows
@@ -89,27 +96,60 @@ public class SandboxCommonTest<GIVEN, WHEN, THEN> extends SpringScenarioTest<GIV
                 throw new IllegalStateException("Sandbox env is up, in needs to be shut down first");
             }
 
-            // push Online-Banking-UI declared port as we use Starter only to check if all apps are up
-            JsonNode appConfig = YML.readTree(new File(DOCKER_COMPOSE_SANDBOX_YML));
-            int onlineBankingUiPort = Integer.parseInt(appConfig.at("/services/xs2a-sandbox-onlinebankingui/ports/0").asText().split(":")[0]);
             // while it is not launching anything, it allows to await for apps to be ready to use:
-            starter = new SandboxAppsStarter(ImmutableMap.of(SandboxApp.ONLINE_BANKING_UI, onlineBankingUiPort));
-            // Ensure that ports are clear:
-            starter.awaitForAllStopped();
-
             sandboxEnvironment = new DockerComposeContainer(new File(DOCKER_COMPOSE_SANDBOX_YML))
                     .withLocalCompose(true)
                     .withTailChildContainers(true);
             sandboxEnvironment.start();
-            starter.awaitForAllStarted();
+            awaitAllStarted();
         }
 
 
         @SneakyThrows
         synchronized void stopSandbox() {
             sandboxEnvironment.stop();
-            starter.awaitForAllStopped();
+            awaitAllStopped();
             sandboxEnvironment = null;
+        }
+
+        private void awaitAllStarted() {
+            int[] portsToCheck = getDockerServicesPorts();
+
+            await().atMost(Duration.ofMinutes(MAX_WAIT_MINUTES)).until(
+                    () -> Arrays.stream(portsToCheck).map(port -> isPortListening(port) ? 1 : 0).sum() == portsToCheck.length
+            );
+        }
+
+        @SneakyThrows
+        private int[] getDockerServicesPorts() {
+            JsonNode appConfig = YML.readTree(new File(DOCKER_COMPOSE_SANDBOX_YML));
+            var dockerServices = appConfig.at("/services");
+            return StreamSupport.stream(dockerServices.spliterator(), false)
+                    .map(it -> it.at("/ports/0").asText())
+                    .filter(it -> !it.endsWith(":5432")) // Exclude Postgres from HTTP readiness check
+                    .map(it -> Integer.parseInt(it.split(":")[0]))
+                    .mapToInt(Integer::intValue)
+                    .toArray();
+        }
+
+        private void awaitAllStopped() {
+            int[] portsToCheck = getDockerServicesPorts();
+
+            await().atMost(Duration.ofMinutes(MAX_WAIT_MINUTES)).until(
+                    () -> Arrays.stream(portsToCheck).map(port -> isPortListening(port) ? 1 : 0).sum() == 0
+            );
+        }
+
+        private boolean isPortListening(int port) {
+            try (Socket ignored = new Socket("localhost", port)) {
+                // Deeper check for docker-compose runtime as docker opens port always, Java-based stuff can simply return true
+                URL url = new URL("http://localhost:" + port);
+                HttpURLConnection http = (HttpURLConnection) url.openConnection();
+                int statusCode = http.getResponseCode();
+                return statusCode >= HttpStatus.OK.value(); // Assuming that if we got such status code app should be more or less ready
+            } catch (IOException ignored) {
+                return false;
+            }
         }
     }
 }

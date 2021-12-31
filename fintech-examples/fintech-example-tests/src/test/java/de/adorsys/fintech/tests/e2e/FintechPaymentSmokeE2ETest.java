@@ -9,7 +9,7 @@ import de.adorsys.fintech.tests.e2e.steps.WebDriverBasedUserInfoFintech;
 import de.adorsys.opba.api.security.external.service.RequestSigningService;
 import de.adorsys.opba.api.security.internal.config.CookieProperties;
 import de.adorsys.opba.api.security.internal.config.TppTokenProperties;
-import io.github.bonigarcia.seljup.SeleniumExtension;
+import io.github.bonigarcia.seljup.SeleniumJupiter;
 import io.github.bonigarcia.wdm.WebDriverManager;
 import lombok.SneakyThrows;
 import net.bytebuddy.utility.RandomString;
@@ -25,7 +25,9 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.test.context.ActiveProfiles;
 
-import static de.adorsys.fintech.tests.e2e.steps.FintechStagesUtils.*;
+import static de.adorsys.fintech.tests.e2e.steps.FintechStagesUtils.ADORSYS_XS2A;
+import static de.adorsys.fintech.tests.e2e.steps.FintechStagesUtils.EMBEDDED_MODE;
+import static de.adorsys.fintech.tests.e2e.steps.FintechStagesUtils.PIN;
 import static de.adorsys.opba.protocol.xs2a.tests.Const.ENABLE_SMOKE_TESTS;
 import static de.adorsys.opba.protocol.xs2a.tests.Const.TRUE_BOOL;
 import static org.springframework.boot.test.context.SpringBootTest.WebEnvironment.NONE;
@@ -33,7 +35,7 @@ import static org.springframework.boot.test.context.SpringBootTest.WebEnvironmen
 @SuppressWarnings("PMD.UnusedPrivateField")
 @ActiveProfiles("test-smoke-fintech")
 @EnabledIfEnvironmentVariable(named = ENABLE_SMOKE_TESTS, matches = TRUE_BOOL)
-@ExtendWith({SeleniumExtension.class})
+@ExtendWith({SeleniumJupiter.class})
 @SpringBootTest(classes = {JGivenConfig.class, SmokeConfig.class}, webEnvironment = NONE)
 public class FintechPaymentSmokeE2ETest extends SpringScenarioTest<FintechServer, WebDriverBasedUserInfoFintech<? extends WebDriverBasedUserInfoFintech<?>>, UserInformationResult> {
 
