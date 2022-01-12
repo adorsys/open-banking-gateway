@@ -113,7 +113,7 @@
         <guava.version>30.1.1-jre</guava.version>
         <apache.commons-lang3.version>3.12.0</apache.commons-lang3.version>
         <fasterxml.version>2.13.1</fasterxml.version>
-        <fasterxml-data-format.version>2.13.0</fasterxml-data-format.version>
+        <fasterxml-data-format.version>2.13.1</fasterxml-data-format.version>
         <swaggerv3.version>2.1.0</swaggerv3.version>
         <swagger.version>1.6.3</swagger.version>
         <swagger-codegen-generators.version>1.0.19</swagger-codegen-generators.version>
