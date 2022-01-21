@@ -1,0 +1,13 @@
+<databaseChangeLog logicalFilePath="db.changelog-1.0.xml" xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+                   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                   xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.8.xsd">
+
+    <changeSet author="mhr" id="2022-01-21">
+        <comment>fix unique constraint in fintech_psu_aspsp_prv_key_inbox and fintech_psu_aspsp_prv_key</comment>
+        <dropUniqueConstraint tableName="${table-prefix}fintech_psu_aspsp_prv_key_inbox" constraintName="opb_fintech_psu_aspsp_prv_key_inbox_psu_id_aspsp_id_key"/>
+        <addUniqueConstraint tableName="${table-prefix}fintech_psu_aspsp_prv_key_inbox" columnNames="fintech_id,psu_id,aspsp_id"/>
+
+        <dropUniqueConstraint tableName="${table-prefix}fintech_psu_aspsp_prv_key" constraintName="opb_fintech_psu_aspsp_prv_key_psu_id_aspsp_id_key"/>
+        <addUniqueConstraint tableName="${table-prefix}fintech_psu_aspsp_prv_key" columnNames="fintech_id,psu_id,aspsp_id"/>
+    </changeSet>
+</databaseChangeLog>
