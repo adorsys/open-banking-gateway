@@ -82,6 +82,7 @@ public class PaymentService {
                 tppProperties.getFintechDataProtectionPassword(),
                 UUID.fromString(bankProfileId),
                 xPisPsuAuthenticationRequired,
+                null,
                 HEADER_COMPUTE_PSU_IP_ADDRESS,
                 null,
                 fintechDecoupledPreferred,

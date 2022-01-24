@@ -6,6 +6,7 @@ import de.adorsys.opba.tpp.ais.api.model.generated.AccountList;
 import de.adorsys.opba.tpp.ais.api.model.generated.SessionStatusDetails;
 import de.adorsys.opba.tpp.ais.api.model.generated.TransactionsResponse;
 import de.adorsys.opba.tpp.ais.api.model.generated.UpdateAisExternalSessionStatus;
+import de.adorsys.opba.tpp.ais.api.model.generated.UpdateMetadata;
 import org.springframework.http.ResponseEntity;
 
 import javax.servlet.http.HttpServletRequest;
@@ -32,6 +33,7 @@ public class TppAisClientFeignMock implements TppAisClient {
             UUID serviceSessionID,
             String createConsentIfNone,
             String importUserData,
+            String protocolConfiguration,
             Boolean computePsuIpAddress,
             String psuIpAddress,
             Boolean fintechDecoupledPreferred,
@@ -61,6 +63,7 @@ public class TppAisClientFeignMock implements TppAisClient {
             UUID serviceSessionID,
             String createConsentIfNone,
             String importUserData,
+            String protocolConfiguration,
             Boolean computePsuIpAddress,
             String psuIpAddress,
             LocalDate dateFrom,
@@ -92,6 +95,7 @@ public class TppAisClientFeignMock implements TppAisClient {
             UUID serviceSessionID,
             String createConsentIfNone,
             String importUserData,
+            String protocolConfiguration,
             Boolean computePsuIpAddress,
             String psuIpAddress,
             LocalDate dateFrom,
@@ -112,13 +116,13 @@ public class TppAisClientFeignMock implements TppAisClient {
     }
 
     @Override
-    public ResponseEntity<SessionStatusDetails> getAisSessionStatus(UUID serviceSessionID, UUID xRequestID, String xTimestampUTC, String xRequestSignature, String fintechID,
+    public ResponseEntity<SessionStatusDetails> getAisSessionStatus(UUID serviceSessionID, UUID xRequestID, String externalSessionId, String xTimestampUTC, String xRequestSignature, String fintechID,
                                                                     String serviceSessionPassword, String fintechDataPassword) {
         return null;
     }
 
     @Override
-    public ResponseEntity<UpdateAisExternalSessionStatus> updateExternalAisSession(UUID serviceSessionID, UUID xRequestID, String xTimestampUTC, String xRequestSignature, String fintechID,
+    public ResponseEntity<UpdateAisExternalSessionStatus> updateExternalAisSession(UUID xRequestID, UUID serviceSessionID, UpdateMetadata updateMetadata, String xTimestampUTC, String xRequestSignature, String fintechID,
                                                                                    String serviceSessionPassword, String fintechDataPassword) {
         return null;
     }

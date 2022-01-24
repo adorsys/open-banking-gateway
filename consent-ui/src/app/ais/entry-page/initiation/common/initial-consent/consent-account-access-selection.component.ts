@@ -1,17 +1,17 @@
-import {AfterContentChecked, ChangeDetectorRef, Component, Input, OnInit} from '@angular/core';
-import {FormBuilder, FormControl, FormGroup, Validators} from '@angular/forms';
-import {ActivatedRoute, Router} from '@angular/router';
-import {AuthConsentState} from '../../../../common/dto/auth-state';
-import {SessionService} from '../../../../../common/session.service';
-import {StubUtil} from '../../../../../common/utils/stub-util';
+import { AfterContentChecked, ChangeDetectorRef, Component, Input, OnInit } from '@angular/core';
+import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
+import { ActivatedRoute, Router } from '@angular/router';
+import { AuthConsentState } from '../../../../common/dto/auth-state';
+import { SessionService } from '../../../../../common/session.service';
+import { StubUtil } from '../../../../../common/utils/stub-util';
 import {
   AccountAccessLevel,
   AccountAccessLevelAspspConsentSupport,
   AisConsentToGrant
 } from '../../../../common/dto/ais-consent';
-import {ConsentUtil} from '../../../../common/consent-util';
-import {ConsentAuth, UpdateConsentAuthorizationService} from '../../../../../api';
-import {ApiHeaders} from '../../../../../api/api.headers';
+import { ConsentUtil } from '../../../../common/consent-util';
+import { ConsentAuth, UpdateConsentAuthorizationService } from '../../../../../api';
+import { ApiHeaders } from '../../../../../api/api.headers';
 
 @Component({
   selector: 'consent-app-access-selection',
@@ -33,6 +33,19 @@ export class ConsentAccountAccessSelectionComponent implements OnInit, AfterCont
   public consent: AisConsentToGrant;
 
   private authorizationId: string;
+
+  private static hasIntersection(
+    source: Set<ConsentAuth.SupportedConsentTypesEnum>,
+    target: Set<ConsentAuth.SupportedConsentTypesEnum>
+  ): boolean {
+    for (const entry of source) {
+      if (target.has(entry)) {
+        return true;
+      }
+    }
+
+    return false;
+  }
 
   constructor(
     private router: Router,
@@ -65,13 +78,17 @@ export class ConsentAccountAccessSelectionComponent implements OnInit, AfterCont
       const bankSupportFromApi = this.sessionService.getConsentTypesSupported(res.authId);
       if (bankSupportFromApi) {
         const bankSupport = new Set(this.sessionService.getConsentTypesSupported(res.authId) || []);
-        this.filteredAccountAccesses = this.accountAccesses
-          .filter(it => ConsentAccountAccessSelectionComponent.hasIntersection(AccountAccessLevelAspspConsentSupport.get(it.id), bankSupport));
+        this.filteredAccountAccesses = this.accountAccesses.filter((it) =>
+          ConsentAccountAccessSelectionComponent.hasIntersection(
+            AccountAccessLevelAspspConsentSupport.get(it.id),
+            bankSupport
+          )
+        );
       } else {
         this.filteredAccountAccesses = this.accountAccesses;
       }
     });
-    if (this.filteredAccountAccesses && this.filteredAccountAccesses.length == 1) {
+    if (this.filteredAccountAccesses && this.filteredAccountAccesses.length === 1) {
       this.selectedAccess.setValue(this.filteredAccountAccesses[0]);
     }
   }
@@ -118,16 +135,6 @@ export class ConsentAccountAccessSelectionComponent implements OnInit, AfterCont
       .subscribe((res) => {
         window.location.href = res.headers.get(ApiHeaders.LOCATION);
       });
-  }
-
-  private static hasIntersection(source: Set<ConsentAuth.SupportedConsentTypesEnum>, target: Set<ConsentAuth.SupportedConsentTypesEnum>): boolean {
-    for (const entry of source) {
-      if (target.has(entry)) {
-        return true;
-      }
-    }
-
-    return false;
   }
 
   private updateConsentObject() {

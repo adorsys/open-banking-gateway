@@ -18,6 +18,7 @@ import { DateUtil } from '../../../../common/date-util';
   styleUrls: ['./accounts-consent-review.component.scss']
 })
 export class AccountsConsentReviewComponent implements OnInit {
+  public static ROUTE = SharedRoutes.REVIEW;
 
   consentReviewForm: FormGroup;
 
@@ -29,8 +30,6 @@ export class AccountsConsentReviewComponent implements OnInit {
     private sessionService: SessionService,
     private updateConsentAuthorizationService: UpdateConsentAuthorizationService
   ) {}
-
-  public static ROUTE = SharedRoutes.REVIEW;
 
   accountAccessLevel = AccountAccessLevel;
 
@@ -92,28 +91,20 @@ export class AccountsConsentReviewComponent implements OnInit {
       recurringIndicator: this.aisConsent.consent.recurringIndicator,
       validUntilDate: [
         this.aisConsent.consent.validUntil,
-        [
-          Validators.required,
-          Validators.pattern(DATA_PATTERN),
-          DateUtil.isDateNotInThePastValidator()
-        ]
+        [Validators.required, Validators.pattern(DATA_PATTERN), DateUtil.isDateNotInThePastValidator()]
       ],
       frequencyPerDay: [
         this.aisConsent.consent.frequencyPerDay,
-        [
-          Validators.required,
-          Validators.min(1),
-          Validators.max(MAX_FREQUENCY_PER_DAY)
-        ]
+        [Validators.required, Validators.min(1), Validators.max(MAX_FREQUENCY_PER_DAY)]
       ]
-    })
+    });
   }
 
   get validUntilDate() {
-    return this.consentReviewForm.get('validUntilDate')
+    return this.consentReviewForm.get('validUntilDate');
   }
 
   get frequencyPerDay() {
-    return this.consentReviewForm.get('frequencyPerDay')
+    return this.consentReviewForm.get('frequencyPerDay');
   }
 }

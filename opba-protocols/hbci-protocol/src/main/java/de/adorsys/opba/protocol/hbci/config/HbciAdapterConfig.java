@@ -40,7 +40,8 @@ public class HbciAdapterConfig {
         OnlineBankingService hbci = new HbciBanking(
                 product.orElse(null),
                 properties.getSysIdExpirationTimeMs(),
-                properties.getUpdExpirationTimeMs()
+                properties.getUpdExpirationTimeMs(),
+                properties.getBpdExpirationTimeMs()
         );
 
         properties.getAdorsysMockBanksBlz().forEach(it -> {

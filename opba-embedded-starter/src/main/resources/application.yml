@@ -47,6 +47,10 @@ management:
   info:
     git:
       mode: full
+  endpoints:
+    web:
+      exposure:
+        include: info,health
 
 # Application configuration
 api:
@@ -385,6 +389,7 @@ protocol:
   finapi:
     # FinApi service's URLs
     api-url: https://sandbox.finapi.io
+    webform-api-url: https://webform-sandbox.finapi.io
     token-url: ${protocol.finapi.api-url}/oauth/token
     banks-url: ${protocol.finapi.api-url}/api/v1/banks
     # Requested from FinApi token-scope

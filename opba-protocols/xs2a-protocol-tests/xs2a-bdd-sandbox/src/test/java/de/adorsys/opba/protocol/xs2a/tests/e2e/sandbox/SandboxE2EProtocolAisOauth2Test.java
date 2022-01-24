@@ -8,7 +8,6 @@ import de.adorsys.opba.protocol.xs2a.tests.e2e.sandbox.servers.WebDriverBasedAcc
 import de.adorsys.opba.protocol.xs2a.tests.e2e.sandbox.servers.config.RetryableConfig;
 import de.adorsys.opba.protocol.xs2a.tests.e2e.stages.AccountInformationResult;
 import de.adorsys.opba.protocol.xs2a.tests.e2e.stages.RedirectCapturingTransformer;
-import de.adorsys.psd2.sandbox.cms.starter.Xs2aCmsAutoConfiguration;
 import io.github.bonigarcia.seljup.SeleniumExtension;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
@@ -42,7 +41,6 @@ import static org.springframework.boot.test.context.SpringBootTest.WebEnvironmen
 @EnabledIfEnvironmentVariable(named = ENABLE_HEAVY_TESTS, matches = TRUE_BOOL)
 @EnableAutoConfiguration(exclude = {
     HypermediaAutoConfiguration.class,
-    Xs2aCmsAutoConfiguration.class,
     ManagementWebSecurityAutoConfiguration.class,
     SecurityAutoConfiguration.class,
 })

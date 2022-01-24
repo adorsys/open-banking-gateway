@@ -271,6 +271,8 @@ components:
           description: Comma-separated external interfaces
         protocolType:
           type: string
+        protocolConfiguration:
+          type: string
         isSandbox:
           type: boolean
         isActive:

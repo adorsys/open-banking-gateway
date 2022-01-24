@@ -1,7 +1,7 @@
-import {async, ComponentFixture, TestBed} from '@angular/core/testing';
+import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 
-import {RestoreSessionComponent} from './restore-session.component';
-import {HttpClientTestingModule} from "@angular/common/http/testing";
+import { RestoreSessionComponent } from './restore-session.component';
+import { HttpClientTestingModule } from '@angular/common/http/testing';
 
 describe('RestoreSessionComponent', () => {
   let component: RestoreSessionComponent;
@@ -11,10 +11,9 @@ describe('RestoreSessionComponent', () => {
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [ RestoreSessionComponent ],
-      imports: [HttpClientTestingModule],
-    })
-    .compileComponents();
+      declarations: [RestoreSessionComponent],
+      imports: [HttpClientTestingModule]
+    }).compileComponents();
   }));
 
   beforeEach(() => {

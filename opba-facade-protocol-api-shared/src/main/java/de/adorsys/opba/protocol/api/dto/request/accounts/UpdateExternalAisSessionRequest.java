@@ -22,4 +22,6 @@ public class UpdateExternalAisSessionRequest implements FacadeServiceableGetter 
      * The request representation that is being serviced by facade.
      */
     private FacadeServiceableRequest facadeServiceable;
+
+    private UpdateMetadataDetails details;
 }

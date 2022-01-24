@@ -10,11 +10,13 @@ public interface AuthorizationStatusBody extends ResultBody {
 
     SessionStatus getStatus();
     Map<UUID, DetailedSessionStatus> getDetailedStatus();
+    String getExternalLinkForPsu();
     OffsetDateTime getCreatedAt();
     OffsetDateTime getUpdatedAt();
 
     void setStatus(SessionStatus status);
     void setDetailedStatus(Map<UUID, DetailedSessionStatus> detailedStatus);
+    void setExternalLinkForPsu(String externalLinkForPsu);
     void setCreatedAt(OffsetDateTime createdAt);
     void setUpdatedAt(OffsetDateTime updatedAt);
 }

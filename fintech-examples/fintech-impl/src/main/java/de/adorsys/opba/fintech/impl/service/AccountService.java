@@ -130,6 +130,7 @@ public class AccountService {
                 serviceSessionID,
                 createConsentIfNone,
                 null,
+                null,
                 HEADER_COMPUTE_PSU_IP_ADDRESS,
                 null,
                 fintechDecoupledPreferred,
@@ -140,6 +141,7 @@ public class AccountService {
                 online);
     }
 
+    @SuppressWarnings("checkstyle:MethodLength") // Long method argument list written in column style for clarity
     private ResponseEntity consentNotYetAvailable(String bankProfileID, SessionEntity sessionEntity, String redirectCode, UUID xRequestId, Boolean psuAuthenticationRequired,
                                                   Optional<ConsentEntity> optionalConsent, boolean withBalance, Boolean online, String createConsentIfNone, Boolean fintechDecoupledPreferred,
                                                   String fintechBrandLoggingInformation, String fintechNotificationURI, String fintechNotificationContentPreferred) {
@@ -160,6 +162,7 @@ public class AccountService {
                 serviceSessionID,
                 createConsentIfNone,
                 null,
+                null,
                 HEADER_COMPUTE_PSU_IP_ADDRESS,
                 null, null, null, null,
                 null, null, null, null
@@ -167,8 +170,20 @@ public class AccountService {
         if (response.getStatusCode() != HttpStatus.OK) {
             return response;
         }
-        return consentAvailable(bankProfileID, sessionEntity, redirectCode, UUID.randomUUID(), optionalConsent, createConsentIfNone, withBalance, psuAuthenticationRequired,
-                online, fintechDecoupledPreferred, fintechBrandLoggingInformation, fintechNotificationURI, fintechNotificationContentPreferred
+        return consentAvailable(
+                bankProfileID,
+                sessionEntity,
+                redirectCode,
+                UUID.randomUUID(),
+                optionalConsent,
+                createConsentIfNone,
+                withBalance,
+                psuAuthenticationRequired,
+                online,
+                fintechDecoupledPreferred,
+                fintechBrandLoggingInformation,
+                fintechNotificationURI,
+                fintechNotificationContentPreferred
         );
     }
 }

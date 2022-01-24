@@ -7,7 +7,7 @@ import { SharedRoutes } from '../shared-routes';
 import { InternalAccountReference } from '../accounts-reference/accounts-reference.component';
 import { SessionService } from '../../../../../common/session.service';
 import { ConsentUtil } from '../../../../common/consent-util';
-import {AccountReference} from "../../../../common/dto/ais-consent";
+import { AccountReference } from '../../../../common/dto/ais-consent';
 
 @Component({
   selector: 'consent-app-limited-access',
@@ -36,6 +36,13 @@ export class DedicatedAccessComponent implements OnInit {
 
   private authorizationId: string;
 
+  private static toAccountReference(reference: InternalAccountReference): AccountReference {
+    const result = {} as AccountReference;
+    result.iban = reference.iban;
+    result.currency = reference.currency;
+    return result;
+  }
+
   ngOnInit() {
     this.wrongIban = this.activatedRoute.snapshot.queryParamMap.get('wrong') === 'true';
     this.activatedRoute.parent.parent.params.subscribe((res) => {
@@ -63,13 +70,6 @@ export class DedicatedAccessComponent implements OnInit {
   onBack() {
     ConsentUtil.rollbackConsent(this.authorizationId, this.sessionService);
     this.location.back();
-  }
-
-  private static toAccountReference(reference: InternalAccountReference): AccountReference {
-    const result = {} as AccountReference;
-    result.iban = reference.iban;
-    result.currency = reference.currency;
-    return result;
   }
 
   private loadDataFromExistingConsent() {

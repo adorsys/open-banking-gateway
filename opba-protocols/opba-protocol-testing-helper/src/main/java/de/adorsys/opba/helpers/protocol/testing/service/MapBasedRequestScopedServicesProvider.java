@@ -149,6 +149,7 @@ public class MapBasedRequestScopedServicesProvider implements RequestScopedServi
         private String externalId;
         private String externalInterfaces;
         private String bankName;
+        private String protocolConfiguration;
         private ResultContentType contentTypeTransactions;
     }
 
