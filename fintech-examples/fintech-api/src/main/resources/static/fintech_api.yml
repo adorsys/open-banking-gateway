@@ -261,6 +261,10 @@ paths:
         - $ref: "#/components/parameters/Fintech-Redirect-URL-NOK"
         - $ref: "#/components/parameters/LoARetrievalInformation"
         - $ref: "#/components/parameters/X-Create-Consent-If-None"
+        - $ref: "#/components/parameters/Fintech-Decoupled-Preferred"
+        - $ref: "#/components/parameters/Fintech-Brand-Logging-Information"
+        - $ref: "#/components/parameters/Fintech-Notification-URI"
+        - $ref: "#/components/parameters/Fintech-Redirect-Notification-Content-Preferred"
         #query
         - $ref: "#/components/parameters/withBalance"
         - $ref: "#/components/parameters/online"
@@ -407,6 +411,10 @@ paths:
         - $ref: "#/components/parameters/X-Psu-Authentication-Required"
         - $ref: "#/components/parameters/Fintech-Redirect-URL-OK"
         - $ref: "#/components/parameters/Fintech-Redirect-URL-NOK"
+        - $ref: "#/components/parameters/Fintech-Decoupled-Preferred"
+        - $ref: "#/components/parameters/Fintech-Brand-Logging-Information"
+        - $ref: "#/components/parameters/Fintech-Notification-URI"
+        - $ref: "#/components/parameters/Fintech-Redirect-Notification-Content-Preferred"
 
       requestBody:
         description: Single payment initiation request
@@ -586,6 +594,34 @@ components:
       schema:
         type: string
       example: "https://example.com/myservice?auth-id=sf3x;authResult=failure"
+
+    Fintech-Decoupled-Preferred:
+      name: Fintech-Decoupled-Preferred
+      required: false
+      in: header
+      schema:
+        type: boolean
+
+    Fintech-Brand-Logging-Information:
+      name: Fintech-Brand-Logging-Information
+      required: false
+      in: header
+      schema:
+        type: string
+
+    Fintech-Notification-URI:
+      name: Fintech-Notification-URI
+      required: false
+      in: header
+      schema:
+        type: string
+
+    Fintech-Redirect-Notification-Content-Preferred:
+      name: Fintech-Redirect-Notification-Content-Preferred
+      required: false
+      in: header
+      schema:
+        type: string
 
     LoARetrievalInformation:
       name: LoARetrievalInformation

@@ -211,6 +211,27 @@ public class Xs2aContext extends BaseContext {
      */
     private boolean decoupledScaFinished;
 
+
+    /**
+     * This header might be used by FinTechs to inform the ASPSP about the brand used by the FinTech towards the PSU.
+     */
+    private  String fintechBrandLoggingInformation;
+
+    /**
+     *  URI for the Endpoint of the FinTech-API to which the status of the payment initiation should be sent.
+     */
+    private  String fintechNotificationURI;
+
+    /**
+     * The string has the formstatus=X1, ..., Xn where Xi is one of the constants SCA, PROCESS, LAST and where constants are not repeated.
+     */
+    private  String fintechNotificationContentPreferred;
+
+    /**
+     * If it equals "true", the FinTech prefers a decoupled SCA approach
+     */
+    private boolean fintechDecoupledPreferred;
+
     @JsonIgnore
     public String getPsuPassword() {
         TransientDataEntry entry = this.transientStorage().get();

@@ -52,22 +52,30 @@ public class TppBankingApiPisController implements TppBankingApiSinglePaymentPis
                                              Boolean xPsuAuthenticationRequired,
                                              String xProtocolConfiguration,
                                              Boolean computePsuIpAddress,
-                                             String psuIpAddress
+                                             String psuIpAddress,
+                                             Boolean fintechDecoupledPreferred,
+                                             String fintechBrandLoggingInformation,
+                                             String fintechNotificationURI,
+                                             String fintechNotificationContentPreferred
     ) {
         return payments.execute(
                 InitiateSinglePaymentRequest.builder()
                         .facadeServiceable(FacadeServiceableRequest.builder()
-                                                   // Get rid of CGILIB here by copying:
-                                                   .uaContext(userAgentContext.toBuilder().build())
-                                                   .authorization(fintechID)
-                                                   .sessionPassword(PasswordExtractingUtil.getDataProtectionPassword(serviceSessionPassword, fintechDataPassword))
-                                                   .fintechUserId(fintechUserID)
-                                                   .fintechRedirectUrlOk(fintechRedirectURLOK)
-                                                   .fintechRedirectUrlNok(fintechRedirectURLNOK)
-                                                   .requestId(xRequestID)
-                                                   .bankProfileId(bankProfileID)
-                                                   .anonymousPsu(null != xPsuAuthenticationRequired && !xPsuAuthenticationRequired)
-                                                   .build()
+                                // Get rid of CGILIB here by copying:
+                                .uaContext(userAgentContext.toBuilder().build())
+                                .authorization(fintechID)
+                                .sessionPassword(PasswordExtractingUtil.getDataProtectionPassword(serviceSessionPassword, fintechDataPassword))
+                                .fintechUserId(fintechUserID)
+                                .fintechRedirectUrlOk(fintechRedirectURLOK)
+                                .fintechRedirectUrlNok(fintechRedirectURLNOK)
+                                .requestId(xRequestID)
+                                .bankProfileId(bankProfileID)
+                                .anonymousPsu(null != xPsuAuthenticationRequired && !xPsuAuthenticationRequired)
+                                .fintechDecoupledPreferred(null != fintechDecoupledPreferred && !fintechDecoupledPreferred)
+                                .fintechBrandLoggingInformation(fintechBrandLoggingInformation)
+                                .fintechNotificationURI(fintechNotificationURI)
+                                .fintechNotificationContentPreferred(fintechNotificationContentPreferred)
+                                .build()
                         )
                         .singlePayment(pisSinglePaymentMapper.map(body, PaymentProductDetails.fromValue(paymentProduct)))
                         .extras(getExtras(xProtocolConfiguration))

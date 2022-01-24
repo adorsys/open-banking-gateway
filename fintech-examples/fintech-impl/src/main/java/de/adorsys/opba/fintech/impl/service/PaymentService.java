@@ -54,10 +54,10 @@ public class PaymentService {
     private final PaymentRepository paymentRepository;
 
     public ResponseEntity<Void> initiateSinglePayment(String bankProfileId, String accountId, SinglePaymentInitiationRequest singlePaymentInitiationRequest,
-                                                      String fintechOkUrl, String fintechNOkUrl, Boolean xPisPsuAuthenticationRequired) {
+                                                      String fintechOkUrl, String fintechNOkUrl, Boolean xPisPsuAuthenticationRequired, Boolean fintechDecoupledPreferred,
+                                                      String fintechBrandLoggingInformation, String fintechNotificationURI, String fintechRedirectNotificationContentPreferred) {
         log.info("fill paramemeters for payment");
         final String fintechRedirectCode = UUID.randomUUID().toString();
-
         SessionEntity sessionEntity = sessionLogicService.getSession();
         PaymentInitiation payment = new PaymentInitiation();
         payment.setCreditorAccount(getAccountReference(singlePaymentInitiationRequest.getCreditorIban()));
@@ -84,12 +84,13 @@ public class PaymentService {
                 xPisPsuAuthenticationRequired,
                 null,
                 HEADER_COMPUTE_PSU_IP_ADDRESS,
-                null);
+                null,
+                fintechDecoupledPreferred, fintechBrandLoggingInformation,
+                fintechNotificationURI, fintechRedirectNotificationContentPreferred);
         if (responseOfTpp.getStatusCode() != HttpStatus.ACCEPTED) {
             throw new RuntimeException("Did expect status 202 from tpp, but got " + responseOfTpp.getStatusCodeValue());
         }
         redirectHandlerService.registerRedirectStateForSession(fintechRedirectCode, fintechOkUrl, fintechNOkUrl);
-
         return handleAcceptedService.handleAccepted(paymentRepository, ConsentType.PIS, bankProfileId, accountId, fintechRedirectCode, sessionEntity,
                 responseOfTpp.getHeaders(), paymentProduct);
     }

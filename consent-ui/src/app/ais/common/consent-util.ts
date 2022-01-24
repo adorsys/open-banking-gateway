@@ -20,8 +20,8 @@ export class ConsentUtil {
     sessionService.setConsentObject(authorizationId, consentObj);
   }
 
-  public static isEmptyObject(obj: Object) {
-    return null === obj || !obj || (Object.keys(obj).length === 0);
+  public static isEmptyObject(obj: object) {
+    return null === obj || !obj || Object.keys(obj).length === 0;
   }
 
   private static initializeConsentObject(): AisConsentToGrant {

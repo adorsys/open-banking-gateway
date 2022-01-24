@@ -7,7 +7,7 @@ import { ApiHeaders } from '../../../../api/api.headers';
 import { AuthConsentState } from '../../../common/dto/auth-state';
 import { ConsentAuth, AuthStateConsentAuthorizationService } from '../../../../api';
 import ActionEnum = ConsentAuth.ActionEnum;
-import { ConsentUtil } from "../../../common/consent-util";
+import { ConsentUtil } from '../../../common/consent-util';
 
 @Component({
   selector: 'consent-app-consent-initiate',

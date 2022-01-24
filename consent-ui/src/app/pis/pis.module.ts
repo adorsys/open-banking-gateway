@@ -13,7 +13,7 @@ import { PaymentsConsentReviewComponent } from './payments-consent-review/paymen
 import { ConsentPaymentAccessSelectionComponent } from './consent-payment-access-selection/consent-payment-access-selection.component';
 import { DynamicInputsComponent } from './dynamic-inputs/dynamic-inputs.component';
 import { PaymentInfoComponent } from './payment-info/payment-info.component';
-import {WaitForDecoupled} from "./wait-for-decoupled/wait-for-decoupled";
+import { WaitForDecoupledComponent } from './wait-for-decoupled/wait-for-decoupled.component';
 import { RestoreSessionPageComponent } from './restore-session-page/restore-session-page.component';
 
 @NgModule({
@@ -30,7 +30,7 @@ import { RestoreSessionPageComponent } from './restore-session-page/restore-sess
     ConsentPaymentAccessSelectionComponent,
     DynamicInputsComponent,
     PaymentInfoComponent,
-    WaitForDecoupled,
+    WaitForDecoupledComponent,
     RestoreSessionPageComponent
   ],
   imports: [SharedModule, PisRoutingModule]

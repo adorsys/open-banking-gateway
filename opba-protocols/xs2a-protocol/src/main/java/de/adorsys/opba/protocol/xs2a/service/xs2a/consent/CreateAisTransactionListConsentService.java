@@ -3,12 +3,6 @@ package de.adorsys.opba.protocol.xs2a.service.xs2a.consent;
 import de.adorsys.opba.protocol.bpmnshared.service.context.ContextUtil;
 import de.adorsys.opba.protocol.xs2a.config.protocol.ProtocolUrlsConfiguration;
 import de.adorsys.opba.protocol.xs2a.context.ais.TransactionListXs2aContext;
-import de.adorsys.opba.protocol.xs2a.service.dto.ValidatedPathHeadersBody;
-import de.adorsys.opba.protocol.xs2a.service.xs2a.dto.consent.ConsentInitiateHeaders;
-import de.adorsys.opba.protocol.xs2a.service.xs2a.dto.consent.ConsentInitiateParameters;
-import de.adorsys.opba.protocol.xs2a.service.xs2a.validation.Xs2aValidator;
-import de.adorsys.xs2a.adapter.api.AccountInformationService;
-import de.adorsys.xs2a.adapter.api.model.Consents;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.flowable.engine.delegate.DelegateExecution;
@@ -25,12 +19,8 @@ import static de.adorsys.opba.protocol.xs2a.constant.GlobalConst.CONTEXT;
 @RequiredArgsConstructor
 public class CreateAisTransactionListConsentService extends BaseCreateAisConsentService<TransactionListXs2aContext> {
 
-    private final AisConsentInitiateExtractor extractor;
-    private final AccountInformationService ais;
-    private final Xs2aValidator validator;
     private final ProtocolUrlsConfiguration urlsConfiguration;
-    private final CreateConsentOrPaymentPossibleErrorHandler handler;
-    private final CreateAisConsentService createAisConsentService;
+    private final  Xs2aAccountListConsentServiceProvider accountListConsentServiceProvider;
 
     @Override
     protected void doPrepareContext(DelegateExecution execution, TransactionListXs2aContext context) {
@@ -44,17 +34,12 @@ public class CreateAisTransactionListConsentService extends BaseCreateAisConsent
 
     @Override
     protected void doValidate(DelegateExecution execution, TransactionListXs2aContext context) {
-        logResolver.log("doValidate: execution ({}) with context ({})", execution, context);
-
-        validator.validate(execution, context, this.getClass(), extractor.forValidation(context));
+        accountListConsentServiceProvider.instance(context).doValidate(execution, context);
     }
 
     @Override
     protected void doRealExecution(DelegateExecution execution, TransactionListXs2aContext context) {
-        logResolver.log("doRealExecution: execution ({}) with context ({})", execution, context);
-
-        ValidatedPathHeadersBody<ConsentInitiateParameters, ConsentInitiateHeaders, Consents> params = extractor.forExecution(context);
-        var result = handler.tryCreateAndHandleErrors(execution, () -> createAisConsentService.createConsent(ais, context, params));
+        var result =  accountListConsentServiceProvider.instance(context).doExecution(execution, context);
         if (null == result) {
             execution.setVariable(CONTEXT, context);
             log.warn("Consent creation failed");

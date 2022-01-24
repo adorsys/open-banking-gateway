@@ -1,5 +1,5 @@
-import {Component, OnInit} from '@angular/core';
-import {ActivatedRoute, ActivatedRouteSnapshot} from "@angular/router";
+import { Component, OnInit } from '@angular/core';
+import { ActivatedRoute, ActivatedRouteSnapshot } from '@angular/router';
 
 @Component({
   selector: 'consent-app-restore-session-page',
@@ -7,7 +7,6 @@ import {ActivatedRoute, ActivatedRouteSnapshot} from "@angular/router";
   styleUrls: ['./restore-session-page.component.scss']
 })
 export class RestoreSessionPageComponent implements OnInit {
-
   // ING does not support query parameters, so everything must be in URL path
   public static ROUTE = 'restore-session/:aspspRedirectCode/:state';
 
@@ -17,12 +16,10 @@ export class RestoreSessionPageComponent implements OnInit {
   result: string;
   oauthCode: string;
 
-  constructor(
-    private activatedRoute: ActivatedRoute
-  ) { }
+  constructor(private activatedRoute: ActivatedRoute) {}
 
   ngOnInit(): void {
-    this.route = this.activatedRoute.snapshot
+    this.route = this.activatedRoute.snapshot;
 
     this.authId = this.route.parent.params.authId;
     this.aspspRedirectCode = this.route.params.aspspRedirectCode;

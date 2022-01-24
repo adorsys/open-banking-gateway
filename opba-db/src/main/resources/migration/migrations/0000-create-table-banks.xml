@@ -51,6 +51,10 @@
                 <constraints nullable="false"/>
             </column>
 
+            <column name="supported_xs2a_api_version" type="VARCHAR(255)">
+                <constraints nullable="true"/>
+            </column>
+
             <column name="unique_payment_purpose" type="BOOLEAN" defaultValue="false">
                 <constraints nullable="false"/>
             </column>

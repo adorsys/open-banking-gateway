@@ -1,27 +1,14 @@
 package de.adorsys.opba.protocol.xs2a.service.xs2a.payment;
 
-import de.adorsys.opba.protocol.bpmnshared.dto.DtoMapper;
 import de.adorsys.opba.protocol.bpmnshared.service.context.ContextUtil;
 import de.adorsys.opba.protocol.bpmnshared.service.exec.ValidatedExecution;
 import de.adorsys.opba.protocol.xs2a.config.protocol.ProtocolUrlsConfiguration;
 import de.adorsys.opba.protocol.xs2a.context.pis.Xs2aPisContext;
-import de.adorsys.opba.protocol.xs2a.service.dto.ValidatedPathHeadersBody;
-import de.adorsys.opba.protocol.xs2a.service.mapper.PathHeadersBodyMapperTemplate;
 import de.adorsys.opba.protocol.xs2a.service.xs2a.authenticate.StartAuthorizationHandlerUtil;
-import de.adorsys.opba.protocol.xs2a.service.xs2a.consent.CreateConsentOrPaymentPossibleErrorHandler;
-import de.adorsys.opba.protocol.xs2a.service.xs2a.dto.Xs2aInitialPaymentParameters;
-import de.adorsys.opba.protocol.xs2a.service.xs2a.dto.payment.PaymentInitiateBody;
-import de.adorsys.opba.protocol.xs2a.service.xs2a.dto.payment.PaymentInitiateHeaders;
 import de.adorsys.opba.protocol.xs2a.service.xs2a.oauth2.OAuth2Util;
-import de.adorsys.opba.protocol.xs2a.service.xs2a.quirks.QuirkUtil;
-import de.adorsys.opba.protocol.xs2a.service.xs2a.validation.Xs2aValidator;
 import de.adorsys.opba.protocol.xs2a.util.logresolver.Xs2aLogResolver;
-import de.adorsys.xs2a.adapter.api.PaymentInitiationService;
-import de.adorsys.xs2a.adapter.api.RequestParams;
 import de.adorsys.xs2a.adapter.api.Response;
 import de.adorsys.xs2a.adapter.api.model.PaymentInitationRequestResponse201;
-import de.adorsys.xs2a.adapter.api.model.PaymentInitiationJson;
-import de.adorsys.xs2a.adapter.api.model.PaymentService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.logging.log4j.util.Strings;
@@ -41,12 +28,8 @@ import static de.adorsys.xs2a.adapter.api.ResponseHeaders.ASPSP_SCA_APPROACH;
 @Service("xs2aSinglePaymentInitiate")
 @RequiredArgsConstructor
 public class CreateSinglePaymentService extends ValidatedExecution<Xs2aPisContext> {
-
-    private final PaymentInitiationService pis;
-    private final Xs2aValidator validator;
     private final ProtocolUrlsConfiguration urlsConfiguration;
-    private final CreateConsentOrPaymentPossibleErrorHandler handler;
-    private final Extractor extractor;
+    private final SinglePaymentInitiationServiceProvider initiationServiceProvider;
     private final Xs2aLogResolver logResolver = new Xs2aLogResolver(getClass());
 
     @Override
@@ -62,22 +45,18 @@ public class CreateSinglePaymentService extends ValidatedExecution<Xs2aPisContex
     @Override
     protected void doValidate(DelegateExecution execution, Xs2aPisContext context) {
         logResolver.log("doValidate: execution ({}) with context ({})", execution, context);
-
-        validator.validate(execution, context, this.getClass(), extractor.forValidation(context));
+        initiationServiceProvider.instance(context).doValidate(execution, context);
     }
 
     @Override
     protected void doRealExecution(DelegateExecution execution, Xs2aPisContext context) {
         logResolver.log("doRealExecution: execution ({}) with context ({})", execution, context);
-
-        ValidatedPathHeadersBody<Xs2aInitialPaymentParameters, PaymentInitiateHeaders, PaymentInitiationJson> params = extractor.forExecution(context);
-        var result = handler.tryCreateAndHandleErrors(execution, () -> initiatePayment(context, params));
+        var result = initiationServiceProvider.instance(context).doExecution(execution, context);
         if (null == result) {
             execution.setVariable(CONTEXT, context);
             log.warn("Payment creation failed");
             return;
         }
-
         postHandleCreatedPayment(result, execution, context);
     }
 
@@ -106,37 +85,4 @@ public class CreateSinglePaymentService extends ValidatedExecution<Xs2aPisContex
         execution.setVariable(CONTEXT, context);
     }
 
-    private Response<PaymentInitationRequestResponse201> initiatePayment(
-            Xs2aPisContext context,
-            ValidatedPathHeadersBody<Xs2aInitialPaymentParameters, PaymentInitiateHeaders, PaymentInitiationJson> params) {
-
-        logResolver.log("initiatePayment with parameters: {}", params.getPath(), params.getHeaders(), params.getBody());
-
-        Response<PaymentInitationRequestResponse201> paymentInit = pis.initiatePayment(PaymentService.PAYMENTS,
-                params.getPath().getPaymentProduct(),
-                QuirkUtil.pushBicToXs2aAdapterHeaders(context, params.getHeaders().toHeaders()),
-                RequestParams.empty(),
-                params.getBody()
-        );
-
-        logResolver.log("initiatePayment response: {}", paymentInit);
-        return paymentInit;
-    }
-
-    @Service
-    public static class Extractor extends PathHeadersBodyMapperTemplate<Xs2aPisContext,
-            Xs2aInitialPaymentParameters,
-            PaymentInitiateHeaders,
-            PaymentInitiateBody,
-            PaymentInitiationJson> {
-
-        public Extractor(
-                DtoMapper<Xs2aPisContext, PaymentInitiateBody> toValidatableBody,
-                DtoMapper<PaymentInitiateBody, PaymentInitiationJson> toBody,
-                DtoMapper<Xs2aPisContext, PaymentInitiateHeaders> toHeaders,
-                DtoMapper<Xs2aPisContext, Xs2aInitialPaymentParameters> toParameters) {
-
-            super(toValidatableBody, toBody, toHeaders, toParameters);
-        }
-    }
 }

@@ -48,6 +48,12 @@ public interface CurrentBankProfile {
     boolean isTryToUsePreferredApproach();
 
     /**
+     * ASPSP supported Xs2a api version
+     */
+
+    String getSupportedXs2aApiVersion();
+
+    /**
      * Current date will be added in the end of payment purpose if this field is true .
      */
     boolean isUniquePaymentPurpose();

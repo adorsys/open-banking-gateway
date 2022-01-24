@@ -198,6 +198,13 @@
             <artifactId>spring-web-test-client</artifactId>
             <scope>test</scope>
         </dependency>
+
+        <!-- Other -->
+        <dependency>
+            <groupId>com.vdurmont</groupId>
+            <artifactId>semver4j</artifactId>
+            <version>${semver4j.version}</version>
+        </dependency>
     </dependencies>
 
     <build>

@@ -1,16 +1,16 @@
-import {Component, OnInit} from '@angular/core';
-import {Location} from '@angular/common';
-import {SharedRoutes} from '../../common/shared-routes';
-import {ActivatedRoute, Router} from '@angular/router';
-import {FormBuilder, FormGroup, Validators} from '@angular/forms';
-import {SessionService} from '../../../../../common/session.service';
-import {AccountAccessLevel, AisConsentToGrant} from '../../../../common/dto/ais-consent';
-import {StubUtil} from '../../../../../common/utils/stub-util';
-import {ConsentUtil} from '../../../../common/consent-util';
-import {ApiHeaders} from '../../../../../api/api.headers';
-import {ConsentAuth, UpdateConsentAuthorizationService, PsuAuthRequest} from '../../../../../api';
-import {DATA_PATTERN, MAX_FREQUENCY_PER_DAY} from '../../../../common/constant/constant';
-import {DateUtil} from '../../../../common/date-util';
+import { Component, OnInit } from '@angular/core';
+import { Location } from '@angular/common';
+import { SharedRoutes } from '../../common/shared-routes';
+import { ActivatedRoute, Router } from '@angular/router';
+import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { SessionService } from '../../../../../common/session.service';
+import { AccountAccessLevel, AisConsentToGrant } from '../../../../common/dto/ais-consent';
+import { StubUtil } from '../../../../../common/utils/stub-util';
+import { ConsentUtil } from '../../../../common/consent-util';
+import { ApiHeaders } from '../../../../../api/api.headers';
+import { ConsentAuth, UpdateConsentAuthorizationService, PsuAuthRequest } from '../../../../../api';
+import { DATA_PATTERN, MAX_FREQUENCY_PER_DAY } from '../../../../common/constant/constant';
+import { DateUtil } from '../../../../common/date-util';
 
 @Component({
   selector: 'consent-app-transactions-consent-review',
@@ -18,6 +18,7 @@ import {DateUtil} from '../../../../common/date-util';
   styleUrls: ['./transactions-consent-review.component.scss']
 })
 export class TransactionsConsentReviewComponent implements OnInit {
+  public static ROUTE = SharedRoutes.REVIEW;
 
   consentReviewForm: FormGroup;
 
@@ -30,7 +31,6 @@ export class TransactionsConsentReviewComponent implements OnInit {
     private updateConsentAuthorizationService: UpdateConsentAuthorizationService
   ) {}
 
-  public static ROUTE = SharedRoutes.REVIEW;
   accountAccessLevel = AccountAccessLevel;
 
   public actualDate: string;
@@ -91,28 +91,20 @@ export class TransactionsConsentReviewComponent implements OnInit {
       recurringIndicator: this.aisConsent.consent.recurringIndicator,
       validUntilDate: [
         this.aisConsent.consent.validUntil,
-        [
-          Validators.required,
-          Validators.pattern(DATA_PATTERN),
-          DateUtil.isDateNotInThePastValidator()
-        ]
+        [Validators.required, Validators.pattern(DATA_PATTERN), DateUtil.isDateNotInThePastValidator()]
       ],
       frequencyPerDay: [
         this.aisConsent.consent.frequencyPerDay,
-        [
-          Validators.required,
-          Validators.min(1),
-          Validators.max(MAX_FREQUENCY_PER_DAY)
-        ]
+        [Validators.required, Validators.min(1), Validators.max(MAX_FREQUENCY_PER_DAY)]
       ]
-    })
+    });
   }
 
   get validUntilDate() {
-    return this.consentReviewForm.get('validUntilDate')
+    return this.consentReviewForm.get('validUntilDate');
   }
 
   get frequencyPerDay() {
-    return this.consentReviewForm.get('frequencyPerDay')
+    return this.consentReviewForm.get('frequencyPerDay');
   }
 }
