@@ -85,10 +85,8 @@ public class PaymentService {
                 null,
                 HEADER_COMPUTE_PSU_IP_ADDRESS,
                 null,
-                fintechDecoupledPreferred,
-                fintechBrandLoggingInformation,
-                fintechNotificationURI,
-                fintechRedirectNotificationContentPreferred);
+                fintechDecoupledPreferred, fintechBrandLoggingInformation,
+                fintechNotificationURI, fintechRedirectNotificationContentPreferred);
         if (responseOfTpp.getStatusCode() != HttpStatus.ACCEPTED) {
             throw new RuntimeException("Did expect status 202 from tpp, but got " + responseOfTpp.getStatusCodeValue());
         }
