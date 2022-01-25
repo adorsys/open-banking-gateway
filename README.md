@@ -161,7 +161,11 @@ For commercial support please contact **[adorsys Team](https://adorsys.de/)**.
 
 ## License
 
-This project is licensed **(until 01.01.2022)** under the Apache License version 2.0 - see the [LICENSE](LICENSE) file for details
+This project is dual licensed under Affero GNU General Public License v.3 (AGPL v.3) or alternatively under a commercial license agreement - see the [LICENSE](LICENSE) file for details.
+
+For commercial inquiries please contact us at psd2@adorsys.com.
+
+For additional details please see the section: FAQ on Licensing Change.
 
 
 ## FAQ on Licensing Change
