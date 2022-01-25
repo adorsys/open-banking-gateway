@@ -1,19 +1,20 @@
 @REM ----------------------------------------------------------------------------
-@REM Copyright 2018-2022 adorsys GmbH & Co KG
+@REM Licensed to the Apache Software Foundation (ASF) under one
+@REM or more contributor license agreements.  See the NOTICE file
+@REM distributed with this work for additional information
+@REM regarding copyright ownership.  The ASF licenses this file
+@REM to you under the Apache License, Version 2.0 (the
+@REM "License"); you may not use this file except in compliance
+@REM with the License.  You may obtain a copy of the License at
 @REM
-@REM This program is free software: you can redistribute it and/or modify it
-@REM under the terms of the GNU Affero General Public License as published
-@REM by the Free Software Foundation, either version 3 of the License, or (at
-@REM your option) any later version. This program is distributed in the hope that
-@REM it will be useful, but WITHOUT ANY WARRANTY; without even the implied
-@REM warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
-@REM See the GNU Affero General Public License for more details.
+@REM    http://www.apache.org/licenses/LICENSE-2.0
 @REM
-@REM You should have received a copy of the GNU Affero General Public License
-@REM along with this program. If not, see https://www.gnu.org/licenses/.
-@REM
-@REM This project is also available under a separate commercial license. You can
-@REM contact us at psd2@adorsys.com.
+@REM Unless required by applicable law or agreed to in writing,
+@REM software distributed under the License is distributed on an
+@REM "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+@REM KIND, either express or implied.  See the License for the
+@REM specific language governing permissions and limitations
+@REM under the License.
 @REM ----------------------------------------------------------------------------
 
 @REM ----------------------------------------------------------------------------
