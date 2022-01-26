@@ -4,8 +4,8 @@ info:
   termsOfService: urn:tos
   contact: {}
   license:
-    name: Apache 2.0
-    url: http://www.apache.org/licenses/LICENSE-2.0
+    name: Affero GNU General Public License v.3
+    url: https://www.gnu.org/licenses/agpl-3.0.txt
   version: "1.0"
   description: |
     Interface used by the PsuUserAgent to present consent authorization services to the PSU. The consent authorization process is triggered by redirecting the PSU from
