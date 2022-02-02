@@ -117,7 +117,7 @@
         <fasterxml.version>2.13.1</fasterxml.version>
         <fasterxml-data-format.version>2.13.1</fasterxml-data-format.version>
         <swaggerv3.version>2.1.0</swaggerv3.version>
-        <swagger.version>1.6.3</swagger.version>
+        <swagger.version>1.6.4</swagger.version>
         <swagger-codegen-generators.version>1.0.19</swagger-codegen-generators.version>
         <swagger-codegen-maven-plugin.version>3.0.19</swagger-codegen-maven-plugin.version>
         <springdoc-openapi-ui.version>1.5.13</springdoc-openapi-ui.version> <!-- springfox replacement for OpenApi 3 -->
