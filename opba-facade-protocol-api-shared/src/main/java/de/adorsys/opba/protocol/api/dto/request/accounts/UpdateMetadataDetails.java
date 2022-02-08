@@ -9,8 +9,8 @@ import lombok.Data;
 public class UpdateMetadataDetails {
 
     /**
-     * User metadata, i.e.:
+     * body content for 3rd party service. For example:
      * {"ipAddress": "1.1.1.1", "deviceOs": "Macintosh; Intel Mac OS X 10_15_7", "userAgent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/605.1.15 (KHTML, like Gecko)"}
      */
-    private String userMetadata;
+    private String adapterProperties;
 }
