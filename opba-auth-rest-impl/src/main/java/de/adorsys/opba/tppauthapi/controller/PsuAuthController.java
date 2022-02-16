@@ -31,6 +31,7 @@ import org.springframework.web.util.UriComponentsBuilder;
 import javax.servlet.http.HttpServletRequest;
 import java.time.Duration;
 import java.util.Base64;
+import java.util.Collections;
 import java.util.Optional;
 import java.util.UUID;
 import java.util.concurrent.CompletableFuture;
@@ -83,13 +84,13 @@ public class PsuAuthController implements PsuAuthenticationApi, PsuAuthenticatio
     }
 
     @Override
-    public CompletableFuture<ResponseEntity<LoginResponse>> loginForApproval(PsuAuthBody body, UUID xRequestId, String redirectCode, UUID authorizationId) {
+    public CompletableFuture loginForApproval(PsuAuthBody body, UUID xRequestId, String redirectCode, UUID authorizationId) {
         var outcome = loginService.loginInPsuScopeAndAssociateAuthSession(body.getLogin(), body.getPassword(), authorizationId, redirectCode);
         return outcome.thenApply(it -> createResponseWithSecretKeyInCookieOnAllPaths(xRequestId, authorizationId, it));
     }
 
     @Override
-    public CompletableFuture<ResponseEntity<LoginResponse>> loginForAnonymousApproval(UUID xRequestId, UUID authorizationId, String redirectCode) {
+    public CompletableFuture loginForAnonymousApproval(UUID xRequestId, UUID authorizationId, String redirectCode) {
         var outcome = loginService.anonymousPsuAssociateAuthSession(authorizationId, redirectCode);
         return outcome.thenApply(it -> createResponseWithSecretKeyInCookieOnAllPaths(xRequestId, authorizationId, it));
     }
@@ -134,7 +135,15 @@ public class PsuAuthController implements PsuAuthenticationApi, PsuAuthenticatio
     }
 
     @NotNull
-    private ResponseEntity<LoginResponse> createResponseWithSecretKeyInCookieOnAllPaths(UUID xRequestId, UUID authorizationId, PsuLoginService.Outcome outcome) {
+    private ResponseEntity<?> createResponseWithSecretKeyInCookieOnAllPaths(UUID xRequestId, UUID authorizationId, PsuLoginService.Outcome outcome) {
+
+        if (outcome instanceof PsuLoginService.ErrorOutcome) {
+            var headers = ((PsuLoginService.ErrorOutcome) outcome).getHeaders();
+            var httpHeaders = new HttpHeaders();
+            headers.forEach((k, v) -> httpHeaders.put(k, Collections.singletonList(v)));
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).headers(httpHeaders).body(headers.get("X-ERROR-MESSAGE"));
+        }
+
         String ttl = Long.toString(cookieProperties.getMaxAge().getSeconds());
         log.debug("created new session cookie for authid {}", authorizationId);
         return ResponseEntity

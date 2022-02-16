@@ -8,6 +8,7 @@ import de.adorsys.opba.protocol.api.dto.request.FacadeServiceableRequest;
 import de.adorsys.opba.protocol.api.dto.request.authorization.OnLoginRequest;
 import de.adorsys.opba.protocol.facade.config.encryption.impl.fintech.FintechConsentSpecSecureStorage;
 import de.adorsys.opba.protocol.facade.dto.result.torest.redirectable.FacadeRedirectResult;
+import de.adorsys.opba.protocol.facade.dto.result.torest.redirectable.FacadeRuntimeErrorResult;
 import de.adorsys.opba.protocol.facade.services.EncryptionKeySerde;
 import de.adorsys.opba.protocol.facade.services.authorization.internal.psuauth.PsuFintechAssociationService;
 import lombok.Data;
@@ -18,6 +19,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.support.TransactionOperations;
 
 import java.net.URI;
+import java.util.Collections;
+import java.util.Map;
 import java.util.UUID;
 import java.util.concurrent.CompletableFuture;
 
@@ -84,12 +87,19 @@ public class PsuLoginService {
                                 .authorizationKey(serde.asString(association.getProtocolKey().asKey()))
                         .build()
                 ).build()
-        ).thenApply(it ->
-                new Outcome(
-                        serde.asString(association.getProtocolKey().asKey()),
-                        null == it ? association.getAfterPsuIdentifiedRedirectTo() : ((FacadeRedirectResult) it).getRedirectionTo()
-                )
-        );
+        ).thenApply(it -> {
+            if (!(it instanceof FacadeRedirectResult)) {
+                if (it instanceof FacadeRuntimeErrorResult) {
+                    var err = (FacadeRuntimeErrorResult) it;
+                    return new ErrorOutcome(err.getHeaders());
+                }
+                return new ErrorOutcome(Collections.emptyMap());
+            }
+            return new Outcome(
+                serde.asString(association.getProtocolKey().asKey()),
+                null == it ? association.getAfterPsuIdentifiedRedirectTo() : ((FacadeRedirectResult) it).getRedirectionTo()
+            );
+        });
     }
 
     @Getter
@@ -101,6 +111,19 @@ public class PsuLoginService {
 
         @NonNull
         private final URI redirectLocation;
+
+
+    }
+
+    @Getter
+    public static class ErrorOutcome extends Outcome {
+
+        public ErrorOutcome(Map<String, String> headers) {
+            super("", URI.create(""));
+            this.headers = headers;
+        }
+
+        private final Map<String, String> headers;
     }
 
     @Data

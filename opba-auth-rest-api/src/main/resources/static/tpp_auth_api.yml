@@ -30,6 +30,9 @@ paths:
           $ref: "#/components/responses/202_UserAccepted"
         "401":
           $ref: "#/components/responses/401_Unauthorised"
+        "500":
+          $ref: "#/components/responses/500_InternalServerError"
+
   /v1/psu/{authorization-id}/for-approval/login:
     post:
       tags:
@@ -214,6 +217,16 @@ components:
           schema:
             $ref: "#/components/schemas/generalError"
 
+    500_InternalServerError:
+      description: |
+        Internal server error
+      headers:
+        X-Request-ID:
+          $ref: "#/components/parameters/X-Request-ID"
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/generalError"
   schemas:
     PsuAuthBody:
       type: object
