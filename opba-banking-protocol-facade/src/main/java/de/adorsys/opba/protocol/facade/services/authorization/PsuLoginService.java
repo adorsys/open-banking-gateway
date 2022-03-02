@@ -88,7 +88,7 @@ public class PsuLoginService {
                         .build()
                 ).build()
         ).thenApply(it -> {
-            if (!(it instanceof FacadeRedirectResult)) {
+            if (!(it instanceof FacadeRedirectResult) && it != null) {
                 if (it instanceof FacadeRuntimeErrorResult) {
                     var err = (FacadeRuntimeErrorResult) it;
                     return new ErrorOutcome(err.getHeaders());
