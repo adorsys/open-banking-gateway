@@ -168,7 +168,7 @@
         <testcontainers-jna.version>5.10.0</testcontainers-jna.version>
         <zerocode.tdd.version>1.3.17</zerocode.tdd.version>
         <selenium-jupiter.version>3.4.0</selenium-jupiter.version>
-        <slf4j-simple.version>1.7.35</slf4j-simple.version>
+        <slf4j-simple.version>1.7.36</slf4j-simple.version>
         <!-- other properties -->
         <lombok-maven-plugin.version>1.18.18</lombok-maven-plugin.version>
         <maven.dependency.plugin.version>3.1.2</maven.dependency.plugin.version>
