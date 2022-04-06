@@ -10,7 +10,6 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.Lob;
 import javax.persistence.SequenceGenerator;
 
 @Entity
@@ -26,6 +25,5 @@ public class DatasafeConfig {
     @SequenceGenerator(name = "datasafe_config_id_generator", sequenceName = "datasafe_config_sequence")
     private Long id;
 
-    @Lob
     private String config;
 }
