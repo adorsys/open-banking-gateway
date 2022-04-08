@@ -6,7 +6,9 @@ import de.adorsys.opba.db.repository.jpa.psu.PsuRepository;
 import de.adorsys.opba.protocol.api.common.SessionStatus;
 import de.adorsys.opba.protocol.api.dto.request.FacadeServiceableRequest;
 import de.adorsys.opba.protocol.api.dto.request.authorization.OnLoginRequest;
+import de.adorsys.opba.protocol.api.dto.result.body.UpdateAuthBody;
 import de.adorsys.opba.protocol.facade.config.encryption.impl.fintech.FintechConsentSpecSecureStorage;
+import de.adorsys.opba.protocol.facade.dto.result.torest.FacadeResult;
 import de.adorsys.opba.protocol.facade.dto.result.torest.redirectable.FacadeRedirectResult;
 import de.adorsys.opba.protocol.facade.dto.result.torest.redirectable.FacadeRuntimeErrorResult;
 import de.adorsys.opba.protocol.facade.services.EncryptionKeySerde;
@@ -15,6 +17,7 @@ import lombok.Data;
 import lombok.Getter;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
+import org.jetbrains.annotations.NotNull;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.support.TransactionOperations;
 
@@ -87,19 +90,22 @@ public class PsuLoginService {
                                 .authorizationKey(serde.asString(association.getProtocolKey().asKey()))
                         .build()
                 ).build()
-        ).thenApply(it -> {
-            if (!(it instanceof FacadeRedirectResult) && it != null) {
-                if (it instanceof FacadeRuntimeErrorResult) {
-                    var err = (FacadeRuntimeErrorResult) it;
-                    return new ErrorOutcome(err.getHeaders());
-                }
-                return new ErrorOutcome(Collections.emptyMap());
+        ).thenApply(it -> createResultOutcome(association, it));
+    }
+
+    @NotNull
+    private Outcome createResultOutcome(FintechConsentSpecSecureStorage.FinTechUserInboxData association, FacadeResult<UpdateAuthBody> it) {
+        if (!(it instanceof FacadeRedirectResult) && it != null) {
+            if (it instanceof FacadeRuntimeErrorResult) {
+                var err = (FacadeRuntimeErrorResult) it;
+                return new ErrorOutcome(err.getHeaders());
             }
-            return new Outcome(
-                serde.asString(association.getProtocolKey().asKey()),
-                null == it ? association.getAfterPsuIdentifiedRedirectTo() : ((FacadeRedirectResult) it).getRedirectionTo()
-            );
-        });
+            return new ErrorOutcome(Collections.emptyMap());
+        }
+        return new Outcome(
+            serde.asString(association.getProtocolKey().asKey()),
+            null == it ? association.getAfterPsuIdentifiedRedirectTo() : ((FacadeRedirectResult) it).getRedirectionTo()
+        );
     }
 
     @Getter

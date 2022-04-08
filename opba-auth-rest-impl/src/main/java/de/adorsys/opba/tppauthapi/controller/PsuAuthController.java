@@ -31,7 +31,6 @@ import org.springframework.web.util.UriComponentsBuilder;
 import javax.servlet.http.HttpServletRequest;
 import java.time.Duration;
 import java.util.Base64;
-import java.util.Collections;
 import java.util.Optional;
 import java.util.UUID;
 import java.util.concurrent.CompletableFuture;
@@ -140,7 +139,7 @@ public class PsuAuthController implements PsuAuthenticationApi, PsuAuthenticatio
         if (outcome instanceof PsuLoginService.ErrorOutcome) {
             var headers = ((PsuLoginService.ErrorOutcome) outcome).getHeaders();
             var httpHeaders = new HttpHeaders();
-            headers.forEach((k, v) -> httpHeaders.put(k, Collections.singletonList(v)));
+            headers.forEach(httpHeaders::add);
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).headers(httpHeaders).body(headers.get("X-ERROR-MESSAGE"));
         }
 

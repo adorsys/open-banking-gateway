@@ -15,6 +15,7 @@ import de.adorsys.opba.protocol.facade.services.psu.PsuAuthService;
 import de.adorsys.opba.tppauthapi.config.ApplicationTest;
 import de.adorsys.opba.tppauthapi.model.generated.PsuAuthBody;
 import lombok.SneakyThrows;
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.MockitoAnnotations;
@@ -60,6 +61,8 @@ public class PsuAuthControllerTest {
     private static final String KEY = "{\"algo\":\"AES\",\"encoded\":\"hiLipoyNrCOaq9daBjF/9g==\",\"iv\":\"qvL2pfF3mHR8MF8Q\"}";
     private static final CompletableFuture<PsuLoginService.Outcome> OUTCOME = CompletableFuture.completedFuture(new PsuLoginService.Outcome(KEY, URI.create(REDIRECT_TO)));
 
+    private AutoCloseable closeable;
+
     @MockBean
     private PsuRepository psuRepository;
     @MockBean
@@ -84,7 +87,7 @@ public class PsuAuthControllerTest {
     @BeforeEach
     @SneakyThrows
     public void setup() {
-        MockitoAnnotations.openMocks(this).close();
+        closeable = MockitoAnnotations.openMocks(this);
 
         when(psuSecureStorage.privateService()).thenReturn(privateSpace);
         FacadeConsentAuthConfig.Redirect redir = new FacadeConsentAuthConfig.Redirect();
@@ -101,6 +104,12 @@ public class PsuAuthControllerTest {
         cookie.setRedirectPathTemplate("/embedded-server/v1/consent/{authorizationSessionId}/fromAspsp/*");
         authSessionKey.setCookie(cookie);
         when(consentAuthConfig.getAuthorizationSessionKey()).thenReturn(authSessionKey);
+    }
+
+    @AfterEach
+    @SneakyThrows
+    public void close() {
+        closeable.close();
     }
 
     @Test
