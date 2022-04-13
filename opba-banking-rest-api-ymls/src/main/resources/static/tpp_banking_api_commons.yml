@@ -14,6 +14,14 @@ components:
             $ref: "#/components/schemas/UpdateMetadata"
       required: false
 
+    DeleteMetadata:
+      description: Delete metadata for 3rd party service
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/DeleteMetadata"
+      required: false
+
   headers:
     Location:
       required: true
@@ -711,4 +719,13 @@ components:
           description: content of this field will be sent as body to 3rd party service
           example: |
             {"ipAddress": "1.1.1.1", "deviceOs": "Macintosh; Intel Mac OS X 10_15_7", "userAgent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/605.1.15 (KHTML, like Gecko)"}
+          type: string
+
+    DeleteMetadata:
+      type: object
+      properties:
+        adapterProperties:
+          description: content of this field will be sent as body to 3rd party service
+          example: |
+            {"psuIpAddress": "1.1.1.1", "psuDeviceOs": "Macintosh; Intel Mac OS X 10_15_7", "psuUserAgent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/605.1.15 (KHTML, like Gecko)", "forceDeletion":"true", "xHttpMethodOverride": "PATCH"}
           type: string

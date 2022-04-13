@@ -3,6 +3,7 @@ package de.adorsys.opba.fintech.server.feignmocks;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import de.adorsys.opba.fintech.impl.tppclients.TppAisClient;
 import de.adorsys.opba.tpp.ais.api.model.generated.AccountList;
+import de.adorsys.opba.tpp.ais.api.model.generated.DeleteMetadata;
 import de.adorsys.opba.tpp.ais.api.model.generated.SessionStatusDetails;
 import de.adorsys.opba.tpp.ais.api.model.generated.TransactionsResponse;
 import de.adorsys.opba.tpp.ais.api.model.generated.UpdateAisExternalSessionStatus;
@@ -110,7 +111,7 @@ public class TppAisClientFeignMock implements TppAisClient {
     }
 
     @Override
-    public ResponseEntity<Void> deleteConsent(UUID serviceSessionID, UUID xRequestID,
+    public ResponseEntity<Void> deleteConsent(UUID xRequestID, UUID serviceSessionID, DeleteMetadata requestBody,
                                               String xTimestampUTC, String xRequestSignature, String fintechID, String serviceSessionPassword, String fintechDataPassword, Boolean deleteAll) {
         return null;
     }

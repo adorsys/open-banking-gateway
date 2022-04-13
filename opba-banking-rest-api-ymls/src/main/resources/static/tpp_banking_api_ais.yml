@@ -183,7 +183,8 @@ paths:
         - $ref: "./tpp_banking_api_commons.yml#/components/parameters/X-Request-ID"
         #query
         - $ref: "#/components/parameters/deleteAll"
-
+      requestBody:
+        $ref: "./tpp_banking_api_commons.yml#/components/requestBodies/DeleteMetadata"
       responses:
         "200":
           $ref: "#/components/responses/204_NoContent"
