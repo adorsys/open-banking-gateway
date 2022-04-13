@@ -196,5 +196,10 @@ public class MapBasedRequestScopedServicesProvider implements RequestScopedServi
         private String consentId;
         private String consentContext;
         private String consentCache;
+
+        @Override
+        public EncryptionService getSupplementaryEncryptionService() {
+            return null;
+        }
     }
 }

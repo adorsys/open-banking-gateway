@@ -10,8 +10,10 @@ import de.adorsys.opba.db.repository.jpa.fintech.FintechOnlyPubKeyRepository;
 import de.adorsys.opba.db.repository.jpa.fintech.FintechPsuAspspPrvKeyRepository;
 import de.adorsys.opba.db.repository.jpa.psu.PsuAspspPrvKeyRepository;
 import de.adorsys.opba.protocol.api.services.scoped.consent.ConsentAccess;
+import de.adorsys.opba.protocol.facade.config.encryption.ConsentAuthorizationEncryptionServiceProvider;
 import de.adorsys.opba.protocol.facade.config.encryption.PsuEncryptionServiceProvider;
 import de.adorsys.opba.protocol.facade.config.encryption.impl.fintech.FintechSecureStorage;
+import de.adorsys.opba.protocol.facade.services.EncryptionKeySerde;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -32,6 +34,8 @@ public class ConsentAccessFactory {
     private final FintechOnlyPubKeyRepository fintechPubKeys;
     private final FintechPsuAspspPrvKeyRepository fintechPsuAspspPrvKeyRepository;
     private final ConsentRepository consentRepository;
+    private final ConsentAuthorizationEncryptionServiceProvider encServiceProvider;
+    private final EncryptionKeySerde encryptionKeySerde;
 
     /**
      * Consent access for PSU-ASPSP tuple.
@@ -53,7 +57,8 @@ public class ConsentAccessFactory {
      * @return New consent access template
      */
     public ConsentAccess consentForAnonymousPsu(Fintech fintech, Bank aspsp, ServiceSession session) {
-        return new AnonymousPsuConsentAccess(aspsp, fintech, fintechPubKeys, psuEncryption, session, consentRepository);
+        return new AnonymousPsuConsentAccess(aspsp, fintech, fintechPubKeys, psuEncryption, session, consentRepository,
+                                             encServiceProvider, encryptionKeySerde);
     }
 
     /**
@@ -65,9 +70,11 @@ public class ConsentAccessFactory {
      * @return New consent access template
      */
     public ConsentAccess consentForFintech(Fintech fintech, Bank aspsp, ServiceSession session, Supplier<char[]> fintechPassword) {
-        var anonymousAccess = new AnonymousPsuConsentAccess(aspsp, fintech, fintechPubKeys, psuEncryption, session, consentRepository);
+        var anonymousAccess = new AnonymousPsuConsentAccess(aspsp, fintech, fintechPubKeys, psuEncryption, session,
+                                                            consentRepository, encServiceProvider, encryptionKeySerde);
         return new FintechConsentAccessImpl(
-                fintech, psuEncryption, fintechPsuAspspPrvKeyRepository, fintechVault, consentRepository, entityManager, session.getId(), fintechPassword, anonymousAccess
+                fintech, psuEncryption, fintechPsuAspspPrvKeyRepository, fintechVault, consentRepository, entityManager,
+                session.getId(), fintechPassword, anonymousAccess, encServiceProvider, encryptionKeySerde
         );
     }
 }

@@ -76,6 +76,11 @@ public class Consent {
     @Column(nullable = false)
     private byte[] encCache;
 
+    @Lob
+    @Basic(fetch = FetchType.LAZY)
+    @Column(nullable = false)
+    private byte[] encSupplementaryKey;
+
     /**
      * If the consent encryption key can be identified by Key ID stored in FinTech keystore (anonymous consent).
      */
@@ -108,6 +113,18 @@ public class Consent {
 
     public void setCache(EncryptionService encryption, String cache) {
         this.encCache = encryption.encrypt(cache.getBytes(StandardCharsets.UTF_8));
+    }
+
+    public String getEncSupplementaryKey(EncryptionService encryption) {
+        if (null == encSupplementaryKey) {
+            return null;
+        }
+
+        return new String(encryption.decrypt(encSupplementaryKey), StandardCharsets.UTF_8);
+    }
+
+    public void setEncSupplementaryKey(EncryptionService encryption, String encSupplementaryKey) {
+        this.encSupplementaryKey = encryption.encrypt(encSupplementaryKey.getBytes(StandardCharsets.UTF_8));
     }
 
     public String getConsentId(EncryptionService encryption) {

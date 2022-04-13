@@ -9,8 +9,10 @@ import de.adorsys.opba.db.repository.jpa.fintech.FintechPsuAspspPrvKeyRepository
 import de.adorsys.opba.protocol.api.services.EncryptionService;
 import de.adorsys.opba.protocol.api.services.scoped.consent.FintechConsentAccess;
 import de.adorsys.opba.protocol.api.services.scoped.consent.ProtocolFacingConsent;
+import de.adorsys.opba.protocol.facade.config.encryption.ConsentAuthorizationEncryptionServiceProvider;
 import de.adorsys.opba.protocol.facade.config.encryption.PsuEncryptionServiceProvider;
 import de.adorsys.opba.protocol.facade.config.encryption.impl.fintech.FintechSecureStorage;
+import de.adorsys.opba.protocol.facade.services.EncryptionKeySerde;
 import de.adorsys.opba.protocol.facade.services.scoped.ConsentAccessUtil;
 import lombok.RequiredArgsConstructor;
 import org.jetbrains.annotations.NotNull;
@@ -39,6 +41,8 @@ public class FintechConsentAccessImpl implements FintechConsentAccess {
     private final UUID serviceSessionId;
     private final Supplier<char[]> fintechPassword;
     private final AnonymousPsuConsentAccess anonymousPsuConsentAccess;
+    private final ConsentAuthorizationEncryptionServiceProvider encServiceProvider;
+    private final EncryptionKeySerde encryptionKeySerde;
 
     /**
      * Creates consent template, but does not persist it
@@ -98,7 +102,8 @@ public class FintechConsentAccessImpl implements FintechConsentAccess {
 
         var psuAspspKey = fintechVault.psuAspspKeyFromPrivate(serviceSession, fintech, fintechPassword);
         EncryptionService enc = encryptionService.forPublicAndPrivateKey(psuAspspPrivateKey.get().getId(), psuAspspKey);
-        return consent.stream().map(it -> new ProtocolFacingConsentImpl(it, enc)).collect(Collectors.toList());
+        return consent.stream().map(it -> new ProtocolFacingConsentImpl(it, enc, encServiceProvider, encryptionKeySerde))
+            .collect(Collectors.toList());
     }
 
     /**
@@ -121,7 +126,9 @@ public class FintechConsentAccessImpl implements FintechConsentAccess {
                                         fintech,
                                         fintechPassword
                                 )
-                        ))
+                        ),
+                        encServiceProvider,
+                        encryptionKeySerde)
                 ).collect(Collectors.toList());
     }
 }

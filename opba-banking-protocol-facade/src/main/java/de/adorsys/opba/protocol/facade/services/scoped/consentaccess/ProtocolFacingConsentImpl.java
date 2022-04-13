@@ -3,6 +3,8 @@ package de.adorsys.opba.protocol.facade.services.scoped.consentaccess;
 import de.adorsys.opba.db.domain.entity.Consent;
 import de.adorsys.opba.protocol.api.services.EncryptionService;
 import de.adorsys.opba.protocol.api.services.scoped.consent.ProtocolFacingConsent;
+import de.adorsys.opba.protocol.facade.config.encryption.ConsentAuthorizationEncryptionServiceProvider;
+import de.adorsys.opba.protocol.facade.services.EncryptionKeySerde;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 
@@ -15,6 +17,8 @@ public class ProtocolFacingConsentImpl implements ProtocolFacingConsent {
 
     private final Consent consent;
     private final EncryptionService encryptionService;
+    private final ConsentAuthorizationEncryptionServiceProvider encServiceProvider;
+    private final EncryptionKeySerde encryptionKeySerde;
 
     /**
      * Consent ID that is to be used to communicate with ASPSP.
@@ -62,5 +66,16 @@ public class ProtocolFacingConsentImpl implements ProtocolFacingConsent {
     @Override
     public void setConsentContext(String context) {
         consent.setContext(encryptionService, context);
+    }
+
+    @Override
+    public EncryptionService getSupplementaryEncryptionService() {
+        var encSupplementaryKey = consent.getEncSupplementaryKey(encryptionService);
+
+        if (encSupplementaryKey == null) {
+            consent.setEncSupplementaryKey(encryptionService, encryptionKeySerde.asString(encServiceProvider.generateKey()));
+        }
+
+        return encServiceProvider.forSecretKey(encryptionKeySerde.fromString(consent.getEncSupplementaryKey(encryptionService)));
     }
 }
