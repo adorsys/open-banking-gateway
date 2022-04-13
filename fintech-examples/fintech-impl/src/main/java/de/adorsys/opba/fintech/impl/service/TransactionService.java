@@ -1,6 +1,5 @@
 package de.adorsys.opba.fintech.impl.service;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 import de.adorsys.opba.fintech.impl.config.FintechUiConfig;
 import de.adorsys.opba.fintech.impl.controller.utils.LoTRetrievalInformation;
 import de.adorsys.opba.fintech.impl.controller.utils.RestRequestContext;
@@ -42,7 +41,6 @@ public class TransactionService {
     private final RedirectHandlerService redirectHandlerService;
     private final ConsentRepository consentRepository;
     private final HandleAcceptedService handleAcceptedService;
-    private final ObjectMapper mapper;
 
     @SuppressWarnings("checkstyle:MethodLength") //  FIXME - It is just too many lines of text
     @SneakyThrows
@@ -87,7 +85,7 @@ public class TransactionService {
             bookingStatus,
             deltaList,
             online,
-            true,
+            "DISABLED",
             null,
             null
         );

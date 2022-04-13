@@ -96,7 +96,7 @@ public class FacadeServiceableRequest {
     /**
      * For transaction listing requests triggers transaction analyzers to enrich online result.
      */
-    private final boolean withAnalytics;
+    private final Analytics withAnalytics;
 
 
     /**

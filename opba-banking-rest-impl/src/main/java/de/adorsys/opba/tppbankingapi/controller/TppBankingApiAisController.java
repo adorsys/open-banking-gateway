@@ -3,6 +3,7 @@ package de.adorsys.opba.tppbankingapi.controller;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import de.adorsys.opba.protocol.api.dto.context.UserAgentContext;
 import de.adorsys.opba.protocol.api.dto.parameters.ExtraRequestParam;
+import de.adorsys.opba.protocol.api.dto.request.Analytics;
 import de.adorsys.opba.protocol.api.dto.request.FacadeServiceableRequest;
 import de.adorsys.opba.protocol.api.dto.request.accounts.AisAuthorizationStatusRequest;
 import de.adorsys.opba.protocol.api.dto.request.accounts.ListAccountsRequest;
@@ -147,7 +148,7 @@ public class TppBankingApiAisController implements TppBankingApiAccountInformati
             String bookingStatus,
             Boolean deltaList,
             Boolean online,
-            Boolean analytics,
+            String analytics,
             Integer page,
             Integer pageSize
     ) {
@@ -166,7 +167,7 @@ public class TppBankingApiAisController implements TppBankingApiAccountInformati
                                 .bankProfileId(bankProfileID)
                                 .anonymousPsu(null != xPsuAuthenticationRequired && !xPsuAuthenticationRequired)
                                 .online(online)
-                                .withAnalytics(analytics)
+                                .withAnalytics(analytics == null ? Analytics.DISABLED : Analytics.valueOf(analytics.toUpperCase()))
                                 .build()
                         )
                         .accountId(accountId)

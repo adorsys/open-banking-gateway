@@ -73,7 +73,7 @@ public class TppAisClientFeignMock implements TppAisClient {
             @Valid String bookingStatus,
             @Valid Boolean deltaList,
             Boolean online,
-            Boolean analytics,
+            String analytics,
             Integer page,
             Integer pageSize
     ) {

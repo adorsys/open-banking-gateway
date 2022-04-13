@@ -369,11 +369,14 @@ components:
       required: false
       description: |
         Analyze transactions (bookings) for categorizations.
-      example: "false"
+      example: "DISABLED"
       schema:
-        type: boolean
-        default: "false"
-
+        type: string
+        default: "DISABLED"
+        enum:
+          - "BANK"
+          - "OWN"
+          - "DISABLED"
     deltaList:
       name: deltaList
       in: query

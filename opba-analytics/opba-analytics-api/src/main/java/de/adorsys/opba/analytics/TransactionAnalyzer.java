@@ -1,5 +1,6 @@
 package de.adorsys.opba.analytics;
 
+import de.adorsys.opba.protocol.api.dto.request.Analytics;
 import de.adorsys.opba.protocol.api.dto.request.FacadeServiceableRequest;
 import de.adorsys.opba.protocol.api.dto.result.body.AnalyticsResult;
 import de.adorsys.opba.protocol.api.dto.result.body.TransactionsResponseBody;
@@ -26,7 +27,7 @@ public abstract class TransactionAnalyzer implements ResultBodyPostProcessor {
 
     @Override
     public boolean shouldApply(FacadeServiceableRequest request, Object requestMappedResult) {
-        return request.isWithAnalytics() && requestMappedResult instanceof TransactionsResponseBody;
+        return request.getWithAnalytics() == Analytics.OWN && requestMappedResult instanceof TransactionsResponseBody;
     }
 
     public abstract AnalyticsResult analyze(AnalyticsRequest request);
