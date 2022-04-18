@@ -11,7 +11,9 @@ import de.adorsys.opba.db.repository.jpa.fintech.FintechOnlyPubKeyRepository;
 import de.adorsys.opba.protocol.api.services.EncryptionService;
 import de.adorsys.opba.protocol.api.services.scoped.consent.ConsentAccess;
 import de.adorsys.opba.protocol.api.services.scoped.consent.ProtocolFacingConsent;
+import de.adorsys.opba.protocol.facade.config.encryption.ConsentAuthorizationEncryptionServiceProvider;
 import de.adorsys.opba.protocol.facade.config.encryption.PsuEncryptionServiceProvider;
+import de.adorsys.opba.protocol.facade.services.EncryptionKeySerde;
 import de.adorsys.opba.protocol.facade.services.scoped.ConsentAccessUtil;
 import lombok.RequiredArgsConstructor;
 
@@ -36,6 +38,8 @@ public class AnonymousPsuConsentAccess implements ConsentAccess {
     private final PsuEncryptionServiceProvider psuEncryption;
     private final ServiceSession serviceSession;
     private final ConsentRepository consentRepository;
+    private final ConsentAuthorizationEncryptionServiceProvider encServiceProvider;
+    private final EncryptionKeySerde encryptionKeySerde;
 
     @Override
     public boolean isFinTechScope() {
@@ -54,7 +58,8 @@ public class AnonymousPsuConsentAccess implements ConsentAccess {
                 .fintechPubKey(fintechPubKey)
                 .build();
 
-        return new ProtocolFacingConsentImpl(newConsent, anonymousEncryptionServiceBasedOnKeyFromFintech(fintechPubKey));
+        return new ProtocolFacingConsentImpl(newConsent, anonymousEncryptionServiceBasedOnKeyFromFintech(fintechPubKey),
+                                             encServiceProvider, encryptionKeySerde);
     }
 
     @Override
@@ -79,7 +84,9 @@ public class AnonymousPsuConsentAccess implements ConsentAccess {
                 .map(it ->
                         new ProtocolFacingConsentImpl(
                                 it,
-                                anonymousEncryptionServiceBasedOnKeyFromFintech(it.getFintechPubKey())
+                                anonymousEncryptionServiceBasedOnKeyFromFintech(it.getFintechPubKey()),
+                                encServiceProvider,
+                                encryptionKeySerde
                         )
                 )
                 .collect(Collectors.toList());

@@ -27,4 +27,5 @@
     <includeAll relativeToChangelogFile="true" path="migrations/0021-finapi-add-webform2" context="finapi-sandbox-banks OR finapi-prod-banks OR finapi-sandbox-test-bank"/>
     <include relativeToChangelogFile="true" file="migrations/0022-add-protocol-configuration.xml"/>
     <include relativeToChangelogFile="true" file="migrations/0023-change-unique-constraint.xml"/>
+    <include relativeToChangelogFile="true" file="migrations/0024-add-consent-supplementary-key.xml"/>
 </databaseChangeLog>

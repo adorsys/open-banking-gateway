@@ -42,7 +42,7 @@ public class PsuConsentAccess implements ConsentAccess {
                 .aspsp(aspsp)
                 .build();
 
-        return new ProtocolFacingConsentImpl(newConsent, encryptionService);
+        return new ProtocolFacingConsentImpl(newConsent, encryptionService, null, null);
     }
 
     @Override
@@ -64,14 +64,14 @@ public class PsuConsentAccess implements ConsentAccess {
     public List<ProtocolFacingConsent> findByCurrentServiceSessionOrderByModifiedDesc() {
         return consentRepository.findByServiceSessionIdOrderByModifiedAtDesc(serviceSession.getId())
                 .stream()
-                .map(it -> new ProtocolFacingConsentImpl(it, encryptionService))
+                .map(it -> new ProtocolFacingConsentImpl(it, encryptionService, null, null))
                 .collect(Collectors.toList());
     }
 
     @Override
     public Collection<ProtocolFacingConsent> getAvailableConsentsForCurrentPsu() {
         return consentRepository.findByPsu(psu).stream()
-                .map(it -> new ProtocolFacingConsentImpl(it, encryptionService))
+                .map(it -> new ProtocolFacingConsentImpl(it, encryptionService, null, null))
                 .collect(Collectors.toList());
     }
 }
