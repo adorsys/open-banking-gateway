@@ -78,10 +78,10 @@
     </changeSet>
 
     <changeSet id="load_csv_bank_xs2a" author="mhr" context="xs2a-banks OR hbci-banks">
-        <!-- Note that on Liquibase 4.4.0 relativeToChangelogFile (for loadData) does not work  when using PropertiesLauncher -->
         <loadData
                 encoding="utf8"
-                file="migration/migrations/csv/v0/0-banks.csv"
+                relativeToChangelogFile="true"
+                file="csv/v0/0-banks.csv"
                 catalogName=""
                 tableName="${table-prefix}bank">
             <column header="bank_uuid"  name="uuid"         type="UUID"/>
@@ -93,10 +93,10 @@
     </changeSet>
 
     <changeSet id="load_csv_bank_profile_xs2a" author="mhr" context="xs2a-banks">
-        <!-- Note that on Liquibase 4.4.0 relativeToChangelogFile (for loadData) does not work  when using PropertiesLauncher -->
         <loadData
                 encoding="utf8"
-                file="migration/migrations/csv/v0/0-xs2a_bank-profile.csv"
+                relativeToChangelogFile="true"
+                file="csv/v0/0-xs2a_bank-profile.csv"
                 catalogName=""
                 tableName="${table-prefix}bank_profile">
             <column header="bank_uuid"  name="bank_uuid"                type="UUID"/>
@@ -109,7 +109,7 @@
             <column header="idp_url"    name="idp_url"                  type="STRING"/>
             <column header="aspsp_sca_approaches" name="sca_approaches" type="STRING"/>
             <column header="protocol_type" name="protocol_type"         type="STRING"/>
-            <column header="is_sandbox"   name="is_sandbox"             type="BOOL"/>
+            <column header="is_sandbox"   name="is_sandbox"             type="BOOLEAN"/>
         </loadData>
         <rollback />
     </changeSet>

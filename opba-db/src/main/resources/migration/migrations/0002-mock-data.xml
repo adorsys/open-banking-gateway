@@ -3,10 +3,10 @@
                    xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.8.xsd">
 
     <changeSet id="load_csv_bank_mock" author="vbeex@adorsys.com.ua">
-        <!-- Note that on Liquibase 4.4.0 relativeToChangelogFile (for loadData) does not work  when using PropertiesLauncher -->
         <loadData
                 encoding="utf8"
-                file="migration/migrations/csv/v0/0-mock-banks.csv"
+                relativeToChangelogFile="true"
+                file="csv/v0/0-mock-banks.csv"
                 catalogName=""
                 tableName="${table-prefix}bank">
             <column header="bank_uuid"  name="uuid"         type="UUID"/>
@@ -18,10 +18,10 @@
     </changeSet>
 
     <changeSet id="load_csv_bank_profile_mock" author="vbeex@adorsys.com.ua">
-        <!-- Note that on Liquibase 4.4.0 relativeToChangelogFile (for loadData) does not work  when using PropertiesLauncher -->
         <loadData
                 encoding="utf8"
-                file="migration/migrations/csv/v0/0-mock_bank_profile.csv"
+                relativeToChangelogFile="true"
+                file="csv/v0/0-mock_bank_profile.csv"
                 catalogName=""
                 tableName="${table-prefix}bank_profile">
             <column header="bank_uuid"  name="bank_uuid"                type="UUID"/>
@@ -83,10 +83,10 @@
 
     <changeSet id="load_csv_banks_random" author="mhr" context="search-performance-test">
         <comment>Loads randomized bank set to understand full-text search performance</comment>
-        <!-- Note that on Liquibase 4.4.0 relativeToChangelogFile (for loadData) does not work  when using PropertiesLauncher -->
         <loadData
                 encoding="utf8"
-                file="migration/migrations/csv/v0/banks_random_data.csv"
+                relativeToChangelogFile="true"
+                file="csv/v0/banks_random_data.csv"
                 catalogName=""
                 tableName="${table-prefix}bank">
             <column header="name"       name="name"         type="STRING"/>
