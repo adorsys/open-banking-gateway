@@ -1,0 +1,90 @@
+# This Docker-Compose file is DEMO. Will pull released docker images from DockerHub.
+version: "3.3"
+
+networks:
+  opba-net:
+
+services:
+  postgres:
+    image: "postgres"
+    environment:
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=docker
+      - POSTGRES_DB=open_banking
+    ports:
+      #HOST:CONTAINER
+      - "15432:5432"
+    volumes:
+      - ./opba-db/src/main/resources/init.sql:/docker-entrypoint-initdb.d/init.sql
+      - ./fintech-examples/fintech-db-schema/src/main/resources/init.sql:/docker-entrypoint-initdb.d/fintech-init.sql
+    networks:
+      - opba-net
+
+  open-banking-gateway:
+    environment:
+      - SPRING_LIQUIBASE_PARAMETERS_ADORSYS-SANDBOX-URL=https://obg-bank-dev-xs2a.cloud.adorsys.de
+      - SPRING_LIQUIBASE_PARAMETERS_ADORSYS-HBCI-SANDBOX-URL=http://hbci-sandbox:8090/hbci-mock/
+      - SPRING_DATASOURCE_URL=jdbc:postgresql://postgres:5432/open_banking?currentSchema=banking_protocol
+      - SPRING_DATASOURCE_USERNAME=postgres
+      - SPRING_DATASOURCE_PASSWORD=docker
+      - PROTOCOL_XS2A_PKCS12_KEYSTORE=/pkcs12/sample-qwac.keystore
+      - FACADE_ENCRYPTION_KEYSETPATH=/keysetpath/example-keyset.json
+      - FACADE_URLS_EMBEDDED-UI-BASE-URL=http://localhost:14200
+      - PROTOCOL_GATEWAY-BASE-URL=http://localhost:18085
+    image: "obg-with-extensions:latest"
+    ports:
+      - "18085:8085"
+    volumes:
+      - ./opba-protocols/xs2a-protocol/src/main/resources/:/pkcs12/
+      - ./opba-banking-protocol-facade/src/main/resources/:/keysetpath/
+    depends_on:
+      - postgres
+    networks:
+      - opba-net
+
+  fintech-ui:
+    environment:
+      - BACKEND_URL=http://fintech-server:8086
+    restart: on-failure
+    image: "adorsys/open-banking-gateway-fintech-ui:1.0.0"
+    ports:
+      - "24200:4200"
+    depends_on:
+      - fintech-server
+    networks:
+      - opba-net
+
+  fintech-server:
+    environment:
+      - TPP_URL=http://open-banking-gateway:8085
+      - SPRING_DATASOURCE_URL=jdbc:postgresql://postgres:5432/open_banking?currentSchema=fintech
+
+      - FINTECH-UI_HOST=http://localhost:24200
+
+    image: "adorsys/open-banking-gateway-fintech-server:1.0.0"
+    ports:
+      - "18086:8086"
+    depends_on:
+      - postgres
+    networks:
+      - opba-net
+
+  consent-ui:
+    environment:
+      - BACKEND_URL=http://open-banking-gateway:8085
+    restart: on-failure
+    image: "adorsys/open-banking-gateway-consent-ui:1.0.0"
+    ports:
+      - "14200:4200"
+    depends_on:
+      - open-banking-gateway
+    networks:
+      - opba-net
+
+  hbci-sandbox-server:
+    restart: on-failure
+    image: "adorsys/open-banking-gateway-hbci-sandbox-server:1.0.0"
+    ports:
+      - "18090:8090"
+    networks:
+      - opba-net
