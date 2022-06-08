@@ -17,7 +17,7 @@ of our XS2A projects forces us to focus on our commercial engagements.
 We are committed to continuous active development of our XS2A solutions to ensure constant adherence to the latest Berlin Group 
 specifications and to support OpenFinance initiatives.
 Existing published versions will remain available under their respective open-source licenses.
-If you are a user of our XS2A solutions and would like to either start or extend cooperation with us, please contact us under psd2@adorsys.com.
+If you are a user of our XS2A solutions and would like to either start or extend cooperation, please contact us under psd2@adorsys.com.
 
 # Licensing model change to dual license: _AGPL v.3_ or _commercial license_
 
