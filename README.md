@@ -9,6 +9,15 @@
  - Frontend: [![codecov-frontend](https://codecov.io/gh/adorsys/open-banking-gateway/branch/develop/graph/badge.svg?flag=frontend)](https://codecov.io/gh/adorsys/open-banking-gateway)
  - Example code: [![codecov-examples](https://codecov.io/gh/adorsys/open-banking-gateway/branch/develop/graph/badge.svg?flag=fintech)](https://codecov.io/gh/adorsys/open-banking-gateway)
 
+# Changes in OSS release policy
+
+For the time being, version 1.0.0 will be the current try-out version of Open-Banking Gateway that adorsys publishes on GitHub. 
+With PSD2 standards and our solutions having grown to maturity in production, our continuous investment in development and maintenance 
+of our XS2A projects forces us to focus on our commercial engagements.
+We are committed to continuous active development of our XS2A solutions to ensure constant adherence to the latest Berlin Group 
+specifications and to support OpenFinance initiatives.
+Existing published versions will remain available under their respective open-source licenses.
+If you are a user of our XS2A solutions and would like to either start or extend cooperation, please contact us under psd2@adorsys.com.
 
 # Licensing model change to dual license: _AGPL v.3_ or _commercial license_
 
