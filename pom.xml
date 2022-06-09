@@ -114,7 +114,7 @@
         <commit-id.version>4.0.0</commit-id.version>
         <guava.version>30.1.1-jre</guava.version>
         <apache.commons-lang3.version>3.12.0</apache.commons-lang3.version>
-        <fasterxml.version>2.13.2</fasterxml.version>
+        <fasterxml.version>2.13.3</fasterxml.version>
         <jackson-databind.version>2.13.2.2</jackson-databind.version>
         <swaggerv3.version>2.1.0</swaggerv3.version>
         <swagger.version>1.6.6</swagger.version>
