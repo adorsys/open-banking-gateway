@@ -132,7 +132,7 @@
         <bouncycastle.version>1.64</bouncycastle.version>
         <datasafe.version>1.0.3</datasafe.version>
         <liquibase.version>4.11.0</liquibase.version> <!-- On update make sure that relativeToChangelogFile (for loadData) works when using PropertiesLauncher -->
-        <mapstruct.version>1.4.2.Final</mapstruct.version>
+        <mapstruct.version>1.5.0.Final</mapstruct.version>
         <hibernate.version>5.4.9.Final</hibernate.version> <!-- Currently only for bytecode enhancer plugin, can't inherit Spring BOM -->
         <jjwt.version>0.11.2</jjwt.version>
         <nimbus.version>8.36.2</nimbus.version>
