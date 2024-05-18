@@ -62,26 +62,30 @@ jobs:
           OPENSHIFT_TOKEN: ${{ secrets.OPENSHIFT_TOKEN }}
 
       # CODECOV Upload BEGIN
-      - uses: codecov/codecov-action@v1
+      - uses: codecov/codecov-action@v4
         with:
+          token: ${{ secrets.CODECOV_TOKEN }}
           directory: ./last-module-codecoverage/
           flags: backend
           verbose: true
 
-      - uses: codecov/codecov-action@v1
+      - uses: codecov/codecov-action@v4
         with:
+          token: ${{ secrets.CODECOV_TOKEN }}
           directory: ./consent-ui/
           flags: frontend
           verbose: true
 
-      - uses: codecov/codecov-action@v1
+      - uses: codecov/codecov-action@v4
         with:
+          token: ${{ secrets.CODECOV_TOKEN }}
           directory: ./fintech-examples/fintech-last-module-codecoverage/
           flags: fintech
           verbose: true
 
-      - uses: codecov/codecov-action@v1
+      - uses: codecov/codecov-action@v4
         with:
+          token: ${{ secrets.CODECOV_TOKEN }}
           directory: ./fintech-examples/fintech-ui/
           flags: fintech
           verbose: true
