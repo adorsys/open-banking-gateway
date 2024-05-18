@@ -25,9 +25,15 @@ import org.springframework.util.FileSystemUtils;
 
 import java.io.File;
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
 import java.net.URL;
+import java.nio.file.Files;
 import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.nio.file.StandardCopyOption;
 import java.util.Arrays;
+import java.util.Properties;
 import java.util.UUID;
 import java.util.function.Consumer;
 
@@ -328,9 +334,26 @@ public class MockServers<SELF extends MockServers<SELF>> extends CommonGivenStag
         WireMockConfiguration config = WireMockConfiguration.options().dynamicPort()
                 .usingFilesUnderClasspath("mockedsandbox/restrecord/embedded/multi-sca/accounts/postbank/");
         startWireMock(config, POSTBANK_BANK_ID, it -> it.setUrl("http://localhost:" + sandbox.port() + "/{Service Group}/DE/Postbank"));
+        setSandboxPortInAdapterConfig(sandbox.port());
         return self();
     }
 
+    @SneakyThrows
+    public void setSandboxPortInAdapterConfig(int port) {
+        Path resourcePath = Paths.get(MockServers.class.getClassLoader().getResource("adapter.config.properties").toURI());
+        log.info(resourcePath.toString());
+        Properties props = new Properties();
+        try (InputStream input = Files.newInputStream(resourcePath)) {
+            props.load(input);
+        }
+        props.setProperty("deutsche-bank.aspsp.certificate.url", "http://localhost:" + port + "/pb/aspsp-certificates/tpp-pb-password_cert.pem");
+
+        Path tempFile = Files.createTempFile("temp", ".properties");
+        try (OutputStream output = Files.newOutputStream(tempFile)) {
+            props.store(output, null);
+        }
+        Files.move(tempFile, resourcePath, StandardCopyOption.REPLACE_EXISTING);
+    }
 
 
     public SELF decoupled_embedded_approach_sca_decoupled_start_mock_of_sandbox_for_max_musterman_accounts_running() {

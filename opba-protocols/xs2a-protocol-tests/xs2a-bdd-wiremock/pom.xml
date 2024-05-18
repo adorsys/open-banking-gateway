@@ -126,6 +126,7 @@
                         <include>mockedsandbox/**/*.*</include>
                         <include>**/*.yml</include>
                     </includes>
+                    <attachToTest>false</attachToTest>
                 </configuration>
                 <executions>
                     <execution>
