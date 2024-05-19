@@ -17,6 +17,7 @@ import de.adorsys.opba.protocol.xs2a.service.xs2a.authenticate.StartConsentAutho
 import de.adorsys.opba.protocol.xs2a.service.xs2a.authenticate.embedded.Xs2aAisAuthenticateUserConsentWithPin;
 import de.adorsys.opba.protocol.xs2a.service.xs2a.consent.CreateAisAccountListConsentService;
 import de.adorsys.opba.protocol.xs2a.tests.e2e.stages.CommonGivenStages;
+import de.adorsys.xs2a.adapter.api.config.AdapterConfig;
 import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
 import org.assertj.core.api.Assertions;
@@ -353,6 +354,7 @@ public class MockServers<SELF extends MockServers<SELF>> extends CommonGivenStag
             props.store(output, null);
         }
         Files.move(tempFile, resourcePath, StandardCopyOption.REPLACE_EXISTING);
+        AdapterConfig.reload();
     }
 
 
