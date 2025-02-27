@@ -5,7 +5,7 @@ import de.adorsys.opba.protocol.xs2a.service.xs2a.annotations.FrontendCode;
 import de.adorsys.opba.protocol.xs2a.service.xs2a.annotations.ValidationInfo;
 import lombok.Data;
 
-import javax.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotBlank;
 
 import static de.adorsys.opba.protocol.api.dto.codes.FieldCode.PSU_PASSWORD;
 import static de.adorsys.opba.protocol.api.dto.codes.FieldCode.PSU_ID;

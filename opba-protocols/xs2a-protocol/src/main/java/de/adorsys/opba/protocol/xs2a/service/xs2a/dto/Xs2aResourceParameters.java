@@ -8,7 +8,7 @@ import de.adorsys.opba.protocol.xs2a.service.xs2a.annotations.ValidationInfo;
 import lombok.Data;
 import org.mapstruct.Mapper;
 
-import javax.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotBlank;
 
 import static de.adorsys.opba.protocol.api.dto.codes.FieldCode.RESOURCE_ID;
 import static de.adorsys.opba.protocol.api.dto.codes.TypeCode.PROHIBITED;

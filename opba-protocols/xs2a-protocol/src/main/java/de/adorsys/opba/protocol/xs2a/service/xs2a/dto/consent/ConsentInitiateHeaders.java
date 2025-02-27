@@ -14,7 +14,7 @@ import lombok.Getter;
 import lombok.Setter;
 import org.mapstruct.Mapper;
 
-import javax.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotBlank;
 import java.util.Map;
 
 import static de.adorsys.opba.protocol.api.dto.codes.TypeCode.STRING;

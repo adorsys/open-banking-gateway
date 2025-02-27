@@ -3,8 +3,8 @@ package de.adorsys.opba.db.domain.converter;
 import de.adorsys.opba.protocol.api.common.SupportedConsentType;
 import org.apache.commons.lang3.StringUtils;
 
-import javax.persistence.AttributeConverter;
-import javax.persistence.Converter;
+import jakarta.persistence.AttributeConverter;
+import jakarta.persistence.Converter;
 import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;

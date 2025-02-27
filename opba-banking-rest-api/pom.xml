@@ -57,20 +57,20 @@
             <artifactId>jackson-databind</artifactId>
         </dependency>
         <dependency>
-            <groupId>javax.validation</groupId>
-            <artifactId>validation-api</artifactId>
+            <groupId>jakarta.validation</groupId>
+            <artifactId>jakarta.validation-api</artifactId>
         </dependency>
         <dependency>
-            <groupId>javax.annotation</groupId>
-            <artifactId>javax.annotation-api</artifactId>
+            <groupId>jakarta.annotation</groupId>
+            <artifactId>jakarta.annotation-api</artifactId>
         </dependency>
         <dependency>
             <groupId>org.slf4j</groupId>
             <artifactId>slf4j-api</artifactId>
         </dependency>
         <dependency>
-            <groupId>javax.servlet</groupId>
-            <artifactId>javax.servlet-api</artifactId>
+            <groupId>jakarta.servlet</groupId>
+            <artifactId>jakarta.servlet-api</artifactId>
         </dependency>
 
         <!-- Test dependencies -->
@@ -78,6 +78,10 @@
             <groupId>org.junit.jupiter</groupId>
             <artifactId>junit-jupiter-engine</artifactId>
             <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>io.swagger.core.v3</groupId>
+            <artifactId>swagger-annotations</artifactId>
         </dependency>
     </dependencies>
 
@@ -106,8 +110,6 @@
                                 <apiPackage>de.adorsys.opba.tppbankingapi.ais.resource.generated</apiPackage>
                                 <interfaceOnly>true</interfaceOnly>
                                 <skipOverwrite>true</skipOverwrite>
-                                <dateLibrary>java8</dateLibrary>
-                                <java8>true</java8>
                                 <implicitHeaders>false</implicitHeaders>
                                 <delegatePattern>true</delegatePattern>
                                 <useTags>true</useTags>
@@ -140,8 +142,6 @@
                                 <apiPackage>de.adorsys.opba.tppbankingapi.pis.resource.generated</apiPackage>
                                 <interfaceOnly>true</interfaceOnly>
                                 <skipOverwrite>true</skipOverwrite>
-                                <dateLibrary>java8</dateLibrary>
-                                <java8>true</java8>
                                 <implicitHeaders>false</implicitHeaders>
                                 <delegatePattern>true</delegatePattern>
                                 <useTags>true</useTags>
@@ -174,8 +174,6 @@
                                 <apiPackage>de.adorsys.opba.tppbankingapi.search.resource.generated</apiPackage>
                                 <interfaceOnly>true</interfaceOnly>
                                 <skipOverwrite>true</skipOverwrite>
-                                <dateLibrary>java8</dateLibrary>
-                                <java8>true</java8>
                                 <implicitHeaders>false</implicitHeaders>
                                 <delegatePattern>true</delegatePattern>
                                 <useTags>true</useTags>
@@ -206,8 +204,6 @@
                                 <apiPackage>de.adorsys.opba.tppbankingapi.token.resource.generated</apiPackage>
                                 <interfaceOnly>true</interfaceOnly>
                                 <skipOverwrite>true</skipOverwrite>
-                                <dateLibrary>java8</dateLibrary>
-                                <java8>true</java8>
                                 <implicitHeaders>false</implicitHeaders>
                                 <delegatePattern>true</delegatePattern>
                                 <useTags>true</useTags>

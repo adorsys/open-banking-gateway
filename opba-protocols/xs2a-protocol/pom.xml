@@ -33,9 +33,9 @@
 
         <!-- javadoc -->
         <dependency>
-            <groupId>javax.interceptor</groupId>
-            <artifactId>javax.interceptor-api</artifactId>
-            <version>${javax.interceptor.api.version}</version>
+            <groupId>jakarta.interceptor</groupId>
+            <artifactId>jakarta.interceptor-api</artifactId>
+            <version>${jakarta.interceptor.api.version}</version>
         </dependency>
         <!-- end javadoc -->
 
@@ -145,9 +145,9 @@
         </dependency>
         <!-- Required for I18Config in tests -->
         <dependency>
-            <groupId>org.glassfish</groupId>
-            <artifactId>javax.el</artifactId>
-            <version>3.0.1-b08</version>
+            <groupId>jakarta.el</groupId>
+            <artifactId>jakarta.el-api</artifactId>
+            <version>6.0.1</version>
             <scope>test</scope>
         </dependency>
 

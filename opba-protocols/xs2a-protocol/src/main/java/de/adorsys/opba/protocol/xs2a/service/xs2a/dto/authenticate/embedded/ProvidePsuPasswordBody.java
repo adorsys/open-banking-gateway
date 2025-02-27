@@ -11,7 +11,7 @@ import de.adorsys.xs2a.adapter.api.model.UpdatePsuAuthentication;
 import lombok.Data;
 import org.mapstruct.Mapper;
 
-import javax.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotBlank;
 
 import static de.adorsys.opba.protocol.api.dto.codes.FieldCode.PSU_PASSWORD;
 import static de.adorsys.opba.protocol.api.dto.codes.TypeCode.STRING;

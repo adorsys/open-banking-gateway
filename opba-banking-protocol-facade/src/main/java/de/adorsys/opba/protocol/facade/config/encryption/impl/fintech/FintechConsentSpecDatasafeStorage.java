@@ -12,7 +12,7 @@ import de.adorsys.opba.protocol.facade.config.encryption.impl.FintechUserAuthSes
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.support.TransactionOperations;
 
-import javax.persistence.EntityManager;
+import jakarta.persistence.EntityManager;
 import java.net.URI;
 
 /**

@@ -10,8 +10,8 @@ import de.adorsys.opba.tpp.ais.api.model.generated.UpdateAisExternalSessionStatu
 import de.adorsys.opba.tpp.ais.api.model.generated.UpdateMetadata;
 import org.springframework.http.ResponseEntity;
 
-import javax.servlet.http.HttpServletRequest;
-import javax.validation.Valid;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.validation.Valid;
 import java.time.LocalDate;
 import java.util.Optional;
 import java.util.UUID;

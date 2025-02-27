@@ -20,8 +20,8 @@ import org.flowable.engine.delegate.DelegateExecution;
 import org.springframework.stereotype.Service;
 import org.springframework.util.ReflectionUtils;
 
-import javax.validation.ConstraintViolation;
-import javax.validation.Validator;
+import jakarta.validation.ConstraintViolation;
+import jakarta.validation.Validator;
 import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.Comparator;

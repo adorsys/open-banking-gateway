@@ -6,7 +6,7 @@ import de.adorsys.opba.api.security.generator.api.RequestDataToSignNormalizer;
 import de.adorsys.opba.api.security.generator.api.RequestToSign;
 import java.lang.Override;
 import java.lang.String;
-import javax.annotation.Generated;
+import jakarta.annotation.Generated;
 
 @Generated(
         value = "de.adorsys.opba.api.security.generator.normalizer.DataToSignProviderGenerator",

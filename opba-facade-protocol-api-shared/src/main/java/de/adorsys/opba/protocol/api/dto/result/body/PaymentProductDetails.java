@@ -22,7 +22,7 @@ public enum PaymentProductDetails {
 
     @JsonCreator
     public static PaymentProductDetails fromValue(String text) {
-        for (PaymentProductDetails b : PaymentProductDetails.values()) {
+        for (PaymentProductDetails b : values()) {
             if (String.valueOf(b.value).equals(text)) {
                 return b;
             }

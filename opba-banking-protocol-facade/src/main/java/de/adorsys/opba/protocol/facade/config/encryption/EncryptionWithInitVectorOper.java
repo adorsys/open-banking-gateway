@@ -5,9 +5,9 @@ import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.SneakyThrows;
 
-import javax.crypto.Cipher;
-import javax.crypto.KeyGenerator;
-import javax.crypto.spec.IvParameterSpec;
+import jakarta.crypto.Cipher;
+import jakarta.crypto.KeyGenerator;
+import jakarta.crypto.spec.IvParameterSpec;
 import java.security.SecureRandom;
 import java.util.function.Supplier;
 

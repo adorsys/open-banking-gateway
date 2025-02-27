@@ -10,9 +10,9 @@ import lombok.Data;
 import lombok.EqualsAndHashCode;
 import org.mapstruct.Mapper;
 
-import javax.annotation.Nullable;
-import javax.validation.constraints.NotBlank;
-import javax.validation.constraints.NotNull;
+import jakarta.annotation.Nullable;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
 import java.time.LocalDate;
 import java.util.Optional;
 
