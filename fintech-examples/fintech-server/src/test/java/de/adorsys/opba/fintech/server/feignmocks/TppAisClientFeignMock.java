@@ -111,8 +111,8 @@ public class TppAisClientFeignMock implements TppAisClient {
     }
 
     @Override
-    public ResponseEntity<Void> deleteConsent(UUID xRequestID, UUID serviceSessionID, DeleteMetadata requestBody,
-                                              String xTimestampUTC, String xRequestSignature, String fintechID, String serviceSessionPassword, String fintechDataPassword, Boolean deleteAll) {
+    public ResponseEntity<Void> deleteConsent(UUID xRequestID, UUID serviceSessionID,
+                                              String xTimestampUTC, String xRequestSignature, String fintechID, String serviceSessionPassword, String fintechDataPassword, Boolean deleteAll, DeleteMetadata requestBody) {
         return null;
     }
 
@@ -123,8 +123,8 @@ public class TppAisClientFeignMock implements TppAisClient {
     }
 
     @Override
-    public ResponseEntity<UpdateAisExternalSessionStatus> updateExternalAisSession(UUID xRequestID, UUID serviceSessionID, UpdateMetadata updateMetadata, String xTimestampUTC, String xRequestSignature, String fintechID,
-                                                                                   String serviceSessionPassword, String fintechDataPassword) {
+    public ResponseEntity<UpdateAisExternalSessionStatus> updateExternalAisSession(UUID xRequestID, UUID serviceSessionID, String xTimestampUTC, String xRequestSignature, String fintechID,
+                                                                                   String serviceSessionPassword, String fintechDataPassword, UpdateMetadata updateMetadata) {
         return null;
     }
 

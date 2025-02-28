@@ -92,6 +92,12 @@
             <groupId>org.awaitility</groupId>
             <artifactId>awaitility</artifactId>
         </dependency>
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-test</artifactId>
+            <version>3.4.3</version>
+            <scope>compile</scope>
+        </dependency>
     </dependencies>
 
     <build>

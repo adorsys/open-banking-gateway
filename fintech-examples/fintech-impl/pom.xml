@@ -164,6 +164,11 @@
             <scope>test</scope>
         </dependency>
         <dependency>
+            <groupId>org.openapitools</groupId>
+            <artifactId>jackson-databind-nullable</artifactId>
+            <version>0.2.6</version>
+        </dependency>
+        <dependency>
             <groupId>com.h2database</groupId>
             <artifactId>h2</artifactId>
             <version>${h2.database.version}</version>
@@ -204,7 +209,8 @@
                                 <interfaceOnly>true</interfaceOnly>
                                 <skipOverwrite>true</skipOverwrite>
                                 <dateLibrary>java8</dateLibrary>
-                                <java8>false</java8>
+                                <java21>false</java21>
+                                <jakarta>true</jakarta>
                                 <useTags>true</useTags>
                                 <defaultInterfaces>false</defaultInterfaces>
                                 <implicitHeaders>false</implicitHeaders>
@@ -235,7 +241,8 @@
                                 <interfaceOnly>true</interfaceOnly>
                                 <skipOverwrite>true</skipOverwrite>
                                 <dateLibrary>java8</dateLibrary>
-                                <java8>false</java8>
+                                <java21>false</java21>
+                                <jakarta>true</jakarta>
                                 <useTags>true</useTags>
                                 <defaultInterfaces>false</defaultInterfaces>
                                 <implicitHeaders>false</implicitHeaders>
@@ -266,7 +273,8 @@
                                 <interfaceOnly>true</interfaceOnly>
                                 <skipOverwrite>true</skipOverwrite>
                                 <dateLibrary>java8</dateLibrary>
-                                <java8>false</java8>
+                                <java21>false</java21>
+                                <jakarta>true</jakarta>
                                 <useTags>true</useTags>
                                 <defaultInterfaces>false</defaultInterfaces>
                                 <implicitHeaders>false</implicitHeaders>
@@ -297,7 +305,8 @@
                                 <interfaceOnly>true</interfaceOnly>
                                 <skipOverwrite>true</skipOverwrite>
                                 <dateLibrary>java8</dateLibrary>
-                                <java8>false</java8>
+                                <java21>false</java21>
+                                <jakarta>true</jakarta>
                                 <useTags>true</useTags>
                                 <defaultInterfaces>false</defaultInterfaces>
                                 <implicitHeaders>false</implicitHeaders>

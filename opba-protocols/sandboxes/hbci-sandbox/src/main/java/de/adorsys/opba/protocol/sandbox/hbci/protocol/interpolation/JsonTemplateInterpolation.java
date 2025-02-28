@@ -41,9 +41,9 @@ import org.springframework.stereotype.Service;
 import org.w3c.dom.Document;
 import org.w3c.dom.Node;
 
-import jakarta.xml.xpath.XPath;
-import jakarta.xml.xpath.XPathConstants;
-import jakarta.xml.xpath.XPathFactory;
+import javax.xml.xpath.XPath;
+import javax.xml.xpath.XPathConstants;
+import javax.xml.xpath.XPathFactory;
 import java.lang.reflect.Method;
 import java.math.BigDecimal;
 import java.nio.charset.StandardCharsets;

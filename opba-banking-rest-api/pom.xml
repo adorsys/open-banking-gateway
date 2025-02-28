@@ -49,8 +49,9 @@
             <artifactId>spring-webmvc</artifactId>
         </dependency>
         <dependency>
-            <groupId>io.swagger</groupId>
+            <groupId>io.swagger.core.v3</groupId>
             <artifactId>swagger-annotations</artifactId>
+            <version>${io.swagger.annotations.version}</version>
         </dependency>
         <dependency>
             <groupId>com.fasterxml.jackson.core</groupId>
@@ -59,6 +60,11 @@
         <dependency>
             <groupId>jakarta.validation</groupId>
             <artifactId>jakarta.validation-api</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.openapitools</groupId>
+            <artifactId>jackson-databind-nullable</artifactId>
+            <version>0.2.6</version>
         </dependency>
         <dependency>
             <groupId>jakarta.annotation</groupId>
@@ -82,6 +88,7 @@
         <dependency>
             <groupId>io.swagger.core.v3</groupId>
             <artifactId>swagger-annotations</artifactId>
+            <version>${io.swagger.annotations.version}</version>
         </dependency>
     </dependencies>
 
@@ -110,6 +117,9 @@
                                 <apiPackage>de.adorsys.opba.tppbankingapi.ais.resource.generated</apiPackage>
                                 <interfaceOnly>true</interfaceOnly>
                                 <skipOverwrite>true</skipOverwrite>
+                                <dateLibrary>java8</dateLibrary>
+                                <java21>true</java21>
+                                <jakarta>true</jakarta>
                                 <implicitHeaders>false</implicitHeaders>
                                 <delegatePattern>true</delegatePattern>
                                 <useTags>true</useTags>
@@ -142,6 +152,9 @@
                                 <apiPackage>de.adorsys.opba.tppbankingapi.pis.resource.generated</apiPackage>
                                 <interfaceOnly>true</interfaceOnly>
                                 <skipOverwrite>true</skipOverwrite>
+                                <dateLibrary>java8</dateLibrary>
+                                <java21>true</java21>
+                                <jakarta>true</jakarta>
                                 <implicitHeaders>false</implicitHeaders>
                                 <delegatePattern>true</delegatePattern>
                                 <useTags>true</useTags>
@@ -174,6 +187,9 @@
                                 <apiPackage>de.adorsys.opba.tppbankingapi.search.resource.generated</apiPackage>
                                 <interfaceOnly>true</interfaceOnly>
                                 <skipOverwrite>true</skipOverwrite>
+                                <dateLibrary>java8</dateLibrary>
+                                <java21>true</java21>
+                                <jakarta>true</jakarta>
                                 <implicitHeaders>false</implicitHeaders>
                                 <delegatePattern>true</delegatePattern>
                                 <useTags>true</useTags>
@@ -204,6 +220,9 @@
                                 <apiPackage>de.adorsys.opba.tppbankingapi.token.resource.generated</apiPackage>
                                 <interfaceOnly>true</interfaceOnly>
                                 <skipOverwrite>true</skipOverwrite>
+                                <dateLibrary>java8</dateLibrary>
+                                <java21>true</java21>
+                                <jakarta>true</jakarta>
                                 <implicitHeaders>false</implicitHeaders>
                                 <delegatePattern>true</delegatePattern>
                                 <useTags>true</useTags>

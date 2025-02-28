@@ -10,7 +10,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.SneakyThrows;
 import org.springframework.stereotype.Service;
 
-import jakarta.crypto.spec.SecretKeySpec;
+import javax.crypto.spec.SecretKeySpec;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.security.KeyFactory;

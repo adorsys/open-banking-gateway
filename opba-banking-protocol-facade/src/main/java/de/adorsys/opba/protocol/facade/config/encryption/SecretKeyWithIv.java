@@ -2,7 +2,7 @@ package de.adorsys.opba.protocol.facade.config.encryption;
 
 import lombok.Data;
 
-import jakarta.crypto.SecretKey;
+import javax.crypto.SecretKey;
 
 /**
  * Wrapper for secret key and initialization vector.

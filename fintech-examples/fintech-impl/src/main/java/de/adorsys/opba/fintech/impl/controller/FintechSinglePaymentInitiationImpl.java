@@ -21,13 +21,13 @@ public class FintechSinglePaymentInitiationImpl implements FintechSinglePaymentI
 
     @Override
     public ResponseEntity<Void> initiateSinglePayment(
-            SinglePaymentInitiationRequest body,
             UUID xRequestID,
             String xXsrfToken,
             String fintechRedirectURLOK,
             String fintechRedirectURLNOK,
             String bankId,
             String accountId,
+            SinglePaymentInitiationRequest body,
             Boolean xPisPsuAuthenticationRequired,
             Boolean fintechDecoupledPreferred,
             String fintechBrandLoggingInformation,

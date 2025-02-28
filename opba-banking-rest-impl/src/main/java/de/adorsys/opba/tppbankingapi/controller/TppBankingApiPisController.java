@@ -37,12 +37,12 @@ public class TppBankingApiPisController implements TppBankingApiSinglePaymentPis
     private final PaymentFacadeResponseBodyToRestBodyMapper paymentResponseMapper;
 
     @Override
-    public CompletableFuture initiatePayment(PaymentInitiation body,
-                                             String fintechUserID,
+    public CompletableFuture initiatePayment(String fintechUserID,
                                              String fintechRedirectURLOK,
                                              String fintechRedirectURLNOK,
                                              UUID xRequestID,
                                              String paymentProduct,
+                                             PaymentInitiation body,
                                              String xTimestampUTC,
                                              String xRequestSignature,
                                              String fintechID,

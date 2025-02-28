@@ -34,8 +34,14 @@
       <artifactId>spring-webmvc</artifactId>
     </dependency>
     <dependency>
-      <groupId>io.swagger</groupId>
+      <groupId>io.swagger.core.v3</groupId>
       <artifactId>swagger-annotations</artifactId>
+      <version>${io.swagger.annotations.version}</version>
+    </dependency>
+    <dependency>
+      <groupId>org.openapitools</groupId>
+      <artifactId>jackson-databind-nullable</artifactId>
+      <version>0.2.6</version>
     </dependency>
     <dependency>
       <groupId>com.fasterxml.jackson.core</groupId>
@@ -86,7 +92,8 @@
                 <interfaceOnly>true</interfaceOnly>
                 <skipOverwrite>true</skipOverwrite>
                 <dateLibrary>java8</dateLibrary>
-                <java8>true</java8>
+                <java21>true</java21>
+                <jakarta>true</jakarta>
                 <implicitHeaders>false</implicitHeaders>
                 <delegatePattern>true</delegatePattern>
                 <useTags>true</useTags>
