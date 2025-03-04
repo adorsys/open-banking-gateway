@@ -7,7 +7,7 @@
     "openapi-gen": "openapi-generator generate -g typescript-angular -o src/app/api -i ../opba-consent-rest-api/src/main/resources/static/tpp_consent_api.yml",
     "openapi-auth-gen": "openapi-generator generate -g typescript-angular -o src/app/api-auth -i ../opba-auth-rest-api/src/main/resources/static/tpp_auth_api.yml",
     "start": "ng serve",
-    "serve:local": "ng serve --proxy-config=proxy-conf-local-backend.json",
+    "serve:local": "NODE_OPTIONS=--openssl-legacy-provider ng serve --proxy-config=proxy-conf-local-backend.json",
     "serve:dev": "ng serve --proxy-config=proxy-conf-dev-backend.js",
     "serve:docker": "ng serve --port=14200 --proxy-config=proxy-conf-docker-backend.json",
     "build": "ng build",

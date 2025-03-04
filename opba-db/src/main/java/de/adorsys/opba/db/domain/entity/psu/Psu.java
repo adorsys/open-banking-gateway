@@ -58,7 +58,7 @@ public class Psu {
     @OneToMany(mappedBy = "psu", cascade = CascadeType.ALL, orphanRemoval = true)
     private Collection<AuthSession> authSessions;
 
-    @OneToMany(mappedBy = "aspsp", cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToMany(mappedBy = "psu", cascade = CascadeType.ALL, orphanRemoval = true)
     private Collection<Consent> consents;
 
     @CreatedDate

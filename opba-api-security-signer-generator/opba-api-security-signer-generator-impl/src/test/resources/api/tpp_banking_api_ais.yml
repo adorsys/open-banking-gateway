@@ -17,8 +17,8 @@ paths:
       tags:
         - TPP Banking API Account information service (AIS)
       description: >-
-          returns list of transactions for specified account resource ID in case Service-Session-ID is provided
-          and saved consent on tpp by it found. Otherwise initiates creation of new consent
+        returns list of transactions for specified account resource ID in case Service-Session-ID is provided
+        and saved consent on tpp by it found. Otherwise initiates creation of new consent
       parameters:
         #path
         - $ref: "#/components/parameters/account-id"
@@ -28,7 +28,7 @@ paths:
         - $ref: "#/components/parameters/dateFrom"
         - $ref: "#/components/parameters/dateTo"
       security:
-        - BearerAuthOAuth: []
+        - BearerAuthOAuth: [ ]
       responses:
         '200':
           $ref: "#/components/responses/200_AccountsTransactions"
