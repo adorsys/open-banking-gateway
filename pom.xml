@@ -109,7 +109,7 @@
         <release-branch-pattern>.*</release-branch-pattern>
 
         <!-- Framework libs -->
-        <spring-boot.version>3.4.3</spring-boot.version>
+        <spring-boot.version>3.3.8</spring-boot.version>
         <aspectj.version>1.9.7</aspectj.version>
         <commit-id.version>4.0.0</commit-id.version>
         <guava.version>30.1.1-jre</guava.version>
@@ -120,7 +120,7 @@
         <swagger.version>1.6.6</swagger.version>
         <swagger-codegen-generators.version>1.0.56</swagger-codegen-generators.version>
         <swagger-codegen-maven-plugin.version>3.0.67</swagger-codegen-maven-plugin.version>
-        <springdoc-openapi-ui.version>2.8.5</springdoc-openapi-ui.version> <!-- springfox replacement for OpenApi 3 -->
+        <springdoc-openapi-ui.version>1.8.0</springdoc-openapi-ui.version> <!-- springfox replacement for OpenApi 3 -->
         <springfox.version>2.9.2</springfox.version>
         <jetbrains.annotations.version>17.0.0</jetbrains.annotations.version>
         <lombok.version>1.18.36</lombok.version>
@@ -237,6 +237,14 @@
                 <scope>import</scope>
             </dependency>
 
+            <dependency>
+                <groupId>org.springframework.cloud</groupId>
+                <artifactId>spring-cloud-dependencies</artifactId>
+                <version>2023.0.3</version>
+                <scope>import</scope>
+                <type>pom</type>
+            </dependency>
+
             <!-- Lombok -->
             <dependency>
                 <groupId>org.projectlombok</groupId>
@@ -274,6 +282,12 @@
                 <artifactId>jackson-datatype-jsr310</artifactId>
                 <version>${fasterxml.version}</version>
                 <scope>compile</scope>
+            </dependency>
+
+            <dependency>
+                <groupId>jakarta.validation</groupId>
+                <artifactId>jakarta.validation-api</artifactId>
+                <version>3.0.2</version>
             </dependency>
 
             <dependency>
