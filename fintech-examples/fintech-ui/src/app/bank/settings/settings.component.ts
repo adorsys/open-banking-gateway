@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { Location } from '@angular/common';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { UntypedFormBuilder, UntypedFormGroup, Validators } from '@angular/forms';
 import { ConsentSettingType, LoARetrievalInformation, LoTRetrievalInformation } from '../../models/consts';
 import { StorageService } from '../../services/storage.service';
 
@@ -27,12 +27,12 @@ export class SettingsComponent implements OnInit {
   consentTypeDefault = ConsentSettingType.DEFAULT;
   consentTypeCustom = ConsentSettingType.CUSTOM;
 
-  settingsForm: FormGroup;
+  settingsForm: UntypedFormGroup;
 
   constructor(
     private location: Location,
     private route: ActivatedRoute,
-    private formBuilder: FormBuilder,
+    private formBuilder: UntypedFormBuilder,
     private storageService: StorageService,
     private accountService: FinTechAccountInformationService
   ) {}

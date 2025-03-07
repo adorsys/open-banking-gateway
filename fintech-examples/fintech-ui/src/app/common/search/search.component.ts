@@ -1,6 +1,6 @@
 import { Component, EventEmitter, Output } from '@angular/core';
 import { debounceTime, distinctUntilChanged } from 'rxjs/operators';
-import { FormControl } from '@angular/forms';
+import { UntypedFormControl } from '@angular/forms';
 
 @Component({
   selector: 'app-search',
@@ -9,7 +9,7 @@ import { FormControl } from '@angular/forms';
 })
 export class SearchComponent {
   @Output() keyword = new EventEmitter();
-  searchTerm = new FormControl('adorsys');
+  searchTerm = new UntypedFormControl('adorsys');
 
   constructor() {
     this.searchTerm.valueChanges.pipe(debounceTime(500), distinctUntilChanged()).subscribe(inputData => {

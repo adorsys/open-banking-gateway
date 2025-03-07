@@ -123,7 +123,6 @@
       }
     }
   },
-  "defaultProject": "fintech-ui",
   "cli": {
     "analytics": "e23cfdeb-4ee0-4f12-a8d6-83edef5d1381"
   }
