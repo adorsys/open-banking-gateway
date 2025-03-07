@@ -3,7 +3,7 @@
     "booked": [
       {
         "transactionId": "iY1DmFg0Twsh2vuCSYjqX0",
-        "entryReference": null,
+        "entryReference": "",
         "endToEndId": "20180617T181000",
         "mandateId": null,
         "checkId": null,

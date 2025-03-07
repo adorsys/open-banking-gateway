@@ -36,7 +36,7 @@ spring:
       # Prefix for OBG tables in database
       table-prefix: opb_
       # Sandbox URLs
-      adorsys-sandbox-url: http://xs2a-connector-xs2a.support.sol.adorsys.com/
+      adorsys-sandbox-url: https://xs2a-connector-modelbank.support.sol.adorsys.com/
       adorsys-sandbox-oauth-server-url: https://xs2a-online-modelbank.support.sol.adorsys.com/
       adorsys-hbci-sandbox-url: http://localhost:8090/hbci-mock/
     # Which migrations types to apply (pre-load bank data into database)
