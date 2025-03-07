@@ -1,4 +1,4 @@
-import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
 import { RouterTestingModule } from '@angular/router/testing';
 import { FormBuilder, ReactiveFormsModule } from '@angular/forms';
 import { HttpClientTestingModule } from '@angular/common/http/testing';
@@ -22,7 +22,7 @@ describe('TransactionsConsentReviewComponent', () => {
 
   beforeAll(() => (window.onbeforeunload = jasmine.createSpy()));
 
-  beforeEach(async(() => {
+  beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
       declarations: [TransactionsConsentReviewComponent],
       imports: [RouterTestingModule, ReactiveFormsModule, HttpClientTestingModule],

@@ -1,4 +1,4 @@
-import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
 
 import { ReactiveFormsModule } from '@angular/forms';
 import { RegisterComponent } from './register.component';
@@ -18,7 +18,7 @@ describe('RegisterComponent', () => {
   const notMachingPasswordInput = 'not matching password';
   let form;
 
-  beforeEach(async(() => {
+  beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
       declarations: [RegisterComponent],
       imports: [ReactiveFormsModule, HttpClientTestingModule, RouterTestingModule],

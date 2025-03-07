@@ -1,4 +1,4 @@
-import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
 import { ActivatedRoute } from '@angular/router';
 import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { of } from 'rxjs';
@@ -14,7 +14,7 @@ describe('ConsentSharingComponent', () => {
 
   beforeAll(() => (window.onbeforeunload = jasmine.createSpy()));
 
-  beforeEach(async(() => {
+  beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
       declarations: [ConsentSharingComponent],
       imports: [HttpClientTestingModule],

@@ -1,4 +1,4 @@
-import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
 import { ActivatedRoute, convertToParamMap } from '@angular/router';
 import { NO_ERRORS_SCHEMA } from '@angular/core';
 import { HttpClientTestingModule } from '@angular/common/http/testing';
@@ -13,7 +13,7 @@ describe('AIS ScaSelectPageComponent', () => {
 
   beforeAll(() => (window.onbeforeunload = jasmine.createSpy()));
 
-  beforeEach(async(() => {
+  beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
       declarations: [ScaSelectPageComponent],
       schemas: [NO_ERRORS_SCHEMA],

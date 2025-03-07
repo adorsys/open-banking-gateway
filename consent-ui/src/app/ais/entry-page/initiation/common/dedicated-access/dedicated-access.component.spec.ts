@@ -1,4 +1,4 @@
-import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
 import { Location } from '@angular/common';
 import { ReactiveFormsModule } from '@angular/forms';
 import { CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
@@ -23,7 +23,7 @@ describe('DedicatedAccessComponent', () => {
   let consentUtilSpy;
   let mockData;
 
-  beforeEach(async(() => {
+  beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
       declarations: [DedicatedAccessComponent],
       schemas: [CUSTOM_ELEMENTS_SCHEMA],

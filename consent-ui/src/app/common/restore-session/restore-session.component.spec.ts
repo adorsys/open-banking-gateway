@@ -1,4 +1,4 @@
-import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
 
 import { RestoreSessionComponent } from './restore-session.component';
 import { HttpClientTestingModule } from '@angular/common/http/testing';
@@ -9,7 +9,7 @@ describe('RestoreSessionComponent', () => {
 
   beforeAll(() => (window.onbeforeunload = jasmine.createSpy()));
 
-  beforeEach(async(() => {
+  beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
       declarations: [RestoreSessionComponent],
       imports: [HttpClientTestingModule]

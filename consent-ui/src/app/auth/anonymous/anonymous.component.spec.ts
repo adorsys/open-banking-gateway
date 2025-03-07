@@ -1,4 +1,4 @@
-import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
 import { ReactiveFormsModule } from '@angular/forms';
 import { AnonymousComponent } from './anonymous.component';
 import { RouterTestingModule } from '@angular/router/testing';
@@ -19,7 +19,7 @@ describe('AnonymousComponent', () => {
   let authServiceSpy;
   let authService: AuthService;
 
-  beforeEach(async(() => {
+  beforeEach(waitForAsync(() => {
     route = new MockActivatedRoute();
     route.snapshot = {
       queryParams: { redirectCode: 'redirectCode654' },
