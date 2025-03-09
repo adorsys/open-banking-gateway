@@ -23,7 +23,7 @@
     "@angular-devkit/core": "^14.2.13",
     "@angular-devkit/schematics": "^14.2.13",
     "@angular/animations": "^14.3.0",
-    "@angular/cdk": "^13.3.9",
+    "@angular/cdk": "^14.2.7",
     "@angular/common": "^14.3.0",
     "@angular/compiler": "^14.3.0",
     "@angular/core": "^14.3.0",
@@ -32,10 +32,11 @@
     "@angular/platform-browser": "^14.3.0",
     "@angular/platform-browser-dynamic": "^14.3.0",
     "@angular/router": "^14.3.0",
-    "@ng-bootstrap/ng-bootstrap": "^11.0.1",
-    "@ngtools/webpack": "^13.3.11",
+    "@ng-bootstrap/ng-bootstrap": "^13.1.1",
+    "@ngtools/webpack": "^14.2.13",
+    "@popperjs/core": "^2.11.8",
     "@schematics/update": "^0.1102.19",
-    "angular-iban": "^19.0.0",
+    "angular-iban": "^14.0.0",
     "angular2-uuid": "^1.1.1",
     "bootstrap": "^4.6.1",
     "font-awesome": "^4.7.0",
@@ -54,7 +55,7 @@
     "@angular/compiler-cli": "^14.3.0",
     "@angular/language-service": "^14.3.0",
     "@openapitools/openapi-generator-cli": "^1.0.18-4.3.1",
-    "@schematics/angular": "^13.3.11",
+    "@schematics/angular": "^14.2.13",
     "@types/jasmine": "~3.5.14",
     "@types/jasminewd2": "~2.0.8",
     "@types/node": "~14.10.2",
@@ -74,7 +75,8 @@
     "ts-node": "~9.0.0",
     "tslint": "~6.1.3",
     "tslint-config-prettier": "^1.18.0",
-    "typescript": "^4.8.4"
+    "typescript": "^4.8.4",
+    "uuid": "^9.0.0"
   },
   "husky": {
     "hooks": {
