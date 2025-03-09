@@ -1,5 +1,5 @@
 import { AfterContentChecked, ChangeDetectorRef, Component, Input, OnInit } from '@angular/core';
-import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
+import { UntypedFormBuilder, UntypedFormControl, UntypedFormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { AuthConsentState } from '../../../../common/dto/auth-state';
 import { SessionService } from '../../../../../common/session.service';
@@ -28,7 +28,7 @@ export class ConsentAccountAccessSelectionComponent implements OnInit, AfterCont
 
   public filteredAccountAccesses: Access[];
   public selectedAccess;
-  public accountAccessForm: FormGroup;
+  public accountAccessForm: UntypedFormGroup;
   public state: AuthConsentState;
   public consent: AisConsentToGrant;
 
@@ -50,7 +50,7 @@ export class ConsentAccountAccessSelectionComponent implements OnInit, AfterCont
   constructor(
     private router: Router,
     private activatedRoute: ActivatedRoute,
-    private formBuilder: FormBuilder,
+    private formBuilder: UntypedFormBuilder,
     private sessionService: SessionService,
     private updateConsentAuthorizationService: UpdateConsentAuthorizationService,
     private cdRef: ChangeDetectorRef
@@ -72,7 +72,7 @@ export class ConsentAccountAccessSelectionComponent implements OnInit, AfterCont
         this.moveToReviewConsent();
       }
 
-      this.selectedAccess = new FormControl(this.accountAccesses[0], Validators.required);
+      this.selectedAccess = new UntypedFormControl(this.accountAccesses[0], Validators.required);
       this.accountAccessForm.addControl('accountAccess', this.selectedAccess);
       this.consent = ConsentUtil.getOrDefault(this.authorizationId, this.sessionService);
       const bankSupportFromApi = this.sessionService.getConsentTypesSupported(res.authId);

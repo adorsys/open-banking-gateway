@@ -1,5 +1,5 @@
 import {AfterContentChecked, ChangeDetectorRef, Component, Input, OnInit} from '@angular/core';
-import {FormBuilder, FormGroup} from '@angular/forms';
+import {UntypedFormBuilder, UntypedFormGroup} from '@angular/forms';
 import {ActivatedRoute, Router} from '@angular/router';
 
 import {UpdateConsentAuthorizationService} from '../../api';
@@ -21,7 +21,7 @@ export class ConsentPaymentAccessSelectionComponent implements OnInit, AfterCont
 
   @Input() paymentReviewPage: string;
 
-  public paymentAccessForm: FormGroup;
+  public paymentAccessForm: UntypedFormGroup;
   public state: AuthConsentState;
   public payment: PisPayment;
 
@@ -30,7 +30,7 @@ export class ConsentPaymentAccessSelectionComponent implements OnInit, AfterCont
   constructor(
     private router: Router,
     private activatedRoute: ActivatedRoute,
-    private formBuilder: FormBuilder,
+    private formBuilder: UntypedFormBuilder,
     private sessionService: SessionService,
     private updateConsentAuthorizationService: UpdateConsentAuthorizationService,
     private cdRef: ChangeDetectorRef

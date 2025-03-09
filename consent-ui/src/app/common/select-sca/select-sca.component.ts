@@ -1,5 +1,5 @@
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
-import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
+import { UntypedFormBuilder, UntypedFormControl, UntypedFormGroup, Validators } from '@angular/forms';
 import { AuthStateConsentAuthorizationService, ScaUserData, UpdateConsentAuthorizationService } from '../../api';
 import { ApiHeaders } from '../../api/api.headers';
 import { SessionService } from '../session.service';
@@ -15,12 +15,12 @@ export class SelectScaComponent implements OnInit {
   @Output() selectedValue = new EventEmitter<any>();
 
   scaMethods: ScaUserData[] = [];
-  selectedMethod = new FormControl();
-  scaMethodForm: FormGroup;
+  selectedMethod = new UntypedFormControl();
+  scaMethodForm: UntypedFormGroup;
   redirectCode: string;
 
   constructor(
-    private formBuilder: FormBuilder,
+    private formBuilder: UntypedFormBuilder,
     private authStateConsentAuthorizationService: AuthStateConsentAuthorizationService,
     private updateConsentAuthorizationService: UpdateConsentAuthorizationService,
     private sessionService: SessionService

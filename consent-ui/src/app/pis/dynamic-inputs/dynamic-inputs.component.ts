@@ -1,6 +1,6 @@
 import { Component, Input, OnInit } from '@angular/core';
 import { AuthViolation } from '../../api';
-import { FormControl, FormGroup, Validators } from '@angular/forms';
+import { UntypedFormControl, UntypedFormGroup, Validators } from '@angular/forms';
 import { PisPayment } from '../common/models/pis-payment.model';
 
 @Component({
@@ -10,13 +10,13 @@ import { PisPayment } from '../common/models/pis-payment.model';
 })
 export class DynamicInputsComponent implements OnInit {
   @Input() violations: AuthViolation[];
-  @Input() targetForm: FormGroup;
+  @Input() targetForm: UntypedFormGroup;
   @Input() payment: PisPayment;
 
   constructor() {}
 
   ngOnInit() {
-    this.violations.forEach((it) => this.targetForm.addControl(it.code, new FormControl('', Validators.required)));
+    this.violations.forEach((it) => this.targetForm.addControl(it.code, new UntypedFormControl('', Validators.required)));
 
     if (this.payment && this.payment.extras) {
       this.violations

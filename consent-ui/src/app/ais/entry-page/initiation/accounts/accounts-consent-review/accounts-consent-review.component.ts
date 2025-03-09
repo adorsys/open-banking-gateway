@@ -4,7 +4,7 @@ import { SharedRoutes } from '../../common/shared-routes';
 import { AccountAccessLevel, AisConsentToGrant } from '../../../../common/dto/ais-consent';
 import { StubUtil } from '../../../../../common/utils/stub-util';
 import { ActivatedRoute, Router } from '@angular/router';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { UntypedFormBuilder, UntypedFormGroup, Validators } from '@angular/forms';
 import { SessionService } from '../../../../../common/session.service';
 import { ConsentUtil } from '../../../../common/consent-util';
 import { ApiHeaders } from '../../../../../api/api.headers';
@@ -20,13 +20,13 @@ import { DateUtil } from '../../../../common/date-util';
 export class AccountsConsentReviewComponent implements OnInit {
   public static ROUTE = SharedRoutes.REVIEW;
 
-  consentReviewForm: FormGroup;
+  consentReviewForm: UntypedFormGroup;
 
   constructor(
     private location: Location,
     private router: Router,
     private activatedRoute: ActivatedRoute,
-    private formBuilder: FormBuilder,
+    private formBuilder: UntypedFormBuilder,
     private sessionService: SessionService,
     private updateConsentAuthorizationService: UpdateConsentAuthorizationService
   ) {}

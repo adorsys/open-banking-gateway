@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { UntypedFormBuilder, UntypedFormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute, ActivatedRouteSnapshot, Router } from '@angular/router';
 import { SessionService } from '../../common/session.service';
 import { AuthService } from '../../common/auth.service';
@@ -14,14 +14,14 @@ import { CustomizeService } from '../../services/customize.service';
 export class LoginComponent implements OnInit {
   public static ROUTE = 'login';
 
-  loginForm: FormGroup;
+  loginForm: UntypedFormGroup;
   redirectCode: string;
 
   private route: ActivatedRouteSnapshot;
   private authId: string;
 
   constructor(
-    private formBuilder: FormBuilder,
+    private formBuilder: UntypedFormBuilder,
     private activatedRoute: ActivatedRoute,
     private router: Router,
     private sessionService: SessionService,

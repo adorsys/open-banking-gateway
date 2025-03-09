@@ -1,5 +1,5 @@
 import { Component, Input, OnDestroy, OnInit } from '@angular/core';
-import {FormControl, FormGroup, Validators} from '@angular/forms';
+import {UntypedFormControl, UntypedFormGroup, Validators} from '@angular/forms';
 import * as uuid from 'uuid';
 import { Subscription } from 'rxjs';
 import { ValidatorService } from 'angular-iban';
@@ -11,7 +11,7 @@ import {DEFAULT_CURRENCY} from '../../../../common/constant/constant';
   styleUrls: ['./accounts-reference.component.scss']
 })
 export class AccountsReferenceComponent implements OnInit, OnDestroy {
-  @Input() targetForm: FormGroup;
+  @Input() targetForm: UntypedFormGroup;
   @Input() accounts: InternalAccountReference[];
 
   private subscriptions = new Map<string, Subscription>();
@@ -46,17 +46,17 @@ export class AccountsReferenceComponent implements OnInit, OnDestroy {
     this.subscriptions[account.currencyId].unsubscribe();
   }
 
-  private addControlToForm(account: InternalAccountReference) : FormControl[] {
+  private addControlToForm(account: InternalAccountReference) : UntypedFormControl[] {
     if (!(account.ibanId && account.currencyId)) {
       const id = InternalAccountReference.generateId();
       account.ibanId = InternalAccountReference.generateIbanId(id);
       account.currencyId = InternalAccountReference.generateCurrencyId(id);
     }
 
-    const ibanFormControl = new FormControl('', [ValidatorService.validateIban, Validators.required]);
+    const ibanFormControl = new UntypedFormControl('', [ValidatorService.validateIban, Validators.required]);
     this.targetForm.addControl(account.ibanId, ibanFormControl);
 
-    const currencyFormControl = new FormControl(DEFAULT_CURRENCY, Validators.required);
+    const currencyFormControl = new UntypedFormControl(DEFAULT_CURRENCY, Validators.required);
     this.targetForm.addControl(account.currencyId, currencyFormControl );
 
     this.subscriptions[account.ibanId] = ibanFormControl.valueChanges.subscribe((it) => (account.iban = it));
