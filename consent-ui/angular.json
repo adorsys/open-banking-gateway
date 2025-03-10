@@ -76,18 +76,18 @@
         "serve": {
           "builder": "@angular-devkit/build-angular:dev-server",
           "options": {
-            "browserTarget": "consent-ui:build"
+            "buildTarget": "consent-ui:build"
           },
           "configurations": {
             "production": {
-              "browserTarget": "consent-ui:build:production"
+              "buildTarget": "consent-ui:build:production"
             }
           }
         },
         "extract-i18n": {
           "builder": "@angular-devkit/build-angular:extract-i18n",
           "options": {
-            "browserTarget": "consent-ui:build"
+            "buildTarget": "consent-ui:build"
           }
         },
         "test": {
