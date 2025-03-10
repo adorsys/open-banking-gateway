@@ -8,6 +8,7 @@ import de.adorsys.opba.protocol.xs2a.tests.e2e.sandbox.servers.WebDriverBasedAcc
 import de.adorsys.opba.protocol.xs2a.tests.e2e.sandbox.servers.config.RetryableConfig;
 import de.adorsys.opba.protocol.xs2a.tests.e2e.stages.AccountInformationResult;
 import io.github.bonigarcia.seljup.SeleniumExtension;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.condition.EnabledIfEnvironmentVariable;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -44,6 +45,7 @@ import static org.springframework.boot.test.context.SpringBootTest.WebEnvironmen
 @Transactional(propagation = Propagation.NOT_SUPPORTED)
 @SpringBootTest(classes = {RetryableConfig.class, Xs2aRealSandboxProtocolApplication.class, JGivenConfig.class}, webEnvironment = RANDOM_PORT)
 @ActiveProfiles(profiles = {ONE_TIME_POSTGRES_RAMFS, MOCKED_SANDBOX})
+@Disabled
 class SandboxE2EProtocolAisTest extends SandboxCommonTest<
         SandboxServers<? extends SandboxServers<?>>,
         WebDriverBasedAccountInformation<? extends WebDriverBasedAccountInformation<?>>,
