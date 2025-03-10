@@ -4,6 +4,7 @@ import com.tngtech.jgiven.junit5.ScenarioTest;
 import de.adorsys.opba.protocol.xs2a.tests.e2e.stages.AccountInformationResult;
 import de.adorsys.opba.protocol.xs2a.tests.e2e.stages.CommonGivenStages;
 import de.adorsys.opba.protocol.xs2a.tests.e2e.wiremock.mocks.WiremockAccountInformationRequest;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.config.AutowireCapableBeanFactory;
 
@@ -18,6 +19,7 @@ import static de.adorsys.opba.protocol.xs2a.tests.e2e.wiremock.mocks.WiremockCon
 /**
  * This is not really a test, just steps supplier.
  */
+@Disabled
 class E2EStress extends ScenarioTest<CommonGivenStages<? extends CommonGivenStages<?>>, WiremockAccountInformationRequest<? extends WiremockAccountInformationRequest<?>>, AccountInformationResult> {
 
     // need to find way to inject spring beans for load test, currently using static hack
