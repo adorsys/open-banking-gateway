@@ -6,7 +6,6 @@ import de.adorsys.opba.protocol.xs2a.tests.e2e.sandbox.servers.SandboxServers;
 import de.adorsys.opba.protocol.xs2a.tests.e2e.sandbox.servers.WebDriverBasedPaymentInitiation;
 import de.adorsys.opba.protocol.xs2a.tests.e2e.sandbox.servers.config.RetryableConfig;
 import de.adorsys.opba.protocol.xs2a.tests.e2e.stages.PaymentResult;
-import io.github.bonigarcia.seljup.SeleniumExtension;
 import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.condition.EnabledIfEnvironmentVariable;
@@ -42,11 +41,10 @@ import static org.springframework.boot.test.context.SpringBootTest.WebEnvironmen
     ManagementWebSecurityAutoConfiguration.class,
     SecurityAutoConfiguration.class,
 })
-@ExtendWith(SeleniumExtension.class)
+@Disabled
 @Transactional(propagation = Propagation.NOT_SUPPORTED)
 @SpringBootTest(classes = {RetryableConfig.class, Xs2aRealSandboxProtocolApplication.class, JGivenConfig.class}, webEnvironment = RANDOM_PORT)
 @ActiveProfiles(profiles = {ONE_TIME_POSTGRES_RAMFS, MOCKED_SANDBOX})
-@Disabled
 public class SandboxE2EProtocolPisTest extends SandboxCommonTest<
         SandboxServers<? extends SandboxServers<?>>,
         WebDriverBasedPaymentInitiation<? extends WebDriverBasedPaymentInitiation<?>>,
