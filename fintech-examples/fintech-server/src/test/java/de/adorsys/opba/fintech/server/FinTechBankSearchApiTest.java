@@ -24,12 +24,13 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.boot.test.mock.mockito.SpyBean;
+import org.springframework.boot.test.mock.mockito.MockReset;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.test.annotation.DirtiesContext;
-import org.springframework.test.context.bean.override.mockito.MockReset;
-import org.springframework.test.context.bean.override.mockito.MockitoBean;
+
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
 
@@ -63,14 +64,14 @@ class FinTechBankSearchApiTest extends FinTechApiBaseTest {
     private static final String FIN_TECH_BANK_SEARCH_URL = "/v1/search/bankSearch";
     private static final String FIN_TECH_BANK_PROFILE_URL = "/v1/search/bankProfile";
 
-    @MockitoBean(reset = MockReset.NONE, answers = Answers.CALLS_REAL_METHODS)
+    @MockBean(reset = MockReset.NONE, answer = Answers.CALLS_REAL_METHODS)
     protected RestRequestContext restRequestContext;
 
-    @MockitoBean
+    @MockBean
     protected TppBankSearchClientFeignMock tppBankSearchClientFeignMock;
 
     @SuppressWarnings("PMD.UnusedPrivateField")
-    @MockitoBean
+    @MockBean
     protected TppBankSearchApi mockedTppBankSearchApi;
 
     @BeforeEach

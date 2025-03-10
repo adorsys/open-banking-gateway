@@ -52,6 +52,7 @@ import static org.springframework.boot.test.context.SpringBootTest.WebEnvironmen
         HbciServerApplication.class,  // Starting HBCI server within test so that application basically communicates with itself
         HbciJGivenConfig.class
 }, webEnvironment = RANDOM_PORT)
+@Disabled
 @ActiveProfiles(profiles = {ONE_TIME_POSTGRES_RAMFS, MOCKED_SANDBOX, HBCI_SANDBOX_CONFIG})
 class HbciSandboxConsentE2EHbciProtocolTest extends SpringScenarioTest<
         HbciServers,

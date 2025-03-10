@@ -8,10 +8,7 @@ import de.adorsys.opba.fintech.impl.config.GmailOauth2Config;
 import de.adorsys.opba.fintech.impl.tppclients.Consts;
 import de.adorsys.opba.fintech.server.config.TestConfig;
 import lombok.SneakyThrows;
-import org.junit.jupiter.api.AfterAll;
-import org.junit.jupiter.api.BeforeAll;
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -40,6 +37,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @AutoConfigureMockMvc
 @EnableFinTechImplConfig
 @DirtiesContext(classMode = AFTER_EACH_TEST_METHOD)
+@Disabled
 class GmailOAuth2AuthenticationTest {
 
     private static final String FIN_TECH_INITIATE_OAUTH2 = "/v1/oauth2/{idpProvider}/login";

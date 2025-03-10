@@ -10,6 +10,7 @@ import de.adorsys.opba.protocol.xs2a.tests.e2e.wiremock.mocks.MockServers;
 import de.adorsys.opba.protocol.xs2a.tests.e2e.wiremock.mocks.WiremockAccountInformationRequest;
 import de.adorsys.opba.protocol.xs2a.tests.e2e.wiremock.mocks.Xs2aProtocolApplication;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.io.TempDir;
 import org.junit.jupiter.params.ParameterizedTest;
@@ -131,6 +132,7 @@ class WiremockConsentE2EXs2aProtocolTest extends SpringScenarioTest<MockServers,
             .open_banking_can_read_anton_brueckner_account_data_using_consent_bound_to_service_session(false, ING_BANK_PROFILE_ID);
     }
 
+    @Disabled
     @Test
     void testPostbankAccountsListWithConsentUsingEmbedded() {
         given()

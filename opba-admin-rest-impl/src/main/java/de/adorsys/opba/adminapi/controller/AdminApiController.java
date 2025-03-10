@@ -9,8 +9,6 @@ import org.springframework.context.annotation.Profile;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RestController;
 
-import jakarta.validation.Valid;
-import jakarta.validation.constraints.NotNull;
 import java.util.UUID;
 
 import static de.adorsys.opba.adminapi.config.Const.DISABLED_ON_NO_ADMIN_API;
@@ -23,7 +21,7 @@ public class AdminApiController implements AdminApiControllerApi {
     private final AdminApiService adminApiService;
 
     @Override
-    public ResponseEntity<BankData> createNewBankDataEntry(UUID bankId, @Valid BankData body) {
+    public ResponseEntity<BankData> createNewBankDataEntry(UUID bankId, BankData body) {
         return ResponseEntity.ok(adminApiService.createOrReplaceBank(bankId, body));
     }
 
@@ -34,7 +32,7 @@ public class AdminApiController implements AdminApiControllerApi {
     }
 
     @Override
-    public ResponseEntity<BankData> getBankDataById(@NotNull @Valid UUID bankId) {
+    public ResponseEntity<BankData> getBankDataById(UUID bankId) {
         BankData data = adminApiService.getBankDataByBankId(bankId);
         if (null == data) {
             return ResponseEntity.notFound().build();
@@ -49,7 +47,7 @@ public class AdminApiController implements AdminApiControllerApi {
     }
 
     @Override
-    public ResponseEntity<BankData> updateBankDataEntry(UUID bankId, @Valid BankData body) {
+    public ResponseEntity<BankData> updateBankDataEntry(UUID bankId, BankData body) {
         return ResponseEntity.ok(adminApiService.updateBank(bankId, body));
     }
 }
