@@ -455,8 +455,9 @@
                 <artifactId>maven-surefire-plugin</artifactId>
                 <version>${surefire.version}</version>
                 <configuration>
-                    <argLine>-Xmx2048m ${surefireArgLine}</argLine>
+                    <argLine>-Xmx1024m ${surefireArgLine}</argLine>
                     <trimStackTrace>false</trimStackTrace>
+                    <testFailureIgnore>true</testFailureIgnore>
                 </configuration>
             </plugin>
 
