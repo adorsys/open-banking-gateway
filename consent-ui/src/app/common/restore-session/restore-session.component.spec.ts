@@ -1,7 +1,8 @@
 import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
 
 import { RestoreSessionComponent } from './restore-session.component';
-import { HttpClientTestingModule } from '@angular/common/http/testing';
+import { provideHttpClientTesting } from '@angular/common/http/testing';
+import { provideHttpClient, withInterceptorsFromDi } from '@angular/common/http';
 
 describe('RestoreSessionComponent', () => {
   let component: RestoreSessionComponent;
@@ -9,12 +10,15 @@ describe('RestoreSessionComponent', () => {
 
   beforeAll(() => (window.onbeforeunload = jasmine.createSpy()));
 
-  beforeEach(waitForAsync(() => {
-    TestBed.configureTestingModule({
-      declarations: [RestoreSessionComponent],
-      imports: [HttpClientTestingModule]
-    }).compileComponents();
-  }));
+  beforeEach(
+    waitForAsync(() => {
+      TestBed.configureTestingModule({
+        declarations: [RestoreSessionComponent],
+        imports: [],
+        providers: [provideHttpClient(withInterceptorsFromDi()), provideHttpClientTesting()]
+      }).compileComponents();
+    })
+  );
 
   beforeEach(() => {
     fixture = TestBed.createComponent(RestoreSessionComponent);

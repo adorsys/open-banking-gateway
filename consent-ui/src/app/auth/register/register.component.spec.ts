@@ -4,9 +4,10 @@ import { ReactiveFormsModule } from '@angular/forms';
 import { RegisterComponent } from './register.component';
 import { RouterTestingModule } from '@angular/router/testing';
 import { ActivatedRoute } from '@angular/router';
-import { HttpClientTestingModule } from '@angular/common/http/testing';
+import { provideHttpClientTesting } from '@angular/common/http/testing';
 import { AuthService } from '../../common/auth.service';
 import { StubUtilTests } from '../../ais/common/stub-util-tests';
+import { provideHttpClient, withInterceptorsFromDi } from '@angular/common/http';
 
 describe('RegisterComponent', () => {
   let component: RegisterComponent;
@@ -18,23 +19,27 @@ describe('RegisterComponent', () => {
   const notMachingPasswordInput = 'not matching password';
   let form;
 
-  beforeEach(waitForAsync(() => {
-    TestBed.configureTestingModule({
-      declarations: [RegisterComponent],
-      imports: [ReactiveFormsModule, HttpClientTestingModule, RouterTestingModule],
-      providers: [
-        {
-          provide: ActivatedRoute,
-          useValue: {
-            snapshot: {
-              parent: { params: { authId: StubUtilTests.AUTH_ID } },
-              queryParams: { redirectCode: StubUtilTests.REDIRECT_ID }
+  beforeEach(
+    waitForAsync(() => {
+      TestBed.configureTestingModule({
+        declarations: [RegisterComponent],
+        imports: [ReactiveFormsModule, RouterTestingModule],
+        providers: [
+          {
+            provide: ActivatedRoute,
+            useValue: {
+              snapshot: {
+                parent: { params: { authId: StubUtilTests.AUTH_ID } },
+                queryParams: { redirectCode: StubUtilTests.REDIRECT_ID }
+              }
             }
-          }
-        }
-      ]
-    }).compileComponents();
-  }));
+          },
+          provideHttpClient(withInterceptorsFromDi()),
+          provideHttpClientTesting()
+        ]
+      }).compileComponents();
+    })
+  );
 
   beforeEach(() => {
     fixture = TestBed.createComponent(RegisterComponent);

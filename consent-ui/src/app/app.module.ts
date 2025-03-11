@@ -1,6 +1,6 @@
 import { BrowserModule } from '@angular/platform-browser';
 import { ErrorHandler, NgModule } from '@angular/core';
-import { HttpClientModule } from '@angular/common/http';
+import { provideHttpClient, withInterceptorsFromDi } from '@angular/common/http';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 
 import { AppRoutingModule } from './app-routing.module';
@@ -19,22 +19,16 @@ import { CookieRenewalService } from './ais/common/cookie-renewal/CookieRenewalS
 
 @NgModule({
   declarations: [AppComponent],
-  imports: [
-    HttpClientModule,
-    BrowserAnimationsModule,
-    BrowserModule,
-    NgHttpLoaderModule.forRoot(),
-    AppRoutingModule,
-    InfoModule
-  ],
+  bootstrap: [AppComponent],
+  imports: [BrowserAnimationsModule, BrowserModule, NgHttpLoaderModule.forRoot(), AppRoutingModule, InfoModule],
   providers: [
     SimpleTimer,
     CookieRenewalService,
     ErrorService,
     { provide: ErrorHandler, useClass: GlobalErrorHandler },
     { provide: BASE_PATH, useValue: environment.API_BASE_PATH },
-    { provide: BASE_PATH_AUTH, useValue: environment.API_BASE_PATH }
-  ],
-  bootstrap: [AppComponent]
+    { provide: BASE_PATH_AUTH, useValue: environment.API_BASE_PATH },
+    provideHttpClient(withInterceptorsFromDi())
+  ]
 })
 export class AppModule {}

@@ -1,9 +1,10 @@
 import { TestBed } from '@angular/core/testing';
-import { HttpClientTestingModule } from '@angular/common/http/testing';
+import { provideHttpClientTesting } from '@angular/common/http/testing';
 import { PsuAuthenticationService } from '../../../api-auth';
 import { SessionService } from '../../../common/session.service';
 import { CookieRenewalService } from './CookieRenewalService';
 import { SimpleTimer } from 'ng2-simple-timer';
+import { provideHttpClient, withInterceptorsFromDi } from '@angular/common/http';
 
 describe('CookieRenewalService', () => {
   let psuAuthService: PsuAuthenticationService;
@@ -14,8 +15,13 @@ describe('CookieRenewalService', () => {
 
   beforeEach(() => {
     TestBed.configureTestingModule({
-      imports: [HttpClientTestingModule],
-      providers: [PsuAuthenticationService, SessionService]
+      imports: [],
+      providers: [
+        PsuAuthenticationService,
+        SessionService,
+        provideHttpClient(withInterceptorsFromDi()),
+        provideHttpClientTesting()
+      ]
     });
 
     psuAuthService = TestBed.inject(PsuAuthenticationService);

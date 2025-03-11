@@ -2,13 +2,14 @@ import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
 import { AccountsConsentReviewComponent } from './accounts-consent-review.component';
 import { RouterTestingModule } from '@angular/router/testing';
 import { ReactiveFormsModule } from '@angular/forms';
-import { HttpClientTestingModule } from '@angular/common/http/testing';
+import { provideHttpClientTesting } from '@angular/common/http/testing';
 import { ActivatedRoute, convertToParamMap } from '@angular/router';
 import { of } from 'rxjs';
 import { StubUtilTests } from '../../../../common/stub-util-tests';
 import { SessionService } from '../../../../../common/session.service';
 import { Location } from '@angular/common';
 import { UpdateConsentAuthorizationService } from '../../../../../api';
+import { provideHttpClient, withInterceptorsFromDi } from '@angular/common/http';
 
 describe('AccountsConsentReviewComponent', () => {
   let component: AccountsConsentReviewComponent;
@@ -21,23 +22,27 @@ describe('AccountsConsentReviewComponent', () => {
 
   beforeAll(() => (window.onbeforeunload = jasmine.createSpy()));
 
-  beforeEach(waitForAsync(() => {
-    TestBed.configureTestingModule({
-      declarations: [AccountsConsentReviewComponent],
-      imports: [RouterTestingModule, ReactiveFormsModule, HttpClientTestingModule],
-      providers: [
-        SessionService,
-        UpdateConsentAuthorizationService,
-        { provide: Location, useValue: locationStub },
-        {
-          provide: ActivatedRoute,
-          useValue: {
-            parent: { parent: { params: of(convertToParamMap({ authId: StubUtilTests.AUTH_ID })) } }
-          }
-        }
-      ]
-    }).compileComponents();
-  }));
+  beforeEach(
+    waitForAsync(() => {
+      TestBed.configureTestingModule({
+        declarations: [AccountsConsentReviewComponent],
+        imports: [RouterTestingModule, ReactiveFormsModule],
+        providers: [
+          SessionService,
+          UpdateConsentAuthorizationService,
+          { provide: Location, useValue: locationStub },
+          {
+            provide: ActivatedRoute,
+            useValue: {
+              parent: { parent: { params: of(convertToParamMap({ authId: StubUtilTests.AUTH_ID })) } }
+            }
+          },
+          provideHttpClient(withInterceptorsFromDi()),
+          provideHttpClientTesting()
+        ]
+      }).compileComponents();
+    })
+  );
 
   beforeEach(() => {
     fixture = TestBed.createComponent(AccountsConsentReviewComponent);

@@ -1,6 +1,6 @@
 import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
 import { ReactiveFormsModule } from '@angular/forms';
-import { HttpClientTestingModule } from '@angular/common/http/testing';
+import { provideHttpClientTesting } from '@angular/common/http/testing';
 import { NO_ERRORS_SCHEMA } from '@angular/core';
 import { of } from 'rxjs';
 
@@ -9,6 +9,7 @@ import { StubUtilTests } from '../../ais/common/stub-util-tests';
 import { SessionService } from '../session.service';
 import { UpdateConsentAuthorizationService } from '../../api';
 import { AuthStateConsentAuthorizationService } from '../../api';
+import { provideHttpClient, withInterceptorsFromDi } from '@angular/common/http';
 
 describe('EnterTanComponent', () => {
   let component: EnterTanComponent;
@@ -21,13 +22,16 @@ describe('EnterTanComponent', () => {
   let consentAuthorizationService;
   let consentAuthorizationServiceSpy;
 
-  beforeEach(waitForAsync(() => {
-    TestBed.configureTestingModule({
-      declarations: [EnterTanComponent],
-      schemas: [NO_ERRORS_SCHEMA],
-      imports: [ReactiveFormsModule, HttpClientTestingModule]
-    }).compileComponents();
-  }));
+  beforeEach(
+    waitForAsync(() => {
+      TestBed.configureTestingModule({
+        declarations: [EnterTanComponent],
+        schemas: [NO_ERRORS_SCHEMA],
+        imports: [ReactiveFormsModule],
+        providers: [provideHttpClient(withInterceptorsFromDi()), provideHttpClientTesting()]
+      }).compileComponents();
+    })
+  );
 
   beforeEach(() => {
     fixture = TestBed.createComponent(EnterTanComponent);
