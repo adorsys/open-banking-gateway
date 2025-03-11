@@ -132,7 +132,7 @@ class WiremockConsentE2EXs2aProtocolTest extends SpringScenarioTest<MockServers,
             .open_banking_can_read_anton_brueckner_account_data_using_consent_bound_to_service_session(false, ING_BANK_PROFILE_ID);
     }
 
-    @Disabled
+    @Disabled // default Deutsche bank certificate is expired/missing in the xs2a adapter side
     @Test
     void testPostbankAccountsListWithConsentUsingEmbedded() {
         given()
