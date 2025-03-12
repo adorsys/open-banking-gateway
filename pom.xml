@@ -458,6 +458,11 @@
                     <argLine>-Xmx1024m ${surefireArgLine}</argLine>
                     <trimStackTrace>false</trimStackTrace>
                     <testFailureIgnore>true</testFailureIgnore>
+                    <includes>
+                        <include>./smoke-tests/src/tests/java/de.adorsys.opba.smoketests/OpbaApiSmokeE2ETest.java</include>
+                        <include>./smoke-tests/src/tests/java/de.adorsys.opba.smoketests/OpbaApiWithHbciConsentUiSmokeE2ETest.java</include>
+                        <include>./smoke-tests/src/tests/java/de.adorsys.opba.smoketests/OpbaApiWithXs2aConsentUiSmokeE2ETest.java</include>
+                    </includes>
                 </configuration>
             </plugin>
 
