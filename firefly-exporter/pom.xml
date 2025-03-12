@@ -16,12 +16,12 @@
 	<version>1.0.1-SNAPSHOT</version>
 
 	<properties>
-		<java.version>8</java.version>
+		<java.version>21</java.version>
 		<spring-cloud.version>Hoxton.SR8</spring-cloud.version>
 
-		<swagger-codegen-generators.version>1.0.19</swagger-codegen-generators.version>
-		<swagger-codegen-maven-plugin.version>3.0.19</swagger-codegen-maven-plugin.version>
-		<io.swagger.annotations.version>1.6.3</io.swagger.annotations.version>
+		<swagger-codegen-generators.version>1.0.56</swagger-codegen-generators.version>
+		<swagger-codegen-maven-plugin.version>3.0.67</swagger-codegen-maven-plugin.version>
+		<io.swagger.annotations.version>2.2.28</io.swagger.annotations.version>
 
 		<main.basedir>..</main.basedir>
 		<tpp-bank-search-location>
