@@ -4,9 +4,10 @@ import { UntypedFormControl, UntypedFormGroup, Validators } from '@angular/forms
 import { PisPayment } from '../common/models/pis-payment.model';
 
 @Component({
-  selector: 'consent-app-dynamic-inputs',
-  templateUrl: './dynamic-inputs.component.html',
-  styleUrls: ['./dynamic-inputs.component.scss']
+    selector: 'consent-app-dynamic-inputs',
+    templateUrl: './dynamic-inputs.component.html',
+    styleUrls: ['./dynamic-inputs.component.scss'],
+    standalone: false
 })
 export class DynamicInputsComponent implements OnInit {
   @Input() violations: AuthViolation[];

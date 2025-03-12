@@ -1,9 +1,11 @@
 // Overwrite bootstrap variables
-@import './bootstrap-overrides';
+@use 'bootstrap/scss/functions';
+@use 'bootstrap/scss/variables';
+@use 'bootstrap/scss/mixins' as *;
+@use "bootstrap/scss/maps";
+@use "bootstrap/scss/utilities";
+@use './bootstrap-overrides';
 
-@import 'bootstrap/scss/functions';
-@import 'bootstrap/scss/variables';
-@import 'bootstrap/scss/mixins';
 
 $COLOR_LIGHT_GREEN: #96d550;
 $COLOR_DARK_GREEN: #78aa40;

@@ -4,9 +4,10 @@ import {AuthViolation} from '../../../../../api';
 import {AisConsentToGrant} from '../../../../common/dto/ais-consent';
 
 @Component({
-  selector: 'consent-app-dynamic-inputs',
-  templateUrl: './dynamic-inputs.component.html',
-  styleUrls: ['./dynamic-inputs.component.scss']
+    selector: 'consent-app-dynamic-inputs',
+    templateUrl: './dynamic-inputs.component.html',
+    styleUrls: ['./dynamic-inputs.component.scss'],
+    standalone: false
 })
 export class DynamicInputsComponent implements OnInit {
   @Input() violations: AuthViolation[];

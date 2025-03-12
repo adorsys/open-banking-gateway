@@ -8,9 +8,10 @@ import { SessionService } from '../session.service';
 import { AuthStateConsentAuthorizationService } from '../../api/api/authStateConsentAuthorization.service';
 
 @Component({
-  selector: 'consent-app-enter-tan',
-  templateUrl: './enter-tan.component.html',
-  styleUrls: ['./enter-tan.component.scss']
+    selector: 'consent-app-enter-tan',
+    templateUrl: './enter-tan.component.html',
+    styleUrls: ['./enter-tan.component.scss'],
+    standalone: false
 })
 export class EnterTanComponent implements OnInit {
   @Input() authorizationSessionId: string;

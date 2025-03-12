@@ -6,9 +6,10 @@ import { ValidatorService } from 'angular-iban';
 import {DEFAULT_CURRENCY} from '../../../../common/constant/constant';
 
 @Component({
-  selector: 'consent-app-account-selector',
-  templateUrl: './accounts-reference.component.html',
-  styleUrls: ['./accounts-reference.component.scss']
+    selector: 'consent-app-account-selector',
+    templateUrl: './accounts-reference.component.html',
+    styleUrls: ['./accounts-reference.component.scss'],
+    standalone: false
 })
 export class AccountsReferenceComponent implements OnInit, OnDestroy {
   @Input() targetForm: UntypedFormGroup;

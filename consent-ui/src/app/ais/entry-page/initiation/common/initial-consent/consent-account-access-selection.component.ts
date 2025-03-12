@@ -14,9 +14,10 @@ import { ConsentAuth, UpdateConsentAuthorizationService } from '../../../../../a
 import { ApiHeaders } from '../../../../../api/api.headers';
 
 @Component({
-  selector: 'consent-app-access-selection',
-  templateUrl: './consent-account-access-selection.component.html',
-  styleUrls: ['./consent-account-access-selection.component.scss']
+    selector: 'consent-app-access-selection',
+    templateUrl: './consent-account-access-selection.component.html',
+    styleUrls: ['./consent-account-access-selection.component.scss'],
+    standalone: false
 })
 export class ConsentAccountAccessSelectionComponent implements OnInit, AfterContentChecked {
   public finTechName: string;

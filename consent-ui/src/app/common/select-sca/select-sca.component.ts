@@ -6,9 +6,10 @@ import { SessionService } from '../session.service';
 import { StubUtil } from '../utils/stub-util';
 
 @Component({
-  selector: 'consent-app-select-sca',
-  templateUrl: './select-sca.component.html',
-  styleUrls: ['./select-sca.component.scss']
+    selector: 'consent-app-select-sca',
+    templateUrl: './select-sca.component.html',
+    styleUrls: ['./select-sca.component.scss'],
+    standalone: false
 })
 export class SelectScaComponent implements OnInit {
   @Input() authorizationSessionId: string;

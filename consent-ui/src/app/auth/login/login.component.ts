@@ -7,9 +7,10 @@ import { ApiHeaders } from '../../api/api.headers';
 import { CustomizeService } from '../../services/customize.service';
 
 @Component({
-  selector: 'consent-app-login',
-  templateUrl: './login.component.html',
-  styleUrls: ['../auth.component.scss']
+    selector: 'consent-app-login',
+    templateUrl: './login.component.html',
+    styleUrls: ['../auth.component.scss'],
+    standalone: false
 })
 export class LoginComponent implements OnInit {
   public static ROUTE = 'login';

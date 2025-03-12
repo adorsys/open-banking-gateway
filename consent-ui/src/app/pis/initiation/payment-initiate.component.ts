@@ -7,9 +7,10 @@ import { AuthConsentState } from '../../ais/common/dto/auth-state';
 import { EntryPagePaymentsComponent } from '../entry-page-payments/entry-page-payments.component';
 
 @Component({
-  selector: 'consent-app-initiation',
-  templateUrl: './payment-initiate.component.html',
-  styleUrls: ['./payment-initiate.component.scss']
+    selector: 'consent-app-initiation',
+    templateUrl: './payment-initiate.component.html',
+    styleUrls: ['./payment-initiate.component.scss'],
+    standalone: false
 })
 export class PaymentInitiateComponent implements OnInit {
   private redirectCode: string;

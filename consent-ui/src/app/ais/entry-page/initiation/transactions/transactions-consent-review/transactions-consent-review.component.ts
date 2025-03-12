@@ -13,9 +13,10 @@ import { DATA_PATTERN, MAX_FREQUENCY_PER_DAY } from '../../../../common/constant
 import { DateUtil } from '../../../../common/date-util';
 
 @Component({
-  selector: 'consent-app-transactions-consent-review',
-  templateUrl: './transactions-consent-review.component.html',
-  styleUrls: ['./transactions-consent-review.component.scss']
+    selector: 'consent-app-transactions-consent-review',
+    templateUrl: './transactions-consent-review.component.html',
+    styleUrls: ['./transactions-consent-review.component.scss'],
+    standalone: false
 })
 export class TransactionsConsentReviewComponent implements OnInit {
   public static ROUTE = SharedRoutes.REVIEW;

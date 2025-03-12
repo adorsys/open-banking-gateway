@@ -10,9 +10,10 @@ import { ConsentUtil } from '../../../../common/consent-util';
 import { AccountReference } from '../../../../common/dto/ais-consent';
 
 @Component({
-  selector: 'consent-app-limited-access',
-  templateUrl: './dedicated-access.component.html',
-  styleUrls: ['./dedicated-access.component.scss']
+    selector: 'consent-app-limited-access',
+    templateUrl: './dedicated-access.component.html',
+    styleUrls: ['./dedicated-access.component.scss'],
+    standalone: false
 })
 export class DedicatedAccessComponent implements OnInit {
   constructor(

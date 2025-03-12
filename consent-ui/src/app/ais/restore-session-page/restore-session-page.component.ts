@@ -2,9 +2,10 @@ import { Component, Input, OnInit } from '@angular/core';
 import { ActivatedRoute, ActivatedRouteSnapshot } from '@angular/router';
 
 @Component({
-  selector: 'consent-app-restore-session-page',
-  templateUrl: './restore-session-page.component.html',
-  styleUrls: ['./restore-session-page.component.scss']
+    selector: 'consent-app-restore-session-page',
+    templateUrl: './restore-session-page.component.html',
+    styleUrls: ['./restore-session-page.component.scss'],
+    standalone: false
 })
 export class RestoreSessionPageComponent implements OnInit {
   // ING does not support query parameters, so everything must be in URL path

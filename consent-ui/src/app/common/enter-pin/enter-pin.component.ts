@@ -6,9 +6,10 @@ import { SessionService } from '../session.service';
 import { ApiHeaders } from '../../api/api.headers';
 
 @Component({
-  selector: 'consent-app-enter-pin',
-  templateUrl: './enter-pin.component.html',
-  styleUrls: ['./enter-pin.component.scss']
+    selector: 'consent-app-enter-pin',
+    templateUrl: './enter-pin.component.html',
+    styleUrls: ['./enter-pin.component.scss'],
+    standalone: false
 })
 export class EnterPinComponent implements OnInit {
   @Input() title: string;

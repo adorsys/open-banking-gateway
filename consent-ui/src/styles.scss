@@ -1,7 +1,10 @@
 /* You can add global styles to this file, and also import other style files */
-@import './assets/themes/variables';
-@import 'bootstrap/scss/bootstrap';
-@import './assets/themes/fonts';
+@use './assets/themes/variables';
+@use './assets/themes/fonts';
+@use './assets/themes/mobile';
+
+@use 'node_modules/bootstrap/scss/bootstrap';
+
 
 * {
   margin: 0;
@@ -401,4 +404,3 @@ label {
   }
 }
 
-@import './assets/themes/mobile';

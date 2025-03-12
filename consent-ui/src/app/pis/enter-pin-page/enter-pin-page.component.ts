@@ -3,9 +3,10 @@ import { ActivatedRoute } from '@angular/router';
 import { ApiHeaders } from '../../api/api.headers';
 
 @Component({
-  selector: 'consent-app-enter-pin-page',
-  templateUrl: './enter-pin-page.component.html',
-  styleUrls: ['./enter-pin-page.component.scss']
+    selector: 'consent-app-enter-pin-page',
+    templateUrl: './enter-pin-page.component.html',
+    styleUrls: ['./enter-pin-page.component.scss'],
+    standalone: false
 })
 export class EnterPinPageComponent implements OnInit {
   wrongPassword = false;

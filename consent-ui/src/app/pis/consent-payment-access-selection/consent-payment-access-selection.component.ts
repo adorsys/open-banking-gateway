@@ -11,9 +11,10 @@ import {PaymentUtil} from '../common/payment-util';
 import {PisPayment} from '../common/models/pis-payment.model';
 
 @Component({
-  selector: 'consent-app-payment-access-selection',
-  templateUrl: './consent-payment-access-selection.component.html',
-  styleUrls: ['./consent-payment-access-selection.component.scss']
+    selector: 'consent-app-payment-access-selection',
+    templateUrl: './consent-payment-access-selection.component.html',
+    styleUrls: ['./consent-payment-access-selection.component.scss'],
+    standalone: false
 })
 export class ConsentPaymentAccessSelectionComponent implements OnInit, AfterContentChecked {
   public finTechName: string;

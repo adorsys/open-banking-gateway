@@ -13,9 +13,10 @@ import { PisPayment } from '../common/models/pis-payment.model';
 import { AuthConsentState } from '../../ais/common/dto/auth-state';
 
 @Component({
-  selector: 'consent-app-payments-consent-review',
-  templateUrl: './payments-consent-review.component.html',
-  styleUrls: ['./payments-consent-review.component.scss']
+    selector: 'consent-app-payments-consent-review',
+    templateUrl: './payments-consent-review.component.html',
+    styleUrls: ['./payments-consent-review.component.scss'],
+    standalone: false
 })
 export class PaymentsConsentReviewComponent implements OnInit {
   public static ROUTE = SharedRoutes.REVIEW;
