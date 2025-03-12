@@ -110,7 +110,7 @@
 
         <!-- Framework libs -->
         <spring-boot.version>3.3.8</spring-boot.version>
-        <aspectj.version>1.9.7</aspectj.version>
+        <aspectj.version>1.9.21</aspectj.version>
         <commit-id.version>4.0.0</commit-id.version>
         <guava.version>30.1.1-jre</guava.version>
         <apache.commons-lang3.version>3.17.0</apache.commons-lang3.version>
