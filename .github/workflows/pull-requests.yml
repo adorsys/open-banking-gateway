@@ -30,6 +30,9 @@ jobs:
           echo "Available space"
           df -h
 
+      - name: Force update Maven dependencies
+        run: mvn clean install -U
+
       - name: Build project and run default test suite
         run: ./scripts/build_and_test.sh
         env:
