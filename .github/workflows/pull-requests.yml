@@ -30,7 +30,9 @@ jobs:
           echo "Available space"
           df -h
 
-      - name: Force update Maven dependencies
+      - name: Delete corrupted AspectJ JAR
+        run: rm -rf ~/.m2/repository/org/aspectj/aspectjweaver
+      - name: Force Maven dependency download
         run: mvn clean install -U
 
       - name: Build project and run default test suite
