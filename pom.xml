@@ -459,9 +459,9 @@
                     <trimStackTrace>false</trimStackTrace>
                     <testFailureIgnore>true</testFailureIgnore>
                     <includes>
-                        <include>./smoke-tests/src/tests/java/OpbaApiSmokeE2ETest.java</include>
-                        <include>./smoke-tests/src/tests/java/OpbaApiWithHbciConsentUiSmokeE2ETest.java</include>
-                        <include>./smoke-tests/src/tests/java/OpbaApiWithXs2aConsentUiSmokeE2ETest.java</include>
+                        <include>smoke-tests/src/tests/java/OpbaApiSmokeE2ETest.java</include>
+                        <include>smoke-tests/src/tests/java/OpbaApiWithHbciConsentUiSmokeE2ETest.java</include>
+                        <include>smoke-tests/src/tests/java/OpbaApiWithXs2aConsentUiSmokeE2ETest.java</include>
                     </includes>
                 </configuration>
             </plugin>
