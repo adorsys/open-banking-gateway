@@ -4,7 +4,6 @@ import { provideHttpClient, withInterceptorsFromDi } from '@angular/common/http'
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 
 import { AppRoutingModule } from './app-routing.module';
-import { NgHttpLoaderModule } from 'ng-http-loader';
 import { InfoModule } from './errorsHandler/info/info.module';
 import { GlobalErrorHandler } from './errorsHandler/global-errors-handler';
 import { ErrorService } from './errorsHandler/error.service';
@@ -20,7 +19,7 @@ import { CookieRenewalService } from './ais/common/cookie-renewal/CookieRenewalS
 @NgModule({
   declarations: [AppComponent],
   bootstrap: [AppComponent],
-  imports: [BrowserAnimationsModule, BrowserModule, NgHttpLoaderModule.forRoot(), AppRoutingModule, InfoModule],
+  imports: [BrowserAnimationsModule, BrowserModule, AppRoutingModule, InfoModule],
   providers: [
     SimpleTimer,
     CookieRenewalService,

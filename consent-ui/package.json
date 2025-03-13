@@ -38,7 +38,6 @@
     "bootstrap": "^5.3.3",
     "iban": "0.0.14",
     "jquery": "^3.6.0",
-    "ng-http-loader": "^17.2.0",
     "ng-swagger-gen": "^2.3.1",
     "ng2-simple-timer": "^11.2.9",
     "ngx-chiptan": "^17.0.0",
