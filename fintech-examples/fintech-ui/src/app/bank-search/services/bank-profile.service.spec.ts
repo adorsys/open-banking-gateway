@@ -1,8 +1,9 @@
 import { TestBed } from '@angular/core/testing';
-import { HttpClientTestingModule } from '@angular/common/http/testing';
+import { provideHttpClientTesting } from '@angular/common/http/testing';
 
 import { BankProfileService } from './bank-profile.service';
 import { FinTechBankSearchService } from '../../api';
+import { provideHttpClient, withInterceptorsFromDi } from '@angular/common/http';
 
 describe('BankProfileService', () => {
   let finTechBankSearchService: FinTechBankSearchService;
@@ -10,9 +11,9 @@ describe('BankProfileService', () => {
 
   beforeEach(() => {
     TestBed.configureTestingModule({
-      imports: [HttpClientTestingModule],
-      providers: [BankProfileService, FinTechBankSearchService]
-    });
+    imports: [],
+    providers: [BankProfileService, FinTechBankSearchService, provideHttpClient(withInterceptorsFromDi()), provideHttpClientTesting()]
+});
 
     bankProfileService = TestBed.inject(BankProfileService);
     finTechBankSearchService = TestBed.inject(FinTechBankSearchService);

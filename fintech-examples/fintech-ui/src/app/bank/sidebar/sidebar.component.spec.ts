@@ -1,12 +1,13 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 import { ActivatedRoute } from '@angular/router';
 import { RouterTestingModule } from '@angular/router/testing';
-import { HttpClientTestingModule } from '@angular/common/http/testing';
+import { provideHttpClientTesting } from '@angular/common/http/testing';
 import { of } from 'rxjs';
 
 import { BankProfileService } from '../../bank-search/services/bank-profile.service';
 import { BankProfile } from '../../api';
 import { SidebarComponent } from './sidebar.component';
+import { provideHttpClient, withInterceptorsFromDi } from '@angular/common/http';
 
 describe('SidebarComponent', () => {
   let component: SidebarComponent;
@@ -15,25 +16,27 @@ describe('SidebarComponent', () => {
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [SidebarComponent],
-      imports: [RouterTestingModule, HttpClientTestingModule],
-      providers: [
+    declarations: [SidebarComponent],
+    imports: [RouterTestingModule],
+    providers: [
         BankProfileService,
         {
-          provide: ActivatedRoute,
-          useValue: {
-            params: of({ bankId: 1234 }),
-            snapshot: {
-              paramMap: {
-                get(bankId: string): string {
-                  return '1234';
+            provide: ActivatedRoute,
+            useValue: {
+                params: of({ bankId: 1234 }),
+                snapshot: {
+                    paramMap: {
+                        get(bankId: string): string {
+                            return '1234';
+                        }
+                    }
                 }
-              }
             }
-          }
-        }
-      ]
-    }).compileComponents();
+        },
+        provideHttpClient(withInterceptorsFromDi()),
+        provideHttpClientTesting()
+    ]
+}).compileComponents();
   }));
 
   beforeEach(() => {

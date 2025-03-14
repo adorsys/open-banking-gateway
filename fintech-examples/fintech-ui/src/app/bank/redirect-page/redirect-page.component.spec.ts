@@ -6,7 +6,8 @@ import { ActivatedRoute } from '@angular/router';
 import { RedirectPageComponent } from './redirect-page.component';
 import { ConsentAuthorizationService } from '../services/consent-authorization.service';
 import { RedirectStruct } from './redirect-struct';
-import { HttpClientTestingModule } from '@angular/common/http/testing';
+import { provideHttpClientTesting } from '@angular/common/http/testing';
+import { provideHttpClient, withInterceptorsFromDi } from '@angular/common/http';
 
 describe('RedirectPageComponent', () => {
   let component: RedirectPageComponent;
@@ -16,10 +17,11 @@ describe('RedirectPageComponent', () => {
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      imports: [RouterTestingModule, HttpClientTestingModule],
-      declarations: [RedirectPageComponent],
-      schemas: [NO_ERRORS_SCHEMA]
-    })
+    declarations: [RedirectPageComponent],
+    schemas: [NO_ERRORS_SCHEMA],
+    imports: [RouterTestingModule],
+    providers: [provideHttpClient(withInterceptorsFromDi()), provideHttpClientTesting()]
+})
       .overrideComponent(RedirectPageComponent, {
         set: {
           providers: [

@@ -1,6 +1,6 @@
 import {Component, OnInit} from '@angular/core';
 import {UntypedFormBuilder, UntypedFormGroup, Validators} from '@angular/forms';
-import {HttpResponse} from '@angular/common/http';
+import { HttpResponse } from '@angular/common/http';
 import {Location} from '@angular/common';
 import {ActivatedRoute, Router} from '@angular/router';
 import {ValidatorService} from 'angular-iban';

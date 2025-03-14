@@ -2,11 +2,12 @@ import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 import { ReactiveFormsModule } from '@angular/forms';
 import { ActivatedRoute } from '@angular/router';
 import { RouterTestingModule } from '@angular/router/testing';
-import { HttpClientTestingModule } from '@angular/common/http/testing';
+import { provideHttpClientTesting } from '@angular/common/http/testing';
 import { InitiateComponent } from './initiate.component';
 
 import { StorageService } from '../../../services/storage.service';
 import { Consts } from '../../../models/consts';
+import { provideHttpClient, withInterceptorsFromDi } from '@angular/common/http';
 
 describe('InitiateComponent', () => {
   let component: InitiateComponent;
@@ -16,17 +17,19 @@ describe('InitiateComponent', () => {
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [InitiateComponent],
-      imports: [ReactiveFormsModule, HttpClientTestingModule, RouterTestingModule],
-      providers: [
+    declarations: [InitiateComponent],
+    imports: [ReactiveFormsModule, RouterTestingModule],
+    providers: [
         {
-          provide: ActivatedRoute,
-          useValue: {
-            snapshot: { params: { bankid: '1234', accountid: '1234' }, queryParams: {iban: 'AL90208110080000001039531801'} }
-          }
-        }
-      ]
-    }).compileComponents();
+            provide: ActivatedRoute,
+            useValue: {
+                snapshot: { params: { bankid: '1234', accountid: '1234' }, queryParams: { iban: 'AL90208110080000001039531801' } }
+            }
+        },
+        provideHttpClient(withInterceptorsFromDi()),
+        provideHttpClientTesting()
+    ]
+}).compileComponents();
   }));
 
   beforeEach(() => {

@@ -1,5 +1,5 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
-import { HttpClientTestingModule } from '@angular/common/http/testing';
+import { provideHttpClientTesting } from '@angular/common/http/testing';
 import { RouterTestingModule } from '@angular/router/testing';
 import { ActivatedRoute } from '@angular/router';
 import { CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
@@ -8,6 +8,7 @@ import { PaymentAccountComponent } from './payment-account.component';
 import { PaymentAccountPaymentsComponent } from '../payment-account-payments/payment-account-payments.component';
 import { StorageService } from '../../../services/storage.service';
 import { Consts } from '../../../models/consts';
+import { provideHttpClient, withInterceptorsFromDi } from '@angular/common/http';
 
 describe('PaymentAccountComponent', () => {
   let component: PaymentAccountComponent;
@@ -17,19 +18,21 @@ describe('PaymentAccountComponent', () => {
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      imports: [HttpClientTestingModule, RouterTestingModule],
-      declarations: [PaymentAccountComponent, PaymentAccountPaymentsComponent],
-      schemas: [CUSTOM_ELEMENTS_SCHEMA],
-      providers: [
+    declarations: [PaymentAccountComponent, PaymentAccountPaymentsComponent],
+    schemas: [CUSTOM_ELEMENTS_SCHEMA],
+    imports: [RouterTestingModule],
+    providers: [
         StorageService,
         {
-          provide: ActivatedRoute,
-          useValue: {
-            snapshot: { params: { bankid: '1234', accountid: '1234' } }
-          }
-        }
-      ]
-    }).compileComponents();
+            provide: ActivatedRoute,
+            useValue: {
+                snapshot: { params: { bankid: '1234', accountid: '1234' } }
+            }
+        },
+        provideHttpClient(withInterceptorsFromDi()),
+        provideHttpClientTesting()
+    ]
+}).compileComponents();
   }));
 
   beforeEach(() => {

@@ -1,4 +1,4 @@
-import { HTTP_INTERCEPTORS, HttpClientModule, HttpClientXsrfModule } from '@angular/common/http';
+import { HTTP_INTERCEPTORS, provideHttpClient, withInterceptorsFromDi, withXsrfConfiguration } from '@angular/common/http';
 import { ErrorHandler, NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
 
@@ -35,45 +35,38 @@ export function apiConfigFactory(): Configuration {
   return new Configuration(params);
 }
 
-@NgModule({
-  declarations: [
-    AppComponent,
-    LoginComponent,
-    Oauth2LoginComponent,
-    ForbiddenOauth2Component,
-    RedirectAfterConsentComponent,
-    RedirectAfterPaymentComponent,
-    NavbarComponent,
-    RedirectAfterConsentDeniedComponent,
-    RedirectAfterPaymentDeniedComponent,
-    SessionExpiredComponent
-  ],
-  imports: [
-    AppRoutingModule,
-    BrowserModule,
-    BrowserAnimationsModule,
-    SharedModule,
-    HttpClientModule,
-    NgHttpLoaderModule.forRoot(),
-    HttpClientXsrfModule.withOptions({
-      cookieName: 'XSRF-TOKEN',
-      headerName: 'X-XSRF-TOKEN'
-    }),
-    ApiModule.forRoot(apiConfigFactory)
-  ],
-  providers: [
-    SimpleTimer,
-    AuthGuard,
-    ErrorService,
-    DocumentCookieService,
-    TimerService,
-    {
-      provide: HTTP_INTERCEPTORS,
-      useClass: AuthInterceptor,
-      multi: true
-    },
-    { provide: ErrorHandler, useClass: GlobalErrorHandler }
-  ],
-  bootstrap: [AppComponent]
-})
+@NgModule({ declarations: [
+        AppComponent,
+        LoginComponent,
+        Oauth2LoginComponent,
+        ForbiddenOauth2Component,
+        RedirectAfterConsentComponent,
+        RedirectAfterPaymentComponent,
+        NavbarComponent,
+        RedirectAfterConsentDeniedComponent,
+        RedirectAfterPaymentDeniedComponent,
+        SessionExpiredComponent
+    ],
+    bootstrap: [AppComponent], imports: [AppRoutingModule,
+        BrowserModule,
+        BrowserAnimationsModule,
+        SharedModule,
+        NgHttpLoaderModule.forRoot(),
+        ApiModule.forRoot(apiConfigFactory)], providers: [
+        SimpleTimer,
+        AuthGuard,
+        ErrorService,
+        DocumentCookieService,
+        TimerService,
+        {
+            provide: HTTP_INTERCEPTORS,
+            useClass: AuthInterceptor,
+            multi: true
+        },
+        { provide: ErrorHandler, useClass: GlobalErrorHandler },
+        provideHttpClient(withInterceptorsFromDi(), withXsrfConfiguration({
+            cookieName: 'XSRF-TOKEN',
+            headerName: 'X-XSRF-TOKEN'
+        }))
+    ] })
 export class AppModule {}

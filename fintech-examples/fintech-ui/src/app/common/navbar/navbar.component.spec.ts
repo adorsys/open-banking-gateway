@@ -1,11 +1,12 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 import { Router } from '@angular/router';
-import { HttpClientTestingModule } from '@angular/common/http/testing';
+import { provideHttpClientTesting } from '@angular/common/http/testing';
 import { RouterTestingModule } from '@angular/router/testing';
 import { SimpleTimer } from 'ng2-simple-timer';
 
 import { AuthService } from '../../services/auth.service';
 import { NavbarComponent } from './navbar.component';
+import { provideHttpClient, withInterceptorsFromDi } from '@angular/common/http';
 
 describe('NavbarComponent', () => {
   let component: NavbarComponent;
@@ -14,10 +15,10 @@ describe('NavbarComponent', () => {
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      providers: [AuthService, SimpleTimer],
-      declarations: [NavbarComponent],
-      imports: [RouterTestingModule, HttpClientTestingModule]
-    }).compileComponents();
+    declarations: [NavbarComponent],
+    imports: [RouterTestingModule],
+    providers: [AuthService, SimpleTimer, provideHttpClient(withInterceptorsFromDi()), provideHttpClientTesting()]
+}).compileComponents();
   }));
 
   beforeEach(() => {

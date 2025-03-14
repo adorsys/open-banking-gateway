@@ -2,17 +2,18 @@ import { TestBed, async } from '@angular/core/testing';
 import { RouterTestingModule } from '@angular/router/testing';
 import { AppComponent } from './app.component';
 import { NavbarComponent } from './common/navbar/navbar.component';
-import { HttpClientTestingModule } from '@angular/common/http/testing';
+import { provideHttpClientTesting } from '@angular/common/http/testing';
 import { DocumentCookieService } from './services/document-cookie.service';
 import { NgHttpLoaderModule } from 'ng-http-loader';
+import { provideHttpClient, withInterceptorsFromDi } from '@angular/common/http';
 
 describe('AppComponent', () => {
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      imports: [RouterTestingModule, HttpClientTestingModule, NgHttpLoaderModule],
-      declarations: [AppComponent, NavbarComponent],
-      providers: [DocumentCookieService]
-    }).compileComponents();
+    declarations: [AppComponent, NavbarComponent],
+    imports: [RouterTestingModule, NgHttpLoaderModule],
+    providers: [DocumentCookieService, provideHttpClient(withInterceptorsFromDi()), provideHttpClientTesting()]
+}).compileComponents();
   }));
 
   it('should create the app', () => {
