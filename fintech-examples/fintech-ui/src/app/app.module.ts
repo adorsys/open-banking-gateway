@@ -19,7 +19,6 @@ import { DocumentCookieService } from './services/document-cookie.service';
 import { RedirectAfterConsentDeniedComponent } from './redirect-after-consent-denied/redirect-after-consent-denied.component';
 import { SessionExpiredComponent } from './session-expired/session-expired.component';
 import { SimpleTimer } from 'ng2-simple-timer';
-import { NgHttpLoaderModule } from 'ng-http-loader';
 import { RedirectAfterPaymentComponent } from './redirect-after-payment/redirect-after-payment.component';
 import { RedirectAfterPaymentDeniedComponent } from './redirect-after-payment-denied/redirect-after-payment-denied.component';
 import { Oauth2LoginComponent } from './oauth2-login/oauth2-login.component';
@@ -51,7 +50,6 @@ export function apiConfigFactory(): Configuration {
         BrowserModule,
         BrowserAnimationsModule,
         SharedModule,
-        NgHttpLoaderModule.forRoot(),
         ApiModule.forRoot(apiConfigFactory)], providers: [
         SimpleTimer,
         AuthGuard,
