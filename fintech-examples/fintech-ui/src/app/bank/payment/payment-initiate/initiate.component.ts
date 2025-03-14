@@ -15,9 +15,10 @@ class TestPayment {
 }
 
 @Component({
-  selector: 'app-initiate',
-  templateUrl: './initiate.component.html',
-  styleUrls: ['./initiate.component.scss']
+    selector: 'app-initiate',
+    templateUrl: './initiate.component.html',
+    styleUrls: ['./initiate.component.scss'],
+    standalone: false
 })
 export class InitiateComponent implements OnInit {
   public static ROUTE = 'initiate';

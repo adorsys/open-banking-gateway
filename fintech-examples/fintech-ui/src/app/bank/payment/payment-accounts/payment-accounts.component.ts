@@ -6,9 +6,10 @@ import { ValidatorService } from 'angular-iban';
 import { UntypedFormBuilder, UntypedFormGroup, Validators } from '@angular/forms';
 
 @Component({
-  selector: 'app-list-accounts-for-payment',
-  templateUrl: './payment-accounts.component.html',
-  styleUrls: ['./payment-accounts.component.scss']
+    selector: 'app-list-accounts-for-payment',
+    templateUrl: './payment-accounts.component.html',
+    styleUrls: ['./payment-accounts.component.scss'],
+    standalone: false
 })
 export class PaymentAccountsComponent implements OnInit {
   public static ROUTE = 'accounts';

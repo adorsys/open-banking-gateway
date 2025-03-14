@@ -5,9 +5,10 @@ import { AuthService } from '../services/auth.service';
 import { RoutingPath } from '../models/routing-path.model';
 
 @Component({
-  selector: 'app-login',
-  templateUrl: './login.component.html',
-  styleUrls: ['./login.component.scss']
+    selector: 'app-login',
+    templateUrl: './login.component.html',
+    styleUrls: ['./login.component.scss'],
+    standalone: false
 })
 export class LoginComponent implements OnInit {
   loginForm: UntypedFormGroup;

@@ -5,9 +5,10 @@ import { Consent, Payment } from '../models/consts';
 import { ModalCard } from '../models/modalCard.model';
 
 @Component({
-  selector: 'app-redirect-after-payment-denied',
-  templateUrl: './redirect-after-payment-denied.component.html',
-  styleUrls: ['./redirect-after-payment-denied.component.scss']
+    selector: 'app-redirect-after-payment-denied',
+    templateUrl: './redirect-after-payment-denied.component.html',
+    styleUrls: ['./redirect-after-payment-denied.component.scss'],
+    standalone: false
 })
 export class RedirectAfterPaymentDeniedComponent implements OnInit {
   private redirectCode;
