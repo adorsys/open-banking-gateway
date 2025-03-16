@@ -13,7 +13,7 @@ services:
       - POSTGRES_DB=open_banking
     ports:
       #HOST:CONTAINER
-      - "15432:5432"
+      - "5432:5432"
     volumes:
       - ./opba-db/src/main/resources/init.sql:/docker-entrypoint-initdb.d/init.sql
       - ./fintech-examples/fintech-db-schema/src/main/resources/init.sql:/docker-entrypoint-initdb.d/fintech-init.sql
