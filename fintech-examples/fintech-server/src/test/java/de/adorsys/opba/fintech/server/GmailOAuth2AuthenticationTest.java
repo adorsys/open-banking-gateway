@@ -37,7 +37,6 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @AutoConfigureMockMvc
 @EnableFinTechImplConfig
 @DirtiesContext(classMode = AFTER_EACH_TEST_METHOD)
-@Disabled
 class GmailOAuth2AuthenticationTest {
 
     private static final String FIN_TECH_INITIATE_OAUTH2 = "/v1/oauth2/{idpProvider}/login";

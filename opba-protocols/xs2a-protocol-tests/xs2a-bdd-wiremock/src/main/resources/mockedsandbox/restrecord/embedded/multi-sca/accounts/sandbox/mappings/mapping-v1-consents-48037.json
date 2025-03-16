@@ -1,5 +1,5 @@
 {
-  "id": "36078b2f-2c60-3162-a658-c9225dae428a",
+  "id": "36078b2f-2c60-3162-a658-c9225dae428c",
   "scenarioName": "Embedded max.musterman initiate consent",
   "requiredScenarioState": "PsuIdentified",
   "newScenarioState": "PsuAuthenticated",
@@ -35,5 +35,5 @@
       "Date": "Wed, 08 Jan 2020 16:25:18 GMT"
     }
   },
-  "uuid": "36078b2f-2c60-3162-a658-c9225dae428a"
+  "uuid": "36078b2f-2c60-3162-a658-c9225dae428c"
 }

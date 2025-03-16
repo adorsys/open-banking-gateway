@@ -1,5 +1,5 @@
 {
-  "id": "8b4e888c-22f2-33b1-a4ea-701e4d9f76f5",
+  "id": "8b4e888c-22f2-33b1-a4ea-701e4d9f76f9",
   "scenarioName": "Embedded max.musterman initiate consent",
   "requiredScenarioState": "PsuAuthenticated",
   "newScenarioState": "ScaMethodSelected",
@@ -35,5 +35,5 @@
       "Date": "Wed, 08 Jan 2020 16:25:21 GMT"
     }
   },
-  "uuid": "8b4e888c-22f2-33b1-a4ea-701e4d9f76f5"
+  "uuid": "8b4e888c-22f2-33b1-a4ea-701e4d9f76f9"
 }

@@ -67,7 +67,7 @@
 
         <dependency>
             <groupId>org.wiremock</groupId>
-            <artifactId>wiremock-standalone</artifactId>
+            <artifactId>wiremock-jetty12</artifactId>
             <version>${wiremock.version}</version>
             <scope>test</scope>
         </dependency>
@@ -82,6 +82,12 @@
             <artifactId>junit-jupiter</artifactId>
             <version>${testcontainers.version}</version>
             <scope>test</scope>
+            <exclusions>
+                <exclusion>
+                    <groupId>org.apache.commons</groupId>
+                    <artifactId>commons-compress</artifactId>
+                </exclusion>
+            </exclusions>
         </dependency>
     </dependencies>
 
