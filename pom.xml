@@ -468,17 +468,6 @@
                 </configuration>
             </plugin>
 
-            <!-- junit tests -->
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-surefire-plugin</artifactId>
-                <version>${surefire.version}</version>
-                <configuration>
-                    <argLine>-Xmx1024m ${surefireArgLine}</argLine>
-                    <trimStackTrace>false</trimStackTrace>
-                </configuration>
-            </plugin>
-
             <!-- integration tests -->
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
@@ -504,6 +493,21 @@
                 </executions>
             </plugin>
         </plugins>
+
+        <pluginManagement>
+            <plugins>
+                <!-- junit tests -->
+                <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-surefire-plugin</artifactId>
+                    <version>${surefire.version}</version>
+                    <configuration>
+                        <argLine>-Xmx1024m ${surefireArgLine}</argLine>
+                        <trimStackTrace>false</trimStackTrace>
+                    </configuration>
+                </plugin>
+            </plugins>
+        </pluginManagement>
     </build>
 
     <reporting>
