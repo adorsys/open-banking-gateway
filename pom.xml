@@ -110,6 +110,7 @@
 
         <!-- Framework libs -->
         <spring-boot.version>3.3.8</spring-boot.version>
+        <spring-boot-test.version>3.4.3</spring-boot-test.version>
         <aspectj.version>1.9.21</aspectj.version>
         <commit-id.version>4.0.0</commit-id.version>
         <guava.version>30.1.1-jre</guava.version>
@@ -140,6 +141,14 @@
         <swagger-parser.version>2.1.25</swagger-parser.version>
         <jackson-yaml.version>2.13.1</jackson-yaml.version>
         <auto-service.version>1.0.1</auto-service.version>
+        <jakarta.el-api.version>6.0.1</jakarta.el-api.version>
+        <jakarta.servlet.version>6.1.0</jakarta.servlet.version>
+        <jakarta.validation.version>3.0.2</jakarta.validation.version>
+        <jakarta.xml.bind.version>4.0.2</jakarta.xml.bind.version>
+        <jakarta.persistence-api.version>3.1.0</jakarta.persistence-api.version>
+        <jaxb-api.version>2.3.1</jaxb-api.version>
+        <selenium-java.version>4.29.0</selenium-java.version>
+        <jackson-databind-nullable.version>0.2.6</jackson-databind-nullable.version>
 
         <!-- Flowable BPMN -->
         <flowable.version>7.1.0</flowable.version>
@@ -194,6 +203,7 @@
         <!-- JavaDoc -->
         <jakarta.interceptor.api.version>2.2.0</jakarta.interceptor.api.version>
         <commons-codec.version>1.15</commons-codec.version>
+        <commons-compress>1.26.2</commons-compress>
     </properties>
 
     <repositories>
@@ -282,7 +292,7 @@
             <dependency>
                 <groupId>jakarta.validation</groupId>
                 <artifactId>jakarta.validation-api</artifactId>
-                <version>3.0.2</version>
+                <version>${jakarta.validation.version}</version>
             </dependency>
 
             <dependency>
@@ -294,7 +304,7 @@
             <dependency>
                 <groupId>jakarta.el</groupId>
                 <artifactId>jakarta.el-api</artifactId>
-                <version>6.0.1</version>
+                <version>${jakarta.el-api.version}</version>
             </dependency>
 
 
@@ -317,7 +327,7 @@
             <dependency>
                 <groupId>org.apache.commons</groupId>
                 <artifactId>commons-compress</artifactId>
-                <version>1.26.2</version>
+                <version>${commons-compress}</version>
             </dependency>
 
             <dependency>
