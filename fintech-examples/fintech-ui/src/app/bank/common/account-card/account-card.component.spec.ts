@@ -1,4 +1,4 @@
-import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+import { waitForAsync, ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { AccountCardComponent } from './account-card.component';
 import { AccountStruct } from '../../redirect-page/redirect-struct';
@@ -7,7 +7,7 @@ describe('AccountCardComponent', () => {
   let component: AccountCardComponent;
   let fixture: ComponentFixture<AccountCardComponent>;
 
-  beforeEach(async(() => {
+  beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
       declarations: [AccountCardComponent]
     }).compileComponents();

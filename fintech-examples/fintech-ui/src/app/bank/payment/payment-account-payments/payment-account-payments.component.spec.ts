@@ -1,4 +1,4 @@
-import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+import { waitForAsync, ComponentFixture, TestBed } from '@angular/core/testing';
 import { ActivatedRoute } from '@angular/router';
 import { provideHttpClientTesting } from '@angular/common/http/testing';
 import { CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
@@ -12,7 +12,7 @@ describe('PaymentAccountPaymentsComponent', () => {
   let component: PaymentAccountPaymentsComponent;
   let fixture: ComponentFixture<PaymentAccountPaymentsComponent>;
 
-  beforeEach(async(() => {
+  beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
     declarations: [PaymentAccountPaymentsComponent],
     schemas: [CUSTOM_ELEMENTS_SCHEMA],

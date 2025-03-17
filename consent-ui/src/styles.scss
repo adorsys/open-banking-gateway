@@ -12,6 +12,10 @@
 }
 
 body {
+  display: grid;
+  place-items: center; /* Center content */
+  min-height: 75vh; /* Full viewport height */
+  margin: 0;
   font-size: var(--textFontSize);
   font-weight: var(--textFontWeight);
   font-family: var(--fontFamily);
@@ -74,6 +78,10 @@ a {
   border: none;
   margin-right: auto;
   margin-left: auto;
+  border-radius: 1rem;
+  padding: 2rem;
+  display: flex;
+  flex-direction: column;
 
   &--large {
     padding: 2rem 2rem;

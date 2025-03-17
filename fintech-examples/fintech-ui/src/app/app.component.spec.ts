@@ -1,17 +1,17 @@
-import { TestBed, async } from '@angular/core/testing';
+import { TestBed, waitForAsync } from '@angular/core/testing';
 import { RouterTestingModule } from '@angular/router/testing';
 import { AppComponent } from './app.component';
 import { NavbarComponent } from './common/navbar/navbar.component';
 import { provideHttpClientTesting } from '@angular/common/http/testing';
 import { DocumentCookieService } from './services/document-cookie.service';
-import { NgHttpLoaderModule } from 'ng-http-loader';
+// import { NgHttpLoaderModule } from 'ng-http-loader';
 import { provideHttpClient, withInterceptorsFromDi } from '@angular/common/http';
 
 describe('AppComponent', () => {
-  beforeEach(async(() => {
+  beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
     declarations: [AppComponent, NavbarComponent],
-    imports: [RouterTestingModule, NgHttpLoaderModule],
+    imports: [RouterTestingModule, ],
     providers: [DocumentCookieService, provideHttpClient(withInterceptorsFromDi()), provideHttpClientTesting()]
 }).compileComponents();
   }));

@@ -1,0 +1,6 @@
+.center-button {
+  display: flex;
+  flex-direction: column; /* Stack buttons vertically */
+  align-items: center; /* Center horizontally */
+  gap: 0.2px; /* Add spacing between buttons */
+}

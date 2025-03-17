@@ -1,5 +1,11 @@
+@import 'src/assets/themes/variables';
+
 input {
   margin-right: 10px;
+}
+
+.card-body {
+  background-color: $primary-10;
 }
 
 .withoutOutline {

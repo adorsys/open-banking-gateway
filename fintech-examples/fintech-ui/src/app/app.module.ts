@@ -18,12 +18,13 @@ import { NavbarComponent } from './common/navbar/navbar.component';
 import { DocumentCookieService } from './services/document-cookie.service';
 import { RedirectAfterConsentDeniedComponent } from './redirect-after-consent-denied/redirect-after-consent-denied.component';
 import { SessionExpiredComponent } from './session-expired/session-expired.component';
-import { SimpleTimer } from 'ng2-simple-timer';
+import { SimpleTimer } from 'src/app/services/simple-timer';
 import { RedirectAfterPaymentComponent } from './redirect-after-payment/redirect-after-payment.component';
 import { RedirectAfterPaymentDeniedComponent } from './redirect-after-payment-denied/redirect-after-payment-denied.component';
 import { Oauth2LoginComponent } from './oauth2-login/oauth2-login.component';
 import { ForbiddenOauth2Component } from './invalid-oauth2/forbidden-oauth2.component';
 import { TimerService } from './services/timer.service';
+import { NgHttpLoaderComponent } from 'ng-http-loader';
 
 export function apiConfigFactory(): Configuration {
   const params: ConfigurationParameters = {
@@ -47,10 +48,10 @@ export function apiConfigFactory(): Configuration {
         SessionExpiredComponent
     ],
     bootstrap: [AppComponent], imports: [AppRoutingModule,
-        BrowserModule,
-        BrowserAnimationsModule,
-        SharedModule,
-        ApiModule.forRoot(apiConfigFactory)], providers: [
+    BrowserModule,
+    BrowserAnimationsModule,
+    SharedModule,
+    ApiModule.forRoot(apiConfigFactory), NgHttpLoaderComponent], providers: [
         SimpleTimer,
         AuthGuard,
         ErrorService,

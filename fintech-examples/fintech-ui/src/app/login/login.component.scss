@@ -4,3 +4,10 @@
   width: 35px;
   border: none;
 }
+
+.center-buttons {
+  display: flex;
+  flex-direction: column; /* Stack buttons vertically */
+  align-items: center; /* Center horizontally */
+  gap: 0.5rem; /* Add spacing between buttons */
+}

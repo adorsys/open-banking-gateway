@@ -3,7 +3,7 @@ import { provideHttpClientTesting } from '@angular/common/http/testing';
 import { PsuAuthenticationService } from '../../../api-auth';
 import { SessionService } from '../../../common/session.service';
 import { CookieRenewalService } from './CookieRenewalService';
-import { SimpleTimer } from 'ng2-simple-timer';
+import { SimpleTimer } from 'src/app/utilities/simple-timer';
 import { provideHttpClient, withInterceptorsFromDi } from '@angular/common/http';
 
 describe('CookieRenewalService', () => {

@@ -1,4 +1,4 @@
-import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+import { waitForAsync, ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { ConfirmComponent } from './confirm.component';
 import { provideHttpClientTesting } from '@angular/common/http/testing';
@@ -15,7 +15,7 @@ describe('ConfirmComponent', () => {
 
   beforeAll(() => (window.onbeforeunload = jasmine.createSpy()));
 
-  beforeEach(async(() => {
+  beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
     declarations: [ConfirmComponent],
     imports: [RouterTestingModule],
