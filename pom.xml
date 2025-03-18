@@ -472,7 +472,6 @@
                 <configuration>
                     <argLine>-Xmx1024m ${surefireArgLine}</argLine>
                     <trimStackTrace>false</trimStackTrace>
-                    <testFailureIgnore>true</testFailureIgnore>
                 </configuration>
             </plugin>
 
