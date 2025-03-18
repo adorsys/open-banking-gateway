@@ -2,7 +2,6 @@ package de.adorsys.opba.protocol.xs2a.tests.e2e.wiremock.mocks;
 
 import com.github.tomakehurst.wiremock.WireMockServer;
 import com.github.tomakehurst.wiremock.core.WireMockConfiguration;
-import com.github.tomakehurst.wiremock.extension.responsetemplating.ResponseTemplateTransformer;
 import com.google.common.io.Resources;
 import com.tngtech.jgiven.annotation.AfterScenario;
 import com.tngtech.jgiven.annotation.ProvidedScenarioState;
@@ -145,8 +144,7 @@ public class MockServers<SELF extends MockServers<SELF>> extends CommonGivenStag
         );
 
         WireMockConfiguration config = WireMockConfiguration.options().dynamicPort()
-                .usingFilesUnderClasspath(tempDir.toAbsolutePath().toString())
-                .extensions(new ResponseTemplateTransformer(false));
+                .usingFilesUnderClasspath(tempDir.toAbsolutePath().toString());
         startWireMock(config);
 
         return self();
@@ -160,8 +158,7 @@ public class MockServers<SELF extends MockServers<SELF>> extends CommonGivenStag
         );
 
         WireMockConfiguration config = WireMockConfiguration.options().dynamicPort()
-                .usingFilesUnderClasspath(tempDir.toAbsolutePath().toString())
-                .extensions(new ResponseTemplateTransformer(false));
+                .usingFilesUnderClasspath(tempDir.toAbsolutePath().toString());
         startWireMock(config);
 
         return self();
@@ -219,8 +216,7 @@ public class MockServers<SELF extends MockServers<SELF>> extends CommonGivenStag
         );
 
         WireMockConfiguration config = WireMockConfiguration.options().dynamicPort()
-                .usingFilesUnderClasspath(tempDir.toAbsolutePath().toString())
-                .extensions(new ResponseTemplateTransformer(false));
+                .usingFilesUnderClasspath(tempDir.toAbsolutePath().toString());
         startWireMock(config);
 
         return self();
@@ -228,8 +224,7 @@ public class MockServers<SELF extends MockServers<SELF>> extends CommonGivenStag
 
     public SELF oauth2_prestep_mock_of_ing_for_anton_brueckner_payments_running() {
         WireMockConfiguration config = WireMockConfiguration.options().dynamicPort()
-            .usingFilesUnderClasspath("mockedsandbox/restrecord/oauth2/prestep/ing")
-            .extensions(new ResponseTemplateTransformer(false));
+            .usingFilesUnderClasspath("mockedsandbox/restrecord/oauth2/prestep/ing");
         startWireMock(config, ING_BANK_ID, ingBankProfileConfigurer);
 
         return self();
@@ -243,8 +238,7 @@ public class MockServers<SELF extends MockServers<SELF>> extends CommonGivenStag
         );
 
         WireMockConfiguration config = WireMockConfiguration.options().dynamicPort()
-                .usingFilesUnderClasspath(tempDir.toAbsolutePath().toString())
-                .extensions(new ResponseTemplateTransformer(false));
+                .usingFilesUnderClasspath(tempDir.toAbsolutePath().toString());
         startWireMock(config);
         startWireMock(config, SANTANDER_BANK_ID, defaultBankProfileConfigurer);
 
@@ -259,8 +253,7 @@ public class MockServers<SELF extends MockServers<SELF>> extends CommonGivenStag
         );
 
         WireMockConfiguration config = WireMockConfiguration.options().dynamicPort()
-                .usingFilesUnderClasspath(tempDir.toAbsolutePath().toString())
-                .extensions(new ResponseTemplateTransformer(false));
+                .usingFilesUnderClasspath(tempDir.toAbsolutePath().toString());
         startWireMock(config);
         startWireMock(config, COMMERZ_BANK_ID, defaultBankProfileConfigurer);
 
@@ -275,8 +268,7 @@ public class MockServers<SELF extends MockServers<SELF>> extends CommonGivenStag
         );
 
         WireMockConfiguration config = WireMockConfiguration.options().dynamicPort()
-                .usingFilesUnderClasspath(tempDir.toAbsolutePath().toString())
-                .extensions(new ResponseTemplateTransformer(false));
+                .usingFilesUnderClasspath(tempDir.toAbsolutePath().toString());
         startWireMock(config);
 
         return self();

@@ -24,6 +24,7 @@ import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.springframework.stereotype.Service;
 
+import java.io.Serializable;
 import java.util.Set;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ConcurrentHashMap;
@@ -38,7 +39,7 @@ import static de.adorsys.opba.protocol.hbci.constant.GlobalConst.HBCI_REQUEST_SA
  */
 @Service("hbciListTransactions")
 @RequiredArgsConstructor
-public class HbciListTransactionsEntrypoint implements ListTransactions {
+public class HbciListTransactionsEntrypoint implements ListTransactions, Serializable {
 
     private final RuntimeService runtimeService;
     private final HbciResultBodyExtractor extractor;

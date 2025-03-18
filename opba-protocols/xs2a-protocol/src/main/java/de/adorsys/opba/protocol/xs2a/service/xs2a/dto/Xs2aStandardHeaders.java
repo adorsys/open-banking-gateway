@@ -12,7 +12,7 @@ import lombok.Data;
 import org.jetbrains.annotations.Nullable;
 import org.mapstruct.Mapper;
 
-import javax.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotBlank;
 import java.util.HashMap;
 import java.util.Map;
 

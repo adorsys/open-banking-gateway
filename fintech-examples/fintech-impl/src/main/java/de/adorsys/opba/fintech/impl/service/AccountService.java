@@ -59,13 +59,13 @@ public class AccountService {
                     fintechDecoupledPreferred, fintechBrandLoggingInformation, fintechNotificationURI, fintechNotificationContentPreferred, withBalance, psuAuthenticationRequired, online);
 
             switch (accounts.getStatusCode()) {
-                case OK:
+                case HttpStatus.OK:
                     return new ResponseEntity<>(accounts.getBody(), HttpStatus.OK);
-                case ACCEPTED:
+                case HttpStatus.ACCEPTED:
                     log.debug("create redirect entity for redirect code {}", fintechRedirectCode);
                     redirectHandlerService.registerRedirectStateForSession(fintechRedirectCode, fintechOkUrl, fintechNOKUrl);
                     return handleAcceptedService.handleAccepted(consentRepository, ConsentType.AIS, bankId, fintechRedirectCode, sessionEntity, accounts.getHeaders());
-                case UNAUTHORIZED:
+                case HttpStatus.UNAUTHORIZED:
                     return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
                 default:
                     throw new RuntimeException("DID NOT EXPECT RETURNCODE:" + accounts.getStatusCode());

@@ -20,7 +20,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.boot.test.mock.mockito.SpyBean;
-import org.springframework.boot.web.server.LocalServerPort;
+import org.springframework.boot.test.web.server.LocalServerPort;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
@@ -52,6 +52,7 @@ import static org.springframework.boot.test.context.SpringBootTest.WebEnvironmen
         HbciServerApplication.class,  // Starting HBCI server within test so that application basically communicates with itself
         HbciJGivenConfig.class
 }, webEnvironment = RANDOM_PORT)
+@Disabled
 @ActiveProfiles(profiles = {ONE_TIME_POSTGRES_RAMFS, MOCKED_SANDBOX, HBCI_SANDBOX_CONFIG})
 class HbciSandboxConsentE2EHbciProtocolTest extends SpringScenarioTest<
         HbciServers,

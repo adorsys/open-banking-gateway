@@ -7,10 +7,10 @@ import de.adorsys.opba.fintech.impl.tppclients.TppConsentClient;
 import de.adorsys.opba.fintech.impl.tppclients.TppPaymentClient;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.http.HttpStatus;
+import org.springframework.http.HttpStatusCode;
 import org.springframework.stereotype.Service;
 
-import javax.transaction.Transactional;
+import jakarta.transaction.Transactional;
 import java.util.UUID;
 
 import static de.adorsys.opba.fintech.impl.tppclients.Consts.COMPUTE_FINTECH_ID;
@@ -28,7 +28,7 @@ public class ConsentService {
     private final ConsentRepository consentRepository;
 
     public boolean confirmConsent(String authId, UUID xRequestId) {
-        HttpStatus statusCode = tppConsentClient.confirmConsent(
+        HttpStatusCode statusCode = tppConsentClient.confirmConsent(
                 authId,
                 xRequestId,
                 COMPUTE_X_TIMESTAMP_UTC,
@@ -42,7 +42,7 @@ public class ConsentService {
     }
 
     public boolean confirmPayment(String authId, UUID xRequestId) {
-        HttpStatus statusCode = tppPaymentClient.confirmPayment(
+        HttpStatusCode statusCode = tppPaymentClient.confirmPayment(
                 authId,
                 xRequestId,
                 COMPUTE_X_TIMESTAMP_UTC,

@@ -1,5 +1,5 @@
 {
-  "id" : "48c14db7-d90a-3271-a407-31626f248723",
+  "id" : "48c14db7-d90a-3271-a407-31626f248726",
   "scenarioName": "Embedded max.musterman initiate payment",
   "requiredScenarioState": "PsuAuthenticated",
   "newScenarioState": "ScaMethodSelected",
@@ -35,5 +35,5 @@
       "Keep-Alive" : "timeout=60"
     }
   },
-  "uuid" : "48c14db7-d90a-3271-a407-31626f248723"
+  "uuid" : "48c14db7-d90a-3271-a407-31626f248726"
 }

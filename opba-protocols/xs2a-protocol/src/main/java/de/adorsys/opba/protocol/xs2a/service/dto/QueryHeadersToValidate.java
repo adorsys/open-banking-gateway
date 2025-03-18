@@ -3,7 +3,7 @@ package de.adorsys.opba.protocol.xs2a.service.dto;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 
-import javax.validation.Valid;
+import jakarta.validation.Valid;
 
 /**
  * Structure that represents REST request that Query parameter and Headers.

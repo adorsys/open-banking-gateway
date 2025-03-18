@@ -17,7 +17,7 @@ import de.adorsys.opba.protocol.facade.services.scoped.ConsentAccessUtil;
 import lombok.RequiredArgsConstructor;
 import org.jetbrains.annotations.NotNull;
 
-import javax.persistence.EntityManager;
+import jakarta.persistence.EntityManager;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.List;

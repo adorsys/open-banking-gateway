@@ -5,7 +5,7 @@ import de.adorsys.opba.firefly.api.resource.generated.TransactionsApi;
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.http.HttpHeaders;
 
-import javax.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletRequest;
 import java.util.Optional;
 
 @FeignClient(url = "${firefly.url}", name = "fireflyTransactionsApiClient", configuration = FireFlyClientConfig.class)

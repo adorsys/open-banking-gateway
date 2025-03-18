@@ -13,17 +13,17 @@ import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
-import javax.persistence.Basic;
-import javax.persistence.CascadeType;
-import javax.persistence.Entity;
-import javax.persistence.EntityListeners;
-import javax.persistence.FetchType;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.Lob;
-import javax.persistence.OneToMany;
-import javax.persistence.SequenceGenerator;
+import jakarta.persistence.Basic;
+import jakarta.persistence.CascadeType;
+import jakarta.persistence.Entity;
+import jakarta.persistence.EntityListeners;
+import jakarta.persistence.FetchType;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.Lob;
+import jakarta.persistence.OneToMany;
+import jakarta.persistence.SequenceGenerator;
 import java.time.Instant;
 import java.util.Collection;
 import java.util.function.Supplier;
@@ -58,7 +58,7 @@ public class Psu {
     @OneToMany(mappedBy = "psu", cascade = CascadeType.ALL, orphanRemoval = true)
     private Collection<AuthSession> authSessions;
 
-    @OneToMany(mappedBy = "aspsp", cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToMany(mappedBy = "psu", cascade = CascadeType.ALL, orphanRemoval = true)
     private Collection<Consent> consents;
 
     @CreatedDate

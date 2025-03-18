@@ -18,6 +18,7 @@ import org.springframework.test.web.servlet.MvcResult;
 import java.lang.reflect.Type;
 import java.nio.charset.StandardCharsets;
 import java.time.LocalDate;
+import java.time.OffsetDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.UUID;
 
@@ -64,6 +65,7 @@ class FinTechApiBaseTest {
 
     protected final Gson GSON = new GsonBuilder()
             .setPrettyPrinting()
+            .registerTypeAdapter(OffsetDateTime.class, new OffsetDateTimeAdapter())
             .registerTypeAdapter(LocalDate.class, new LocalDateAdapter())
             .create();
 

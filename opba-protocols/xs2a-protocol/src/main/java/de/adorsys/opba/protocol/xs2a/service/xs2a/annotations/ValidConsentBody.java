@@ -2,8 +2,8 @@ package de.adorsys.opba.protocol.xs2a.service.xs2a.annotations;
 
 import de.adorsys.opba.protocol.xs2a.service.xs2a.validation.AccountAccessBodyValidator;
 
-import javax.validation.Constraint;
-import javax.validation.Payload;
+import jakarta.validation.Constraint;
+import jakarta.validation.Payload;
 import java.lang.annotation.Documented;
 import java.lang.annotation.Retention;
 import java.lang.annotation.Target;

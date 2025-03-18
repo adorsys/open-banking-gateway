@@ -27,7 +27,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.util.UriComponentsBuilder;
 
-import javax.persistence.EntityManager;
+import jakarta.persistence.EntityManager;
 
 import static de.adorsys.opba.protocol.api.common.ProtocolAction.AUTHORIZATION;
 import static de.adorsys.opba.protocol.facade.config.auth.UriExpandConst.AUTHORIZATION_SESSION_ID;

@@ -293,7 +293,7 @@ public class WebDriverBasedUserInfoFintech<SELF extends WebDriverBasedUserInfoFi
     }
 
     private void waitForPageToLoad(WebDriver driver) {
-        new WebDriverWait(driver, timeout.getSeconds())
+        new WebDriverWait(driver, timeout)
                 .until(wd -> ((JavascriptExecutor) wd).executeScript("return document.readyState").equals("complete"));
     }
 
@@ -430,11 +430,11 @@ public class WebDriverBasedUserInfoFintech<SELF extends WebDriverBasedUserInfoFi
     }
 
     private WebDriverWait wait(WebDriver driver) {
-        return new WebDriverWait(driver, timeout.getSeconds());
+        return new WebDriverWait(driver, timeout);
     }
 
     private WebDriverWait waitPlusTimer(WebDriver webDriver, long duration) {
-        return new WebDriverWait(webDriver, timeout.getSeconds() + duration);
+        return new WebDriverWait(webDriver, timeout.plusSeconds(duration));
     }
 
     private void sendTestInSearchInput(WebDriver driver, By id, String visibleText) {
@@ -461,7 +461,7 @@ public class WebDriverBasedUserInfoFintech<SELF extends WebDriverBasedUserInfoFi
     }
 
     private void waitForPageLoadAndUrlEndsWithPath(WebDriver driver, String urlEndsWithPath) {
-        new WebDriverWait(driver, timeout.getSeconds())
+        new WebDriverWait(driver, timeout)
                 .until(wd ->
                                URI.create(driver.getCurrentUrl()).getPath().endsWith(urlEndsWithPath)
                                        && ((JavascriptExecutor) wd).executeScript("return document.readyState").equals("complete")
@@ -469,7 +469,7 @@ public class WebDriverBasedUserInfoFintech<SELF extends WebDriverBasedUserInfoFi
     }
 
     private void waitForPageLoadAndUrlContains(WebDriver driver, String urlContains) {
-        new WebDriverWait(driver, timeout.getSeconds())
+        new WebDriverWait(driver, timeout)
                 .until(wd ->
                                driver.getCurrentUrl().contains(urlContains)
                                        && ((JavascriptExecutor) wd).executeScript("return document.readyState").equals("complete")

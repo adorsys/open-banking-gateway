@@ -10,8 +10,8 @@ import de.adorsys.opba.tpp.ais.api.model.generated.UpdateAisExternalSessionStatu
 import de.adorsys.opba.tpp.ais.api.model.generated.UpdateMetadata;
 import org.springframework.http.ResponseEntity;
 
-import javax.servlet.http.HttpServletRequest;
-import javax.validation.Valid;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.validation.Valid;
 import java.time.LocalDate;
 import java.util.Optional;
 import java.util.UUID;
@@ -111,8 +111,8 @@ public class TppAisClientFeignMock implements TppAisClient {
     }
 
     @Override
-    public ResponseEntity<Void> deleteConsent(UUID xRequestID, UUID serviceSessionID, DeleteMetadata requestBody,
-                                              String xTimestampUTC, String xRequestSignature, String fintechID, String serviceSessionPassword, String fintechDataPassword, Boolean deleteAll) {
+    public ResponseEntity<Void> deleteConsent(UUID xRequestID, UUID serviceSessionID,
+                                              String xTimestampUTC, String xRequestSignature, String fintechID, String serviceSessionPassword, String fintechDataPassword, Boolean deleteAll, DeleteMetadata requestBody) {
         return null;
     }
 
@@ -123,8 +123,8 @@ public class TppAisClientFeignMock implements TppAisClient {
     }
 
     @Override
-    public ResponseEntity<UpdateAisExternalSessionStatus> updateExternalAisSession(UUID xRequestID, UUID serviceSessionID, UpdateMetadata updateMetadata, String xTimestampUTC, String xRequestSignature, String fintechID,
-                                                                                   String serviceSessionPassword, String fintechDataPassword) {
+    public ResponseEntity<UpdateAisExternalSessionStatus> updateExternalAisSession(UUID xRequestID, UUID serviceSessionID, String xTimestampUTC, String xRequestSignature, String fintechID,
+                                                                                   String serviceSessionPassword, String fintechDataPassword, UpdateMetadata updateMetadata) {
         return null;
     }
 
