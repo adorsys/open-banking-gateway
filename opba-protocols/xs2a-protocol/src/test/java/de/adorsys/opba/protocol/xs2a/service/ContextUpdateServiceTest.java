@@ -7,7 +7,6 @@ import de.adorsys.opba.protocol.xs2a.constant.GlobalConst;
 import de.adorsys.xs2a.adapter.api.AspspReadOnlyRepository;
 import org.flowable.common.engine.api.FlowableOptimisticLockingException;
 import org.flowable.engine.RuntimeService;
-import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
@@ -19,7 +18,7 @@ import static org.mockito.Mockito.doThrow;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
-@Disabled
+
 @SpringBootTest(classes = ContextUpdateServiceTest.TestConfig.class)
 @ActiveProfiles(TestProfiles.ONE_TIME_POSTGRES_RAMFS)
 class ContextUpdateServiceTest extends BaseMockitoTest {

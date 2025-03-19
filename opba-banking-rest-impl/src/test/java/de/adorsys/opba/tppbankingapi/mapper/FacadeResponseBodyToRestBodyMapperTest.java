@@ -17,6 +17,7 @@ import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
 
 import static org.assertj.core.api.Assertions.assertThat;
+
 @SpringBootTest(classes = FacadeResponseBodyToRestBodyMapperTest.TestConfig.class)
 public class FacadeResponseBodyToRestBodyMapperTest {
     public static final ObjectMapper JSON_MAPPER = new ObjectMapper()
