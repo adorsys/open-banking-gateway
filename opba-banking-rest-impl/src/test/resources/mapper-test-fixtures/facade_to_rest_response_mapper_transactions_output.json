@@ -3,210 +3,110 @@
     "booked": [
       {
         "transactionId": "iY1DmFg0Twsh2vuCSYjqX0",
-        "entryReference": "",
         "endToEndId": "20180617T181000",
-        "mandateId": "",
-        "checkId": "",
-        "creditorId": "",
         "bookingDate": "2020-02-28",
         "valueDate": "2020-02-28",
         "transactionAmount": {
           "currency": "EUR",
           "amount": "-1280.00"
         },
-        "currencyExchange": [],
         "creditorName": "Marion Mueller",
         "creditorAccount": {
           "iban": "DE69760700240340283600",
-          "bban": "",
-          "pan": "",
-          "maskedpan": "",
-          "msisdn": null,
           "currency": "EUR"
         },
-        "ultimateCreditor": null,
-        "debtorName": null,
         "debtorAccount": {
           "iban": "DE38760700240320465700",
-          "bban": "",
-          "pan": "",
-          "maskedpan": "",
-          "msisdn": null,
           "currency": "EUR"
         },
-        "ultimateDebtor": null,
         "remittanceInformationUnstructured": "Payment",
-        "remittanceInformationStructured": null,
-        "additionalInformation": null,
-        "purposeCode": null,
-        "bankTransactionCode": null,
         "proprietaryBankTransactionCode": "PMNT-IRCT-STDO"
       },
       {
         "transactionId": "WNmzBMlAS5IgAB5-i6-ohc",
-        "entryReference": "",
         "endToEndId": "20180614T110000",
-        "mandateId": "",
-        "checkId": "",
-        "creditorId": "",
         "bookingDate": "2020-02-28",
         "valueDate": "2020-02-28",
         "transactionAmount": {
           "currency": "EUR",
           "amount": "-2300.00"
         },
-        "currencyExchange": [],
         "creditorName": "Anton Brueckner",
         "creditorAccount": {
           "iban": "DE80760700240271232400",
-          "bban": "",
-          "pan": "",
-          "maskedpan": "",
-          "msisdn": null,
           "currency": "EUR"
         },
-        "ultimateCreditor": null,
-        "debtorName": null,
         "debtorAccount": {
           "iban": "DE38760700240320465700",
-          "bban": "",
-          "pan": "",
-          "maskedpan": "",
-          "msisdn": null,
           "currency": "EUR"
         },
-        "ultimateDebtor": null,
         "remittanceInformationUnstructured": "Payment",
-        "remittanceInformationStructured": null,
-        "additionalInformation": null,
-        "purposeCode": null,
-        "bankTransactionCode": null,
         "proprietaryBankTransactionCode": "PMNT-IRCT-STDO"
       },
       {
         "transactionId": "zjY5KZcxRfwi8R50gvhKjw",
-        "entryReference": null,
         "endToEndId": "20180601T131000",
-        "mandateId": "",
-        "checkId": "",
-        "creditorId": "",
         "bookingDate": "2020-02-28",
         "valueDate": "2020-02-28",
         "transactionAmount": {
           "currency": "EUR",
           "amount": "700.00"
         },
-        "currencyExchange": [],
         "creditorName": "Max Musterman",
         "creditorAccount": {
           "iban": "DE38760700240320465700",
-          "bban": "",
-          "pan": "",
-          "maskedpan": "",
-          "msisdn": null,
           "currency": "EUR"
         },
-        "ultimateCreditor": null,
-        "debtorName": null,
         "debtorAccount": {
           "iban": "DE80760700240271232400",
-          "bban": "",
-          "pan": "",
-          "maskedpan": "",
-          "msisdn": null,
           "currency": "EUR"
         },
-        "ultimateDebtor": null,
         "remittanceInformationUnstructured": "Payment",
-        "remittanceInformationStructured": null,
-        "additionalInformation": null,
-        "purposeCode": null,
-        "bankTransactionCode": null,
         "proprietaryBankTransactionCode": "PMNT-IRCT-STDO"
       },
       {
         "transactionId": "kLNluTtCSiMjN9GlIYW2UY",
-        "entryReference": "",
         "endToEndId": "20180601T20180601",
-        "mandateId": "",
-        "checkId": "",
-        "creditorId": "",
         "bookingDate": "2020-02-28",
         "valueDate": "2020-02-28",
         "transactionAmount": {
           "currency": "EUR",
           "amount": "3000"
         },
-        "currencyExchange": [],
         "creditorName": "Max Musterman",
         "creditorAccount": {
           "iban": "DE38760700240320465700",
-          "bban": "",
-          "pan": "",
-          "maskedpan": "",
-          "msisdn": null,
           "currency": "EUR"
         },
-        "ultimateCreditor": null,
-        "debtorName": null,
         "debtorAccount": {
           "iban": "DE69760700240340283600",
-          "bban": "",
-          "pan": "",
-          "maskedpan": "",
-          "msisdn": null,
           "currency": "EUR"
         },
-        "ultimateDebtor": null,
         "remittanceInformationUnstructured": "Payment",
-        "remittanceInformationStructured": null,
-        "additionalInformation": null,
-        "purposeCode": null,
-        "bankTransactionCode": null,
         "proprietaryBankTransactionCode": "PMNT-IRCT-STDO"
       },
       {
         "transactionId": "yxOpDVLFRa8mexqqD1TeSE",
-        "entryReference": "",
         "endToEndId": "yxOpDVLFRa8mexqqD1TeSE",
-        "mandateId": "",
-        "checkId": "",
-        "creditorId": "",
         "bookingDate": "2020-02-28",
         "valueDate": "2020-02-28",
         "transactionAmount": {
           "currency": "EUR",
           "amount": "10000.00"
         },
-        "currencyExchange": [],
         "creditorName": "max.musterman",
         "creditorAccount": {
           "iban": "DE38760700240320465700",
-          "bban": "",
-          "pan": "",
-          "maskedpan": "",
-          "msisdn": null,
           "currency": "EUR"
         },
-        "ultimateCreditor": null,
         "debtorName": "max.musterman",
         "debtorAccount": {
           "iban": "DE38760700240320465700",
-          "bban": "",
-          "pan": "",
-          "maskedpan": "",
-          "msisdn": null,
           "currency": "EUR"
         },
-        "ultimateDebtor": null,
         "remittanceInformationUnstructured": "Cash deposit through Bank ATM",
-        "remittanceInformationStructured": null,
-        "additionalInformation": null,
-        "purposeCode": null,
-        "bankTransactionCode": null,
         "proprietaryBankTransactionCode": "PMNT-MCOP-OTHR"
       }
-    ],
-    "pending": null
+    ]
   }
 }

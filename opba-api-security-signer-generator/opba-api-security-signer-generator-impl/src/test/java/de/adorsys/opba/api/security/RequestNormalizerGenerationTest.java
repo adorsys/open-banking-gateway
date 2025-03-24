@@ -3,7 +3,6 @@ package de.adorsys.opba.api.security;
 import com.google.testing.compile.Compilation;
 import com.google.testing.compile.JavaFileObjects;
 import de.adorsys.opba.api.security.generator.DataToSignGeneratingProcessor;
-import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 
 import static com.google.testing.compile.CompilationSubject.assertThat;
@@ -11,7 +10,6 @@ import static com.google.testing.compile.Compiler.javac;
 
 class RequestNormalizerGenerationTest {
 
-    @Disabled
     @Test
     void testBasicCases() {
         Compilation compilation = javac()
