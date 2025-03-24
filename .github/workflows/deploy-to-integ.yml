@@ -16,22 +16,23 @@ jobs:
   build:
     runs-on: ubuntu-22.04
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v4
       - name: Clone Repository (Latest)
-        uses: actions/checkout@v2
+        uses: actions/checkout@v4
         if: github.event.inputs.gitRef == ''
 
       - name: Clone Repository (Custom commit SHA)
-        uses: actions/checkout@v2
+        uses: actions/checkout@v4
         if: github.event.inputs.gitRef != ''
         with:
           ref: ${{ github.event.inputs.gitRef }}
 
 
       - name: Set up JDK 21
-        uses: actions/setup-java@v1
+        uses: actions/setup-java@v3
         with:
           java-version: 21
+          distribution: 'temurin'
 
       - name: Free disk space
         run: |
