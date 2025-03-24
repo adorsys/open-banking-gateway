@@ -6,7 +6,13 @@ input {
 
 .card-body {
   background-color: $primary-10;
+  padding: 20px;
 }
+
+label {
+  margin-top: 1.5rem;
+}
+
 
 .withoutOutline {
   outline: none;

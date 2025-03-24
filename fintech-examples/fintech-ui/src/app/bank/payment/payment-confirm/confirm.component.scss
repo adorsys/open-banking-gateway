@@ -1,20 +1,25 @@
 @import 'src/assets/themes/variables';
 p {
-  margin-bottom: 0;
+  margin-bottom: 0.25rem;
 }
 
 .pl {
-  padding-left: 88px;
+  padding-left: 40px;
+}
+
+.card-frame--big {
+  max-width: 650px; /* Reduced card size */
+  padding: 1.5rem; /* Reduced padding */
 }
 
 .form-group {
   .title {
-    font-size: 1.25rem;
+    font-size: 1.1rem;
     color: $dark-90;
   }
 
   .card-img {
-    width: 48px;
+    width: 38px;
     height: auto;
   }
 }

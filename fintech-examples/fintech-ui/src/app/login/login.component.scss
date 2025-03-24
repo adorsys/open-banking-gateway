@@ -11,3 +11,9 @@
   align-items: center; /* Center horizontally */
   gap: 0.5rem; /* Add spacing between buttons */
 }
+
+.form-group label {
+  display: block; /* Ensure label behaves like a block element */
+  margin-bottom: 0.2rem; /* Add space below label */
+  margin-top: 1rem;
+}
