@@ -387,20 +387,20 @@ public class WebDriverBasedAccountInformation<SELF extends WebDriverBasedAccount
     }
 
     private WebDriverWait wait(WebDriver driver) {
-        return new WebDriverWait(driver, timeout.getSeconds());
+        return new WebDriverWait(driver, timeout);
     }
 
     private void waitForPageLoad(WebDriver driver) {
-        new WebDriverWait(driver, timeout.getSeconds())
+        new WebDriverWait(driver, timeout)
                 .until(wd -> ((JavascriptExecutor) wd).executeScript("return document.readyState").equals("complete"));
     }
 
     private void waitForPageLoadAndUrlContainsNoReadyStateCheck(WebDriver driver, String urlContains) {
-        new WebDriverWait(driver, timeout.getSeconds()).until(wd -> driver.getCurrentUrl().contains(urlContains));
+        new WebDriverWait(driver, timeout).until(wd -> driver.getCurrentUrl().contains(urlContains));
     }
 
     private void waitForPageLoadAndUrlContains(WebDriver driver, String urlContains) {
-        new WebDriverWait(driver, timeout.getSeconds())
+        new WebDriverWait(driver, timeout)
                 .until(wd ->
                         driver.getCurrentUrl().contains(urlContains)
                         && ((JavascriptExecutor) wd).executeScript("return document.readyState").equals("complete")
@@ -408,7 +408,7 @@ public class WebDriverBasedAccountInformation<SELF extends WebDriverBasedAccount
     }
 
     private void waitForPageLoadAndUrlEndsWithPath(WebDriver driver, String urlEndsWithPath) {
-        new WebDriverWait(driver, timeout.getSeconds())
+        new WebDriverWait(driver, timeout)
                 .until(wd ->
                         URI.create(driver.getCurrentUrl()).getPath().endsWith(urlEndsWithPath)
                         && ((JavascriptExecutor) wd).executeScript("return document.readyState").equals("complete")

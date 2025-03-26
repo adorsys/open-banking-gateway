@@ -69,12 +69,12 @@ public class PaymentService {
         log.info("start call for payment {} {}", fintechOkUrl, fintechNOkUrl);
         var paymentProduct = singlePaymentInitiationRequest.isInstantPayment() ? INSTANT_SEPA_PAYMENT_PRODUCT : SEPA_PAYMENT_PRODUCT;
         ResponseEntity<PaymentInitiationResponse> responseOfTpp = tppPisSinglePaymentClient.initiatePayment(
-                payment,
                 sessionEntity.getUserEntity().getFintechUserId(),
                 RedirectUrlsEntity.buildPaymentOkUrl(uiConfig, fintechRedirectCode),
                 RedirectUrlsEntity.buildPaymentNokUrl(uiConfig, fintechRedirectCode),
                 UUID.fromString(restRequestContext.getRequestId()),
                 paymentProduct,
+                payment,
                 COMPUTE_X_TIMESTAMP_UTC,
                 COMPUTE_X_REQUEST_SIGNATURE,
                 COMPUTE_FINTECH_ID,

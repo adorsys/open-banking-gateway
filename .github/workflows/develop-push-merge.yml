@@ -8,16 +8,17 @@ on:
 
 jobs:
   build:
-    runs-on: ubuntu-20.04
+    runs-on: ubuntu-22.04
     steps:
-      - uses: actions/checkout@v2
-      - name: Set up JDK 11
-        uses: actions/setup-java@v1
+      - uses: actions/checkout@v4
+      - name: Set up JDK 21
+        uses: actions/setup-java@v3
         with:
-          java-version: 11
+          java-version: 21
+          distribution: 'temurin'
 
       - name: Cancel Previous Runs
-        uses: styfle/cancel-workflow-action@0.5.0
+        uses: styfle/cancel-workflow-action@0.11.0
         with:
           access_token: ${{ secrets.GITHUB_TOKEN }}
 
@@ -51,37 +52,41 @@ jobs:
         env:
           MAVEN_OPTS: "-Dhttp.keepAlive=false -Dmaven.wagon.http.pool=false -Dmaven.wagon.httpconnectionManager.ttlSeconds=120" # Github-on-Azure tweaks - https://github.com/actions/virtual-environments/issues/1499
 
-      - name: Deploy develop artifacts to OpenShift
-        run: ./scripts/deploy_openshift.sh scripts/service.list
-        env:
-          OPENSHIFT_TOKEN: ${{ secrets.OPENSHIFT_TOKEN }}
+##     - name: Deploy develop artifacts to OpenShift
+##       run: ./scripts/deploy_openshift.sh scripts/service.list
+##        env:
+##          OPENSHIFT_TOKEN: ${{ secrets.OPENSHIFT_TOKEN }}
 
-      - name: Deploy FireFly-importer to OpenShift
-        run: ./scripts/deploy_openshift.sh scripts/firefly-service.list
-        env:
-          OPENSHIFT_TOKEN: ${{ secrets.OPENSHIFT_TOKEN }}
+##    - name: Deploy FireFly-importer to OpenShift
+##        run: ./scripts/deploy_openshift.sh scripts/firefly-service.list
+##      env:
+##         OPENSHIFT_TOKEN: ${{ secrets.OPENSHIFT_TOKEN }}
 
       # CODECOV Upload BEGIN
-      - uses: codecov/codecov-action@v1
+      - uses: codecov/codecov-action@v4
         with:
+          token: ${{ secrets.CODECOV_TOKEN }}
           directory: ./last-module-codecoverage/
           flags: backend
           verbose: true
 
-      - uses: codecov/codecov-action@v1
+      - uses: codecov/codecov-action@v4
         with:
+          token: ${{ secrets.CODECOV_TOKEN }}
           directory: ./consent-ui/
           flags: frontend
           verbose: true
 
-      - uses: codecov/codecov-action@v1
+      - uses: codecov/codecov-action@v4
         with:
+          token: ${{ secrets.CODECOV_TOKEN }}
           directory: ./fintech-examples/fintech-last-module-codecoverage/
           flags: fintech
           verbose: true
 
-      - uses: codecov/codecov-action@v1
+      - uses: codecov/codecov-action@v4
         with:
+          token: ${{ secrets.CODECOV_TOKEN }}
           directory: ./fintech-examples/fintech-ui/
           flags: fintech
           verbose: true

@@ -5,7 +5,7 @@ import de.adorsys.opba.tpp.ais.api.resource.generated.TppBankingApiAccountInform
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.http.HttpHeaders;
 
-import javax.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletRequest;
 import java.util.Optional;
 
 @FeignClient(url = "${open-banking.url}", name = "tppAisClient", configuration = TppClientConfig.class)

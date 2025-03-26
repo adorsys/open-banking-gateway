@@ -359,7 +359,7 @@ class HbciStubGenerator {
             for (int indStar = 0; indStar < stars; indStar++) {
                 int div = BigDecimal.ONE.movePointRight(starRange * (stars - indStar - 1)).intValueExact();
                 res = res.replaceFirst("\\*", "" + (value / div + 1));
-                value -= (value / div) * div;
+                value -= value / div * div;
             }
             result.add(res);
         }

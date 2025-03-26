@@ -46,7 +46,7 @@
       "currency": "EUR",
       "amount": "12.34"
     },
-    "paymentProduct": {}
+    "paymentProduct": "SEPA"
 
   }
 }

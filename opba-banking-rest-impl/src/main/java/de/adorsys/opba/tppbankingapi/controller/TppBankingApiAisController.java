@@ -241,9 +241,9 @@ public class TppBankingApiAisController implements TppBankingApiAccountInformati
 
     @Override
     @SuppressWarnings("unchecked")
-    public CompletableFuture<ResponseEntity<Void>> deleteConsent(UUID xRequestID, UUID serviceSessionId, DeleteMetadata requestBody,
+    public CompletableFuture<ResponseEntity<Void>> deleteConsent(UUID xRequestID, UUID serviceSessionId,
                                                                  String xTimestampUTC, String xRequestSignature, String fintechId,
-                                                                 String serviceSessionPassword, String fintechDataPassword, Boolean deleteAll) {
+                                                                 String serviceSessionPassword, String fintechDataPassword, Boolean deleteAll, DeleteMetadata requestBody) {
         return deleteConsent.execute(
                 DeleteConsentRequest.builder()
                         .facadeServiceable(FacadeServiceableRequest.builder()
@@ -282,12 +282,12 @@ public class TppBankingApiAisController implements TppBankingApiAccountInformati
     @Override
     public CompletableFuture updateExternalAisSession(UUID xRequestID,
                                                       UUID serviceSessionId,
-                                                      UpdateMetadata body,
                                                       String xTimestampUTC,
                                                       String xRequestSignature,
                                                       String fintechId,
                                                       String serviceSessionPassword,
-                                                      String fintechDataPassword) {
+                                                      String fintechDataPassword,
+                                                      UpdateMetadata body) {
         return updateExternalAis.execute(UpdateExternalAisSessionRequest.builder()
                 .facadeServiceable(FacadeServiceableRequest.builder()
                         .authorization(fintechId)

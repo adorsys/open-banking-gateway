@@ -20,6 +20,7 @@ import java.util.stream.Collectors;
 
 @Getter
 @RequiredArgsConstructor
+@SuppressWarnings("PMD.UnusedPrivateMethod")
 public enum Operation {
 
     CUSTOM_MSG("CustomMsg", Operation::typeMatch),
@@ -35,7 +36,7 @@ public enum Operation {
     private final Function<MatchingContext, Message> is;
 
     public static Match find(List<Message> matched) {
-        return Arrays.stream(Operation.values())
+        return Arrays.stream(values())
                 .map(it -> {
                     Message message = it.getIs().apply(new MatchingContext(it.getTypeName(), matched));
                     return null == message ? null : new Match(it, message);
@@ -75,7 +76,7 @@ public enum Operation {
     }
 
     private static Message isScaInit(MatchingContext context) {
-        Set<String> acceptableTypes = ImmutableSet.of(Operation.DIALOG_INIT.typeName, Operation.CUSTOM_MSG.typeName);
+        Set<String> acceptableTypes = ImmutableSet.of(DIALOG_INIT.typeName, CUSTOM_MSG.typeName);
         Set<String> available = context.getMatched().stream().map(SyntaxElement::getType).collect(Collectors.toSet());
         if (Sets.intersection(acceptableTypes, available).isEmpty()) {
             return null;

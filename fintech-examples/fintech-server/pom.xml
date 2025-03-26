@@ -71,12 +71,6 @@
             <artifactId>liquibase-core</artifactId>
         </dependency>
 
-        <!-- other dependencies -->
-        <dependency>
-            <groupId>javax.xml.bind</groupId>
-            <artifactId>jaxb-api</artifactId>
-        </dependency>
-
         <!-- Test dependencies -->
         <dependency>
             <groupId>org.springframework.boot</groupId>
@@ -107,9 +101,10 @@
             <scope>test</scope>
         </dependency>
         <dependency>
-            <groupId>com.github.tomakehurst</groupId>
-            <artifactId>wiremock</artifactId>
+            <groupId>org.wiremock</groupId>
+            <artifactId>wiremock-jetty12</artifactId>
             <version>${wiremock.version}</version>
+            <scope>test</scope>
         </dependency>
 
     </dependencies>

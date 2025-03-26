@@ -5,7 +5,7 @@ import de.adorsys.opba.tpp.banksearch.api.resource.generated.TppBankSearchApi;
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.http.HttpHeaders;
 
-import javax.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletRequest;
 import java.util.Optional;
 
 @FeignClient(url = "${open-banking.url}", name = "tppSearch", configuration = TppClientConfig.class)

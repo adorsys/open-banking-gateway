@@ -6,7 +6,7 @@
 	<parent>
 		<groupId>org.springframework.boot</groupId>
 		<artifactId>spring-boot-starter-parent</artifactId>
-		<version>2.3.4.RELEASE</version>
+		<version>3.3.8</version>
 		<relativePath/> <!-- lookup parent from repository -->
 	</parent>
 
@@ -16,12 +16,12 @@
 	<version>1.0.1-SNAPSHOT</version>
 
 	<properties>
-		<java.version>8</java.version>
-		<spring-cloud.version>Hoxton.SR8</spring-cloud.version>
+		<java.version>21</java.version>
+		<spring-cloud.version>2023.0.4</spring-cloud.version>
 
-		<swagger-codegen-generators.version>1.0.19</swagger-codegen-generators.version>
-		<swagger-codegen-maven-plugin.version>3.0.19</swagger-codegen-maven-plugin.version>
-		<io.swagger.annotations.version>1.6.3</io.swagger.annotations.version>
+		<swagger-codegen-generators.version>1.0.56</swagger-codegen-generators.version>
+		<swagger-codegen-maven-plugin.version>3.0.67</swagger-codegen-maven-plugin.version>
+		<io.swagger.annotations.version>2.2.28</io.swagger.annotations.version>
 
 		<main.basedir>..</main.basedir>
 		<tpp-bank-search-location>
@@ -85,7 +85,7 @@
 		</dependency>
 
 		<dependency>
-			<groupId>io.swagger</groupId>
+			<groupId>io.swagger.core.v3</groupId>
 			<artifactId>swagger-annotations</artifactId>
 			<version>${io.swagger.annotations.version}</version>
 		</dependency>
@@ -94,11 +94,43 @@
 			<artifactId>hibernate-validator</artifactId>
 		</dependency>
 
+		<dependency>
+			<groupId>org.openapitools</groupId>
+			<artifactId>jackson-databind-nullable</artifactId>
+			<version>0.2.6</version>
+		</dependency>
+
+		<dependency>
+			<groupId>jakarta.validation</groupId>
+			<artifactId>jakarta.validation-api</artifactId>
+			<version>3.0.2</version>
+		</dependency>
+
+		<dependency>
+			<groupId>jakarta.annotation</groupId>
+			<artifactId>jakarta.annotation-api</artifactId>
+			<version>3.0.0</version>
+		</dependency>
+
+		<dependency>
+			<groupId>jakarta.servlet</groupId>
+			<artifactId>jakarta.servlet-api</artifactId>
+			<version>6.1.0</version>
+		</dependency>
+
+		<dependency>
+			<groupId>jakarta.persistence</groupId>
+			<artifactId>jakarta.persistence-api</artifactId>
+			<version>3.1.0</version>
+		</dependency>
+
+
+
 		<!-- Used for transaction categorization -->
 		<dependency>
 			<groupId>org.drools</groupId>
 			<artifactId>drools-engine-classic</artifactId>
-			<version>7.63.0.t20211129</version>
+			<version>8.44.2.Final</version>
 		</dependency>
 
 		<!-- End -->
@@ -118,6 +150,7 @@
 			<groupId>org.projectlombok</groupId>
 			<artifactId>lombok</artifactId>
 			<optional>true</optional>
+			<version>1.18.30</version>
 		</dependency>
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
@@ -172,7 +205,8 @@
 								<interfaceOnly>true</interfaceOnly>
 								<skipOverwrite>true</skipOverwrite>
 								<dateLibrary>java8</dateLibrary>
-								<java8>false</java8>
+								<java21>true</java21>
+								<jakarta>true</jakarta>
 								<useTags>true</useTags>
 								<defaultInterfaces>false</defaultInterfaces>
 								<implicitHeaders>false</implicitHeaders>
@@ -203,7 +237,8 @@
 								<interfaceOnly>true</interfaceOnly>
 								<skipOverwrite>true</skipOverwrite>
 								<dateLibrary>java8</dateLibrary>
-								<java8>false</java8>
+								<java21>true</java21>
+								<jakarta>true</jakarta>
 								<useTags>true</useTags>
 								<defaultInterfaces>false</defaultInterfaces>
 								<implicitHeaders>false</implicitHeaders>
@@ -234,7 +269,8 @@
 								<interfaceOnly>true</interfaceOnly>
 								<skipOverwrite>true</skipOverwrite>
 								<dateLibrary>java8</dateLibrary>
-								<java8>false</java8>
+								<java21>true</java21>
+								<jakarta>true</jakarta>
 								<useTags>true</useTags>
 								<defaultInterfaces>false</defaultInterfaces>
 								<implicitHeaders>false</implicitHeaders>
@@ -265,7 +301,8 @@
 								<interfaceOnly>true</interfaceOnly>
 								<skipOverwrite>true</skipOverwrite>
 								<dateLibrary>java8</dateLibrary>
-								<java8>false</java8>
+								<java21>true</java21>
+								<jakarta>true</jakarta>
 								<useTags>true</useTags>
 								<defaultInterfaces>false</defaultInterfaces>
 								<implicitHeaders>false</implicitHeaders>

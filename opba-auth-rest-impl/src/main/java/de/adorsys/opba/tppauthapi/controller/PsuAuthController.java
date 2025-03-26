@@ -28,7 +28,7 @@ import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.util.UriComponentsBuilder;
 
-import javax.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletRequest;
 import java.time.Duration;
 import java.util.Base64;
 import java.util.Optional;
@@ -59,7 +59,7 @@ public class PsuAuthController implements PsuAuthenticationApi, PsuAuthenticatio
     // TODO - probably this operation is not needed. At least for simple usecase.
     @Override
     @SneakyThrows
-    public CompletableFuture<ResponseEntity<LoginResponse>> login(PsuAuthBody psuAuthBody, UUID xRequestID) {
+    public CompletableFuture<ResponseEntity<LoginResponse>> login(UUID xRequestID, PsuAuthBody psuAuthBody) {
         Psu psu = psuAuthService.tryAuthenticateUser(psuAuthBody.getLogin(), psuAuthBody.getPassword());
 
         String jwtToken = authService.generateToken(psu.getLogin(), tppTokenProperties.getTokenValidityDuration());
@@ -83,7 +83,7 @@ public class PsuAuthController implements PsuAuthenticationApi, PsuAuthenticatio
     }
 
     @Override
-    public CompletableFuture loginForApproval(PsuAuthBody body, UUID xRequestId, String redirectCode, UUID authorizationId) {
+    public CompletableFuture loginForApproval(UUID xRequestId,  String redirectCode, UUID authorizationId, PsuAuthBody body) {
         var outcome = loginService.loginInPsuScopeAndAssociateAuthSession(body.getLogin(), body.getPassword(), authorizationId, redirectCode);
         return outcome.thenApply(it -> createResponseWithSecretKeyInCookieOnAllPaths(xRequestId, authorizationId, it));
     }
@@ -95,7 +95,7 @@ public class PsuAuthController implements PsuAuthenticationApi, PsuAuthenticatio
     }
 
     @Override
-    public CompletableFuture<ResponseEntity<Void>> registration(PsuAuthBody psuAuthDto, UUID xRequestID) {
+    public CompletableFuture<ResponseEntity<Void>> registration(UUID xRequestID, PsuAuthBody psuAuthDto) {
         psuAuthService.createPsuIfNotExist(psuAuthDto.getLogin(), psuAuthDto.getPassword());
 
         HttpHeaders responseHeaders = new HttpHeaders();
