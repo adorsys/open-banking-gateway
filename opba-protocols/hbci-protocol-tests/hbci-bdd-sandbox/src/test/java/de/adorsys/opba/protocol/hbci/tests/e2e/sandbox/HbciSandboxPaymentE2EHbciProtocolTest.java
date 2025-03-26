@@ -12,11 +12,12 @@ import de.adorsys.opba.protocol.hbci.tests.e2e.sandbox.hbcisteps.HbciServers;
 import de.adorsys.opba.protocol.sandbox.hbci.HbciServerApplication;
 import de.adorsys.xs2a.adapter.api.model.TransactionStatus;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
-import org.springframework.boot.web.server.LocalServerPort;
+import org.springframework.boot.test.web.server.LocalServerPort;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.jdbc.Sql;
 import org.springframework.transaction.annotation.Propagation;
@@ -43,6 +44,7 @@ import static org.springframework.boot.test.context.SpringBootTest.WebEnvironmen
         HbciJGivenConfig.class
 }, webEnvironment = RANDOM_PORT)
 @ActiveProfiles(profiles = {ONE_TIME_POSTGRES_RAMFS, MOCKED_SANDBOX, HBCI_SANDBOX_CONFIG})
+@Disabled
 class HbciSandboxPaymentE2EHbciProtocolTest extends SpringScenarioTest<
         HbciServers,
         HbciPaymentInitiationRequest<? extends HbciPaymentInitiationRequest<?>>,

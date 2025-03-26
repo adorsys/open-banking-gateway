@@ -11,13 +11,13 @@ import de.adorsys.opba.api.security.requestsigner.OpenBankingDataToSignProvider;
 import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
 
-import javax.servlet.Filter;
-import javax.servlet.FilterChain;
-import javax.servlet.ServletException;
-import javax.servlet.ServletRequest;
-import javax.servlet.ServletResponse;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
+import jakarta.servlet.Filter;
+import jakarta.servlet.FilterChain;
+import jakarta.servlet.ServletException;
+import jakarta.servlet.ServletRequest;
+import jakarta.servlet.ServletResponse;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.time.Duration;
 import java.time.Instant;
@@ -34,6 +34,7 @@ import java.util.concurrent.ConcurrentMap;
  * and request timestamp should be within the range of security.verification.request-validity-window property.
  * The filter can be disabled by using 'no-signature-filter' spring active profile.
  */
+@SuppressWarnings("PMD.UselessOperationOnImmutable")
 @Slf4j
 public class RequestSignatureValidationFilter implements Filter {
     private final RequestVerifyingService requestVerifyingService;

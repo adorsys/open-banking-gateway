@@ -2,9 +2,9 @@ package de.adorsys.signer.test;
 
 import de.adorsys.opba.api.security.generator.api.RequestDataToSignNormalizer;
 import de.adorsys.opba.api.security.generator.api.RequestToSign;
+import jakarta.annotation.Generated;
 import java.lang.Override;
 import java.lang.String;
-import javax.annotation.Generated;
 
 @Generated(
         value = "de.adorsys.opba.api.security.generator.normalizer.DataToSignProviderGenerator",

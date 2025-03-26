@@ -10,14 +10,17 @@ import de.adorsys.opba.protocol.xs2a.tests.e2e.wiremock.mocks.MockServers;
 import de.adorsys.opba.protocol.xs2a.tests.e2e.wiremock.mocks.WiremockAccountInformationRequest;
 import de.adorsys.opba.protocol.xs2a.tests.e2e.wiremock.mocks.Xs2aProtocolApplication;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.MethodOrderer;
+import org.junit.jupiter.api.Order;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.TestMethodOrder;
 import org.junit.jupiter.api.io.TempDir;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.CsvSource;
 import org.junit.jupiter.params.provider.EnumSource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.boot.web.server.LocalServerPort;
+import org.springframework.boot.test.web.server.LocalServerPort;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.jdbc.Sql;
 import org.springframework.transaction.annotation.Propagation;
@@ -59,6 +62,7 @@ As we redefine list accounts for adorsys-sandbox bank to sandbox customary one
 @Transactional(propagation = Propagation.NOT_SUPPORTED)
 @SpringBootTest(classes = {Xs2aProtocolApplication.class, JGivenConfig.class}, webEnvironment = RANDOM_PORT)
 @ActiveProfiles(profiles = {ONE_TIME_POSTGRES_RAMFS, MOCKED_SANDBOX})
+@TestMethodOrder(MethodOrderer.OrderAnnotation.class)
 class WiremockConsentE2EXs2aProtocolTest extends SpringScenarioTest<MockServers, WiremockAccountInformationRequest<? extends WiremockAccountInformationRequest<?>>, AccountInformationResult> {
 
     private static final String OAUTH2_CODE = "2buKRxcMvi79w8xYLFaNsoyh";
@@ -132,6 +136,7 @@ class WiremockConsentE2EXs2aProtocolTest extends SpringScenarioTest<MockServers,
     }
 
     @Test
+    @Order(1) // test should run before testDeutscheBank, because it's impossible to reinitialize static field URL_TO_CERTIFICATE of DeutscheBankPsuPasswordEncryptionService, which is needed to mock getCertificate call
     void testPostbankAccountsListWithConsentUsingEmbedded() {
         given()
                 .embedded_mock_of_postbank_for_max_musterman_accounts_running()

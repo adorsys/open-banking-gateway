@@ -1,5 +1,5 @@
 {
-  "id": "41045177-fc44-389d-8ba4-781804d62c05",
+  "id": "41045177-fc44-389d-8ba4-781804d62c15",
   "scenarioName": "Embedded max.musterman initiate consent",
   "requiredScenarioState": "Received",
   "newScenarioState": "PsuIdentified",
@@ -35,5 +35,5 @@
       "Date": "Wed, 08 Jan 2020 16:25:12 GMT"
     }
   },
-  "uuid": "41045177-fc44-389d-8ba4-781804d62c05"
+  "uuid": "41045177-fc44-389d-8ba4-781804d62c15"
 }

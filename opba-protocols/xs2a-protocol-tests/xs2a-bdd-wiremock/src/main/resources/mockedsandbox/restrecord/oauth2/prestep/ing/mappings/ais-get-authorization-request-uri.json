@@ -1,5 +1,5 @@
 {
-  "id" : "6934db76-5bd6-4fe1-abc6-dab92161b8c3",
+  "id" : "6934db76-5bd6-4fe1-abc6-dab92161b8c4",
   "name" : "oauth2_authorization-server-url",
   "request" : {
     "urlPattern" : "/oauth2/authorization-server-url\\?scope=payment-accounts%3Atransactions%3Aview\\+payment-accounts%3Abalances%3Aview&redirect_uri=http%3A%2F%2Flocalhost%3A.+%2Fv1%2Fconsent%2F.+%2FfromAspsp%2F.+%2Fok",
@@ -36,7 +36,7 @@
       "X-XSS-Protection" : "1; mode=block"
     }
   },
-  "uuid" : "6934db76-5bd6-4fe1-abc6-dab92161b8c3",
+  "uuid" : "6934db76-5bd6-4fe1-abc6-dab92161b8c4",
   "persistent" : true,
   "insertionIndex" : 2
 }

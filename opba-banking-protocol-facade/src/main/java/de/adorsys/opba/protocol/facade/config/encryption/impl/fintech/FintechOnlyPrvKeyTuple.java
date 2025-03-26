@@ -5,7 +5,7 @@ import de.adorsys.opba.db.domain.entity.fintech.FintechPrvKey;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 
-import javax.persistence.EntityManager;
+import jakarta.persistence.EntityManager;
 import java.util.UUID;
 
 /**

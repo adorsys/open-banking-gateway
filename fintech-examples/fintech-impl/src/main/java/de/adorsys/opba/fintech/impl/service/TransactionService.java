@@ -90,13 +90,13 @@ public class TransactionService {
             null
         );
         switch (transactions.getStatusCode()) {
-            case OK:
+            case HttpStatus.OK:
                 return new ResponseEntity<>(ManualMapper.fromTppToFintech(transactions.getBody()), HttpStatus.OK);
-            case ACCEPTED:
+            case HttpStatus.ACCEPTED:
                 log.info("create redirect entity for lot for redirectcode {}", fintechRedirectCode);
                 redirectHandlerService.registerRedirectStateForSession(fintechRedirectCode, fintechOkUrl, fintechNOkUrl);
                 return handleAcceptedService.handleAccepted(consentRepository, ConsentType.AIS, bankProfileID, fintechRedirectCode, sessionEntity, transactions.getHeaders());
-            case UNAUTHORIZED:
+            case HttpStatus.UNAUTHORIZED:
                 return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
             default:
                 throw new RuntimeException("DID NOT EXPECT RETURNCODE:" + transactions.getStatusCode());

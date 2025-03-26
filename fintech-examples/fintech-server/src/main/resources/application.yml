@@ -36,9 +36,7 @@ tpp:
 
 spring:
   datasource:
-    url: jdbc:postgresql://localhost/open_banking?currentSchema=fintech
-    # local testing
-    # url: jdbc:postgresql://localhost:15432/open_banking?currentSchema=fintech
+    url: jdbc:postgresql://localhost:5432/open_banking?currentSchema=fintech
     username: postgres
     password: docker
     type: com.zaxxer.hikari.HikariDataSource

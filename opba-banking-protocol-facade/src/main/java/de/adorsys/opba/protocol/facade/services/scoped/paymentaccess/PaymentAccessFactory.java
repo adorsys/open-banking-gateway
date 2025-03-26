@@ -15,7 +15,7 @@ import de.adorsys.opba.protocol.facade.config.encryption.impl.fintech.FintechSec
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
-import javax.persistence.EntityManager;
+import jakarta.persistence.EntityManager;
 import java.util.function.Supplier;
 
 @Service

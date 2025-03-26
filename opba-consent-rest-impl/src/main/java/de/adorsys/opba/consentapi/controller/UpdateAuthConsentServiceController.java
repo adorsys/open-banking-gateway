@@ -44,8 +44,8 @@ public class UpdateAuthConsentServiceController implements UpdateConsentAuthoriz
     public CompletableFuture embeddedUsingPOST(
             UUID xRequestID,
             String authId,
-            PsuAuthRequest body,
-            String redirectCode) {
+            String redirectCode,
+            PsuAuthRequest body) {
         return updateAuthorizationService.execute(
                 AuthorizationRequest.builder()
                         .facadeServiceable(serviceableTemplate.toBuilder()

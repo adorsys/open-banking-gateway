@@ -16,7 +16,7 @@ import de.adorsys.opba.api.security.generator.api.RequestDataToSignNormalizer;
 import de.adorsys.opba.api.security.generator.api.RequestToSign;
 import io.swagger.v3.oas.models.Operation;
 
-import javax.annotation.Generated;
+import jakarta.annotation.Generated;
 import javax.annotation.processing.Filer;
 import javax.lang.model.element.Modifier;
 import java.io.IOError;

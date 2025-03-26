@@ -6,9 +6,9 @@ import de.adorsys.opba.tpp.banksearch.api.model.generated.BankProfileResponse;
 import de.adorsys.opba.tpp.banksearch.api.model.generated.BankSearchResponse;
 import org.springframework.http.ResponseEntity;
 
-import javax.servlet.http.HttpServletRequest;
-import javax.validation.Valid;
-import javax.validation.constraints.NotNull;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.validation.Valid;
+import jakarta.validation.constraints.NotNull;
 import java.util.Optional;
 import java.util.UUID;
 

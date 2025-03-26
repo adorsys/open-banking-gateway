@@ -20,6 +20,6 @@ public class AssignedUuidGenerator extends UUIDGenerator {
             }
         }
 
-        return super.generate(session, obj);
+        return (Serializable) super.generate(session, obj);
     }
 }
