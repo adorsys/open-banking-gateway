@@ -38,6 +38,7 @@
     "font-awesome": "^4.7.0",
     "iban": "0.0.14",
     "jquery": "^3.6.0",
+    "karma-coverage": "^2.2.1",
     "ng-http-loader": "^17.0.0",
     "npm": "^10.9.2",
     "popper.js": "^1.16.1",
