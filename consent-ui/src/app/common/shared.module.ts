@@ -9,7 +9,7 @@ import { SelectScaComponent } from './select-sca/select-sca.component';
 import { ResultComponent } from './result/result.component';
 import { ToAspspComponent } from './to-aspsp/to-aspsp.component';
 import { QRCodeComponent } from 'angularx-qrcode';
-import { NgxChiptanModule } from 'ngx-chiptan';
+import { NgxChiptanComponent } from '../utilities/ngx-chiptan/ngx-chiptan.component';
 import { RestoreSessionComponent } from './restore-session/restore-session.component';
 
 @NgModule({
@@ -26,7 +26,7 @@ import { RestoreSessionComponent } from './restore-session/restore-session.compo
     ReactiveFormsModule,
     InfoModule,
     QRCodeComponent,
-    NgxChiptanModule,
+    NgxChiptanComponent,
     EnterTanComponent,
     EnterPinComponent,
     SelectScaComponent,
@@ -34,7 +34,7 @@ import { RestoreSessionComponent } from './restore-session/restore-session.compo
     ResultComponent,
     RestoreSessionComponent
   ],
-  imports: [CommonModule, ReactiveFormsModule, InfoModule, QRCodeComponent, NgxChiptanModule],
+  imports: [CommonModule, ReactiveFormsModule, InfoModule, QRCodeComponent, NgxChiptanComponent],
   providers: [provideHttpClient(withInterceptorsFromDi())]
 })
 export class SharedModule {}

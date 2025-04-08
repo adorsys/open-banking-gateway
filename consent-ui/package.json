@@ -40,7 +40,6 @@
     "jquery": "^3.6.0",
     "ng-http-loader": "^17.2.0",
     "ng-swagger-gen": "^2.3.1",
-    "ngx-chiptan": "^17.0.0",
     "popper.js": "^1.16.1",
     "rxjs": "^7.8.2",
     "tslib": "^2.0.0",
