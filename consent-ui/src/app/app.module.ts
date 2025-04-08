@@ -15,11 +15,12 @@ import { environment } from '../environments/environment';
 import { BASE_PATH as BASE_PATH_AUTH } from './api-auth';
 import { SimpleTimer } from 'src/app/utilities/simple-timer';
 import { CookieRenewalService } from './ais/common/cookie-renewal/CookieRenewalService';
+import { NgHttpLoaderComponent } from 'ng-http-loader';
 
 @NgModule({
   declarations: [AppComponent],
   bootstrap: [AppComponent],
-  imports: [BrowserAnimationsModule, BrowserModule, AppRoutingModule, InfoModule],
+  imports: [BrowserAnimationsModule, BrowserModule, AppRoutingModule, InfoModule, NgHttpLoaderComponent],
   providers: [
     SimpleTimer,
     CookieRenewalService,
