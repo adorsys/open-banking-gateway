@@ -76,8 +76,8 @@ fintech-ui: fintech-ui/node_modules
 	cd fintech-examples/fintech-ui && npm i && ng test --no-watch --browsers Chrome --code-coverage=true && npm run build:prod
 
 consent-ui/node_modules:
-	cd consent-ui && npm install --legacy-peer-deps
+	cd consent-ui && npm install
 
 .PHONY : consent-ui
 consent-ui: consent-ui/node_modules
-	cd consent-ui && npm i --legacy-peer-deps && ng test --no-watch --browsers Chrome --code-coverage=true && npm run build:prod
+	cd consent-ui && npm i && ng test --no-watch --browsers Chrome --code-coverage=true && npm run build:prod
