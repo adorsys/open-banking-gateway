@@ -1,0 +1,8 @@
+Package: fintech-server
+Version: 1.0.0
+Section: misc
+Priority: low
+Architecture: all
+Description: Provides Access to Banking APIs.
+Maintainer: Francis Pouatcha <Francis.Pouatcha@adorsys.com>
+Depends: default-jre | java6-runtime
