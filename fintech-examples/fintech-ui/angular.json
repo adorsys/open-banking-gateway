@@ -147,12 +147,18 @@
               "devServerTarget": "fintech-ui:serve:development"
             }
           }
+        },
+        "lint": {
+          "builder": "@angular-eslint/builder:lint",
+          "options": {
+            "lintFilePatterns": ["src/**/*.ts", "src/**/*.html"]
+          }
         }
       }
     }
   },
   "cli": {
     "analytics": "e23cfdeb-4ee0-4f12-a8d6-83edef5d1381",
-    "schematicCollections": ["@cypress/schematic", "@cypress/schematic", "@schematics/angular"]
+    "schematicCollections": ["angular-eslint", "@cypress/schematic", "@cypress/schematic", "@schematics/angular"]
   }
 }

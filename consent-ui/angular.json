@@ -3,6 +3,7 @@
   "cli": {
     "analytics": "f56b4386-64a2-417e-9d69-fe721bc482a5",
     "schematicCollections": [
+      "angular-eslint",
       "@cypress/schematic",
       "@schematics/angular"
     ]
@@ -51,7 +52,9 @@
                 "."
               ],
               "sass": {
-                "silenceDeprecations": ["import"]
+                "silenceDeprecations": [
+                  "import"
+                ]
               }
             },
             "browser": "src/main.ts"
@@ -163,6 +166,15 @@
             "development": {
               "devServerTarget": "consent-ui:serve:development"
             }
+          }
+        },
+        "lint": {
+          "builder": "@angular-eslint/builder:lint",
+          "options": {
+            "lintFilePatterns": [
+              "src/**/*.ts",
+              "src/**/*.html"
+            ]
           }
         }
       }
