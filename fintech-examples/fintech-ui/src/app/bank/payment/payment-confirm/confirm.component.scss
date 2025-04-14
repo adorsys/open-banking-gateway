@@ -1,4 +1,4 @@
-@import 'src/assets/themes/variables';
+@use 'src/assets/themes/variables' as vars;
 p {
   margin-bottom: 0.25rem;
 }
@@ -15,7 +15,7 @@ p {
 .form-group {
   .title {
     font-size: 1.1rem;
-    color: $dark-90;
+    color: vars.$dark-90;
   }
 
   .card-img {

@@ -21,30 +21,22 @@
               "base": "dist/fintech-ui"
             },
             "index": "src/index.html",
-            "polyfills": [
-              "src/polyfills.ts"
-            ],
+            "polyfills": ["src/polyfills.ts"],
             "tsConfig": "tsconfig.app.json",
             "aot": false,
-            "assets": [
-              "src/favicon.ico",
-              "src/assets"
-            ],
+            "assets": ["src/favicon.ico", "src/assets"],
             "styles": [
               "src/styles.scss",
               "node_modules/font-awesome/css/font-awesome.css",
               "node_modules/bootstrap/dist/css/bootstrap.css"
             ],
             "stylePreprocessorOptions": {
-              "includePaths": [
-                "node_modules",
-                "."
-              ]
+              "includePaths": ["node_modules", "."],
+              "sass": {
+                "silenceDeprecations": ["import"]
+              }
             },
-            "scripts": [
-              "node_modules/jquery/dist/jquery.js",
-              "node_modules/bootstrap/dist/js/bootstrap.js"
-            ],
+            "scripts": ["node_modules/jquery/dist/jquery.js", "node_modules/bootstrap/dist/js/bootstrap.js"],
             "extractLicenses": false,
             "sourceMap": true,
             "optimization": false,
@@ -106,13 +98,8 @@
             "polyfills": "src/polyfills.ts",
             "tsConfig": "tsconfig.spec.json",
             "karmaConfig": "karma.conf.js",
-            "assets": [
-              "src/favicon.ico",
-              "src/assets"
-            ],
-            "styles": [
-              "src/styles.scss"
-            ],
+            "assets": ["src/favicon.ico", "src/assets"],
+            "styles": ["src/styles.scss"],
             "scripts": []
           }
         },
@@ -166,10 +153,6 @@
   },
   "cli": {
     "analytics": "e23cfdeb-4ee0-4f12-a8d6-83edef5d1381",
-    "schematicCollections": [
-      "@cypress/schematic",
-      "@cypress/schematic",
-      "@schematics/angular"
-    ]
+    "schematicCollections": ["@cypress/schematic", "@cypress/schematic", "@schematics/angular"]
   }
 }

@@ -1,7 +1,9 @@
-@import './assets/themes/variables';
+@use './assets/themes/variables' as vars;
+@use './assets/themes/fonts' as fonts;
 
-@import 'bootstrap/scss/bootstrap';
-@import './assets/themes/fonts';
+@import 'bootstrap/scss/functions';
+@import 'bootstrap/scss/variables';
+@import 'bootstrap/scss/mixins';
 
 * {
   margin: 0;
@@ -29,7 +31,7 @@ body {
 
   &-body {
     padding: 3rem;
-    color: $dark-80;
+    color: vars.$dark-80;
   }
 
   &-title {
@@ -61,7 +63,7 @@ body {
 
 label {
   margin-bottom: 0;
-  color: $primary;
+  color: vars.$primary;
   line-height: 1;
 }
 
@@ -74,7 +76,7 @@ label {
 .form-control,
 .form-control:focus {
   border-radius: 0;
-  background-color: $primary-30;
+  background-color: vars.$primary-30;
 }
 
 .btn {
@@ -91,7 +93,7 @@ label {
   }
 
   &-link {
-    color: $primary;
+    color: vars.$primary;
     opacity: 0.6;
   }
 }

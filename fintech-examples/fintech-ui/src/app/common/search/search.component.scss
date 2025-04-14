@@ -1,4 +1,4 @@
-@import 'src/assets/themes/variables';
+@use 'src/assets/themes/variables' as vars;
 
 .search {
   margin-bottom: 10px;
@@ -15,6 +15,6 @@
     position: absolute;
     padding-left: 0.7rem;
     pointer-events: none;
-    color: $primary;
+    color: vars.$primary;
   }
 }

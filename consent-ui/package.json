@@ -37,7 +37,7 @@
     "angular-iban": "^19.0.0",
     "angular2-uuid": "^1.1.1",
     "angularx-qrcode": "^19.0.0",
-    "bootstrap": "^5.3.3",
+    "bootstrap": "^5.3.5",
     "iban": "0.0.14",
     "jquery": "^3.6.0",
     "ng-http-loader": "^17.2.0",

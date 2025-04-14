@@ -49,7 +49,10 @@
               "includePaths": [
                 "node_modules",
                 "."
-              ]
+              ],
+              "sass": {
+                "silenceDeprecations": ["import"]
+              }
             },
             "browser": "src/main.ts"
           },

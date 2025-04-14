@@ -1,18 +1,17 @@
-@import 'src/assets/themes/variables';
+@use 'src/assets/themes/variables' as vars;
 
 input {
   margin-right: 10px;
 }
 
 .card-body {
-  background-color: $primary-10;
+  background-color: vars.$primary-10;
   padding: 20px;
 }
 
 label {
   margin-top: 1.5rem;
 }
-
 
 .withoutOutline {
   outline: none;

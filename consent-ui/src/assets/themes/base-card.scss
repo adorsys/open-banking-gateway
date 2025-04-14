@@ -1,4 +1,4 @@
-@import 'src/styles';
+@use 'src/styles' as vars;
 
 .card-body {
   padding: 3rem;
@@ -9,7 +9,7 @@
 @media (min-width: 768px) {
   .card {
     border-radius: 16px;
-    color: $COLOR_DARK_BODY;
+    color: vars.$COLOR_DARK_BODY;
 
     &-frame {
       width: 761px;

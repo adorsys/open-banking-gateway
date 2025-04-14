@@ -1,7 +1,7 @@
-@import 'src/assets/themes/variables';
+@use 'src/assets/themes/variables' as vars;
 
 .card__item {
-  background-color: $primary-30;
+  background-color: vars.$primary-30;
   padding: 16px;
   box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
   display: inline-block;
@@ -12,14 +12,14 @@
 
     &--small {
       font-size: 0.85rem;
-      color: $primary;
+      color: vars.$primary;
     }
   }
 
   .card__subheadline {
     font-size: 0.85rem;
     margin-bottom: 0;
-    color: $primary;
+    color: vars.$primary;
 
     &--large {
       font-size: 1.1rem;

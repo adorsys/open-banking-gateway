@@ -1,4 +1,4 @@
-@import 'src/assets/themes/variables';
+@use 'src/assets/themes/variables' as vars;
 
 .ltx-list-container {
   @extend %layout-padding;
@@ -24,7 +24,7 @@
   padding-right: 5px;
 }
 
-@media (max-width: $breakpoint-sm) {
+@media (max-width: vars.$breakpoint-sm) {
   .left,
   .ltx-description {
     display: block;

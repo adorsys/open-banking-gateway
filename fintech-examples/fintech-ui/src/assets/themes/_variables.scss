@@ -1,5 +1,5 @@
 // Overwrite bootstrap variables
-@import './bootstrap-overrides';
+@use './bootstrap-overrides' as vars;
 
 $primary: #687aa8;
 $primary-10: #dfe3ed;
@@ -18,5 +18,5 @@ $breakpoint-sm: 576px;
 :root {
   /*Main*/
   --main-BG: #{$primary-10};
-  --fontFamily: #{$font-family-base};
+  --fontFamily: #{vars.$font-family-base};
 }

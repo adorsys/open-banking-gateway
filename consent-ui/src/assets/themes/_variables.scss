@@ -1,4 +1,5 @@
 // Overwrite bootstrap variables
+@use 'sass:color';
 @import 'bootstrap/scss/functions';
 @import 'bootstrap/scss/mixins';
 @import 'bootstrap/scss/variables';
@@ -24,7 +25,7 @@ $COLOR_TEXT_LIGHT: #878a92;
 $text-muted: #687aa8; // overwrite bootstrap
 
 $primary-gradient: linear-gradient(129.54deg, #0db0e2 0%, #10317d 100%);
-$danger-gradient: linear-gradient(129.54deg, lighten($danger, 7%) 0%, $danger 100%);
+$danger-gradient: linear-gradient(129.54deg, color.scale($danger, $lightness: 7%) 0%, $danger 100%);
 
 /*
  * CSS Variables: Used for whitelabel customization
@@ -105,7 +106,7 @@ $danger-gradient: linear-gradient(129.54deg, lighten($danger, 7%) 0%, $danger 10
   /* Primary */
 
   --buttonTextColor: #fff;
-  --buttonBorderRadius: 3px;
+  --buttonBorderRadius: 5px;
 
   --buttonBgGradient1: #0db0e2;
   --buttonBgGradient2: #10317d;
