@@ -1,8 +1,9 @@
 {
 	"info": {
-		"_postman_id": "95b7680c-b905-4d2d-ada5-f844e364b593",
+		"_postman_id": "619f31c1-b07e-4ed2-b4aa-ef7f9dbd16f0",
 		"name": "OPBA-PIS-SEPA-XS2A-EMBEDDED-2-SCA-METHODS-NO-LOGIN",
-		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "25454200"
 	},
 	"item": [
 		{
@@ -18,7 +19,8 @@
 							"",
 							"pm.environment.set(\"bank-profile-id\", pm.response.json().bankDescriptor[0].profiles.filter(it => it.name == 'embedded')[0].uuid)"
 						],
-						"type": "text/javascript"
+						"type": "text/javascript",
+						"packages": {}
 					}
 				}
 			],
@@ -33,11 +35,17 @@
 					{
 						"key": "X-Request-Signature",
 						"value": "{{x-request-signature}}",
-						"type": "text"
+						"type": "text",
+						"disabled": true
 					},
 					{
 						"key": "Fintech-ID",
 						"value": "{{fintech-id}}",
+						"type": "text"
+					},
+					{
+						"key": "X-Timestamp-UTC",
+						"value": "2020-04-14T08:46:33.629Z",
 						"type": "text"
 					}
 				],
@@ -97,18 +105,18 @@
 				"header": [
 					{
 						"key": "X-Request-ID",
-						"type": "text",
-						"value": "{{x-request-id}}"
+						"value": "{{x-request-id}}",
+						"type": "text"
 					},
 					{
 						"key": "X-Request-Signature",
-						"type": "text",
-						"value": "{{x-request-signature}}"
+						"value": "{{x-request-signature}}",
+						"type": "text"
 					},
 					{
 						"key": "Fintech-ID",
-						"type": "text",
-						"value": "{{fintech-id}}"
+						"value": "{{fintech-id}}",
+						"type": "text"
 					},
 					{
 						"key": "Fintech-Redirect-URL-OK",
@@ -326,8 +334,8 @@
 				"header": [
 					{
 						"key": "Cookie",
-						"type": "text",
-						"value": "{{session-cookie}}"
+						"value": "{{session-cookie}}",
+						"type": "text"
 					},
 					{
 						"key": "X-Request-ID",
@@ -402,8 +410,8 @@
 				"header": [
 					{
 						"key": "Cookie",
-						"type": "text",
-						"value": "{{session-cookie}}"
+						"value": "{{session-cookie}}",
+						"type": "text"
 					},
 					{
 						"key": "X-Request-ID",
@@ -534,8 +542,8 @@
 				"header": [
 					{
 						"key": "Cookie",
-						"type": "text",
-						"value": "{{session-cookie}}"
+						"value": "{{session-cookie}}",
+						"type": "text"
 					},
 					{
 						"key": "X-Request-iD",
@@ -610,8 +618,8 @@
 				"header": [
 					{
 						"key": "Cookie",
-						"type": "text",
-						"value": "{{session-cookie}}"
+						"value": "{{session-cookie}}",
+						"type": "text"
 					},
 					{
 						"key": "X-Request-ID",
@@ -739,18 +747,18 @@
 				"header": [
 					{
 						"key": "X-Request-ID",
-						"type": "text",
-						"value": "{{x-request-id}}"
+						"value": "{{x-request-id}}",
+						"type": "text"
 					},
 					{
 						"key": "X-Request-Signature",
-						"type": "text",
-						"value": "{{x-request-signature}}"
+						"value": "{{x-request-signature}}",
+						"type": "text"
 					},
 					{
 						"key": "Fintech-Data-Password",
-						"type": "text",
-						"value": "{{fintech-data-password}}"
+						"value": "{{fintech-data-password}}",
+						"type": "text"
 					}
 				],
 				"url": {
@@ -799,28 +807,28 @@
 				"header": [
 					{
 						"key": "X-Request-ID",
-						"type": "text",
-						"value": "{{x-request-id}}"
+						"value": "{{x-request-id}}",
+						"type": "text"
 					},
 					{
 						"key": "X-Request-Signature",
-						"type": "text",
-						"value": "{{x-request-signature}}"
+						"value": "{{x-request-signature}}",
+						"type": "text"
 					},
 					{
 						"key": "Fintech-ID",
-						"type": "text",
-						"value": "{{fintech-id}}"
+						"value": "{{fintech-id}}",
+						"type": "text"
 					},
 					{
 						"key": "Fintech-User-ID",
-						"type": "text",
-						"value": "{{fintech-user-id}}"
+						"value": "{{fintech-user-id}}",
+						"type": "text"
 					},
 					{
 						"key": "Fintech-Data-Password",
-						"type": "text",
-						"value": "{{fintech-data-password}}"
+						"value": "{{fintech-data-password}}",
+						"type": "text"
 					},
 					{
 						"key": "Service-Session-ID",
