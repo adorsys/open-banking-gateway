@@ -116,6 +116,19 @@
                 </exclusion>
             </exclusions>
         </dependency>
+        <!-- junixsocket dependencies -->
+        <!-- https://mvnrepository.com/artifact/com.kohlschutter.junixsocket/junixsocket-native-common -->
+        <dependency>
+            <groupId>com.kohlschutter.junixsocket</groupId>
+            <artifactId>junixsocket-native-common</artifactId>
+            <version>2.10.1</version>
+        </dependency>
+        <!-- https://mvnrepository.com/artifact/com.kohlschutter.junixsocket/junixsocket-common -->
+        <dependency>
+            <groupId>com.kohlschutter.junixsocket</groupId>
+            <artifactId>junixsocket-common</artifactId>
+            <version>2.10.1</version>
+        </dependency>
 
         <!-- Test dependencies -->
         <dependency>

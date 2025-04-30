@@ -5,4 +5,4 @@ Priority: low
 Architecture: all
 Description: Provides Access to Banking APIs.
 Maintainer: Francis Pouatcha <Francis.Pouatcha@adorsys.com>
-Depends: default-jre | java6-runtime
+Depends: openjdk-21-jre
