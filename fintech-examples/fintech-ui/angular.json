@@ -36,7 +36,7 @@
                 "silenceDeprecations": ["import"]
               }
             },
-            "scripts": ["node_modules/jquery/dist/jquery.js", "node_modules/bootstrap/dist/js/bootstrap.js"],
+            "scripts": ["node_modules/jquery/dist/jquery.js", "node_modules/bootstrap/dist/js/bootstrap.bundle.min.js"],
             "extractLicenses": false,
             "sourceMap": true,
             "optimization": false,
