@@ -1,5 +1,5 @@
 {
-  "/fintech-api-proxy/*": {
+  "/fintech-api-proxy/**": {
     "target": "http://localhost:8086",
     "secure": false,
     "changeOrigin": true,

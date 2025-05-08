@@ -1,11 +1,12 @@
-import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
 import { ReactiveFormsModule } from '@angular/forms';
 import { AnonymousComponent } from './anonymous.component';
 import { RouterTestingModule } from '@angular/router/testing';
 import { ActivatedRoute, ActivatedRouteSnapshot, Params } from '@angular/router';
-import { HttpClientTestingModule } from '@angular/common/http/testing';
+import { provideHttpClientTesting } from '@angular/common/http/testing';
 import { Observable } from 'rxjs';
 import { AuthService } from '../../common/auth.service';
+import { provideHttpClient, withInterceptorsFromDi } from '@angular/common/http';
 
 export class MockActivatedRoute {
   snapshot: ActivatedRouteSnapshot;
@@ -19,19 +20,25 @@ describe('AnonymousComponent', () => {
   let authServiceSpy;
   let authService: AuthService;
 
-  beforeEach(async(() => {
-    route = new MockActivatedRoute();
-    route.snapshot = {
-      queryParams: { redirectCode: 'redirectCode654' },
-      parent: { params: { authId: 'authIdHere' } }
-    };
+  beforeEach(
+    waitForAsync(() => {
+      route = new MockActivatedRoute();
+      route.snapshot = {
+        queryParams: { redirectCode: 'redirectCode654' },
+        parent: { params: { authId: 'authIdHere' } }
+      };
 
-    TestBed.configureTestingModule({
-      declarations: [AnonymousComponent],
-      imports: [ReactiveFormsModule, HttpClientTestingModule, RouterTestingModule],
-      providers: [{ provide: ActivatedRoute, useValue: route }]
-    }).compileComponents();
-  }));
+      TestBed.configureTestingModule({
+        declarations: [AnonymousComponent],
+        imports: [ReactiveFormsModule, RouterTestingModule],
+        providers: [
+          { provide: ActivatedRoute, useValue: route },
+          provideHttpClient(withInterceptorsFromDi()),
+          provideHttpClientTesting()
+        ]
+      }).compileComponents();
+    })
+  );
 
   beforeEach(() => {
     fixture = TestBed.createComponent(AnonymousComponent);

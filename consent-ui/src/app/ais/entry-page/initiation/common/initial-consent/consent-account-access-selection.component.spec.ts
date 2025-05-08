@@ -1,5 +1,5 @@
-import { async, ComponentFixture, TestBed } from '@angular/core/testing';
-import { HttpClientTestingModule } from '@angular/common/http/testing';
+import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
+import { provideHttpClientTesting } from '@angular/common/http/testing';
 import { ReactiveFormsModule } from '@angular/forms';
 import { CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
 import { RouterTestingModule } from '@angular/router/testing';
@@ -15,6 +15,7 @@ import { DedicatedAccessComponent } from '../dedicated-access/dedicated-access.c
 import { StubUtilTests } from '../../../../common/stub-util-tests';
 import { UpdateConsentAuthorizationService } from '../../../../../api';
 import { StubUtil } from '../../../../../common/utils/stub-util';
+import { provideHttpClient, withInterceptorsFromDi } from '@angular/common/http';
 
 describe('ConsentAccountAccessSelectionComponent', () => {
   let component: ConsentAccountAccessSelectionComponent;
@@ -23,32 +24,36 @@ describe('ConsentAccountAccessSelectionComponent', () => {
 
   beforeAll(() => (window.onbeforeunload = jasmine.createSpy()));
 
-  beforeEach(async(() => {
-    TestBed.configureTestingModule({
-      declarations: [ConsentAccountAccessSelectionComponent],
-      imports: [ReactiveFormsModule, RouterTestingModule, HttpClientTestingModule],
-      providers: [
-        {
-          provide: ActivatedRoute,
-          useValue: {
-            parent: { parent: { params: of({ authId: StubUtilTests.AUTH_ID }) } },
-            snapshot: {}
-          }
-        },
-        {
-          provide: SessionService,
-          useValue: {
-            getConsentObject: () => new AisConsentToGrant(),
-            getConsentState: () => new AuthConsentState([]),
-            getFintechName: (): string => StubUtil.FINTECH_NAME,
-            getBankName: (): string => StubUtil.ASPSP_NAME,
-            getConsentTypesSupported: () => []
-          }
-        }
-      ],
-      schemas: [CUSTOM_ELEMENTS_SCHEMA]
-    }).compileComponents();
-  }));
+  beforeEach(
+    waitForAsync(() => {
+      TestBed.configureTestingModule({
+        declarations: [ConsentAccountAccessSelectionComponent],
+        schemas: [CUSTOM_ELEMENTS_SCHEMA],
+        imports: [ReactiveFormsModule, RouterTestingModule],
+        providers: [
+          {
+            provide: ActivatedRoute,
+            useValue: {
+              parent: { parent: { params: of({ authId: StubUtilTests.AUTH_ID }) } },
+              snapshot: {}
+            }
+          },
+          {
+            provide: SessionService,
+            useValue: {
+              getConsentObject: () => new AisConsentToGrant(),
+              getConsentState: () => new AuthConsentState([]),
+              getFintechName: (): string => StubUtil.FINTECH_NAME,
+              getBankName: (): string => StubUtil.ASPSP_NAME,
+              getConsentTypesSupported: () => []
+            }
+          },
+          provideHttpClient(withInterceptorsFromDi()),
+          provideHttpClientTesting()
+        ]
+      }).compileComponents();
+    })
+  );
 
   beforeEach(() => {
     fixture = TestBed.createComponent(ConsentAccountAccessSelectionComponent);

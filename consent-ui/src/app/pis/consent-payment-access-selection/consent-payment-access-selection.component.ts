@@ -1,5 +1,5 @@
 import {AfterContentChecked, ChangeDetectorRef, Component, Input, OnInit} from '@angular/core';
-import {FormBuilder, FormGroup} from '@angular/forms';
+import {UntypedFormBuilder, UntypedFormGroup} from '@angular/forms';
 import {ActivatedRoute, Router} from '@angular/router';
 
 import {UpdateConsentAuthorizationService} from '../../api';
@@ -11,9 +11,10 @@ import {PaymentUtil} from '../common/payment-util';
 import {PisPayment} from '../common/models/pis-payment.model';
 
 @Component({
-  selector: 'consent-app-payment-access-selection',
-  templateUrl: './consent-payment-access-selection.component.html',
-  styleUrls: ['./consent-payment-access-selection.component.scss']
+    selector: 'consent-app-payment-access-selection',
+    templateUrl: './consent-payment-access-selection.component.html',
+    styleUrls: ['./consent-payment-access-selection.component.scss'],
+    standalone: false
 })
 export class ConsentPaymentAccessSelectionComponent implements OnInit, AfterContentChecked {
   public finTechName: string;
@@ -21,7 +22,7 @@ export class ConsentPaymentAccessSelectionComponent implements OnInit, AfterCont
 
   @Input() paymentReviewPage: string;
 
-  public paymentAccessForm: FormGroup;
+  public paymentAccessForm: UntypedFormGroup;
   public state: AuthConsentState;
   public payment: PisPayment;
 
@@ -30,7 +31,7 @@ export class ConsentPaymentAccessSelectionComponent implements OnInit, AfterCont
   constructor(
     private router: Router,
     private activatedRoute: ActivatedRoute,
-    private formBuilder: FormBuilder,
+    private formBuilder: UntypedFormBuilder,
     private sessionService: SessionService,
     private updateConsentAuthorizationService: UpdateConsentAuthorizationService,
     private cdRef: ChangeDetectorRef

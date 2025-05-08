@@ -12,9 +12,10 @@ import {AuthStateConsentAuthorizationService, UpdateConsentAuthorizationService}
 import {combineLatest} from 'rxjs';
 
 @Component({
-  selector: 'consent-app-to-aspsp-redirection',
-  templateUrl: './to-aspsp-redirection.component.html',
-  styleUrls: ['./to-aspsp-redirection.component.scss']
+    selector: 'consent-app-to-aspsp-redirection',
+    templateUrl: './to-aspsp-redirection.component.html',
+    styleUrls: ['./to-aspsp-redirection.component.scss'],
+    standalone: false
 })
 export class ToAspspRedirectionComponent implements OnInit {
   public static ROUTE = 'to-aspsp-redirection';

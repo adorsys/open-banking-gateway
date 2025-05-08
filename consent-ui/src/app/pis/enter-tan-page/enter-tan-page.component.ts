@@ -3,9 +3,10 @@ import { ActivatedRoute } from '@angular/router';
 import { ApiHeaders } from '../../api/api.headers';
 
 @Component({
-  selector: 'consent-app-enter-tan-page',
-  templateUrl: './enter-tan-page.component.html',
-  styleUrls: ['./enter-tan-page.component.scss']
+    selector: 'consent-app-enter-tan-page',
+    templateUrl: './enter-tan-page.component.html',
+    styleUrls: ['./enter-tan-page.component.scss'],
+    standalone: false
 })
 export class EnterTanPageComponent implements OnInit {
   public static ROUTE = 'sca-result/:scaType';

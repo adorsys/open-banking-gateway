@@ -5,9 +5,10 @@ import { Consent } from '../models/consts';
 import { ModalCard } from '../models/modalCard.model';
 
 @Component({
-  selector: 'app-redirect-after-consent',
-  templateUrl: './redirect-after-consent.component.html',
-  styleUrls: ['./redirect-after-consent.component.scss']
+    selector: 'app-redirect-after-consent',
+    templateUrl: './redirect-after-consent.component.html',
+    styleUrls: ['./redirect-after-consent.component.scss'],
+    standalone: false
 })
 export class RedirectAfterConsentComponent implements OnInit {
   cardModal: ModalCard = {

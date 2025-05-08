@@ -1,4 +1,4 @@
-import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+import { waitForAsync, ComponentFixture, TestBed } from '@angular/core/testing';
 import { NO_ERRORS_SCHEMA } from '@angular/core';
 import { RouterTestingModule } from '@angular/router/testing';
 import { ActivatedRoute } from '@angular/router';
@@ -6,7 +6,8 @@ import { ActivatedRoute } from '@angular/router';
 import { RedirectPageComponent } from './redirect-page.component';
 import { ConsentAuthorizationService } from '../services/consent-authorization.service';
 import { RedirectStruct } from './redirect-struct';
-import { HttpClientTestingModule } from '@angular/common/http/testing';
+import { provideHttpClientTesting } from '@angular/common/http/testing';
+import { provideHttpClient, withInterceptorsFromDi } from '@angular/common/http';
 
 describe('RedirectPageComponent', () => {
   let component: RedirectPageComponent;
@@ -14,12 +15,13 @@ describe('RedirectPageComponent', () => {
 
   beforeAll(() => (window.onbeforeunload = jasmine.createSpy()));
 
-  beforeEach(async(() => {
+  beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
-      imports: [RouterTestingModule, HttpClientTestingModule],
-      declarations: [RedirectPageComponent],
-      schemas: [NO_ERRORS_SCHEMA]
-    })
+    declarations: [RedirectPageComponent],
+    schemas: [NO_ERRORS_SCHEMA],
+    imports: [RouterTestingModule],
+    providers: [provideHttpClient(withInterceptorsFromDi()), provideHttpClientTesting()]
+})
       .overrideComponent(RedirectPageComponent, {
         set: {
           providers: [

@@ -7,9 +7,10 @@ import { StorageService } from '../../services/storage.service';
 import { ModalCard } from '../../models/modalCard.model';
 
 @Component({
-  selector: 'app-redirect-page',
-  templateUrl: './redirect-page.component.html',
-  styleUrls: ['./redirect-page.component.scss']
+    selector: 'app-redirect-page',
+    templateUrl: './redirect-page.component.html',
+    styleUrls: ['./redirect-page.component.scss'],
+    standalone: false
 })
 export class RedirectPageComponent implements OnInit {
   public redirectStruct: RedirectStruct = new RedirectStruct();

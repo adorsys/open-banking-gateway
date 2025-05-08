@@ -5,29 +5,24 @@ import { Subject } from 'rxjs';
 import { InfoOptions } from './info-options';
 
 @Component({
-  selector: 'app-feedback',
-  templateUrl: './info.component.html',
-  styleUrls: ['./info.component.scss'],
-  animations: [
-    trigger('feedbackAnimation', [
-      state(
-        'void',
-        style({
-          transform: 'translateY(100%)',
-          opacity: 0
-        })
-      ),
-      state(
-        '*',
-        style({
-          transform: 'translateY(0)',
-          opacity: 1
-        })
-      ),
-      transition('* <=> void', animate(`400ms cubic-bezier(0.4, 0, 0.1, 1)`))
-    ])
-  ],
-  encapsulation: ViewEncapsulation.None
+    selector: 'app-feedback',
+    templateUrl: './info.component.html',
+    styleUrls: ['./info.component.scss'],
+    animations: [
+        trigger('feedbackAnimation', [
+            state('void', style({
+                transform: 'translateY(100%)',
+                opacity: 0
+            })),
+            state('*', style({
+                transform: 'translateY(0)',
+                opacity: 1
+            })),
+            transition('* <=> void', animate(`400ms cubic-bezier(0.4, 0, 0.1, 1)`))
+        ])
+    ],
+    encapsulation: ViewEncapsulation.None,
+    standalone: false
 })
 export class InfoComponent {
   message: string;

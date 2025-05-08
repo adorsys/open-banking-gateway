@@ -2,9 +2,10 @@ import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { ModalCard } from '../../models/modalCard.model';
 
 @Component({
-  selector: 'app-modal-card',
-  templateUrl: './modal-card.component.html',
-  styleUrls: ['./modal-card.component.scss']
+    selector: 'app-modal-card',
+    templateUrl: './modal-card.component.html',
+    styleUrls: ['./modal-card.component.scss'],
+    standalone: false
 })
 export class ModalCardComponent implements OnInit {
   @Input() cardModal: ModalCard;

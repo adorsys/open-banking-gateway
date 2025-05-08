@@ -3,9 +3,12 @@
   margin-left: 100px;
 }
 
-.dropdown-menu,
+.dropdown-menu {
+  padding: 0.1rem;
+}
+
 .nav {
-  padding: 0;
+  padding: 1.75rem;
   cursor: pointer;
   .dropdown-item {
     padding-top: 0.5rem;

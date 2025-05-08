@@ -1,12 +1,13 @@
-import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
 import { ReactiveFormsModule } from '@angular/forms';
-import { HttpClientTestingModule } from '@angular/common/http/testing';
+import { provideHttpClientTesting } from '@angular/common/http/testing';
 import { of } from 'rxjs';
 
 import { SelectScaComponent } from './select-sca.component';
 import { StubUtilTests } from '../../ais/common/stub-util-tests';
 import { AuthStateConsentAuthorizationService, UpdateConsentAuthorizationService } from '../../api';
 import { SessionService } from '../session.service';
+import { provideHttpClient, withInterceptorsFromDi } from '@angular/common/http';
 
 describe('SelectScaComponent', () => {
   let component: SelectScaComponent;
@@ -19,12 +20,15 @@ describe('SelectScaComponent', () => {
   let authStateConsentAuthorizationService;
   let authStateConsentAuthorizationServiceSpy;
 
-  beforeEach(async(() => {
-    TestBed.configureTestingModule({
-      declarations: [SelectScaComponent],
-      imports: [ReactiveFormsModule, HttpClientTestingModule]
-    }).compileComponents();
-  }));
+  beforeEach(
+    waitForAsync(() => {
+      TestBed.configureTestingModule({
+        declarations: [SelectScaComponent],
+        imports: [ReactiveFormsModule],
+        providers: [provideHttpClient(withInterceptorsFromDi()), provideHttpClientTesting()]
+      }).compileComponents();
+    })
+  );
 
   beforeEach(() => {
     fixture = TestBed.createComponent(SelectScaComponent);

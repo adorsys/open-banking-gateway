@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { Location } from '@angular/common';
 import { SharedRoutes } from '../../common/shared-routes';
 import { ActivatedRoute, Router } from '@angular/router';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { UntypedFormBuilder, UntypedFormGroup, Validators } from '@angular/forms';
 import { SessionService } from '../../../../../common/session.service';
 import { AccountAccessLevel, AisConsentToGrant } from '../../../../common/dto/ais-consent';
 import { StubUtil } from '../../../../../common/utils/stub-util';
@@ -13,20 +13,21 @@ import { DATA_PATTERN, MAX_FREQUENCY_PER_DAY } from '../../../../common/constant
 import { DateUtil } from '../../../../common/date-util';
 
 @Component({
-  selector: 'consent-app-transactions-consent-review',
-  templateUrl: './transactions-consent-review.component.html',
-  styleUrls: ['./transactions-consent-review.component.scss']
+    selector: 'consent-app-transactions-consent-review',
+    templateUrl: './transactions-consent-review.component.html',
+    styleUrls: ['./transactions-consent-review.component.scss'],
+    standalone: false
 })
 export class TransactionsConsentReviewComponent implements OnInit {
   public static ROUTE = SharedRoutes.REVIEW;
 
-  consentReviewForm: FormGroup;
+  consentReviewForm: UntypedFormGroup;
 
   constructor(
     private location: Location,
     private router: Router,
     private activatedRoute: ActivatedRoute,
-    private formBuilder: FormBuilder,
+    private formBuilder: UntypedFormBuilder,
     private sessionService: SessionService,
     private updateConsentAuthorizationService: UpdateConsentAuthorizationService
   ) {}

@@ -8,9 +8,10 @@ import { StorageService } from '../../services/storage.service';
 import { RoutingPath } from '../../models/routing-path.model';
 
 @Component({
-  selector: 'app-list-transactions',
-  templateUrl: './list-transactions.component.html',
-  styleUrls: ['./list-transactions.component.scss']
+    selector: 'app-list-transactions',
+    templateUrl: './list-transactions.component.html',
+    styleUrls: ['./list-transactions.component.scss'],
+    standalone: false
 })
 export class ListTransactionsComponent implements OnInit {
   accountId = '';

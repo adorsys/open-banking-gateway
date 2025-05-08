@@ -11,9 +11,10 @@ import {PisPayment} from '../common/models/pis-payment.model';
 import {combineLatest} from 'rxjs';
 
 @Component({
-  selector: 'consent-app-to-aspsp-page',
-  templateUrl: './to-aspsp-page.component.html',
-  styleUrls: ['./to-aspsp-page.component.scss']
+    selector: 'consent-app-to-aspsp-page',
+    templateUrl: './to-aspsp-page.component.html',
+    styleUrls: ['./to-aspsp-page.component.scss'],
+    standalone: false
 })
 export class ToAspspPageComponent implements OnInit {
   public static ROUTE = 'to-aspsp-redirection';

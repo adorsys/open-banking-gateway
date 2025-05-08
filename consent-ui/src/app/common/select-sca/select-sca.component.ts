@@ -1,26 +1,27 @@
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
-import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
+import { UntypedFormBuilder, UntypedFormControl, UntypedFormGroup, Validators } from '@angular/forms';
 import { AuthStateConsentAuthorizationService, ScaUserData, UpdateConsentAuthorizationService } from '../../api';
 import { ApiHeaders } from '../../api/api.headers';
 import { SessionService } from '../session.service';
 import { StubUtil } from '../utils/stub-util';
 
 @Component({
-  selector: 'consent-app-select-sca',
-  templateUrl: './select-sca.component.html',
-  styleUrls: ['./select-sca.component.scss']
+    selector: 'consent-app-select-sca',
+    templateUrl: './select-sca.component.html',
+    styleUrls: ['./select-sca.component.scss'],
+    standalone: false
 })
 export class SelectScaComponent implements OnInit {
   @Input() authorizationSessionId: string;
   @Output() selectedValue = new EventEmitter<any>();
 
   scaMethods: ScaUserData[] = [];
-  selectedMethod = new FormControl();
-  scaMethodForm: FormGroup;
+  selectedMethod = new UntypedFormControl();
+  scaMethodForm: UntypedFormGroup;
   redirectCode: string;
 
   constructor(
-    private formBuilder: FormBuilder,
+    private formBuilder: UntypedFormBuilder,
     private authStateConsentAuthorizationService: AuthStateConsentAuthorizationService,
     private updateConsentAuthorizationService: UpdateConsentAuthorizationService,
     private sessionService: SessionService

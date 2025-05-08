@@ -1,14 +1,15 @@
-import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
 
 import { PaymentsConsentReviewComponent } from './payments-consent-review.component';
 import { RouterTestingModule } from '@angular/router/testing';
 import { ReactiveFormsModule } from '@angular/forms';
-import { HttpClientTestingModule } from '@angular/common/http/testing';
+import { provideHttpClientTesting } from '@angular/common/http/testing';
 import { ActivatedRoute, convertToParamMap } from '@angular/router';
 import { of } from 'rxjs';
 import { StubUtilTests } from '../../ais/common/stub-util-tests';
 import { UpdateConsentAuthorizationService } from '../../api';
 import { SessionService } from '../../common/session.service';
+import { provideHttpClient, withInterceptorsFromDi } from '@angular/common/http';
 
 describe('PaymentsConsentReviewComponent', () => {
   let component: PaymentsConsentReviewComponent;
@@ -19,20 +20,24 @@ describe('PaymentsConsentReviewComponent', () => {
 
   beforeAll(() => (window.onbeforeunload = jasmine.createSpy()));
 
-  beforeEach(async(() => {
-    TestBed.configureTestingModule({
-      declarations: [PaymentsConsentReviewComponent],
-      imports: [RouterTestingModule, ReactiveFormsModule, HttpClientTestingModule],
-      providers: [
-        {
-          provide: ActivatedRoute,
-          useValue: {
-            parent: { parent: { params: of(convertToParamMap({ authId: StubUtilTests.AUTH_ID })) } }
-          }
-        }
-      ]
-    }).compileComponents();
-  }));
+  beforeEach(
+    waitForAsync(() => {
+      TestBed.configureTestingModule({
+        declarations: [PaymentsConsentReviewComponent],
+        imports: [RouterTestingModule, ReactiveFormsModule],
+        providers: [
+          {
+            provide: ActivatedRoute,
+            useValue: {
+              parent: { parent: { params: of(convertToParamMap({ authId: StubUtilTests.AUTH_ID })) } }
+            }
+          },
+          provideHttpClient(withInterceptorsFromDi()),
+          provideHttpClientTesting()
+        ]
+      }).compileComponents();
+    })
+  );
 
   beforeEach(() => {
     fixture = TestBed.createComponent(PaymentsConsentReviewComponent);

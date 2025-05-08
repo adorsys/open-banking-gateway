@@ -5,9 +5,10 @@ import {DedicatedAccessComponent} from '../../common/dedicated-access/dedicated-
 import {AccountAccessLevel} from '../../../../common/dto/ais-consent';
 
 @Component({
-  selector: 'consent-app-entry-page-transactions',
-  templateUrl: './entry-page-transactions.component.html',
-  styleUrls: ['./entry-page-transactions.component.scss']
+    selector: 'consent-app-entry-page-transactions',
+    templateUrl: './entry-page-transactions.component.html',
+    styleUrls: ['./entry-page-transactions.component.scss'],
+    standalone: false
 })
 export class EntryPageTransactionsComponent implements OnInit {
   public static ROUTE = 'entry-consent-transactions';

@@ -3,9 +3,10 @@ import { CookieRenewalService } from '../common/cookie-renewal/CookieRenewalServ
 import { ActivatedRoute } from '@angular/router';
 
 @Component({
-  selector: 'consent-app-entry-page',
-  templateUrl: './entry-page.component.html',
-  styleUrls: ['./entry-page.component.scss']
+    selector: 'consent-app-entry-page',
+    templateUrl: './entry-page.component.html',
+    styleUrls: ['./entry-page.component.scss'],
+    standalone: false
 })
 export class EntryPageComponent implements OnInit {
   private authid;

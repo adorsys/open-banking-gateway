@@ -1,4 +1,4 @@
-@import 'src/assets/themes/variables';
+@use 'src/assets/themes/variables' as vars;
 
 .scrollable {
   overflow-x: hidden;
@@ -15,7 +15,7 @@
   margin-bottom: 10px;
 
   &:hover {
-    background-color: $primary-10;
+    background-color: vars.$primary-10;
     transition: 0.2s ease-in-out;
   }
 }

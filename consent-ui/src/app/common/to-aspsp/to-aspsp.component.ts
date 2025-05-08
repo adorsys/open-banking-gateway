@@ -2,9 +2,10 @@ import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { SessionService } from '../session.service';
 
 @Component({
-  selector: 'consent-app-to-aspsp',
-  templateUrl: './to-aspsp.component.html',
-  styleUrls: ['./to-aspsp.component.scss']
+    selector: 'consent-app-to-aspsp',
+    templateUrl: './to-aspsp.component.html',
+    styleUrls: ['./to-aspsp.component.scss'],
+    standalone: false
 })
 export class ToAspspComponent implements OnInit {
   @Input() redirectTo: string;

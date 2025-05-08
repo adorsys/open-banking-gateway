@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { UntypedFormBuilder, UntypedFormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { CustomValidators } from '../../utilities/customValidators';
 import { AuthService } from '../../common/auth.service';
@@ -9,19 +9,20 @@ import { SessionService } from '../../common/session.service';
 import { CustomizeService } from '../../services/customize.service';
 
 @Component({
-  selector: 'consent-app-register',
-  templateUrl: './register.component.html',
-  styleUrls: ['../auth.component.scss']
+    selector: 'consent-app-register',
+    templateUrl: './register.component.html',
+    styleUrls: ['../auth.component.scss'],
+    standalone: false
 })
 export class RegisterComponent implements OnInit {
   public static ROUTE = 'register';
-  registerForm: FormGroup;
+  registerForm: UntypedFormGroup;
 
   private authId: string;
   private redirectCode: string;
 
   constructor(
-    private formBuilder: FormBuilder,
+    private formBuilder: UntypedFormBuilder,
     private router: Router,
     private authService: AuthService,
     private activatedRoute: ActivatedRoute,

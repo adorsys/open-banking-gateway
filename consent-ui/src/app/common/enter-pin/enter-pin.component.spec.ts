@@ -1,12 +1,13 @@
-import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
 import { ReactiveFormsModule } from '@angular/forms';
-import { HttpClientTestingModule } from '@angular/common/http/testing';
+import { provideHttpClientTesting } from '@angular/common/http/testing';
 import { of } from 'rxjs';
 
 import { EnterPinComponent } from './enter-pin.component';
 import { StubUtilTests } from '../../ais/common/stub-util-tests';
 import { SessionService } from '../session.service';
 import { UpdateConsentAuthorizationService } from '../../api';
+import { provideHttpClient, withInterceptorsFromDi } from '@angular/common/http';
 
 describe('EnterPinComponent', () => {
   let component: EnterPinComponent;
@@ -17,12 +18,15 @@ describe('EnterPinComponent', () => {
   let updateConsentAuthorizationService;
   let updateConsentAuthorizationServiceSpy;
 
-  beforeEach(async(() => {
-    TestBed.configureTestingModule({
-      declarations: [EnterPinComponent],
-      imports: [ReactiveFormsModule, HttpClientTestingModule]
-    }).compileComponents();
-  }));
+  beforeEach(
+    waitForAsync(() => {
+      TestBed.configureTestingModule({
+        declarations: [EnterPinComponent],
+        imports: [ReactiveFormsModule],
+        providers: [provideHttpClient(withInterceptorsFromDi()), provideHttpClientTesting()]
+      }).compileComponents();
+    })
+  );
 
   beforeEach(() => {
     fixture = TestBed.createComponent(EnterPinComponent);
