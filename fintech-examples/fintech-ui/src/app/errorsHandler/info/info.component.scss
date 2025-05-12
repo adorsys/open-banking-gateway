@@ -1,7 +1,6 @@
-@import '~@angular/cdk/overlay';
+@use '@angular/cdk' as cdk;
 
-@include cdk-overlay();
-@import 'src/assets/themes/variables';
+@include cdk.overlay();
 
 $close-button-size: 26px;
 $close-button-offset: calc((#{$close-button-size} / 2) * -1);

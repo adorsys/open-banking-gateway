@@ -1,7 +1,7 @@
-import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
 import { RouterTestingModule } from '@angular/router/testing';
-import { FormBuilder, ReactiveFormsModule } from '@angular/forms';
-import { HttpClientTestingModule } from '@angular/common/http/testing';
+import { UntypedFormBuilder, ReactiveFormsModule } from '@angular/forms';
+import { provideHttpClientTesting } from '@angular/common/http/testing';
 import { ActivatedRoute } from '@angular/router';
 import { Location } from '@angular/common';
 import { of } from 'rxjs';
@@ -9,6 +9,7 @@ import { StubUtilTests } from '../../../../common/stub-util-tests';
 import { SessionService } from '../../../../../common/session.service';
 import { TransactionsConsentReviewComponent } from './transactions-consent-review.component';
 import { UpdateConsentAuthorizationService } from '../../../../../api';
+import { provideHttpClient, withInterceptorsFromDi } from '@angular/common/http';
 
 describe('TransactionsConsentReviewComponent', () => {
   let component: TransactionsConsentReviewComponent;
@@ -22,22 +23,26 @@ describe('TransactionsConsentReviewComponent', () => {
 
   beforeAll(() => (window.onbeforeunload = jasmine.createSpy()));
 
-  beforeEach(async(() => {
-    TestBed.configureTestingModule({
-      declarations: [TransactionsConsentReviewComponent],
-      imports: [RouterTestingModule, ReactiveFormsModule, HttpClientTestingModule],
-      providers: [
-        SessionService,
-        UpdateConsentAuthorizationService,
-        FormBuilder,
-        { provide: Location, useValue: locationStub },
-        {
-          provide: ActivatedRoute,
-          useValue: { parent: { parent: { params: of({ authId: StubUtilTests.AUTH_ID }) } } }
-        }
-      ]
-    }).compileComponents();
-  }));
+  beforeEach(
+    waitForAsync(() => {
+      TestBed.configureTestingModule({
+        declarations: [TransactionsConsentReviewComponent],
+        imports: [RouterTestingModule, ReactiveFormsModule],
+        providers: [
+          SessionService,
+          UpdateConsentAuthorizationService,
+          UntypedFormBuilder,
+          { provide: Location, useValue: locationStub },
+          {
+            provide: ActivatedRoute,
+            useValue: { parent: { parent: { params: of({ authId: StubUtilTests.AUTH_ID }) } } }
+          },
+          provideHttpClient(withInterceptorsFromDi()),
+          provideHttpClientTesting()
+        ]
+      }).compileComponents();
+    })
+  );
 
   beforeEach(() => {
     fixture = TestBed.createComponent(TransactionsConsentReviewComponent);

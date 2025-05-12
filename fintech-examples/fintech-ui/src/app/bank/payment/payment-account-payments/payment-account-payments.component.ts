@@ -8,9 +8,10 @@ import {Consts} from '../../../models/consts';
 import {StorageService} from '../../../services/storage.service';
 
 @Component({
-  selector: 'app-list-payments',
-  templateUrl: './payment-account-payments.component.html',
-  styleUrls: ['./payment-account-payments.component.scss']
+    selector: 'app-list-payments',
+    templateUrl: './payment-account-payments.component.html',
+    styleUrls: ['./payment-account-payments.component.scss'],
+    standalone: false
 })
 export class PaymentAccountPaymentsComponent implements OnInit {
   public static ROUTE = 'payments';

@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { Location } from '@angular/common';
 import { ActivatedRoute, Router } from '@angular/router';
-import { FormBuilder } from '@angular/forms';
+import { UntypedFormBuilder } from '@angular/forms';
 import { SessionService } from '../../common/session.service';
 import { PsuAuthRequest, SinglePayment, UpdateConsentAuthorizationService } from '../../api';
 import { SharedRoutes } from '../../ais/entry-page/initiation/common/shared-routes';
@@ -13,9 +13,10 @@ import { PisPayment } from '../common/models/pis-payment.model';
 import { AuthConsentState } from '../../ais/common/dto/auth-state';
 
 @Component({
-  selector: 'consent-app-payments-consent-review',
-  templateUrl: './payments-consent-review.component.html',
-  styleUrls: ['./payments-consent-review.component.scss']
+    selector: 'consent-app-payments-consent-review',
+    templateUrl: './payments-consent-review.component.html',
+    styleUrls: ['./payments-consent-review.component.scss'],
+    standalone: false
 })
 export class PaymentsConsentReviewComponent implements OnInit {
   public static ROUTE = SharedRoutes.REVIEW;
@@ -30,7 +31,7 @@ export class PaymentsConsentReviewComponent implements OnInit {
     private location: Location,
     private router: Router,
     private activatedRoute: ActivatedRoute,
-    private formBuilder: FormBuilder,
+    private formBuilder: UntypedFormBuilder,
     private sessionService: SessionService,
     private updateConsentAuthorizationService: UpdateConsentAuthorizationService
   ) {}

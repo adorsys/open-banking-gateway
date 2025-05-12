@@ -1,6 +1,6 @@
 import {Component, OnInit} from '@angular/core';
-import {FormBuilder, FormGroup, Validators} from '@angular/forms';
-import {HttpResponse} from '@angular/common/http';
+import {UntypedFormBuilder, UntypedFormGroup, Validators} from '@angular/forms';
+import { HttpResponse } from '@angular/common/http';
 import {Location} from '@angular/common';
 import {ActivatedRoute, Router} from '@angular/router';
 import {ValidatorService} from 'angular-iban';
@@ -15,9 +15,10 @@ class TestPayment {
 }
 
 @Component({
-  selector: 'app-initiate',
-  templateUrl: './initiate.component.html',
-  styleUrls: ['./initiate.component.scss']
+    selector: 'app-initiate',
+    templateUrl: './initiate.component.html',
+    styleUrls: ['./initiate.component.scss'],
+    standalone: false
 })
 export class InitiateComponent implements OnInit {
   public static ROUTE = 'initiate';
@@ -33,10 +34,10 @@ export class InitiateComponent implements OnInit {
   bankId = '';
   accountId = '';
   debtorIban: string;
-  paymentForm: FormGroup;
+  paymentForm: UntypedFormGroup;
 
   constructor(
-    private formBuilder: FormBuilder,
+    private formBuilder: UntypedFormBuilder,
     private fintechSinglePaymentInitiationService: FintechSinglePaymentInitiationService,
     private router: Router,
     private route: ActivatedRoute,

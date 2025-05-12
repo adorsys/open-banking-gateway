@@ -6,9 +6,10 @@ import { AuthConsentState } from '../../ais/common/dto/auth-state';
 import { SinglePayment } from '../../api';
 
 @Component({
-  selector: 'consent-app-payment-info',
-  templateUrl: './payment-info.component.html',
-  styleUrls: ['./payment-info.component.scss']
+    selector: 'consent-app-payment-info',
+    templateUrl: './payment-info.component.html',
+    styleUrls: ['./payment-info.component.scss'],
+    standalone: false
 })
 export class PaymentInfoComponent implements OnInit {
   public singlePayment?: SinglePayment;

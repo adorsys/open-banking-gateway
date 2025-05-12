@@ -4,9 +4,10 @@ import { AuthService } from '../services/auth.service';
 import { RoutingPath } from '../models/routing-path.model';
 
 @Component({
-  selector: 'app-session-expired',
-  templateUrl: './session-expired.component.html',
-  styleUrls: ['./session-expired.component.scss']
+    selector: 'app-session-expired',
+    templateUrl: './session-expired.component.html',
+    styleUrls: ['./session-expired.component.scss'],
+    standalone: false
 })
 export class SessionExpiredComponent implements OnInit {
   constructor(private router: Router,

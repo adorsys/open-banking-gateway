@@ -13,9 +13,10 @@ import { StubUtil } from '../../common/utils/stub-util';
 import { ApiHeaders } from '../../api/api.headers';
 
 @Component({
-  selector: 'consent-app-wait-for-decoupled-redirection',
-  templateUrl: './wait-for-decoupled.component.html',
-  styleUrls: ['./wait-for-decoupled.component.scss']
+    selector: 'consent-app-wait-for-decoupled-redirection',
+    templateUrl: './wait-for-decoupled.component.html',
+    styleUrls: ['./wait-for-decoupled.component.scss'],
+    standalone: false
 })
 export class WaitForDecoupledComponent implements OnInit {
   public static ROUTE = 'wait-sca-finalization';

@@ -6,9 +6,10 @@ import { ApiHeaders } from '../../api/api.headers';
 import { CustomizeService } from '../../services/customize.service';
 
 @Component({
-  selector: 'consent-app-anonymous',
-  templateUrl: './anonymous.component.html',
-  styleUrls: ['../auth.component.scss']
+    selector: 'consent-app-anonymous',
+    templateUrl: './anonymous.component.html',
+    styleUrls: ['../auth.component.scss'],
+    standalone: false
 })
 export class AnonymousComponent implements OnInit {
   redirectCode: string;

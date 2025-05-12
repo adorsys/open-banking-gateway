@@ -5,9 +5,10 @@ import { ConsentAuth, FromASPSPConsentAuthorizationService } from '../../api';
 import { ApiHeaders } from '../../api/api.headers';
 
 @Component({
-  selector: 'consent-app-restore-session',
-  templateUrl: './restore-session.component.html',
-  styleUrls: ['./restore-session.component.scss']
+    selector: 'consent-app-restore-session',
+    templateUrl: './restore-session.component.html',
+    styleUrls: ['./restore-session.component.scss'],
+    standalone: false
 })
 export class RestoreSessionComponent implements OnInit {
   @Input() authId: string;

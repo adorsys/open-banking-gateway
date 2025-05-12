@@ -1,13 +1,13 @@
-import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
 
 import { InternalAccountReference, AccountsReferenceComponent } from './accounts-reference.component';
-import { FormGroup, ReactiveFormsModule } from '@angular/forms';
+import { UntypedFormGroup, ReactiveFormsModule } from '@angular/forms';
 
 describe('AccountsReferenceComponent', () => {
   let component: AccountsReferenceComponent;
   let fixture: ComponentFixture<AccountsReferenceComponent>;
 
-  beforeEach(async(() => {
+  beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
       declarations: [AccountsReferenceComponent],
       imports: [ReactiveFormsModule]
@@ -17,7 +17,7 @@ describe('AccountsReferenceComponent', () => {
   beforeEach(() => {
     fixture = TestBed.createComponent(AccountsReferenceComponent);
     component = fixture.componentInstance;
-    component.targetForm = new FormGroup({});
+    component.targetForm = new UntypedFormGroup({});
     component.accounts = [];
     fixture.detectChanges();
   });

@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
-import { FormBuilder, FormGroup } from '@angular/forms';
+import { UntypedFormBuilder, UntypedFormGroup } from '@angular/forms';
 import { Location } from '@angular/common';
 
 import { SharedRoutes } from '../shared-routes';
@@ -10,16 +10,17 @@ import { ConsentUtil } from '../../../../common/consent-util';
 import { AccountReference } from '../../../../common/dto/ais-consent';
 
 @Component({
-  selector: 'consent-app-limited-access',
-  templateUrl: './dedicated-access.component.html',
-  styleUrls: ['./dedicated-access.component.scss']
+    selector: 'consent-app-limited-access',
+    templateUrl: './dedicated-access.component.html',
+    styleUrls: ['./dedicated-access.component.scss'],
+    standalone: false
 })
 export class DedicatedAccessComponent implements OnInit {
   constructor(
     private location: Location,
     private router: Router,
     private activatedRoute: ActivatedRoute,
-    private formBuilder: FormBuilder,
+    private formBuilder: UntypedFormBuilder,
     private sessionService: SessionService
   ) {
     this.limitedAccountAccessForm = this.formBuilder.group({});
@@ -31,7 +32,7 @@ export class DedicatedAccessComponent implements OnInit {
   public aspspName: string;
 
   accounts = [new InternalAccountReference()];
-  limitedAccountAccessForm: FormGroup;
+  limitedAccountAccessForm: UntypedFormGroup;
   wrongIban: boolean;
 
   private authorizationId: string;

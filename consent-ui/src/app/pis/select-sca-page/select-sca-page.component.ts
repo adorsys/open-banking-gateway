@@ -3,9 +3,10 @@ import { ActivatedRoute } from '@angular/router';
 import { ApiHeaders } from '../../api/api.headers';
 
 @Component({
-  selector: 'consent-app-select-sca-page',
-  templateUrl: './select-sca-page.component.html',
-  styleUrls: ['./select-sca-page.component.scss']
+    selector: 'consent-app-select-sca-page',
+    templateUrl: './select-sca-page.component.html',
+    styleUrls: ['./select-sca-page.component.scss'],
+    standalone: false
 })
 export class SelectScaPageComponent implements OnInit {
   public static ROUTE = 'select-sca-method';

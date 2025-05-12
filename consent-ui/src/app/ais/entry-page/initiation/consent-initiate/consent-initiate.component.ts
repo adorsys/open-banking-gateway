@@ -10,9 +10,10 @@ import ActionEnum = ConsentAuth.ActionEnum;
 import { ConsentUtil } from '../../../common/consent-util';
 
 @Component({
-  selector: 'consent-app-consent-initiate',
-  templateUrl: './consent-initiate.component.html',
-  styleUrls: ['./consent-initiate.component.scss']
+    selector: 'consent-app-consent-initiate',
+    templateUrl: './consent-initiate.component.html',
+    styleUrls: ['./consent-initiate.component.scss'],
+    standalone: false
 })
 export class ConsentInitiateComponent implements OnInit {
   private redirectCode: string;

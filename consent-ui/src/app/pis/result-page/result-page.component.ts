@@ -14,9 +14,10 @@ import { PisPayment } from '../common/models/pis-payment.model';
 import { AuthConsentState } from '../../ais/common/dto/auth-state';
 
 @Component({
-  selector: 'consent-app-result-page',
-  templateUrl: './result-page.component.html',
-  styleUrls: ['./result-page.component.scss']
+    selector: 'consent-app-result-page',
+    templateUrl: './result-page.component.html',
+    styleUrls: ['./result-page.component.scss'],
+    standalone: false
 })
 export class ResultPageComponent implements OnInit {
   public static ROUTE = 'consent-result';

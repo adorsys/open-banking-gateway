@@ -3,23 +3,24 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { StorageService } from '../../../services/storage.service';
 import { Consts } from '../../../models/consts';
 import { ValidatorService } from 'angular-iban';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { UntypedFormBuilder, UntypedFormGroup, Validators } from '@angular/forms';
 
 @Component({
-  selector: 'app-list-accounts-for-payment',
-  templateUrl: './payment-accounts.component.html',
-  styleUrls: ['./payment-accounts.component.scss']
+    selector: 'app-list-accounts-for-payment',
+    templateUrl: './payment-accounts.component.html',
+    styleUrls: ['./payment-accounts.component.scss'],
+    standalone: false
 })
 export class PaymentAccountsComponent implements OnInit {
   public static ROUTE = 'accounts';
   selectedAccount;
   bankId: string;
   accounts = [];
-  ibanForm: FormGroup;
+  ibanForm: UntypedFormGroup;
 
   constructor(
     private storageService: StorageService,
-    private formBuilder: FormBuilder,
+    private formBuilder: UntypedFormBuilder,
     private router: Router,
     private route: ActivatedRoute
   ) {}

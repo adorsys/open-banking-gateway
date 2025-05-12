@@ -5,8 +5,7 @@ import { OverlayModule } from '@angular/cdk/overlay';
 import { InfoComponent } from './info.component';
 
 @NgModule({
-  imports: [CommonModule, OverlayModule],
-  declarations: [InfoComponent],
-  entryComponents: [InfoComponent]
+    imports: [CommonModule, OverlayModule],
+    declarations: [InfoComponent]
 })
 export class InfoModule {}

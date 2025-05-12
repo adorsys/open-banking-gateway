@@ -10,9 +10,10 @@ import {ApiHeaders} from '../../api/api.headers';
 import {AuthStateConsentAuthorizationService, UpdateConsentAuthorizationService} from '../../api';
 
 @Component({
-  selector: 'consent-app-result-page',
-  templateUrl: './result-page.component.html',
-  styleUrls: ['./result-page.component.scss']
+    selector: 'consent-app-result-page',
+    templateUrl: './result-page.component.html',
+    styleUrls: ['./result-page.component.scss'],
+    standalone: false
 })
 export class ResultPageComponent implements OnInit {
   public static ROUTE = 'consent-result';

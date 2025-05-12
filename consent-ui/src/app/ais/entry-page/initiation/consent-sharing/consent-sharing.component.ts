@@ -8,9 +8,10 @@ import {AccountAccessLevel, AisConsentToGrant} from '../../../common/dto/ais-con
 import {ConsentUtil} from '../../../common/consent-util';
 
 @Component({
-  selector: 'consent-app-consent-sharing',
-  templateUrl: './consent-sharing.component.html',
-  styleUrls: ['./consent-sharing.component.scss']
+    selector: 'consent-app-consent-sharing',
+    templateUrl: './consent-sharing.component.html',
+    styleUrls: ['./consent-sharing.component.scss'],
+    standalone: false
 })
 export class ConsentSharingComponent implements OnInit {
   public static ROUTE = 'consent-sharing';

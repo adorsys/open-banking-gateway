@@ -1,8 +1,8 @@
 import { TestBed } from '@angular/core/testing';
 import { RouterTestingModule } from '@angular/router/testing';
-import { HttpResponse } from '@angular/common/http';
+import { HttpResponse, provideHttpClient, withInterceptorsFromDi } from '@angular/common/http';
 import { Router } from '@angular/router';
-import { HttpClientTestingModule } from '@angular/common/http/testing';
+import { provideHttpClientTesting } from '@angular/common/http/testing';
 import { of } from 'rxjs';
 
 import { DocumentCookieService } from './document-cookie.service';
@@ -24,12 +24,9 @@ describe('AuthService', () => {
 
   beforeEach(() => {
     TestBed.configureTestingModule({
-      imports: [
-        HttpClientTestingModule,
-        RouterTestingModule.withRoutes([{ path: RoutingPath.LOGIN, component: LoginComponent }])
-      ],
-      providers: [AuthService, DocumentCookieService]
-    });
+    imports: [RouterTestingModule.withRoutes([{ path: RoutingPath.LOGIN, component: LoginComponent }])],
+    providers: [AuthService, DocumentCookieService, provideHttpClient(withInterceptorsFromDi()), provideHttpClientTesting()]
+});
 
     cookieService = TestBed.inject(DocumentCookieService);
     storageService = TestBed.inject(StorageService);

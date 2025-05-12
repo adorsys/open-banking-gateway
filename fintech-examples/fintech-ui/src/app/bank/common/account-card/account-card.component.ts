@@ -2,9 +2,10 @@ import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { AccountDetails } from '../../../api';
 
 @Component({
-  selector: 'app-account-card',
-  templateUrl: './account-card.component.html',
-  styleUrls: ['./account-card.component.scss']
+    selector: 'app-account-card',
+    templateUrl: './account-card.component.html',
+    styleUrls: ['./account-card.component.scss'],
+    standalone: false
 })
 export class AccountCardComponent implements OnInit {
   @Input() account: AccountDetails;

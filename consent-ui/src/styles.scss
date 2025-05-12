@@ -1,7 +1,12 @@
 /* You can add global styles to this file, and also import other style files */
-@import './assets/themes/variables';
-@import '~bootstrap/scss/bootstrap';
-@import './assets/themes/fonts';
+
+@use './assets/themes/variables' as vars;
+@use './assets/themes/fonts' as fonts;
+@use './assets/themes/mobile' as mobile;
+
+@forward './assets/themes/variables';
+
+@import 'node_modules/bootstrap/scss/bootstrap';
 
 * {
   margin: 0;
@@ -10,9 +15,13 @@
 }
 
 body {
+  display: grid;
+  place-items: center; /* Center content */
+  min-height: 75vh; /* Full viewport height */
+  margin: 0;
   font-size: var(--textFontSize);
   font-weight: var(--textFontWeight);
-  font-family: var(--fontFamily);
+  font-family: var(--fontFamily), sans-serif;
   color: var(--bodyFontColor);
   background: var(--bodyBG);
 
@@ -65,13 +74,17 @@ a {
 }
 
 .text-light-dark {
-  color: $COLOR_LIGHT_DARK;
+  color: vars.$COLOR_LIGHT_DARK;
 }
 
 .card {
   border: none;
   margin-right: auto;
   margin-left: auto;
+  border-radius: 1rem;
+  padding: 2rem;
+  display: flex;
+  flex-direction: column;
 
   &--large {
     padding: 2rem 2rem;
@@ -103,7 +116,7 @@ a {
       margin-right: 1rem;
     }
     .customStrong {
-      padding: 5px 0 0 0px;
+      padding: 5px 0 0 0;
     }
   }
 
@@ -116,7 +129,7 @@ a {
   padding-bottom: 1rem;
 }
 .no-bg-color {
-  background-color: $COLOR_WHITE;
+  background-color: vars.$COLOR_WHITE;
   border: none;
 }
 .form__margin {
@@ -130,7 +143,7 @@ a {
   }
 
   label {
-    font-family: var(--fontFamilyMedium);
+    font-family: var(--fontFamilyMedium), sans-serif;
     color: #21242c;
     font-size: 1.125rem;
     position: relative;
@@ -142,7 +155,7 @@ a {
       height: 17px;
       border-radius: 50%;
       background: white;
-      border: 1px solid $text-muted;
+      border: 1px solid vars.$text-muted;
       display: block;
       position: absolute;
       left: 0;
@@ -158,7 +171,7 @@ a {
           width: 9px;
           height: 9px;
           border-radius: 50%;
-          background-color: $text-muted;
+          background-color: vars.$text-muted;
           position: absolute;
           left: 3px;
           top: 3px;
@@ -178,7 +191,7 @@ a {
 
 @media (max-width: 767px) {
   .bg-sm-light {
-    background-color: $COLOR_LIGHT_GREY-10;
+    background-color: vars.$COLOR_LIGHT_GREY-10;
   }
 }
 
@@ -258,7 +271,6 @@ section {
   border-radius: var(--buttonBorderRadius);
   font-size: 1.25rem;
   padding: 0.8rem 0.75rem 0.4rem 0.75rem;
-  border-radius: 5px;
 
   &-primary {
     color: var(--buttonTextColor);
@@ -364,7 +376,7 @@ label {
   font-size: 1rem;
 }
 .text-secondary {
-  color: $COLOR_TEXT_LIGHT !important;
+  color: vars.$COLOR_TEXT_LIGHT !important;
 }
 
 @media screen and (max-width: 768px) {
@@ -401,4 +413,3 @@ label {
   }
 }
 
-@import './assets/themes/mobile';

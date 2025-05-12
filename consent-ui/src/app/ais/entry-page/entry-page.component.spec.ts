@@ -1,31 +1,36 @@
-import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
 
 import { EntryPageComponent } from './entry-page.component';
 import { CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
 import { ReactiveFormsModule } from '@angular/forms';
 import { CookieRenewalService } from '../common/cookie-renewal/CookieRenewalService';
 import { ActivatedRoute, convertToParamMap } from '@angular/router';
-import { HttpClientTestingModule } from '@angular/common/http/testing';
+import { provideHttpClientTesting } from '@angular/common/http/testing';
 import { of } from 'rxjs';
+import { provideHttpClient, withInterceptorsFromDi } from '@angular/common/http';
 
 describe('EntryPageComponent', () => {
   let component: EntryPageComponent;
   let fixture: ComponentFixture<EntryPageComponent>;
 
-  beforeEach(async(() => {
-    TestBed.configureTestingModule({
-      declarations: [EntryPageComponent],
-      providers: [
-        CookieRenewalService,
-        {
-          provide: ActivatedRoute,
-          useValue: { paramMap: of(convertToParamMap({ authId: '1234' })) }
-        }
-      ],
-      imports: [ReactiveFormsModule, HttpClientTestingModule],
-      schemas: [CUSTOM_ELEMENTS_SCHEMA]
-    }).compileComponents();
-  }));
+  beforeEach(
+    waitForAsync(() => {
+      TestBed.configureTestingModule({
+        declarations: [EntryPageComponent],
+        schemas: [CUSTOM_ELEMENTS_SCHEMA],
+        imports: [ReactiveFormsModule],
+        providers: [
+          CookieRenewalService,
+          {
+            provide: ActivatedRoute,
+            useValue: { paramMap: of(convertToParamMap({ authId: '1234' })) }
+          },
+          provideHttpClient(withInterceptorsFromDi()),
+          provideHttpClientTesting()
+        ]
+      }).compileComponents();
+    })
+  );
 
   beforeEach(() => {
     fixture = TestBed.createComponent(EntryPageComponent);

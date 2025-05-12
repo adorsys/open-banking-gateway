@@ -73,11 +73,11 @@ fintech-ui/node_modules:
 
 .PHONY : fintech-ui
 fintech-ui: fintech-ui/node_modules
-	cd fintech-examples/fintech-ui && ng test --watch=false --browsers ChromeHeadless --code-coverage=true && npm run build:prod
+	cd fintech-examples/fintech-ui && npm i && ng test --no-watch --browsers Chrome --code-coverage=true && npm run build:prod
 
 consent-ui/node_modules:
 	cd consent-ui && npm install
 
 .PHONY : consent-ui
 consent-ui: consent-ui/node_modules
-	cd consent-ui && ng test --watch=false --browsers ChromeHeadless --code-coverage=true && npm run build:prod
+	cd consent-ui && npm i && ng test --no-watch --browsers Chrome --code-coverage=true && npm run build:prod

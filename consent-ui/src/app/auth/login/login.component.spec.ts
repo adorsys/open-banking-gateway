@@ -1,11 +1,11 @@
-import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
 import { ReactiveFormsModule } from '@angular/forms';
 import { LoginComponent } from './login.component';
 import { RouterTestingModule } from '@angular/router/testing';
 import { ActivatedRoute, ActivatedRouteSnapshot, Params } from '@angular/router';
-import { HttpClientTestingModule } from '@angular/common/http/testing';
+import { provideHttpClientTesting } from '@angular/common/http/testing';
 import { Observable, of } from 'rxjs';
-import { HttpHeaders, HttpResponse } from '@angular/common/http';
+import { HttpHeaders, HttpResponse, provideHttpClient, withInterceptorsFromDi } from '@angular/common/http';
 import { AuthService } from '../../common/auth.service';
 
 export class MockActivatedRoute {
@@ -32,19 +32,25 @@ describe('LoginComponent', () => {
 
   beforeAll(() => (window.onbeforeunload = jasmine.createSpy()));
 
-  beforeEach(async(() => {
-    route = new MockActivatedRoute();
-    route.snapshot = {
-      queryParams: { redirectCode: 'redirectCode654' },
-      parent: { params: { authId: 'authIdHere' } }
-    };
+  beforeEach(
+    waitForAsync(() => {
+      route = new MockActivatedRoute();
+      route.snapshot = {
+        queryParams: { redirectCode: 'redirectCode654' },
+        parent: { params: { authId: 'authIdHere' } }
+      };
 
-    TestBed.configureTestingModule({
-      declarations: [LoginComponent],
-      imports: [ReactiveFormsModule, HttpClientTestingModule, RouterTestingModule],
-      providers: [{ provide: ActivatedRoute, useValue: route }]
-    }).compileComponents();
-  }));
+      TestBed.configureTestingModule({
+        declarations: [LoginComponent],
+        imports: [ReactiveFormsModule, RouterTestingModule],
+        providers: [
+          { provide: ActivatedRoute, useValue: route },
+          provideHttpClient(withInterceptorsFromDi()),
+          provideHttpClientTesting()
+        ]
+      }).compileComponents();
+    })
+  );
 
   beforeEach(() => {
     fixture = TestBed.createComponent(LoginComponent);

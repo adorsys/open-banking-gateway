@@ -2,9 +2,10 @@ import { Component, Input, OnInit } from '@angular/core';
 import { TransactionDetails } from '../../../api';
 
 @Component({
-  selector: 'app-transaction-card',
-  templateUrl: './transaction-card.component.html',
-  styleUrls: ['../payment-transaction-card.scss']
+    selector: 'app-transaction-card',
+    templateUrl: './transaction-card.component.html',
+    styleUrls: ['../payment-transaction-card.scss'],
+    standalone: false
 })
 export class TransactionCardComponent implements OnInit {
   @Input() transactions: Array<TransactionDetails>;

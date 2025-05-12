@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { SimpleTimer } from 'ng2-simple-timer';
+import { SimpleTimer } from 'src/app/utilities/simple-timer';
 import { PsuAuthenticationService } from '../../../api-auth';
 import * as uuid from 'uuid';
 import { ApiHeaders } from '../../../api/api.headers';

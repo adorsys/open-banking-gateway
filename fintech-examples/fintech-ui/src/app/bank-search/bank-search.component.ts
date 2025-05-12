@@ -6,9 +6,10 @@ import {TimerService} from '../services/timer.service';
 import {RoutingPath} from '../models/routing-path.model';
 
 @Component({
-  selector: 'app-bank-search',
-  templateUrl: './bank-search.component.html',
-  styleUrls: ['./bank-search.component.scss']
+    selector: 'app-bank-search',
+    templateUrl: './bank-search.component.html',
+    styleUrls: ['./bank-search.component.scss'],
+    standalone: false
 })
 export class BankSearchComponent {
   searchedBanks: BankSearchInfo[] = [];
