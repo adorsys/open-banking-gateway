@@ -1,5 +1,5 @@
 # This Dockerfile is for deployment
-FROM adoptopenjdk/openjdk11:jre-11.0.9_11-alpine
+FROM eclipse-temurin:21-jre-alpine
 
 ENV APP_HOME /usr/app
 WORKDIR $APP_HOME
