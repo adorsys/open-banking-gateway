@@ -1,8 +1,9 @@
 {
 	"info": {
-		"_postman_id": "95b7680c-b905-4d2d-ada5-f844e364b593",
+		"_postman_id": "619f31c1-b07e-4ed2-b4aa-ef7f9dbd16f0",
 		"name": "OPBA-PIS-SEPA-XS2A-EMBEDDED-2-SCA-METHODS-NO-LOGIN",
-		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "25454200"
 	},
 	"item": [
 		{
@@ -18,7 +19,8 @@
 							"",
 							"pm.environment.set(\"bank-profile-id\", pm.response.json().bankDescriptor[0].profiles.filter(it => it.name == 'embedded')[0].uuid)"
 						],
-						"type": "text/javascript"
+						"type": "text/javascript",
+						"packages": {}
 					}
 				}
 			],
@@ -33,11 +35,17 @@
 					{
 						"key": "X-Request-Signature",
 						"value": "{{x-request-signature}}",
-						"type": "text"
+						"type": "text",
+						"disabled": true
 					},
 					{
 						"key": "Fintech-ID",
 						"value": "{{fintech-id}}",
+						"type": "text"
+					},
+					{
+						"key": "X-Timestamp-UTC",
+						"value": "2020-04-14T08:46:33.629Z",
 						"type": "text"
 					}
 				],
@@ -97,18 +105,18 @@
 				"header": [
 					{
 						"key": "X-Request-ID",
-						"type": "text",
-						"value": "{{x-request-id}}"
+						"value": "{{x-request-id}}",
+						"type": "text"
 					},
 					{
 						"key": "X-Request-Signature",
-						"type": "text",
-						"value": "{{x-request-signature}}"
+						"value": "{{x-request-signature}}",
+						"type": "text"
 					},
 					{
 						"key": "Fintech-ID",
-						"type": "text",
-						"value": "{{fintech-id}}"
+						"value": "{{fintech-id}}",
+						"type": "text"
 					},
 					{
 						"key": "Fintech-Redirect-URL-OK",
@@ -148,7 +156,7 @@
 				],
 				"body": {
 					"mode": "raw",
-					"raw": "{\r\n    \"endToEndIdentification\": \"{{$randomBs}}\",\r\n    \"debtorAccount\": {\r\n        \"iban\": \"DE38760700240320465700\",\r\n        \"bban\": null,\r\n        \"pan\": null,\r\n        \"maskedPan\": null,\r\n        \"msisdn\": null,\r\n        \"currency\": null\r\n    },\r\n    \"instructedAmount\": {\r\n        \"currency\": \"EUR\",\r\n        \"amount\": \"12.34\"\r\n    },\r\n    \"creditorAccount\": {\r\n        \"iban\": \"AL90208110080000001039531801\",\r\n        \"bban\": null,\r\n        \"pan\": null,\r\n        \"maskedPan\": null,\r\n        \"msisdn\": null,\r\n        \"currency\": null\r\n    },\r\n    \"creditorAgent\": null,\r\n    \"creditorAgentName\": null,\r\n    \"creditorName\": \"Apple\",\r\n    \"creditorAddress\": null,\r\n    \"remittanceInformationUnstructured\": \"Apple ITunes payment (demo)\",\r\n    \"requestedExecutionDate\": null,\r\n    \"requestedExecutionTime\": null\r\n}",
+					"raw": "{\r\n    \"endToEndIdentification\": \"{{$randomBs}}\",\r\n    \"debtorAccount\": {\r\n        \"iban\": \"DE38760700240320465700\"\r\n    },\r\n    \"instructedAmount\": {\r\n        \"currency\": \"EUR\",\r\n        \"amount\": \"123\"\r\n    },\r\n    \"creditorAccount\": {\r\n        \"iban\": \"AL90208110080000001039531801\"\r\n    },\r\n    \"creditorAgent\": \"AAAADEBBXXX\",\r\n    \"creditorAgentName\": \"Creditor Agent Name\",\r\n    \"creditorName\": \"Creditor Name\",\r\n    \"creditorAddress\": {\r\n        \"streetName\": \"rue blue\",\r\n        \"buildingNumber\": \"89\",\r\n        \"townName\": \"Paris\",\r\n        \"postCode\": \"75000\",\r\n        \"country\": \"FR\"\r\n    },\r\n    \"remittanceInformationUnstructured\": \"Ref Number Merchant\",\r\n    \"requestedExecutionDate\": \"2025-04-10\",\r\n    \"requestedExecutionTime\": \"string\"\r\n}",
 					"options": {
 						"raw": {
 							"language": "json"
@@ -326,8 +334,8 @@
 				"header": [
 					{
 						"key": "Cookie",
-						"type": "text",
-						"value": "{{session-cookie}}"
+						"value": "{{session-cookie}}",
+						"type": "text"
 					},
 					{
 						"key": "X-Request-ID",
@@ -402,8 +410,8 @@
 				"header": [
 					{
 						"key": "Cookie",
-						"type": "text",
-						"value": "{{session-cookie}}"
+						"value": "{{session-cookie}}",
+						"type": "text"
 					},
 					{
 						"key": "X-Request-ID",
@@ -534,8 +542,8 @@
 				"header": [
 					{
 						"key": "Cookie",
-						"type": "text",
-						"value": "{{session-cookie}}"
+						"value": "{{session-cookie}}",
+						"type": "text"
 					},
 					{
 						"key": "X-Request-iD",
@@ -610,8 +618,8 @@
 				"header": [
 					{
 						"key": "Cookie",
-						"type": "text",
-						"value": "{{session-cookie}}"
+						"value": "{{session-cookie}}",
+						"type": "text"
 					},
 					{
 						"key": "X-Request-ID",
@@ -739,18 +747,18 @@
 				"header": [
 					{
 						"key": "X-Request-ID",
-						"type": "text",
-						"value": "{{x-request-id}}"
+						"value": "{{x-request-id}}",
+						"type": "text"
 					},
 					{
 						"key": "X-Request-Signature",
-						"type": "text",
-						"value": "{{x-request-signature}}"
+						"value": "{{x-request-signature}}",
+						"type": "text"
 					},
 					{
 						"key": "Fintech-Data-Password",
-						"type": "text",
-						"value": "{{fintech-data-password}}"
+						"value": "{{fintech-data-password}}",
+						"type": "text"
 					}
 				],
 				"url": {
@@ -799,28 +807,28 @@
 				"header": [
 					{
 						"key": "X-Request-ID",
-						"type": "text",
-						"value": "{{x-request-id}}"
+						"value": "{{x-request-id}}",
+						"type": "text"
 					},
 					{
 						"key": "X-Request-Signature",
-						"type": "text",
-						"value": "{{x-request-signature}}"
+						"value": "{{x-request-signature}}",
+						"type": "text"
 					},
 					{
 						"key": "Fintech-ID",
-						"type": "text",
-						"value": "{{fintech-id}}"
+						"value": "{{fintech-id}}",
+						"type": "text"
 					},
 					{
 						"key": "Fintech-User-ID",
-						"type": "text",
-						"value": "{{fintech-user-id}}"
+						"value": "{{fintech-user-id}}",
+						"type": "text"
 					},
 					{
 						"key": "Fintech-Data-Password",
-						"type": "text",
-						"value": "{{fintech-data-password}}"
+						"value": "{{fintech-data-password}}",
+						"type": "text"
 					},
 					{
 						"key": "Service-Session-ID",
