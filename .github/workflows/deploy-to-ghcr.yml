@@ -1,0 +1,32 @@
+name: deploy-to-ghcr.yml
+on:
+  push:
+    tags:
+      - '*v'
+jobs:
+  build:
+    runs-on: ubuntu-22.04
+    permissions:
+      packages: write
+      contents: read
+    steps:
+      - uses: actions/checkout@v4
+      - name: Set up JDK 21
+        uses: actions/setup-java@v3
+        with:
+          java-version: 21
+          distribution: 'temurin'
+
+      - name: Free disk space
+        run: |
+          sudo apt clean
+          docker rmi $(docker image ls -aq)
+          docker system prune -af
+          echo "Available space"
+          df -h
+
+      - name: Deploy All Images to GHCR
+        run: ./scripts/deploy-to-ghcr.sh
+        env:
+          GHCR_DEPLOY_TOKEN: ${{ secrets.GHCR_DEPLOY_TOKEN }}
+          GITHUB_SHA: ${{ github.sha }}
