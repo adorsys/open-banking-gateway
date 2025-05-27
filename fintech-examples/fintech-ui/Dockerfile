@@ -3,7 +3,7 @@
 #############
 
 # base image
-FROM node:12.14.0 as build-stage
+FROM node:18-alpine as build-stage
 LABEL maintainer="https://github.com/adorsys/open-banking-gateway"
 
 # set working directory
