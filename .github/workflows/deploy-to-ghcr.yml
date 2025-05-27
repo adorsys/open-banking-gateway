@@ -1,0 +1,28 @@
+name: deploy-to-ghcr.yml
+on:
+  push:
+    branches:
+      - '**'
+jobs:
+  build:
+    runs-on: ubuntu-22.04
+    permissions:
+      packages: write
+      contents: read
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Free disk space
+        run: |
+          sudo apt clean
+          docker rmi $(docker image ls -aq)
+          docker system prune -af
+          echo "Available space"
+          df -h
+
+      - name: Deploy All Images to GHCR
+        run: ./scripts/deploy_to_ghcr.sh
+        env:
+          GHCR_DEPLOY_TOKEN: ${{ secrets.GHCR_DEPLOY_TOKEN }}
+          GITHUB_SHA: ${{ github.sha }}
