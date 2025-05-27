@@ -11,7 +11,7 @@ WORKDIR /app
 
 # install and cache app dependencies
 COPY package*.json /app/
-RUN HUSKY_SKIP_INSTALL=1 npm ci --silent
+RUN HUSKY_SKIP_INSTALL=1 npm i --silent
 
 # add app
 COPY . /app/
