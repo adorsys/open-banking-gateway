@@ -22,7 +22,7 @@ jobs:
           df -h
 
       - name: Deploy All Images to GHCR
-        run: ./scripts/deploy-to-ghcr.sh
+        run: ./scripts/deploy_to_ghcr.sh
         env:
           GHCR_DEPLOY_TOKEN: ${{ secrets.GHCR_DEPLOY_TOKEN }}
           GITHUB_SHA: ${{ github.sha }}
