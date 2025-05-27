@@ -12,16 +12,15 @@
         </server>
         <server>
             <!--GitHub packages deployment -->
-            <!-- Staging Deployment -->
-            <id>stage</id>
-            <username>${env.STAGE_ARTIFACTORY_USERNAME}</username>
-            <password>${env.STAGE_ARTIFACTORY_PASSWORD}</password>
+            <id>github</id>
+            <username>${env.GITHUB_ACTOR}</username>
+            <password>${env.GHCR_DEPLOY_TOKEN}</password>
         </server>
     </servers>
 
     <profiles>
         <profile>
-            <id>sonatype</id>
+            <id>github</id>
             <activation>
                 <activeByDefault>true</activeByDefault>
             </activation>
@@ -31,7 +30,7 @@
             </properties>
             <repositories>
                 <repository>
-                    <id>stage</id>
+                    <id>github</id>
                     <url>https://maven.pkg.github.com/adorsys/open-banking-gateway</url>
                     <snapshots>
                         <enabled>false</enabled>

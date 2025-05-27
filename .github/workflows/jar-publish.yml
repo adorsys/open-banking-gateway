@@ -1,0 +1,31 @@
+name: jar-publish.yml
+
+on:
+  push:
+    branches:
+      - '**'
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    permissions:
+      packages: write
+      contents: read
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Set up JDK 21
+        uses: actions/setup-java@v3
+        with:
+          java-version: 21
+          distribution: 'temurin'
+          server-id: github
+          server-username: GITHUB_ACTOR
+          server-password: ${{ secrets.GHCR_DEPLOY_TOKEN }}
+
+      - name: Deploy to GitHub Packages
+        run: mvn deploy --settings ./scripts/mvn-release-settings.xml -Pgithub
+        env:
+          GITHUB_ACTOR: ${{ github.actor }}
+          GITHUB_TOKEN: ${{ secrets.GHCR_DEPLOY_TOKEN }}
+
