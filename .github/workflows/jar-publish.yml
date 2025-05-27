@@ -27,5 +27,5 @@ jobs:
         run: mvn deploy --settings ./scripts/mvn-release-settings.xml -Pgithub
         env:
           GITHUB_ACTOR: ${{ github.actor }}
-          GITHUB_TOKEN: ${{ secrets.GHCR_DEPLOY_TOKEN }}
+          GHCR_DEPLOY_TOKEN: ${{ secrets.GHCR_DEPLOY_TOKEN }}
 
