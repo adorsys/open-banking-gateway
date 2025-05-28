@@ -3,7 +3,12 @@ name: jar-publish.yml
 on:
   push:
     branches:
-      - '**'
+      - develop
+    tags:
+      - 'v*'
+  release:
+    types:
+      - published
 jobs:
   publish:
     runs-on: ubuntu-latest
