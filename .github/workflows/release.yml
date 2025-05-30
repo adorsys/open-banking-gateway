@@ -26,16 +26,9 @@ jobs:
       - name: Build with Maven
         run: mvn clean package -DskipTests
 
-      - name: Package Release Files
+      - name: Create releases
         run: |
-          mkdir release
-          find . -type f -path "*/target/*.jar" -exec cp {} release/ \;
-          zip -r open-banking-gateway-${GITHUB_REF_NAME}.zip release
-
-      - name: Create GitHub Release and Upload Assets
-        uses: softprops/action-gh-release@v2
-        with:
-          files: |
-            open-banking-gateway-${{ github.ref_name }}.zip
-        env:
-          RELEASE_TOKEN: ${{ secrets.RELEASE_TOKEN}}
+          chmod +x ./scripts/release-scripts/release.sh
+          chmod +x ./scripts/release-scripts/version.sh
+          VERSION=$(./scripts/release-scripts/version.sh)
+          ./scripts/release-scripts/release.sh --no-snapshots "$VERSION"
