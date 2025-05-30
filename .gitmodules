@@ -1,0 +1,3 @@
+[submodule "scripts/release-scripts"]
+	path = scripts/release-scripts
+	url = https://github.com/borisskert/release-scripts
