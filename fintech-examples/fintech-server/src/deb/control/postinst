@@ -1,0 +1,79 @@
+#!/bin/bash
+set -eu
+
+USERNAME="obg"
+USERHOME="/home/$USERNAME"
+MARKER="/etc/$USERNAME/.postinst_done"
+
+echo "[INFO] Starting post-install script..."
+
+# Skip if already run
+if [ -f "$MARKER" ]; then
+    echo "[INFO] Post-install steps already completed. Skipping."
+    exit 0
+fi
+
+# Create user if it doesn't exist
+if ! id "$USERNAME" &>/dev/null; then
+    echo "[INFO] Creating user '$USERNAME'..."
+    useradd -m -s /bin/bash "$USERNAME"
+    passwd -d "$USERNAME"  # No password
+else
+    echo "[INFO] User '$USERNAME' already exists."
+fi
+
+# Create necessary directories with correct permissions
+for dir in /opt/$USERNAME /var/log/$USERNAME /etc/$USERNAME; do
+    echo "[INFO] Creating directory $dir..."
+    mkdir -p "$dir"
+    chown "$USERNAME:$USERNAME" "$dir"
+    chmod 755 "$dir"
+done
+
+# Add user to necessary groups
+echo "[INFO] Adding '$USERNAME' to groups: sudo, systemd-journal..."
+usermod -aG sudo,systemd-journal "$USERNAME"
+
+# Generate SSH key if not exists
+echo "[INFO] Setting up SSH keys for '$USERNAME'..."
+su - "$USERNAME" -c '
+    mkdir -p ~/.ssh && chmod 700 ~/.ssh
+    if [ ! -f ~/.ssh/id_rsa ]; then
+        echo "[INFO] Generating SSH key..."
+        ssh-keygen -t rsa -f ~/.ssh/id_rsa -N ""
+    fi
+    touch ~/.ssh/authorized_keys
+    chmod 600 ~/.ssh/authorized_keys
+    grep -qxF "$(cat ~/.ssh/id_rsa.pub)" ~/.ssh/authorized_keys || cat ~/.ssh/id_rsa.pub >> ~/.ssh/authorized_keys
+'
+
+# Configure sudoers safely
+SUDOERS_FILE="/etc/sudoers.d/$USERNAME"
+if [ ! -f "$SUDOERS_FILE" ]; then
+    echo "[INFO] Creating sudoers config for '$USERNAME'..."
+    echo "$USERNAME ALL=(ALL) NOPASSWD: /bin/systemctl" > "$SUDOERS_FILE"
+    chmod 440 "$SUDOERS_FILE"
+else
+    echo "[INFO] Sudoers config already exists: $SUDOERS_FILE"
+fi
+
+# Disable SSH password authentication
+SSHD_CONFIG="/etc/ssh/sshd_config"
+echo "[INFO] Disabling password authentication in SSH config..."
+if grep -q "^PasswordAuthentication" "$SSHD_CONFIG"; then
+    sed -i 's/^PasswordAuthentication.*/PasswordAuthentication no/' "$SSHD_CONFIG"
+else
+    echo "PasswordAuthentication no" >> "$SSHD_CONFIG"
+fi
+
+# Restart SSH safely
+echo "[INFO] Restarting SSH service..."
+if ! systemctl restart sshd; then
+    echo "[WARN] Failed to restart sshd. Please check manually."
+fi
+
+# Mark as done
+touch "$MARKER"
+echo "[INFO] Post-install script completed successfully."
+
+exit 0
