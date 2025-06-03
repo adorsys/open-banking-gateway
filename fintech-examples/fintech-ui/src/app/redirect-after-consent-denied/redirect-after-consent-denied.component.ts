@@ -3,12 +3,14 @@ import { ActivatedRoute } from '@angular/router';
 import { ConsentAuthorizationService } from '../bank/services/consent-authorization.service';
 import { Payment } from '../models/consts';
 import { ModalCard } from '../models/modalCard.model';
+import { SharedModule } from '../common/shared.module';
 
 @Component({
-    selector: 'app-redirect-after-consent-denied',
-    templateUrl: './redirect-after-consent-denied.component.html',
-    styleUrls: ['./redirect-after-consent-denied.component.scss'],
-    standalone: false
+  selector: 'app-redirect-after-consent-denied',
+  templateUrl: './redirect-after-consent-denied.component.html',
+  styleUrls: ['./redirect-after-consent-denied.component.scss'],
+  standalone: true,
+  imports: [SharedModule]
 })
 export class RedirectAfterConsentDeniedComponent implements OnInit {
   private redirectCode;

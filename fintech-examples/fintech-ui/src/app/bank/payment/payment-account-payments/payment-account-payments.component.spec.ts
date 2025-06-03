@@ -12,23 +12,24 @@ describe('PaymentAccountPaymentsComponent', () => {
   let component: PaymentAccountPaymentsComponent;
   let fixture: ComponentFixture<PaymentAccountPaymentsComponent>;
 
-  beforeEach(waitForAsync(() => {
-    TestBed.configureTestingModule({
-    declarations: [PaymentAccountPaymentsComponent],
-    schemas: [CUSTOM_ELEMENTS_SCHEMA],
-    imports: [RouterTestingModule, ReactiveFormsModule],
-    providers: [
-        {
+  beforeEach(
+    waitForAsync(() => {
+      TestBed.configureTestingModule({
+        schemas: [CUSTOM_ELEMENTS_SCHEMA],
+        imports: [RouterTestingModule, ReactiveFormsModule, PaymentAccountPaymentsComponent],
+        providers: [
+          {
             provide: ActivatedRoute,
             useValue: {
-                snapshot: { params: { bankid: '1234', accountid: '1234' } }
+              snapshot: { params: { bankid: '1234', accountid: '1234' } }
             }
-        },
-        provideHttpClient(withInterceptorsFromDi()),
-        provideHttpClientTesting()
-    ]
-}).compileComponents();
-  }));
+          },
+          provideHttpClient(withInterceptorsFromDi()),
+          provideHttpClientTesting()
+        ]
+      }).compileComponents();
+    })
+  );
 
   beforeEach(() => {
     fixture = TestBed.createComponent(PaymentAccountPaymentsComponent);

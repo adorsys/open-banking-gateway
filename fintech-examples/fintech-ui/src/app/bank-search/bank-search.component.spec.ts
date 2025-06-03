@@ -5,8 +5,6 @@ import { RouterTestingModule } from '@angular/router/testing';
 
 import { BankSearchComponent, BankSearchInfo } from './bank-search.component';
 import { SearchComponent } from '../common/search/search.component';
-import { BankSearchService } from './services/bank-search.service';
-import { StorageService } from '../services/storage.service';
 import { Router } from '@angular/router';
 import { RoutingPath } from '../models/routing-path.model';
 import { provideHttpClient, withInterceptorsFromDi } from '@angular/common/http';
@@ -14,22 +12,19 @@ import { provideHttpClient, withInterceptorsFromDi } from '@angular/common/http'
 describe('BankSearchComponent', () => {
   let component: BankSearchComponent;
   let fixture: ComponentFixture<BankSearchComponent>;
-  let bankSearchService: BankSearchService;
-  let storageService: StorageService;
   let router: Router;
 
-  beforeEach(waitForAsync(() => {
-    TestBed.configureTestingModule({
-    declarations: [BankSearchComponent, SearchComponent],
-    imports: [ReactiveFormsModule, RouterTestingModule],
-    providers: [provideHttpClient(withInterceptorsFromDi()), provideHttpClientTesting()]
-}).compileComponents();
-  }));
+  beforeEach(
+    waitForAsync(() => {
+      TestBed.configureTestingModule({
+        imports: [ReactiveFormsModule, RouterTestingModule, BankSearchComponent, SearchComponent],
+        providers: [provideHttpClient(withInterceptorsFromDi()), provideHttpClientTesting()]
+      }).compileComponents();
+    })
+  );
 
   beforeEach(() => {
     fixture = TestBed.createComponent(BankSearchComponent);
-    bankSearchService = TestBed.inject(BankSearchService);
-    storageService = TestBed.inject(StorageService);
     router = TestBed.inject(Router);
     component = fixture.componentInstance;
     fixture.detectChanges();

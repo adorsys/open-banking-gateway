@@ -3,26 +3,35 @@ import { animate, state, style, transition, trigger } from '@angular/animations'
 import { Subject } from 'rxjs';
 
 import { InfoOptions } from './info-options';
+import { NgClass, NgIf } from '@angular/common';
+import Timeout = NodeJS.Timeout;
 
 @Component({
-    selector: 'app-feedback',
-    templateUrl: './info.component.html',
-    styleUrls: ['./info.component.scss'],
-    animations: [
-        trigger('feedbackAnimation', [
-            state('void', style({
-                transform: 'translateY(100%)',
-                opacity: 0
-            })),
-            state('*', style({
-                transform: 'translateY(0)',
-                opacity: 1
-            })),
-            transition('* <=> void', animate(`400ms cubic-bezier(0.4, 0, 0.1, 1)`))
-        ])
-    ],
-    encapsulation: ViewEncapsulation.None,
-    standalone: false
+  selector: 'app-feedback',
+  templateUrl: './info.component.html',
+  styleUrls: ['./info.component.scss'],
+  animations: [
+    trigger('feedbackAnimation', [
+      state(
+        'void',
+        style({
+          transform: 'translateY(100%)',
+          opacity: 0
+        })
+      ),
+      state(
+        '*',
+        style({
+          transform: 'translateY(0)',
+          opacity: 1
+        })
+      ),
+      transition('* <=> void', animate(`400ms cubic-bezier(0.4, 0, 0.1, 1)`))
+    ])
+  ],
+  encapsulation: ViewEncapsulation.None,
+  standalone: true,
+  imports: [NgClass, NgIf]
 })
 export class InfoComponent {
   message: string;
@@ -30,7 +39,7 @@ export class InfoComponent {
   animationState: '*' | 'void' = 'void';
   private onDestroy = new Subject<void>();
   onDestroy$ = this.onDestroy.asObservable();
-  private durationTimeoutId: any;
+  private durationTimeoutId: Timeout;
 
   open(message: string, options: InfoOptions): void {
     this.message = message;
