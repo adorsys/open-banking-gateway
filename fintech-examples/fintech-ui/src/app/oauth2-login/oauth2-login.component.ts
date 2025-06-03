@@ -3,10 +3,11 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { AuthService } from '../services/auth.service';
 
 @Component({
-    selector: 'app-oauth2-login',
-    templateUrl: './oauth2-login.component.html',
-    styleUrls: ['./oauth2-login.component.scss'],
-    standalone: false
+  selector: 'app-oauth2-login',
+  templateUrl: './oauth2-login.component.html',
+  styleUrls: ['./oauth2-login.component.scss'],
+  standalone: true,
+  imports: []
 })
 export class Oauth2LoginComponent implements OnInit {
   constructor(private router: Router, private activatedRoute: ActivatedRoute, private authService: AuthService) {}

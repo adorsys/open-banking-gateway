@@ -1,14 +1,12 @@
 import { waitForAsync, ComponentFixture, TestBed } from '@angular/core/testing';
 import { ReactiveFormsModule } from '@angular/forms';
 import { provideHttpClient, withInterceptorsFromDi } from '@angular/common/http';
-import { Router } from '@angular/router';
-import { RouterTestingModule } from '@angular/router/testing';
+import { provideRouter, Router } from '@angular/router';
 import { By } from '@angular/platform-browser';
 import { of } from 'rxjs';
 
 import { LoginComponent } from './login.component';
 import { BankSearchComponent } from '../bank-search/bank-search.component';
-import { BankSearchModule } from '../bank-search/bank-search.module';
 import { DocumentCookieService } from '../services/document-cookie.service';
 import { AuthService } from '../services/auth.service';
 import { RoutingPath } from '../models/routing-path.model';
@@ -23,15 +21,19 @@ describe('LoginComponent', () => {
 
   beforeAll(() => (window.onbeforeunload = jasmine.createSpy()));
 
-  beforeEach(waitForAsync(() => {
-    TestBed.configureTestingModule({
-    declarations: [LoginComponent],
-    imports: [BankSearchModule,
-        ReactiveFormsModule,
-        RouterTestingModule.withRoutes([{ path: RoutingPath.BANK_SEARCH, component: BankSearchComponent }])],
-    providers: [AuthService, DocumentCookieService, provideHttpClient(withInterceptorsFromDi())]
-}).compileComponents();
-  }));
+  beforeEach(
+    waitForAsync(() => {
+      TestBed.configureTestingModule({
+        imports: [ReactiveFormsModule, LoginComponent],
+        providers: [
+          AuthService,
+          DocumentCookieService,
+          provideHttpClient(withInterceptorsFromDi()),
+          provideRouter([{ path: RoutingPath.BANK_SEARCH, component: BankSearchComponent }])
+        ]
+      }).compileComponents();
+    })
+  );
 
   beforeEach(() => {
     fixture = TestBed.createComponent(LoginComponent);
@@ -69,7 +71,7 @@ describe('LoginComponent', () => {
   });
 
   it('username field validity', () => {
-    let errors = {};
+    let errors: object;
     const username = component.loginForm.controls['username'];
     expect(username.valid).toBeFalsy();
 
@@ -84,11 +86,11 @@ describe('LoginComponent', () => {
   });
 
   it('password field validity', () => {
-    let errors = {};
+    let errors: object;
     const password = component.loginForm.controls['password'];
     expect(password.valid).toBeFalsy();
 
-    // password field is required
+    // a password field is required
     errors = password.errors || {};
     expect(errors['required']).toBeTruthy();
 

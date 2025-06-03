@@ -6,37 +6,43 @@ import { provideHttpClientTesting } from '@angular/common/http/testing';
 import { InitiateComponent } from './initiate.component';
 
 import { StorageService } from '../../../services/storage.service';
-import { Consts } from '../../../models/consts';
 import { provideHttpClient, withInterceptorsFromDi } from '@angular/common/http';
+import { RouteUtilsService } from '../../../services/route-utils.service';
 
 describe('InitiateComponent', () => {
   let component: InitiateComponent;
   let fixture: ComponentFixture<InitiateComponent>;
   let route: ActivatedRoute;
   let bankId;
+  let routeUtils: RouteUtilsService;
 
-  beforeEach(waitForAsync(() => {
-    TestBed.configureTestingModule({
-    declarations: [InitiateComponent],
-    imports: [ReactiveFormsModule, RouterTestingModule],
-    providers: [
-        {
+  beforeEach(
+    waitForAsync(() => {
+      TestBed.configureTestingModule({
+        imports: [ReactiveFormsModule, RouterTestingModule, InitiateComponent],
+        providers: [
+          {
             provide: ActivatedRoute,
             useValue: {
-                snapshot: { params: { bankid: '1234', accountid: '1234' }, queryParams: { iban: 'AL90208110080000001039531801' } }
+              snapshot: {
+                params: { bankid: '1234', accountid: '1234' },
+                queryParams: { iban: 'AL90208110080000001039531801' }
+              }
             }
-        },
-        provideHttpClient(withInterceptorsFromDi()),
-        provideHttpClientTesting()
-    ]
-}).compileComponents();
-  }));
+          },
+          provideHttpClient(withInterceptorsFromDi()),
+          provideHttpClientTesting()
+        ]
+      }).compileComponents();
+    })
+  );
 
   beforeEach(() => {
     fixture = TestBed.createComponent(InitiateComponent);
     component = fixture.componentInstance;
     route = TestBed.inject(ActivatedRoute);
-    bankId = route.snapshot.params[Consts.BANK_ID_NAME];
+    routeUtils = TestBed.inject(RouteUtilsService);
+    bankId = routeUtils.getBankId(route);
     const storageService = TestBed.inject(StorageService);
     spyOn(storageService, 'getLoa')
       .withArgs(bankId)
@@ -59,5 +65,4 @@ describe('InitiateComponent', () => {
     component.onConfirm();
     expect(onConfirmSpy).toHaveBeenCalled();
   });
-
 });

@@ -2,16 +2,19 @@ import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { AisService } from '../services/ais.service';
 import { AccountReport } from '../../api';
-import { RedirectStruct, RedirectType } from '../redirect-page/redirect-struct';
-import { Consts, HeaderConfig } from '../../models/consts';
+import { RedirectType } from '../redirect-page/redirect-struct';
+import { HeaderConfig } from '../../models/consts';
 import { StorageService } from '../../services/storage.service';
 import { RoutingPath } from '../../models/routing-path.model';
+import { SharedModule } from '../../common/shared.module';
+import { RouteUtilsService } from '../../services/route-utils.service';
 
 @Component({
-    selector: 'app-list-transactions',
-    templateUrl: './list-transactions.component.html',
-    styleUrls: ['./list-transactions.component.scss'],
-    standalone: false
+  selector: 'app-list-transactions',
+  templateUrl: './list-transactions.component.html',
+  styleUrls: ['./list-transactions.component.scss'],
+  standalone: true,
+  imports: [SharedModule]
 })
 export class ListTransactionsComponent implements OnInit {
   accountId = '';
@@ -24,12 +27,13 @@ export class ListTransactionsComponent implements OnInit {
     private router: Router,
     private route: ActivatedRoute,
     private aisService: AisService,
-    private storageService: StorageService
+    private storageService: StorageService,
+    private routeUtils: RouteUtilsService
   ) {}
 
   ngOnInit() {
-    this.bankId = this.route.snapshot.params[Consts.BANK_ID_NAME];
-    this.accountId = this.route.snapshot.params[Consts.ACCOUNT_ID_NAME];
+    this.bankId = this.routeUtils.getBankId(this.route);
+    this.accountId = this.routeUtils.getAccountId(this.route);
     this.loadTransactions();
     this.account = this.getAccountById(this.accountId);
   }
@@ -51,7 +55,7 @@ export class ListTransactionsComponent implements OnInit {
       )
       .subscribe((response) => {
         switch (response.status) {
-          case 202:
+          case 202: {
             console.log('list tx got REDIRECT');
             this.storageService.setRedirect(
               response.headers.get(HeaderConfig.HEADER_FIELD_REDIRECT_CODE),
@@ -60,13 +64,14 @@ export class ListTransactionsComponent implements OnInit {
               parseInt(response.headers.get(HeaderConfig.HEADER_FIELD_X_MAX_AGE), 0),
               RedirectType.AIS
             );
-            const r = new RedirectStruct();
-            r.redirectUrl = encodeURIComponent(response.headers.get(HeaderConfig.HEADER_FIELD_LOCATION));
-            r.redirectCode = response.headers.get(HeaderConfig.HEADER_FIELD_REDIRECT_CODE);
-            r.bankId = this.bankId;
-            r.bankName = this.storageService.getBankName();
+            const r = this.storageService.createRedirectStruct(
+              response.headers.get(HeaderConfig.HEADER_FIELD_LOCATION),
+              response.headers.get(HeaderConfig.HEADER_FIELD_REDIRECT_CODE),
+              this.bankId
+            );
             this.router.navigate(['../redirect', JSON.stringify(r)], { relativeTo: this.route });
             break;
+          }
           case 200:
             console.log('I got transactions');
             this.transactions = response.body.transactions;

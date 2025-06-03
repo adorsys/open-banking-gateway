@@ -1,6 +1,5 @@
 import { waitForAsync, ComponentFixture, TestBed } from '@angular/core/testing';
 import { ActivatedRoute } from '@angular/router';
-import { RouterTestingModule } from '@angular/router/testing';
 import { provideHttpClientTesting } from '@angular/common/http/testing';
 import { of } from 'rxjs';
 
@@ -14,30 +13,31 @@ describe('SidebarComponent', () => {
   let fixture: ComponentFixture<SidebarComponent>;
   let bankProfileService: BankProfileService;
 
-  beforeEach(waitForAsync(() => {
-    TestBed.configureTestingModule({
-    declarations: [SidebarComponent],
-    imports: [RouterTestingModule],
-    providers: [
-        BankProfileService,
-        {
+  beforeEach(
+    waitForAsync(() => {
+      TestBed.configureTestingModule({
+        imports: [SidebarComponent],
+        providers: [
+          BankProfileService,
+          {
             provide: ActivatedRoute,
             useValue: {
-                params: of({ bankId: 1234 }),
-                snapshot: {
-                    paramMap: {
-                        get(bankId: string): string {
-                            return '1234';
-                        }
-                    }
+              params: of({ bankId: 1234 }),
+              snapshot: {
+                paramMap: {
+                  get(): string {
+                    return '1234';
+                  }
                 }
+              }
             }
-        },
-        provideHttpClient(withInterceptorsFromDi()),
-        provideHttpClientTesting()
-    ]
-}).compileComponents();
-  }));
+          },
+          provideHttpClient(withInterceptorsFromDi()),
+          provideHttpClientTesting()
+        ]
+      }).compileComponents();
+    })
+  );
 
   beforeEach(() => {
     fixture = TestBed.createComponent(SidebarComponent);

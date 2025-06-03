@@ -2,12 +2,11 @@ import { Injectable } from '@angular/core';
 import { ComponentPortal } from '@angular/cdk/portal';
 import { Overlay, OverlayRef } from '@angular/cdk/overlay';
 
-import { InfoModule } from './info.module';
 import { InfoOptions } from './info-options';
 import { InfoComponent } from './info.component';
 
 @Injectable({
-  providedIn: InfoModule
+  providedIn: 'root'
 })
 export class InfoService {
   private overlayRef: OverlayRef;

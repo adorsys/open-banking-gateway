@@ -5,8 +5,6 @@ import { LogException } from '../models/LogException';
   providedIn: 'root'
 })
 export class DocumentCookieService {
-  constructor() {}
-
   public getAll(): string[] {
     return document.cookie
       .split(';')

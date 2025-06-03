@@ -9,12 +9,14 @@ import AllPsd2Enum = AisAccountAccessInfo.AllPsd2Enum;
 import { FinTechAccountInformationService } from '../../api';
 import { AisConsentRequest } from '../../api/model/aisConsentRequest';
 import { AisAccountAccessInfo } from '../../api/model/aisAccountAccessInfo';
+import { SharedModule } from '../../common/shared.module';
 
 @Component({
-    selector: 'app-settings',
-    templateUrl: './settings.component.html',
-    styleUrls: ['./settings.component.scss'],
-    standalone: false
+  selector: 'app-settings',
+  templateUrl: './settings.component.html',
+  styleUrls: ['./settings.component.scss'],
+  standalone: true,
+  imports: [SharedModule]
 })
 export class SettingsComponent implements OnInit {
   bankId = 'unknown';

@@ -6,14 +6,18 @@ import {
   LoTRetrievalInformation,
   toLocaleString
 } from '../models/consts';
-import { AccountStruct, RedirectTupelForMap, RedirectType } from '../bank/redirect-page/redirect-struct';
+import {
+  AccountStruct,
+  RedirectStruct,
+  RedirectTupelForMap,
+  RedirectType
+} from '../bank/redirect-page/redirect-struct';
 import { SettingsData } from '../bank/settings/settings.component';
 
 @Injectable({
   providedIn: 'root'
 })
 export class StorageService {
-
   static isoDate(toConvert: Date) {
     return toConvert.toISOString().split('T')[0];
   }
@@ -201,6 +205,15 @@ export class StorageService {
       return false;
     }
     return JSON.parse(value);
+  }
+
+  public createRedirectStruct(redirectUrl: string, redirectCode: string, bankId: string): RedirectStruct {
+    const r = new RedirectStruct();
+    r.redirectUrl = encodeURIComponent(redirectUrl);
+    r.redirectCode = redirectCode;
+    r.bankId = bankId;
+    r.bankName = this.getBankName();
+    return r;
   }
 }
 

@@ -5,12 +5,14 @@ import { Consent, HeaderConfig } from '../../models/consts';
 import { ConsentAuthorizationService } from '../services/consent-authorization.service';
 import { StorageService } from '../../services/storage.service';
 import { ModalCard } from '../../models/modalCard.model';
+import { SharedModule } from '../../common/shared.module';
 
 @Component({
-    selector: 'app-redirect-page',
-    templateUrl: './redirect-page.component.html',
-    styleUrls: ['./redirect-page.component.scss'],
-    standalone: false
+  selector: 'app-redirect-page',
+  templateUrl: './redirect-page.component.html',
+  styleUrls: ['./redirect-page.component.scss'],
+  standalone: true,
+  imports: [SharedModule]
 })
 export class RedirectPageComponent implements OnInit {
   public redirectStruct: RedirectStruct = new RedirectStruct();

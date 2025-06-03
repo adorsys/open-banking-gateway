@@ -6,13 +6,15 @@
           <img alt="redirection" class="card-img" src="assets/icons/icons8-network 2.png" />
         </div>
         <h2 class="card-title mb-2">Please confirm redirection to consent ui</h2>
-        <p class="card-text text-center">When you confirm, you will be redirected to consent ui to authorize payment.</p>
+        <p class="card-text text-center">
+          When you confirm, you will be redirected to consent ui to authorize payment.
+        </p>
         <div class="row mt-4 mb-3">
           <div class="form-group col-md-6">
             <div class="d-flex align-items-center">
               <img alt="redirection" class="card-img mb-4 mb-md-0 mr-4" src="assets/icons/card_payment.png" />
               <div class="">
-                <label class="text-bold title">My account</label>
+                <h3 class="text-bold title">My account</h3>
                 <p class="description">{{ confirmData.paymentRequest.debitorIban }}</p>
               </div>
             </div>
@@ -21,27 +23,27 @@
             <div class="d-flex align-items-center">
               <img alt="redirection" class="card-img mb-4 mb-md-0 mr-4" src="assets/icons/receive_dollar.png" />
               <div class="">
-                <label class="text-bold title">IBAN</label>
+                <h3 class="text-bold title">IBAN</h3>
                 <p class="description">{{ confirmData.paymentRequest.creditorIban }}</p>
               </div>
             </div>
           </div>
           <div class="form-group col-md-6 pl">
-            <label>Name</label>
+            <h3>Name</h3>
             <p class="text-bold">{{ confirmData.paymentRequest.name }}</p>
           </div>
           <div class="form-group col-md-6 pl">
-            <label>Purpose of payment</label>
+            <h3>Purpose of payment</h3>
             <p class="text-bold">{{ confirmData.paymentRequest.purpose }}</p>
           </div>
 
           <div class="form-group col-md-6 pl">
-            <label>Amount:</label>
+            <h3>Amount:</h3>
             <p class="text-bold">{{ roundToTwoDigitsAfterComma(confirmData.paymentRequest.amount) }} EUR</p>
           </div>
 
           <div class="form-group col-md-6 pl">
-            <label>End To End Identification</label>
+            <h3>End To End Identification</h3>
             <p class="text-bold">{{ confirmData.paymentRequest.endToEndIdentification }}</p>
           </div>
         </div>

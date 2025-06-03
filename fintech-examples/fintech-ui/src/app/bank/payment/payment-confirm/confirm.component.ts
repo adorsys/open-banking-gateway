@@ -7,10 +7,11 @@ import { ClassSinglePaymentInitiationRequest } from '../../../api/model-classes/
 import { RedirectStruct } from '../../redirect-page/redirect-struct';
 
 @Component({
-    selector: 'app-confirm',
-    templateUrl: './confirm.component.html',
-    styleUrls: ['./confirm.component.scss'],
-    standalone: false
+  selector: 'app-confirm',
+  templateUrl: './confirm.component.html',
+  styleUrls: ['./confirm.component.scss'],
+  standalone: true,
+  imports: []
 })
 export class ConfirmComponent implements OnInit {
   public static ROUTE = 'confirm/:' + Consts.CONFIRM_PAYMENT;
