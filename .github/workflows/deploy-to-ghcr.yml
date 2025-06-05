@@ -1,0 +1,4 @@
+name: deploy-to-ghcr.yml
+on:
+
+jobs:
