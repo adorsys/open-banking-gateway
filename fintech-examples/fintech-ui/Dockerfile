@@ -3,7 +3,7 @@
 #############
 
 # base image
-FROM node:12.14.0 as build-stage
+FROM node:18-alpine as build-stage
 LABEL maintainer="https://github.com/adorsys/open-banking-gateway"
 
 # set working directory
@@ -11,7 +11,7 @@ WORKDIR /app
 
 # install and cache app dependencies
 COPY package*.json /app/
-RUN HUSKY_SKIP_INSTALL=1 npm ci --silent
+RUN HUSKY_SKIP_INSTALL=1 npm i --silent
 
 # add app
 COPY . /app/

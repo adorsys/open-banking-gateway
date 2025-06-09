@@ -370,6 +370,13 @@
             </dependency>
         </dependencies>
     </dependencyManagement>
+    <distributionManagement>
+        <repository>
+            <id>github</id>
+            <url>https://maven.pkg.github.com/adorsys/open-banking-gateway</url>
+        </repository>
+    </distributionManagement>
+
 
     <build>
         <plugins>
