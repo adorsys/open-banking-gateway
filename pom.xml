@@ -149,6 +149,7 @@
         <jaxb-api.version>2.3.1</jaxb-api.version>
         <selenium-java.version>4.29.0</selenium-java.version>
         <jackson-databind-nullable.version>0.2.6</jackson-databind-nullable.version>
+        <junixsocket-core.version>2.10.1</junixsocket-core.version>
 
         <!-- Flowable BPMN -->
         <flowable.version>7.1.0</flowable.version>
@@ -339,6 +340,13 @@
                 <groupId>org.slf4j</groupId>
                 <artifactId>slf4j-api</artifactId>
                 <version>${slf4j-simple.version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>com.kohlschutter.junixsocket</groupId>
+                <artifactId>junixsocket-core</artifactId>
+                <version>${junixsocket-core.version}</version>
+                <type>pom</type>
             </dependency>
 
             <!-- Test -->

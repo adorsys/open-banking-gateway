@@ -6,6 +6,9 @@ spring:
   datasource:
     # Database URL
     url: jdbc:postgresql://localhost:5432/open_banking?currentSchema=banking_protocol
+    # To use Unix socket, uncomment the line below:
+    # url: jdbc:postgresql:///open_banking?socketFactory=org.newsclub.net.unix.AFUNIXSocketFactory$FactoryArg&socketFactoryArg=/var/run/postgresql/.s.PGSQL.5432
+
     # Database credentials
     username: postgres
     password: docker

@@ -94,6 +94,11 @@
             <scope>runtime</scope>
             <optional>true</optional>
         </dependency>
+        <dependency>
+            <groupId>com.kohlschutter.junixsocket</groupId>
+            <artifactId>junixsocket-core</artifactId>
+            <type>pom</type>
+        </dependency>
 
         <dependency>
             <groupId>org.springdoc</groupId>
