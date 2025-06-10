@@ -5,9 +5,6 @@ on:
       - develop
     tags:
       - 'v*'
-  release:
-    types:
-      - published
 
 jobs:
   build:
@@ -36,8 +33,18 @@ jobs:
       - name: Build project with Maven
         run: mvn clean package -DskipTests
 
-      - name: Deploy All Images to GHCR
+      - name: Deploy Develop Images to GHCR   # task triggered when pushed on develop branch
+        if: github.ref == 'refs/heads/develop'
+        run: ./scripts/deploy_to_ghcr.sh develop
+        env:
+          GHCR_DEPLOY_TOKEN: ${{ secrets.GHCR_DEPLOY_TOKEN }}
+          GITHUB_SHA: ${{ github.sha }}
+          GITHUB_REF: ${{ github.ref }}
+
+      - name: Deploy Release Images to GHCR  # task triggered when pushed on tags
+        if: startsWith(github.ref, 'refs/tags/v')
         run: ./scripts/deploy_to_ghcr.sh
         env:
           GHCR_DEPLOY_TOKEN: ${{ secrets.GHCR_DEPLOY_TOKEN }}
           GITHUB_SHA: ${{ github.sha }}
+          GITHUB_REF: ${{ github.ref }}

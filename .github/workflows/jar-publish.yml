@@ -6,10 +6,7 @@ on:
       - develop
     tags:
       - 'v*'
-  release:
-    types:
-      - published
-      
+
 jobs:
   publish:
     runs-on: ubuntu-latest
@@ -29,8 +26,16 @@ jobs:
           server-username: GITHUB_ACTOR
           server-password: ${{ secrets.GHCR_DEPLOY_TOKEN }}
 
-      - name: Deploy to GitHub Packages
-        run: mvn deploy --settings ./scripts/mvn-release-settings.xml -Pgithub
+      - name: Deploy SNAPSHOT to GitHub Packages
+        if: github.ref == 'refs/heads/develop'
+        run: mvn deploy --settings ./scripts/mvn-release-settings.xml -Pgithub -DskipTests -Dclassifier=develop
+        env:
+          GITHUB_ACTOR: ${{ github.actor }}
+          GHCR_DEPLOY_TOKEN: ${{ secrets.GHCR_DEPLOY_TOKEN }}
+
+      - name: Deploy RELEASE to GitHub Packages
+        if: startsWith(github.ref, 'refs/tags/v')
+        run: mvn deploy --settings ./scripts/mvn-release-settings.xml -Pgithub -DskipTests
         env:
           GITHUB_ACTOR: ${{ github.actor }}
           GHCR_DEPLOY_TOKEN: ${{ secrets.GHCR_DEPLOY_TOKEN }}
