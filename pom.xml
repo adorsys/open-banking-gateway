@@ -580,8 +580,8 @@
                         <configuration>
                             <!-- Tell the plugins what repositories to use (by id) -->
                             <releaseDeploymentRepository>release</releaseDeploymentRepository>
-                            <stageDeploymentRepository>stage</stageDeploymentRepository>
-                            <snapshotDeploymentRepository>stage</snapshotDeploymentRepository>
+                            <stageDeploymentRepository>github</stageDeploymentRepository>
+                            <snapshotDeploymentRepository>github</snapshotDeploymentRepository>
 
                             <!-- Allow to promote on ANY branch because Github Actions checkouts tag, not branch (and forcing both seem impossible) -->
                             <releaseBranchPattern>${release-branch-pattern}</releaseBranchPattern>
