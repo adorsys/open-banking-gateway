@@ -1,0 +1,94 @@
+openapi: 3.0.1
+info:
+  version: "1.0.0"
+  title: Open Banking Gateway Bank Info API
+  description: >
+    This API allows retrieval of bank metadata based on a provided IBAN.
+externalDocs:
+  url: "https://adorsys.github.com/open-banking-gateway"
+
+paths:
+  /v1/banking/search/bank-info:
+    post:
+      tags:
+        - TppBankInfo
+      operationId: getBankInfoByIban
+      summary: Retrieve bank information by IBAN
+      description: >
+        Accepts an IBAN and returns the corresponding bank name, BIC,
+        and bank code.
+      parameters:
+        - $ref: "./tpp_banking_api_commons.yml#/components/parameters/Fintech-ID"
+        - $ref: "./tpp_banking_api_commons.yml#/components/parameters/X-Request-Signature"
+        - $ref: "./tpp_banking_api_commons.yml#/components/parameters/X-Request-ID"
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                iban:
+                  type: string
+                  example: DE89370400440532013000
+              required:
+                - iban
+      responses:
+        "200":
+          description: Bank information retrieved successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BankInfoResponse'
+        "400":
+          $ref: '#/components/responses/400_BadRequest'
+        "404":
+          $ref: '#/components/responses/404_NotFound'
+
+components:
+  schemas:
+    BankInfoResponse:
+      type: object
+      properties:
+        bankCode:
+          type: string
+          description: National bank identifier extracted from IBAN
+          example: 37040044
+        bankName:
+          type: string
+          description: Official bank name
+          example: Commerzbank
+        bic:
+          type: string
+          description: Bank Identifier Code (SWIFT/BIC)
+          example: COBADEFFXXX
+      required:
+        - bankCode
+        - bankName
+        - bic
+
+    ErrorResponse:
+      type: object
+      properties:
+        errorCode:
+          type: string
+        message:
+          type: string
+      required:
+        - errorCode
+        - message
+
+  responses:
+    400_BadRequest:
+      description: Invalid IBAN supplied
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorResponse'
+
+    404_NotFound:
+      description: Bank information not found
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorResponse'
