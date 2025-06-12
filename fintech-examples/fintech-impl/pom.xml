@@ -17,6 +17,10 @@
             ${main.basedir}/opba-banking-rest-api-ymls/src/main/resources/static/tpp_banking_api_bank_search.yml
         </tpp-bank-search-location>
         <tpp-bank-search-prefix>de.adorsys.opba.tpp.banksearch</tpp-bank-search-prefix>
+        <tpp-bank-info-location>
+            ${main.basedir}/opba-banking-rest-api-ymls/src/main/resources/static/tpp_banking_api_bank_info.yml
+        </tpp-bank-info-location>
+        <tpp-bank-info-prefix>de.adorsys.opba.tpp.bankinfo</tpp-bank-info-prefix>
         <tpp-ais-location>
             ${main.basedir}/opba-banking-rest-api-ymls/src/main/resources/static/tpp_banking_api_ais.yml
         </tpp-ais-location>
@@ -205,6 +209,38 @@
                                 <modelPackage>${tpp-bank-search-prefix}.api.model.generated</modelPackage>
                                 <apiPackage>${tpp-bank-search-prefix}.api.resource.generated</apiPackage>
                                 <invokerPackage>${tpp-bank-search-prefix}.client.generated</invokerPackage>
+                                <interfaceOnly>true</interfaceOnly>
+                                <skipOverwrite>true</skipOverwrite>
+                                <dateLibrary>java8</dateLibrary>
+                                <java21>false</java21>
+                                <jakarta>true</jakarta>
+                                <useTags>true</useTags>
+                                <defaultInterfaces>false</defaultInterfaces>
+                                <implicitHeaders>false</implicitHeaders>
+                                <generateForOpenFeign>true</generateForOpenFeign>
+                                <library>spring-cloud</library>
+                                <swaggerDocketConfig>false</swaggerDocketConfig>
+                            </configOptions>
+                        </configuration>
+                    </execution>
+                    <execution>
+                        <id>bankInfo</id>
+                        <goals>
+                            <goal>generate</goal>
+                        </goals>
+                        <configuration>
+                            <inputSpec>${tpp-bank-info-location}</inputSpec>
+                            <language>spring</language>
+                            <output>${project.build.directory}/generated-sources/open-api/</output>
+                            <generateApiTests>false</generateApiTests>
+                            <generateModelTests>false</generateModelTests>
+                            <configOptions>
+                                <sourceFolder>src/main/java</sourceFolder>
+                                <basePackage>${tpp-bank-info-prefix}.api.generated</basePackage>
+                                <configPackage>${tpp-bank-info-prefix}.api.config.generated</configPackage>
+                                <modelPackage>${tpp-bank-info-prefix}.api.model.generated</modelPackage>
+                                <apiPackage>${tpp-bank-info-prefix}.api.resource.generated</apiPackage>
+                                <invokerPackage>${tpp-bank-info-prefix}.client.generated</invokerPackage>
                                 <interfaceOnly>true</interfaceOnly>
                                 <skipOverwrite>true</skipOverwrite>
                                 <dateLibrary>java8</dateLibrary>

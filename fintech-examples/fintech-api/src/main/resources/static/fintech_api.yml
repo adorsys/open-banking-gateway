@@ -234,6 +234,45 @@ paths:
         "404":
           $ref: "#/components/responses/404_NotFound"
 
+  /v1/search/bankInfo:
+    post:
+      tags:
+        - FinTechIbanSearch
+      operationId: getBankInfoByIban
+      summary: Retrieves bank metadata using an IBAN
+      description: |
+        Takes an IBAN and returns metadata such as bank name, bank code, and BIC.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - iban
+              properties:
+                iban:
+                  type: string
+                  example: "DE89370400440532013000"
+      parameters:
+        - $ref: "#/components/parameters/X-Request-ID"
+        - $ref: "#/components/parameters/X-XSRF-TOKEN"
+      security:
+        - sessionCookie: [ ]
+      responses:
+        "200":
+          description: Bank metadata for the given IBAN
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/InlineResponseBankInfo"
+        "400":
+          $ref: "#/components/responses/400_BadRequest"
+        "401":
+          $ref: "#/components/responses/401_Unauthorized"
+        "404":
+          $ref: "#/components/responses/404_NotFound"
+
   /v1/ais/banks/{bank-id}/accounts:
     get:
       tags:
@@ -1081,6 +1120,20 @@ components:
         initiationDate:
           type: string
           format: date
+
+    InlineResponseBankInfo:
+      type: object
+      required:
+        - bankName
+        - bic
+      properties:
+        bankName:
+          type: string
+        bankCode:
+          type: string
+        bic:
+          type: string
+
 
     transactionStatus:
       description: The transaction status

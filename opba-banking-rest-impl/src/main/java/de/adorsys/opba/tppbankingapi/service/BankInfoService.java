@@ -23,10 +23,8 @@ public class BankInfoService {
     @Transactional(readOnly = true)
     public BankInfoResponse getBankInfoByIban(String ibanStr) {
         try {
-            log.info("Parsing IBAN: {}", ibanStr);
             Iban iban = Iban.valueOf(ibanStr);
             String bankCode = iban.getBankCode();
-            log.info("Extracted bank code: {}", bankCode);
 
             Optional<Bank> bankOpt = bankInfoRepository.findByIban(bankCode, false);
             if (bankOpt.isEmpty()) {

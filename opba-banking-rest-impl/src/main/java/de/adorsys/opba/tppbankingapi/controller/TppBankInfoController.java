@@ -17,8 +17,6 @@ public class TppBankInfoController implements TppBankInfoApi {
 
     @Override
     public ResponseEntity<BankInfoResponse> getBankInfoByIban(UUID xRequestID, SearchBankinfoBody body, String fintechID, String xRequestSignature) {
-        log.info("Received IBAN lookup request: {}", body.getIban());
-
         var response = bankInfoService.getBankInfoByIban(body.getIban());
 
         if (response == null) {
@@ -26,7 +24,6 @@ public class TppBankInfoController implements TppBankInfoApi {
             return ResponseEntity.notFound().build();
         }
 
-        log.info("Returning bank info: {}", response);
         return ResponseEntity.ok(response);
     }
 }
