@@ -30,7 +30,9 @@ module.exports = [
           prefix: 'app',
           style: 'kebab-case'
         }
-      ]
+      ],
+      '@typescript-eslint/no-explicit-any': 'warn',
+      '@typescript-eslint/no-unused-vars': 'warn'
     }
   },
   {

@@ -31,6 +31,8 @@ module.exports = [
           style: "kebab-case",
         },
       ],
+      "@typescript-eslint/no-explicit-any": "warn",
+      "@typescript-eslint/no-unused-vars": "warn",
     },
   },
   {
@@ -43,6 +45,7 @@ module.exports = [
     },
     rules: {
       "@angular-eslint/template/banana-in-box": "error",
+      "@angular-eslint/template/click-events-have-key-events": "warn",
     },
   },
 ];
