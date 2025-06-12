@@ -2,7 +2,7 @@ import { Component, Input, OnInit } from '@angular/core';
 import { flickerCanvas, flickerCode } from './flicker';
 
 @Component({
-  selector: 'ngx-chiptan',
+  selector: 'consent-app-chiptan',
   template: `
     <div id='flickercontainer'>
     </div>
