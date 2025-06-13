@@ -1,13 +1,11 @@
-import { Component, OnInit } from '@angular/core';
+import { Component } from '@angular/core';
+import { RouterOutlet } from '@angular/router';
 
 @Component({
-    selector: 'app-payment',
-    templateUrl: './payment.component.html',
-    styleUrls: ['./payment.component.scss'],
-    standalone: false
+  selector: 'app-payment',
+  templateUrl: './payment.component.html',
+  styleUrls: ['./payment.component.scss'],
+  standalone: true,
+  imports: [RouterOutlet]
 })
-export class PaymentComponent implements OnInit {
-  constructor() {}
-
-  ngOnInit() {}
-}
+export class PaymentComponent {}

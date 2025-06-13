@@ -24,7 +24,9 @@
       <a
         class="nav-link"
         [ngClass]="{ disabled: showPaymentNav === false }"
-        (click)="onInitiatePayment()"
+        [routerLink]="showPaymentNav ? ['payment'] : null"
+        [attr.tabindex]="showPaymentNav ? 0 : -1"
+        [attr.aria-disabled]="!showPaymentNav"
       >
         <div class="icon__container">
           <img alt="transfer" class="text-primary" src="assets/icons/icons8-sent.svg" />

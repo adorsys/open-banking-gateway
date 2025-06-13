@@ -1,14 +1,17 @@
 import { Component, OnInit } from '@angular/core';
-import { UntypedFormBuilder, UntypedFormGroup, Validators } from '@angular/forms';
+import { FormsModule, UntypedFormBuilder, UntypedFormGroup, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { AuthService } from '../services/auth.service';
 import { RoutingPath } from '../models/routing-path.model';
+import { NgClass, NgIf } from '@angular/common';
+import { SharedModule } from '../common/shared.module';
 
 @Component({
-    selector: 'app-login',
-    templateUrl: './login.component.html',
-    styleUrls: ['./login.component.scss'],
-    standalone: false
+  selector: 'app-login',
+  templateUrl: './login.component.html',
+  styleUrls: ['./login.component.scss'],
+  standalone: true,
+  imports: [FormsModule, NgClass, NgIf, SharedModule]
 })
 export class LoginComponent implements OnInit {
   loginForm: UntypedFormGroup;

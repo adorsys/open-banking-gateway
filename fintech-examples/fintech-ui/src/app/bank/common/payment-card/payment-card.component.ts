@@ -1,16 +1,14 @@
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, Input } from '@angular/core';
 import { PaymentInitiationWithStatusResponse } from '../../../api';
+import { NgForOf, NgIf } from '@angular/common';
 
 @Component({
-    selector: 'app-payment-card',
-    templateUrl: './payment-card.component.html',
-    styleUrls: ['../payment-transaction-card.scss'],
-    standalone: false
+  selector: 'app-payment-card',
+  templateUrl: './payment-card.component.html',
+  styleUrls: ['../payment-transaction-card.scss'],
+  standalone: true,
+  imports: [NgForOf, NgIf]
 })
-export class PaymentCardComponent implements OnInit {
-  @Input() payments: Array<PaymentInitiationWithStatusResponse>;
-
-  constructor() {}
-
-  ngOnInit() {}
+export class PaymentCardComponent {
+  @Input() payments: PaymentInitiationWithStatusResponse[];
 }

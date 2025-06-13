@@ -2,15 +2,6 @@ import { NgModule, ModuleWithProviders, SkipSelf, Optional } from '@angular/core
 import { Configuration } from './configuration';
 import { HttpClient } from '@angular/common/http';
 
-
-import { FinTechAccountInformationService } from './api/finTechAccountInformation.service';
-import { FinTechAuthorizationService } from './api/finTechAuthorization.service';
-import { FinTechBankSearchService } from './api/finTechBankSearch.service';
-import { FinTechOauth2AuthenticationService } from './api/finTechOauth2Authentication.service';
-import { FintechRetrieveAllSinglePaymentsService } from './api/fintechRetrieveAllSinglePayments.service';
-import { FintechRetrieveConsentService } from './api/fintechRetrieveConsent.service';
-import { FintechSinglePaymentInitiationService } from './api/fintechSinglePaymentInitiation.service';
-
 @NgModule({
   imports:      [],
   declarations: [],

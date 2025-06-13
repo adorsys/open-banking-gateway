@@ -19,7 +19,15 @@
         >{{ getUserName() }}</a
       >
       <div class="dropdown-menu dropdown-menu-right">
-        <span (click)="onLogout()" class="dropdown-item">Sign Out</span>
+        <button
+          (click)="onLogout()"
+          (keydown.enter)="onLogout()"
+          (keydown.space)="onLogout()"
+          class="dropdown-item"
+          type="button"
+        >
+          Sign Out
+        </button>
       </div>
     </li>
   </ul>

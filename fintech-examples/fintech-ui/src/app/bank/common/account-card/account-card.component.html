@@ -1,9 +1,9 @@
-<div (click)="onSubmit()" class="card__item">
+<div (click)="onSubmit()" (keyup)="$event.key === 'Enter' && onSubmit()" tabindex="0" role="button" class="card__item">
   <div class="d-flex justify-content-between">
     <h1 class="card__headline card__headline--small">{{ internalAccount?.name }}</h1>
     <h1
       class="card__headline card__headline--small"
-      [ngClass]="internalAccount?.amount > 0 ? 'text-success' : 'text-danger'"
+      [ngClass]="Number(internalAccount?.amount) > 0 ? 'text-success' : 'text-danger'"
       *ngIf="internalAccount.amount"
     >
       {{ internalAccount?.amount }} {{ internalAccount?.currency }}

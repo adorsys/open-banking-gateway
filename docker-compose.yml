@@ -1,6 +1,4 @@
 # This Docker-Compose file is DEMO. Will pull released docker images from DockerHub.
-version: "3.3"
-
 networks:
   opba-net:
 

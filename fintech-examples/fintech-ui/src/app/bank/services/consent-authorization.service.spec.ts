@@ -1,28 +1,22 @@
-import { Router } from '@angular/router';
-import { FinTechAuthorizationService } from '../../api';
-import { StorageService } from '../../services/storage.service';
+import { provideRouter } from '@angular/router';
 import { TestBed } from '@angular/core/testing';
 import { provideHttpClientTesting } from '@angular/common/http/testing';
 import { ConsentAuthorizationService } from './consent-authorization.service';
-import { RouterTestingModule } from '@angular/router/testing';
 import { Consent, Payment } from '../../models/consts';
 import { provideHttpClient, withInterceptorsFromDi } from '@angular/common/http';
 
 describe('ConsentAuthorizationService', () => {
-  let router: Router;
-  let finTechAuthorizationService: FinTechAuthorizationService;
-  let storageService: StorageService;
   let consentAuthorizationService: ConsentAuthorizationService;
 
   beforeEach(() => {
     TestBed.configureTestingModule({
-    imports: [RouterTestingModule],
-    providers: [ConsentAuthorizationService, provideHttpClient(withInterceptorsFromDi()), provideHttpClientTesting()]
-});
-
-    storageService = TestBed.inject(StorageService);
-    finTechAuthorizationService = TestBed.inject(FinTechAuthorizationService);
-    router = TestBed.inject(Router);
+      providers: [
+        provideRouter([]),
+        ConsentAuthorizationService,
+        provideHttpClient(withInterceptorsFromDi()),
+        provideHttpClientTesting()
+      ]
+    });
     consentAuthorizationService = TestBed.inject(ConsentAuthorizationService);
   });
 

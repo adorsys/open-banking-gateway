@@ -1,17 +1,18 @@
-import {Component, OnInit} from '@angular/core';
-import {ActivatedRoute, Router} from '@angular/router';
-import {Location} from '@angular/common';
-import {map} from 'rxjs/operators';
+import { Component, OnInit } from '@angular/core';
+import { ActivatedRoute, Router } from '@angular/router';
+import { Location } from '@angular/common';
+import { map } from 'rxjs/operators';
 
-import {FintechRetrieveAllSinglePaymentsService, PaymentInitiationWithStatusResponse} from '../../../api';
-import {Consts} from '../../../models/consts';
-import {StorageService} from '../../../services/storage.service';
+import { FintechRetrieveAllSinglePaymentsService, PaymentInitiationWithStatusResponse } from '../../../api';
+import { PaymentCardComponent } from '../../common/payment-card/payment-card.component';
+import { RouteUtilsService } from '../../../services/route-utils.service';
 
 @Component({
-    selector: 'app-list-payments',
-    templateUrl: './payment-account-payments.component.html',
-    styleUrls: ['./payment-account-payments.component.scss'],
-    standalone: false
+  selector: 'app-list-payments',
+  templateUrl: './payment-account-payments.component.html',
+  styleUrls: ['./payment-account-payments.component.scss'],
+  standalone: true,
+  imports: [PaymentCardComponent]
 })
 export class PaymentAccountPaymentsComponent implements OnInit {
   public static ROUTE = 'payments';
@@ -23,14 +24,13 @@ export class PaymentAccountPaymentsComponent implements OnInit {
     private router: Router,
     private route: ActivatedRoute,
     private location: Location,
-    private storageService: StorageService,
-    private fintechRetrieveAllSinglePaymentsService: FintechRetrieveAllSinglePaymentsService
-  ) {
-  }
+    private fintechRetrieveAllSinglePaymentsService: FintechRetrieveAllSinglePaymentsService,
+    private routeUtils: RouteUtilsService
+  ) {}
 
   ngOnInit() {
-    this.bankId = this.route.snapshot.params[Consts.BANK_ID_NAME];
-    this.accountId = this.route.snapshot.params[Consts.ACCOUNT_ID_NAME];
+    this.bankId = this.routeUtils.getBankId(this.route);
+    this.accountId = this.routeUtils.getAccountId(this.route);
 
     this.fintechRetrieveAllSinglePaymentsService
       .retrieveAllSinglePayments(this.bankId, this.accountId, '', '', 'response')
@@ -42,7 +42,7 @@ export class PaymentAccountPaymentsComponent implements OnInit {
 
   initiateSinglePayment() {
     console.log('go to initiate');
-    this.router.navigate(['../initiate'], {relativeTo: this.route});
+    this.router.navigate(['../initiate'], { relativeTo: this.route });
   }
 
   onDeny() {

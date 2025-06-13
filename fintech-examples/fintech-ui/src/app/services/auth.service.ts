@@ -9,6 +9,7 @@ import { DocumentCookieService } from './document-cookie.service';
 import { StorageService } from './storage.service';
 import { RedirectTupelForMap } from '../bank/redirect-page/redirect-struct';
 import { RoutingPath } from '../models/routing-path.model';
+import { HttpResponse } from '@angular/common/http';
 
 @Injectable({
   providedIn: 'root'
@@ -93,10 +94,10 @@ export class AuthService {
     return this.storageService.getXsrfToken();
   }
 
-  private setSessionData(response: any, credentials: Credentials): void {
+  private setSessionData(response: HttpResponse<object>, credentials: Credentials): void {
     this.storageService.setXsrfToken(
       response.headers.get(HeaderConfig.HEADER_FIELD_X_XSRF_TOKEN),
-      response.headers.get(HeaderConfig.HEADER_FIELD_X_MAX_AGE)
+      Number(response.headers.get(HeaderConfig.HEADER_FIELD_X_MAX_AGE))
     );
     this.storageService.setUserName(credentials.username);
   }

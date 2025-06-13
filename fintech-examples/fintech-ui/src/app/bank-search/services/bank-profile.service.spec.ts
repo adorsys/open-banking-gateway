@@ -6,17 +6,20 @@ import { FinTechBankSearchService } from '../../api';
 import { provideHttpClient, withInterceptorsFromDi } from '@angular/common/http';
 
 describe('BankProfileService', () => {
-  let finTechBankSearchService: FinTechBankSearchService;
   let bankProfileService: BankProfileService;
 
   beforeEach(() => {
     TestBed.configureTestingModule({
-    imports: [],
-    providers: [BankProfileService, FinTechBankSearchService, provideHttpClient(withInterceptorsFromDi()), provideHttpClientTesting()]
-});
+      imports: [],
+      providers: [
+        BankProfileService,
+        FinTechBankSearchService,
+        provideHttpClient(withInterceptorsFromDi()),
+        provideHttpClientTesting()
+      ]
+    });
 
     bankProfileService = TestBed.inject(BankProfileService);
-    finTechBankSearchService = TestBed.inject(FinTechBankSearchService);
   });
 
   it('should be created', () => {

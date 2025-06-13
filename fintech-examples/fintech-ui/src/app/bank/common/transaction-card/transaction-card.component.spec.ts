@@ -6,11 +6,13 @@ describe('TransactionCardComponent', () => {
   let component: TransactionCardComponent;
   let fixture: ComponentFixture<TransactionCardComponent>;
 
-  beforeEach(waitForAsync(() => {
-    TestBed.configureTestingModule({
-      declarations: [TransactionCardComponent]
-    }).compileComponents();
-  }));
+  beforeEach(
+    waitForAsync(() => {
+      TestBed.configureTestingModule({
+        imports: [TransactionCardComponent]
+      }).compileComponents();
+    })
+  );
 
   beforeEach(() => {
     fixture = TestBed.createComponent(TransactionCardComponent);

@@ -3,12 +3,14 @@ import { AuthService } from '../../services/auth.service';
 import { TimerService } from '../../services/timer.service';
 import { TimerModel } from '../../models/timer.model';
 import { StorageService } from '../../services/storage.service';
+import { CommonModule } from '@angular/common';
 
 @Component({
-    selector: 'app-navbar',
-    templateUrl: './navbar.component.html',
-    styleUrls: ['./navbar.component.scss'],
-    standalone: false
+  selector: 'app-navbar',
+  templateUrl: './navbar.component.html',
+  styleUrls: ['./navbar.component.scss'],
+  standalone: true,
+  imports: [CommonModule]
 })
 export class NavbarComponent implements OnInit {
   timer: TimerModel;

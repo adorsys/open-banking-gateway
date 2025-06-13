@@ -1,28 +1,24 @@
-import { FinTechAccountInformationService } from '../../api';
 import { TestBed } from '@angular/core/testing';
 import { provideHttpClientTesting } from '@angular/common/http/testing';
 import { AisService } from './ais.service';
 import { LoARetrievalInformation, LoTRetrievalInformation } from '../../models/consts';
-import {StorageService} from '../../services/storage.service';
+import { StorageService } from '../../services/storage.service';
 import { provideHttpClient, withInterceptorsFromDi } from '@angular/common/http';
 
 describe('AisService', () => {
-  let finTechAccountInformationService: FinTechAccountInformationService;
   let aisService: AisService;
 
   beforeAll(() => (window.onbeforeunload = jasmine.createSpy()));
 
   beforeEach(() => {
     TestBed.configureTestingModule({
-    imports: [],
-    providers: [AisService, provideHttpClient(withInterceptorsFromDi()), provideHttpClientTesting()]
-});
-
-    finTechAccountInformationService = TestBed.inject(FinTechAccountInformationService);
+      imports: [],
+      providers: [AisService, provideHttpClient(withInterceptorsFromDi()), provideHttpClientTesting()]
+    });
     aisService = TestBed.inject(AisService);
   });
 
-  it('should be created', () => {
+  it('aisService should be created', () => {
     expect(aisService).toBeTruthy();
   });
 

@@ -1,17 +1,16 @@
-import { Component, OnInit } from '@angular/core';
+import { Component } from '@angular/core';
 
 @Component({
-    selector: 'app-result',
-    templateUrl: './result.component.html',
-    styleUrls: ['./result.component.scss'],
-    standalone: false
+  selector: 'app-result',
+  templateUrl: './result.component.html',
+  styleUrls: ['./result.component.scss'],
+  standalone: true,
+  imports: []
 })
-export class ResultComponent implements OnInit {
+export class ResultComponent {
   public static ROUTE = 'result';
 
-  constructor() {}
-
-  ngOnInit() {}
-
-  onConfirm(): void {}
+  onConfirm(): void {
+    // This is the final step of the payment flow
+  }
 }

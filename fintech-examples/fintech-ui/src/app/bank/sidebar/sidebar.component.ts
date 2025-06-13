@@ -1,12 +1,14 @@
-import {Component, OnInit} from '@angular/core';
-import {ActivatedRoute, Router} from '@angular/router';
-import {BankProfileService} from '../../bank-search/services/bank-profile.service';
+import { Component, OnInit } from '@angular/core';
+import { ActivatedRoute, Router, RouterLink, RouterModule } from '@angular/router';
+import { BankProfileService } from '../../bank-search/services/bank-profile.service';
+import { NgClass } from '@angular/common';
 
 @Component({
-    selector: 'app-sidebar',
-    templateUrl: './sidebar.component.html',
-    styleUrls: ['./sidebar.component.scss'],
-    standalone: false
+  selector: 'app-sidebar',
+  templateUrl: './sidebar.component.html',
+  styleUrls: ['./sidebar.component.scss'],
+  standalone: true,
+  imports: [NgClass, RouterLink, RouterModule]
 })
 export class SidebarComponent implements OnInit {
   showListAccounts = false;
@@ -16,11 +18,7 @@ export class SidebarComponent implements OnInit {
   bankId: string;
   bankName: string;
 
-  constructor(
-    private bankProfileService: BankProfileService,
-    private route: ActivatedRoute,
-    private router: Router,
-  ) {}
+  constructor(private bankProfileService: BankProfileService, private route: ActivatedRoute, private router: Router) {}
 
   ngOnInit() {
     this.bankId = this.route.snapshot.paramMap.get('bankid');
@@ -38,10 +36,6 @@ export class SidebarComponent implements OnInit {
 
   getRouterLinkListAccounts(): string {
     return this.showListAccounts ? 'accounts' : '.';
-  }
-
-  onInitiatePayment() {
-    this.router.navigate(['payment'], {relativeTo: this.route});
   }
 
   get showPaymentNav(): boolean {

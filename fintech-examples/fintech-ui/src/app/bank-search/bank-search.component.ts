@@ -1,15 +1,19 @@
-import {Component} from '@angular/core';
-import {BankSearchService} from './services/bank-search.service';
-import {ActivatedRoute, Router} from '@angular/router';
-import {StorageService} from '../services/storage.service';
-import {TimerService} from '../services/timer.service';
-import {RoutingPath} from '../models/routing-path.model';
+import { Component } from '@angular/core';
+import { BankSearchService } from './services/bank-search.service';
+import { StorageService } from '../services/storage.service';
+import { TimerService } from '../services/timer.service';
+import { RoutingPath } from '../models/routing-path.model';
+import { SharedModule } from '../common/shared.module';
+import { NgForOf } from '@angular/common';
+import { SearchComponent } from '../common/search/search.component';
+import { Router } from '@angular/router';
 
 @Component({
-    selector: 'app-bank-search',
-    templateUrl: './bank-search.component.html',
-    styleUrls: ['./bank-search.component.scss'],
-    standalone: false
+  selector: 'app-bank-search',
+  templateUrl: './bank-search.component.html',
+  styleUrls: ['./bank-search.component.scss'],
+  standalone: true,
+  imports: [SharedModule, NgForOf, SearchComponent]
 })
 export class BankSearchComponent {
   searchedBanks: BankSearchInfo[] = [];
@@ -18,7 +22,6 @@ export class BankSearchComponent {
   constructor(
     private bankSearchService: BankSearchService,
     private storageService: StorageService,
-    private route: ActivatedRoute,
     private router: Router,
     private timerService: TimerService
   ) {
@@ -31,10 +34,18 @@ export class BankSearchComponent {
         this.searchedBanks = [];
         for (const descriptor of bankDescriptor.bankDescriptor) {
           if (!descriptor.profiles) {
-            continue
+            continue;
           }
 
-          this.searchedBanks.push(...descriptor.profiles.map(it => new BankSearchInfo(`[${it.protocolType}${null === it.name ? '' : ',' + it.name}] ${it.bankName}`, it.uuid)))
+          this.searchedBanks.push(
+            ...descriptor.profiles.map(
+              (it) =>
+                new BankSearchInfo(
+                  `[${it.protocolType}${null === it.name ? '' : ',' + it.name}] ${it.bankName}`,
+                  it.uuid
+                )
+            )
+          );
         }
       });
     } else {
@@ -55,8 +66,8 @@ export class BankSearchComponent {
 }
 
 export class BankSearchInfo {
-  name: string
-  uuid: string
+  name: string;
+  uuid: string;
 
   constructor(name: string, profileId: string) {
     this.name = name;
