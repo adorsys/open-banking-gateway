@@ -14,7 +14,7 @@ public class HeaderNames {
     public static final String FINTECH_REDIRECT_URL_OK = "Fintech-Redirect-URL-OK";
     public static final String FINTECH_REDIRECT_URL_NOK = "Fintech-Redirect-URL-NOK";
     public static final String FINTECH_USER_ID = "Fintech-User-ID";
-    public static final String SERVICE_SESSION_PASSWORD = "Service-Session-Password";
+    public static final String FINTECH_DATA_PASSWORD = "Fintech-Data-Password";
     public static final String X_XSRF_TOKEN = "X-XSRF-TOKEN";
 
     public static final String X_PSU_AUTHENTICATION_REQUIRED = "X-Psu-Authentication-Required";

@@ -104,14 +104,22 @@ public class WebDriverBasedAccountInformation<SELF extends WebDriverBasedAccount
 
     public SELF user_provided_to_consent_ui_account_iban_for_dedicated_accounts_consent(WebDriver driver) {
         waitForPageLoadAndUrlEndsWithPath(driver, "entry-consent-accounts/dedicated-account-access");
-        sendText(driver, By.cssSelector("[id^=account-reference]"), iban);
+        sendText(driver, By.cssSelector("[id$=iban]"), iban);
+        clickOnButton(driver, By.id(SUBMIT_ID));
+        return self();
+    }
+
+    public SELF user_provided_to_consent_ui_account_iban_with_currency_for_dedicated_accounts_consent(WebDriver driver) {
+        waitForPageLoadAndUrlEndsWithPath(driver, "entry-consent-accounts/dedicated-account-access");
+        sendText(driver, By.cssSelector("[id$=iban]"), iban);
+        sendText(driver, By.cssSelector("[id$=currency]"), currency);
         clickOnButton(driver, By.id(SUBMIT_ID));
         return self();
     }
 
     public SELF user_provided_to_consent_ui_account_iban_for_dedicated_transactions_consent(WebDriver driver) {
         waitForPageLoadAndUrlEndsWithPath(driver, "entry-consent-transactions/dedicated-account-access");
-        sendText(driver, By.cssSelector("[id^=account-reference]"), iban);
+        sendText(driver, By.cssSelector("[id$=iban]"), iban);
         clickOnButton(driver, By.id(SUBMIT_ID));
         return self();
     }
@@ -337,10 +345,7 @@ public class WebDriverBasedAccountInformation<SELF extends WebDriverBasedAccount
         waitForPageLoad(driver);
         add_open_banking_auth_session_key_cookie_to_selenium(driver, authSessionCookie);
         try {
-            String redirect = driver.findElement(By.className("btn-primary"))
-                    .getAttribute("href")
-                    .replaceAll("oauth2=false", "oauth2=true");
-            swallowReachedErrorPageException(() -> driver.navigate().to(redirect));
+            clickOnButton(driver, By.className("btn-primary"), true);
         } finally {
             driver.manage().deleteCookieNamed(AUTHORIZATION_SESSION_KEY);
         }
@@ -382,20 +387,20 @@ public class WebDriverBasedAccountInformation<SELF extends WebDriverBasedAccount
     }
 
     private WebDriverWait wait(WebDriver driver) {
-        return new WebDriverWait(driver, timeout.getSeconds());
+        return new WebDriverWait(driver, timeout);
     }
 
     private void waitForPageLoad(WebDriver driver) {
-        new WebDriverWait(driver, timeout.getSeconds())
+        new WebDriverWait(driver, timeout)
                 .until(wd -> ((JavascriptExecutor) wd).executeScript("return document.readyState").equals("complete"));
     }
 
     private void waitForPageLoadAndUrlContainsNoReadyStateCheck(WebDriver driver, String urlContains) {
-        new WebDriverWait(driver, timeout.getSeconds()).until(wd -> driver.getCurrentUrl().contains(urlContains));
+        new WebDriverWait(driver, timeout).until(wd -> driver.getCurrentUrl().contains(urlContains));
     }
 
     private void waitForPageLoadAndUrlContains(WebDriver driver, String urlContains) {
-        new WebDriverWait(driver, timeout.getSeconds())
+        new WebDriverWait(driver, timeout)
                 .until(wd ->
                         driver.getCurrentUrl().contains(urlContains)
                         && ((JavascriptExecutor) wd).executeScript("return document.readyState").equals("complete")
@@ -403,7 +408,7 @@ public class WebDriverBasedAccountInformation<SELF extends WebDriverBasedAccount
     }
 
     private void waitForPageLoadAndUrlEndsWithPath(WebDriver driver, String urlEndsWithPath) {
-        new WebDriverWait(driver, timeout.getSeconds())
+        new WebDriverWait(driver, timeout)
                 .until(wd ->
                         URI.create(driver.getCurrentUrl()).getPath().endsWith(urlEndsWithPath)
                         && ((JavascriptExecutor) wd).executeScript("return document.readyState").equals("complete")

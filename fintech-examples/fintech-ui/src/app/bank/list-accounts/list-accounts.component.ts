@@ -7,9 +7,10 @@ import { Consts, HeaderConfig } from '../../models/consts';
 import { StorageService } from '../../services/storage.service';
 
 @Component({
-  selector: 'app-list-accounts',
-  templateUrl: './list-accounts.component.html',
-  styleUrls: ['./list-accounts.component.scss']
+    selector: 'app-list-accounts',
+    templateUrl: './list-accounts.component.html',
+    styleUrls: ['./list-accounts.component.scss'],
+    standalone: false
 })
 export class ListAccountsComponent implements OnInit {
   accounts: AccountDetails[];

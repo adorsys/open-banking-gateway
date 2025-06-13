@@ -1,0 +1,52 @@
+{
+  "facadeServiceable": {
+    "uaContext": {
+      "psuIpAddress": "1.1.1.1",
+      "psuIpPort": "5555",
+      "psuAccept": "application/json",
+      "psuAcceptCharset": null,
+      "psuAcceptEncoding": null,
+      "psuAcceptLanguage": null,
+      "psuDeviceId": null,
+      "psuUserAgent": null,
+      "psuGeoLocation": null,
+      "psuHttpMethod": null
+    },
+    "requestId": "cef0cbf3-6458-4f13-a418-ee4d7e750511",
+    "serviceSessionId": "cef0cbf3-6458-4f13-a418-ee4d7e7505dd",
+    "authorizationSessionId": "11111-11111",
+    "redirectCode": "123",
+    "authorization": "22222-22222",
+    "bankProfileId": "53c47f54-b9a4-465a-8f77-bc6cd5f0cf46",
+    "fintechUserId": "localhost:2222",
+    "fintechRedirectUrlOk": "http://localhost:5500/from-aspsp/v1/consent/c86feb1e-9ba8-4407-918f-8183143df295/fromAspsp/STUB_STATE/ok?redirectCode=a5001521-edd8-4d99-b72d-30670b839d06",
+    "fintechRedirectUrlNok": "http://localhost:5500/from-aspsp/v1/consent/c86feb1e-9ba8-4407-918f-8183143df295/fromAspsp/STUB_STATE/nok?redirectCode=a5001521-edd8-4d99-b72d-30670b839d06",
+    "fintechBrandLoggingInformation": "Test Brand Logging Information",
+    "fintechNotificationURI": "http://localhost:5500/from-aspsp/v1/consent/c86feb1e-9ba8-4407-918f-8183143df295/fromAspsp/STUB_STATE/notify",
+    "fintechNotificationContentPreferred": "Testt Notification Content Preferred ",
+    "fintechDecoupledPreferred": true,
+    "sessionPassword": "1234",
+    "online": false
+  },
+  "singlePayment": {
+    "paymentId": "cef0cbf3-6458-4f13-a418-ee4d7e750511",
+    "creditorAccount":{
+      "iban": "AL90208110080000001039531801",
+      "currency": "EUR"
+    },
+    "creditorAddress": {},
+    "creditorAgent": "Test creditorAgent ",
+    "creditorName": "peter",
+    "debtorAccount": {
+      "iban": "DE80760700240271232400",
+      "currency": "EUR"
+    },
+    "endToEndIdentification": "Test endToEndIdentification",
+    "instructedAmount": {
+      "currency": "EUR",
+      "amount": "12.34"
+    },
+    "paymentProduct": "SEPA"
+
+  }
+}

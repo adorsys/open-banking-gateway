@@ -10,6 +10,11 @@ import java.util.Optional;
 @UtilityClass
 public class ConsentAccessUtil {
 
+    /**
+     * Retrieves exactly one consent out of available, throws if more area available.
+     * @param consents Consents
+     * @return 1st element of the collection.
+     */
     @NotNull
     public Optional<ProtocolFacingConsent> getProtocolFacingConsent(Collection<ProtocolFacingConsent> consents) {
         if (consents.isEmpty()) {

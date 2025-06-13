@@ -1,0 +1,41 @@
+name: jar-publish.yml
+
+on:
+  push:
+    branches:
+      - develop
+    tags:
+      - 'v*'
+
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    permissions:
+      packages: write
+      contents: read
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Set up JDK 21
+        uses: actions/setup-java@v3
+        with:
+          java-version: 21
+          distribution: 'temurin'
+          server-id: github
+          server-username: GITHUB_ACTOR
+          server-password: ${{ secrets.GHCR_DEPLOY_TOKEN }}
+
+      - name: Deploy SNAPSHOT to GitHub Packages
+        if: github.ref == 'refs/heads/develop'
+        run: mvn deploy --settings ./scripts/mvn-release-settings.xml -Pgithub -DskipTests -Dclassifier=develop
+        env:
+          GITHUB_ACTOR: ${{ github.actor }}
+          GHCR_DEPLOY_TOKEN: ${{ secrets.GHCR_DEPLOY_TOKEN }}
+
+      - name: Deploy RELEASE to GitHub Packages
+        if: startsWith(github.ref, 'refs/tags/v')
+        run: mvn deploy --settings ./scripts/mvn-release-settings.xml -Pgithub -DskipTests
+        env:
+          GITHUB_ACTOR: ${{ github.actor }}
+          GHCR_DEPLOY_TOKEN: ${{ secrets.GHCR_DEPLOY_TOKEN }}

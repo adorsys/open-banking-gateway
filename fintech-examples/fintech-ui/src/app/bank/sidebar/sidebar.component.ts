@@ -3,9 +3,10 @@ import {ActivatedRoute, Router} from '@angular/router';
 import {BankProfileService} from '../../bank-search/services/bank-profile.service';
 
 @Component({
-  selector: 'app-sidebar',
-  templateUrl: './sidebar.component.html',
-  styleUrls: ['./sidebar.component.scss']
+    selector: 'app-sidebar',
+    templateUrl: './sidebar.component.html',
+    styleUrls: ['./sidebar.component.scss'],
+    standalone: false
 })
 export class SidebarComponent implements OnInit {
   showListAccounts = false;

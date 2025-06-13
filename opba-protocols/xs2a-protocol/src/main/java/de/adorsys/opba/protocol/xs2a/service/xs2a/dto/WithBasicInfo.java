@@ -8,7 +8,7 @@ import de.adorsys.opba.protocol.xs2a.service.xs2a.annotations.ValidationInfo;
 import lombok.Getter;
 import lombok.Setter;
 
-import javax.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotBlank;
 import java.util.HashMap;
 import java.util.Map;
 

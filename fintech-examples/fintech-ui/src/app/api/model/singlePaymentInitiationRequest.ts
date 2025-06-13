@@ -17,6 +17,7 @@ export interface SinglePaymentInitiationRequest {
     debitorIban: string;
     amount: string;
     purpose?: string;
+    endToEndIdentification?: string;
     instantPayment?: boolean;
 }
 

@@ -11,7 +11,7 @@ import lombok.Data;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 
-import javax.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotBlank;
 
 import static de.adorsys.opba.protocol.api.dto.codes.FieldCode.SCA_CHALLENGE_RESULT;
 import static de.adorsys.opba.protocol.api.dto.codes.TypeCode.STRING;

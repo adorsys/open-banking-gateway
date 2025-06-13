@@ -9,7 +9,8 @@ import { EntryPagePaymentsComponent } from '../entry-page-payments/entry-page-pa
 @Component({
   selector: 'consent-app-initiation',
   templateUrl: './payment-initiate.component.html',
-  styleUrls: ['./payment-initiate.component.scss']
+  styleUrls: ['./payment-initiate.component.scss'],
+  standalone: false
 })
 export class PaymentInitiateComponent implements OnInit {
   private redirectCode: string;

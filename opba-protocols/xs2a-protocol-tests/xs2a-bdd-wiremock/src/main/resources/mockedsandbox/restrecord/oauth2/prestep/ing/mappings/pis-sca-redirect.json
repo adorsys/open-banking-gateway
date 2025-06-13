@@ -1,0 +1,17 @@
+{
+  "id" : "6934db76-5bd6-4fe1-abc6-dab92161b8c5",
+  "name" : "scaRedirect",
+  "request" : {
+    "urlPath" : "/redirect",
+    "method" : "GET"
+  },
+  "response" : {
+    "status" : 302,
+    "headers" : {
+      "Location" : "http://localhost:8080/redirect"
+    }
+  },
+  "uuid" : "6fbec90b-9998-40ae-83a5-65cc49958cd3",
+  "persistent" : true,
+  "insertionIndex" : 2
+}

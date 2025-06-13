@@ -5,9 +5,10 @@ import { Payment } from '../models/consts';
 import { ModalCard } from '../models/modalCard.model';
 
 @Component({
-  selector: 'app-redirect-after-payment',
-  templateUrl: './redirect-after-payment.component.html',
-  styleUrls: ['./redirect-after-payment.component.scss']
+    selector: 'app-redirect-after-payment',
+    templateUrl: './redirect-after-payment.component.html',
+    styleUrls: ['./redirect-after-payment.component.scss'],
+    standalone: false
 })
 export class RedirectAfterPaymentComponent implements OnInit {
   cardModal: ModalCard = {

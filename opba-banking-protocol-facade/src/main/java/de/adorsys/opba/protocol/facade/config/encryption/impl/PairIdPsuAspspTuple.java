@@ -6,9 +6,12 @@ import de.adorsys.opba.db.domain.entity.psu.PsuAspspPrvKey;
 import de.adorsys.opba.db.domain.entity.sessions.AuthSession;
 import lombok.Data;
 
-import javax.persistence.EntityManager;
+import jakarta.persistence.EntityManager;
 import java.util.UUID;
 
+/**
+ * Key ID -> Psu + Aspsp relation tuple.
+ */
 @Data
 public class PairIdPsuAspspTuple {
 
@@ -50,10 +53,20 @@ public class PairIdPsuAspspTuple {
         return String.valueOf(this.aspspId);
     }
 
+    /**
+     * Computes current tuples' Datasafe storage path.
+     * @return Datasafe path corresponding to current tuple
+     */
     public String toDatasafePathWithoutPsu() {
         return pairId.toString() + "/" + this.aspspId;
     }
 
+    /**
+     * Creates PSU - ASPSP private key pair entity.
+     * @param path Datasafe path
+     * @param em Entity manager to persist to
+     * @return KeyPair template
+     */
     public static PsuAspspPrvKey buildPrvKey(String path, EntityManager em) {
         PairIdPsuAspspTuple tuple = new PairIdPsuAspspTuple(path);
         if (null == tuple.getPairId()) {

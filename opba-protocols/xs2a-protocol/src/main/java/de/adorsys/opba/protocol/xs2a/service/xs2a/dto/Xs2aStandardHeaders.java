@@ -12,7 +12,7 @@ import lombok.Data;
 import org.jetbrains.annotations.Nullable;
 import org.mapstruct.Mapper;
 
-import javax.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotBlank;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -48,6 +48,20 @@ public class Xs2aStandardHeaders {
      */
     @NotBlank // can't be provided manually
     private String requestId;
+
+
+    /**
+     *  URI for the Endpoint of the TPP-API to which the status of the payment initiation should be sent.
+     */
+    @Nullable
+    private  String tppNotificationURI;
+
+    /**
+     * The string has the formstatus=X1, ..., Xn where Xi is one of the constants SCA, PROCESS, LAST and where constants are not repeated.
+     */
+    @Nullable
+    private  String tppNotificationContentPreferred;
+
 
     /**
      * TPP-Redirect-Preferred - If value is null then approach is irrelevant for TPP.

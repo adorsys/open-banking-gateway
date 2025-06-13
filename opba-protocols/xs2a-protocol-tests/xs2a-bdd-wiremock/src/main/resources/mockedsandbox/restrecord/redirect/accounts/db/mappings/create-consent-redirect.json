@@ -1,0 +1,49 @@
+{
+  "newScenarioState": "CreateConsent",
+  "request": {
+    "url": "/v1/consents",
+    "method": "POST",
+    "headers": {
+      "X-Request-ID": {
+        "matches": "[0-9a-zA-z\\-]+"
+      },
+      "PSU-ID": {
+        "equalTo" : "anton.brueckner"
+      },
+      "X-GTW-Bank-Code": {
+        "equalTo" : "76070024"
+      },
+      "X-GTW-ASPSP-ID": {
+        "matches" : "[0-9a-zA-z\\-]+"
+      },
+      "PSU-IP-Address": {
+        "matches": "^((25[0-5]|(2[0-4]|1[0-9]|[1-9]|)[0-9])(\\.(?!$)|$)){4}$"
+      },
+      "TPP-Redirect-URI": {
+        "matches": "http://localhost:\\d+/v1/consent/.+/fromAspsp/.+/ok"
+      },
+      "TPP-Nok-Redirect-URI": {
+        "matches": "http://localhost:\\d+/v1/consent/.+/fromAspsp/.+/nok"
+      }
+    },
+    "bodyPatterns": [
+      {
+        "equalToJson": "{\"recurringIndicator\":true,\"combinedServiceIndicator\":false,\"access\":{\"accounts\":[{\"iban\":\"DE80760700240271232400\",\"currency\":\"EUR\"}],\"balances\":[{\"iban\":\"DE80760700240271232400\",\"currency\":\"EUR\"}],\"transactions\":[{\"iban\":\"DE80760700240271232400\",\"currency\":\"EUR\"}]},\"frequencyPerDay\":12,\"validUntil\":\"2030-01-31\"}",
+        "ignoreArrayOrder": true,
+        "ignoreExtraElements": true
+      }
+    ]
+  },
+  "response": {
+    "status": 201,
+    "bodyFileName": "create-consent-redirect-response-body.json",
+    "headers": {
+      "Aspsp-Sca-Approach": "REDIRECT",
+      "Location": "http://127.0.0.1:20014/v1/consents/FnQrERp1CutlTlhTke5EScQUikVhZuNU40Nfru7GjyesxBtjhvuH5WGDIejOpAQ82Kg_O5MgvEsAcowGNyi7d8z9MpaJIQIH3NJX8IHgetw=_=_psGLvQpt9Q",
+      "X-Request-Id": "b575eefc-3232-11ea-b535-e2b5b1f1970b",
+      "Content-Type": "application/json;charset=UTF-8",
+      "Date": "Wed, 08 Jan 2020 16:20:14 GMT"
+    }
+  },
+  "uuid": "49c02872-029b-3c8b-a29c-e8290789dcd1"
+}

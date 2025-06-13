@@ -5,6 +5,7 @@ import com.fasterxml.jackson.annotation.JsonValue;
 
 public enum PaymentProductDetails {
     SEPA("sepa-credit-transfers"),
+    INSTANT_SEPA("instant-sepa-credit-transfers"),
     PAIN_SEPA("pain.001-sepa-credit-transfers");
 
     private final String value;
@@ -21,7 +22,7 @@ public enum PaymentProductDetails {
 
     @JsonCreator
     public static PaymentProductDetails fromValue(String text) {
-        for (PaymentProductDetails b : PaymentProductDetails.values()) {
+        for (PaymentProductDetails b : values()) {
             if (String.valueOf(b.value).equals(text)) {
                 return b;
             }

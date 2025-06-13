@@ -1,25 +1,26 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
-import { FormBuilder, FormGroup } from '@angular/forms';
+import { UntypedFormBuilder, UntypedFormGroup } from '@angular/forms';
 import { Location } from '@angular/common';
 
 import { SharedRoutes } from '../shared-routes';
 import { InternalAccountReference } from '../accounts-reference/accounts-reference.component';
 import { SessionService } from '../../../../../common/session.service';
 import { ConsentUtil } from '../../../../common/consent-util';
-import {AccountReference} from "../../../../common/dto/ais-consent";
+import { AccountReference } from '../../../../common/dto/ais-consent';
 
 @Component({
   selector: 'consent-app-limited-access',
   templateUrl: './dedicated-access.component.html',
-  styleUrls: ['./dedicated-access.component.scss']
+  styleUrls: ['./dedicated-access.component.scss'],
+  standalone: false
 })
 export class DedicatedAccessComponent implements OnInit {
   constructor(
     private location: Location,
     private router: Router,
     private activatedRoute: ActivatedRoute,
-    private formBuilder: FormBuilder,
+    private formBuilder: UntypedFormBuilder,
     private sessionService: SessionService
   ) {
     this.limitedAccountAccessForm = this.formBuilder.group({});
@@ -31,10 +32,17 @@ export class DedicatedAccessComponent implements OnInit {
   public aspspName: string;
 
   accounts = [new InternalAccountReference()];
-  limitedAccountAccessForm: FormGroup;
+  limitedAccountAccessForm: UntypedFormGroup;
   wrongIban: boolean;
 
   private authorizationId: string;
+
+  private static toAccountReference(reference: InternalAccountReference): AccountReference {
+    const result = {} as AccountReference;
+    result.iban = reference.iban;
+    result.currency = reference.currency;
+    return result;
+  }
 
   ngOnInit() {
     this.wrongIban = this.activatedRoute.snapshot.queryParamMap.get('wrong') === 'true';
@@ -63,13 +71,6 @@ export class DedicatedAccessComponent implements OnInit {
   onBack() {
     ConsentUtil.rollbackConsent(this.authorizationId, this.sessionService);
     this.location.back();
-  }
-
-  private static toAccountReference(reference: InternalAccountReference): AccountReference {
-    const result = {} as AccountReference;
-    result.iban = reference.iban;
-    result.currency = reference.currency;
-    return result;
   }
 
   private loadDataFromExistingConsent() {

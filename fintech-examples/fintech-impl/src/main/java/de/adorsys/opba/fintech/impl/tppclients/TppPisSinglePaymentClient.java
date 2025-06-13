@@ -4,7 +4,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import de.adorsys.opba.tpp.pis.api.resource.generated.TppBankingApiSinglePaymentPisApi;
 import org.springframework.cloud.openfeign.FeignClient;
 
-import javax.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletRequest;
 import java.util.Optional;
 
 @FeignClient(url = "${tpp.url}", name = "tppPisSinglePaymentClient")

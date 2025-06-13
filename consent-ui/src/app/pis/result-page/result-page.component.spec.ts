@@ -1,11 +1,12 @@
-import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
 import { NO_ERRORS_SCHEMA } from '@angular/core';
 
 import { ResultPageComponent } from './result-page.component';
 import { RouterTestingModule } from '@angular/router/testing';
-import { HttpClientTestingModule } from '@angular/common/http/testing';
+import { provideHttpClientTesting } from '@angular/common/http/testing';
 import { ActivatedRoute } from '@angular/router';
 import { StubUtilTests } from '../../ais/common/stub-util-tests';
+import { provideHttpClient, withInterceptorsFromDi } from '@angular/common/http';
 
 describe('ResultPageComponent', () => {
   let component: ResultPageComponent;
@@ -13,24 +14,28 @@ describe('ResultPageComponent', () => {
 
   beforeAll(() => (window.onbeforeunload = jasmine.createSpy()));
 
-  beforeEach(async(() => {
-    TestBed.configureTestingModule({
-      declarations: [ResultPageComponent],
-      schemas: [NO_ERRORS_SCHEMA],
-      imports: [RouterTestingModule, HttpClientTestingModule],
-      providers: [
-        {
-          provide: ActivatedRoute,
-          useValue: {
-            snapshot: {
-              parent: { params: { authId: StubUtilTests.AUTH_ID } },
-              queryParams: { redirectCode: StubUtilTests.REDIRECT_ID }
+  beforeEach(
+    waitForAsync(() => {
+      TestBed.configureTestingModule({
+        declarations: [ResultPageComponent],
+        schemas: [NO_ERRORS_SCHEMA],
+        imports: [RouterTestingModule],
+        providers: [
+          {
+            provide: ActivatedRoute,
+            useValue: {
+              snapshot: {
+                parent: { params: { authId: StubUtilTests.AUTH_ID } },
+                queryParams: { redirectCode: StubUtilTests.REDIRECT_ID }
+              }
             }
-          }
-        }
-      ]
-    }).compileComponents();
-  }));
+          },
+          provideHttpClient(withInterceptorsFromDi()),
+          provideHttpClientTesting()
+        ]
+      }).compileComponents();
+    })
+  );
 
   beforeEach(() => {
     fixture = TestBed.createComponent(ResultPageComponent);

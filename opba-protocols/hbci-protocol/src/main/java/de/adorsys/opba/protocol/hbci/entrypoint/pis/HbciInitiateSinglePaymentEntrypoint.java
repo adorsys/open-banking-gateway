@@ -17,6 +17,7 @@ import de.adorsys.opba.protocol.hbci.context.PaymentHbciContext;
 import de.adorsys.opba.protocol.hbci.entrypoint.HbciExtendWithServiceContext;
 import de.adorsys.opba.protocol.hbci.entrypoint.HbciOutcomeMapper;
 import de.adorsys.opba.protocol.hbci.entrypoint.HbciResultBodyExtractor;
+import de.adorsys.opba.protocol.hbci.service.protocol.pis.dto.PaymentInitiateBody;
 import lombok.RequiredArgsConstructor;
 import org.flowable.engine.RuntimeService;
 import org.flowable.engine.runtime.ProcessInstance;
@@ -97,5 +98,8 @@ public class HbciInitiateSinglePaymentEntrypoint implements SinglePayment {
         @Mapping(source = "facadeServiceable.fintechRedirectUrlNok", target = "fintechRedirectUriNok")
         @Mapping(source = "singlePayment", target = "payment", nullValuePropertyMappingStrategy = IGNORE)
         PaymentHbciContext map(InitiateSinglePaymentRequest ctx);
+
+        @Mapping(expression = "java(payment.getPaymentProduct().toString().contains(\"instant\"))", target = "instantPayment")
+        PaymentInitiateBody map(SinglePaymentBody payment);
     }
 }

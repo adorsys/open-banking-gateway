@@ -1,4 +1,4 @@
-@import 'src/assets/themes/variables';
+@use 'src/assets/themes/variables' as vars;
 
 .ltx-parent {
   display: flex;
@@ -17,7 +17,7 @@
   text-align: start;
   margin: 6px;
   border-bottom: 1px solid rgba(0, 0, 0, 0.145);
-  @media (max-width: $breakpoint-sm) {
+  @media (max-width: vars.$breakpoint-sm) {
     flex-wrap: wrap;
   }
 
@@ -32,7 +32,7 @@
 .ltx-description {
   padding: 0 10px;
   line-height: 1.2;
-  @media (max-width: $breakpoint-sm) {
+  @media (max-width: vars.$breakpoint-sm) {
     padding: 0;
   }
 }

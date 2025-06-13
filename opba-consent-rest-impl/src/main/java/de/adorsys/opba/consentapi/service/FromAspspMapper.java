@@ -15,7 +15,6 @@ import static de.adorsys.opba.restapi.shared.HttpHeaders.SERVICE_SESSION_ID;
 import static de.adorsys.opba.restapi.shared.HttpHeaders.X_REQUEST_ID;
 import static de.adorsys.opba.restapi.shared.HttpHeaders.X_XSRF_TOKEN;
 import static org.springframework.http.HttpStatus.ACCEPTED;
-import static org.springframework.http.HttpStatus.SEE_OTHER;
 
 @Service
 public class FromAspspMapper {
@@ -37,7 +36,7 @@ public class FromAspspMapper {
     }
 
     protected ResponseEntity<?> doHandleRedirect(FacadeResultRedirectable<?, ?> result) {
-        ResponseEntity.BodyBuilder response = putDefaultHeaders(result, ResponseEntity.status(SEE_OTHER));
+        ResponseEntity.BodyBuilder response = putDefaultHeaders(result, ResponseEntity.status(ACCEPTED));
         putExtraRedirectHeaders(result, response);
         response.body(result.getCause());
         return responseForRedirection(result, response);

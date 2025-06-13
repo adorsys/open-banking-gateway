@@ -38,6 +38,24 @@ public class TokenBasedAuthService {
 
     @SneakyThrows
     public String validateTokenAndGetSubject(String token) {
+        var jwt = parseAndValidateTokenWithoutExpirationCheck(token);
+
+        if (Instant.now().isAfter(jwt.getJWTClaimsSet().getExpirationTime().toInstant())) {
+            throw new IllegalArgumentException("Expired token");
+        }
+
+        return jwt.getJWTClaimsSet().getSubject();
+    }
+
+    @SneakyThrows
+    public String getSubject(String token) {
+        var jwt = parseAndValidateTokenWithoutExpirationCheck(token);
+
+        return jwt.getJWTClaimsSet().getSubject();
+    }
+
+    @SneakyThrows
+    private SignedJWT parseAndValidateTokenWithoutExpirationCheck(String token) {
         if (token == null || "".equals(token)) {
             throw new IllegalArgumentException("Missing token");
         }
@@ -48,10 +66,6 @@ public class TokenBasedAuthService {
             throw new IllegalArgumentException("Wrong token");
         }
 
-        if (Instant.now().isAfter(jwt.getJWTClaimsSet().getExpirationTime().toInstant())) {
-            throw new IllegalArgumentException("Expired token");
-        }
-
-        return jwt.getJWTClaimsSet().getSubject();
+        return jwt;
     }
 }

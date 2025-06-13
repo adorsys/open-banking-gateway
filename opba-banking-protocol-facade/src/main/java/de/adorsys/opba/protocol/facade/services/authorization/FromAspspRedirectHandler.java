@@ -16,6 +16,9 @@ import java.util.Map;
 import static de.adorsys.opba.protocol.api.common.ProtocolAction.FROM_ASPSP_REDIRECT;
 import static de.adorsys.opba.protocol.facade.services.context.ServiceContextProviderForAspsp.ASPSP_CONTEXT_PROVIDER;
 
+/**
+ * Action that is executed after user is redirected back from ASPSP to restore consent authorization session.
+ */
 @Service
 public class FromAspspRedirectHandler extends FacadeService<FromAspspRequest, UpdateAuthBody, FromAspspRedirect> {
 

@@ -1,12 +1,13 @@
-import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+import { waitForAsync, ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { ConfirmComponent } from './confirm.component';
-import { HttpClientTestingModule } from '@angular/common/http/testing';
+import { provideHttpClientTesting } from '@angular/common/http/testing';
 import { RouterTestingModule } from '@angular/router/testing';
 import { ActivatedRoute } from '@angular/router';
 import { ConfirmData } from './confirm.data';
 import { RedirectStruct } from '../../redirect-page/redirect-struct';
 import { ClassSinglePaymentInitiationRequest } from '../../../api/model-classes/ClassSinglePaymentInitiationRequest';
+import { provideHttpClient, withInterceptorsFromDi } from '@angular/common/http';
 
 describe('ConfirmComponent', () => {
   let component: ConfirmComponent;
@@ -14,11 +15,12 @@ describe('ConfirmComponent', () => {
 
   beforeAll(() => (window.onbeforeunload = jasmine.createSpy()));
 
-  beforeEach(async(() => {
+  beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
-      imports: [HttpClientTestingModule, RouterTestingModule],
-      declarations: [ConfirmComponent]
-    })
+    declarations: [ConfirmComponent],
+    imports: [RouterTestingModule],
+    providers: [provideHttpClient(withInterceptorsFromDi()), provideHttpClientTesting()]
+})
       .overrideComponent(ConfirmComponent, {
         set: {
           providers: [

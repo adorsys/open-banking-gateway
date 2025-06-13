@@ -5,8 +5,8 @@ import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.validation.annotation.Validated;
 
-import javax.validation.constraints.NotBlank;
-import javax.validation.constraints.NotNull;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
 
 import static de.adorsys.opba.protocol.hbci.config.ConfigConst.HBCI_PROTOCOL_CONFIG_PREFIX;
 
@@ -68,18 +68,6 @@ public class HbciProtocolConfiguration {
 
             @Data
             public static class WebHooks {
-
-                /**
-                 * URL that represents page saying that consent creation was OK (comes before consent result page).
-                 */
-                @NotBlank
-                private String ok;
-
-                /**
-                 * URL that represents page saying that consent creation was not OK (comes before consent result page).
-                 */
-                @NotBlank
-                private String nok;
 
                 /**
                  * URL that represents consent acquisition result.

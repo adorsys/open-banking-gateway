@@ -1,20 +1,21 @@
-import {Component, OnInit} from '@angular/core';
-import {Location} from '@angular/common';
-import {ActivatedRoute} from '@angular/router';
+import { Component, OnInit } from '@angular/core';
+import { Location } from '@angular/common';
+import { ActivatedRoute } from '@angular/router';
 
-import {AisConsentToGrant} from '../common/dto/ais-consent';
-import {StubUtil} from '../../common/utils/stub-util';
-import {SessionService} from '../../common/session.service';
-import {ConsentUtil} from '../common/consent-util';
-import {ApiHeaders} from '../../api/api.headers';
-import {Action} from '../../common/utils/action';
-import {AuthStateConsentAuthorizationService, UpdateConsentAuthorizationService} from '../../api';
-import {combineLatest} from 'rxjs';
+import { AisConsentToGrant } from '../common/dto/ais-consent';
+import { StubUtil } from '../../common/utils/stub-util';
+import { SessionService } from '../../common/session.service';
+import { ConsentUtil } from '../common/consent-util';
+import { ApiHeaders } from '../../api/api.headers';
+import { Action } from '../../common/utils/action';
+import { AuthStateConsentAuthorizationService, UpdateConsentAuthorizationService } from '../../api';
+import { combineLatest } from 'rxjs';
 
 @Component({
   selector: 'consent-app-to-aspsp-redirection',
   templateUrl: './to-aspsp-redirection.component.html',
-  styleUrls: ['./to-aspsp-redirection.component.scss']
+  styleUrls: ['./to-aspsp-redirection.component.scss'],
+  standalone: false
 })
 export class ToAspspRedirectionComponent implements OnInit {
   public static ROUTE = 'to-aspsp-redirection';

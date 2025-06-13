@@ -23,6 +23,7 @@ import lombok.SneakyThrows;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.transaction.support.TransactionOperations;
 
 import java.net.URI;
 import java.util.UUID;
@@ -61,6 +62,9 @@ abstract class AbstractServiceSessionTest extends DbDropper {
 
     @Autowired
     private AuthorizationSessionRepository authenticationSessions;
+
+    @Autowired
+    private TransactionOperations txOper;
 
     @MockBean(name = "xs2aListAccounts")
     private ListAccounts xs2aListAccountsEntrypoint;
@@ -194,14 +198,16 @@ abstract class AbstractServiceSessionTest extends DbDropper {
     }
 
     private void assertServiceAndAuthorizationSessions() {
-        AuthSession authenticationSession = authenticationSessions.findById(SESSION_ID).get();
-        ServiceSession serviceSessionFromDB = serviceSessionRepository.findById(SESSION_ID).get();
+        txOper.executeWithoutResult(ctx -> {
+            AuthSession authenticationSession = authenticationSessions.findById(SESSION_ID).get();
+            ServiceSession serviceSessionFromDB = serviceSessionRepository.findById(SESSION_ID).get();
 
-        ServiceSession serviceSessionFromAuth = authenticationSession.getParent();
+            ServiceSession serviceSessionFromAuth = authenticationSession.getParent();
 
-        assertThat(serviceSessionFromDB.getId()).isEqualTo(serviceSessionFromAuth.getId());
-        assertThat(serviceSessionFromDB.getAuthSession().getId()).isEqualTo(authenticationSession.getId());
-        assertThat(serviceSessionFromDB.getAuthSession().getRedirectCode()).isEqualTo(authenticationSession.getRedirectCode());
+            assertThat(serviceSessionFromDB.getId()).isEqualTo(serviceSessionFromAuth.getId());
+            assertThat(serviceSessionFromDB.getAuthSession().getId()).isEqualTo(authenticationSession.getId());
+            assertThat(serviceSessionFromDB.getAuthSession().getRedirectCode()).isEqualTo(authenticationSession.getRedirectCode());
+        });
     }
 
     private void assertErrorResponse(FacadeRedirectErrorResult errorResponse, String sessionId, boolean authSessionIsOpen) {

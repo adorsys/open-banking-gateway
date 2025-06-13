@@ -1,4 +1,4 @@
-import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
 import { NO_ERRORS_SCHEMA } from '@angular/core';
 import { ReactiveFormsModule } from '@angular/forms';
 import { ActivatedRoute, convertToParamMap } from '@angular/router';
@@ -12,22 +12,24 @@ describe('AIS EnterPinPageComponent', () => {
 
   beforeAll(() => (window.onbeforeunload = jasmine.createSpy()));
 
-  beforeEach(async(() => {
-    TestBed.configureTestingModule({
-      declarations: [EnterPinPageComponent],
-      schemas: [NO_ERRORS_SCHEMA],
-      imports: [ReactiveFormsModule],
-      providers: [
-        {
-          provide: ActivatedRoute,
-          useValue: {
-            snapshot: { queryParamMap: convertToParamMap({}) },
-            parent: { snapshot: { paramMap: convertToParamMap({ authId: StubUtilTests.AUTH_ID }) } }
+  beforeEach(
+    waitForAsync(() => {
+      TestBed.configureTestingModule({
+        declarations: [EnterPinPageComponent],
+        schemas: [NO_ERRORS_SCHEMA],
+        imports: [ReactiveFormsModule],
+        providers: [
+          {
+            provide: ActivatedRoute,
+            useValue: {
+              snapshot: { queryParamMap: convertToParamMap({}) },
+              parent: { snapshot: { paramMap: convertToParamMap({ authId: StubUtilTests.AUTH_ID }) } }
+            }
           }
-        }
-      ]
-    }).compileComponents();
-  }));
+        ]
+      }).compileComponents();
+    })
+  );
 
   beforeEach(() => {
     fixture = TestBed.createComponent(EnterPinPageComponent);

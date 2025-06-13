@@ -1,4 +1,4 @@
-@import 'src/assets/themes/variables';
+@use 'src/assets/themes/variables' as vars;
 
 .add-mr-mb:not(:last-child) {
   margin-right: 1rem;

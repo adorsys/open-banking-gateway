@@ -1,16 +1,17 @@
-import {Component, OnInit} from '@angular/core';
-import {ActivatedRoute} from '@angular/router';
-import {SessionService} from '../../../../common/session.service';
-import {AuthStateConsentAuthorizationService, UpdateConsentAuthorizationService} from '../../../../api';
-import {ApiHeaders} from '../../../../api/api.headers';
-import {StubUtil} from '../../../../common/utils/stub-util';
-import {AccountAccessLevel, AisConsentToGrant} from '../../../common/dto/ais-consent';
-import {ConsentUtil} from '../../../common/consent-util';
+import { Component, OnInit } from '@angular/core';
+import { ActivatedRoute } from '@angular/router';
+import { SessionService } from '../../../../common/session.service';
+import { AuthStateConsentAuthorizationService, UpdateConsentAuthorizationService } from '../../../../api';
+import { ApiHeaders } from '../../../../api/api.headers';
+import { StubUtil } from '../../../../common/utils/stub-util';
+import { AccountAccessLevel, AisConsentToGrant } from '../../../common/dto/ais-consent';
+import { ConsentUtil } from '../../../common/consent-util';
 
 @Component({
   selector: 'consent-app-consent-sharing',
   templateUrl: './consent-sharing.component.html',
-  styleUrls: ['./consent-sharing.component.scss']
+  styleUrls: ['./consent-sharing.component.scss'],
+  standalone: false
 })
 export class ConsentSharingComponent implements OnInit {
   public static ROUTE = 'consent-sharing';

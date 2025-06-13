@@ -7,7 +7,8 @@ import { ConsentUtil } from '../../common/consent-util';
 @Component({
   selector: 'consent-app-consent-info',
   templateUrl: './consent-info.component.html',
-  styleUrls: ['./consent-info.component.scss']
+  styleUrls: ['./consent-info.component.scss'],
+  standalone: false
 })
 export class ConsentInfoComponent implements OnInit {
   accountAccessLevel = AccountAccessLevel;

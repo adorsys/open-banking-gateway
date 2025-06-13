@@ -1,5 +1,7 @@
 package de.adorsys.opba.protocol.api.services.scoped.consent;
 
+import de.adorsys.opba.protocol.api.services.EncryptionService;
+
 /**
  * PSU consent representation view for protocol execution.
  */
@@ -35,4 +37,6 @@ public interface ProtocolFacingConsent {
      * Get the context of this consent to identify its scope.
      */
     void setConsentContext(String context);
+
+    EncryptionService getSupplementaryEncryptionService();
 }

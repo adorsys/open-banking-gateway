@@ -6,7 +6,6 @@ import { InfoComponent } from './info.component';
 
 @NgModule({
   imports: [CommonModule, OverlayModule],
-  declarations: [InfoComponent],
-  entryComponents: [InfoComponent]
+  declarations: [InfoComponent]
 })
 export class InfoModule {}

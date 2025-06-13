@@ -1,0 +1,36 @@
+{
+  "scenarioName": "PaymentUsingCommerzbankOauthIntegrated",
+  "newScenarioState": "PaymentInitiated",
+  "request": {
+    "url": "/v1/payments/sepa-credit-transfers",
+    "method": "POST",
+    "headers": {
+      "X-Request-ID": {
+        "matches": "[0-9a-zA-z\\-]+"
+      },
+      "TPP-Redirect-URI": {
+        "matches": "http://localhost:\\d+/v1/consent/.+/fromAspsp/.+/ok"
+      },
+      "TPP-Nok-Redirect-URI": {
+        "matches": "http://localhost:\\d+/v1/consent/.+/fromAspsp/.+/nok"
+      }
+    },
+    "bodyPatterns": [
+      {
+        "equalToJson": "{\"creditorAccount\":{\"currency\":\"EUR\",\"iban\":\"DE80760700240271232400\"},\"creditorAddress\":{\"buildingNumber\":\"56\",\"townName\":\"Nürnberg\",\"country\":\"DE\",\"postCode\":\"90543\",\"streetName\":\"WBG Straße\"},\"creditorAgent\":\"AAAADEBBXXX\",\"creditorName\":\"WBG\",\"debtorAccount\":{\"currency\":\"EUR\",\"iban\":\"DE80760700240271232400\"},\"endToEndIdentification\":\"WBG-123456789\",\"instructedAmount\":{\"currency\":\"EUR\",\"amount\":\"1.03\"},\"remittanceInformationUnstructured\":\"Ref. Number WBG-1222\"}",
+        "ignoreArrayOrder": true,
+        "ignoreExtraElements": true
+      }
+    ]
+  },
+  "response": {
+    "status": 201,
+    "bodyFileName": "created-payment-body.json",
+    "headers": {
+      "X-Request-Id": "b575eefc-3232-11ea-b535-e2b5b1f1970b",
+      "Content-Type": "application/json;charset=UTF-8",
+      "Date": "Wed, 08 Jan 2020 16:20:14 GMT"
+    }
+  },
+  "uuid": "8726e4ee-2523-399f-8d65-ec646a24c8b7"
+}

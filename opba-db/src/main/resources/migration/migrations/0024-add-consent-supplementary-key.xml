@@ -1,0 +1,12 @@
+<databaseChangeLog logicalFilePath="db.changelog-1.0.xml" xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+                   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                   xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.8.xsd">
+
+    <changeSet author="mhr" id="2022-04-13">
+        <comment>Added supplementary key</comment>
+        <addColumn tableName="${table-prefix}consent">
+            <column name="enc_supplementary_key" type="BLOB"/>
+        </addColumn>
+    </changeSet>
+
+</databaseChangeLog>

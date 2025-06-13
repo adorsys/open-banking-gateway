@@ -15,7 +15,7 @@ import de.adorsys.opba.protocol.facade.config.encryption.impl.fintech.FintechSec
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
-import javax.persistence.EntityManager;
+import jakarta.persistence.EntityManager;
 import java.util.function.Supplier;
 
 @Service
@@ -30,16 +30,37 @@ public class PaymentAccessFactory {
     private final FintechPsuAspspPrvKeyRepository fintechPsuAspspPrvKeyRepository;
     private final PaymentRepository paymentRepository;
 
+    /**
+     * Create {@code PaymentAccess} object that is similar to consent facing to PSU/Fintech user and ASPSP pair.
+     * @param psu Payee/authorizer of this payment
+     * @param aspsp ASPSP/Bank that is going to perform the payment
+     * @param session Session that identifies the payment.
+     * @return Payment context to authorize
+     */
     public PaymentAccess paymentForPsuAndAspsp(Psu psu, Bank aspsp, ServiceSession session) {
         PsuAspspPrvKey prvKey = prvKeyRepository.findByPsuIdAndAspspId(psu.getId(), aspsp.getId())
                 .orElseThrow(() -> new IllegalStateException("No public key for: " + psu.getId()));
         return new PsuPaymentAccess(psu, aspsp, psuEncryption.forPublicKey(prvKey.getId(), prvKey.getPubKey().getKey()), session, paymentRepository);
     }
 
+    /**
+     * Create {@code PaymentAccess} object that is similar to consent facing to anonymous (to OBG) user and ASPSP pair.
+     * @param fintech Fintech that initiates the payment
+     * @param aspsp ASPSP/Bank that is going to perform the payment
+     * @param session Session that identifies the payment.
+     * @return Payment context to authorize
+     */
     public PaymentAccess paymentForAnonymousPsu(Fintech fintech, Bank aspsp, ServiceSession session) {
         return new AnonymousPsuPaymentAccess(aspsp, fintech, fintechPubKeys, psuEncryption, session, paymentRepository);
     }
 
+    /**
+     * Create {@code PaymentAccess} object that is similar to consent facing to FinTech.
+     * @param fintech Fintech that initiates the payment
+     * @param session Session that identifies the payment.
+     * @param fintechPassword FinTech Datasafe/KeyStore password
+     * @return Payment context
+     */
     public PaymentAccess paymentForFintech(Fintech fintech, ServiceSession session, Supplier<char[]> fintechPassword) {
         return new FintechPaymentAccess(fintech, psuEncryption, fintechPsuAspspPrvKeyRepository, fintechVault, paymentRepository, entityManager, session.getId(), fintechPassword);
     }

@@ -1,0 +1,19 @@
+{
+  "accounts": [
+    {
+      "resourceId": "a217d676-7559-4f2a-83dc-5da0c2279223",
+      "product": "Girokonto",
+      "_links": {
+        "balances": {
+          "href": "/v3/accounts/a217d676-7559-4f2a-83dc-5da0c2279223/balances?currency=EUR"
+        },
+        "transactions": {
+          "href": "/v2/accounts/a217d676-7559-4f2a-83dc-5da0c2279223/transactions?currency=EUR"
+        }
+      },
+      "iban": "DE80760700240271232400",
+      "name": "anton.brueckner",
+      "currency": "EUR"
+    }
+  ]
+}

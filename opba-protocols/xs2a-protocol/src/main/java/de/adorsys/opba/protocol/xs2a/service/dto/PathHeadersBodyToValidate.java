@@ -3,7 +3,7 @@ package de.adorsys.opba.protocol.xs2a.service.dto;
 import lombok.Data;
 import lombok.RequiredArgsConstructor;
 
-import javax.validation.Valid;
+import jakarta.validation.Valid;
 
 /**
  * Structure that represents REST request that has Path parameter, Headers and Body.

@@ -4,7 +4,8 @@ import { PaymentsConsentReviewComponent } from '../payments-consent-review/payme
 @Component({
   selector: 'consent-app-entry-page-payments',
   templateUrl: './entry-page-payments.component.html',
-  styleUrls: ['./entry-page-payments.component.scss']
+  styleUrls: ['./entry-page-payments.component.scss'],
+  standalone: false
 })
 export class EntryPagePaymentsComponent implements OnInit {
   public static ROUTE = 'entry-payments';

@@ -16,6 +16,9 @@ import java.util.Map;
 import static de.adorsys.opba.protocol.api.common.ProtocolAction.GET_AUTHORIZATION_STATE;
 import static de.adorsys.opba.protocol.facade.services.context.ServiceContextProviderForFintech.FINTECH_CONTEXT_PROVIDER;
 
+/**
+ * Action to retreive consent authorization state - missing parameters like PIN,login,redirection link for current action.
+ */
 @Service
 public class GetAuthorizationStateService extends FacadeService<AuthorizationRequest, AuthStateBody, GetAuthorizationState> {
 

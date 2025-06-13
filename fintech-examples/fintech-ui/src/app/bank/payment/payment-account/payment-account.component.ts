@@ -6,9 +6,10 @@ import { AccountDetails } from '../../../api';
 import { Consts } from '../../../models/consts';
 
 @Component({
-  selector: 'app-list-payments',
-  templateUrl: './payment-account.component.html',
-  styleUrls: ['./payment-account.component.scss']
+    selector: 'app-list-payments',
+    templateUrl: './payment-account.component.html',
+    styleUrls: ['./payment-account.component.scss'],
+    standalone: false
 })
 export class PaymentAccountComponent implements OnInit {
   public static ROUTE = 'account';

@@ -4,7 +4,6 @@ import com.google.common.collect.ImmutableMap;
 import de.adorsys.opba.protocol.api.common.ProtocolAction;
 import de.adorsys.opba.protocol.api.dto.ValidationIssue;
 import de.adorsys.opba.protocol.api.dto.context.ServiceContext;
-import de.adorsys.opba.protocol.api.dto.parameters.ExtraAuthRequestParam;
 import de.adorsys.opba.protocol.api.dto.request.payments.InitiateSinglePaymentRequest;
 import de.adorsys.opba.protocol.api.dto.request.payments.SinglePaymentBody;
 import de.adorsys.opba.protocol.api.dto.result.body.PaymentProductDetails;
@@ -25,7 +24,6 @@ import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.springframework.stereotype.Service;
 
-import java.util.Optional;
 import java.util.Set;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ConcurrentHashMap;
@@ -73,13 +71,6 @@ public class Xs2aInitiateSinglePaymentEntrypoint implements SinglePayment {
         SinglePaymentXs2aContext context = mapper.map(request);
         context.setAction(ProtocolAction.SINGLE_PAYMENT);
         extender.extend(context, serviceContext);
-
-        Optional<String> psuIdOptional = Optional.ofNullable(request.getExtras())
-                                                 .map(ex -> ex.get(ExtraAuthRequestParam.PSU_ID))
-                                                 .map(Object::toString);
-
-        psuIdOptional.ifPresent(context::setPsuId);
-
         return context;
     }
 
@@ -94,6 +85,10 @@ public class Xs2aInitiateSinglePaymentEntrypoint implements SinglePayment {
         @Mapping(source = "facadeServiceable.uaContext.psuIpAddress", target = "psuIpAddress")
         @Mapping(source = "facadeServiceable.fintechRedirectUrlOk", target = "fintechRedirectUriOk")
         @Mapping(source = "facadeServiceable.fintechRedirectUrlNok", target = "fintechRedirectUriNok")
+        @Mapping(source = "facadeServiceable.fintechBrandLoggingInformation", target = "fintechBrandLoggingInformation")
+        @Mapping(source = "facadeServiceable.fintechNotificationURI", target = "fintechNotificationURI")
+        @Mapping(source = "facadeServiceable.fintechNotificationContentPreferred", target = "fintechNotificationContentPreferred")
+        @Mapping(source = "facadeServiceable.fintechDecoupledPreferred", target = "fintechDecoupledPreferred")
         @Mapping(source = "facadeServiceable.uaContext.psuAccept", target = "contentType", nullValuePropertyMappingStrategy = IGNORE)
         @Mapping(source = "singlePayment", target = "payment", nullValuePropertyMappingStrategy = IGNORE)
         @Mapping(source = "singlePayment.paymentId", target = "paymentId")

@@ -5,7 +5,8 @@ import { ApiHeaders } from '../../api/api.headers';
 @Component({
   selector: 'consent-app-sca-select-page',
   templateUrl: './sca-select-page.component.html',
-  styleUrls: ['./sca-select-page.component.scss']
+  styleUrls: ['./sca-select-page.component.scss'],
+  standalone: false
 })
 export class ScaSelectPageComponent implements OnInit {
   authorizationSessionId: string;

@@ -1,5 +1,5 @@
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { UntypedFormBuilder, UntypedFormGroup, Validators } from '@angular/forms';
 import { StubUtil } from '../utils/stub-util';
 import { UpdateConsentAuthorizationService } from '../../api';
 import { SessionService } from '../session.service';
@@ -8,7 +8,8 @@ import { ApiHeaders } from '../../api/api.headers';
 @Component({
   selector: 'consent-app-enter-pin',
   templateUrl: './enter-pin.component.html',
-  styleUrls: ['./enter-pin.component.scss']
+  styleUrls: ['./enter-pin.component.scss'],
+  standalone: false
 })
 export class EnterPinComponent implements OnInit {
   @Input() title: string;
@@ -16,11 +17,11 @@ export class EnterPinComponent implements OnInit {
   @Input() authorizationSessionId: string;
   @Output() enteredPin = new EventEmitter<any>();
 
-  pinForm: FormGroup;
+  pinForm: UntypedFormGroup;
   redirectCode: string;
 
   constructor(
-    private formBuilder: FormBuilder,
+    private formBuilder: UntypedFormBuilder,
     private authService: UpdateConsentAuthorizationService,
     private sessionService: SessionService
   ) {}

@@ -5,7 +5,6 @@ import de.adorsys.multibanking.domain.spi.OnlineBankingService;
 import de.adorsys.multibanking.hbci.HbciBanking;
 import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
-import org.apache.commons.codec.Resources;
 import org.kapott.hbci.manager.BankInfo;
 import org.kapott.hbci.manager.HBCIProduct;
 import org.kapott.hbci.manager.HBCIUtils;
@@ -33,14 +32,15 @@ public class HbciAdapterConfig {
     @Bean
     @SneakyThrows
     OnlineBankingService onlineBankingService(Optional<HBCIProduct> product) {
-        try (InputStream is = Resources.getInputStream("blz.properties")) {
+        try (InputStream is = getClass().getClassLoader().getResourceAsStream("blz.properties")) {
             HBCIUtils.refreshBLZList(is);
         }
 
         OnlineBankingService hbci = new HbciBanking(
                 product.orElse(null),
                 properties.getSysIdExpirationTimeMs(),
-                properties.getUpdExpirationTimeMs()
+                properties.getUpdExpirationTimeMs(),
+                properties.getBpdExpirationTimeMs()
         );
 
         properties.getAdorsysMockBanksBlz().forEach(it -> {

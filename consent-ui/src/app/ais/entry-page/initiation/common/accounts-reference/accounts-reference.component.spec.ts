@@ -1,23 +1,25 @@
-import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
 
 import { InternalAccountReference, AccountsReferenceComponent } from './accounts-reference.component';
-import { FormGroup, ReactiveFormsModule } from '@angular/forms';
+import { UntypedFormGroup, ReactiveFormsModule } from '@angular/forms';
 
 describe('AccountsReferenceComponent', () => {
   let component: AccountsReferenceComponent;
   let fixture: ComponentFixture<AccountsReferenceComponent>;
 
-  beforeEach(async(() => {
-    TestBed.configureTestingModule({
-      declarations: [AccountsReferenceComponent],
-      imports: [ReactiveFormsModule]
-    }).compileComponents();
-  }));
+  beforeEach(
+    waitForAsync(() => {
+      TestBed.configureTestingModule({
+        declarations: [AccountsReferenceComponent],
+        imports: [ReactiveFormsModule]
+      }).compileComponents();
+    })
+  );
 
   beforeEach(() => {
     fixture = TestBed.createComponent(AccountsReferenceComponent);
     component = fixture.componentInstance;
-    component.targetForm = new FormGroup({});
+    component.targetForm = new UntypedFormGroup({});
     component.accounts = [];
     fixture.detectChanges();
   });
@@ -33,7 +35,8 @@ describe('AccountsReferenceComponent', () => {
 
   it('should call removeAccount', () => {
     const account: InternalAccountReference = {
-      id: '12345',
+      ibanId: '12345',
+      currencyId: '12345',
       iban: 'DE12344313232222',
       currency: 'EUR'
     };

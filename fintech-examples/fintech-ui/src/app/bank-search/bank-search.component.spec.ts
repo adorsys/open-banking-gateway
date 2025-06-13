@@ -1,6 +1,6 @@
-import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+import { waitForAsync, ComponentFixture, TestBed } from '@angular/core/testing';
 import { ReactiveFormsModule } from '@angular/forms';
-import { HttpClientTestingModule } from '@angular/common/http/testing';
+import { provideHttpClientTesting } from '@angular/common/http/testing';
 import { RouterTestingModule } from '@angular/router/testing';
 
 import { BankSearchComponent, BankSearchInfo } from './bank-search.component';
@@ -9,6 +9,7 @@ import { BankSearchService } from './services/bank-search.service';
 import { StorageService } from '../services/storage.service';
 import { Router } from '@angular/router';
 import { RoutingPath } from '../models/routing-path.model';
+import { provideHttpClient, withInterceptorsFromDi } from '@angular/common/http';
 
 describe('BankSearchComponent', () => {
   let component: BankSearchComponent;
@@ -17,12 +18,12 @@ describe('BankSearchComponent', () => {
   let storageService: StorageService;
   let router: Router;
 
-  beforeEach(async(() => {
+  beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
-      imports: [ReactiveFormsModule, HttpClientTestingModule, RouterTestingModule],
-      declarations: [BankSearchComponent, SearchComponent],
-      providers: []
-    }).compileComponents();
+    declarations: [BankSearchComponent, SearchComponent],
+    imports: [ReactiveFormsModule, RouterTestingModule],
+    providers: [provideHttpClient(withInterceptorsFromDi()), provideHttpClientTesting()]
+}).compileComponents();
   }));
 
   beforeEach(() => {

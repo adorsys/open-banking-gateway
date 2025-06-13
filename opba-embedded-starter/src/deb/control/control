@@ -1,0 +1,8 @@
+Package: open-banking-gateway
+Version: 1.0.0
+Section: misc
+Priority: low
+Architecture: all
+Description: Provides Access to Banking API
+Maintainer: Francis Pouatcha <Francis.Pouatcha@adorsys.com>
+Depends: java-runtime (>= 21)

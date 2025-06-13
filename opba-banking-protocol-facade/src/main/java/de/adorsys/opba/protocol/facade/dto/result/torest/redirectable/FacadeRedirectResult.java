@@ -8,6 +8,11 @@ import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.factory.Mappers;
 
+/**
+ * Successful result that indicates PSU/Fintech user should be redirected elsewhere.
+ * @param <T> Result body type
+ * @param <C> Authorization state
+ */
 @Data
 @EqualsAndHashCode(callSuper = true)
 public class FacadeRedirectResult<T, C extends AuthStateBody> extends FacadeResultRedirectable<T, C> {

@@ -27,7 +27,8 @@ import { InfoOptions } from './info-options';
       transition('* <=> void', animate(`400ms cubic-bezier(0.4, 0, 0.1, 1)`))
     ])
   ],
-  encapsulation: ViewEncapsulation.None
+  encapsulation: ViewEncapsulation.None,
+  standalone: false
 })
 export class InfoComponent {
   message: string;

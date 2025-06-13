@@ -1,11 +1,11 @@
-@import 'src/assets/themes/variables';
+@use 'src/assets/themes/variables' as vars;
 
 .sidebar {
   background-color: white;
   padding: 0 1rem;
 
   .nav-item {
-    background-color: $primary-10;
+    background-color: vars.$primary-10;
     border-radius: 3px;
 
     &--disabled {

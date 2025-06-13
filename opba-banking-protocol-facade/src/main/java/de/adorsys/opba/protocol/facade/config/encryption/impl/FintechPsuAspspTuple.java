@@ -9,8 +9,11 @@ import de.adorsys.opba.db.domain.entity.sessions.AuthSession;
 import de.adorsys.opba.db.domain.entity.sessions.ServiceSession;
 import lombok.Data;
 
-import javax.persistence.EntityManager;
+import jakarta.persistence.EntityManager;
 
+/**
+ * Fintech to Psu with his ASPSP (for current session) relation tuple.
+ */
 @Data
 public class FintechPsuAspspTuple {
 
@@ -37,10 +40,20 @@ public class FintechPsuAspspTuple {
         this.aspspId = session.getBankProfile().getBank().getId();
     }
 
+    /**
+     * Converts current tuple to Datasafe storage path.
+     * @return Datasafe path corresponding to current tuple
+     */
     public String toDatasafePathWithoutParent() {
         return this.psuId + "/" + this.aspspId;
     }
 
+    /**
+     * Creates PSU-ASPSP template key pair entity for FinTech
+     * @param path Datasafe path
+     * @param em Entity manager to persist to
+     * @return FinTech scoped private key for a given PSU
+     */
     public static FintechPsuAspspPrvKey buildFintechPrvKey(String path, EntityManager em) {
         FintechPsuAspspTuple tuple = new FintechPsuAspspTuple(path);
         return FintechPsuAspspPrvKey.builder()
@@ -50,6 +63,12 @@ public class FintechPsuAspspTuple {
                 .build();
     }
 
+    /**
+     * Creates PSU-ASPSP template key pair for FinTechs' INBOX
+     * @param path Datasafe path
+     * @param em Entity manager to persist to
+     * @return FinTech scoped private key for a given PSU to be used in its inbox.
+     */
     public static FintechPsuAspspPrvKeyInbox buildFintechInboxPrvKey(String path, EntityManager em) {
         FintechPsuAspspTuple tuple = new FintechPsuAspspTuple(path);
         return FintechPsuAspspPrvKeyInbox.builder()

@@ -1,5 +1,5 @@
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { UntypedFormBuilder, UntypedFormGroup, Validators } from '@angular/forms';
 
 import { StubUtil } from '../utils/stub-util';
 import { UpdateConsentAuthorizationService } from '../../api';
@@ -10,7 +10,8 @@ import { AuthStateConsentAuthorizationService } from '../../api/api/authStateCon
 @Component({
   selector: 'consent-app-enter-tan',
   templateUrl: './enter-tan.component.html',
-  styleUrls: ['./enter-tan.component.scss']
+  styleUrls: ['./enter-tan.component.scss'],
+  standalone: false
 })
 export class EnterTanComponent implements OnInit {
   @Input() authorizationSessionId: string;
@@ -18,7 +19,7 @@ export class EnterTanComponent implements OnInit {
   @Input() wrongSca: boolean;
   @Output() enteredSca = new EventEmitter<any>();
 
-  reportScaResultForm: FormGroup;
+  reportScaResultForm: UntypedFormGroup;
   redirectCode: string;
   baseImageUrl = 'data:image/jpg;base64,';
   private message = '';
@@ -28,7 +29,7 @@ export class EnterTanComponent implements OnInit {
   private challengeData: any;
 
   constructor(
-    private formBuilder: FormBuilder,
+    private formBuilder: UntypedFormBuilder,
     private sessionService: SessionService,
     private consentAuthorizationService: AuthStateConsentAuthorizationService,
     private updateConsentAuthorizationService: UpdateConsentAuthorizationService
@@ -44,10 +45,7 @@ export class EnterTanComponent implements OnInit {
     this.consentAuthorizationService
       .authUsingGET(this.authorizationSessionId, this.redirectCode, 'response')
       .subscribe((response) => {
-        this.sessionService.setRedirectCode(
-          this.authorizationSessionId,
-          response.headers.get(ApiHeaders.X_XSRF_TOKEN)
-        );
+        this.sessionService.setRedirectCode(this.authorizationSessionId, response.headers.get(ApiHeaders.X_XSRF_TOKEN));
 
         const authStateResponseBody: any = response.body;
         this.challengeData = authStateResponseBody.challengeData;

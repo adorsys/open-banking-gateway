@@ -1,4 +1,4 @@
-import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
 import { Location } from '@angular/common';
 import { ReactiveFormsModule } from '@angular/forms';
 import { CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
@@ -23,26 +23,28 @@ describe('DedicatedAccessComponent', () => {
   let consentUtilSpy;
   let mockData;
 
-  beforeEach(async(() => {
-    TestBed.configureTestingModule({
-      declarations: [DedicatedAccessComponent],
-      schemas: [CUSTOM_ELEMENTS_SCHEMA],
-      imports: [ReactiveFormsModule, RouterTestingModule],
-      providers: [
-        {
-          provide: Router,
-          useValue: route
-        },
-        {
-          provide: ActivatedRoute,
-          useValue: {
-            parent: { parent: { params: of({ authId: StubUtilTests.AUTH_ID }) } },
-            snapshot: { queryParamMap: convertToParamMap({ wrong: false }) }
+  beforeEach(
+    waitForAsync(() => {
+      TestBed.configureTestingModule({
+        declarations: [DedicatedAccessComponent],
+        schemas: [CUSTOM_ELEMENTS_SCHEMA],
+        imports: [ReactiveFormsModule, RouterTestingModule],
+        providers: [
+          {
+            provide: Router,
+            useValue: route
+          },
+          {
+            provide: ActivatedRoute,
+            useValue: {
+              parent: { parent: { params: of({ authId: StubUtilTests.AUTH_ID }) } },
+              snapshot: { queryParamMap: convertToParamMap({ wrong: false }) }
+            }
           }
-        }
-      ]
-    }).compileComponents();
-  }));
+        ]
+      }).compileComponents();
+    })
+  );
 
   beforeEach(() => {
     fixture = TestBed.createComponent(DedicatedAccessComponent);

@@ -1,3 +1,0 @@
-spring:
-  datasource:
-    url: jdbc:postgresql://localhost:15432/open_banking?currentSchema=banking_protocol

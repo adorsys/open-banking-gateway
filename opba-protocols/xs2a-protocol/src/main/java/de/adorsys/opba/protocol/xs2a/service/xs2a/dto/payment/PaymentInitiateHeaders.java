@@ -19,4 +19,6 @@ public class PaymentInitiateHeaders extends ConsentInitiateHeaders {
 
         PaymentInitiateHeaders map(Xs2aPisContext ctx);
     }
+
+
 }

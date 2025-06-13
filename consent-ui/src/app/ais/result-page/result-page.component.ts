@@ -1,18 +1,19 @@
-import {Component, OnInit} from '@angular/core';
-import {Location} from '@angular/common';
-import {ActivatedRoute, ActivatedRouteSnapshot} from '@angular/router';
+import { Component, OnInit } from '@angular/core';
+import { Location } from '@angular/common';
+import { ActivatedRoute, ActivatedRouteSnapshot } from '@angular/router';
 
-import {StubUtil} from '../../common/utils/stub-util';
-import {AisConsentToGrant} from '../common/dto/ais-consent';
-import {SessionService} from '../../common/session.service';
-import {ConsentUtil} from '../common/consent-util';
-import {ApiHeaders} from '../../api/api.headers';
-import {AuthStateConsentAuthorizationService, UpdateConsentAuthorizationService} from '../../api';
+import { StubUtil } from '../../common/utils/stub-util';
+import { AisConsentToGrant } from '../common/dto/ais-consent';
+import { SessionService } from '../../common/session.service';
+import { ConsentUtil } from '../common/consent-util';
+import { ApiHeaders } from '../../api/api.headers';
+import { AuthStateConsentAuthorizationService, UpdateConsentAuthorizationService } from '../../api';
 
 @Component({
   selector: 'consent-app-result-page',
   templateUrl: './result-page.component.html',
-  styleUrls: ['./result-page.component.scss']
+  styleUrls: ['./result-page.component.scss'],
+  standalone: false
 })
 export class ResultPageComponent implements OnInit {
   public static ROUTE = 'consent-result';

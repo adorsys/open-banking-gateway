@@ -16,8 +16,6 @@ To keep it simple:
 
 - We use odd major version to mark development mainlines (1.x, 3.x, 5.x etc)
 
-Normally new development versions are released every two weeks, however this is not a strict rule, rather our willingness.
-
 ## Backward compatibility
 For stable mainlines we provide backward compatibility of APIs and Database schema. Although for stable versions backward compatibility is high priority and we try our best to keep it as much as possible, we can guarantee backward compatibility only for two versions before.
 

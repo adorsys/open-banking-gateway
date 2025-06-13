@@ -1,19 +1,20 @@
-import {Component, OnInit} from '@angular/core';
-import {StubUtil} from '../../common/utils/stub-util';
-import {Action} from '../../common/utils/action';
-import {Location} from '@angular/common';
-import {ActivatedRoute} from '@angular/router';
-import {SessionService} from '../../common/session.service';
-import {AuthStateConsentAuthorizationService, UpdateConsentAuthorizationService} from '../../api';
-import {ApiHeaders} from '../../api/api.headers';
-import {PaymentUtil} from '../common/payment-util';
-import {PisPayment} from '../common/models/pis-payment.model';
-import {combineLatest} from 'rxjs';
+import { Component, OnInit } from '@angular/core';
+import { StubUtil } from '../../common/utils/stub-util';
+import { Action } from '../../common/utils/action';
+import { Location } from '@angular/common';
+import { ActivatedRoute } from '@angular/router';
+import { SessionService } from '../../common/session.service';
+import { AuthStateConsentAuthorizationService, UpdateConsentAuthorizationService } from '../../api';
+import { ApiHeaders } from '../../api/api.headers';
+import { PaymentUtil } from '../common/payment-util';
+import { PisPayment } from '../common/models/pis-payment.model';
+import { combineLatest } from 'rxjs';
 
 @Component({
   selector: 'consent-app-to-aspsp-page',
   templateUrl: './to-aspsp-page.component.html',
-  styleUrls: ['./to-aspsp-page.component.scss']
+  styleUrls: ['./to-aspsp-page.component.scss'],
+  standalone: false
 })
 export class ToAspspPageComponent implements OnInit {
   public static ROUTE = 'to-aspsp-redirection';

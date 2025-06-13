@@ -10,6 +10,6 @@ spring:
   jpa:
     hibernate:
       naming:
-        physical-strategy: org.springframework.boot.orm.jpa.hibernate.SpringPhysicalNamingStrategy
+        physical-strategy: org.hibernate.boot.model.naming.PhysicalNamingStrategyStandardImpl
 bank-search:
   query:

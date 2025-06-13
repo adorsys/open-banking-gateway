@@ -12,10 +12,13 @@ import de.adorsys.opba.protocol.facade.config.encryption.impl.PairIdPsuAspspTupl
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.support.TransactionOperations;
 
-import javax.persistence.EntityManager;
+import jakarta.persistence.EntityManager;
 import java.net.URI;
 import java.util.Optional;
 
+/**
+ * Psu/Fintech users' Datasafe private storage (granted consent, etc.)
+ */
 @Component
 public class PsuDatasafeStorage extends BaseDatasafeDbStorageService {
 
@@ -36,6 +39,9 @@ public class PsuDatasafeStorage extends BaseDatasafeDbStorageService {
         return URI.create(value).getHost();
     }
 
+    /**
+     * Psu/Fintech users' Datasafe private key storage (granted consent, etc.)
+     */
     @Component
     public static class PsuAspspPrvKeyStorage extends DatasafeDataStorage<PsuAspspPrvKey> {
 
@@ -59,6 +65,9 @@ public class PsuDatasafeStorage extends BaseDatasafeDbStorageService {
         }
     }
 
+    /**
+     * Datasafe PSU private key storage.
+     */
     @Component
     public static class PsuKeystoreStorage extends DatasafeMetadataStorage<Psu> {
 
@@ -67,6 +76,9 @@ public class PsuDatasafeStorage extends BaseDatasafeDbStorageService {
         }
     }
 
+    /**
+     * Datasafe PSU public key storage.
+     */
     @Component
     public static class PsuPubKeysStorage extends DatasafeMetadataStorage<Psu> {
 

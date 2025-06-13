@@ -10,6 +10,9 @@ import org.springframework.stereotype.Component;
 
 import java.util.Map;
 
+/**
+ * Declares converter and available cipher algorithms for Datasafe and encryption operations.
+ */
 @Component
 @ConfigurationPropertiesBinding
 public class ASN1ObjectIdentifierConverter implements Converter<String, ASN1ObjectIdentifier> {

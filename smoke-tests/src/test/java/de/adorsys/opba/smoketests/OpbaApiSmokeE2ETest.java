@@ -9,7 +9,7 @@ import de.adorsys.opba.smoketests.config.FintechRequestSigningTestConfig;
 import de.adorsys.opba.smoketests.config.SandboxConsentAuthApproachState;
 import de.adorsys.opba.smoketests.config.SmokeConfig;
 import de.adorsys.opba.smoketests.steps.SmokeSandboxServers;
-import io.github.bonigarcia.seljup.SeleniumExtension;
+import io.github.bonigarcia.seljup.SeleniumJupiter;
 import io.github.bonigarcia.wdm.WebDriverManager;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeAll;
@@ -36,7 +36,7 @@ import static org.springframework.boot.test.context.SpringBootTest.WebEnvironmen
  * Happy-path smoke test to validate that OpenBanking environment is in sane state.
  */
 @EnabledIfEnvironmentVariable(named = ENABLE_SMOKE_TESTS, matches = TRUE_BOOL)
-@ExtendWith(SeleniumExtension.class)
+@ExtendWith(SeleniumJupiter.class)
 @SpringBootTest(classes = {JGivenConfig.class, SmokeConfig.class, FintechRequestSigningTestConfig.class, SmokeSandboxServers.class}, webEnvironment = NONE)
 // Use @ActiveProfiles(profiles = {SMOKE_TEST, "test-smoke-local"}) to run the test on local env.
 @ActiveProfiles(profiles = {SMOKE_TEST})
@@ -89,7 +89,7 @@ class OpbaApiSmokeE2ETest extends SpringScenarioTest<SmokeSandboxServers, WebDri
             .and()
             .user_provided_initial_parameters_to_list_transactions_with_single_account_consent(sandboxUserLogin)
             .and()
-            .user_sees_that_he_needs_to_be_redirected_to_aspsp_and_redirects_to_aspsp(sandboxUserLogin)
+            .user_sees_that_he_needs_to_be_redirected_to_aspsp_and_redirects_to_aspsp(sandboxUserLogin, null, null)
             .and()
             .manually_set_authorization_cookie_on_domain(firefoxDriver, config.getUiUri())
             .and()
@@ -187,7 +187,7 @@ class OpbaApiSmokeE2ETest extends SpringScenarioTest<SmokeSandboxServers, WebDri
             .and()
             .user_provided_initial_parameters_to_list_accounts_with_all_accounts_consent_with_cookie_validation(sandboxUserLogin)
             .and()
-            .user_sees_that_he_needs_to_be_redirected_to_aspsp_and_redirects_to_aspsp(sandboxUserLogin)
+            .user_sees_that_he_needs_to_be_redirected_to_aspsp_and_redirects_to_aspsp(sandboxUserLogin, null ,null)
             .and()
             .manually_set_authorization_cookie_on_domain(firefoxDriver, config.getUiUri())
             .and()

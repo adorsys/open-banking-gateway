@@ -10,7 +10,7 @@ import de.adorsys.opba.smoketests.config.SandboxConsentAuthApproachState;
 import de.adorsys.opba.smoketests.config.SmokeConfig;
 import de.adorsys.opba.smoketests.config.WebDriverErrorReportAspectAndWatcher;
 import de.adorsys.opba.smoketests.steps.SmokeSandboxServers;
-import io.github.bonigarcia.seljup.SeleniumExtension;
+import io.github.bonigarcia.seljup.SeleniumJupiter;
 import io.github.bonigarcia.wdm.WebDriverManager;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeAll;
@@ -37,11 +37,12 @@ import static org.springframework.boot.test.context.SpringBootTest.WebEnvironmen
  * Happy-path smoke test to validate that OpenBanking environment with Consent UI is in sane state.
  */
 @EnabledIfEnvironmentVariable(named = ENABLE_SMOKE_TESTS, matches = TRUE_BOOL)
-@ExtendWith({SeleniumExtension.class, WebDriverErrorReportAspectAndWatcher.class})
+@ExtendWith({SeleniumJupiter.class, WebDriverErrorReportAspectAndWatcher.class})
 @SpringBootTest(classes = {JGivenConfig.class, SmokeConfig.class, FintechRequestSigningTestConfig.class, SmokeSandboxServers.class}, webEnvironment = NONE)
 // Use @ActiveProfiles(profiles = {SMOKE_TEST, "test-smoke-local"}) to run the test on local env.
 @ActiveProfiles(profiles = {SMOKE_TEST})
 class OpbaApiWithXs2aConsentUiSmokeE2ETest extends SpringScenarioTest<SmokeSandboxServers, WebDriverBasedAccountInformation<? extends WebDriverBasedAccountInformation<?>>, AccountInformationResult> {
+    private static final String ADDITIONAL_CURRENCY = "USD";
 
     private final String opbaLogin = UUID.randomUUID().toString();
     private final String opbaPassword = UUID.randomUUID().toString();
@@ -160,6 +161,41 @@ class OpbaApiWithXs2aConsentUiSmokeE2ETest extends SpringScenarioTest<SmokeSandb
     @Test
     void testAccountsListWithConsentUsingEmbeddedDedicatedOneAccountConsent(FirefoxDriver firefoxDriver) {
         embeddedListAccountsDedicatedOneAccountConsent(firefoxDriver);
+    }
+
+    @Test
+    void testAccountsListWithConsentUsingEmbeddedDedicatedOneAdditionalCurrencyAccountConsent(FirefoxDriver firefoxDriver) {
+        given()
+                .create_new_user_in_sandbox_tpp_management(sandboxUserLogin, sandboxUserPassword, ADDITIONAL_CURRENCY)
+                .enabled_embedded_sandbox_mode(config.getAspspProfileServerUri())
+                .rest_assured_points_to_opba_server_with_fintech_signer_on_banking_api(config.getOpbaServerUri());
+
+        when()
+                .fintech_calls_list_accounts_for_user(sandboxUserLogin)
+                .and()
+                .user_opens_opba_consent_login_page(firefoxDriver)
+                .and()
+                .user_sees_register_button_clicks_it_navigate_to_register_fills_form_and_registers(firefoxDriver, opbaLogin, opbaPassword)
+                .and()
+                .user_logs_in_to_opba(firefoxDriver, opbaLogin, opbaPassword)
+                .and()
+                .user_provided_to_consent_ui_initial_parameters_to_list_accounts_with_dedicated_accounts_consent(firefoxDriver, sandboxUserLogin)
+                .and()
+                .user_provided_to_consent_ui_account_iban_with_currency_for_dedicated_accounts_consent(firefoxDriver)
+                .and()
+                .user_in_consent_ui_reviews_account_consent_and_accepts(firefoxDriver)
+                .and()
+                .user_in_consent_ui_provides_pin(firefoxDriver, sandboxUserPassword)
+                .and()
+                .user_in_consent_ui_sees_sca_select_and_selected_type_email1_to_embedded_authorization(firefoxDriver)
+                .and()
+                .user_in_consent_ui_provides_sca_result_to_embedded_authorization(firefoxDriver)
+                .and()
+                .user_in_consent_ui_sees_thank_you_for_consent_and_clicks_to_tpp(firefoxDriver);
+
+        then()
+                .fintech_calls_consent_activation_for_current_authorization_id()
+                .open_banking_can_read_user_account_data_using_consent_bound_to_service_session(sandboxUserLogin, false, ADDITIONAL_CURRENCY);
     }
 
     @Test

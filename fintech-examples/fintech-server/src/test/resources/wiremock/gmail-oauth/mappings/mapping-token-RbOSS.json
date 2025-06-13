@@ -5,7 +5,7 @@
     "method" : "POST",
     "headers" : {
       "Accept" : {
-        "equalTo" : "text/html, image/gif, image/jpeg, *; q=.2, */*; q=.2"
+        "contains" : "*/*"
       },
       "Content-Type" : {
         "equalTo" : "application/x-www-form-urlencoded; charset=UTF-8"
@@ -14,9 +14,12 @@
         "equalTo": "Basic dGVzdC1jbGllbnQtaWQ6dGVzdC1jbGllbnQtc2VjcmV0"
       }
     },
-    "bodyPatterns" : [ {
-      "equalTo" : "code=code-to-be-exchanged&redirect_uri=http%3A%2F%2Flocalhost%3A4444%2Flogin%2Foauth2&grant_type=authorization_code"
-    } ]
+    "bodyPatterns": [
+      { "contains": "code=code-to-be-exchanged" },
+      { "contains": "redirect_uri=http%3A%2F%2Flocalhost%3A4444%2Flogin%2Foauth2" },
+      { "contains": "grant_type=authorization_code" }
+    ]
+
   },
   "response" : {
     "status" : 200,

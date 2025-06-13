@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { Router } from '@angular/router';
-import { SimpleTimer } from 'ng2-simple-timer';
+import { SimpleTimer } from 'src/app/services/simple-timer';
 import { BehaviorSubject } from 'rxjs';
 import { AuthService } from './auth.service';
 import { TimerModel } from '../models/timer.model';

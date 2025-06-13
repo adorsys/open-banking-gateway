@@ -3,11 +3,7 @@ import { StubUtil } from '../../common/utils/stub-util';
 import { ActivatedRoute, ActivatedRouteSnapshot } from '@angular/router';
 import { Location } from '@angular/common';
 import { SessionService } from '../../common/session.service';
-import {
-  AuthStateConsentAuthorizationService,
-  SinglePayment,
-  UpdateConsentAuthorizationService
-} from '../../api';
+import { AuthStateConsentAuthorizationService, SinglePayment, UpdateConsentAuthorizationService } from '../../api';
 import { ApiHeaders } from '../../api/api.headers';
 import { PaymentUtil } from '../common/payment-util';
 import { PisPayment } from '../common/models/pis-payment.model';
@@ -16,7 +12,8 @@ import { AuthConsentState } from '../../ais/common/dto/auth-state';
 @Component({
   selector: 'consent-app-result-page',
   templateUrl: './result-page.component.html',
-  styleUrls: ['./result-page.component.scss']
+  styleUrls: ['./result-page.component.scss'],
+  standalone: false
 })
 export class ResultPageComponent implements OnInit {
   public static ROUTE = 'consent-result';
