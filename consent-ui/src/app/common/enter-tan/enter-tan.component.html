@@ -3,8 +3,8 @@
     <div class="card-body">
       <ng-container [ngSwitch]="tanConfig.type">
         <section *ngSwitchCase="tanType.CHIP_OTP" class="text-center">
-          <ngx-chiptan code="{{ tanConfig?.data }}" width="300" height="150" bgColor="#000" barColor="#fff">
-          </ngx-chiptan>
+          <consent-app-chiptan code="{{ tanConfig?.data }}" width="300" height="150" bgColor="#000" barColor="#fff">
+          </consent-app-chiptan>
         </section>
         <section *ngSwitchCase="tanType?.QR_CODE" class="text-center">
           <qrcode [qrdata]="tanConfig.data" [width]="200" [errorCorrectionLevel]="'M'"></qrcode>

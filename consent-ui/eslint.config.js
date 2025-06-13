@@ -1,18 +1,19 @@
 // @ts-check
-const eslint = require("@eslint/js");
 const tseslint = require("typescript-eslint");
-const angular = require("angular-eslint");
 
-module.exports = tseslint.config(
+module.exports = [
   {
     files: ["**/*.ts"],
-    extends: [
-      eslint.configs.recommended,
-      ...tseslint.configs.recommended,
-      ...tseslint.configs.stylistic,
-      ...angular.configs.tsRecommended,
-    ],
-    processor: angular.processInlineTemplates,
+    languageOptions: {
+      parser: require("@typescript-eslint/parser"),
+      parserOptions: {
+        project: "./tsconfig.json",
+      },
+    },
+    plugins: {
+      "@typescript-eslint": require("@typescript-eslint/eslint-plugin"),
+      "@angular-eslint": require("@angular-eslint/eslint-plugin"),
+    },
     rules: {
       "@angular-eslint/directive-selector": [
         "error",
@@ -30,14 +31,21 @@ module.exports = tseslint.config(
           style: "kebab-case",
         },
       ],
+      "@typescript-eslint/no-explicit-any": "warn",
+      "@typescript-eslint/no-unused-vars": "warn",
     },
   },
   {
     files: ["**/*.html"],
-    extends: [
-      ...angular.configs.templateRecommended,
-      ...angular.configs.templateAccessibility,
-    ],
-    rules: {},
-  }
-);
+    languageOptions: {
+      parser: require("@angular-eslint/template-parser"),
+    },
+    plugins: {
+      "@angular-eslint/template": require("@angular-eslint/eslint-plugin-template"),
+    },
+    rules: {
+      "@angular-eslint/template/banana-in-box": "error",
+      "@angular-eslint/template/click-events-have-key-events": "warn",
+    },
+  },
+];
