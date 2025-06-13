@@ -20,6 +20,7 @@
       <openapi-spec-file-location-banking_api_ais>${ymldir}/tpp_banking_api_ais.yml</openapi-spec-file-location-banking_api_ais>
       <openapi-spec-file-location-banking_api_pis>${ymldir}/tpp_banking_api_pis.yml</openapi-spec-file-location-banking_api_pis>
       <openapi-spec-file-location-tpp_bank_search_api>${ymldir}/tpp_banking_api_bank_search.yml</openapi-spec-file-location-tpp_bank_search_api>
+      <openapi-spec-file-location-tpp_bank_info_api>${ymldir}/tpp_banking_api_bank_info.yml</openapi-spec-file-location-tpp_bank_info_api>
       <openapi-spec-file-location-tpp_token_api>${ymldir}/tpp_banking_api_token.yml</openapi-spec-file-location-tpp_token_api>
       <openapi-spec-file-location-admin_api>${ymldir}/tpp_admin_api.yml</openapi-spec-file-location-admin_api>
   </properties>
@@ -76,6 +77,11 @@
         <dependency>
             <groupId>jakarta.servlet</groupId>
             <artifactId>jakarta.servlet-api</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.iban4j</groupId>
+            <artifactId>iban4j</artifactId>
+            <version>${iban.4j.version}</version>
         </dependency>
 
         <!-- Test dependencies -->
@@ -179,6 +185,39 @@
                                 <configPackage>de.adorsys.opba.tppbankingapi.config.generated</configPackage>
                                 <modelPackage>de.adorsys.opba.tppbankingapi.search.model.generated</modelPackage>
                                 <apiPackage>de.adorsys.opba.tppbankingapi.search.resource.generated</apiPackage>
+                                <interfaceOnly>true</interfaceOnly>
+                                <skipOverwrite>true</skipOverwrite>
+                                <dateLibrary>java8</dateLibrary>
+                                <java21>true</java21>
+                                <jakarta>true</jakarta>
+                                <implicitHeaders>false</implicitHeaders>
+                                <delegatePattern>true</delegatePattern>
+                                <useTags>true</useTags>
+                                <library>spring-mvc</library>
+                                <swaggerDocketConfig>false</swaggerDocketConfig>
+                            </configOptions>
+                            <generateApiDocumentation>false</generateApiDocumentation>
+                            <generateModelDocumentation>false</generateModelDocumentation>
+                            <generateSupportingFiles>false</generateSupportingFiles>
+                            <generateApiTests>false</generateApiTests>
+                            <generateModelTests>false</generateModelTests>
+                        </configuration>
+                    </execution>
+                    <execution>
+                        <id>generate_bankinfo_api</id>
+                        <goals>
+                            <goal>generate</goal>
+                        </goals>
+                        <configuration>
+                            <inputSpec>${openapi-spec-file-location-tpp_bank_info_api}</inputSpec>
+                            <language>spring</language>
+                            <output>${project.build.directory}/generated-sources/open-api/</output>
+                            <configOptions>
+                                <sourceFolder>src/main/java</sourceFolder>
+                                <basePackage>de.adorsys.opba.tppbankingapi.bankinfo.generated</basePackage>
+                                <configPackage>de.adorsys.opba.tppbankingapi.config.generated</configPackage>
+                                <modelPackage>de.adorsys.opba.tppbankingapi.bankinfo.model.generated</modelPackage>
+                                <apiPackage>de.adorsys.opba.tppbankingapi.bankinfo.resource.generated</apiPackage>
                                 <interfaceOnly>true</interfaceOnly>
                                 <skipOverwrite>true</skipOverwrite>
                                 <dateLibrary>java8</dateLibrary>
