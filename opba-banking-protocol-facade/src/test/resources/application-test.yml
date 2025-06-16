@@ -22,6 +22,9 @@ api:
         password: OpenSesame
         url-patterns-to-protect:
           - /admin/*
+    # Bank-info API properties
+    bank-info:
+      query:
     # Bank-search API properties
     bank-search:
       query:
