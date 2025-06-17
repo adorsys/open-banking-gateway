@@ -1,17 +1,19 @@
 <?xml version="1.0" encoding="UTF-8"?><!--
-  ~ Copyright 2018-2019 adorsys GmbH & Co KG
+  ~ Copyright 2018-2022 adorsys GmbH & Co KG
   ~
-  ~ Licensed under the Apache License, Version 2.0 (the "License");
-  ~ you may not use this file except in compliance with the License.
-  ~ You may obtain a copy of the License at
+  ~ This program is free software: you can redistribute it and/or modify it
+  ~ under the terms of the GNU Affero General Public License as published
+  ~ by the Free Software Foundation, either version 3 of the License, or (at
+  ~ your option) any later version. This program is distributed in the hope that
+  ~ it will be useful, but WITHOUT ANY WARRANTY; without even the implied
+  ~ warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+  ~ See the GNU Affero General Public License for more details.
   ~
-  ~ http://www.apache.org/licenses/LICENSE-2.0
+  ~ You should have received a copy of the GNU Affero General Public License
+  ~ along with this program. If not, see https://www.gnu.org/licenses/.
   ~
-  ~ Unless required by applicable law or agreed to in writing, software
-  ~ distributed under the License is distributed on an "AS IS" BASIS,
-  ~ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-  ~ See the License for the specific language governing permissions and
-  ~ limitations under the License.
+  ~ This project is also available under a separate commercial license. You can
+  ~ contact us at psd2@adorsys.com.
   -->
 
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
@@ -20,7 +22,7 @@
     <modelVersion>4.0.0</modelVersion>
     <groupId>de.adorsys.opba</groupId>
     <artifactId>open-banking-gateway</artifactId>
-    <version>1.0.0</version>
+    <version>1.0.2</version>
     <packaging>pom</packaging>
 
     <name>open-banking-gateway</name>
@@ -39,6 +41,7 @@
         <module>opba-auth-rest-impl</module>
         <module>opba-admin-rest-api</module>
         <module>opba-admin-rest-impl</module>
+        <module>opba-admin-management</module>
         <module>opba-banking-protocol-facade</module>
         <module>opba-embedded-starter</module>
         <module>opba-embedded-starter-tests</module>
@@ -55,8 +58,8 @@
 
     <licenses>
         <license>
-            <name>The Apache License, Version 2.0</name>
-            <url>http://www.apache.org/licenses/LICENSE-2.0.txt</url>
+            <name>GNU Affero General Public License (AGPL) version 3.0</name>
+            <url>https://www.gnu.org/licenses/agpl-3.0.txt</url>
         </license>
     </licenses>
 
@@ -87,8 +90,8 @@
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
         <maven-enforcer-plugin.version>3.0.0-M2</maven-enforcer-plugin.version>
-        <java.version>11</java.version>
-        <pmd.plugin.version>3.13.0</pmd.plugin.version>
+        <java.version>21</java.version>
+        <pmd.plugin.version>3.26.0</pmd.plugin.version>
         <build-helper-maven-plugin.version>3.0.0</build-helper-maven-plugin.version>
 
         <!-- Deployment plugins -->
@@ -98,7 +101,7 @@
         NoFileAssignedException: The packaging plugin for this project did not assign a main file to the project but it has attachments. Change packaging to 'pom'
         -->
         <maven-deploy-plugin.version>2.8.2</maven-deploy-plugin.version>
-        <maven-source-plugin.version>3.0.1</maven-source-plugin.version>
+        <maven-source-plugin.version>3.3.1</maven-source-plugin.version>
         <maven-nexus-staging-plugin.version>1.6.8</maven-nexus-staging-plugin.version>
         <maven-gpg-plugin.version>1.6</maven-gpg-plugin.version>
 
@@ -106,89 +109,102 @@
         <release-branch-pattern>.*</release-branch-pattern>
 
         <!-- Framework libs -->
-        <spring-boot.version>2.2.4.RELEASE</spring-boot.version>
-        <aspectj.version>1.9.5</aspectj.version>
+        <spring-boot.version>3.3.8</spring-boot.version>
+        <spring-boot-test.version>3.4.3</spring-boot-test.version>
+        <aspectj.version>1.9.23</aspectj.version>
         <commit-id.version>4.0.0</commit-id.version>
         <guava.version>30.1.1-jre</guava.version>
-        <apache.commons-lang3.version>3.9</apache.commons-lang3.version>
-        <fasterxml.version>2.12.2</fasterxml.version>
-        <fasterxml-data-format.version>2.9.8</fasterxml-data-format.version>
-        <swaggerv3.version>2.1.0</swaggerv3.version>
-        <swagger.version>1.5.23</swagger.version>
-        <swagger-codegen-generators.version>1.0.19</swagger-codegen-generators.version>
-        <swagger-codegen-maven-plugin.version>3.0.19</swagger-codegen-maven-plugin.version>
-        <springdoc-openapi-ui.version>1.5.10</springdoc-openapi-ui.version> <!-- springfox replacement for OpenApi 3 -->
+        <apache.commons-lang3.version>3.17.0</apache.commons-lang3.version>
+        <fasterxml.version>2.17.1</fasterxml.version>
+        <jackson-databind.version>2.18.2</jackson-databind.version>
+        <swaggerv3.version>2.2.28</swaggerv3.version>
+        <swagger.version>1.6.6</swagger.version>
+        <swagger-codegen-generators.version>1.0.56</swagger-codegen-generators.version>
+        <swagger-codegen-maven-plugin.version>3.0.67</swagger-codegen-maven-plugin.version>
+        <springdoc-openapi-starter-webmvc-ui.version>2.5.0</springdoc-openapi-starter-webmvc-ui.version>
+        <springdoc-openapi-ui.version>1.8.0</springdoc-openapi-ui.version> <!-- springfox replacement for OpenApi 3 -->
         <springfox.version>2.9.2</springfox.version>
         <jetbrains.annotations.version>17.0.0</jetbrains.annotations.version>
-        <lombok.version>1.18.12</lombok.version>
+        <lombok.version>1.18.36</lombok.version>
         <lombok-mapstruct-binding.version>0.2.0</lombok-mapstruct-binding.version>
-        <xml-maven-plugin.version>1.0.2</xml-maven-plugin.version>
+        <xml-maven-plugin.version>1.1.0</xml-maven-plugin.version>
         <checkstyle-plugin.version>3.1.0</checkstyle-plugin.version>
         <spotbugs-plugin.version>3.1.12.2</spotbugs-plugin.version>
-        <maven.jxr.plugin.version>3.0.0</maven.jxr.plugin.version>
-        <bouncycastle.version>1.64</bouncycastle.version>
-        <datasafe.version>1.0.0.1</datasafe.version>
-        <liquibase.version>4.4.0</liquibase.version>
-        <mapstruct.version>1.4.2.Final</mapstruct.version>
-        <hibernate.version>5.4.9.Final</hibernate.version> <!-- Currently only for bytecode enhancer plugin, can't inherit Spring BOM -->
-        <jjwt.version>0.11.1</jjwt.version>
-        <nimbus.version>8.18</nimbus.version>
+        <maven.jxr.plugin.version>3.6.0</maven.jxr.plugin.version>
+        <bouncycastle.version>1.78.1</bouncycastle.version>
+        <datasafe.version>1.0.3</datasafe.version>
+        <liquibase.version>4.29.2</liquibase.version> <!-- On update make sure that relativeToChangelogFile (for loadData) works when using PropertiesLauncher -->
+        <mapstruct.version>1.6.3</mapstruct.version>
+        <hibernate.version>6.5.3.Final</hibernate.version> <!-- Currently only for bytecode enhancer plugin, can't inherit Spring BOM -->
+        <jjwt.version>0.11.2</jjwt.version>
+        <nimbus.version>11.23.1</nimbus.version>
         <javapoet.version>1.13.0</javapoet.version>
-        <swagger-parser.version>2.0.21</swagger-parser.version>
-        <jackson-yaml.version>2.12.1</jackson-yaml.version>
-        <auto-service.version>1.0-rc7</auto-service.version>
+        <swagger-parser.version>2.1.25</swagger-parser.version>
+        <jackson-yaml.version>2.13.1</jackson-yaml.version>
+        <auto-service.version>1.0.1</auto-service.version>
+        <jakarta.el-api.version>6.0.1</jakarta.el-api.version>
+        <jakarta.servlet.version>6.1.0</jakarta.servlet.version>
+        <jakarta.validation.version>3.0.2</jakarta.validation.version>
+        <jakarta.persistence-api.version>3.1.0</jakarta.persistence-api.version>
+        <jaxb-api.version>2.3.1</jaxb-api.version>
+        <selenium-java.version>4.29.0</selenium-java.version>
+        <jackson-databind-nullable.version>0.2.6</jackson-databind-nullable.version>
+        <junixsocket-core.version>2.10.1</junixsocket-core.version>
 
         <!-- Flowable BPMN -->
-        <flowable.version>6.4.2</flowable.version>
+        <flowable.version>7.1.0</flowable.version>
 
         <!-- Special libs -->
         <maven.replacer.version>1.5.3</maven.replacer.version>
 
         <!-- Adorsys libs -->
-        <xs2a-adapter.version>0.1.15</xs2a-adapter.version>
-        <multibanking.version>5.5.24</multibanking.version>
-        <hbci4j-adorsys.version>3.5.28</hbci4j-adorsys.version>
+        <xs2a-adapter.version>0.1.17</xs2a-adapter.version>
+        <multibanking.version>5.5.36</multibanking.version>
+        <hbci4j-adorsys.version>3.5.35</hbci4j-adorsys.version>
 
         <!-- Util libs -->
-        <iban.4j.version>3.2.1</iban.4j.version>
+        <iban.4j.version>3.2.3-RELEASE</iban.4j.version>
 
         <!-- Test libs -->
-        <jacoco.version>0.8.5</jacoco.version>
-        <jupiter.version>5.5.2</jupiter.version>
+        <jacoco.version>0.8.12</jacoco.version>
+        <jupiter.version>5.10.2</jupiter.version>
         <junit.platform.commons.version>1.5.2</junit.platform.commons.version>
-        <surefire.version>3.0.0-M3</surefire.version>
-        <failsafe.version>3.0.0-M3</failsafe.version>
+        <surefire.version>3.5.2</surefire.version>
+        <failsafe.version>3.5.2</failsafe.version>
         <assertj.version>3.12.2</assertj.version>
-        <jgiven.version>1.0.0-RC3</jgiven.version>
-        <wiremock.version>2.25.1</wiremock.version>
-        <testcontainers.version>1.15.2</testcontainers.version>
-        <zerocode.tdd.version>1.3.17</zerocode.tdd.version>
-        <selenium-jupiter.version>3.3.4</selenium-jupiter.version>
-        <slf4j-simple.version>1.7.29</slf4j-simple.version>
+        <jgiven.version>1.1.0</jgiven.version>
+        <wiremock.version>3.10.0</wiremock.version>
+        <testcontainers.version>1.20.6</testcontainers.version>
+        <testcontainers-jna.version>5.10.0</testcontainers-jna.version>
+        <zerocode.tdd.version>1.3.44</zerocode.tdd.version>
+        <selenium-jupiter.version>5.1.1</selenium-jupiter.version>
+        <slf4j-simple.version>2.0.17</slf4j-simple.version>
         <!-- other properties -->
-        <lombok-maven-plugin.version>1.18.18</lombok-maven-plugin.version>
-        <maven.dependency.plugin.version>3.1.2</maven.dependency.plugin.version>
+        <lombok-maven-plugin.version>1.18.20.0</lombok-maven-plugin.version>
+        <maven.dependency.plugin.version>3.8.1</maven.dependency.plugin.version>
         <maven-remote-resources-plugin.version>1.6.0</maven-remote-resources-plugin.version>
-        <maven-resources-plugin.version>3.1.0</maven-resources-plugin.version>
+        <maven-resources-plugin.version>3.3.1</maven-resources-plugin.version>
         <maven-javadoc-plugin.version>3.2.0</maven-javadoc-plugin.version>
-        <spring-framework-spring-tests.version>5.1.7.RELEASE</spring-framework-spring-tests.version>
+        <spring-framework-spring-tests.version>6.1.16</spring-framework-spring-tests.version>
         <mockito-core.version>2.25.1</mockito-core.version>
-        <commons-io.version>2.6</commons-io.version>
-        <commons-lang3.version>3.0.1</commons-lang3.version>
-        <google.gson.version>2.8.6</google.gson.version>
+        <commons-io.version>2.11.0</commons-io.version>
+        <commons-lang3.version>3.17.0</commons-lang3.version>
+        <google.gson.version>2.12.1</google.gson.version>
         <saxon.version>8.7</saxon.version>
-        <io.swagger.annotations.version>2.1.1</io.swagger.annotations.version>
-        <javax.ws.rs-api.version>2.1.1</javax.ws.rs-api.version>
+        <io.swagger.annotations.version>2.2.28</io.swagger.annotations.version>
+        <jakarta.ws.rs-api.version>2.1.1</jakarta.ws.rs-api.version>
         <glassfish.jersey-client.version>2.30</glassfish.jersey-client.version>
         <jersey-hk2.version>2.28</jersey-hk2.version>
-        <h2.database.version>1.4.200</h2.database.version>
-        <spring-web.version>5.2.3.RELEASE</spring-web.version>
-        <feign-http-client.version>10.7.4</feign-http-client.version>
-        <postgresql.version>42.2.11</postgresql.version>
-        <compile-testing.version>0.18</compile-testing.version>
+        <h2.database.version>2.3.232</h2.database.version>
+        <spring-web.version>6.1.16</spring-web.version>
+        <feign-http-client.version>13.5</feign-http-client.version>
+        <postgresql.version>42.7.3</postgresql.version>
+        <compile-testing.version>0.21.0</compile-testing.version>
+        <semver4j.version>3.1.0</semver4j.version>
         <!-- JavaDoc -->
-        <javax.interceptor.api.version>1.2.2</javax.interceptor.api.version>
-        <commons-codec.version>1.14</commons-codec.version>
+        <jakarta.interceptor.api.version>2.2.0</jakarta.interceptor.api.version>
+        <commons-codec.version>1.15</commons-codec.version>
+        <commons-compress>1.26.2</commons-compress>
     </properties>
 
     <repositories>
@@ -215,12 +231,7 @@
             <dependency>
                 <groupId>io.swagger.core.v3</groupId>
                 <artifactId>swagger-annotations</artifactId>
-                <version>${swaggerv3.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>io.swagger</groupId>
-                <artifactId>swagger-annotations</artifactId>
-                <version>${swagger.version}</version>
+                <version>${io.swagger.annotations.version}</version>
             </dependency>
 
             <!-- Spring Boot -->
@@ -230,6 +241,14 @@
                 <version>${spring-boot.version}</version>
                 <type>pom</type>
                 <scope>import</scope>
+            </dependency>
+
+            <dependency>
+                <groupId>org.springframework.cloud</groupId>
+                <artifactId>spring-cloud-dependencies</artifactId>
+                <version>2023.0.3</version>
+                <scope>import</scope>
+                <type>pom</type>
             </dependency>
 
             <!-- Lombok -->
@@ -272,9 +291,27 @@
             </dependency>
 
             <dependency>
+                <groupId>jakarta.validation</groupId>
+                <artifactId>jakarta.validation-api</artifactId>
+                <version>${jakarta.validation.version}</version>
+            </dependency>
+
+            <dependency>
                 <groupId>com.fasterxml.jackson.dataformat</groupId>
                 <artifactId>jackson-dataformat-yaml</artifactId>
-                <version>${fasterxml-data-format.version}</version>
+                <version>${fasterxml.version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>jakarta.el</groupId>
+                <artifactId>jakarta.el-api</artifactId>
+                <version>${jakarta.el-api.version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>org.openapitools</groupId>
+                <artifactId>jackson-databind-nullable</artifactId>
+                <version>${jackson-databind-nullable.version}</version>
             </dependency>
 
             <dependency>
@@ -293,11 +330,23 @@
                     </exclusion>
                 </exclusions>
             </dependency>
+            <dependency>
+                <groupId>org.apache.commons</groupId>
+                <artifactId>commons-compress</artifactId>
+                <version>${commons-compress}</version>
+            </dependency>
 
             <dependency>
                 <groupId>org.slf4j</groupId>
                 <artifactId>slf4j-api</artifactId>
                 <version>${slf4j-simple.version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>com.kohlschutter.junixsocket</groupId>
+                <artifactId>junixsocket-core</artifactId>
+                <version>${junixsocket-core.version}</version>
+                <type>pom</type>
             </dependency>
 
             <!-- Test -->
@@ -307,8 +356,27 @@
                 <version>${jupiter.version}</version>
                 <scope>test</scope>
             </dependency>
+            <dependency>
+                <groupId>net.java.dev.jna</groupId>
+                <artifactId>jna</artifactId>
+                <version>${testcontainers-jna.version}</version>
+                <scope>test</scope>
+            </dependency>
+            <dependency>
+                <groupId>net.java.dev.jna</groupId>
+                <artifactId>jna-platform</artifactId>
+                <version>${testcontainers-jna.version}</version>
+                <scope>test</scope>
+            </dependency>
         </dependencies>
     </dependencyManagement>
+    <distributionManagement>
+        <repository>
+            <id>github</id>
+            <url>https://maven.pkg.github.com/adorsys/open-banking-gateway</url>
+        </repository>
+    </distributionManagement>
+
 
     <build>
         <plugins>
@@ -318,8 +386,8 @@
                 <artifactId>maven-compiler-plugin</artifactId>
                 <version>${maven-compiler-plugin.version}</version>
                 <configuration>
-                    <source>11</source>
-                    <target>11</target>
+                    <source>21</source>
+                    <target>21</target>
                     <annotationProcessorPaths>
                         <path>
                             <groupId>org.projectlombok</groupId>
@@ -347,7 +415,7 @@
                 <version>${pmd.plugin.version}</version>
                 <configuration>
                     <includeTests>true</includeTests>
-                    <sourceEncoding>${project.build.sourceEncoding}</sourceEncoding>
+                    <inputEncoding>${project.build.sourceEncoding}</inputEncoding>
                     <minimumTokens>100</minimumTokens>
                     <targetJdk>${java.version}</targetJdk>
                     <analysisCache>true</analysisCache>
@@ -416,17 +484,6 @@
                 </configuration>
             </plugin>
 
-            <!-- junit tests -->
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-surefire-plugin</artifactId>
-                <version>${surefire.version}</version>
-                <configuration>
-                    <argLine>${surefireArgLine}</argLine>
-                    <trimStackTrace>false</trimStackTrace>
-                </configuration>
-            </plugin>
-
             <!-- integration tests -->
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
@@ -452,6 +509,21 @@
                 </executions>
             </plugin>
         </plugins>
+
+        <pluginManagement>
+            <plugins>
+                <!-- junit tests -->
+                <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-surefire-plugin</artifactId>
+                    <version>${surefire.version}</version>
+                    <configuration>
+                        <argLine>-Xmx1024m ${surefireArgLine}</argLine>
+                        <trimStackTrace>false</trimStackTrace>
+                    </configuration>
+                </plugin>
+            </plugins>
+        </pluginManagement>
     </build>
 
     <reporting>
@@ -508,8 +580,8 @@
                         <configuration>
                             <!-- Tell the plugins what repositories to use (by id) -->
                             <releaseDeploymentRepository>release</releaseDeploymentRepository>
-                            <stageDeploymentRepository>stage</stageDeploymentRepository>
-                            <snapshotDeploymentRepository>stage</snapshotDeploymentRepository>
+                            <stageDeploymentRepository>github</stageDeploymentRepository>
+                            <snapshotDeploymentRepository>github</snapshotDeploymentRepository>
 
                             <!-- Allow to promote on ANY branch because Github Actions checkouts tag, not branch (and forcing both seem impossible) -->
                             <releaseBranchPattern>${release-branch-pattern}</releaseBranchPattern>
@@ -581,12 +653,12 @@
                         <version>${maven-javadoc-plugin.version}</version>
                         <configuration>
                             <doclint>none</doclint>
-                            <!-- Fixes error - class file for javax.interceptor.InterceptorBinding not found -->
+                            <!-- Fixes error - class file for jakarta.interceptor.InterceptorBinding not found -->
                             <additionalDependencies>
                                 <additionalDependency>
-                                    <groupId>javax.interceptor</groupId>
-                                    <artifactId>javax.interceptor-api</artifactId>
-                                    <version>${javax.interceptor.api.version}</version>
+                                    <groupId>jakarta.interceptor</groupId>
+                                    <artifactId>jakarta.interceptor-api</artifactId>
+                                    <version>${jakarta.interceptor.api.version}</version>
                                 </additionalDependency>
                             </additionalDependencies>
                         </configuration>

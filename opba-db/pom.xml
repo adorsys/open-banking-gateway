@@ -5,7 +5,7 @@
     <parent>
         <artifactId>open-banking-gateway</artifactId>
         <groupId>de.adorsys.opba</groupId>
-        <version>1.0.0</version>
+        <version>1.0.2</version>
     </parent>
     <modelVersion>4.0.0</modelVersion>
 
@@ -43,6 +43,16 @@
             <groupId>de.adorsys</groupId>
             <artifactId>datasafe-encryption-api</artifactId>
             <version>${datasafe.version}</version>
+            <exclusions>
+                <exclusion>
+                    <groupId>org.bouncycastle</groupId>
+                    <artifactId>bcprov-jdk15on</artifactId>
+                </exclusion>
+                <exclusion>
+                    <groupId>org.bouncycastle</groupId>
+                    <artifactId>bcpkix-jdk15on</artifactId>
+                </exclusion>
+            </exclusions>
         </dependency>
 
         <!-- Spring -->
