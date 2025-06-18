@@ -96,6 +96,12 @@
             <artifactId>mapstruct</artifactId>
             <version>${mapstruct.version}</version>
         </dependency>
+        <dependency>
+            <groupId>org.iban4j</groupId>
+            <artifactId>iban4j</artifactId>
+            <version>${iban.4j.version}</version>
+            <scope>compile</scope>
+        </dependency>
 
         <!-- Email based Oauth2 -->
         <dependency>

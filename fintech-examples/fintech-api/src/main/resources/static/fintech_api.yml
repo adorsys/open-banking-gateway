@@ -1124,6 +1124,7 @@ components:
     InlineResponseBankInfo:
       type: object
       required:
+        - bankCode
         - bankName
         - bic
       properties:
