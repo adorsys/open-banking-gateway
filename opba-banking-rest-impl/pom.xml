@@ -128,7 +128,6 @@
             <groupId>org.iban4j</groupId>
             <artifactId>iban4j</artifactId>
             <version>${iban.4j.version}</version>
-            <scope>compile</scope>
         </dependency>
     </dependencies>
 

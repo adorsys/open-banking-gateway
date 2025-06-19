@@ -1127,6 +1127,7 @@ components:
         - bankCode
         - bankName
         - bic
+        - uuid
       properties:
         bankName:
           type: string
@@ -1134,7 +1135,8 @@ components:
           type: string
         bic:
           type: string
-
+        uuid:
+          type: string
 
     transactionStatus:
       description: The transaction status

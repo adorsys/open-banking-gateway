@@ -34,9 +34,10 @@ public class BankInfoService {
 
             Bank bank = bankOpt.get();
             BankInfoResponse response = new BankInfoResponse();
-            response.setBankCode(bank.getBankCode());
             response.setBankName(bank.getName());
+            response.setBankCode(bank.getBankCode());
             response.setBic(bank.getBic());
+            response.setUuid(bank.getUuid());
             return response;
 
         } catch (IbanFormatException | IllegalArgumentException e) {
