@@ -99,6 +99,12 @@ Then push the results:
    ```
 This will trigger both workflows and deploy the JAR artifacts and Docker images.
 
+###   Post-Release Update Steps
+After the release workflows complete, manually update the firefly-exporter pom.xml dependency versions to the required version, which needs to match with the version of the future release.
+Later on commit and push the changes to the develop branch
+
+This keeps the develop branch up to date with the proper dependency versions.
+
 ###  Required GitHub Secrets
 Ensure the following secrets are configured in your repository:
 
