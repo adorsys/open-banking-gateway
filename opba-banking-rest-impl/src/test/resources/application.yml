@@ -23,6 +23,16 @@ api:
         password: OpenSesame
         url-patterns-to-protect:
           - /admin/*
+
+    # Bank-info API properties
+    bank-info:
+      query: >
+        SELECT id, uuid, name, bic, bank_code
+        FROM opb_bank
+        WHERE bank_code = :bankCode
+          AND (:onlyActive IS FALSE OR active IS TRUE)
+        LIMIT 1
+
     # Bank-search API properties
     bank-search:
       start: 0

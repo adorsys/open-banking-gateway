@@ -13,6 +13,7 @@ import de.adorsys.opba.api.security.generator.api.GeneratedDataToSignNormalizer;
             "static/tpp_banking_api_ais.yml",
             "static/tpp_banking_api_pis.yml",
             "static/tpp_banking_api_bank_search.yml",
+            "static/tpp_banking_api_bank_info.yml",
             "static/tpp_banking_api_token.yml"
         })
 @SuppressWarnings("unused") // Is used to configure generation of request Signer - OpenBankingDataToSignProvider

@@ -21,6 +21,8 @@ public interface BankProfileJpaRepository extends JpaRepository<BankProfile, Lon
 
     List<BankProfile> findByBankIdIn(Collection<Long> bankIds);
 
+    List<BankProfile> findByBankId(Long bankId);
+
     List<BankProfile> findByBankBic(String bankBic);
 
     List<BankProfile> findByBankBankCode(String bankCode);

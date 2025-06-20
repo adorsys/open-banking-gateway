@@ -68,6 +68,16 @@ api:
         url-patterns-to-protect:
           - /admin/*
 
+    # fetch bank-Info from iban
+    bank-info:
+      # Query to fetch bank info from db
+      query: >
+        SELECT id, uuid, name, bic, bank_code
+        FROM opb_bank
+        WHERE bank_code = :bankCode
+          AND (:onlyActive IS FALSE OR active IS TRUE)
+        LIMIT 1
+
     # Bank-search API properties
     bank-search:
       # The index of the first result

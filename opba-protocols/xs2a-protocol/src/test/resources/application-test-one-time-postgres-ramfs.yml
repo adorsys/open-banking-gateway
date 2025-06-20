@@ -13,3 +13,5 @@ spring:
         physical-strategy: org.hibernate.boot.model.naming.PhysicalNamingStrategyStandardImpl
 bank-search:
   query:
+bank-info:
+  query:
