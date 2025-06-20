@@ -5,7 +5,7 @@
     <parent>
         <groupId>de.adorsys.opba</groupId>
         <artifactId>open-banking-gateway</artifactId>
-        <version>1.0.2</version>
+        <version>1.0.3-SNAPSHOT</version>
     </parent>
 
     <artifactId>opba-consent-rest-impl</artifactId>
