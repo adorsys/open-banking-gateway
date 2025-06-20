@@ -29,14 +29,12 @@ public class IbanSearchService {
 
     public InlineResponseBankInfo searchByIban(String iban) {
         if (iban == null || iban.trim().isEmpty()) {
-            log.warn("Empty or null IBAN provided.");
             throw new InvalidIbanException("No IBAN was provided. Please enter a valid IBAN.");
         }
 
         try {
             IbanUtil.validate(iban); // Validates format and checksum
         } catch (IbanFormatException | IllegalArgumentException e) {
-            log.warn("Invalid IBAN format provided: {}", iban);
             throw new InvalidIbanException("The IBAN you provided is invalid. Please check and try again.");
         }
 
@@ -53,13 +51,11 @@ public class IbanSearchService {
 
             BankInfoResponse response = fullResponse.getBody();
             if (response == null) {
-                log.error("TPP returned null for IBAN: {}", iban);
                 throw new InvalidIbanException("Unable to find bank info for the provided IBAN.");
             }
 
             return bankInfoMapper.mapFromTppToFintech(response);
         } catch (Exception e) {
-            log.error("Unexpected error while retrieving bank info: {}", e.getMessage());
             throw new InvalidIbanException("An unexpected error occurred while processing your request. Please try again later.");
         }
     }

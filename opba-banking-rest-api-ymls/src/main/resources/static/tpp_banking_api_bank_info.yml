@@ -33,6 +33,11 @@ paths:
                   example: DE89370400440532013000
               required:
                 - iban
+            examples:
+              validIban:
+                summary: Valid IBAN request
+                value:
+                  iban: DE89370400440532013000
       responses:
         "200":
           description: Bank information retrieved successfully
@@ -40,6 +45,14 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/BankInfoResponse'
+              examples:
+                successfulResponse:
+                  summary: Example of a successful response
+                  value:
+                    bankCode: "37040044"
+                    bankName: "Commerzbank"
+                    bic: "COBADEFFXXX"
+                    uuid: "123e4567-e89b-12d3-a456-426614174000"
         "400":
           $ref: '#/components/responses/400_BadRequest'
         "404":
@@ -91,6 +104,12 @@ components:
         application/json:
           schema:
             $ref: '#/components/schemas/ErrorResponse'
+          examples:
+            invalidIban:
+              summary: Invalid IBAN example
+              value:
+                errorCode: "INVALID_IBAN"
+                message: "The provided IBAN is not valid."
 
     404_NotFound:
       description: Bank information not found
@@ -98,3 +117,9 @@ components:
         application/json:
           schema:
             $ref: '#/components/schemas/ErrorResponse'
+          examples:
+            bankNotFound:
+              summary: Bank not found example
+              value:
+                errorCode: "BANK_NOT_FOUND"
+                message: "No bank information could be found for the provided IBAN."
