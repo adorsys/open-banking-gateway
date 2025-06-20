@@ -93,5 +93,13 @@ function build_release_modules {
 # Should set version numbers in your modules
 # Parameter $1 - version as text
 function set_modules_version {
-  mvn versions:set -DnewVersion="$1"
+  local new_version="$1"
+
+  echo "Setting version to ${new_version} in main modules"
+  mvn versions:set -DnewVersion="${new_version}"
+
+  echo "Setting version to ${new_version} in firefly-exporter"
+  pushd firefly-exporter > /dev/null
+  ../mvnw versions:set -DnewVersion="${new_version}"
+  popd > /dev/null
 }
