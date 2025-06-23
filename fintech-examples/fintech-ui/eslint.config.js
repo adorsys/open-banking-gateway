@@ -3,6 +3,7 @@ const tseslint = require('typescript-eslint');
 
 module.exports = [
   {
+    ignores: ['src/app/api/**/*'],
     files: ['**/*.ts'],
     languageOptions: {
       parser: require('@typescript-eslint/parser'),

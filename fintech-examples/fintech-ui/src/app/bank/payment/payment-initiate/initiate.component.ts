@@ -1,24 +1,27 @@
-import {Component, OnInit} from '@angular/core';
-import {UntypedFormBuilder, UntypedFormGroup, Validators} from '@angular/forms';
+import { Component, OnInit } from '@angular/core';
+import { UntypedFormBuilder, UntypedFormGroup, Validators } from '@angular/forms';
 import { HttpResponse } from '@angular/common/http';
-import {Location} from '@angular/common';
-import {ActivatedRoute, Router} from '@angular/router';
-import {ValidatorService} from 'angular-iban';
-import {FintechSinglePaymentInitiationService, SinglePaymentInitiationRequest} from '../../../api';
-import {Consts, HeaderConfig} from '../../../models/consts';
-import {RedirectStruct, RedirectType} from '../../redirect-page/redirect-struct';
-import {StorageService} from '../../../services/storage.service';
-import {ConfirmData} from '../payment-confirm/confirm.data';
+import { Location } from '@angular/common';
+import { ActivatedRoute, Router } from '@angular/router';
+import { ValidatorService } from 'angular-iban';
+import { FintechSinglePaymentInitiationService, SinglePaymentInitiationRequest } from '../../../api';
+import { HeaderConfig } from '../../../models/consts';
+import { RedirectStruct, RedirectType } from '../../redirect-page/redirect-struct';
+import { StorageService } from '../../../services/storage.service';
+import { ConfirmData } from '../payment-confirm/confirm.data';
+import { SharedModule } from '../../../common/shared.module';
+import { RouteUtilsService } from '../../../services/route-utils.service';
 
 class TestPayment {
   constructor(public referenceName: string, public purpose: string) {}
 }
 
 @Component({
-    selector: 'app-initiate',
-    templateUrl: './initiate.component.html',
-    styleUrls: ['./initiate.component.scss'],
-    standalone: false
+  selector: 'app-initiate',
+  templateUrl: './initiate.component.html',
+  styleUrls: ['./initiate.component.scss'],
+  standalone: true,
+  imports: [SharedModule]
 })
 export class InitiateComponent implements OnInit {
   public static ROUTE = 'initiate';
@@ -42,10 +45,11 @@ export class InitiateComponent implements OnInit {
     private router: Router,
     private route: ActivatedRoute,
     private location: Location,
-    private storageService: StorageService
+    private storageService: StorageService,
+    private routeUtils: RouteUtilsService
   ) {
-    this.bankId = this.route.snapshot.params[Consts.BANK_ID_NAME];
-    this.accountId = this.route.snapshot.params[Consts.ACCOUNT_ID_NAME];
+    this.bankId = this.routeUtils.getBankId(this.route);
+    this.accountId = this.routeUtils.getAccountId(this.route);
     this.debtorIban = this.route.snapshot.queryParams.iban;
   }
 
@@ -129,7 +133,7 @@ export class InitiateComponent implements OnInit {
     throw new Error('did not find account for id:' + accountId);
   }
 
-  private setRedirectInfo(response: HttpResponse<any>): void {
+  private setRedirectInfo(response: HttpResponse<unknown>): void {
     this.storageService.setRedirect(
       response.headers.get(HeaderConfig.HEADER_FIELD_REDIRECT_CODE),
       response.headers.get(HeaderConfig.HEADER_FIELD_AUTH_ID),
@@ -140,7 +144,7 @@ export class InitiateComponent implements OnInit {
   }
 
   private setConfirmDataAndGet(
-    response: HttpResponse<any>,
+    response: HttpResponse<unknown>,
     paymentRequest: SinglePaymentInitiationRequest
   ): ConfirmData {
     const location = response.headers.get(HeaderConfig.HEADER_FIELD_LOCATION);

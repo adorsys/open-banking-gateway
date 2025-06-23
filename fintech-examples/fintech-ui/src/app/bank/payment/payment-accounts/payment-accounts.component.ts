@@ -1,15 +1,18 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { StorageService } from '../../../services/storage.service';
-import { Consts } from '../../../models/consts';
 import { ValidatorService } from 'angular-iban';
 import { UntypedFormBuilder, UntypedFormGroup, Validators } from '@angular/forms';
+import { AccountCardComponent } from '../../common/account-card/account-card.component';
+import { SharedModule } from '../../../common/shared.module';
+import { RouteUtilsService } from '../../../services/route-utils.service';
 
 @Component({
-    selector: 'app-list-accounts-for-payment',
-    templateUrl: './payment-accounts.component.html',
-    styleUrls: ['./payment-accounts.component.scss'],
-    standalone: false
+  selector: 'app-list-accounts-for-payment',
+  templateUrl: './payment-accounts.component.html',
+  styleUrls: ['./payment-accounts.component.scss'],
+  standalone: true,
+  imports: [AccountCardComponent, SharedModule]
 })
 export class PaymentAccountsComponent implements OnInit {
   public static ROUTE = 'accounts';
@@ -22,11 +25,12 @@ export class PaymentAccountsComponent implements OnInit {
     private storageService: StorageService,
     private formBuilder: UntypedFormBuilder,
     private router: Router,
-    private route: ActivatedRoute
+    private route: ActivatedRoute,
+    private routeUtils: RouteUtilsService
   ) {}
 
   ngOnInit() {
-    this.bankId = this.route.snapshot.params[Consts.BANK_ID_NAME];
+    this.bankId = this.routeUtils.getBankId(this.route);
     this.accounts = this.storageService.getLoa(this.bankId);
 
     this.ibanForm = this.formBuilder.group({

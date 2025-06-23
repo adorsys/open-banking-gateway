@@ -15,37 +15,38 @@ describe('RedirectPageComponent', () => {
 
   beforeAll(() => (window.onbeforeunload = jasmine.createSpy()));
 
-  beforeEach(waitForAsync(() => {
-    TestBed.configureTestingModule({
-    declarations: [RedirectPageComponent],
-    schemas: [NO_ERRORS_SCHEMA],
-    imports: [RouterTestingModule],
-    providers: [provideHttpClient(withInterceptorsFromDi()), provideHttpClientTesting()]
-})
-      .overrideComponent(RedirectPageComponent, {
-        set: {
-          providers: [
-            {
-              provide: ActivatedRoute,
-              useValue: {
-                paramMap: {
-                  subscribe(location: string): string {
-                    const r: RedirectStruct = new RedirectStruct();
-                    r.bankName = 'peter';
-                    r.redirectUrl = 'redirectUrl';
-                    return JSON.stringify(r);
+  beforeEach(
+    waitForAsync(() => {
+      TestBed.configureTestingModule({
+        schemas: [NO_ERRORS_SCHEMA],
+        imports: [RouterTestingModule, RedirectPageComponent],
+        providers: [provideHttpClient(withInterceptorsFromDi()), provideHttpClientTesting()]
+      })
+        .overrideComponent(RedirectPageComponent, {
+          set: {
+            providers: [
+              {
+                provide: ActivatedRoute,
+                useValue: {
+                  paramMap: {
+                    subscribe(): string {
+                      const r: RedirectStruct = new RedirectStruct();
+                      r.bankName = 'peter';
+                      r.redirectUrl = 'redirectUrl';
+                      return JSON.stringify(r);
+                    }
                   }
                 }
+              },
+              {
+                provide: ConsentAuthorizationService
               }
-            },
-            {
-              provide: ConsentAuthorizationService
-            }
-          ]
-        }
-      })
-      .compileComponents();
-  }));
+            ]
+          }
+        })
+        .compileComponents();
+    })
+  );
 
   beforeEach(() => {
     fixture = TestBed.createComponent(RedirectPageComponent);

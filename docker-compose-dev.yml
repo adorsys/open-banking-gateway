@@ -1,6 +1,4 @@
 # This Docker-Compose file is FOR DEVELOPMENT. When you are able to build project yourself.
-version: "3.3"
-
 networks:
   opba-net:
 
@@ -22,18 +20,20 @@ services:
 
   open-banking-gateway:
     environment:
-      - SPRING_LIQUIBASE_PARAMETERS_ADORSYS-SANDBOX-URL=https://obg-bank-dev-xs2a.cloud.adorsys.de
+      - SPRING_LIQUIBASE_PARAMETERS_ADORSYS-SANDBOX-URL=https://xs2a-connector-modelbank.support.sol.adorsys.com
+      - SPRING_LIQUIBASE_PARAMETERS_ADORSYS-SANDBOX-OAUTH-SERVER-URL=https://xs2a-online-modelbank.support.sol.adorsys.com/oauth/authorization-server
       - SPRING_LIQUIBASE_PARAMETERS_ADORSYS-HBCI-SANDBOX-URL=http://hbci-sandbox:8090/hbci-mock/
       - SPRING_DATASOURCE_URL=jdbc:postgresql://postgres:5432/open_banking?currentSchema=banking_protocol
       - SPRING_DATASOURCE_USERNAME=postgres
       - SPRING_DATASOURCE_PASSWORD=docker
       - PROTOCOL_XS2A_PKCS12_KEYSTORE=/pkcs12/sample-qwac.keystore
       - FACADE_ENCRYPTION_KEYSETPATH=/keysetpath/example-keyset.json
-      - FACADE_URLS_EMBEDDED-UI-BASE-URL=http://localhost:14200
-      - PROTOCOL_GATEWAY-BASE-URL=http://localhost:18085
+      - FACADE_URLS_EMBEDDED-UI-BASE-URL=http://localhost:4200
+      - PROTOCOL_GATEWAY-BASE-URL=http://localhost:8085
+      - SPRING_PROFILES_INCLUDE = no-signature-filter
     build: opba-embedded-starter
     ports:
-      - "18085:8085"
+      - "8085:8085"
     volumes:
       - ./opba-protocols/xs2a-protocol/src/main/resources/:/pkcs12/
       - ./opba-banking-protocol-facade/src/main/resources/:/keysetpath/
@@ -61,11 +61,11 @@ services:
       - TPP_URL=http://open-banking-gateway:8085
       - SPRING_DATASOURCE_URL=jdbc:postgresql://postgres:5432/open_banking?currentSchema=fintech
 
-      - FINTECH-UI_HOST=http://localhost:24200
+      - FINTECH-UI_HOST=http://localhost:4444
 
     build: fintech-examples/fintech-server
     ports:
-      - "18086:8086"
+      - "8086:8086"
     depends_on:
       - postgres
     networks:

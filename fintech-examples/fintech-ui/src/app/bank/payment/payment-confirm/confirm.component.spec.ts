@@ -2,60 +2,67 @@ import { waitForAsync, ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { ConfirmComponent } from './confirm.component';
 import { provideHttpClientTesting } from '@angular/common/http/testing';
-import { RouterTestingModule } from '@angular/router/testing';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, provideRouter } from '@angular/router';
 import { ConfirmData } from './confirm.data';
 import { RedirectStruct } from '../../redirect-page/redirect-struct';
 import { ClassSinglePaymentInitiationRequest } from '../../../api/model-classes/ClassSinglePaymentInitiationRequest';
 import { provideHttpClient, withInterceptorsFromDi } from '@angular/common/http';
+import { of } from 'rxjs';
 
 describe('ConfirmComponent', () => {
   let component: ConfirmComponent;
   let fixture: ComponentFixture<ConfirmComponent>;
+  let mockConfirmData: ConfirmData;
 
-  beforeAll(() => (window.onbeforeunload = jasmine.createSpy()));
+  function setupMockData(): ConfirmData {
+    const redirectStruct = new RedirectStruct();
+    redirectStruct.bankName = 'peter';
+    redirectStruct.redirectUrl = 'redirectUrl';
 
-  beforeEach(waitForAsync(() => {
-    TestBed.configureTestingModule({
-    declarations: [ConfirmComponent],
-    imports: [RouterTestingModule],
-    providers: [provideHttpClient(withInterceptorsFromDi()), provideHttpClientTesting()]
-})
-      .overrideComponent(ConfirmComponent, {
-        set: {
-          providers: [
-            {
-              provide: ActivatedRoute,
-              useValue: {
-                paramMap: {
-                  subscribe(confirmationData: string): string {
-                    const r: RedirectStruct = new RedirectStruct();
-                    r.bankName = 'peter';
-                    r.redirectUrl = 'redirectUrl';
-                    const p: ClassSinglePaymentInitiationRequest = new ClassSinglePaymentInitiationRequest();
-                    p.debitorIban = 'DE80760700240271232400';
-                    p.creditorIban = 'AL90208110080000001039531801';
-                    p.amount = '1.10';
-                    p.name = 'peter';
-                    const c: ConfirmData = new ConfirmData();
-                    c.redirectStruct = r;
-                    c.paymentRequest = p;
-                    return JSON.stringify(c);
-                  }
-                }
+    const paymentRequest = new ClassSinglePaymentInitiationRequest();
+    paymentRequest.debitorIban = 'DE80760700240271232400';
+    paymentRequest.creditorIban = 'AL90208110080000001039531801';
+    paymentRequest.amount = '1.10';
+    paymentRequest.name = 'peter';
+
+    const confirmData = new ConfirmData();
+    confirmData.redirectStruct = redirectStruct;
+    confirmData.paymentRequest = paymentRequest;
+
+    return confirmData;
+  }
+
+  beforeAll(() => {
+    window.onbeforeunload = jasmine.createSpy();
+    mockConfirmData = setupMockData();
+  });
+
+  beforeEach(
+    waitForAsync(() => {
+      TestBed.configureTestingModule({
+        imports: [ConfirmComponent],
+        providers: [
+          provideRouter([]),
+          provideHttpClient(withInterceptorsFromDi()),
+          provideHttpClientTesting(),
+          {
+            provide: ActivatedRoute,
+            useValue: {
+              paramMap: {
+                subscribe: jasmine.createSpy().and.callFake(() => {
+                  return of(JSON.stringify(mockConfirmData));
+                })
               }
             }
-          ]
-        }
-      })
-      .compileComponents();
-  }));
+          }
+        ]
+      }).compileComponents();
 
-  beforeEach(() => {
-    fixture = TestBed.createComponent(ConfirmComponent);
-    component = fixture.componentInstance;
-    fixture.detectChanges();
-  });
+      fixture = TestBed.createComponent(ConfirmComponent);
+      component = fixture.componentInstance;
+      fixture.detectChanges();
+    })
+  );
 
   it('should create', () => {
     expect(component).toBeTruthy();

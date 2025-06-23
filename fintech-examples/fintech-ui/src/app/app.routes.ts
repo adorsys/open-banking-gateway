@@ -1,5 +1,4 @@
-import { NgModule } from '@angular/core';
-import { RouterModule, Routes } from '@angular/router';
+import { Routes } from '@angular/router';
 import { LoginComponent } from './login/login.component';
 import { AuthGuard } from './guards/auth.guard';
 import { GuestGuard } from './guards/guest.guard';
@@ -11,8 +10,9 @@ import { RedirectAfterPaymentComponent } from './redirect-after-payment/redirect
 import { Oauth2LoginComponent } from './oauth2-login/oauth2-login.component';
 import { ForbiddenOauth2Component } from './invalid-oauth2/forbidden-oauth2.component';
 import { RoutingPath } from './models/routing-path.model';
+import { bankRoutes } from './bank/bank.routes';
 
-const routes: Routes = [
+export const routes: Routes = [
   {
     path: '',
     redirectTo: RoutingPath.LOGIN,
@@ -31,12 +31,12 @@ const routes: Routes = [
   {
     path: RoutingPath.BANK,
     canActivate: [AuthGuard],
-    loadChildren: () => import('./bank/bank.module').then((m) => m.BankModule)
+    children: bankRoutes
   },
   {
     path: RoutingPath.BANK_SEARCH,
     canActivate: [AuthGuard],
-    loadChildren: () => import('./bank-search/bank-search.module').then((m) => m.BankSearchModule)
+    loadComponent: () => import('./bank-search/bank-search.component').then((m) => m.BankSearchComponent)
   },
   {
     path: RoutingPath.REDIRECT_AFTER_CONSENT,
@@ -71,9 +71,3 @@ const routes: Routes = [
     redirectTo: ''
   }
 ];
-
-@NgModule({
-  imports: [RouterModule.forRoot(routes, { enableTracing: false, paramsInheritanceStrategy: 'always' })],
-  exports: [RouterModule]
-})
-export class AppRoutingModule {}
