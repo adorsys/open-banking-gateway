@@ -96,6 +96,7 @@ then
 else
   print_message "Nothing to commit..."
 fi
+git push --set-upstream "${REMOTE_REPO}" "${RELEASE_BRANCH}"
 
 build_release_modules >> ${OUT}
 cd "${GIT_REPO_DIR}"
