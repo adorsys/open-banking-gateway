@@ -28,3 +28,20 @@ This will:
 
 These workflows will build and deploy the JAR artifacts and Docker images automatically.
 
+---
+
+## 📝 Release Notes Requirements
+
+Every contributor performing a release must:
+1. Update the `releasenotes.md` index file with a new entry for the current release.
+2. Create a new file named `releasenotes-<release-version>.md` inside the docs/release-notes/ directory.
+Example:
+  ```bash
+   docs/release-notes/releasenotes-1.2.3.md
+   ```
+Each `releasenotes-<release-version>.md` file should follow the standard format and include:
+- Release title and version
+- Release date
+- A short summary of changes (features, fixes, updates)
+
+This ensures that all releases are properly documented and easy to trace for future reference.
