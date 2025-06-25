@@ -3,6 +3,7 @@ package de.adorsys.opba.fintech.impl.exceptions;
 import de.adorsys.opba.fintech.impl.service.exceptions.InvalidIbanException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
@@ -16,6 +17,18 @@ public class GlobalExceptionHandler {
     public ResponseEntity<String> handleInvalidIban(InvalidIbanException ex) {
         LOG.warn("Invalid IBAN request: {}", ex.getMessage());
         return ResponseEntity.badRequest().body(ex.getMessage());
+    }
+
+    @ExceptionHandler(Oauth2UnauthorizedException.class)
+    public ResponseEntity<String> handleOauth2Unauthorized(Oauth2UnauthorizedException ex) {
+        LOG.warn("Unauthorized OAuth2 request: {}", ex.getMessage());
+        return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(ex.getMessage()); // 401
+    }
+
+    @ExceptionHandler({EmailNotAllowed.class, EmailNotVerified.class})
+    public ResponseEntity<String> handleEmailExceptions(Exception ex) {
+        LOG.warn("Forbidden email operation: {}", ex.getMessage());
+        return ResponseEntity.status(HttpStatus.FORBIDDEN).body(ex.getMessage()); // 403
     }
 
     @ExceptionHandler(Exception.class)
