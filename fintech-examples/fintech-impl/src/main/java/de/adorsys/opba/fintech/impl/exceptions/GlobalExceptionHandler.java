@@ -25,7 +25,7 @@ public class GlobalExceptionHandler {
     public ResponseEntity<Map<String, String>> handleOauth2Unauthorized(Oauth2UnauthorizedException ex) {
         LOG.warn("Unauthorized OAuth2 request: {}", ex.getMessage());
         return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
-                .body(Collections.singletonMap("message", ex.getMessage())); // 401
+                .body(Collections.singletonMap("message", "")); // 401
     }
 
     @ExceptionHandler({EmailNotAllowed.class, EmailNotVerified.class})
