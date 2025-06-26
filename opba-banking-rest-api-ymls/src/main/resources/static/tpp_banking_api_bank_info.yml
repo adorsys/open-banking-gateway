@@ -1,0 +1,125 @@
+openapi: 3.0.1
+info:
+  version: "1.0.0"
+  title: Open Banking Gateway Bank Info API
+  description: >
+    This API allows retrieval of bank metadata based on a provided IBAN.
+externalDocs:
+  url: "https://adorsys.github.com/open-banking-gateway"
+
+paths:
+  /v1/banking/search/bank-info:
+    post:
+      tags:
+        - TppBankInfo
+      operationId: getBankInfoByIban
+      summary: Retrieve bank information by IBAN
+      description: >
+        Accepts an IBAN and returns the corresponding bank name, BIC, uuid
+        and bank code.
+      parameters:
+        - $ref: "./tpp_banking_api_commons.yml#/components/parameters/Fintech-ID"
+        - $ref: "./tpp_banking_api_commons.yml#/components/parameters/X-Request-Signature"
+        - $ref: "./tpp_banking_api_commons.yml#/components/parameters/X-Request-ID"
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                iban:
+                  type: string
+                  example: DE89370400440532013000
+              required:
+                - iban
+            examples:
+              validIban:
+                summary: Valid IBAN request
+                value:
+                  iban: DE89370400440532013000
+      responses:
+        "200":
+          description: Bank information retrieved successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BankInfoResponse'
+              examples:
+                successfulResponse:
+                  summary: Example of a successful response
+                  value:
+                    bankCode: "37040044"
+                    bankName: "Commerzbank"
+                    bic: "COBADEFFXXX"
+                    uuid: "123e4567-e89b-12d3-a456-426614174000"
+        "400":
+          $ref: '#/components/responses/400_BadRequest'
+        "404":
+          $ref: '#/components/responses/404_NotFound'
+
+components:
+  schemas:
+    BankInfoResponse:
+      type: object
+      properties:
+        bankCode:
+          type: string
+          description: National bank identifier extracted from IBAN
+          example: 37040044
+        bankName:
+          type: string
+          description: Official bank name
+          example: Commerzbank
+        bic:
+          type: string
+          description: Bank Identifier Code (SWIFT/BIC)
+          example: COBADEFFXXX
+        uuid:
+          type: string
+          format: uuid
+          description: Unique identifier of the bank record
+          example: 123e4567-e89b-12d3-a456-426614174000
+      required:
+        - bankCode
+        - bankName
+        - bic
+        - uuid
+
+    ErrorResponse:
+      type: object
+      properties:
+        errorCode:
+          type: string
+        message:
+          type: string
+      required:
+        - errorCode
+        - message
+
+  responses:
+    400_BadRequest:
+      description: Invalid IBAN supplied
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorResponse'
+          examples:
+            invalidIban:
+              summary: Invalid IBAN example
+              value:
+                errorCode: "INVALID_IBAN"
+                message: "The provided IBAN is not valid."
+
+    404_NotFound:
+      description: Bank information not found
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorResponse'
+          examples:
+            bankNotFound:
+              summary: Bank not found example
+              value:
+                errorCode: "BANK_NOT_FOUND"
+                message: "No bank information could be found for the provided IBAN."
