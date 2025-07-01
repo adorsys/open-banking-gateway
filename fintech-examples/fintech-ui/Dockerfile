@@ -3,7 +3,7 @@
 #############
 
 # base image
-FROM node:18-alpine as build-stage
+FROM node:22-alpine as build-stage
 LABEL maintainer="https://github.com/adorsys/open-banking-gateway"
 
 # set working directory
@@ -37,7 +37,7 @@ LABEL maintainer="https://github.com/adorsys/open-banking-gateway"
 
 
 # copy artifact build from the 'build environment'
-COPY --from=build-stage /app/dist /usr/share/nginx/html
+COPY --from=build-stage /app/dist/browser /usr/share/nginx/html
 
 USER 0
 

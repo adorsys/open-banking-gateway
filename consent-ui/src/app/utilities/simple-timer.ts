@@ -2,23 +2,24 @@ import { Injectable } from '@angular/core';
 import { Observable, Subscription, timer } from 'rxjs';
 import { UUID } from 'angular2-uuid';
 
+type TimerValue = number;
+
 interface TimerList {
   [name: string]: {
-    second: number,
-    t: Observable<any>
+    second: number;
+    t: Observable<TimerValue>;
   };
 }
 
 interface SubscriptionList {
   [id: string]: {
-    name: string,
-    subscription: Subscription
+    name: string;
+    subscription: Subscription;
   };
 }
 
 @Injectable({ providedIn: 'root' })
 export class SimpleTimer {
-
   private timers: TimerList = {};
   private subscription: SubscriptionList = {};
 
@@ -32,11 +33,10 @@ export class SimpleTimer {
     if (name === undefined || sec === undefined || this.timers[name]) {
       return false;
     }
-    let t: Observable<any>
+    let t: Observable<TimerValue>;
     if (delay) {
       t = timer(sec * 1000, sec * 1000);
-    }
-    else {
+    } else {
       t = timer(0, sec * 1000);
     }
     this.timers[name] = { second: sec, t: t };
@@ -46,7 +46,7 @@ export class SimpleTimer {
     if (name === undefined || sec === undefined || this.timers[name]) {
       return false;
     }
-    let t: Observable<any>
+    let t: Observable<TimerValue>;
     t = timer(delay * 1000, sec * 1000);
     this.timers[name] = { second: sec, t: t };
     return true;
@@ -55,7 +55,7 @@ export class SimpleTimer {
     if (name === undefined || msec === undefined || this.timers[name]) {
       return false;
     }
-    let t: Observable<any>
+    let t: Observable<TimerValue>;
     t = timer(delay, msec);
     this.timers[name] = { second: msec, t: t };
     return true;
@@ -66,7 +66,7 @@ export class SimpleTimer {
     }
     let s = this.getSubscription();
     // unsubscribe all subscription for queue 'name'
-    s.forEach(i => {
+    s.forEach((i) => {
       if (this.subscription[i].name === name) {
         this.unsubscribe(i);
       }
@@ -88,7 +88,7 @@ export class SimpleTimer {
     this.subscription[id] = {
       name: name,
       subscription: this.timers[name].t.subscribe(callback)
-    }
+    };
     return id;
   }
   /**

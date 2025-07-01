@@ -1,5 +1,5 @@
 ### Stage 1: Build Angular app
-FROM node:18-alpine as build
+FROM node:22-alpine as build
 
 WORKDIR /app
 COPY package*.json ./
@@ -9,7 +9,7 @@ COPY . .
 RUN npm run build -- --output-path=dist/consent-ui --configuration=production
 
 ### Stage 2: Nginx server
-FROM nginx:1.17.7-alpine
+FROM adorsys/nginx:ubi
 LABEL maintainer="https://github.com/adorsys/open-banking-gateway"
 
 COPY nginx.conf /etc/nginx/nginx.conf.template
@@ -22,7 +22,7 @@ RUN chgrp -R root /var/cache/nginx && \
     chmod -R 777 /etc/nginx && \
     chmod 775 /opt/entry.sh
 
-COPY --from=build /app/dist/consent-ui /app/dist
+COPY --from=build /app/dist/consent-ui/browser /app/dist
 
 EXPOSE 4200
 
