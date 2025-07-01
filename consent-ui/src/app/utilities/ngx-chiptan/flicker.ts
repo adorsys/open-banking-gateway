@@ -1,4 +1,3 @@
-
 /*
 Copyright (c) 2010–2012
     Lars-Dominik Braun <lars@6xq.net>
@@ -19,7 +18,7 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 THE SOFTWARE.
 */
 
-export function flickerCode(newcode) {
+export function flickerCode(newcode: string): FlickerCode {
   let code = newcode.toUpperCase().replace(/[^a-fA-F0-9]/g, '');
 
   const toHex = (n, minlen) => {
@@ -29,7 +28,7 @@ export function flickerCode(newcode) {
     }
 
     return s;
-  }
+  };
 
   const quersumme = (n) => {
     let q = 0;
@@ -39,7 +38,7 @@ export function flickerCode(newcode) {
     }
 
     return q;
-  }
+  };
 
   const getPayload = () => {
     let i = 0;
@@ -51,12 +50,12 @@ export function flickerCode(newcode) {
       i += 1;
       len = parseInt(code.slice(i, i + 1), 16);
       i += 1;
-      payload += code.slice(i, i+ len * 2);
+      payload += code.slice(i, i + len * 2);
       i += len * 2;
     }
 
     return payload;
-  }
+  };
 
   const checksum = () => {
     const len = code.length / 2 - 1;
@@ -65,7 +64,7 @@ export function flickerCode(newcode) {
     const luhndata = getPayload();
     let luhnsum = 0;
     for (let i = 0; i < luhndata.length; i += 2) {
-      luhnsum += (1 * parseInt(luhndata[i], 16)) + quersumme(2 * parseInt(luhndata[i + 1], 16));
+      luhnsum += 1 * parseInt(luhndata[i], 16) + quersumme(2 * parseInt(luhndata[i + 1], 16));
     }
     luhnsum = (10 - (luhnsum % 10)) % 10;
     code = code.substr(0, code.length - 2) + toHex(luhnsum, 1) + code.substr(code.length - 1);
@@ -75,21 +74,46 @@ export function flickerCode(newcode) {
       xorsum ^= parseInt(code[i], 16);
     }
 
-    code = code.substr(0, code.length-1) + toHex(xorsum, 1);
-  }
+    code = code.substr(0, code.length - 1) + toHex(xorsum, 1);
+  };
 
   this.getCode = () => code;
 
   checksum();
+
+  return {
+    getCode: () => code
+  };
 }
 
-export function flickerCanvas(width, height, bgColor, barColor) {
-  let code, halfbyteid, clock, bitarray, canvas, ctx;
+export interface FlickerCode {
+  getCode: () => string;
+}
 
-  this.reset = () => {
+export interface FlickerCanvas {
+  reset: () => void;
+  step: () => number;
+  getCanvas: () => HTMLCanvasElement;
+  setCode: (newcode: FlickerCode) => void;
+}
+
+export function flickerCanvas(
+  width: number | string,
+  height: number | string,
+  bgColor: string,
+  barColor: string
+): FlickerCanvas {
+  let code: string,
+    halfbyteid: number = 0,
+    clock: number = 1,
+    bitarray: number[][],
+    canvas: HTMLCanvasElement,
+    ctx: CanvasRenderingContext2D;
+
+  function reset() {
     halfbyteid = 0;
     clock = 1;
-  };
+  }
 
   const setup = () => {
     const bits = new Object();
@@ -114,12 +138,12 @@ export function flickerCanvas(width, height, bgColor, barColor) {
 
     bitarray = [];
     for (let i = 0; i < code.length; i += 2) {
-      bitarray[i] = bits[code[i+1]];
-      bitarray[i+1] = bits[code[i]];
+      bitarray[i] = bits[code[i + 1]];
+      bitarray[i + 1] = bits[code[i]];
     }
   };
 
-  const createCanvas = (width, height, bgColor, barColor) => {
+  const createCanvas = (width, height, bgColor) => {
     canvas = document.createElement('canvas');
     canvas.width = width;
     canvas.height = height;
@@ -129,9 +153,9 @@ export function flickerCanvas(width, height, bgColor, barColor) {
 
     ctx.fillStyle = bgColor;
     ctx.fillRect(0, 0, canvas.width, canvas.height);
-  }
+  };
 
-  this.step = () => {
+  function step(): number {
     const margin = 7;
     const barwidth = canvas.width / 5;
 
@@ -154,19 +178,27 @@ export function flickerCanvas(width, height, bgColor, barColor) {
       if (halfbyteid >= bitarray.length) {
         halfbyteid = 0;
       }
-
     }
 
     return 0;
   }
 
-  this.getCanvas = () => canvas;
-
-  this.setCode = newcode => {
-    code = newcode.getCode();
-    setup();
-    this.reset();
+  function getCanvas(): HTMLCanvasElement {
+    return canvas;
   }
 
-  createCanvas(width, height, bgColor, barColor);
+  function setCode(newcode: FlickerCode) {
+    code = newcode.getCode();
+    setup();
+    reset();
+  }
+
+  createCanvas(width, height, bgColor);
+
+  return {
+    reset,
+    step,
+    getCanvas,
+    setCode
+  };
 }

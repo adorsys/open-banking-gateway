@@ -11,7 +11,7 @@
     "moduleResolution": "node",
     "importHelpers": true,
     "target": "ES2022",
-    "typeRoots": ["node_modules/@types"],
+    "typeRoots": ["node_modules/@types", "node_modules/jest-preset-angular/types"],
     "lib": ["es2018", "dom"],
     "useDefineForClassFields": false
   },

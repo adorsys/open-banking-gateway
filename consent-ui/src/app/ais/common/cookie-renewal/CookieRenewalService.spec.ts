@@ -3,14 +3,11 @@ import { provideHttpClientTesting } from '@angular/common/http/testing';
 import { PsuAuthenticationService } from '../../../api-auth';
 import { SessionService } from '../../../common/session.service';
 import { CookieRenewalService } from './CookieRenewalService';
-import { SimpleTimer } from 'src/app/utilities/simple-timer';
 import { provideHttpClient, withInterceptorsFromDi } from '@angular/common/http';
+import { expect } from '@jest/globals';
 
 describe('CookieRenewalService', () => {
-  let psuAuthService: PsuAuthenticationService;
-  let sessionService: SessionService;
   let cookieRenewalService: CookieRenewalService;
-  let simpleTimer: SimpleTimer;
   const authid = 'xxxxxxxx';
 
   beforeEach(() => {
@@ -24,25 +21,22 @@ describe('CookieRenewalService', () => {
       ]
     });
 
-    psuAuthService = TestBed.inject(PsuAuthenticationService);
-    sessionService = TestBed.inject(SessionService);
     cookieRenewalService = TestBed.inject(CookieRenewalService);
-    simpleTimer = TestBed.inject(SimpleTimer);
   });
 
-  it('should be created', () => {
+  test('should be created', () => {
     expect(cookieRenewalService).toBeTruthy();
   });
 
-  it('should call activate method', () => {
-    const activateSpy = spyOn(cookieRenewalService, 'activate').withArgs(authid).and.callThrough();
+  test('should call activate method', () => {
+    const activateSpy = jest.spyOn(cookieRenewalService, 'activate');
     cookieRenewalService.activate(authid);
-    expect(activateSpy).toHaveBeenCalled();
+    expect(activateSpy).toHaveBeenCalledWith(authid);
   });
 
-  it('should call cookieRenewal', () => {
-    const cookieRenewalSpy = spyOn(cookieRenewalService, 'cookieRenewal').withArgs(authid).and.callThrough();
+  test('should call cookieRenewal', () => {
+    const cookieRenewalSpy = jest.spyOn(cookieRenewalService, 'cookieRenewal');
     cookieRenewalService.cookieRenewal(authid);
-    expect(cookieRenewalSpy).toHaveBeenCalled();
+    expect(cookieRenewalSpy).toHaveBeenCalledWith(authid);
   });
 });

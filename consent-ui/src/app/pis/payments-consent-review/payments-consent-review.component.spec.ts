@@ -7,16 +7,12 @@ import { provideHttpClientTesting } from '@angular/common/http/testing';
 import { ActivatedRoute, convertToParamMap } from '@angular/router';
 import { of } from 'rxjs';
 import { StubUtilTests } from '../../ais/common/stub-util-tests';
-import { UpdateConsentAuthorizationService } from '../../api';
-import { SessionService } from '../../common/session.service';
 import { provideHttpClient, withInterceptorsFromDi } from '@angular/common/http';
+import { expect } from '@jest/globals';
 
 describe('PaymentsConsentReviewComponent', () => {
   let component: PaymentsConsentReviewComponent;
   let fixture: ComponentFixture<PaymentsConsentReviewComponent>;
-  let updateConsentAuthorizationService: UpdateConsentAuthorizationService;
-  let sessionService: SessionService;
-  let updateConsentAuthorizationServiceSpy;
 
   beforeAll(() => (window.onbeforeunload = jasmine.createSpy()));
 
@@ -42,12 +38,6 @@ describe('PaymentsConsentReviewComponent', () => {
   beforeEach(() => {
     fixture = TestBed.createComponent(PaymentsConsentReviewComponent);
     component = fixture.componentInstance;
-    updateConsentAuthorizationService = TestBed.inject(UpdateConsentAuthorizationService);
-    sessionService = TestBed.inject(SessionService);
-    updateConsentAuthorizationServiceSpy = spyOn(
-      updateConsentAuthorizationService,
-      'embeddedUsingPOST'
-    ).and.returnValue(of());
     fixture.detectChanges();
   });
 

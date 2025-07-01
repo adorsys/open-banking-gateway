@@ -1,7 +1,10 @@
-import { UntypedFormGroup } from '@angular/forms';
+import { UntypedFormGroup, ValidatorFn } from '@angular/forms';
 
 export class CustomValidators {
-  static readonly compareFields: any = (controlName: string, matchingControlName: string) => {
+  static readonly compareFields: (controlName: string, matchingControlName: string) => ValidatorFn = (
+    controlName: string,
+    matchingControlName: string
+  ) => {
     return (formGroup: UntypedFormGroup) => {
       const control = formGroup.controls[controlName];
       const matchingControl = formGroup.controls[matchingControlName];
@@ -15,6 +18,7 @@ export class CustomValidators {
       } else {
         matchingControl.setErrors(null);
       }
+      return null;
     };
   };
 }

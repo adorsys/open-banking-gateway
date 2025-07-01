@@ -1,16 +1,17 @@
 import { Component, Input, OnInit } from '@angular/core';
-import { flickerCanvas, flickerCode } from './flicker';
+import { FlickerCanvas, flickerCanvas, flickerCode } from './flicker';
+
+interface ChiptanState {
+  canvas: FlickerCanvas;
+  code: ReturnType<typeof flickerCode>;
+}
 
 @Component({
   selector: 'consent-app-chiptan',
-  template: `
-    <div id='flickercontainer'>
-    </div>
-  `,
+  template: ` <div id="flickercontainer"></div> `,
   standalone: true
 })
 export class NgxChiptanComponent implements OnInit {
-
   @Input()
   code: string | undefined;
 
@@ -26,22 +27,22 @@ export class NgxChiptanComponent implements OnInit {
   @Input()
   barColor: string;
 
-  private state: any;
-  private interval: any;
+  private state: ChiptanState;
+  private interval: ReturnType<typeof setInterval>;
 
   ngOnInit() {
-    if (!this.code) { return; }
+    if (!this.code) {
+      return;
+    }
 
     this.state = {
-      canvas: new flickerCanvas(this.width, this.height, this.bgColor, this.barColor),
-      code: new flickerCode(this.code),
+      canvas: flickerCanvas(this.width, this.height, this.bgColor, this.barColor),
+      code: flickerCode(this.code)
     };
 
     const { canvas, code } = this.state;
 
-    document
-      .getElementById('flickercontainer')
-      .appendChild(canvas.getCanvas());
+    document.getElementById('flickercontainer').appendChild(canvas.getCanvas());
 
     canvas.setCode(code);
 
