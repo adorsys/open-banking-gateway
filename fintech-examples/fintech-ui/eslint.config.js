@@ -1,6 +1,4 @@
 // @ts-check
-const tseslint = require('typescript-eslint');
-
 module.exports = [
   {
     ignores: ['src/app/api/**/*'],

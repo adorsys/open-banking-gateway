@@ -1,17 +1,17 @@
-import {Component, OnInit} from '@angular/core';
-import {ActivatedRoute} from '@angular/router';
-import {SessionService} from '../../../../common/session.service';
-import {AuthStateConsentAuthorizationService, UpdateConsentAuthorizationService} from '../../../../api';
-import {ApiHeaders} from '../../../../api/api.headers';
-import {StubUtil} from '../../../../common/utils/stub-util';
-import {AccountAccessLevel, AisConsentToGrant} from '../../../common/dto/ais-consent';
-import {ConsentUtil} from '../../../common/consent-util';
+import { Component, OnInit } from '@angular/core';
+import { ActivatedRoute } from '@angular/router';
+import { SessionService } from '../../../../common/session.service';
+import { AuthStateConsentAuthorizationService, UpdateConsentAuthorizationService } from '../../../../api';
+import { ApiHeaders } from '../../../../api/api.headers';
+import { StubUtil } from '../../../../common/utils/stub-util';
+import { AccountAccessLevel, AisConsentToGrant } from '../../../common/dto/ais-consent';
+import { ConsentUtil } from '../../../common/consent-util';
 
 @Component({
-    selector: 'consent-app-consent-sharing',
-    templateUrl: './consent-sharing.component.html',
-    styleUrls: ['./consent-sharing.component.scss'],
-    standalone: false
+  selector: 'consent-app-consent-sharing',
+  templateUrl: './consent-sharing.component.html',
+  styleUrls: ['./consent-sharing.component.scss'],
+  standalone: false
 })
 export class ConsentSharingComponent implements OnInit {
   public static ROUTE = 'consent-sharing';
@@ -47,7 +47,7 @@ export class ConsentSharingComponent implements OnInit {
       .subscribe((res) => {
         this.sessionService.setRedirectCode(this.authorizationId, res.headers.get(ApiHeaders.X_XSRF_TOKEN));
       });
-    this.loadRedirectUri(this.authorizationId, redirectCode);
+    this.loadRedirectUri();
   }
 
   onConfirm() {
@@ -67,7 +67,7 @@ export class ConsentSharingComponent implements OnInit {
       });
   }
 
-  private loadRedirectUri(authId: string, redirectCode: string): void {
+  private loadRedirectUri(): void {
     // TODO: use the right endpoint after it's defined
     /*   this.consentAuthorisation.authUsingGET(authId, redirectCode, 'response').subscribe(res => {
       this.sessionService.setRedirectCode(authId, res.headers.get(ApiHeaders.REDIRECT_CODE));

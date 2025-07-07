@@ -2,10 +2,10 @@ import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
 import { ReactiveFormsModule } from '@angular/forms';
 import { provideHttpClientTesting } from '@angular/common/http/testing';
 import { of } from 'rxjs';
+import { expect } from '@jest/globals';
 
 import { EnterPinComponent } from './enter-pin.component';
 import { StubUtilTests } from '../../ais/common/stub-util-tests';
-import { SessionService } from '../session.service';
 import { UpdateConsentAuthorizationService } from '../../api';
 import { provideHttpClient, withInterceptorsFromDi } from '@angular/common/http';
 
@@ -13,8 +13,6 @@ describe('EnterPinComponent', () => {
   let component: EnterPinComponent;
   let fixture: ComponentFixture<EnterPinComponent>;
   let form;
-  let sessionService;
-  let sessionServiceSpy;
   let updateConsentAuthorizationService;
   let updateConsentAuthorizationServiceSpy;
 
@@ -31,9 +29,7 @@ describe('EnterPinComponent', () => {
   beforeEach(() => {
     fixture = TestBed.createComponent(EnterPinComponent);
     component = fixture.componentInstance;
-    sessionService = TestBed.inject(SessionService);
     updateConsentAuthorizationService = TestBed.inject(UpdateConsentAuthorizationService);
-    sessionServiceSpy = spyOn(sessionService, 'getRedirectCode').and.returnValue(StubUtilTests.REDIRECT_ID);
     updateConsentAuthorizationServiceSpy = spyOn(
       updateConsentAuthorizationService,
       'embeddedUsingPOST'

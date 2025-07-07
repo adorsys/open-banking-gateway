@@ -1,15 +1,15 @@
 import { Component, Input, OnDestroy, OnInit } from '@angular/core';
-import {UntypedFormControl, UntypedFormGroup, Validators} from '@angular/forms';
+import { UntypedFormControl, UntypedFormGroup, Validators } from '@angular/forms';
 import * as uuid from 'uuid';
 import { Subscription } from 'rxjs';
 import { ValidatorService } from 'angular-iban';
-import {DEFAULT_CURRENCY} from '../../../../common/constant/constant';
+import { DEFAULT_CURRENCY } from '../../../../common/constant/constant';
 
 @Component({
-    selector: 'consent-app-account-selector',
-    templateUrl: './accounts-reference.component.html',
-    styleUrls: ['./accounts-reference.component.scss'],
-    standalone: false
+  selector: 'consent-app-account-selector',
+  templateUrl: './accounts-reference.component.html',
+  styleUrls: ['./accounts-reference.component.scss'],
+  standalone: false
 })
 export class AccountsReferenceComponent implements OnInit, OnDestroy {
   @Input() targetForm: UntypedFormGroup;
@@ -30,7 +30,7 @@ export class AccountsReferenceComponent implements OnInit, OnDestroy {
   }
 
   ngOnDestroy(): void {
-    this.subscriptions.forEach((subs, id) => subs.unsubscribe());
+    this.subscriptions.forEach((subs) => subs.unsubscribe());
   }
 
   addAccount() {
@@ -47,7 +47,7 @@ export class AccountsReferenceComponent implements OnInit, OnDestroy {
     this.subscriptions[account.currencyId].unsubscribe();
   }
 
-  private addControlToForm(account: InternalAccountReference) : UntypedFormControl[] {
+  private addControlToForm(account: InternalAccountReference): UntypedFormControl[] {
     if (!(account.ibanId && account.currencyId)) {
       const id = InternalAccountReference.generateId();
       account.ibanId = InternalAccountReference.generateIbanId(id);
@@ -58,10 +58,12 @@ export class AccountsReferenceComponent implements OnInit, OnDestroy {
     this.targetForm.addControl(account.ibanId, ibanFormControl);
 
     const currencyFormControl = new UntypedFormControl(DEFAULT_CURRENCY, Validators.required);
-    this.targetForm.addControl(account.currencyId, currencyFormControl );
+    this.targetForm.addControl(account.currencyId, currencyFormControl);
 
     this.subscriptions[account.ibanId] = ibanFormControl.valueChanges.subscribe((it) => (account.iban = it));
-    this.subscriptions[account.currencyId] = currencyFormControl.valueChanges.subscribe((it) => (account.currency = it));
+    this.subscriptions[account.currencyId] = currencyFormControl.valueChanges.subscribe(
+      (it) => (account.currency = it)
+    );
 
     return [ibanFormControl, currencyFormControl];
   }

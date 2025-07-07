@@ -9,14 +9,14 @@ import {
   UpdateConsentAuthorizationService
 } from '../../api';
 import { StubUtil } from '../../common/utils/stub-util';
-import { delay, repeatWhen, shareReplay, single, switchMap, takeUntil, tap } from 'rxjs/operators';
-import { interval, Observable, of, Subject } from 'rxjs';
+import { delay, repeatWhen, switchMap, takeUntil, tap } from 'rxjs/operators';
+import { of, Subject } from 'rxjs';
 
 @Component({
-    selector: 'consent-app-wait-for-decoupled-redirection',
-    templateUrl: './wait-for-decoupled.component.html',
-    styleUrls: ['./wait-for-decoupled.component.scss'],
-    standalone: false
+  selector: 'consent-app-wait-for-decoupled-redirection',
+  templateUrl: './wait-for-decoupled.component.html',
+  styleUrls: ['./wait-for-decoupled.component.scss'],
+  standalone: false
 })
 export class WaitForDecoupledComponent implements OnInit {
   public static ROUTE = 'wait-sca-finalization';
@@ -43,7 +43,7 @@ export class WaitForDecoupledComponent implements OnInit {
   ngOnInit() {
     of(true)
       .pipe(
-        switchMap((_) =>
+        switchMap(() =>
           this.consentAuthorizationService.embeddedUsingPOST(
             this.authId,
             StubUtil.X_REQUEST_ID,

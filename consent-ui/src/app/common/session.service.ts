@@ -1,5 +1,7 @@
 import { Injectable } from '@angular/core';
-import {ConsentAuth} from '../api';
+import { ConsentAuth } from '../api';
+import { AuthConsentState } from '../ais/common/dto/auth-state';
+import { PisPayment } from '../pis/common/models/pis-payment.model';
 
 @Injectable({
   providedIn: 'root'
@@ -47,7 +49,10 @@ export class SessionService {
   }
 
   public setConsentTypesSupported(authorizationId: string, consentTypes: ConsentAuth.SupportedConsentTypesEnum[]) {
-    sessionStorage.setItem(authorizationId + Session.CONSENT_TYPES_SUPPORTED, !consentTypes ? null : JSON.stringify(consentTypes));
+    sessionStorage.setItem(
+      authorizationId + Session.CONSENT_TYPES_SUPPORTED,
+      !consentTypes ? null : JSON.stringify(consentTypes)
+    );
   }
 
   public getBankName(authorizationId: string): string {
@@ -58,7 +63,7 @@ export class SessionService {
     sessionStorage.setItem(authorizationId + Session.BANK_NAME, bankName);
   }
 
-  public setConsentState(authorizationId: string, consentState: any) {
+  public setConsentState(authorizationId: string, consentState: AuthConsentState) {
     sessionStorage.setItem(authorizationId + Session.CONSENT_STATE, JSON.stringify(consentState));
   }
 
@@ -70,7 +75,7 @@ export class SessionService {
     return Object.assign(factory(), JSON.parse(sessionStorage.getItem(authorizationId + Session.CONSENT_STATE)));
   }
 
-  public setConsentObject(authorizationId: string, consentObject: any) {
+  public setConsentObject<T>(authorizationId: string, consentObject: T) {
     sessionStorage.setItem(authorizationId + Session.CONSENT_OBJECT, JSON.stringify(consentObject));
   }
 
@@ -82,7 +87,7 @@ export class SessionService {
     return Object.assign(factory(), JSON.parse(sessionStorage.getItem(authorizationId + Session.CONSENT_OBJECT)));
   }
 
-  public setPaymentState(authorizationId: string, paymentState: any) {
+  public setPaymentState(authorizationId: string, paymentState: AuthConsentState) {
     sessionStorage.setItem(authorizationId + Session.PAYMENT_STATE, JSON.stringify(paymentState));
   }
 
@@ -94,11 +99,11 @@ export class SessionService {
     return Object.assign(factory(), JSON.parse(sessionStorage.getItem(authorizationId + Session.PAYMENT_STATE)));
   }
 
-  public setPaymentObject(authorizationId: string, paymentObject: any) {
+  public setPaymentObject(authorizationId: string, paymentObject: PisPayment) {
     sessionStorage.setItem(authorizationId + Session.PAYMENT_OBJECT, JSON.stringify(paymentObject));
   }
 
-  public getPaymentObject<T>(authorizationId: string, factory: () => T): T {
+  public getPaymentObject<T>(authorizationId: string): T {
     if (!sessionStorage.getItem(authorizationId + Session.PAYMENT_OBJECT)) {
       return null;
     }

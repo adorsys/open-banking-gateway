@@ -5,10 +5,10 @@ import { SessionService } from '../../../common/session.service';
 import { ConsentUtil } from '../../common/consent-util';
 
 @Component({
-    selector: 'consent-app-consent-info',
-    templateUrl: './consent-info.component.html',
-    styleUrls: ['./consent-info.component.scss'],
-    standalone: false
+  selector: 'consent-app-consent-info',
+  templateUrl: './consent-info.component.html',
+  styleUrls: ['./consent-info.component.scss'],
+  standalone: false
 })
 export class ConsentInfoComponent implements OnInit {
   accountAccessLevel = AccountAccessLevel;
@@ -30,7 +30,7 @@ export class ConsentInfoComponent implements OnInit {
       this.aisConsent = ConsentUtil.getOrDefault(this.authorizationId, this.sessionService);
     });
 
-    this.router.events.subscribe((evt) => {
+    this.router.events.subscribe(() => {
       this.aisConsent = ConsentUtil.getOrDefault(this.authorizationId, this.sessionService);
     });
   }

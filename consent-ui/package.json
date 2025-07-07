@@ -59,7 +59,7 @@
     "@cypress/schematic": "^3.0.0",
     "@openapitools/openapi-generator-cli": "^1.0.18-4.3.1",
     "@types/jest": "^30.0.0",
-    "@types/node": "^18.19.80",
+    "@types/node": "~22.15.21",
     "@typescript-eslint/eslint-plugin": "^8.30.0",
     "@typescript-eslint/parser": "^8.30.0",
     "angular-eslint": "19.3.0",

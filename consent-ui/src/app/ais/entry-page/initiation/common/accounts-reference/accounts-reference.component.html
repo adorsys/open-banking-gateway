@@ -2,7 +2,9 @@
   <ng-container *ngFor="let account of accounts">
     <div
       class="form-inline"
-      [ngClass]="{ 'is-invalid': targetForm.controls[account.ibanId].touched && targetForm.controls[account.ibanId].errors }"
+      [ngClass]="{
+        'is-invalid': targetForm.controls[account.ibanId].touched && targetForm.controls[account.ibanId].errors
+      }"
     >
       <input
         type="text"
@@ -10,7 +12,9 @@
         [name]="account.ibanId"
         [formControlName]="account.ibanId"
         placeholder="IBAN"
-        [ngClass]="{ 'is-invalid': targetForm.controls[account.ibanId].touched && targetForm.controls[account.ibanId].errors }"
+        [ngClass]="{
+          'is-invalid': targetForm.controls[account.ibanId].touched && targetForm.controls[account.ibanId].errors
+        }"
         class="form-control"
       />
       <select
@@ -24,9 +28,15 @@
         <option>GBP</option>
         <option>USD</option>
       </select>
-      <div class="pointer pl-2" (click)="removeAccount(account)">
-        <img src="assets/icons/minus.png" />
-      </div>
+      <button
+        type="button"
+        class="btn btn-link pointer pl-2"
+        (click)="removeAccount(account)"
+        (keyup.enter)="removeAccount(account)"
+        aria-label="Remove account"
+      >
+        <img ngSrc="assets/icons/minus.png" alt="Remove" height="24" width="24" />
+      </button>
     </div>
     <div
       class="invalid-feedback mb-2"
@@ -40,4 +50,12 @@
   </ng-container>
 </form>
 
-<div class="pointer" (click)="addAccount()"><img src="assets/icons/plus.png" /> Add account</div>
+<button
+  type="button"
+  class="btn btn-link pointer"
+  (click)="addAccount()"
+  (keyup.enter)="addAccount()"
+  aria-label="Add account"
+>
+  <img ngSrc="assets/icons/plus.png" alt="Add" height="24" width="24" /> Add account
+</button>

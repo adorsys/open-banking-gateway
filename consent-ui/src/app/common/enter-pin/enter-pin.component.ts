@@ -4,18 +4,19 @@ import { StubUtil } from '../utils/stub-util';
 import { UpdateConsentAuthorizationService } from '../../api';
 import { SessionService } from '../session.service';
 import { ApiHeaders } from '../../api/api.headers';
+import { HttpResponse } from '@angular/common/http';
 
 @Component({
-    selector: 'consent-app-enter-pin',
-    templateUrl: './enter-pin.component.html',
-    styleUrls: ['./enter-pin.component.scss'],
-    standalone: false
+  selector: 'consent-app-enter-pin',
+  templateUrl: './enter-pin.component.html',
+  styleUrls: ['./enter-pin.component.scss'],
+  standalone: false
 })
 export class EnterPinComponent implements OnInit {
   @Input() title: string;
   @Input() wrongPassword: boolean;
   @Input() authorizationSessionId: string;
-  @Output() enteredPin = new EventEmitter<any>();
+  @Output() enteredPin = new EventEmitter<HttpResponse<unknown>>();
 
   pinForm: UntypedFormGroup;
   redirectCode: string;
