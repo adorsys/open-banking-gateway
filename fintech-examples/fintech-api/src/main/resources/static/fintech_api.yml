@@ -234,6 +234,46 @@ paths:
         "404":
           $ref: "#/components/responses/404_NotFound"
 
+  /v1/search/bankInfo:
+    post:
+      tags:
+        - FinTechIbanSearch
+      operationId: getBankInfoByIban
+      summary: Retrieves bank metadata using an IBAN
+      description: |
+        Takes an IBAN and returns metadata such as bank name, bank code, and BIC.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - iban
+              properties:
+                iban:
+                  type: string
+                  description: International Bank Account Number to be used for the bank information lookup.
+                  example: "DE89370400440532013000"
+      parameters:
+        - $ref: "#/components/parameters/X-Request-ID"
+        - $ref: "#/components/parameters/X-XSRF-TOKEN"
+      security:
+        - sessionCookie: [ ]
+      responses:
+        "200":
+          description: Bank metadata for the given IBAN
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/InlineResponseBankInfo"
+        "400":
+          $ref: "#/components/responses/400_BadRequest"
+        "401":
+          $ref: "#/components/responses/401_Unauthorized"
+        "404":
+          $ref: "#/components/responses/404_NotFound"
+
   /v1/ais/banks/{bank-id}/accounts:
     get:
       tags:
@@ -1081,6 +1121,30 @@ components:
         initiationDate:
           type: string
           format: date
+
+    InlineResponseBankInfo:
+      type: object
+      description: |
+        Contains metadata about a bank, as determined from a provided IBAN. 
+        Used to display or verify bank details in client applications.
+      required:
+        - bankCode
+        - bankName
+        - bic
+        - uuid
+      properties:
+        bankName:
+          type: string
+          description: The full legal name of the bank as registered with financial authorities.
+        bankCode:
+          type: string
+          description: The national code used to identify the bank (e.g., Commerzbank in Germany).
+        bic:
+          type: string
+          description: The Bank Identifier Code (BIC), sometimes called SWIFT code, used for international transfers.
+        uuid:
+          type: string
+          description: A unique identifier assigned to this record in the system, for auditing and reference purposes.
 
     transactionStatus:
       description: The transaction status
