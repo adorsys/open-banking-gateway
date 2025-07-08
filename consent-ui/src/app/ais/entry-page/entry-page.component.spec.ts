@@ -8,6 +8,7 @@ import { ActivatedRoute, convertToParamMap } from '@angular/router';
 import { provideHttpClientTesting } from '@angular/common/http/testing';
 import { of } from 'rxjs';
 import { provideHttpClient, withInterceptorsFromDi } from '@angular/common/http';
+import { expect } from '@jest/globals';
 
 describe('EntryPageComponent', () => {
   let component: EntryPageComponent;

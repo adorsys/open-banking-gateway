@@ -10,6 +10,7 @@ import { SessionService } from '../../../../../common/session.service';
 import { Location } from '@angular/common';
 import { UpdateConsentAuthorizationService } from '../../../../../api';
 import { provideHttpClient, withInterceptorsFromDi } from '@angular/common/http';
+import { expect } from '@jest/globals';
 
 describe('AccountsConsentReviewComponent', () => {
   let component: AccountsConsentReviewComponent;
@@ -17,10 +18,10 @@ describe('AccountsConsentReviewComponent', () => {
   let consentAuthorizationService: UpdateConsentAuthorizationService;
 
   const locationStub = {
-    back: jasmine.createSpy('onBack')
+    back: jest.fn().mockName('onBack')
   };
 
-  beforeAll(() => (window.onbeforeunload = jasmine.createSpy()));
+  beforeAll(() => (window.onbeforeunload = jest.fn()));
 
   beforeEach(
     waitForAsync(() => {
@@ -62,9 +63,9 @@ describe('AccountsConsentReviewComponent', () => {
   });
 
   it('should call onConfirm', () => {
-    const consentAuthorizationServiceSpy = spyOn(consentAuthorizationService, 'embeddedUsingPOST').and.returnValue(
-      of()
-    );
+    const consentAuthorizationServiceSpy = jest
+      .spyOn(consentAuthorizationService, 'embeddedUsingPOST')
+      .mockReturnValue(of());
     component.onConfirm();
     fixture.detectChanges();
     expect(consentAuthorizationServiceSpy).toHaveBeenCalled();

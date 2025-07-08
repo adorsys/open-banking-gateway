@@ -8,6 +8,7 @@ import { EnterPinComponent } from './enter-pin.component';
 import { StubUtilTests } from '../../ais/common/stub-util-tests';
 import { UpdateConsentAuthorizationService } from '../../api';
 import { provideHttpClient, withInterceptorsFromDi } from '@angular/common/http';
+import { SessionService } from '../session.service';
 
 describe('EnterPinComponent', () => {
   let component: EnterPinComponent;
@@ -16,12 +17,21 @@ describe('EnterPinComponent', () => {
   let updateConsentAuthorizationService;
   let updateConsentAuthorizationServiceSpy;
 
+  const mockSessionService = {
+    getRedirectCode: jest.fn().mockReturnValue(StubUtilTests.REDIRECT_ID),
+    setRedirectCode: jest.fn()
+  };
+
   beforeEach(
     waitForAsync(() => {
       TestBed.configureTestingModule({
         declarations: [EnterPinComponent],
         imports: [ReactiveFormsModule],
-        providers: [provideHttpClient(withInterceptorsFromDi()), provideHttpClientTesting()]
+        providers: [
+          provideHttpClient(withInterceptorsFromDi()),
+          provideHttpClientTesting(),
+          { provide: SessionService, useValue: mockSessionService }
+        ]
       }).compileComponents();
     })
   );
@@ -30,10 +40,9 @@ describe('EnterPinComponent', () => {
     fixture = TestBed.createComponent(EnterPinComponent);
     component = fixture.componentInstance;
     updateConsentAuthorizationService = TestBed.inject(UpdateConsentAuthorizationService);
-    updateConsentAuthorizationServiceSpy = spyOn(
-      updateConsentAuthorizationService,
-      'embeddedUsingPOST'
-    ).and.returnValue(of());
+    updateConsentAuthorizationServiceSpy = jest
+      .spyOn(updateConsentAuthorizationService, 'embeddedUsingPOST')
+      .mockReturnValue(of());
     fixture.detectChanges();
     form = component.pinForm;
   });

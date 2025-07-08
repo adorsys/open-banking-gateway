@@ -5,6 +5,7 @@ import { CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
 import { RouterTestingModule } from '@angular/router/testing';
 import { ActivatedRoute, convertToParamMap, Router } from '@angular/router';
 import { of } from 'rxjs';
+import { expect } from '@jest/globals';
 
 import { StubUtilTests } from '../../../../common/stub-util-tests';
 import { SessionService } from '../../../../../common/session.service';
@@ -18,31 +19,33 @@ describe('DedicatedAccessComponent', () => {
   let location: Location;
   let sessionServiceSpy;
   let activatedRoute: ActivatedRoute;
-  const route = { navigate: jasmine.createSpy('navigate') };
+  const route = { navigate: jest.fn().mockName('navigate') };
   let authId;
   let consentUtilSpy;
   let mockData;
 
-  beforeEach(waitForAsync(() => {
-    TestBed.configureTestingModule({
-      declarations: [DedicatedAccessComponent],
-      schemas: [CUSTOM_ELEMENTS_SCHEMA],
-      imports: [ReactiveFormsModule, RouterTestingModule],
-      providers: [
-        {
-          provide: Router,
-          useValue: route
-        },
-        {
-          provide: ActivatedRoute,
-          useValue: {
-            parent: { parent: { params: of({ authId: StubUtilTests.AUTH_ID }) } },
-            snapshot: { queryParamMap: convertToParamMap({ wrong: false }) }
+  beforeEach(
+    waitForAsync(() => {
+      TestBed.configureTestingModule({
+        declarations: [DedicatedAccessComponent],
+        schemas: [CUSTOM_ELEMENTS_SCHEMA],
+        imports: [ReactiveFormsModule, RouterTestingModule],
+        providers: [
+          {
+            provide: Router,
+            useValue: route
+          },
+          {
+            provide: ActivatedRoute,
+            useValue: {
+              parent: { parent: { params: of({ authId: StubUtilTests.AUTH_ID }) } },
+              snapshot: { queryParamMap: convertToParamMap({ wrong: false }) }
+            }
           }
-        }
-      ]
-    }).compileComponents();
-  }));
+        ]
+      }).compileComponents();
+    })
+  );
 
   beforeEach(() => {
     fixture = TestBed.createComponent(DedicatedAccessComponent);
@@ -67,7 +70,7 @@ describe('DedicatedAccessComponent', () => {
         validUntil: '2099-06-24'
       }
     };
-    consentUtilSpy = spyOn(ConsentUtil, 'getOrDefault').and.returnValue(mockData);
+    consentUtilSpy = jest.spyOn(ConsentUtil, 'getOrDefault').mockReturnValue(mockData);
     fixture.detectChanges();
   });
 
@@ -76,8 +79,8 @@ describe('DedicatedAccessComponent', () => {
   });
 
   it('should test onBack method', () => {
-    sessionServiceSpy = spyOn(sessionService, 'setConsentObject').and.callThrough();
-    const locationSpy = spyOn(location, 'back').and.callThrough();
+    sessionServiceSpy = jest.spyOn(sessionService, 'setConsentObject');
+    const locationSpy = jest.spyOn(location, 'back');
     component.onBack();
 
     expect(sessionServiceSpy).toHaveBeenCalledWith(authId, mockData);
@@ -86,7 +89,7 @@ describe('DedicatedAccessComponent', () => {
   });
 
   it('should test onSelect method', () => {
-    sessionServiceSpy = spyOn(sessionService, 'setConsentObject').and.callThrough();
+    sessionServiceSpy = jest.spyOn(sessionService, 'setConsentObject');
     component.onSelect();
 
     expect(sessionServiceSpy).toHaveBeenCalled();

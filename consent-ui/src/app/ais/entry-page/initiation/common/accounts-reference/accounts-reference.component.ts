@@ -43,8 +43,10 @@ export class AccountsReferenceComponent implements OnInit, OnDestroy {
     this.accounts.splice(this.accounts.indexOf(account), 1);
     this.targetForm.removeControl(account.ibanId);
     this.targetForm.removeControl(account.currencyId);
-    this.subscriptions[account.ibanId].unsubscribe();
-    this.subscriptions[account.currencyId].unsubscribe();
+    this.subscriptions.get(account.ibanId)?.unsubscribe();
+    this.subscriptions.get(account.currencyId)?.unsubscribe();
+    this.subscriptions.delete(account.ibanId);
+    this.subscriptions.delete(account.currencyId);
   }
 
   private addControlToForm(account: InternalAccountReference): UntypedFormControl[] {
@@ -60,9 +62,13 @@ export class AccountsReferenceComponent implements OnInit, OnDestroy {
     const currencyFormControl = new UntypedFormControl(DEFAULT_CURRENCY, Validators.required);
     this.targetForm.addControl(account.currencyId, currencyFormControl);
 
-    this.subscriptions[account.ibanId] = ibanFormControl.valueChanges.subscribe((it) => (account.iban = it));
-    this.subscriptions[account.currencyId] = currencyFormControl.valueChanges.subscribe(
-      (it) => (account.currency = it)
+    this.subscriptions.set(
+      account.ibanId,
+      ibanFormControl.valueChanges.subscribe((it) => (account.iban = it))
+    );
+    this.subscriptions.set(
+      account.currencyId,
+      currencyFormControl.valueChanges.subscribe((it) => (account.currency = it))
     );
 
     return [ibanFormControl, currencyFormControl];

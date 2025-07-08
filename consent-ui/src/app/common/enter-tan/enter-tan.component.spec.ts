@@ -5,10 +5,11 @@ import { NO_ERRORS_SCHEMA } from '@angular/core';
 import { of } from 'rxjs';
 import { expect } from '@jest/globals';
 
-import { EnterTanComponent } from './enter-tan.component';
+import { EnterTanComponent, ScaType } from './enter-tan.component';
 import { StubUtilTests } from '../../ais/common/stub-util-tests';
 import { UpdateConsentAuthorizationService } from '../../api';
-import { provideHttpClient, withInterceptorsFromDi } from '@angular/common/http';
+import { HttpHeaders, HttpResponse, provideHttpClient, withInterceptorsFromDi } from '@angular/common/http';
+import { SessionService } from '../session.service';
 
 describe('EnterTanComponent', () => {
   let component: EnterTanComponent;
@@ -17,13 +18,22 @@ describe('EnterTanComponent', () => {
   let updateConsentAuthorizationService;
   let updateConsentAuthorizationServiceSpy;
 
+  const mockSessionService = {
+    getRedirectCode: jest.fn().mockReturnValue(StubUtilTests.REDIRECT_ID),
+    setRedirectCode: jest.fn()
+  };
+
   beforeEach(
     waitForAsync(() => {
       TestBed.configureTestingModule({
         declarations: [EnterTanComponent],
         schemas: [NO_ERRORS_SCHEMA],
         imports: [ReactiveFormsModule],
-        providers: [provideHttpClient(withInterceptorsFromDi()), provideHttpClientTesting()]
+        providers: [
+          provideHttpClient(withInterceptorsFromDi()),
+          provideHttpClientTesting(),
+          { provide: SessionService, useValue: mockSessionService }
+        ]
       }).compileComponents();
     })
   );
@@ -31,11 +41,23 @@ describe('EnterTanComponent', () => {
   beforeEach(() => {
     fixture = TestBed.createComponent(EnterTanComponent);
     component = fixture.componentInstance;
+
+    component.authorizationSessionId = 'test-session-id';
+    component.scaType = ScaType.EMAIL; // or any valid value
+
     updateConsentAuthorizationService = TestBed.inject(UpdateConsentAuthorizationService);
-    updateConsentAuthorizationServiceSpy = spyOn(
-      updateConsentAuthorizationService,
-      'embeddedUsingPOST'
-    ).and.returnValue(of());
+    updateConsentAuthorizationServiceSpy = jest
+      .spyOn(updateConsentAuthorizationService, 'embeddedUsingPOST')
+      .mockReturnValue(
+        of(
+          new HttpResponse({
+            body: { challengeData: { image: '', data: [''] } },
+            headers: new HttpHeaders({ 'X-XSRF-TOKEN': 'token-value' }),
+            status: 200,
+            statusText: 'OK'
+          })
+        )
+      );
 
     fixture.detectChanges();
     form = component.reportScaResultForm;

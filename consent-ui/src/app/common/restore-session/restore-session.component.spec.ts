@@ -8,7 +8,7 @@ describe('RestoreSessionComponent', () => {
   let component: RestoreSessionComponent;
   let fixture: ComponentFixture<RestoreSessionComponent>;
 
-  beforeAll(() => (window.onbeforeunload = jasmine.createSpy()));
+  beforeAll(() => (window.onbeforeunload = jest.fn()));
 
   beforeEach(
     waitForAsync(() => {

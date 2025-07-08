@@ -7,12 +7,13 @@ import { RouterTestingModule } from '@angular/router/testing';
 import { StubUtilTests } from '../common/stub-util-tests';
 import { ScaSelectPageComponent } from './sca-select-page.component';
 import { provideHttpClient, withInterceptorsFromDi } from '@angular/common/http';
+import { expect } from '@jest/globals';
 
 describe('AIS ScaSelectPageComponent', () => {
   let component: ScaSelectPageComponent;
   let fixture: ComponentFixture<ScaSelectPageComponent>;
 
-  beforeAll(() => (window.onbeforeunload = jasmine.createSpy()));
+  beforeAll(() => (window.onbeforeunload = jest.fn()));
 
   beforeEach(
     waitForAsync(() => {

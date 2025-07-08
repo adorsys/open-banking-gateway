@@ -2,6 +2,7 @@ import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
 import { ActivatedRoute } from '@angular/router';
 import { provideHttpClientTesting } from '@angular/common/http/testing';
 import { of } from 'rxjs';
+import { expect } from '@jest/globals';
 
 import { ConsentSharingComponent } from './consent-sharing.component';
 import { StubUtilTests } from '../../../common/stub-util-tests';
@@ -13,7 +14,7 @@ describe('ConsentSharingComponent', () => {
   let consentAuthorizationService: UpdateConsentAuthorizationService;
   let fixture: ComponentFixture<ConsentSharingComponent>;
 
-  beforeAll(() => (window.onbeforeunload = jasmine.createSpy()));
+  beforeAll(() => (window.onbeforeunload = jest.fn()));
 
   beforeEach(
     waitForAsync(() => {
@@ -51,13 +52,15 @@ describe('ConsentSharingComponent', () => {
   });
 
   it('should call denyUsingPOST', () => {
-    const consentAuthorizationServiceSpy = spyOn(consentAuthorizationService, 'denyUsingPOST').and.returnValue(of());
+    const consentAuthorizationServiceSpy = jest
+      .spyOn(consentAuthorizationService, 'denyUsingPOST')
+      .mockReturnValue(of());
     component.onDeny();
     expect(consentAuthorizationServiceSpy).toHaveBeenCalled();
   });
 
   it('should call onConfirm', () => {
-    const urlSpy = spyOn(component, 'onConfirm');
+    const urlSpy = jest.spyOn(component, 'onConfirm');
     component.onConfirm();
     expect(urlSpy).toHaveBeenCalled();
   });

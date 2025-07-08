@@ -7,6 +7,7 @@ import { provideHttpClientTesting } from '@angular/common/http/testing';
 import { Observable } from 'rxjs';
 import { AuthService } from '../../common/auth.service';
 import { provideHttpClient, withInterceptorsFromDi } from '@angular/common/http';
+import { expect } from '@jest/globals';
 
 export class MockActivatedRoute {
   snapshot: ActivatedRouteSnapshot;
@@ -52,7 +53,7 @@ describe('AnonymousComponent', () => {
   });
 
   it('should call login service', () => {
-    authServiceSpy = spyOn(authService, 'userLoginForAnonymous').and.callThrough();
+    authServiceSpy = jest.spyOn(authService, 'userLoginForAnonymous');
 
     const authID = route.snapshot.parent.params.authId;
     const redirectCode = 'redirectCode654';
