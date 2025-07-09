@@ -25,6 +25,7 @@ import { ConsentSharingComponent } from './entry-page/initiation/consent-sharing
 import { SharedModule } from '../common/shared.module';
 import { WaitForDecoupledComponent } from './wait-for-decoupled/wait-for-decoupled.component';
 import { RestoreSessionPageComponent } from './restore-session-page/restore-session-page.component';
+import { NgOptimizedImage } from '@angular/common';
 
 @NgModule({
   declarations: [
@@ -51,6 +52,6 @@ import { RestoreSessionPageComponent } from './restore-session-page/restore-sess
     WaitForDecoupledComponent,
     RestoreSessionPageComponent
   ],
-  imports: [SharedModule, AisRoutingModule, AngularIbanModule]
+  imports: [SharedModule, AisRoutingModule, AngularIbanModule, NgOptimizedImage]
 })
 export class AisModule {}

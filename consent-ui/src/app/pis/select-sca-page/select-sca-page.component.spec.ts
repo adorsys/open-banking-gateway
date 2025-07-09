@@ -7,12 +7,13 @@ import { ActivatedRoute, convertToParamMap } from '@angular/router';
 import { SelectScaPageComponent } from './select-sca-page.component';
 import { StubUtilTests } from '../../ais/common/stub-util-tests';
 import { provideHttpClient, withInterceptorsFromDi } from '@angular/common/http';
+import { expect } from '@jest/globals';
 
 describe('PIS SelectScaPageComponent', () => {
   let component: SelectScaPageComponent;
   let fixture: ComponentFixture<SelectScaPageComponent>;
 
-  beforeAll(() => (window.onbeforeunload = jasmine.createSpy()));
+  beforeAll(() => (window.onbeforeunload = jest.fn()));
 
   beforeEach(
     waitForAsync(() => {

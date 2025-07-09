@@ -2,22 +2,27 @@ import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { UntypedFormBuilder, UntypedFormGroup, Validators } from '@angular/forms';
 
 import { StubUtil } from '../utils/stub-util';
-import { UpdateConsentAuthorizationService } from '../../api';
+import { ChallengeData, UpdateConsentAuthorizationService } from '../../api';
 import { ApiHeaders } from '../../api/api.headers';
 import { SessionService } from '../session.service';
-import { AuthStateConsentAuthorizationService } from '../../api/api/authStateConsentAuthorization.service';
+import { AuthStateConsentAuthorizationService } from '../../api';
+import { HttpResponse } from '@angular/common/http';
+
+interface AuthStateResponse {
+  challengeData: ChallengeData;
+}
 
 @Component({
-    selector: 'consent-app-enter-tan',
-    templateUrl: './enter-tan.component.html',
-    styleUrls: ['./enter-tan.component.scss'],
-    standalone: false
+  selector: 'consent-app-enter-tan',
+  templateUrl: './enter-tan.component.html',
+  styleUrls: ['./enter-tan.component.scss'],
+  standalone: false
 })
 export class EnterTanComponent implements OnInit {
   @Input() authorizationSessionId: string;
   @Input() scaType: ScaType;
   @Input() wrongSca: boolean;
-  @Output() enteredSca = new EventEmitter<any>();
+  @Output() enteredSca = new EventEmitter<HttpResponse<unknown>>();
 
   reportScaResultForm: UntypedFormGroup;
   redirectCode: string;
@@ -26,7 +31,7 @@ export class EnterTanComponent implements OnInit {
 
   public tanConfig = new TanConfig();
   public tanType = ScaType;
-  private challengeData: any;
+  private challengeData: ChallengeData;
 
   constructor(
     private formBuilder: UntypedFormBuilder,
@@ -45,12 +50,9 @@ export class EnterTanComponent implements OnInit {
     this.consentAuthorizationService
       .authUsingGET(this.authorizationSessionId, this.redirectCode, 'response')
       .subscribe((response) => {
-        this.sessionService.setRedirectCode(
-          this.authorizationSessionId,
-          response.headers.get(ApiHeaders.X_XSRF_TOKEN)
-        );
+        this.sessionService.setRedirectCode(this.authorizationSessionId, response.headers.get(ApiHeaders.X_XSRF_TOKEN));
 
-        const authStateResponseBody: any = response.body;
+        const authStateResponseBody = response.body as AuthStateResponse;
         this.challengeData = authStateResponseBody.challengeData;
 
         switch (this.scaType) {

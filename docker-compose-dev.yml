@@ -30,7 +30,7 @@ services:
       - FACADE_ENCRYPTION_KEYSETPATH=/keysetpath/example-keyset.json
       - FACADE_URLS_EMBEDDED-UI-BASE-URL=http://localhost:4200
       - PROTOCOL_GATEWAY-BASE-URL=http://localhost:8085
-      - SPRING_PROFILES_INCLUDE = no-signature-filter
+      - SPRING_PROFILES_INCLUDE=no-signature-filter
     build: opba-embedded-starter
     ports:
       - "8085:8085"

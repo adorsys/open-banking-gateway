@@ -10,6 +10,7 @@ import { SessionService } from '../../../../../common/session.service';
 import { TransactionsConsentReviewComponent } from './transactions-consent-review.component';
 import { UpdateConsentAuthorizationService } from '../../../../../api';
 import { provideHttpClient, withInterceptorsFromDi } from '@angular/common/http';
+import { expect } from '@jest/globals';
 
 describe('TransactionsConsentReviewComponent', () => {
   let component: TransactionsConsentReviewComponent;
@@ -18,10 +19,10 @@ describe('TransactionsConsentReviewComponent', () => {
   let consentAuthorizationService: UpdateConsentAuthorizationService;
 
   const locationStub = {
-    back: jasmine.createSpy('onBack')
+    back: jest.fn().mockName('onBack')
   };
 
-  beforeAll(() => (window.onbeforeunload = jasmine.createSpy()));
+  beforeAll(() => (window.onbeforeunload = jest.fn()));
 
   beforeEach(
     waitForAsync(() => {
@@ -64,7 +65,7 @@ describe('TransactionsConsentReviewComponent', () => {
 
   // FIXME Disabled as DateUtil.isDateNotInThePastValidator seem to cause 'undefined' error in control validation
   it('should confirm transaction when confirm button is pressed', () => {
-    consentAuthorizationServiceSpy = spyOn(consentAuthorizationService, 'embeddedUsingPOST').and.returnValue(of());
+    consentAuthorizationServiceSpy = jest.spyOn(consentAuthorizationService, 'embeddedUsingPOST').mockReturnValue(of());
     component.onConfirm();
     fixture.detectChanges();
     expect(consentAuthorizationServiceSpy).toHaveBeenCalled();

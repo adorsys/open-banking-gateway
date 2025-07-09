@@ -16,13 +16,14 @@ import { PisPayment } from '../common/models/pis-payment.model';
 import { StubUtil } from '../../common/utils/stub-util';
 import { PaymentUtil } from '../common/payment-util';
 import { provideHttpClient, withInterceptorsFromDi } from '@angular/common/http';
+import { expect } from '@jest/globals';
 
 describe('ConsentPaymentAccessSelectionComponent', () => {
   let component: ConsentPaymentAccessSelectionComponent;
   let fixture: ComponentFixture<ConsentPaymentAccessSelectionComponent>;
   let sessionService;
 
-  beforeAll(() => (window.onbeforeunload = jasmine.createSpy()));
+  beforeAll(() => (window.onbeforeunload = jest.fn()));
 
   beforeEach(
     waitForAsync(() => {
@@ -62,7 +63,7 @@ describe('ConsentPaymentAccessSelectionComponent', () => {
     component = fixture.componentInstance;
     component.paymentReviewPage = PaymentsConsentReviewComponent.ROUTE;
     sessionService = TestBed.inject(SessionService);
-    spyOn(component, 'hasGeneralViolations').and.returnValue(false);
+    jest.spyOn(component, 'hasGeneralViolations').mockReturnValue(false);
     fixture.detectChanges();
   });
 
@@ -71,16 +72,19 @@ describe('ConsentPaymentAccessSelectionComponent', () => {
   });
 
   it('should call onDeny', () => {
-    const onDenySpy = spyOn(component, 'onDeny').and.callThrough();
+    const onDenySpy = jest.spyOn(component, 'onDeny');
     component.onDeny();
     expect(onDenySpy).toHaveBeenCalled();
+    onDenySpy.mockRestore();
   });
 
   it('should call onConfirm', () => {
     const paymentObj = PaymentUtil.getOrDefault(StubUtilTests.AUTH_ID, sessionService);
-    const onConfirmSpy = spyOn(component, 'onConfirm').and.callThrough();
-    spyOn(sessionService, 'setPaymentObject').withArgs(StubUtilTests.AUTH_ID, paymentObj);
+    const onConfirmSpy = jest.spyOn(component, 'onConfirm');
+    const setPaymentObjectSpy = jest.spyOn(sessionService, 'setPaymentObject');
     component.onConfirm();
     expect(onConfirmSpy).toHaveBeenCalled();
+    onConfirmSpy.mockRestore();
+    expect(setPaymentObjectSpy).toHaveBeenCalledWith(StubUtilTests.AUTH_ID, paymentObj);
   });
 });

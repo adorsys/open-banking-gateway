@@ -13,7 +13,7 @@ describe('ToAspspPageComponent', () => {
   let component: ToAspspPageComponent;
   let fixture: ComponentFixture<ToAspspPageComponent>;
 
-  beforeAll(() => (window.onbeforeunload = jasmine.createSpy()));
+  beforeAll(() => (window.onbeforeunload = jest.fn()));
 
   beforeEach(
     waitForAsync(() => {

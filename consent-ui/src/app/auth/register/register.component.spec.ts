@@ -8,6 +8,7 @@ import { provideHttpClientTesting } from '@angular/common/http/testing';
 import { AuthService } from '../../common/auth.service';
 import { StubUtilTests } from '../../ais/common/stub-util-tests';
 import { provideHttpClient, withInterceptorsFromDi } from '@angular/common/http';
+import { expect } from '@jest/globals';
 
 describe('RegisterComponent', () => {
   let component: RegisterComponent;
@@ -53,7 +54,7 @@ describe('RegisterComponent', () => {
     expect(component).toBeTruthy();
   });
   it('should call registerUser in AuthService', () => {
-    authServiceSpy = spyOn(authService, 'userRegister').and.callThrough();
+    authServiceSpy = jest.spyOn(authService, 'userRegister');
 
     form.controls.login.setValue(usernameInput);
     form.controls.password.setValue('1234');
@@ -62,7 +63,7 @@ describe('RegisterComponent', () => {
     expect(authServiceSpy).toHaveBeenCalledWith({ login: 'alex', password: '1234' });
   });
   it('should be true if the passwords are not same', () => {
-    authServiceSpy = spyOn(authService, 'userRegister').and.callThrough();
+    authServiceSpy = jest.spyOn(authService, 'userRegister');
 
     form.controls.login.setValue(usernameInput);
     form.controls.password.setValue(passwordInput);
@@ -73,7 +74,7 @@ describe('RegisterComponent', () => {
     expect(component.registerForm.invalid).toBe(true);
   });
   it('should be false if password is not set', () => {
-    authServiceSpy = spyOn(authService, 'userRegister').and.callThrough();
+    authServiceSpy = jest.spyOn(authService, 'userRegister');
 
     form.controls.login.setValue(usernameInput);
     form.controls.password.setValue('');
@@ -84,7 +85,7 @@ describe('RegisterComponent', () => {
     expect(component.registerForm.invalid).toBe(true);
   });
   it('should be false if username is not set', () => {
-    authServiceSpy = spyOn(authService, 'userRegister').and.callThrough();
+    authServiceSpy = jest.spyOn(authService, 'userRegister');
 
     form.controls.login.setValue('');
     form.controls.password.setValue(passwordInput);

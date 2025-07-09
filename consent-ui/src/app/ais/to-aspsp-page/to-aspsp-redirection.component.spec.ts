@@ -13,7 +13,7 @@ describe('ToAspspRedirectionComponent', () => {
   let component: ToAspspRedirectionComponent;
   let fixture: ComponentFixture<ToAspspRedirectionComponent>;
 
-  beforeAll(() => (window.onbeforeunload = jasmine.createSpy()));
+  beforeAll(() => (window.onbeforeunload = jest.fn()));
 
   beforeEach(
     waitForAsync(() => {

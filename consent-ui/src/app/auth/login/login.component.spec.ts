@@ -7,6 +7,7 @@ import { provideHttpClientTesting } from '@angular/common/http/testing';
 import { Observable, of } from 'rxjs';
 import { HttpHeaders, HttpResponse, provideHttpClient, withInterceptorsFromDi } from '@angular/common/http';
 import { AuthService } from '../../common/auth.service';
+import { expect } from '@jest/globals';
 
 export class MockActivatedRoute {
   snapshot: ActivatedRouteSnapshot;
@@ -30,7 +31,7 @@ describe('LoginComponent', () => {
   const usernameInput = 'alex';
   const passwordInput = '1234';
 
-  beforeAll(() => (window.onbeforeunload = jasmine.createSpy()));
+  beforeAll(() => (window.onbeforeunload = jest.fn()));
 
   beforeEach(
     waitForAsync(() => {
@@ -65,7 +66,7 @@ describe('LoginComponent', () => {
   });
 
   it('should be true if the form is invalid', () => {
-    authServiceSpy = spyOn(authService, 'userLogin').and.returnValue(of(response));
+    authServiceSpy = jest.spyOn(authService, 'userLogin').mockReturnValue(of(response));
 
     form.controls.login.setValue(usernameInput);
     form.controls.password.setValue('');
@@ -76,7 +77,7 @@ describe('LoginComponent', () => {
   });
 
   it('should call login service', () => {
-    authServiceSpy = spyOn(authService, 'userLogin').and.callThrough();
+    authServiceSpy = jest.spyOn(authService, 'userLogin');
 
     const authID = route.snapshot.parent.params.authId;
     const redirectCode = 'redirectCode654';
@@ -92,7 +93,7 @@ describe('LoginComponent', () => {
   });
 
   it('should be invalid if password is not set', () => {
-    authServiceSpy = spyOn(authService, 'userLogin').and.returnValue(of(response));
+    authServiceSpy = jest.spyOn(authService, 'userLogin').mockReturnValue(of(response));
 
     form.controls.login.setValue(usernameInput);
     form.controls.password.setValue('');
@@ -102,7 +103,7 @@ describe('LoginComponent', () => {
     expect(component.loginForm.invalid).toBe(true);
   });
   it('should be invalid if username is not set', () => {
-    authServiceSpy = spyOn(authService, 'userLogin').and.returnValue(of(response));
+    authServiceSpy = jest.spyOn(authService, 'userLogin').mockReturnValue(of(response));
 
     form.controls.login.setValue('');
     form.controls.password.setValue(passwordInput);

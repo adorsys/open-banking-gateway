@@ -3,11 +3,11 @@ import { PisPayment } from './models/pis-payment.model';
 
 export class PaymentUtil {
   public static getOrDefault(authorizationId: string, storageService: SessionService): PisPayment {
-    if (!storageService.getPaymentObject(authorizationId, () => new PisPayment())) {
+    if (!storageService.getPaymentObject(authorizationId)) {
       storageService.setPaymentObject(authorizationId, PaymentUtil.initializePaymentObject());
     }
 
-    return storageService.getPaymentObject(authorizationId, () => new PisPayment());
+    return storageService.getPaymentObject(authorizationId);
   }
 
   private static initializePaymentObject(): PisPayment {
