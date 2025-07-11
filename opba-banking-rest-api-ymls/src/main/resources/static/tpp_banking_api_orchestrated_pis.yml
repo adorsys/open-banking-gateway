@@ -1,0 +1,224 @@
+openapi: 3.0.1
+info:
+  version: "1.0.0"
+  title: Open Banking Gateway Tpp Banking API
+  description: >-
+    This API provides FinTech possibilities to perform use-cases specific calls to the bank of PSU.
+externalDocs:
+  url: "https://adorsys.github.com/open-banking-gateway"
+
+paths:
+  /v1/banking/orchestratedpis/payments/{payment-product}:
+    post:
+      summary: Orchestrated ayment initiation request
+      description: This method is used to initiate a payment at the ASPSP and do all the operations to just lead us to the online banking application of the bank of the PSU.
+      operationId: initiateOrchestratedPayment
+      tags:
+        - TPP Banking API orchestrated Single Payment (PIS)
+      parameters:
+        #header
+        - $ref: "./tpp_banking_api_commons.yml#/components/parameters/X-Timestamp-UTC"
+        - $ref: "./tpp_banking_api_commons.yml#/components/parameters/X-Request-Signature"
+        - $ref: "./tpp_banking_api_commons.yml#/components/parameters/Fintech-ID"
+        - $ref: "./tpp_banking_api_commons.yml#/components/parameters/ServiceSessionPassword"
+        - $ref: "./tpp_banking_api_commons.yml#/components/parameters/FintechDataPassword"
+        - $ref: "./tpp_banking_api_commons.yml#/components/parameters/Bank-Profile-ID"
+        - $ref: "./tpp_banking_api_commons.yml#/components/parameters/X-Psu-Authentication-Required"
+        - $ref: "./tpp_banking_api_commons.yml#/components/parameters/X-Protocol-Configuration"
+        - $ref: "./tpp_banking_api_commons.yml#/components/parameters/Fintech-User-ID"
+        - $ref: "./tpp_banking_api_commons.yml#/components/parameters/Fintech-Redirect-URL-OK"
+        - $ref: "./tpp_banking_api_commons.yml#/components/parameters/Fintech-Redirect-URL-NOK"
+        - $ref: "./tpp_banking_api_commons.yml#/components/parameters/X-Request-ID"
+        - $ref: "./tpp_banking_api_commons.yml#/components/parameters/Compute-PSU-IP-Address"
+        - $ref: "./tpp_banking_api_commons.yml#/components/parameters/PSU-IP-Address"
+        - $ref: "./tpp_banking_api_commons.yml#/components/parameters/Fintech-Decoupled-Preferred"
+        - $ref: "./tpp_banking_api_commons.yml#/components/parameters/Fintech-Brand-Logging-Information"
+        - $ref: "./tpp_banking_api_commons.yml#/components/parameters/Fintech-Notification-URI"
+        - $ref: "./tpp_banking_api_commons.yml#/components/parameters/Fintech-Notification-Content-Preferred"
+        #path
+        - $ref: "#/components/parameters/PaymentProduct"
+      requestBody:
+        $ref: "#/components/requestBodies/PaymentInitiation"
+      responses:
+        "200":
+          $ref: "../../../../../opba-consent-rest-api/src/main/resources/static/tpp_consent_api.yml#/components/responses/200_AuthorizeResponse"
+        "202":
+          $ref: "../../../../../opba-consent-rest-api/src/main/resources/static/tpp_consent_api.yml#/components/responses/200_AuthorizeResponse"
+        "401":
+          $ref: "../../../../../opba-consent-rest-api/src/main/resources/static/tpp_consent_api.yml#/components/responses/401_Unauthorized"
+      security:
+        - sessionCookie: [ ]
+      x-codegen-request-body-name: body
+
+
+components:
+  parameters:
+    PaymentProduct:
+      name: payment-product
+      in: path
+      required: true
+      schema:
+        type: string
+        enum:
+          - sepa-credit-transfers
+          - instant-sepa-credit-transfers
+          - target-2-payments
+          - cross-border-credit-transfers
+          - pain.001-sepa-credit-transfers
+          - pain.001-instant-sepa-credit-transfers
+          - pain.001-target-2-payments
+          - pain.001-cross-border-credit-transfers
+  requestBodies:
+    PaymentInitiation:
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/paymentInitiation"
+      required: true
+  responses:
+    202_PaymentInitiationResponse:
+      description: ACCEPTED
+      headers:
+        X-Request-ID:
+          $ref: "./tpp_banking_api_commons.yml#/components/headers/X-Request-ID"
+        Service-Session-ID:
+          $ref: "./tpp_banking_api_commons.yml#/components/headers/Service-Session-ID"
+        Authorization-Session-ID:
+          $ref: "./tpp_banking_api_commons.yml#/components/headers/Authorization-Session-ID"
+        Redirect-Code:
+          $ref: "./tpp_banking_api_commons.yml#/components/headers/Redirect-Code"
+        Location:
+          $ref: "./tpp_banking_api_commons.yml#/components/headers/Location"
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/paymentInitiationResponse"
+    200_PaymentInformationResponse:
+      description: OK
+      headers:
+        X-Request-ID:
+          $ref: "./tpp_banking_api_commons.yml#/components/headers/X-Request-ID"
+        Service-Session-ID:
+          $ref: "./tpp_banking_api_commons.yml#/components/headers/Service-Session-ID"
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/paymentInformationResponse"
+    200_PaymentStatusResponse:
+      description: OK
+      headers:
+        X-Request-ID:
+          $ref: "./tpp_banking_api_commons.yml#/components/headers/X-Request-ID"
+        Service-Session-ID:
+          $ref: "./tpp_banking_api_commons.yml#/components/headers/Service-Session-ID"
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/paymentStatusResponse"
+
+  schemas:
+    paymentInitiation:
+      required:
+        - creditorAccount
+        - creditorName
+        - debtorAccount
+        - instructedAmount
+      type: object
+      properties:
+        endToEndIdentification:
+          maxLength: 35
+          type: string
+        debtorAccount:
+          $ref: "./tpp_banking_api_commons.yml#/components/schemas/accountReference"
+        instructedAmount:
+          $ref: "./tpp_banking_api_commons.yml#/components/schemas/amount"
+        creditorAccount:
+          $ref: "./tpp_banking_api_commons.yml#/components/schemas/accountReference"
+        creditorAgent:
+          $ref: "./tpp_banking_api_commons.yml#/components/schemas/bicfi"
+        creditorAgentName:
+          $ref: "./tpp_banking_api_commons.yml#/components/schemas/creditorAgentName"
+        creditorName:
+          $ref: "./tpp_banking_api_commons.yml#/components/schemas/creditorName"
+        creditorAddress:
+          $ref: "./tpp_banking_api_commons.yml#/components/schemas/address"
+        remittanceInformationUnstructured:
+          $ref: "./tpp_banking_api_commons.yml#/components/schemas/remittanceInformationUnstructured"
+        requestedExecutionDate:
+          type: string
+          format: date
+        requestedExecutionTime:
+          type: string
+        psuAuthRequest:
+          $ref: "../../../../../opba-consent-rest-api/src/main/resources/static/tpp_consent_api.yml#/components/schemas/PsuAuthRequest"
+
+    paymentInitiationResponse:
+      description: Body of the response for a successful payment initiation request.
+      type: object
+      properties:
+        msg:
+          type: string
+          description: use redirect link message
+
+    paymentInformationResponse:
+      description: |
+        Generic JSON response body consistion of the corresponding payment initation JSON body together with an optional transaction status field.
+      type: object
+      required:
+        - debtorAccount
+        - instructedAmount
+        - creditorAccount
+        - creditorName
+      properties:
+        externalResourceId:
+          description: Identifier of the account in 3rd party data provider like FinAPI (similar to resourceId)
+          type: string
+        endToEndIdentification:
+          type: string
+          maxLength: 35
+        debtorAccount:
+          $ref: "./tpp_banking_api_commons.yml#/components/schemas/accountReference"
+        instructedAmount:
+          $ref: "./tpp_banking_api_commons.yml#/components/schemas/amount"
+        creditorAccount:
+          $ref: "./tpp_banking_api_commons.yml#/components/schemas/accountReference"
+        creditorAgent:
+          $ref: "./tpp_banking_api_commons.yml#/components/schemas/bicfi"
+        creditorName:
+          $ref: "./tpp_banking_api_commons.yml#/components/schemas/creditorName"
+        creditorAddress:
+          $ref: "./tpp_banking_api_commons.yml#/components/schemas/address"
+        remittanceInformationUnstructured:
+          $ref: "./tpp_banking_api_commons.yml#/components/schemas/remittanceInformationUnstructured"
+        transactionStatus:
+          $ref: "#/components/schemas/transactionStatus"
+        createdAt:
+          $ref: "./tpp_banking_api_commons.yml#/components/schemas/createdAt"
+
+    paymentStatusResponse:
+      description: Body of the response for a successful payment initiation status request in case of an JSON based endpoint.
+      type: object
+      required:
+        - transactionStatus
+      properties:
+        externalResourceId:
+          description: Identifier of the account in 3rd party data provider like FinAPI (similar to resourceId)
+          type: string
+        transactionStatus:
+          $ref: "#/components/schemas/transactionStatus"
+        fundsAvailable:
+          $ref: "#/components/schemas/fundsAvailable"
+        psuMessage:
+          $ref: "#/components/schemas/psuMessageText"
+        createdAt:
+          $ref: "./tpp_banking_api_commons.yml#/components/schemas/createdAt"
+    transactionStatus:
+      description: The transaction status
+      type: string
+    fundsAvailable:
+      description: Equals true if sufficient funds are available at the time of the request, false otherwise.
+      type: boolean
+    psuMessageText:
+      description: Text to be displayed to the PSU.
+      type: string
+      maxLength: 500

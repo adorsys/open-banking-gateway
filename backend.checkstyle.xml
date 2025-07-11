@@ -93,7 +93,7 @@
         </module>
         -->
         <module name="ParameterNumber">
-            <property name="max" value="8"/>
+            <property name="max" value="25"/>
             <property name="tokens" value="CTOR_DEF"/>
         </module>
 
