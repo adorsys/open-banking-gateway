@@ -1,7 +1,7 @@
 package de.adorsys.opba.tppbankingapi.controller;
 
 import de.adorsys.opba.tppbankingapi.orchestrated.pis.model.generated.PaymentInitiation;
-import de.adorsys.opba.tppbankingapi.orchestrated.pis.resource.generated.TppBankingApiSinglePaymentPisApi;
+import de.adorsys.opba.tppbankingapi.orchestrated.pis.resource.generated.TppBankingApiOrchestratedSinglePaymentPisApi;
 import de.adorsys.opba.tppbankingapi.service.PaymentOrchestratedService;
 import lombok.RequiredArgsConstructor;
 import lombok.SneakyThrows;
@@ -12,7 +12,7 @@ import java.util.concurrent.CompletableFuture;
 
 @RestController
 @RequiredArgsConstructor
-public class TppBankingApiOrchestratedPayment implements TppBankingApiSinglePaymentPisApi {
+public class TppBankingApiOrchestratedPayment implements TppBankingApiOrchestratedSinglePaymentPisApi {
     private final PaymentOrchestratedService payments;
 
     @SneakyThrows
