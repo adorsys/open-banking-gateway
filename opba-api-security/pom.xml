@@ -15,7 +15,7 @@
         <!-- Hard reference to root directory. Used to reference pmd and checkstyle files from root.
         Change this if depth changes. Current: /opba-api-security -->
         <main.basedir>${project.parent.basedir}</main.basedir>
-        <nimbus.version>8.23</nimbus.version>
+        <nimbus.version>10.0.2</nimbus.version>
     </properties>
 
     <dependencies>
