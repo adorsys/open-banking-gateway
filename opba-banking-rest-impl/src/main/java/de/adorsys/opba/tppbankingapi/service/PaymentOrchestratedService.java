@@ -1,8 +1,7 @@
 package de.adorsys.opba.tppbankingapi.service;
 
 import com.google.common.collect.ImmutableMap;
-import de.adorsys.opba.api.security.internal.service.CookieBuilderTemplate;
-import de.adorsys.opba.api.security.internal.service.TokenBasedAuthService;
+import de.adorsys.opba.consentapi.controller.AuthStateConsentServiceController;
 import de.adorsys.opba.consentapi.controller.UpdateAuthConsentServiceController;
 import de.adorsys.opba.consentapi.service.mapper.AisExtrasMapper;
 import de.adorsys.opba.protocol.api.dto.context.UserAgentContext;
@@ -15,8 +14,6 @@ import de.adorsys.opba.protocol.api.dto.request.payments.SinglePaymentBody;
 import de.adorsys.opba.protocol.api.dto.result.body.AuthStateBody;
 import de.adorsys.opba.protocol.api.dto.result.body.PaymentProductDetails;
 import de.adorsys.opba.protocol.api.dto.result.body.ScaMethod;
-import de.adorsys.opba.protocol.api.dto.result.body.UpdateAuthBody;
-import de.adorsys.opba.protocol.facade.config.auth.FacadeConsentAuthConfig;
 import de.adorsys.opba.protocol.facade.dto.result.torest.FacadeResult;
 import de.adorsys.opba.protocol.facade.services.authorization.GetAuthorizationStateService;
 import de.adorsys.opba.protocol.facade.services.authorization.PsuLoginService;
@@ -24,13 +21,15 @@ import de.adorsys.opba.protocol.facade.services.authorization.UpdateAuthorizatio
 import de.adorsys.opba.protocol.facade.services.pis.SinglePaymentService;
 import de.adorsys.opba.restapi.shared.mapper.FacadeResponseBodyToRestBodyMapper;
 import de.adorsys.opba.restapi.shared.service.FacadeResponseMapper;
+import de.adorsys.opba.restapi.shared.service.RedirectionOnlyToOkMapper;
 import de.adorsys.opba.tppbankingapi.controller.PasswordExtractingUtil;
-import de.adorsys.opba.tppbankingapi.orchestrated.pis.model.generated.ConsentAuth;
+
 import de.adorsys.opba.tppbankingapi.orchestrated.pis.model.generated.PaymentInitiation;
-import de.adorsys.opba.tppbankingapi.orchestrated.pis.model.generated.ScaUserData;
 import de.adorsys.opba.tppbankingapi.orchestrated.pis.model.generated.SinglePayment;
+import de.adorsys.opba.tppbankingapi.orchestrated.pis.model.generated.ConsentAuth;
 import de.adorsys.opba.tppbankingapi.orchestrated.pis.model.generated.PaymentProduct;
-import de.adorsys.opba.tppbankingapi.pis.model.generated.PaymentInitiationResponse;
+import de.adorsys.opba.tppbankingapi.orchestrated.pis.model.generated.PaymentInitiationResponse;
+import de.adorsys.opba.tppbankingapi.orchestrated.pis.model.generated.ScaUserData;
 import lombok.RequiredArgsConstructor;
 import lombok.Value;
 import org.mapstruct.Mapper;
@@ -44,12 +43,12 @@ import java.util.Map;
 import java.util.Objects;
 import java.util.UUID;
 import java.util.concurrent.CompletableFuture;
-import java.util.concurrent.TimeUnit;
+import java.util.concurrent.ExecutionException;
 
-import static de.adorsys.opba.restapi.shared.GlobalConst.SPRING_KEYWORD;
 import static de.adorsys.opba.tppbankingapi.Const.API_MAPPERS_PACKAGE;
+import static de.adorsys.opba.tppbankingapi.Const.SPRING_KEYWORD;
 
-@SuppressWarnings({"MethodLength", "ParameterNumber", "PMD.UnusedFormalParameter"})
+@SuppressWarnings({"MethodLength", "ParameterNumber", "PMD.UnusedFormalParameter", "CPD-START"})
 @RequiredArgsConstructor
 @Service
 @ComponentScan({
@@ -70,12 +69,130 @@ public class PaymentOrchestratedService {
     private final PaymentFacadeResponseBodyToRestBodyMapper paymentFacadeResponseBodyToRestBodyMapper;
     private final AisExtrasMapper extrasMapper;
     private final UpdateAuthConsentServiceController.UpdateAuthBodyToApiMapper updateAuthBodyToApiMapper;
+    private final AuthStateConsentServiceController.AuthStateBodyToApiMapper authStateMapper;
+    private final RedirectionOnlyToOkMapper redirectionOnlyToOkMapper;
 
     private static final Map<String, String> TRANSLATE_ACTIONS = ImmutableMap.of(
             "SINGLE_PAYMENT", "INITIATE_PAYMENT"
     );
 
     public CompletableFuture<ResponseEntity<?>> initiatePayment(
+            String fintechUserID,
+            String fintechRedirectURLOK,
+            String fintechRedirectURLNOK,
+            UUID xRequestID,
+            String paymentProduct,
+            PaymentInitiation body,
+            String xTimestampUTC,
+            String xRequestSignature,
+            String fintechID,
+            String serviceSessionPassword,
+            String fintechDataPassword,
+            UUID bankProfileID,
+            Boolean xPsuAuthenticationRequired,
+            String xProtocolConfiguration,
+            Boolean computePsuIpAddress,
+            String psuIpAddress,
+            Boolean fintechDecoupledPreferred,
+            String fintechBrandLoggingInformation,
+            String fintechNotificationURI,
+            String fintechNotificationContentPreferred
+    ) throws ExecutionException, InterruptedException {
+        CompletableFuture<PaymentOrchestrationContext> context = triggerWholeAuthorization(fintechUserID,
+                fintechRedirectURLOK,
+                fintechRedirectURLNOK,
+                xRequestID,
+                paymentProduct,
+                body,
+                xTimestampUTC,
+                xRequestSignature,
+                fintechID,
+                serviceSessionPassword,
+                fintechDataPassword,
+                bankProfileID,
+                xPsuAuthenticationRequired,
+                xProtocolConfiguration,
+                computePsuIpAddress,
+                psuIpAddress,
+                fintechDecoupledPreferred,
+                fintechBrandLoggingInformation,
+                fintechNotificationURI,
+                fintechNotificationContentPreferred);
+
+        String newXsrfToken = (String) updateAuthorization(context).get();
+        PaymentOrchestrationContext updatedContext = context.get().withRedirectCode(newXsrfToken);
+
+        return refreshAuthorizationStateAfterUpdate(updatedContext);
+
+    }
+
+    /**
+     * Handles the initial payment initiation response, extracts necessary IDs (authId, redirectCode, xsrfToken),
+     * and performs the PSU login association to get the session key.
+     *
+     * @param paymentResponse The response from the initial payment service.
+     * @param context         The orchestration context containing original request parameters.
+     * @return A CompletableFuture that resolves to an updated PaymentOrchestrationContext
+     * containing the extracted session details (authId, redirectCode, xsrfToken, sessionKey).
+     */
+    private CompletableFuture<PaymentOrchestrationContext> handlePaymentResponseAndPsuLogin(
+            ResponseEntity<?> paymentResponse,
+            PaymentOrchestrationContext context
+    ) {
+        // Extract required headers, throwing NRE if missing to indicate a critical issue.
+        UUID authId = UUID.fromString(Objects.requireNonNull(paymentResponse.getHeaders().getFirst("Authorization-Session-ID"),
+                "Authorization-Session-ID header missing from payment initiation response"));
+        String redirectCode = extractRedirectCode(Objects.requireNonNull(paymentResponse.getHeaders().getFirst("Location"),
+                "Location header missing from payment initiation response"));
+        String xsrfToken = Objects.requireNonNull(paymentResponse.getHeaders().getFirst("X-XSRF-TOKEN"),
+                "X-XSRF-TOKEN header missing from payment initiation response");
+
+        // Perform PSU login to get the session key. This is an asynchronous call.
+        return psuLoginService.anonymousPsuAssociateAuthSessionWithHeaders(authId, redirectCode)
+                .thenApply(authHeaders -> {
+                    // Extract the session key from the PSU login response.
+                    String sessionKey = Objects.requireNonNull(authHeaders.getHeaders().get("Set-Cookie"),
+                            "Set-Cookie header missing from PSU login response");
+                    // Return a new context instance with all extracted and obtained auth details.
+                    return context.withAuthDetails(authId, redirectCode, xsrfToken, sessionKey);
+                });
+    }
+
+    /**
+     * Triggers the authorization state service using details from the orchestration context.
+     * This method prepares the AuthorizationRequest and executes the service.
+     *
+     * @param context The orchestration context containing all necessary details including authId, redirectCode, xsrfToken, and sessionKey.
+     * @return A CompletableFuture that resolves to the result of the authorization state service.
+     */
+    private CompletableFuture<FacadeResult<AuthStateBody>> triggerAuthorizationState(
+            PaymentOrchestrationContext context
+    ) {
+        // Build the AuthorizationRequest using data from the context.
+        AuthorizationRequest authRequest = buildAuthRequest(
+                context.getXsrfToken(),
+                context.getSessionKey(),
+                context.getFintechID(),
+                context.getFintechUserID(),
+                context.getXRequestID(),
+                context.getBankProfileID(),
+                context.getServiceSessionPassword(),
+                context.getFintechDataPassword(),
+                context.getFintechRedirectURLOK(),
+                context.getFintechRedirectURLNOK(),
+                context.getXPsuAuthenticationRequired(),
+                context.getFintechDecoupledPreferred(),
+                context.getFintechBrandLoggingInformation(),
+                context.getFintechNotificationURI(),
+                context.getFintechNotificationContentPreferred(),
+                context.getUaContext(),
+                context.getAuthId()
+        );
+        // Execute the authorization state service asynchronously.
+        return authorizationStateService.execute(authRequest);
+    }
+
+    private CompletableFuture<PaymentOrchestrationContext> triggerWholeAuthorization(
             String fintechUserID,
             String fintechRedirectURLOK,
             String fintechRedirectURLNOK,
@@ -148,131 +265,67 @@ public class PaymentOrchestratedService {
                 // This thenCompose passes the paymentResponse and the initial orchestrationContext
                 // to the helper method, which returns a CompletableFuture of an updated context.
                 .thenCompose(paymentResponse ->
-                        handlePaymentResponseAndPsuLogin( paymentResponse, orchestrationContext))
+                        handlePaymentResponseAndPsuLogin(paymentResponse, orchestrationContext))
                 // Step 3: Trigger authorization state and then update authorization.
                 // This thenCompose receives the updated context (after PSU login).
                 // Inside this lambda, we chain two more CompletableFutures:
                 // a) triggerAuthorizationState: takes the context and returns auth state result.
-                // b) updateAuthorization: takes the auth state result and the same context, then updates authorization.
                 .thenCompose(contextAfterPsuLogin ->
-                        triggerAuthorizationState(contextAfterPsuLogin)
-                                .thenCompose(authStateResult ->
-                                        updateAuthorization(authStateResult, contextAfterPsuLogin)))
-                .thenApply(result -> mapper.translate(result, updateAuthBodyToApiMapper));
-                // Step 4: Map the final result of the update authorization.
+                        triggerAuthorizationState(contextAfterPsuLogin).thenApply((FacadeResult<AuthStateBody> result) -> redirectionOnlyToOkMapper.translate(result, authStateMapper))
+                                .thenApply(result -> {
+                                    String redirectCode = result.getHeaders().getFirst("X-XSRF-TOKEN");
+                                    return contextAfterPsuLogin.withRedirectCode(redirectCode);
+
+                                })
+                );
 
 
-    }
-
-    /**
-     * Handles the initial payment initiation response, extracts necessary IDs (authId, redirectCode, xsrfToken),
-     * and performs the PSU login association to get the session key.
-     *
-     * @param paymentResponse The response from the initial payment service.
-     * @param context         The orchestration context containing original request parameters.
-     * @return A CompletableFuture that resolves to an updated PaymentOrchestrationContext
-     * containing the extracted session details (authId, redirectCode, xsrfToken, sessionKey).
-     */
-    private CompletableFuture<PaymentOrchestrationContext> handlePaymentResponseAndPsuLogin(
-            ResponseEntity<?> paymentResponse,
-            PaymentOrchestrationContext context
-    ) {
-        // Extract required headers, throwing NRE if missing to indicate a critical issue.
-        UUID authId = UUID.fromString(Objects.requireNonNull(paymentResponse.getHeaders().getFirst("Authorization-Session-ID"),
-                "Authorization-Session-ID header missing from payment initiation response"));
-        String redirectCode = extractRedirectCode(Objects.requireNonNull(paymentResponse.getHeaders().getFirst("Location"),
-                "Location header missing from payment initiation response"));
-        String xsrfToken = Objects.requireNonNull(paymentResponse.getHeaders().getFirst("X-XSRF-TOKEN"),
-                "X-XSRF-TOKEN header missing from payment initiation response");
-
-        // Perform PSU login to get the session key. This is an asynchronous call.
-        return psuLoginService.anonymousPsuAssociateAuthSessionWithHeaders(authId, redirectCode)
-                .thenApply(authHeaders -> {
-                    // Extract the session key from the PSU login response.
-                    String sessionKey = Objects.requireNonNull(authHeaders.getHeaders().get("Set-Cookie"),
-                            "Set-Cookie header missing from PSU login response");
-                    // Return a new context instance with all extracted and obtained auth details.
-                    return context.withAuthDetails(authId, redirectCode, xsrfToken, sessionKey);
-                });
-    }
-
-    /**
-     * Triggers the authorization state service using details from the orchestration context.
-     * This method prepares the AuthorizationRequest and executes the service.
-     *
-     * @param context The orchestration context containing all necessary details including authId, redirectCode, xsrfToken, and sessionKey.
-     * @return A CompletableFuture that resolves to the result of the authorization state service.
-     */
-    private CompletableFuture<FacadeResult<AuthStateBody>> triggerAuthorizationState(
-            PaymentOrchestrationContext context
-    ) {
-        // Build the AuthorizationRequest using data from the context.
-        AuthorizationRequest authRequest = buildAuthRequest(
-                context.getXsrfToken(),
-                context.getSessionKey(),
-                context.getFintechID(),
-                context.getFintechUserID(),
-                context.getXRequestID(),
-                context.getBankProfileID(),
-                context.getServiceSessionPassword(),
-                context.getFintechDataPassword(),
-                context.getFintechRedirectURLOK(),
-                context.getFintechRedirectURLNOK(),
-                context.getXPsuAuthenticationRequired(),
-                context.getFintechDecoupledPreferred(),
-                context.getFintechBrandLoggingInformation(),
-                context.getFintechNotificationURI(),
-                context.getFintechNotificationContentPreferred(),
-                context.getUaContext(),
-                context.getAuthId()
-        );
-        // Execute the authorization state service asynchronously.
-        return authorizationStateService.execute(authRequest);
     }
 
     /**
      * Updates the authorization based on the current state and orchestration context.
      * This method is called after the authorization state has been triggered.
      *
-     * @param authStateResult The result from the authorization state service. This parameter is available
-     * due to the CompletableFuture chaining but is not directly used in building the
-     * update request, as all necessary data comes from the context.
-     * @param context         The orchestration context containing all necessary details for the update.
+     * @param context The orchestration context containing all necessary details for the update.
      * @return A CompletableFuture that resolves to the result of the update authorization service.
      */
-    private CompletableFuture<FacadeResult<UpdateAuthBody>> updateAuthorization(
-            FacadeResult<AuthStateBody> authStateResult, // Parameter from previous CompletableFuture in chain (ignored)
-            PaymentOrchestrationContext context
-    ) {
-        // Build the AuthorizationRequest for updating authorization using data from the context.
-        AuthorizationRequest updateRequest = AuthorizationRequest.builder()
-                .facadeServiceable(FacadeServiceableRequest.builder()
-                        .uaContext(context.getUaContext())
-                        .redirectCode(context.getXsrfToken())
-                        .authorizationSessionId(context.getAuthId().toString())
-                        .authorization(context.getFintechID())
-                        .authorizationKey(context.getSessionKey())
-                        .bankProfileId(context.getBankProfileID())
-                        .requestId(context.getXRequestID())
-                        .sessionPassword(PasswordExtractingUtil.getDataProtectionPassword(context.getServiceSessionPassword(), context.getFintechDataPassword()))
-                        .fintechUserId(context.getFintechUserID())
-                        .fintechRedirectUrlOk(context.getFintechRedirectURLOK())
-                        .fintechRedirectUrlNok(context.getFintechRedirectURLNOK())
-                        .anonymousPsu(null != context.getXPsuAuthenticationRequired() && !context.getXPsuAuthenticationRequired())
-                        .fintechDecoupledPreferred(null != context.getFintechDecoupledPreferred() && !context.getFintechDecoupledPreferred())
-                        .fintechBrandLoggingInformation(context.getFintechBrandLoggingInformation())
-                        .fintechNotificationURI(context.getFintechNotificationURI())
-                        .fintechNotificationContentPreferred(context.getFintechNotificationContentPreferred())
-                        .build())
-                .aisConsent(null == context.getBody().getPsuAuthRequest().getConsentAuth() ? null : aisConsentMapper.map(context.getBody()))
-                .scaAuthenticationData(context.getBody().getPsuAuthRequest().getScaAuthenticationData())
-                .extras(extrasMapper.map(context.getBody().getPsuAuthRequest().getExtras()))
-                .build();
+    private CompletableFuture updateAuthorization(
+            CompletableFuture<PaymentOrchestrationContext> context
+    ) throws ExecutionException, InterruptedException {
 
-        // Execute the update authorization service asynchronously.
-        // Keep the specific timeout for this critical step, as it was in the original code.
-        return updateAuthorizationService.execute(updateRequest)
-                .orTimeout(2, TimeUnit.MINUTES);
+            AuthorizationRequest updateRequest = AuthorizationRequest.builder()
+                    .facadeServiceable(FacadeServiceableRequest.builder()
+                            .uaContext(context.get().getUaContext())
+                            .redirectCode(context.get().getRedirectCode())
+                            .authorizationSessionId(context.get().getAuthId().toString())
+                            .authorization(context.get().getFintechID())
+                            .authorizationKey(context.get().getSessionKey())
+                            .bankProfileId(context.get().getBankProfileID())
+                            .requestId(context.get().getXRequestID())
+                            .sessionPassword(PasswordExtractingUtil.getDataProtectionPassword(context.get().getServiceSessionPassword(), context.get().getFintechDataPassword()))
+                            .fintechUserId(context.get().getFintechUserID())
+                            .fintechRedirectUrlOk(context.get().getFintechRedirectURLOK())
+                            .fintechRedirectUrlNok(context.get().getFintechRedirectURLNOK())
+                            .anonymousPsu(null != context.get().getXPsuAuthenticationRequired() && !context.get().getXPsuAuthenticationRequired())
+                            .fintechDecoupledPreferred(null != context.get().getFintechDecoupledPreferred() && !context.get().getFintechDecoupledPreferred())
+                            .fintechBrandLoggingInformation(context.get().getFintechBrandLoggingInformation())
+                            .fintechNotificationURI(context.get().getFintechNotificationURI())
+                            .fintechNotificationContentPreferred(context.get().getFintechNotificationContentPreferred())
+                            .build())
+                    .aisConsent(null == context.get().getBody().getPsuAuthRequest().getConsentAuth() ? null : aisConsentMapper.map(context.get().getBody()))
+                    .scaAuthenticationData(context.get().getBody().getPsuAuthRequest().getScaAuthenticationData())
+                    .extras(extrasMapper.map(context.get().getBody().getPsuAuthRequest().getExtras()))
+                    .build();
+
+            return updateAuthorizationService.execute(updateRequest)
+                    .thenApply(stateResult -> mapper.translate(stateResult, updateAuthBodyToApiMapper))
+                    .thenApply(updateResult -> {
+                        // Extract the new XSRF token from the response headers
+                         String newXsrfToken = updateResult.getHeaders().getFirst("Redirect-Code");
+                         return newXsrfToken;
+
+                    });
+
     }
 
     /**
@@ -336,6 +389,32 @@ public class PaymentOrchestratedService {
                         .build())
                 .build();
     }
+
+    private CompletableFuture<ResponseEntity<?>> refreshAuthorizationStateAfterUpdate(PaymentOrchestrationContext context) {
+        AuthorizationRequest authRequest = buildAuthRequest(
+                context.getRedirectCode(),
+                context.getSessionKey(),
+                context.getFintechID(),
+                context.getFintechUserID(),
+                context.getXRequestID(),
+                context.getBankProfileID(),
+                context.getServiceSessionPassword(),
+                context.getFintechDataPassword(),
+                context.getFintechRedirectURLOK(),
+                context.getFintechRedirectURLNOK(),
+                context.getXPsuAuthenticationRequired(),
+                context.getFintechDecoupledPreferred(),
+                context.getFintechBrandLoggingInformation(),
+                context.getFintechNotificationURI(),
+                context.getFintechNotificationContentPreferred(),
+                context.getUaContext(),
+                context.getAuthId()
+        );
+
+        return authorizationStateService.execute(authRequest)
+                .thenApply(stateResult -> mapper.translate(stateResult, authStateMapper));
+    }
+
 
     private Map<ExtraRequestParam, Object> getExtras(String protocolConfiguration) {
         Map<ExtraRequestParam, Object> extras = new EnumMap<>(ExtraRequestParam.class);
@@ -436,7 +515,7 @@ class PaymentOrchestrationContext {
      * Constructor to create an initial context before authId, redirectCode, xsrfToken,
      * and sessionKey are known. These will be null initially.
      */
-     PaymentOrchestrationContext(
+    PaymentOrchestrationContext(
             UserAgentContext uaContext,
             String fintechUserID,
             String fintechRedirectURLOK,
@@ -513,6 +592,17 @@ class PaymentOrchestrationContext {
     public PaymentOrchestrationContext withAuthDetails(UUID authId, String redirectCode, String xsrfToken, String sessionKey) {
         return new PaymentOrchestrationContext(
                 authId, redirectCode, xsrfToken, sessionKey,
+                this.uaContext, this.fintechUserID, this.fintechRedirectURLOK, this.fintechRedirectURLNOK,
+                this.xRequestID, this.paymentProduct, this.body, this.fintechID, this.serviceSessionPassword,
+                this.fintechDataPassword, this.bankProfileID, this.xPsuAuthenticationRequired,
+                this.xProtocolConfiguration, this.fintechDecoupledPreferred,
+                this.fintechBrandLoggingInformation, this.fintechNotificationURI,
+                this.fintechNotificationContentPreferred
+        );
+    }
+    public PaymentOrchestrationContext withRedirectCode(String redirectCode) {
+        return new PaymentOrchestrationContext(
+                this.authId, redirectCode, this.xsrfToken, this.sessionKey,
                 this.uaContext, this.fintechUserID, this.fintechRedirectURLOK, this.fintechRedirectURLNOK,
                 this.xRequestID, this.paymentProduct, this.body, this.fintechID, this.serviceSessionPassword,
                 this.fintechDataPassword, this.bankProfileID, this.xPsuAuthenticationRequired,

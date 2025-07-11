@@ -4,6 +4,7 @@ import de.adorsys.opba.tppbankingapi.orchestrated.pis.model.generated.PaymentIni
 import de.adorsys.opba.tppbankingapi.orchestrated.pis.resource.generated.TppBankingApiSinglePaymentPisApi;
 import de.adorsys.opba.tppbankingapi.service.PaymentOrchestratedService;
 import lombok.RequiredArgsConstructor;
+import lombok.SneakyThrows;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.UUID;
@@ -14,8 +15,9 @@ import java.util.concurrent.CompletableFuture;
 public class TppBankingApiOrchestratedPayment implements TppBankingApiSinglePaymentPisApi {
     private final PaymentOrchestratedService payments;
 
+    @SneakyThrows
     @Override
-    public CompletableFuture initiatePayment(String fintechUserID,
+    public CompletableFuture initiateOrchestratedPayment(String fintechUserID,
                                                                           String fintechRedirectURLOK,
                                                                           String fintechRedirectURLNOK,
                                                                           UUID xRequestID,
