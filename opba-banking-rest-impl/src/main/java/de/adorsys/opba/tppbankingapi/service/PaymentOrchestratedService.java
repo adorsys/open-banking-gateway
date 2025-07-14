@@ -54,7 +54,8 @@ import static de.adorsys.opba.tppbankingapi.Const.SPRING_KEYWORD;
 @ComponentScan({
         "de.adorsys.opba.protocol.facade.services.pis",
         "de.adorsys.opba.protocol.facade.services.psu",
-        "de.adorsys.opba.protocol.facade.services.authorization"
+        "de.adorsys.opba.protocol.facade.services.authorization",
+        "de.adorsys.opba.consentapi"
 })
 public class PaymentOrchestratedService {
 

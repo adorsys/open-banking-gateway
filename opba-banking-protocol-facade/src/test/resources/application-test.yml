@@ -6,6 +6,7 @@ spring:
     driver-class-name: org.testcontainers.jdbc.ContainerDatabaseDriver
     hikari:
       schema: banking_protocol
+      auto-commit: false
   liquibase:
     drop-first: true
     change-log: classpath:migration/master.xml
