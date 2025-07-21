@@ -10,6 +10,7 @@ import de.adorsys.opba.protocol.api.dto.result.body.UpdateAuthBody;
 import de.adorsys.opba.protocol.facade.config.encryption.impl.fintech.FintechConsentSpecSecureStorage;
 import de.adorsys.opba.protocol.facade.dto.result.torest.FacadeResult;
 import de.adorsys.opba.protocol.facade.dto.result.torest.redirectable.FacadeRedirectResult;
+import de.adorsys.opba.protocol.facade.dto.result.torest.redirectable.FacadeResultHeaders;
 import de.adorsys.opba.protocol.facade.dto.result.torest.redirectable.FacadeRuntimeErrorResult;
 import de.adorsys.opba.protocol.facade.services.EncryptionKeySerde;
 import de.adorsys.opba.protocol.facade.services.authorization.internal.psuauth.PsuFintechAssociationService;
@@ -19,10 +20,12 @@ import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 import org.jetbrains.annotations.NotNull;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.transaction.support.TransactionOperations;
 
 import java.net.URI;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
 import java.util.concurrent.CompletableFuture;
@@ -30,6 +33,8 @@ import java.util.concurrent.CompletableFuture;
 /**
  * Service responsible for PSU logging into OBG - verifying credentials and other.
  */
+
+@SuppressWarnings("PMD.")
 @Service
 @RequiredArgsConstructor
 public class PsuLoginService {
@@ -81,6 +86,27 @@ public class PsuLoginService {
         return executeOnLoginAndMap(exchange.getInbox(), authorizationId, exchange.getRedirectCode());
     }
 
+    @SuppressWarnings("CPD-START")
+    /**
+     * Used for the cases when there is no need to identify PSU - i.e. single time payment, so that requesting FinTech can
+     * manage associated entities.
+     */
+    @Transactional
+    public CompletableFuture<OutcomeWithHeaders> anonymousPsuAssociateAuthSessionWithHeaders(UUID authorizationId, String authorizationPassword) {
+
+
+        AuthSession session = authRepository.findById(authorizationId)
+                .orElseThrow(() -> new IllegalStateException("Missing authorization session: " + authorizationId));
+            SessionAndInbox result = readInboxWithTransaction(session, authorizationPassword);
+
+        Map<String, String> headers = createHeadersFromSession(session, result.getInbox());
+
+
+        return executeOnLoginAndMapWithHeaders(result.getInbox(), authorizationId, result.getRedirectCode(),  headers);
+    }
+    @SuppressWarnings("CPD-END")
+
+
     private CompletableFuture<Outcome> executeOnLoginAndMap(FintechConsentSpecSecureStorage.FinTechUserInboxData association, UUID authorizationSessionId, String redirectCode) {
         return onLoginService.execute(OnLoginRequest.builder()
                 .facadeServiceable(
@@ -91,6 +117,21 @@ public class PsuLoginService {
                         .build()
                 ).build()
         ).thenApply(it -> createResultOutcome(association, it));
+    }
+
+    private CompletableFuture<OutcomeWithHeaders> executeOnLoginAndMapWithHeaders(FintechConsentSpecSecureStorage.FinTechUserInboxData association,
+                                                                                  UUID authorizationSessionId,
+                                                                                  String redirectCode,
+                                                                                  Map<String, String> headers) {
+        return onLoginService.execute(OnLoginRequest.builder()
+                .facadeServiceable(
+                        FacadeServiceableRequest.builder()
+                                .authorizationSessionId(authorizationSessionId.toString())
+                                .redirectCode(redirectCode)
+                                .authorizationKey(serde.asString(association.getProtocolKey().asKey()))
+                                .build()
+                ).build()
+        ).thenApply(it -> (OutcomeWithHeaders) createResultOutcomeWithHeaders(association, (FacadeResultHeaders<UpdateAuthBody>) it, headers));
     }
 
     @NotNull
@@ -108,6 +149,32 @@ public class PsuLoginService {
         );
     }
 
+    @NonNull
+    private Outcome createResultOutcomeWithHeaders(FintechConsentSpecSecureStorage.FinTechUserInboxData association, FacadeResultHeaders<UpdateAuthBody> it, Map<String, String> headers) {
+        return new OutcomeWithHeaders(
+                serde.asString(association.getProtocolKey().asKey()),
+                null == it ? association.getAfterPsuIdentifiedRedirectTo() : ((FacadeRedirectResult) it).getRedirectionTo(),
+                headers
+        );
+    }
+
+    private Map<String, String> createHeadersFromSession(AuthSession session, FintechConsentSpecSecureStorage.FinTechUserInboxData inbox) {
+        Map<String, String> headers = new HashMap<>();
+
+        headers.put("Redirect-code", session.getRedirectCode());
+        headers.put("Authorization-Session-ID", session.getId().toString());
+        headers.put("Set-Cookie", serde.asString(inbox.getProtocolKey().asKey()));
+        // Add Location header with redirect code
+        String locationUrl = inbox.getAfterPsuIdentifiedRedirectTo().toString();
+        if (!locationUrl.contains("redirectCode=")) {
+            locationUrl += (locationUrl.contains("?") ? "&" : "?") + "redirectCode=" + session.getRedirectCode();
+        }
+        headers.put("Location", locationUrl);
+
+        return headers;
+    }
+
+
     @Getter
     @RequiredArgsConstructor
     public static class Outcome {
@@ -120,6 +187,14 @@ public class PsuLoginService {
 
 
     }
+    @Transactional
+    public SessionAndInbox readInboxWithTransaction(AuthSession session, String authorizationPassword) {
+        FintechConsentSpecSecureStorage.FinTechUserInboxData inbox =
+                associationService.readInboxFromFinTech(session, authorizationPassword);
+        session.setStatus(SessionStatus.STARTED);
+
+        return new SessionAndInbox(session.getRedirectCode(), inbox);
+    }
 
     @Getter
     public static class ErrorOutcome extends Outcome {
@@ -130,6 +205,18 @@ public class PsuLoginService {
         }
 
         private final Map<String, String> headers;
+    }
+
+    @Getter
+    public static class OutcomeWithHeaders extends Outcome {
+        private final Map<String, String> headers;
+
+        public OutcomeWithHeaders(@NonNull String key, @NonNull URI redirectLocation, Map<String, String> headers) {
+            super(key, redirectLocation);
+            this.headers = headers;
+        }
+
+
     }
 
     @Data

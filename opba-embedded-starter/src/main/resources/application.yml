@@ -19,6 +19,7 @@ spring:
     hikari:
       # Database schema name
       schema: banking_protocol
+      auto-commit: false
 
   # Hibernate JPA properties
   jpa:
