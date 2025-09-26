@@ -18,6 +18,25 @@ If you are an organisation that would like to commercially use our solutions bey
 # Open Banking Gateway
 Provides tools, adapters and connectors for transparent access to open banking apis. The initial effort focuses on the connectivity to banks that implement the European PSD2 directive either through one of the common market initiatives like : [The Berlin Group NextGenPSD2](https://www.berlin-group.org/psd2-access-to-bank-accounts), [The Open Banking UK](https://www.openbanking.org.uk/), [The Polish PSD2 API](https://polishapi.org/en/) or even through proprietary bank api like  [the ING’s PSD2 API](https://developer.ing.com/openbanking/).
 
+The idea is to help the banking sector, and the TTPs to make the functioning smooth and receive better customer feedback for the services provided. As a full-service provider, we take care of a technological platform and infrastructure, dedicated project management team, as well as direct access to industry cooperation with dominant market participants.
+
+##### Drivng payement transformations
+
+Our finServices offer platform APIs and functionality for 
+- [API Management](https://adorsys.com/en/expertise/api-management/)
+- [Identity & Access Management](https://adorsys.com/en/expertise/identity-accessmanagement/)
+- [Multibanking/PSD2](https://adorsys.com/en/expertise/open-banking-psd2/)
+- [Smartanalytics /AI](https://adorsys.com/en/expertise/smartanalytics-a-i/)
+- [Data Security](https://adorsys.com/en/expertise/data-security/)
+
+#####Professional Services
+Covering the entire process of digital transformation, our Professional Services can also look after your
+- [Business Design](https://adorsys.com/en/services/business-design/`) 
+- [Business Software Development](https://adorsys.com/en/services/software-development/)
+- [Mobile Development](https://adorsys.com/en/services/mobile-development/)
+- [Conversational UI](https://adorsys.com/en/services/conversational-interfaces/)
+- [DevOps](https://adorsys.com/en/services/devops-services/)
+
 ## What this Project is about
 
 ### Tackle the Key Challenge for Third Party Providers of Payment Services
