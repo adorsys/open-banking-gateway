@@ -76,6 +76,12 @@
             <organization>adorsys GmbH &amp; Co KG</organization>
             <organizationUrl>https://adorsys.de/</organizationUrl>
         </developer>
+        <developer>
+            <name>Schekina Kouam</name>
+            <email>delphine.kouam@adorsys.com</email>
+            <organization>adorsys GmbH &amp; Co KG</organization>
+            <organizationUrl>https://adorsys.com/</organizationUrl>
+        </developer>
     </developers>
 
     <properties>
