@@ -7,3 +7,8 @@ adadadad-4000-0000-0000-b0b0b0b0b0b0,867a53d8-4cca-4365-a393-7febb0bbd38e,oauth-
 adadadad-4000-0000-0000-b0b0b0b0b0b0,2d8b3e75-9e3e-4fd2-b79c-063556ad9ecc,redirect,ADORSYS RE,http://localhost:20014,adorsys-adapter,,http://localhost:20015/oauth/authorization-server,,XS2A,true,REDIRECT,true
 adadadad-4000-0000-0000-b0b0b0b0b0b0,aa750320-2958-455e-9926-e9fca5ddfa92,embedded,ADORSYS EM,http://localhost:20014,adorsys-adapter,,http://localhost:20015/oauth/authorization-server,,XS2A,true,EMBEDDED,true
 adadadad-4000-0000-0000-b0b0b0b0b0b0,53c47f54-b9a4-465a-8f77-bc6cd5f0cf46,no-preference xs2a,ADORSYS,http://localhost:20014,adorsys-adapter,,http://localhost:20015/oauth/authorization-server,,XS2A,true,NULL,false
+adadadad-5000-0000-0000-b0b0b0b0b0b0,0f7e5c28-c1b5-11ed-afa1-0242ac120002,embedded,ATRUVIA EM,https://p1.xs2a-doc.atruvia.de/sandbox/psd2,fiducia-adapter,,,,XS2A,true,EMBEDDED,false
+adadadad-5000-0000-0000-b0b0b0b0b0b0,df7d4c03-cf3d-4adb-85ce-c0ea98c6bf30,decoupled,ATRUVIA EM,https://p1.xs2a-doc.atruvia.de/sandbox/psd2,fiducia-adapter,,,,XS2A,true,DECOUPLED,false
+adadadad-6000-0000-0000-b0b0b0b0b0b0,3819ca21-e22e-42e0-bba0-50ef63ff42c6,embedded,ATRUVIA EM,https://p2.xs2a-doc.atruvia.de/sandbox/psd2,fiducia-adapter,,,,XS2A,true,EMBEDDED,false
+adadadad-6000-0000-0000-b0b0b0b0b0b0,951d1bd3-123b-4656-ae70-d5e8337057d1,decoupled,ATRUVIA EM,https://p2.xs2a-doc.atruvia.de/sandbox/psd2,fiducia-adapter,,,,XS2A,true,DECOUPLED,false
+adadadad-7000-0000-0000-b0b0b0b0b0b0,6969534e-fb47-448e-b2f6-804b6376896f,redirect,SPARKASSE,https://xs2a-sandbox.f-i-apim.de:8444/fixs2a-env/xs2a-api/12345678,sparkasse-adapter,12345678,https://xs2a-sandbox.f-i-apim.de:8444/fixs2a-env/oauth/12345678/.well-known,,XS2A,true,REDIRECT,true

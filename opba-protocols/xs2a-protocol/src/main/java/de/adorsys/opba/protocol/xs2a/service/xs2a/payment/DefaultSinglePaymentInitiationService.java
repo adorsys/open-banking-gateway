@@ -1,5 +1,8 @@
 package de.adorsys.opba.protocol.xs2a.service.xs2a.payment;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.dataformat.xml.XmlMapper;
+import de.adorsys.opba.db.repository.BankProfileRepositoryImpl;
 import de.adorsys.opba.protocol.bpmnshared.dto.DtoMapper;
 import de.adorsys.opba.protocol.xs2a.context.pis.Xs2aPisContext;
 import de.adorsys.opba.protocol.xs2a.service.mapper.PathHeadersBodyMapperTemplate;
@@ -10,26 +13,37 @@ import de.adorsys.opba.protocol.xs2a.service.xs2a.dto.payment.PaymentInitiateHea
 import de.adorsys.opba.protocol.xs2a.service.xs2a.quirks.QuirkUtil;
 import de.adorsys.opba.protocol.xs2a.service.xs2a.validation.Xs2aValidator;
 import de.adorsys.opba.protocol.xs2a.util.logresolver.Xs2aLogResolver;
+import de.adorsys.opba.protocol.xs2a.service.xs2a.xml.Pain00100103Document;
+import de.adorsys.opba.protocol.xs2a.service.xs2a.xml.PaymentInitiationXmlMapper;
 import de.adorsys.xs2a.adapter.api.PaymentInitiationService;
 import de.adorsys.xs2a.adapter.api.RequestParams;
 import de.adorsys.xs2a.adapter.api.Response;
 import de.adorsys.xs2a.adapter.api.model.PaymentInitationRequestResponse201;
 import de.adorsys.xs2a.adapter.api.model.PaymentInitiationJson;
+import de.adorsys.xs2a.adapter.api.model.PaymentProduct;
+import de.adorsys.xs2a.adapter.api.model.Aspsp;
 import de.adorsys.xs2a.adapter.api.model.PaymentService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.logging.log4j.util.Strings;
 import org.flowable.engine.delegate.DelegateExecution;
+import org.springframework.context.annotation.ComponentScan;
 import org.springframework.stereotype.Service;
+
+import java.util.Optional;
 
 @Slf4j
 @RequiredArgsConstructor
 @Service
+@ComponentScan("de.adorsys.opba.db.repository")
 public class DefaultSinglePaymentInitiationService implements SinglePaymentInitiationService {
     private final Xs2aValidator validator;
     private final PaymentInitiationService pis;
     private final CreateConsentOrPaymentPossibleErrorHandler handler;
     private final Extractor extractor;
+    private final BankProfileRepositoryImpl bankProfileJpaRepository;
+    private final PaymentInitiationXmlMapper paymentInitiationXmlMapper;
+    public static final String ADAPTER = "fiducia-adapter";
 
     private final Xs2aLogResolver logResolver = new Xs2aLogResolver(getClass());
 
@@ -43,10 +57,16 @@ public class DefaultSinglePaymentInitiationService implements SinglePaymentIniti
     public Response<PaymentInitationRequestResponse201> doExecution(DelegateExecution execution, Xs2aPisContext context) {
         logResolver.log("doRealExecution: execution ({}) with context ({})", execution, context);
         var params = extractor.forExecution(context);
-        return handler.tryCreateAndHandleErrors(execution, () -> initiatePayment(context,
-                params.getPath(),
-                params.getHeaders(),
-                params.getBody()));
+        return handler.tryCreateAndHandleErrors(execution, () -> {
+            try {
+                return initiatePayment(context,
+                        params.getPath(),
+                        params.getHeaders(),
+                        params.getBody());
+            } catch (JsonProcessingException e) {
+                throw new RuntimeException(e);
+            }
+        });
     }
 
     @Override
@@ -58,19 +78,40 @@ public class DefaultSinglePaymentInitiationService implements SinglePaymentIniti
             Xs2aPisContext context,
             Xs2aInitialPaymentParameters path,
             PaymentInitiateHeaders headers,
-            PaymentInitiationJson body) {
+            PaymentInitiationJson body) throws JsonProcessingException {
 
-        logResolver.log("initiatePayment with parameters: {}", path, headers, body);
+        String aspspId = headers.getAspspId();
+        Optional<Aspsp> bankProfile = bankProfileJpaRepository.findById(aspspId);
+        if (bankProfile.get().getAdapterId().equals(ADAPTER)) {
+            context.setPaymentProduct("pain.001-sepa-credit-transfers");
+            path.setPaymentProduct(PaymentProduct.PAIN_001_SEPA_CREDIT_TRANSFERS);
+            Pain00100103Document document = paymentInitiationXmlMapper.map(body);
+            XmlMapper xmlMapper = new XmlMapper();
+            String xml = xmlMapper.writeValueAsString(document);
+            System.out.println(xml);
+            logResolver.log("initiatePayment with parameters: {}", path, headers, body);
+            Response<PaymentInitationRequestResponse201> paymentInit = pis.initiatePayment(PaymentService.PAYMENTS,
+                    path.getPaymentProduct(),
+                    QuirkUtil.pushBicToXs2aAdapterHeaders(context, headers.toHeaders()),
+                    RequestParams.empty(),
+                    xml
+            );
+            logResolver.log("initiatePayment response: {}", paymentInit);
+            return paymentInit;
+        } else {
 
-        Response<PaymentInitationRequestResponse201> paymentInit = pis.initiatePayment(PaymentService.PAYMENTS,
-                path.getPaymentProduct(),
-                QuirkUtil.pushBicToXs2aAdapterHeaders(context, headers.toHeaders()),
-                RequestParams.empty(),
-                body
-        );
+            logResolver.log("initiatePayment with parameters: {}", path, headers, body);
 
-        logResolver.log("initiatePayment response: {}", paymentInit);
-        return paymentInit;
+            Response<PaymentInitationRequestResponse201> paymentInit = pis.initiatePayment(PaymentService.PAYMENTS,
+                    path.getPaymentProduct(),
+                    QuirkUtil.pushBicToXs2aAdapterHeaders(context, headers.toHeaders()),
+                    RequestParams.empty(),
+                    body
+            );
+
+            logResolver.log("initiatePayment response: {}", paymentInit);
+            return paymentInit;
+        }
     }
 
     @Service

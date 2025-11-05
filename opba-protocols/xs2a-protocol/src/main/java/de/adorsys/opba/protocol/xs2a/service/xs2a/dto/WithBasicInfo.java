@@ -31,7 +31,6 @@ public class WithBasicInfo {
      * PSU ID - PSU login in ASPSP API.
      */
     @ValidationInfo(ui = @FrontendCode(STRING), ctx = @ContextCode(FieldCode.PSU_ID))
-    @NotBlank(message = "{no.ctx.psuId}")
     private String psuId;
 
     /**
@@ -57,7 +56,9 @@ public class WithBasicInfo {
 
     public Map<String, String> asMap() {
         Map<String, String> allValues = new HashMap<>();
-        allValues.put(PSU_ID, psuId);
+        if (null != psuId) {
+            allValues.put(PSU_ID, psuId);
+        }
         allValues.put(X_GTW_ASPSP_ID, aspspId);
         allValues.put(X_REQUEST_ID, requestId);
         allValues.put(CONTENT_TYPE, contentType);

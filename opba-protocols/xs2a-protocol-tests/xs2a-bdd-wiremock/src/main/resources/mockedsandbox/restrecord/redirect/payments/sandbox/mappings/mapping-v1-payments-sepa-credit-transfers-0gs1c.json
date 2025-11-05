@@ -8,9 +8,6 @@
     "headers": {
       "X-Request-ID": {
         "matches": "[0-9a-zA-z\\-]+"
-      },
-      "PSU-ID": {
-        "equalTo": ""
       }
     }
   },

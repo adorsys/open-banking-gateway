@@ -83,9 +83,6 @@
         <module name="LineLength">
             <property name="max" value="200"/>
         </module>
-        <module name="MethodLength">
-            <property name="max" value="40"/>
-        </module>
         <!-- no more checking for number of parameters, requested by DGOlden
         <module name="ParameterNumber">
             <property name="max" value="4"/>
@@ -104,7 +101,6 @@
         <module name="MethodParamPad"/>
         <module name="NoWhitespaceAfter"/>
         <module name="NoWhitespaceBefore"/>
-        <module name="OperatorWrap"/>
         <module name="ParenPad"/>
         <module name="TypecastParenPad"/>
         <module name="WhitespaceAfter"/>

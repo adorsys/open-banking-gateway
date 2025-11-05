@@ -5,9 +5,7 @@
     "url" : "/v1/payments/sepa-credit-transfers/ZmKrFV1N5n5mgDQi5Ik_qYVmmNo0VQ0fQ3pCOOsQSTW-Cn1FUKfaIqPYTpfSkPrFcgftJbETkzvNvu5mZQqWcA==_=_psGLvQpt9Q/status",
     "method" : "GET",
     "headers" : {
-      "PSU-ID" : {
-        "equalTo" : ""
-      },
+
       "X-Request-ID" : {
         "matches" : "[0-9a-zA-z\\-]+"
       }

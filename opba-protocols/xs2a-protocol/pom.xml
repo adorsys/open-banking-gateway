@@ -241,6 +241,12 @@
             <artifactId>semver4j</artifactId>
             <version>${semver4j.version}</version>
         </dependency>
+        <dependency>
+            <groupId>de.adorsys.opba</groupId>
+            <artifactId>opba-db</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+
     </dependencies>
 
     <build>

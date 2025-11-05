@@ -3,3 +3,6 @@ adadadad-1000-0000-0000-b0b0b0b0b0b0,adorsys HBCI no SCA,ADORSYS HA,10000001
 adadadad-2000-0000-0000-b0b0b0b0b0b0,adorsys HBCI no SCA authenticated BPD,ADORSYS HB,20000002
 adadadad-3000-0000-0000-b0b0b0b0b0b0,adorsys HBCI transactions SCA,ADORSYS HS,30000003
 adadadad-4000-0000-0000-b0b0b0b0b0b0,adorsys XS2A,ADORSYS XS,""
+adadadad-5000-0000-0000-b0b0b0b0b0b0,atruvia XS2A Sandbox,Atruvia XS,47261111
+adadadad-6000-0000-0000-b0b0b0b0b0b0,atruvia XS2A Sandbox Fallback,Atruvia XS,47261112
+adadadad-7000-0000-0000-b0b0b0b0b0b0,sparkasse XS2A Sandbox,SPARKASSE,12345678

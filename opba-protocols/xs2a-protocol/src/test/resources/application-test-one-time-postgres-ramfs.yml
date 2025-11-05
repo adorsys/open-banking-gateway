@@ -1,6 +1,6 @@
 spring:
   datasource:
-    url: jdbc:tc:postgresql:12:////open_banking?TC_DAEMON=true&?TC_TMPFS=/testtmpfs:rw
+    url: jdbc:tc:postgresql:12:////open_banking?TC_DAEMON=true&?TC_TMPFS=/testtmpfs:rw&TC_INITSCRIPT=init.sql&TC_REUSABLE=true
     username: postgres
     password: docker
     driver-class-name: org.testcontainers.jdbc.ContainerDatabaseDriver
@@ -11,7 +11,44 @@ spring:
     hibernate:
       naming:
         physical-strategy: org.hibernate.boot.model.naming.PhysicalNamingStrategyStandardImpl
-bank-search:
-  query:
-bank-info:
-  query:
+api:
+  banking:
+    # Admin API properties
+    admin-api:
+      security:
+        # Admin API credentials
+        login: Aladdin
+        password: OpenSesame
+        # URL-patterns to be protected
+        url-patterns-to-protect:
+          - /admin/*
+
+    # fetch bank-Info from iban
+    bank-info:
+      # Query to fetch bank info from db
+      query: >
+        SELECT id, uuid, name, bic, bank_code
+        FROM opb_bank
+        WHERE bank_code = :bankCode
+          AND (:onlyActive IS FALSE OR active IS TRUE)
+        LIMIT 1
+
+    # Bank-search API properties
+    bank-search:
+      # The index of the first result
+      start: 0
+      # Maximum number of entries in the response
+      max: 10
+      # Query to search banks by parameters in DB
+      query:
+        "SELECT id, uuid, name, bic, bank_code, active, word_similarity(:keyword, name) as sml
+        FROM opb_bank WHERE ((word_similarity(:keyword, name) >= 0.6) AND (NOT :onlyActive OR active))
+        UNION
+        SELECT id, uuid, name, bic, bank_code, active, word_similarity(:keyword, bic) as sml
+        FROM opb_bank WHERE ((word_similarity(:keyword, bic) >= 0.8) AND (NOT :onlyActive OR active))
+        UNION
+        SELECT id, uuid, name, bic, bank_code, active, word_similarity(:keyword, bank_code) as sml
+        FROM opb_bank WHERE ((word_similarity(:keyword, bank_code) >= 0.8) AND (NOT :onlyActive OR active))
+        ORDER BY sml DESC, id
+        LIMIT :max
+        OFFSET :start"

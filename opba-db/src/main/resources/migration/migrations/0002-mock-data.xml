@@ -223,6 +223,80 @@
             insert into ${table-prefix}bank_sub_action (id, action_id, protocol_action, sub_protocol_bean_name) values (30, 59, 'UPDATE_AUTHORIZATION', 'hbciUpdateAuthorization');
             insert into ${table-prefix}bank_sub_action (id, action_id, protocol_action, sub_protocol_bean_name) values (31, 59, 'FROM_ASPSP_REDIRECT', 'hbciFromAspspRedirect');
             insert into ${table-prefix}bank_sub_action (id, action_id, protocol_action, sub_protocol_bean_name) values (32, 59, 'DENY_AUTHORIZATION', 'hbciDenyAuthorization');
+
+            <!--  ATRUVIA EMBEDDED ASPSP  -->
+            insert into ${table-prefix}bank_action (id, profile_uuid, protocol_action, protocol_bean_name) values (65, '0f7e5c28-c1b5-11ed-afa1-0242ac120002', 'LIST_ACCOUNTS', 'xs2aListAccounts');
+            insert into ${table-prefix}bank_action (id, profile_uuid, protocol_action, protocol_bean_name) values (66, '0f7e5c28-c1b5-11ed-afa1-0242ac120002', 'LIST_TRANSACTIONS', 'xs2aSandboxListTransactions');
+            insert into ${table-prefix}bank_action (id, profile_uuid, protocol_action, protocol_bean_name) values (67, '0f7e5c28-c1b5-11ed-afa1-0242ac120002', 'AUTHORIZATION', '');
+            insert into ${table-prefix}bank_action (id, profile_uuid, protocol_action, protocol_bean_name) values (68, '0f7e5c28-c1b5-11ed-afa1-0242ac120002', 'SINGLE_PAYMENT', 'xs2aInitiateSinglePayment');
+            insert into ${table-prefix}bank_action (id, profile_uuid, protocol_action, protocol_bean_name) values (69, '0f7e5c28-c1b5-11ed-afa1-0242ac120002', 'GET_PAYMENT_INFORMATION', 'xs2aGetPaymentInfoState');
+            insert into ${table-prefix}bank_action (id, profile_uuid, protocol_action, protocol_bean_name) values (70, '0f7e5c28-c1b5-11ed-afa1-0242ac120002', 'GET_PAYMENT_STATUS', 'xs2aGetPaymentStatusState');
+            insert into ${table-prefix}bank_action (id, profile_uuid, protocol_action, protocol_bean_name) values (71, '0f7e5c28-c1b5-11ed-afa1-0242ac120002', 'DELETE_CONSENT', 'xs2aDeleteConsent');
+            insert into ${table-prefix}bank_action (id, profile_uuid, protocol_action, protocol_bean_name) values (72, '0f7e5c28-c1b5-11ed-afa1-0242ac120002', 'GET_CONSENT_STATUS', 'xs2aGetConsentStatus');
+
+            insert into ${table-prefix}bank_action (id, profile_uuid, protocol_action, protocol_bean_name) values (73, '3819ca21-e22e-42e0-bba0-50ef63ff42c6', 'LIST_ACCOUNTS', 'xs2aListAccounts');
+            insert into ${table-prefix}bank_action (id, profile_uuid, protocol_action, protocol_bean_name) values (74, '3819ca21-e22e-42e0-bba0-50ef63ff42c6', 'LIST_TRANSACTIONS', 'xs2aSandboxListTransactions');
+            insert into ${table-prefix}bank_action (id, profile_uuid, protocol_action, protocol_bean_name) values (75, '3819ca21-e22e-42e0-bba0-50ef63ff42c6', 'AUTHORIZATION', '');
+            insert into ${table-prefix}bank_action (id, profile_uuid, protocol_action, protocol_bean_name) values (76, '3819ca21-e22e-42e0-bba0-50ef63ff42c6', 'SINGLE_PAYMENT', 'xs2aInitiateSinglePayment');
+            insert into ${table-prefix}bank_action (id, profile_uuid, protocol_action, protocol_bean_name) values (77, '3819ca21-e22e-42e0-bba0-50ef63ff42c6', 'GET_PAYMENT_INFORMATION', 'xs2aGetPaymentInfoState');
+            insert into ${table-prefix}bank_action (id, profile_uuid, protocol_action, protocol_bean_name) values (78, '3819ca21-e22e-42e0-bba0-50ef63ff42c6', 'GET_PAYMENT_STATUS', 'xs2aGetPaymentStatusState');
+            insert into ${table-prefix}bank_action (id, profile_uuid, protocol_action, protocol_bean_name) values (79, '3819ca21-e22e-42e0-bba0-50ef63ff42c6', 'DELETE_CONSENT', 'xs2aDeleteConsent');
+            insert into ${table-prefix}bank_action (id, profile_uuid, protocol_action, protocol_bean_name) values (80, '3819ca21-e22e-42e0-bba0-50ef63ff42c6', 'GET_CONSENT_STATUS', 'xs2aGetConsentStatus');
+
+            <!--  ATRUVIA DECOUPLED ASPSP  -->
+            insert into ${table-prefix}bank_action (id, profile_uuid, protocol_action, protocol_bean_name) values (81, 'df7d4c03-cf3d-4adb-85ce-c0ea98c6bf30', 'LIST_ACCOUNTS', 'xs2aListAccounts');
+            insert into ${table-prefix}bank_action (id, profile_uuid, protocol_action, protocol_bean_name) values (82, 'df7d4c03-cf3d-4adb-85ce-c0ea98c6bf30', 'LIST_TRANSACTIONS', 'xs2aSandboxListTransactions');
+            insert into ${table-prefix}bank_action (id, profile_uuid, protocol_action, protocol_bean_name) values (83, 'df7d4c03-cf3d-4adb-85ce-c0ea98c6bf30', 'AUTHORIZATION', '');
+            insert into ${table-prefix}bank_action (id, profile_uuid, protocol_action, protocol_bean_name) values (84, 'df7d4c03-cf3d-4adb-85ce-c0ea98c6bf30', 'SINGLE_PAYMENT', 'xs2aInitiateSinglePayment');
+            insert into ${table-prefix}bank_action (id, profile_uuid, protocol_action, protocol_bean_name) values (85, 'df7d4c03-cf3d-4adb-85ce-c0ea98c6bf30', 'GET_PAYMENT_INFORMATION', 'xs2aGetPaymentInfoState');
+            insert into ${table-prefix}bank_action (id, profile_uuid, protocol_action, protocol_bean_name) values (86, 'df7d4c03-cf3d-4adb-85ce-c0ea98c6bf30', 'GET_PAYMENT_STATUS', 'xs2aGetPaymentStatusState');
+            insert into ${table-prefix}bank_action (id, profile_uuid, protocol_action, protocol_bean_name) values (87, 'df7d4c03-cf3d-4adb-85ce-c0ea98c6bf30', 'DELETE_CONSENT', 'xs2aDeleteConsent');
+            insert into ${table-prefix}bank_action (id, profile_uuid, protocol_action, protocol_bean_name) values (88, 'df7d4c03-cf3d-4adb-85ce-c0ea98c6bf30', 'GET_CONSENT_STATUS', 'xs2aGetConsentStatus');
+
+            insert into ${table-prefix}bank_action (id, profile_uuid, protocol_action, protocol_bean_name) values (89, '951d1bd3-123b-4656-ae70-d5e8337057d1', 'LIST_ACCOUNTS', 'xs2aListAccounts');
+            insert into ${table-prefix}bank_action (id, profile_uuid, protocol_action, protocol_bean_name) values (90, '951d1bd3-123b-4656-ae70-d5e8337057d1', 'LIST_TRANSACTIONS', 'xs2aSandboxListTransactions');
+            insert into ${table-prefix}bank_action (id, profile_uuid, protocol_action, protocol_bean_name) values (91, '951d1bd3-123b-4656-ae70-d5e8337057d1', 'AUTHORIZATION', '');
+            insert into ${table-prefix}bank_action (id, profile_uuid, protocol_action, protocol_bean_name) values (92, '951d1bd3-123b-4656-ae70-d5e8337057d1', 'SINGLE_PAYMENT', 'xs2aInitiateSinglePayment');
+            insert into ${table-prefix}bank_action (id, profile_uuid, protocol_action, protocol_bean_name) values (93, '951d1bd3-123b-4656-ae70-d5e8337057d1', 'GET_PAYMENT_INFORMATION', 'xs2aGetPaymentInfoState');
+            insert into ${table-prefix}bank_action (id, profile_uuid, protocol_action, protocol_bean_name) values (94, '951d1bd3-123b-4656-ae70-d5e8337057d1', 'GET_PAYMENT_STATUS', 'xs2aGetPaymentStatusState');
+            insert into ${table-prefix}bank_action (id, profile_uuid, protocol_action, protocol_bean_name) values (95, '951d1bd3-123b-4656-ae70-d5e8337057d1', 'DELETE_CONSENT', 'xs2aDeleteConsent');
+            insert into ${table-prefix}bank_action (id, profile_uuid, protocol_action, protocol_bean_name) values (96, '951d1bd3-123b-4656-ae70-d5e8337057d1', 'GET_CONSENT_STATUS', 'xs2aGetConsentStatus');
+
+            <!-- ATRUVIA bank_sub_actions -->
+            insert into ${table-prefix}bank_sub_action (id, action_id, protocol_action, sub_protocol_bean_name) values (33, 67, 'GET_AUTHORIZATION_STATE', 'xs2aGetAuthorizationState');
+            insert into ${table-prefix}bank_sub_action (id, action_id, protocol_action, sub_protocol_bean_name) values (34, 67, 'UPDATE_AUTHORIZATION', 'xs2aUpdateAuthorization');
+            insert into ${table-prefix}bank_sub_action (id, action_id, protocol_action, sub_protocol_bean_name) values (35, 67, 'FROM_ASPSP_REDIRECT', 'xs2aFromAspspRedirect');
+            insert into ${table-prefix}bank_sub_action (id, action_id, protocol_action, sub_protocol_bean_name) values (36, 67, 'DENY_AUTHORIZATION', 'xs2aDenyAuthorization');
+
+            insert into ${table-prefix}bank_sub_action (id, action_id, protocol_action, sub_protocol_bean_name) values (37, 75, 'GET_AUTHORIZATION_STATE', 'xs2aGetAuthorizationState');
+            insert into ${table-prefix}bank_sub_action (id, action_id, protocol_action, sub_protocol_bean_name) values (38, 75, 'UPDATE_AUTHORIZATION', 'xs2aUpdateAuthorization');
+            insert into ${table-prefix}bank_sub_action (id, action_id, protocol_action, sub_protocol_bean_name) values (39, 75, 'FROM_ASPSP_REDIRECT', 'xs2aFromAspspRedirect');
+            insert into ${table-prefix}bank_sub_action (id, action_id, protocol_action, sub_protocol_bean_name) values (40, 75, 'DENY_AUTHORIZATION', 'xs2aDenyAuthorization');
+
+            insert into ${table-prefix}bank_sub_action (id, action_id, protocol_action, sub_protocol_bean_name) values (41, 83, 'GET_AUTHORIZATION_STATE', 'xs2aGetAuthorizationState');
+            insert into ${table-prefix}bank_sub_action (id, action_id, protocol_action, sub_protocol_bean_name) values (42, 83, 'UPDATE_AUTHORIZATION', 'xs2aUpdateAuthorization');
+            insert into ${table-prefix}bank_sub_action (id, action_id, protocol_action, sub_protocol_bean_name) values (43, 83, 'FROM_ASPSP_REDIRECT', 'xs2aFromAspspRedirect');
+            insert into ${table-prefix}bank_sub_action (id, action_id, protocol_action, sub_protocol_bean_name) values (44, 83, 'DENY_AUTHORIZATION', 'xs2aDenyAuthorization');
+
+            insert into ${table-prefix}bank_sub_action (id, action_id, protocol_action, sub_protocol_bean_name) values (45, 91, 'GET_AUTHORIZATION_STATE', 'xs2aGetAuthorizationState');
+            insert into ${table-prefix}bank_sub_action (id, action_id, protocol_action, sub_protocol_bean_name) values (46, 91, 'UPDATE_AUTHORIZATION', 'xs2aUpdateAuthorization');
+            insert into ${table-prefix}bank_sub_action (id, action_id, protocol_action, sub_protocol_bean_name) values (47, 91, 'FROM_ASPSP_REDIRECT', 'xs2aFromAspspRedirect');
+            insert into ${table-prefix}bank_sub_action (id, action_id, protocol_action, sub_protocol_bean_name) values (48, 91, 'DENY_AUTHORIZATION', 'xs2aDenyAuthorization');
+
+            <!--  SPARKASSEN TEST  -->
+            insert into ${table-prefix}bank_action (id, profile_uuid, protocol_action, protocol_bean_name, consent_supported) values (97, '6969534e-fb47-448e-b2f6-804b6376896f', 'LIST_ACCOUNTS', 'xs2aListAccounts', true);
+            insert into ${table-prefix}bank_action (id, profile_uuid, protocol_action, protocol_bean_name, consent_supported) values (98, '6969534e-fb47-448e-b2f6-804b6376896f', 'LIST_TRANSACTIONS', 'xs2aListTransactions', true);
+            insert into ${table-prefix}bank_action (id, profile_uuid, protocol_action, protocol_bean_name, consent_supported) values (99, '6969534e-fb47-448e-b2f6-804b6376896f', 'AUTHORIZATION', '', true);
+            insert into ${table-prefix}bank_action (id, profile_uuid, protocol_action, protocol_bean_name, consent_supported) values (100, '6969534e-fb47-448e-b2f6-804b6376896f', 'SINGLE_PAYMENT', 'xs2aInitiateSinglePayment', true);
+            insert into ${table-prefix}bank_action (id, profile_uuid, protocol_action, protocol_bean_name, consent_supported) values (101, '6969534e-fb47-448e-b2f6-804b6376896f', 'GET_PAYMENT_INFORMATION', 'xs2aGetPaymentInfoState', true);
+            insert into ${table-prefix}bank_action (id, profile_uuid, protocol_action, protocol_bean_name, consent_supported) values (102, '6969534e-fb47-448e-b2f6-804b6376896f', 'GET_PAYMENT_STATUS', 'xs2aGetPaymentStatusState', true);
+            insert into ${table-prefix}bank_action (id, profile_uuid, protocol_action, protocol_bean_name, consent_supported) values (103, '6969534e-fb47-448e-b2f6-804b6376896f', 'DELETE_CONSENT', 'xs2aDeleteConsent', true);
+            insert into ${table-prefix}bank_action (id, profile_uuid, protocol_action, protocol_bean_name, consent_supported) values (104, '6969534e-fb47-448e-b2f6-804b6376896f', 'GET_CONSENT_STATUS', 'xs2aGetConsentStatus', true);
+
+            insert into ${table-prefix}bank_sub_action (id, action_id, protocol_action, sub_protocol_bean_name) values (49, 99, 'GET_AUTHORIZATION_STATE', 'xs2aGetAuthorizationState');
+            insert into ${table-prefix}bank_sub_action (id, action_id, protocol_action, sub_protocol_bean_name) values (50, 99, 'UPDATE_AUTHORIZATION', 'xs2aUpdateAuthorization');
+            insert into ${table-prefix}bank_sub_action (id, action_id, protocol_action, sub_protocol_bean_name) values (51, 99, 'FROM_ASPSP_REDIRECT', 'xs2aFromAspspRedirect');
+            insert into ${table-prefix}bank_sub_action (id, action_id, protocol_action, sub_protocol_bean_name) values (52, 99, 'DENY_AUTHORIZATION', 'xs2aDenyAuthorization');
         </sql>
     </changeSet>
 

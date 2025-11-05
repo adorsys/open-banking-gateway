@@ -116,6 +116,7 @@
     
     <changeSet id="create_index" author="mhr">
         <sql dbms="postgresql" stripComments="true">
+            CREATE EXTENSION IF NOT EXISTS pg_trgm WITH SCHEMA banking_protocol;
             CREATE INDEX bank_trgm_idx1 ON ${table-prefix}bank USING gin (name gin_trgm_ops);
             CREATE INDEX bank_trgm_idx2 ON ${table-prefix}bank USING gin (bic gin_trgm_ops);
             CREATE INDEX bank_trgm_idx3 ON ${table-prefix}bank USING gin (bank_code gin_trgm_ops);
