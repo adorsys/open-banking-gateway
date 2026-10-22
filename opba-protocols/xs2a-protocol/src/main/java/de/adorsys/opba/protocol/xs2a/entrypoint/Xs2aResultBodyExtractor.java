@@ -1,6 +1,5 @@
 package de.adorsys.opba.protocol.xs2a.entrypoint;
 
-import com.google.common.base.Strings;
 import de.adorsys.opba.protocol.api.dto.context.ServiceContext;
 import de.adorsys.opba.protocol.api.dto.request.payments.SinglePaymentBody;
 import de.adorsys.opba.protocol.api.dto.request.transactions.ListTransactionsRequest;
@@ -100,24 +99,7 @@ public class Xs2aResultBodyExtractor {
         }
 
         default String map(RemittanceInformationStructured value) {
-            if (null == value) {
-                return null;
-            }
-
-            StringBuilder builder = new StringBuilder();
-            append(builder, value.getReferenceType());
-            append(builder, value.getReferenceIssuer());
-            append(builder, value.getReference());
-            return builder.toString();
-        }
-
-        default void append(StringBuilder builder, String referenceType) {
-            if (Strings.isNullOrEmpty(referenceType)) {
-                return;
-            }
-
-            builder.append(referenceType);
-            builder.append(":");
+            return value == null ? null : value.getReference();
         }
     }
 }
