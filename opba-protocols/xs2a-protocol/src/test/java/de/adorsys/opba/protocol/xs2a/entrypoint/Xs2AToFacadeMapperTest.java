@@ -11,6 +11,7 @@ import de.adorsys.opba.protocol.xs2a.config.MapperTestConfig;
 import de.adorsys.opba.protocol.xs2a.entrypoint.parsers.XmlTransactionsParser;
 import de.adorsys.opba.protocol.xs2a.util.FixtureProvider;
 import de.adorsys.xs2a.adapter.api.model.AccountList;
+import de.adorsys.xs2a.adapter.api.model.RemittanceInformationStructured;
 import de.adorsys.xs2a.adapter.api.model.TransactionsResponse200Json;
 import lombok.SneakyThrows;
 import org.junit.jupiter.api.Test;
@@ -37,6 +38,16 @@ public class Xs2AToFacadeMapperTest {
 
     @Autowired
     private FixtureProvider fixtureProvider;
+
+    @Test
+    void structuredRemittanceInformationMapsThePlainReference() {
+        RemittanceInformationStructured input = new RemittanceInformationStructured();
+        input.setReferenceType("SCOR");
+        input.setReferenceIssuer("ISO");
+        input.setReference("RF18539007547034");
+
+        assertThat(mapper.map(input)).isEqualTo("RF18539007547034");
+    }
 
     @Test
     @SneakyThrows
